@@ -8,6 +8,7 @@ from .combustion import (
     WoodCellState,
     WoodModelParameters,
     WoodThermalModel,
+    initial_volatile_potential_fraction,
 )
 
 
@@ -114,7 +115,7 @@ def create_layered_panel_model(
                 moisture_mass_kg=layer_moisture_mass_kg,
                 dry_wood_mass_kg=layer_dry_mass_kg,
                 volatile_potential_kg=(
-                    layer_dry_mass_kg * (1.0 - p.pyrolysis_char_yield)
+                    layer_dry_mass_kg * initial_volatile_potential_fraction(p)
                 ),
                 char_mass_kg=0.0,
                 ash_mass_kg=0.0,

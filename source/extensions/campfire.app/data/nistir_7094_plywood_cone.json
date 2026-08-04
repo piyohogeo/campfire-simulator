@@ -43,27 +43,36 @@
     "primary_source_url": "https://www.osti.gov/biblio/5354651",
     "source_temperature_range_k": [573.15, 673.15],
     "source_pathways": [
-      {
-        "label": "Thurner-Mann gas branch",
+        {
+          "product": "gas",
+          "label": "Thurner-Mann gas branch",
         "preexponential_per_min": 861000.0,
         "preexponential_s": 14350.0,
         "activation_energy_j_mol": 88600.0
       },
-      {
-        "label": "Thurner-Mann tar branch",
+        {
+          "product": "tar",
+          "label": "Thurner-Mann tar branch",
         "preexponential_per_min": 247000000.0,
         "preexponential_s": 4116666.6666666665,
         "activation_energy_j_mol": 112700.0
       },
-      {
-        "label": "Thurner-Mann char branch",
+        {
+          "product": "char",
+          "label": "Thurner-Mann char branch",
         "preexponential_per_min": 44300000.0,
         "preexponential_s": 738333.3333333334,
         "activation_energy_j_mol": 106500.0
       }
-    ],
-    "calibration_preexponential_scales": [0.25, 1.0, 4.0, 16.0],
-    "interpretation": "Each published pathway pair is used as an apparent single-step candidate and its A value is scaled during calibration. This does not reproduce the paper's full three-parallel-reaction product model."
+      ],
+      "calibration_preexponential_scales": [0.25, 1.0, 4.0, 16.0],
+      "parallel_common_scales": [0.5, 1.0, 2.0, 4.0],
+      "parallel_product_mass_accounting": {
+        "gas": "Emitted primary gas; 1 kg pathway conversion produces 1 kg lumped gas.",
+        "tar": "Emitted condensable tar; 1 kg pathway conversion produces 1 kg lumped tar.",
+        "char": "Retained primary char; 1 kg pathway conversion produces 1 kg char before oxidation."
+      },
+      "interpretation": "The three published mass-basis first-order rates compete for the same unreacted dry wood. Product fractions are k_i / sum(k), not separately fitted fixed yields. A constrained common scale preserves those temperature-dependent branching ratios during calibration."
   },
   "targets": [
     {

@@ -51,6 +51,14 @@ class WoodModelParameters:
     pyrolysis_arrhenius_activation_energy_j_mol: float = 106_500.0
     pyrolysis_arrhenius_reaction_order: float = 1.0
     pyrolysis_arrhenius_source_label: str = "Thurner-Mann char branch"
+    pyrolysis_parallel_common_scale: float = 1.0
+    pyrolysis_parallel_gas_preexponential_s: float = 14_350.0
+    pyrolysis_parallel_gas_activation_energy_j_mol: float = 88_600.0
+    pyrolysis_parallel_tar_preexponential_s: float = 4_116_666.6666666665
+    pyrolysis_parallel_tar_activation_energy_j_mol: float = 112_700.0
+    pyrolysis_parallel_char_preexponential_s: float = 738_333.3333333334
+    pyrolysis_parallel_char_activation_energy_j_mol: float = 106_500.0
+    pyrolysis_parallel_source_label: str = "Thurner-Mann three parallel branches"
     pyrolysis_heat_j_kg: float = 300_000.0
     pyrolysis_char_yield: float = 0.22
     char_oxidation_start_temperature_k: float = 673.15
@@ -108,6 +116,12 @@ class CombustionStepResult:
     pyrolysis_gas_rate_kg_s: float
     char_oxidation_gas_rate_kg_s: float
     external_heat_j: float
+    primary_gas_kg: float
+    primary_tar_kg: float
+    primary_char_kg: float
+    primary_gas_rate_kg_s: float
+    primary_tar_rate_kg_s: float
+    primary_char_rate_kg_s: float
 
 
 @dataclass(frozen=True)
@@ -130,6 +144,9 @@ class WoodThermalModel:
         emitted_water_kg: float = 0.0,
         emitted_pyrolysis_gas_kg: float = 0.0,
         emitted_char_gas_kg: float = 0.0,
+        emitted_primary_gas_kg: float = 0.0,
+        emitted_tar_kg: float = 0.0,
+        produced_primary_char_kg: float = 0.0,
         initial_mass_kg: float | None = None,
     ):
         if len(cells) != spec.cell_count:
@@ -143,6 +160,9 @@ class WoodThermalModel:
         self.emitted_water_kg = float(emitted_water_kg)
         self.emitted_pyrolysis_gas_kg = float(emitted_pyrolysis_gas_kg)
         self.emitted_char_gas_kg = float(emitted_char_gas_kg)
+        self.emitted_primary_gas_kg = float(emitted_primary_gas_kg)
+        self.emitted_tar_kg = float(emitted_tar_kg)
+        self.produced_primary_char_kg = float(produced_primary_char_kg)
         self.initial_mass_kg = (
             float(initial_mass_kg)
             if initial_mass_kg is not None
@@ -277,6 +297,9 @@ class WoodThermalModel:
         evaporated_total = 0.0
         pyrolysis_gas_total = 0.0
         char_gas_total = 0.0
+        primary_gas_total = 0.0
+        primary_tar_total = 0.0
+        primary_char_total = 0.0
         external_heat_total = 0.0
         sigma = 5.670374419e-8
 
@@ -325,6 +348,7 @@ class WoodThermalModel:
                 cell.dry_wood_mass_kg > 0.0
                 and (
                     p.pyrolysis_rate_model == "arrhenius_first_order"
+                    or p.pyrolysis_rate_model == "arrhenius_parallel_first_order"
                     or cell.temperature_k > p.pyrolysis_start_temperature_k
                 )
             ):
@@ -340,6 +364,24 @@ class WoodThermalModel:
                         -rate_constant_s * dryness_factor * dt_seconds
                     )
                     rate_limited_kg = cell.dry_wood_mass_kg * reacted_fraction
+                    pathway_fractions = {
+                        "gas": 1.0 - p.pyrolysis_char_yield,
+                        "tar": 0.0,
+                        "char": p.pyrolysis_char_yield,
+                    }
+                elif p.pyrolysis_rate_model == "arrhenius_parallel_first_order":
+                    pathway_rates_s = parallel_arrhenius_rate_constants_s(
+                        p, cell.temperature_k
+                    )
+                    total_rate_s = sum(pathway_rates_s.values())
+                    reacted_fraction = 1.0 - math.exp(
+                        -total_rate_s * dryness_factor * dt_seconds
+                    )
+                    rate_limited_kg = cell.dry_wood_mass_kg * reacted_fraction
+                    pathway_fractions = {
+                        product: rate_s / total_rate_s
+                        for product, rate_s in pathway_rates_s.items()
+                    }
                 elif p.pyrolysis_rate_model == "piecewise_linear":
                     temperature_ramp = min(
                         1.0,
@@ -359,6 +401,11 @@ class WoodThermalModel:
                         * dryness_factor
                         * dt_seconds
                     )
+                    pathway_fractions = {
+                        "gas": 1.0 - p.pyrolysis_char_yield,
+                        "tar": 0.0,
+                        "char": p.pyrolysis_char_yield,
+                    }
                 else:
                     raise ValueError(
                         f"Unsupported pyrolysis rate model: {p.pyrolysis_rate_model}"
@@ -373,17 +420,22 @@ class WoodThermalModel:
                 reacted_wood_kg = min(
                     cell.dry_wood_mass_kg, rate_limited_kg, energy_limited_kg
                 )
-                char_created_kg = reacted_wood_kg * p.pyrolysis_char_yield
-                gas_created_kg = reacted_wood_kg - char_created_kg
+                gas_created_kg = reacted_wood_kg * pathway_fractions["gas"]
+                tar_created_kg = reacted_wood_kg * pathway_fractions["tar"]
+                char_created_kg = reacted_wood_kg * pathway_fractions["char"]
+                volatile_created_kg = gas_created_kg + tar_created_kg
                 cell.dry_wood_mass_kg -= reacted_wood_kg
                 cell.char_mass_kg += char_created_kg
                 cell.volatile_potential_kg = max(
-                    0.0, cell.volatile_potential_kg - gas_created_kg
+                    0.0, cell.volatile_potential_kg - volatile_created_kg
                 )
                 cell.temperature_k -= (
                     reacted_wood_kg * p.pyrolysis_heat_j_kg / heat_capacity
                 )
-                pyrolysis_gas_total += gas_created_kg
+                pyrolysis_gas_total += volatile_created_kg
+                primary_gas_total += gas_created_kg
+                primary_tar_total += tar_created_kg
+                primary_char_total += char_created_kg
 
             if (
                 cell.char_mass_kg > 0.0
@@ -431,6 +483,9 @@ class WoodThermalModel:
         self.emitted_water_kg += evaporated_total
         self.emitted_pyrolysis_gas_kg += pyrolysis_gas_total
         self.emitted_char_gas_kg += char_gas_total
+        self.emitted_primary_gas_kg += primary_gas_total
+        self.emitted_tar_kg += primary_tar_total
+        self.produced_primary_char_kg += primary_char_total
         return CombustionStepResult(
             elapsed_seconds=self.elapsed_seconds,
             evaporated_water_kg=evaporated_total,
@@ -440,6 +495,12 @@ class WoodThermalModel:
             pyrolysis_gas_rate_kg_s=pyrolysis_gas_total / dt_seconds,
             char_oxidation_gas_rate_kg_s=char_gas_total / dt_seconds,
             external_heat_j=external_heat_total,
+            primary_gas_kg=primary_gas_total,
+            primary_tar_kg=primary_tar_total,
+            primary_char_kg=primary_char_total,
+            primary_gas_rate_kg_s=primary_gas_total / dt_seconds,
+            primary_tar_rate_kg_s=primary_tar_total / dt_seconds,
+            primary_char_rate_kg_s=primary_char_total / dt_seconds,
         )
 
     @property
@@ -465,6 +526,17 @@ class WoodThermalModel:
         weighted_temperature = sum(
             cell.temperature_k * cell.current_mass_kg for cell in self.cells
         ) / max(total_mass, 1.0e-12)
+        primary_product_total_kg = (
+            self.emitted_primary_gas_kg
+            + self.emitted_tar_kg
+            + self.produced_primary_char_kg
+        )
+        primary_product_yields = {
+            "gas": self.emitted_primary_gas_kg / max(primary_product_total_kg, 1.0e-12),
+            "tar": self.emitted_tar_kg / max(primary_product_total_kg, 1.0e-12),
+            "char": self.produced_primary_char_kg
+            / max(primary_product_total_kg, 1.0e-12),
+        }
         return {
             "elapsed_seconds": self.elapsed_seconds,
             "cell_count": len(self.cells),
@@ -481,6 +553,10 @@ class WoodThermalModel:
             "emitted_water_kg": self.emitted_water_kg,
             "emitted_pyrolysis_gas_kg": self.emitted_pyrolysis_gas_kg,
             "emitted_char_gas_kg": self.emitted_char_gas_kg,
+            "emitted_primary_gas_kg": self.emitted_primary_gas_kg,
+            "emitted_tar_kg": self.emitted_tar_kg,
+            "produced_primary_char_kg": self.produced_primary_char_kg,
+            "primary_product_yield_fraction": primary_product_yields,
             "initial_mass_kg": self.initial_mass_kg,
             "accounted_mass_kg": self.accounted_mass_kg,
             "mass_balance_error_kg": self.mass_balance_error_kg,
@@ -495,6 +571,9 @@ class WoodThermalModel:
             "emitted_water_kg": self.emitted_water_kg,
             "emitted_pyrolysis_gas_kg": self.emitted_pyrolysis_gas_kg,
             "emitted_char_gas_kg": self.emitted_char_gas_kg,
+            "emitted_primary_gas_kg": self.emitted_primary_gas_kg,
+            "emitted_tar_kg": self.emitted_tar_kg,
+            "produced_primary_char_kg": self.produced_primary_char_kg,
             "initial_mass_kg": self.initial_mass_kg,
             "cells": [asdict(cell) for cell in self.cells],
         }
@@ -511,6 +590,9 @@ class WoodThermalModel:
             emitted_water_kg=data["emitted_water_kg"],
             emitted_pyrolysis_gas_kg=data["emitted_pyrolysis_gas_kg"],
             emitted_char_gas_kg=data["emitted_char_gas_kg"],
+            emitted_primary_gas_kg=data.get("emitted_primary_gas_kg", 0.0),
+            emitted_tar_kg=data.get("emitted_tar_kg", 0.0),
+            produced_primary_char_kg=data.get("produced_primary_char_kg", 0.0),
             initial_mass_kg=data["initial_mass_kg"],
         )
 
@@ -574,7 +656,8 @@ def create_cylindrical_wood_model(
                         moisture_mass_kg=moisture_mass_kg,
                         dry_wood_mass_kg=dry_mass_kg,
                         volatile_potential_kg=(
-                            dry_mass_kg * (1.0 - p.pyrolysis_char_yield)
+                            dry_mass_kg
+                            * initial_volatile_potential_fraction(p)
                         ),
                         char_mass_kg=0.0,
                         ash_mass_kg=0.0,
@@ -606,6 +689,58 @@ def arrhenius_pyrolysis_rate_constant_s(
         -parameters.pyrolysis_arrhenius_activation_energy_j_mol
         / (UNIVERSAL_GAS_CONSTANT_J_MOL_K * temperature_k)
     )
+
+
+def parallel_arrhenius_rate_constants_s(
+    parameters: WoodModelParameters,
+    temperature_k: float,
+) -> dict[str, float]:
+    """Return competing gas, tar, and char first-order rates in s^-1."""
+
+    if not math.isfinite(temperature_k) or temperature_k <= 0.0:
+        raise ValueError("temperature_k must be finite and positive")
+    if not math.isclose(parameters.pyrolysis_arrhenius_reaction_order, 1.0):
+        raise ValueError("Only first-order parallel Arrhenius pyrolysis is implemented")
+    if (
+        not math.isfinite(parameters.pyrolysis_parallel_common_scale)
+        or parameters.pyrolysis_parallel_common_scale <= 0.0
+    ):
+        raise ValueError("Parallel Arrhenius common scale must be finite and positive")
+    pathway_parameters = {
+        "gas": (
+            parameters.pyrolysis_parallel_gas_preexponential_s,
+            parameters.pyrolysis_parallel_gas_activation_energy_j_mol,
+        ),
+        "tar": (
+            parameters.pyrolysis_parallel_tar_preexponential_s,
+            parameters.pyrolysis_parallel_tar_activation_energy_j_mol,
+        ),
+        "char": (
+            parameters.pyrolysis_parallel_char_preexponential_s,
+            parameters.pyrolysis_parallel_char_activation_energy_j_mol,
+        ),
+    }
+    rates = {}
+    for product, (preexponential_s, activation_energy_j_mol) in pathway_parameters.items():
+        if preexponential_s <= 0.0 or activation_energy_j_mol <= 0.0:
+            raise ValueError("Parallel Arrhenius A and E values must be positive")
+        rates[product] = (
+            parameters.pyrolysis_parallel_common_scale
+            * preexponential_s
+            * math.exp(
+                -activation_energy_j_mol
+                / (UNIVERSAL_GAS_CONSTANT_J_MOL_K * temperature_k)
+            )
+        )
+    return rates
+
+
+def initial_volatile_potential_fraction(parameters: WoodModelParameters) -> float:
+    """Return a diagnostic upper bound for volatile product mass."""
+
+    if parameters.pyrolysis_rate_model == "arrhenius_parallel_first_order":
+        return 1.0
+    return 1.0 - parameters.pyrolysis_char_yield
 
 
 def flow_source_from_model(

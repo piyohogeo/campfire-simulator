@@ -68,14 +68,21 @@ if (($selection.sample_ids -join ",") -ne "SAMP.1,SAMP.2") {
 if (($selection.best.parameters | ConvertTo-Json -Compress) -ne ($calibration.best.parameters | ConvertTo-Json -Compress)) {
     throw "Phase 6 reported parameters do not match replicate selection."
 }
-if ($calibration.candidate_count -ne 48 -or $calibration.best.cases.Count -ne 2) {
+if ($calibration.candidate_count -ne 16 -or $calibration.best.cases.Count -ne 2) {
     throw "Phase 6 did not evaluate the expected fixed search space."
 }
-if ($calibration.baseline.parameters.pyrolysis_rate_model -ne "arrhenius_first_order" -or $calibration.best.parameters.pyrolysis_rate_model -ne "arrhenius_first_order") {
-    throw "Phase 6 did not use first-order Arrhenius pyrolysis."
+if ($calibration.baseline.parameters.pyrolysis_rate_model -ne "arrhenius_parallel_first_order" -or $calibration.best.parameters.pyrolysis_rate_model -ne "arrhenius_parallel_first_order") {
+    throw "Phase 6 did not use three-pathway first-order Arrhenius pyrolysis."
 }
-if ($calibration.best.parameters.pyrolysis_arrhenius_preexponential_s -le 0.0 -or $calibration.best.parameters.pyrolysis_arrhenius_activation_energy_j_mol -le 0.0) {
-    throw "Phase 6 selected invalid Arrhenius coefficients."
+if ($calibration.best.parameters.pyrolysis_parallel_common_scale -le 0.0) {
+    throw "Phase 6 selected an invalid common Arrhenius scale."
+}
+foreach ($product in @("gas", "tar", "char")) {
+    $aName = "pyrolysis_parallel_${product}_preexponential_s"
+    $eName = "pyrolysis_parallel_${product}_activation_energy_j_mol"
+    if ($calibration.best.parameters.$aName -le 0.0 -or $calibration.best.parameters.$eName -le 0.0) {
+        throw "Phase 6 selected invalid $product Arrhenius coefficients."
+    }
 }
 foreach ($case in $calibration.best.cases) {
     if (-not $case.all_values_finite) {
@@ -92,6 +99,10 @@ foreach ($case in $calibration.best.cases) {
     }
     if ([math]::Abs($case.specimen_thickness_m - 0.0127) -gt 0.0000001) {
         throw "Phase 6 calibration specimen thickness changed."
+    }
+    $yieldSum = $case.primary_product_yield_fraction.gas + $case.primary_product_yield_fraction.tar + $case.primary_product_yield_fraction.char
+    if ([math]::Abs($yieldSum - 1.0) -gt 0.000001) {
+        throw "Phase 6 primary-product yields do not close to one."
     }
 }
 if ($calibration.best.cases[0].predicted_ignition_seconds -le $calibration.best.cases[1].predicted_ignition_seconds) {
