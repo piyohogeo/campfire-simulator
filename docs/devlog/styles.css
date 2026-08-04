@@ -110,6 +110,7 @@ img { display: block; max-width: 100%; }
 .intro > p { margin: 0; color: var(--muted); font-size: 18px; }
 
 .entry-section { background: #f0ebe2; color: #181512; }
+.entry-section.phase-three { background: #e9dfd0; }
 .entry-section.phase-two { background: #eee5d8; }
 .entry-section.phase-one { background: #f4eee5; }
 .entry { display: grid; grid-template-columns: 140px 1fr; gap: 48px; }
@@ -177,7 +178,7 @@ img { display: block; max-width: 100%; }
 
 .roadmap-section { background: #12100e; }
 .roadmap-section h2 { max-width: 720px; }
-.roadmap { display: grid; grid-template-columns: repeat(4, 1fr); margin: 68px 0 0; padding: 0; list-style: none; }
+.roadmap { display: grid; grid-template-columns: repeat(5, 1fr); margin: 68px 0 0; padding: 0; list-style: none; }
 .roadmap li { position: relative; display: flex; gap: 18px; align-items: center; padding: 30px 18px 30px 0; border-top: 1px solid var(--line); }
 .roadmap li::after { content: ""; position: absolute; top: -1px; left: 0; width: 0; height: 2px; background: var(--ember); }
 .roadmap li.done::after { width: 100%; }

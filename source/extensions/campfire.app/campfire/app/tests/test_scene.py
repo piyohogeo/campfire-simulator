@@ -1,3 +1,5 @@
+import math
+
 import campfire.app
 import omni.kit.test
 from pxr import Gf, Usd, UsdGeom, UsdPhysics
@@ -114,3 +116,130 @@ class TestScene(omni.kit.test.AsyncTestCase):
 
         with self.assertRaises(ValueError):
             campfire.app.add_scenario_log(stage)
+
+    async def test_wood_grid_uses_dry_basis_moisture_and_si_mass(self):
+        model = campfire.app.create_cylindrical_wood_model(
+            "TestLog", 0.16, 1.8, moisture_ratio_dry_basis=0.20
+        )
+        metrics = model.metrics()
+        expected_dry_mass = math.pi * 0.16**2 * 1.8 * 520.0
+        self.assertEqual(metrics["cell_count"], 24 * 12 * 4)
+        self.assertAlmostEqual(metrics["dry_wood_mass_kg"], expected_dry_mass, places=9)
+        self.assertAlmostEqual(
+            metrics["moisture_mass_kg"] / metrics["dry_wood_mass_kg"],
+            0.20,
+            places=9,
+        )
+        self.assertAlmostEqual(model.mass_balance_error_kg, 0.0, places=10)
+
+    async def test_heat_conduction_alone_conserves_sensible_energy(self):
+        parameters = campfire.app.WoodModelParameters(
+            convection_w_m2_k=0.0,
+            emissivity=0.0,
+            evaporation_start_temperature_k=5000.0,
+            pyrolysis_start_temperature_k=5000.0,
+            pyrolysis_full_temperature_k=5100.0,
+            char_oxidation_start_temperature_k=5000.0,
+        )
+        model = campfire.app.create_cylindrical_wood_model(
+            "ConductionLog",
+            0.04,
+            0.20,
+            0.0,
+            axial_cells=2,
+            circumferential_cells=4,
+            radial_cells=2,
+            parameters=parameters,
+        )
+        model.cells[0].temperature_k = 500.0
+
+        def sensible_energy():
+            return sum(
+                cell.temperature_k
+                * cell.dry_wood_mass_kg
+                * parameters.wood_specific_heat_j_kg_k
+                for cell in model.cells
+            )
+
+        energy_before = sensible_energy()
+        model.step(0.1, 0.0)
+        self.assertAlmostEqual(sensible_energy(), energy_before, places=7)
+        self.assertLess(model.cells[0].temperature_k, 500.0)
+        self.assertGreater(max(cell.temperature_k for cell in model.cells[1:]), 293.15)
+
+    async def test_wet_kindling_evaporates_and_ignites_after_dry_kindling(self):
+        dry = campfire.app.create_cylindrical_wood_model(
+            "DryKindling", 0.03, 0.35, 0.0,
+            axial_cells=6, circumferential_cells=6, radial_cells=3
+        )
+        wet = campfire.app.create_cylindrical_wood_model(
+            "WetKindling", 0.03, 0.35, 0.40,
+            axial_cells=6, circumferential_cells=6, radial_cells=3
+        )
+        dry_ignition = None
+        wet_ignition = None
+        for step_index in range(1, 2401):
+            dry_result = dry.step(0.1, 100_000.0)
+            wet_result = wet.step(0.1, 100_000.0)
+            if dry_ignition is None and dry_result.pyrolysis_gas_rate_kg_s > 1.0e-6:
+                dry_ignition = step_index * 0.1
+            if wet_ignition is None and wet_result.pyrolysis_gas_rate_kg_s > 1.0e-6:
+                wet_ignition = step_index * 0.1
+
+        self.assertIsNotNone(dry_ignition)
+        self.assertIsNotNone(wet_ignition)
+        self.assertGreater(wet_ignition, dry_ignition)
+        self.assertGreater(wet.emitted_water_kg, 0.0)
+        for model in (dry, wet):
+            self.assertLess(abs(model.mass_balance_error_kg), 1.0e-9)
+            for cell in model.cells:
+                self.assertTrue(math.isfinite(cell.temperature_k))
+                self.assertGreaterEqual(cell.moisture_mass_kg, 0.0)
+                self.assertGreaterEqual(cell.dry_wood_mass_kg, 0.0)
+                self.assertGreaterEqual(cell.char_mass_kg, 0.0)
+                self.assertGreaterEqual(cell.ash_mass_kg, 0.0)
+
+    async def test_wood_state_round_trips_on_log_prim_and_maps_to_flow(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase2_scene(stage)
+        prim = stage.GetPrimAtPath("/World/Logs/Log_00")
+        model = campfire.app.create_cylindrical_wood_model(
+            "Log_00", 0.16, 1.8, 0.12, axial_cells=3,
+            circumferential_cells=4, radial_cells=2
+        )
+        result = model.step(0.1, 150_000.0)
+        campfire.app.save_model_to_prim(model, prim)
+        restored = campfire.app.load_model_from_prim(prim)
+        self.assertEqual(restored.spec.log_id, "Log_00")
+        self.assertEqual(len(restored.cells), len(model.cells))
+        self.assertAlmostEqual(restored.elapsed_seconds, model.elapsed_seconds)
+        self.assertAlmostEqual(restored.current_mass_kg, model.current_mass_kg)
+        source = campfire.app.flow_source_from_model(restored, result)
+        self.assertGreaterEqual(source.fuel, 0.0)
+        self.assertLessEqual(source.fuel, 1.0)
+        self.assertGreaterEqual(source.temperature, 0.0)
+
+    async def test_phase3_scene_persists_dry_and_wet_authoritative_states(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase3_scene(stage)
+        dry_prim = stage.GetPrimAtPath("/World/Logs/Log_00")
+        wet_prim = stage.GetPrimAtPath("/World/Logs/Log_01")
+        dry = campfire.app.load_model_from_prim(dry_prim)
+        wet = campfire.app.load_model_from_prim(wet_prim)
+        self.assertEqual(len(dry.cells), 1152)
+        self.assertEqual(len(wet.cells), 1152)
+        self.assertAlmostEqual(
+            dry.metrics()["moisture_mass_kg"]
+            / dry.metrics()["dry_wood_mass_kg"],
+            0.12,
+        )
+        self.assertAlmostEqual(
+            wet.metrics()["moisture_mass_kg"]
+            / wet.metrics()["dry_wood_mass_kg"],
+            0.60,
+        )
+        emitter = stage.GetPrimAtPath(campfire.app.FLOW_EMITTER_PATH)
+        self.assertEqual(emitter.GetAttribute("fuel").Get(), 0.0)
+        self.assertEqual(
+            stage.GetRootLayer().customLayerData["campfire:phase"], "phase3"
+        )

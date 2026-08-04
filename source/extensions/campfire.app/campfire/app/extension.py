@@ -1,7 +1,9 @@
 """Campfire Simulator application bootstrap and headless validation extension."""
 
 import asyncio
+import csv
 import json
+import math
 import statistics
 import struct
 import time
@@ -46,6 +48,21 @@ from .phase2_scene import (
     populate_phase2_scene,
     set_emitter_follow,
 )
+from .phase3_scene import (
+    PHASE3_CAPTURE_STEPS,
+    PHASE3_DRY_LOG_ID,
+    PHASE3_EXTERNAL_HEAT_FLUX_W_M2,
+    PHASE3_FLOW_UPDATE_INTERVAL_STEPS,
+    PHASE3_IGNITION_RATE_KG_S,
+    PHASE3_MODEL_DT_SECONDS,
+    PHASE3_TOTAL_STEPS,
+    PHASE3_WET_LOG_ID,
+    apply_model_visual_state,
+    export_phase3_stage,
+    populate_phase3_scene,
+    update_flow_source,
+)
+from .combustion import flow_source_from_model, load_model_from_prim, save_model_to_prim
 from .wood import get_log_world_position, list_log_ids
 
 
@@ -110,7 +127,13 @@ class CampfireAppExtension(omni.ext.IExt):
 
             stage = context.get_stage()
             repo_root = _find_repo_root(self._extension_path)
-            if phase == "phase2":
+            if phase == "phase3":
+                settings.set("/rtx/flow/enabled", True)
+                populate_phase3_scene(stage)
+                scene_path = export_phase3_stage(
+                    stage, repo_root / "assets" / "scenes" / "phase3_thermal.usda"
+                )
+            elif phase == "phase2":
                 settings.set("/rtx/flow/enabled", True)
                 populate_phase2_scene(stage)
                 scene_path = export_phase2_stage(
@@ -141,7 +164,9 @@ class CampfireAppExtension(omni.ext.IExt):
                 if viewport is None:
                     raise RuntimeError(f"No active viewport is available for {phase} capture")
                 await self._wait_for_capture_resolution(viewport)
-                if phase == "phase2":
+                if phase == "phase3":
+                    await self._run_phase3(viewport, stage, scene_path)
+                elif phase == "phase2":
                     await self._run_phase2(viewport, stage, scene_path)
                 elif phase == "phase1":
                     await self._run_phase1(viewport, stage, scene_path)
@@ -564,6 +589,246 @@ class CampfireAppExtension(omni.ext.IExt):
                 physics.detach_stage()
             settings.set(SETTING_UPDATE_TO_USD, previous_update_to_usd)
             settings.set("/physics/fabricEnabled", previous_fabric)
+            _flowusd.release_flowusd_interface(flow_interface)
+
+    async def _run_phase3(self, viewport, stage, scene_path: Path):
+        """Compare dry/wet wood and drive Flow from released volatile mass."""
+
+        output_dir = self._output_dir()
+        flow_interface = _flowusd.acquire_flowusd_interface()
+        dry_prim = stage.GetPrimAtPath(f"/World/Logs/{PHASE3_DRY_LOG_ID}")
+        wet_prim = stage.GetPrimAtPath(f"/World/Logs/{PHASE3_WET_LOG_ID}")
+        dry_model = load_model_from_prim(dry_prim)
+        wet_model = load_model_from_prim(wet_prim)
+        models = {"dry": dry_model, "wet": wet_model}
+        ignition_seconds = {"dry": None, "wet": None}
+        peak_gas_rate_kg_s = {"dry": 0.0, "wet": 0.0}
+        model_step_times_ms = []
+        flow_adapter_times_ms = []
+        update_times_ms = []
+        active_block_counts = []
+        images = []
+        rows = []
+
+        try:
+            simulation_started = time.perf_counter()
+            for step_index in range(1, PHASE3_TOTAL_STEPS + 1):
+                model_started = time.perf_counter()
+                dry_result = dry_model.step(
+                    PHASE3_MODEL_DT_SECONDS, PHASE3_EXTERNAL_HEAT_FLUX_W_M2
+                )
+                wet_result = wet_model.step(
+                    PHASE3_MODEL_DT_SECONDS, PHASE3_EXTERNAL_HEAT_FLUX_W_M2
+                )
+                model_step_times_ms.append(
+                    (time.perf_counter() - model_started) * 1000.0
+                )
+                results = {"dry": dry_result, "wet": wet_result}
+
+                for name, result in results.items():
+                    peak_gas_rate_kg_s[name] = max(
+                        peak_gas_rate_kg_s[name], result.pyrolysis_gas_rate_kg_s
+                    )
+                    if (
+                        ignition_seconds[name] is None
+                        and result.pyrolysis_gas_rate_kg_s
+                        > PHASE3_IGNITION_RATE_KG_S
+                    ):
+                        ignition_seconds[name] = result.elapsed_seconds
+
+                source = flow_source_from_model(dry_model, dry_result)
+
+                dry_metrics = dry_model.metrics()
+                wet_metrics = wet_model.metrics()
+                rows.append(
+                    {
+                        "time_s": round(dry_result.elapsed_seconds, 6),
+                        "dry_surface_temperature_k": dry_metrics[
+                            "surface_mean_temperature_k"
+                        ],
+                        "dry_moisture_kg": dry_metrics["moisture_mass_kg"],
+                        "dry_wood_kg": dry_metrics["dry_wood_mass_kg"],
+                        "dry_char_kg": dry_metrics["char_mass_kg"],
+                        "dry_ash_kg": dry_metrics["ash_mass_kg"],
+                        "dry_pyrolysis_gas_rate_kg_s": dry_result.pyrolysis_gas_rate_kg_s,
+                        "wet_surface_temperature_k": wet_metrics[
+                            "surface_mean_temperature_k"
+                        ],
+                        "wet_moisture_kg": wet_metrics["moisture_mass_kg"],
+                        "wet_wood_kg": wet_metrics["dry_wood_mass_kg"],
+                        "wet_char_kg": wet_metrics["char_mass_kg"],
+                        "wet_ash_kg": wet_metrics["ash_mass_kg"],
+                        "wet_pyrolysis_gas_rate_kg_s": wet_result.pyrolysis_gas_rate_kg_s,
+                        "flow_fuel": source.fuel,
+                        "flow_temperature": source.temperature,
+                    }
+                )
+
+                update_flow = (
+                    step_index % PHASE3_FLOW_UPDATE_INTERVAL_STEPS == 0
+                    or step_index in PHASE3_CAPTURE_STEPS
+                )
+                if update_flow:
+                    adapter_started = time.perf_counter()
+                    update_flow_source(stage, PHASE3_DRY_LOG_ID, source)
+                    if step_index % 10 == 0 or step_index in PHASE3_CAPTURE_STEPS:
+                        apply_model_visual_state(dry_prim, dry_model)
+                        apply_model_visual_state(wet_prim, wet_model)
+                    flow_adapter_times_ms.append(
+                        (time.perf_counter() - adapter_started) * 1000.0
+                    )
+                    update_started = time.perf_counter()
+                    await omni.kit.app.get_app().next_update_async()
+                    update_times_ms.append(
+                        (time.perf_counter() - update_started) * 1000.0
+                    )
+                    active_block_counts.append(
+                        int(flow_interface.get_active_block_count())
+                    )
+
+                    if step_index in PHASE3_CAPTURE_STEPS:
+                        image_path = output_dir / f"frame_{step_index:04d}.png"
+                        resolution = await self._capture_image(viewport, image_path)
+                        images.append(
+                            {
+                                "step": step_index,
+                                "model_time_seconds": dry_result.elapsed_seconds,
+                                "path": str(image_path),
+                                "resolution": list(resolution),
+                                "dry_flow_fuel": source.fuel,
+                            }
+                        )
+
+            simulation_elapsed = time.perf_counter() - simulation_started
+            save_model_to_prim(dry_model, dry_prim)
+            save_model_to_prim(wet_model, wet_prim)
+            final_stage_path = export_stage(stage, output_dir / "final_stage.usda")
+            metrics_path = output_dir / "wood_metrics.csv"
+            with metrics_path.open("w", newline="", encoding="utf-8") as csv_file:
+                writer = csv.DictWriter(csv_file, fieldnames=list(rows[0]))
+                writer.writeheader()
+                writer.writerows(rows)
+
+            model_measured = model_step_times_ms[20:]
+            model_sorted = sorted(model_measured)
+            update_measured = update_times_ms[20:]
+            update_sorted = sorted(update_measured)
+            adapter_measured = flow_adapter_times_ms[2:]
+            adapter_sorted = sorted(adapter_measured)
+            model_p95_index = min(
+                len(model_sorted) - 1, int(len(model_sorted) * 0.95)
+            )
+            update_p95_index = min(
+                len(update_sorted) - 1, int(len(update_sorted) * 0.95)
+            )
+            adapter_p95_index = min(
+                len(adapter_sorted) - 1, int(len(adapter_sorted) * 0.95)
+            )
+
+            model_summaries = {}
+            for name, model in models.items():
+                metrics = model.metrics()
+                model_summaries[name] = {
+                    **{key: round(value, 9) if isinstance(value, float) else value
+                       for key, value in metrics.items()},
+                    "ignition_seconds": (
+                        round(ignition_seconds[name], 6)
+                        if ignition_seconds[name] is not None
+                        else None
+                    ),
+                    "peak_pyrolysis_gas_rate_kg_s": round(
+                        peak_gas_rate_kg_s[name], 9
+                    ),
+                    "all_values_finite": all(
+                        math.isfinite(cell.temperature_k)
+                        and math.isfinite(cell.current_mass_kg)
+                        for cell in model.cells
+                    ),
+                    "non_negative_mass": all(
+                        min(
+                            cell.moisture_mass_kg,
+                            cell.dry_wood_mass_kg,
+                            cell.char_mass_kg,
+                            cell.ash_mass_kg,
+                        )
+                        >= 0.0
+                        for cell in model.cells
+                    ),
+                }
+
+            summary = {
+                "status": "ok",
+                "phase": "phase3",
+                "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+                "scene": str(scene_path),
+                "final_stage": str(final_stage_path),
+                "metrics_csv": str(metrics_path),
+                "camera": str(CAMERA_PATH),
+                "resolution": list(CAPTURE_RESOLUTION),
+                "images": images,
+                "scenario": {
+                    "model_dt_seconds": PHASE3_MODEL_DT_SECONDS,
+                    "flow_update_interval_steps": PHASE3_FLOW_UPDATE_INTERVAL_STEPS,
+                    "flow_update_interval_seconds": (
+                        PHASE3_MODEL_DT_SECONDS * PHASE3_FLOW_UPDATE_INTERVAL_STEPS
+                    ),
+                    "steps": PHASE3_TOTAL_STEPS,
+                    "model_duration_seconds": round(dry_model.elapsed_seconds, 6),
+                    "external_heat_flux_w_m2": PHASE3_EXTERNAL_HEAT_FLUX_W_M2,
+                    "simulation_wall_seconds": round(simulation_elapsed, 4),
+                },
+                "wood": model_summaries,
+                "comparison": {
+                    "both_ignited": all(
+                        ignition_seconds[name] is not None for name in models
+                    ),
+                    "wet_ignition_delayed": (
+                        ignition_seconds["dry"] is not None
+                        and ignition_seconds["wet"] is not None
+                        and ignition_seconds["wet"] > ignition_seconds["dry"]
+                    ),
+                    "wet_delay_seconds": (
+                        round(ignition_seconds["wet"] - ignition_seconds["dry"], 6)
+                        if all(ignition_seconds[name] is not None for name in models)
+                        else None
+                    ),
+                },
+                "flow": {
+                    "input_owner": "wood thermal model",
+                    "active_blocks_final": active_block_counts[-1],
+                    "active_blocks_peak": max(active_block_counts, default=0),
+                    "peak_fuel_input": round(max(row["flow_fuel"] for row in rows), 6),
+                },
+                "timing": {
+                    "warmup_steps_excluded": 20,
+                    "two_log_model_step_mean_ms": round(
+                        statistics.fmean(model_measured), 4
+                    ),
+                    "two_log_model_step_p95_ms": round(
+                        model_sorted[model_p95_index], 4
+                    ),
+                    "flow_adapter_update_mean_ms": round(
+                        statistics.fmean(adapter_measured), 4
+                    ),
+                    "flow_adapter_update_p95_ms": round(
+                        adapter_sorted[adapter_p95_index], 4
+                    ),
+                    "flow_and_render_update_mean_ms": round(
+                        statistics.fmean(update_measured), 4
+                    ),
+                    "flow_and_render_update_p95_ms": round(
+                        update_sorted[update_p95_index], 4
+                    ),
+                },
+            }
+            self._write_summary(output_dir, summary)
+            carb.log_info(
+                "[campfire.app] Phase 3 complete: "
+                f"dryIgnition={ignition_seconds['dry']}s, "
+                f"wetIgnition={ignition_seconds['wet']}s, "
+                f"modelMeanMs={summary['timing']['two_log_model_step_mean_ms']}"
+            )
+        finally:
             _flowusd.release_flowusd_interface(flow_interface)
 
     @staticmethod

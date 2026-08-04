@@ -15,7 +15,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-2">最新記録</a>
+        <a href="#phase-3">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -26,17 +26,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-2">Phase 2を読む</a>
+        <a class="button primary" href="#phase-3">Phase 3を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 2 完了</strong></div>
+        <div><span>現在地</span><strong>Phase 3 完了</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>7 / 7 passed</strong></div>
-        <div><span>次の焦点</span><strong>木材熱モデル</strong></div>
+        <div><span>テスト</span><strong>12 / 12 passed</strong></div>
+        <div><span>次の焦点</span><strong>配置と通気</strong></div>
       </div>
     </div>
   </header>
@@ -48,6 +48,105 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-3" class="section entry-section phase-three">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number">03</span>
+          <p><time datetime="2026-08-04">2026.08.04</time></p>
+          <span class="pill complete">Completed</span>
+        </aside>
+
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Authoritative wood thermal model</p>
+            <h2>同じ火でも、<br>湿った薪は待たせる。</h2>
+            <p>薪の内側に1,152個のセルを持たせ、温度、水分、木材、炭、灰をFlowから独立して計算しました。乾燥薪と湿潤薪へ同じ熱を与えると、水分蒸発の潜熱によって着火に100.2秒の差が生まれます。</p>
+          </header>
+
+          <div class="capture-pair" aria-label="木材モデル由来のFlow火炎キャプチャ">
+            <figure class="capture-card">
+              <a href="assets/phase3/frame_0650.png" aria-label="Phase 3 step 650を原寸で開く">
+                <img src="assets/phase3/frame_0650.png" width="1280" height="720" alt="木材熱モデルが放出した燃料によりFlow火炎が立つstep 650、モデル時間130秒の焚き火">
+              </a>
+              <figcaption><div><strong>Step 650</strong><span>Model time 130 s · dry log ignited</span></div></figcaption>
+            </figure>
+            <figure class="capture-card">
+              <a href="assets/phase3/frame_1200.png" aria-label="Phase 3 step 1200を原寸で開く">
+                <img src="assets/phase3/frame_1200.png" width="1280" height="720" alt="240秒の木材計算後も木材由来のFlow火炎が継続するstep 1200の焚き火">
+              </a>
+              <figcaption><div><strong>Step 1200</strong><span>Model time 240 s · wet log also ignited</span></div></figcaption>
+            </figure>
+          </div>
+
+          <div class="story-grid">
+            <section class="story-card">
+              <span class="card-index">01</span>
+              <h3>薪が持つ権威状態</h3>
+              <ul>
+                <li>24×12×4、1本1,152セルの円柱格子</li>
+                <li>温度・水分・木材・揮発分・炭・灰</li>
+                <li>熱伝導・蒸発潜熱・熱分解・炭酸化</li>
+                <li>version付きJSONでUSDへ保存・再読込</li>
+              </ul>
+            </section>
+            <section class="story-card warm">
+              <span class="card-index">02</span>
+              <h3>見た目との接続</h3>
+              <ul>
+                <li>熱分解ガス放出率をFlow fuelへ写像</li>
+                <li>表面温度と炭化率を薪の表示色へ反映</li>
+                <li>5 Hzの全物理量を1,200行CSVへ保存</li>
+                <li>Flowは表示先、木材モデルを正とする</li>
+              </ul>
+            </section>
+          </div>
+
+          <section class="verification" aria-labelledby="phase3-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Verification</p>
+              <h3 id="phase3-verification-title">着火差と保存則を同じ実行で測る。</h3>
+              <p>12%と60%の乾量基準含水率を240秒比較し、着火順、負質量、NaN、全放出物を含む質量収支、Flow稼働、CSV行数を自動検査します。</p>
+              <code>.\scripts\run_phase3.bat</code>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase 3検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Ignition</strong><small>dry 66.2 s · wet 166.4 s · delay 100.2 s</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass balance</strong><small>0.0 kg error for both 1,152-cell logs</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Flow</strong><small>wood-owned fuel · peak 302 active blocks</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Regression</strong><small>Release build · 12 / 12 tests passed</small></p></div>
+            </div>
+          </section>
+
+          <section class="facts" aria-labelledby="phase3-facts-title">
+            <div class="facts-heading">
+              <p class="section-kicker">Measured on RTX 3090</p>
+              <h3 id="phase3-facts-title">240秒比較の実測</h3>
+            </div>
+            <dl class="facts-grid">
+              <div><dt>Wood update</dt><dd>5 Hz · 0.2 s</dd></div>
+              <div><dt>Cells</dt><dd>2 × 1,152</dd></div>
+              <div><dt>Model step</dt><dd>24.85 ms mean</dd></div>
+              <div><dt>Model p95</dt><dd>32.34 ms</dd></div>
+              <div><dt>CSV</dt><dd>1,200 rows</dd></div>
+              <div><dt>Runner</dt><dd>276.48 s</dd></div>
+            </dl>
+          </section>
+
+          <div class="notes-grid">
+            <section class="note caution">
+              <p class="note-label">Known limits</p>
+              <h3>因果は成立、速度は未達</h3>
+              <p>2本のPythonセル更新は平均24.85 msです。5 Hzを60 Hzへ償却すると約2.07 ms/frameですが、更新フレームの4 ms予算を超えます。係数と150 kW/m²熱流束も校正前の仮説です。可視化頻度を下げた追加試験は240秒でタイムアウトし、成功結果には採用していません。</p>
+            </section>
+            <section class="note next">
+              <p class="note-label">What comes next</p>
+              <h3>置き方から空気を求める</h3>
+              <p>Phase 4では薪同士の接触、遮蔽、隙間、風から酸素係数を計算します。密な積層と井桁組みで、同じ木材でも燃焼曲線が変わることを比較します。</p>
+            </section>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section id="phase-2" class="section entry-section phase-two">
@@ -356,7 +455,8 @@
           <li class="done"><span>0</span><div><strong>環境成立確認</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>1</span><div><strong>Flow単体検証</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>2</span><div><strong>薪・剛体MVP</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>3</span><div><strong>木材熱モデル</strong><small>次のマイルストーン</small></div></li>
+          <li class="done"><span>3</span><div><strong>木材熱モデル</strong><small>完了 · 2026.08.04</small></div></li>
+          <li class="current"><span>4</span><div><strong>配置と通気</strong><small>次のマイルストーン</small></div></li>
         </ol>
       </div>
     </section>

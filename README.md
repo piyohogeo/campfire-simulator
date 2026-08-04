@@ -2,7 +2,7 @@
 
 焚き火の木材状態、剛体、炎・煙を段階的に検証する、NVIDIA Omniverse Kitベースのリアルタイム・シミュレータです。
 
-現在は **Phase 2「薪・剛体MVP」完了** の状態です。PhysXで動く薪を追加・移動・落下・積層でき、Flow Emitterが同じ永続IDの薪へ追従します。木材燃焼モデルはまだ実装していません。
+現在は **Phase 3「木材熱モデルMVP」完了** の状態です。1本1,152セルの権威状態で熱伝導、水分蒸発、区分線形熱分解、炭化、質量収支を計算し、放出ガス量からFlow燃料入力を生成します。
 
 ## 必要環境
 
@@ -37,7 +37,7 @@
 .\repo.bat test
 ```
 
-固定シーンとFlow設定に加え、動的薪の剛体・衝突・質量、永続ID、追加・移動、Emitter追従をテストします。
+固定シーンとFlow・剛体設定に加え、熱伝導のエネルギー保存、負質量・NaN防止、湿潤薪の着火遅延、USD状態の保存再読込をテストします。
 
 ## ヘッドレス検証
 
@@ -45,6 +45,7 @@
 .\scripts\run_phase0.bat
 .\scripts\run_phase1.bat
 .\scripts\run_phase2.bat
+.\scripts\run_phase3.bat
 ```
 
 各スクリプトはウィンドウなしでアプリを起動し、`artifacts/phase*/latest/` へUSD、1280×720 PNG、JSON要約などを保存して検査します。別の出力先は `-OutputDir` で指定できます。
@@ -55,20 +56,26 @@ Phase 2検証は固定60 Hzで600 step（シミュレーション時間10秒）�
 .\scripts\run_phase2.bat -OutputDir .\artifacts\phase2\manual
 ```
 
+Phase 3検証は乾量基準含水率12%と60%の薪を5 Hzで240秒加熱し、全1,200点をCSVへ保存します。着火順、質量収支、負値・非有限値、炭と熱分解ガス、木材由来のFlow入力、2枚のPNGを判定します。
+
+```powershell
+.\scripts\run_phase3.bat -OutputDir .\artifacts\phase3\manual
+```
+
 ## GUI起動
 
 ```powershell
 .\repo.bat launch
 ```
 
-表示される一覧から `campfire.simulator.kit` を選びます。既定でPhase 2シーンと `Campfire Controls` が開きます。`Add falling log` で薪を追加し、`Lift added log` で追加薪を持ち上げ、`Reset Phase2` で初期状態へ戻せます。
+表示される一覧から `campfire.simulator.kit` を選びます。既定でPhase 3の初期シーンが開きます。再現可能な240秒比較は `run_phase3.bat` で実行します。Phase 2の追加・持ち上げ・リセットUIもコード内に保持しています。
 
 ## 主な構成
 
 - `source/apps/campfire.simulator.kit`: アプリ定義、固定依存バージョン、既定Phase
 - `source/extensions/campfire.app/`: シーン生成、薪サービス、操作UI、キャプチャ、自動テスト
-- `scripts/run_phase0.bat` / `run_phase1.bat` / `run_phase2.bat`: ヘッドレス検証の入口
-- `assets/scenes/phase0.usda` / `phase1_flow.usda` / `phase2_rigid.usda`: 生成済み正規シーン
+- `scripts/run_phase0.bat` ～ `run_phase3.bat`: ヘッドレス検証の入口
+- `assets/scenes/phase0.usda` ～ `phase3_thermal.usda`: 生成済み正規シーン
 - `DESIGN.md`: 全体設計、段階計画、実測結果、判断ログ
 - `AGENTS.md`: 実装時のプロジェクトルール
 - `docs/devlog/`: 実画面キャプチャ付きのWeb版開発日記
@@ -77,9 +84,11 @@ Phase 2検証は固定60 Hzで600 step（シミュレーション時間10秒）�
 
 - 薪は単純な円柱1剛体で、GUI操作も追加・持ち上げ・リセットの最小構成です。マウス拘束による自由な把持は未実装です。
 - 密度・摩擦・反発は、校正前の代表値・初期仮説です。実測木材に合わせた校正はPhase 6で行います。
-- 木材の温度、水分、未燃物、炭、灰、質量の状態モデルと、木材状態に基づくFlow燃料放出は未実装です。
+- Phase 3の熱・反応係数と150 kW/m²の比較熱流束は校正前の初期仮説で、実測木材の予測値ではありません。
+- 1,152セル×2本のPython更新は平均24.85 msです。5 Hzを60 Hzへ償却すると約2.07 ms/frameですが、更新フレームのスパイクは4 ms予算を超えます。
+- Phase 3ヘッドレス比較は成功しますが、Flow/USD更新を含む実行は約276秒かかります。配列化またはWarp化と、Flowアダプター更新コストの分離が必要です。
 - ヘッドレス検証ではUSD transformを同期する `fetch_results` が平均約15.46 msを占めます。PhysX `simulate` 自体は平均約0.15 msですが、60 Hz実時間更新の性能条件はこの経路では未達です。
 - raw NanoVDBを世界座標一点へ変換する局所場アダプターは未実装です。
 - Fabric interface version警告とFlow Python node登録警告が非阻害で残っています。
 
-次のマイルストーンはPhase 3「木材熱モデル」です。温度・水分・質量をFlowから独立した権威状態として実装します。
+次のマイルストーンはPhase 4「配置と通気」です。接触・遮蔽から酸素係数を求め、積層方法による燃焼差を比較します。
