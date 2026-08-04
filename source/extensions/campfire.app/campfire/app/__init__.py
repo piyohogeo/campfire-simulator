@@ -18,6 +18,7 @@ from .calibration import (
     run_nist_plywood_calibration,
     simulate_equivalent_coupon,
     write_calibration_svg,
+    write_holdout_svg,
 )
 from .combustion import (
     ASH,
@@ -165,4 +166,5 @@ __all__ = [
     "calibration_candidates",
     "update_flow_source",
     "write_calibration_svg",
+    "write_holdout_svg",
 ]

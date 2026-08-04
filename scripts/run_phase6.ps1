@@ -66,7 +66,28 @@ foreach ($case in $calibration.best.cases) {
 if ($calibration.best.cases[0].predicted_ignition_seconds -le $calibration.best.cases[1].predicted_ignition_seconds) {
     throw "Phase 6 lost the expected heat-flux ignition ordering."
 }
-foreach ($path in @($result.image, $result.report, $result.top_candidates_csv, $result.final_stage)) {
+$holdout = $calibration.holdout
+if ($holdout.used_for_parameter_selection) {
+    throw "Phase 6 holdout leaked into parameter selection."
+}
+if ($holdout.material -ne "External Oriented Strandboard" -or $holdout.calibrated.cases.Count -ne 2) {
+    throw "Phase 6 external-material holdout is incomplete."
+}
+if ($holdout.baseline.score_rmse_relative -lt 0.0 -or $holdout.calibrated.score_rmse_relative -lt 0.0) {
+    throw "Phase 6 holdout score is invalid."
+}
+foreach ($case in $holdout.calibrated.cases) {
+    if (-not $case.all_values_finite -or $null -eq $case.predicted_ignition_seconds) {
+        throw "Phase 6 holdout produced an invalid prediction."
+    }
+    if ([math]::Abs($case.mass_balance_error_kg) -gt 0.000001) {
+        throw "Phase 6 holdout violated mass conservation."
+    }
+}
+if ($holdout.calibrated.cases[0].predicted_ignition_seconds -le $holdout.calibrated.cases[1].predicted_ignition_seconds) {
+    throw "Phase 6 holdout lost the expected heat-flux ignition ordering."
+}
+foreach ($path in @($result.image, $result.report, $result.holdout_report, $result.top_candidates_csv, $result.final_stage)) {
     if (-not (Test-Path -LiteralPath $path)) {
         throw "Phase 6 artifact was not produced: $path"
     }

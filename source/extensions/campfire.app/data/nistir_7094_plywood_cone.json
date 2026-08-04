@@ -41,6 +41,27 @@
       "final_specimen_mass_g": 16.0
     }
   ],
+  "holdout": {
+    "material": "External Oriented Strandboard",
+    "relationship": "Different wood product from the plywood calibration material; external-material holdout, not an in-material validation split.",
+    "used_for_parameter_selection": false,
+    "targets": [
+      {
+        "incident_heat_flux_kw_m2": 35.0,
+        "time_to_sustained_ignition_s": 39.7,
+        "average_mass_loss_rate_g_s_m2": 12.1,
+        "initial_specimen_mass_g": 76.4,
+        "final_specimen_mass_g": 17.0
+      },
+      {
+        "incident_heat_flux_kw_m2": 70.0,
+        "time_to_sustained_ignition_s": 10.6,
+        "average_mass_loss_rate_g_s_m2": 16.9,
+        "initial_specimen_mass_g": 79.5,
+        "final_specimen_mass_g": 16.9
+      }
+    ]
+  },
   "adapter_assumptions": {
     "geometry": "Equal exposed area and initial wet mass are mapped to a thin cylindrical coupon because the current authoritative grid is cylindrical.",
     "moisture_ratio_dry_basis": 0.08,

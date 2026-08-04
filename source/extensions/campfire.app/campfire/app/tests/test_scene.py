@@ -400,6 +400,14 @@ class TestScene(omni.kit.test.AsyncTestCase):
         reference = campfire.app.load_nist_plywood_reference()
         self.assertEqual(reference["report"], "NISTIR 7094")
         self.assertEqual(reference["method"]["replicates_per_flux"], 3)
+        self.assertEqual(
+            reference["holdout"]["material"], "External Oriented Strandboard"
+        )
+        self.assertFalse(reference["holdout"]["used_for_parameter_selection"])
+        self.assertEqual(
+            [target["time_to_sustained_ignition_s"] for target in reference["holdout"]["targets"]],
+            [39.7, 10.6],
+        )
         parameters = campfire.app.WoodModelParameters()
         results = [
             campfire.app.simulate_equivalent_coupon(target, reference, parameters)
@@ -422,6 +430,13 @@ class TestScene(omni.kit.test.AsyncTestCase):
             calibration["baseline"]["score_rmse_relative"],
         )
         self.assertEqual(len(calibration["best"]["cases"]), 2)
+        holdout = calibration["holdout"]
+        self.assertFalse(holdout["used_for_parameter_selection"])
+        self.assertEqual(holdout["calibrated"]["parameters"], calibration["best"]["parameters"])
+        self.assertEqual(len(holdout["calibrated"]["cases"]), 2)
+        for case in holdout["calibrated"]["cases"]:
+            self.assertTrue(case["all_values_finite"])
+            self.assertLess(abs(case["mass_balance_error_kg"]), 1.0e-9)
 
     async def test_phase6_scene_visualizes_observed_baseline_and_calibrated_values(self):
         stage = Usd.Stage.CreateInMemory()

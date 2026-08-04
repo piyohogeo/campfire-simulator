@@ -78,7 +78,11 @@ from .phase5_scene import (
 )
 from .support import burn_to_support_failure, run_collapse_reignition_scenario
 from .wood import get_log_world_position, list_log_ids
-from .calibration import run_nist_plywood_calibration, write_calibration_svg
+from .calibration import (
+    run_nist_plywood_calibration,
+    write_calibration_svg,
+    write_holdout_svg,
+)
 from .phase6_scene import (
     apply_phase6_calibration,
     export_phase6_stage,
@@ -347,6 +351,9 @@ class CampfireAppExtension(omni.ext.IExt):
         report_path = write_calibration_svg(
             calibration, output_dir / "calibration_report.svg"
         )
+        holdout_report_path = write_holdout_svg(
+            calibration, output_dir / "holdout_report.svg"
+        )
         candidates_path = output_dir / "top_candidates.csv"
         with candidates_path.open("w", newline="", encoding="utf-8") as csv_file:
             writer = csv.DictWriter(
@@ -378,6 +385,7 @@ class CampfireAppExtension(omni.ext.IExt):
             "final_stage": str(final_stage_path),
             "image": str(image_path),
             "report": str(report_path),
+            "holdout_report": str(holdout_report_path),
             "top_candidates_csv": str(candidates_path),
             "resolution": list(image_resolution),
             "calibration_wall_seconds": round(calibration_wall_seconds, 4),

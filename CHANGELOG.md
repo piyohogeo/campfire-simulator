@@ -30,6 +30,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Phase 5の崩落前後キャプチャ、JSON要約、PowerShell受け入れスクリプト、Web開発日記。
 - NISTIR 7094 Table 2の5層合板データを固定したPhase 6A校正参照と、等価クーポン・決定的36候補探索。
 - 観測・初期・校正値を比較するUSD棒グラフ、SVGレポート、候補CSV、Phase 6ヘッドレス受け入れスクリプト。
+- 合板の係数選択から隔離したNIST OSB外部材料ホールドアウトと、再調整なしの比較SVG・受け入れ判定。
 
 ### Changed
 
