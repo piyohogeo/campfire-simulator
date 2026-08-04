@@ -2,7 +2,7 @@
 
 ## 1. 文書情報
 
-- 文書状態: 実装中・Phase 1完了
+- 文書状態: 実装中・Phase 2完了
 - 初版日: 2026-08-04
 - 想定開発環境: Windows 11、NVIDIA RTX 3090（24 GB）、VS Code + Codex
 - 開発リポジトリ（作成済み）: `C:\Users\junic\src\campfire-simulator`
@@ -921,3 +921,22 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 検証結果: `.\repo.bat build`成功、`.\repo.bat test`で5テスト成功、`.\scripts\run_phase1.bat -OutputDir .\artifacts\phase1\run4`成功。
 - 非阻害警告: Phase 0からのFabric interface version警告が継続した。さらに`omni.flowusd`のPython node登録時に例外警告を確認したが、native Flowプリム、描画、統計、NanoVDB読み戻しは動作した。OmniGraph経路を採用する前に再確認する。
 - 判断: Flowを継続採用し、MVPは木材からFlowへの一方向結合で進める。次はPhase 2「薪・剛体MVP」で、薪追加・把持・落下・積層とEmitter追従を実装する。
+
+---
+
+## 25. Phase 2 実測結果
+
+### 2026-08-04: 薪・剛体MVPを完了する
+
+- 状態: 採用
+- 剛体表現: 1本の薪を半径`0.16 m`、長さ`1.8 m`の円柱1剛体として表し、`PhysicsCollisionAPI`、`PhysicsRigidBodyAPI`、`PhysicsMassAPI`を適用した。木材密度は`520 kg/m³`、算出質量は`75.2776 kg`。線形減衰`0.05 s⁻¹`、角減衰`0.20 s⁻¹`を採用した。
+- 接触パラメータ: 静止摩擦`0.70`、動摩擦`0.55`、反発係数`0.10`。静止摩擦を動摩擦より高く、反発を低くすることで積層しやすい初期仮説とした。これらは対象木材の実測値ではなく、Phase 6で比較試験により校正する。
+- 識別と操作: 各薪に永続IDを保存し、生成・移動・一覧取得を共通サービス化した。GUIの`Campfire Controls`は追加、追加薪の持ち上げ、リセットを提供し、ヘッドレス検証も同じサービスを呼ぶ。マウス拘束による自由把持は次の操作改善へ残した。
+- 連成: Flow Emitter位置を、追跡対象薪の権威USD world transformへ毎step追従させ、z方向へ`0.12 m`オフセットした。Flowから木材状態への帰還には依存しない。
+- 動的検証: 固定`1/60 s`で600 step（10秒）実行し、frame 30で5本目をz=`2.6 m`へ追加した。追加前4 ID、追加後5 IDを確認し、追加薪は`1.921298 m`落下して最終位置`(-0.449834, 0.851133, 0.678702) m`へ静止した。最終1秒の変位は`0.0 m`で、石囲い内かつ地面より上に残った。
+- Emitter検証: 571 sampleの最大追従誤差は`0.0 m`。Flow active blockは最終204、最大214で、落下・積層中も火炎計算が継続した。
+- 性能実測: 10秒の固定step区間は実時間`14.9405 s`。PhysX `simulate`は平均`0.1468 ms`、同期`fetch_results`とUSD transform更新は平均`15.4648 ms`、Flow・描画更新は平均`7.1089 ms`（p95 `9.0627 ms`）だった。合計の代表値は約`22.72 ms`で30 fps表示予算内だが、同期読み戻しを伴うこの検証経路では60 Hz実時間条件を満たさない。物理ソルバーではなくUSD同期が支配的であり、Phase 4の性能計測でGUI/Fabric経路と分離して再評価する。
+- 自動化: `scripts/run_phase2.bat`は2枚の1280×720 PNG、USD、JSONを生成し、ID、落下量、静止、積層範囲、Emitter誤差、Flow active block、画像寸法を検査する。
+- 検証結果: `.\repo.bat build`成功、`.\repo.bat test`で7テスト成功、`.\scripts\run_phase2.bat -OutputDir .\artifacts\phase2\run3`成功。既定Phaseと依存関係変更後の`.\scripts\run_phase0.bat -OutputDir .\artifacts\phase0\phase2-regression`も成功した。
+- 非阻害警告: Phase 0からのFabric interface version警告とPhase 1からのFlow Python node登録警告が継続した。終了コード、剛体、Flow、USD、PNG、JSONの生成は阻害しなかった。
+- 判断: Phase 2の受け入れ条件を満たした。次はPhase 3「木材熱モデル」で、温度・水分・未燃物・炭・灰・質量をFlowから独立した権威状態として実装する。

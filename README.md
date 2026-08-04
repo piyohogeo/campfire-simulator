@@ -2,7 +2,7 @@
 
 焚き火の木材状態、剛体、炎・煙を段階的に検証する、NVIDIA Omniverse Kitベースのリアルタイム・シミュレータです。
 
-現在は **Phase 1「Flow技術スパイク」完了** の状態です。固定された焚き火シーンでFlow火炎を生成し、移動Emitter、静的薪コライダー、統計、NanoVDB CPU読み戻しをウィンドウなしで検証できます。木材燃焼モデルはまだ実装していません。
+現在は **Phase 2「薪・剛体MVP」完了** の状態です。PhysXで動く薪を追加・移動・落下・積層でき、Flow Emitterが同じ永続IDの薪へ追従します。木材燃焼モデルはまだ実装していません。
 
 ## 必要環境
 
@@ -19,7 +19,7 @@
 
 ## 開発日記
 
-実装の節目、画面キャプチャ、検証結果、既知の問題、次の課題を [Web版Development Log](docs/devlog/index.html) にまとめています。ブラウザで `docs/devlog/index.html` を開くと、外部サービスなしで閲覧できます。
+実装の節目、実画面キャプチャ、検証結果、既知の問題、次の課題を [Web版Development Log](docs/devlog/index.html) にまとめています。ブラウザで `docs/devlog/index.html` を開くと、外部サービスなしで閲覧できます。
 
 ## セットアップとビルド
 
@@ -37,35 +37,23 @@
 .\repo.bat test
 ```
 
-固定シーンの必須Prim、Stage単位・重力、再生成時の決定性に加え、Phase 1のFlow Prim、衝突設定、読み戻し設定、Emitter移動をテストします。
+固定シーンとFlow設定に加え、動的薪の剛体・衝突・質量、永続ID、追加・移動、Emitter追従をテストします。
 
-## 自動Phase 0検証
+## ヘッドレス検証
 
 ```powershell
 .\scripts\run_phase0.bat
-```
-
-既定の出力先は `artifacts/phase0/latest/` です。別の出力先も指定できます。
-
-```powershell
-.\scripts\run_phase0.bat -OutputDir .\artifacts\phase0\manual
-```
-
-成功すると次を生成します。
-
-- `assets/scenes/phase0.usda`: 固定シーンの正規USD出力
-- `artifacts/phase0/latest/frame_0000.png`: 1280×720の固定カメラ画像
-- `artifacts/phase0/latest/summary.json`: ステータス、出力パス、カメラ、解像度
-
-スクリプトはウィンドウなしでアプリを起動し、必要なファイルが揃って終了コードが0であることを検証します。`artifacts/` の生成物はGitの追跡対象外です。
-
-## 自動Phase 1検証
-
-```powershell
 .\scripts\run_phase1.bat
+.\scripts\run_phase2.bat
 ```
 
-既定の出力先は `artifacts/phase1/latest/` です。220 updateのFlowシミュレーションを実行し、frame 90と220のPNG、JSON要約、250 ms間隔のGPU CSVを保存します。active block、Emitter終点、4本の薪の衝突設定、PNG寸法も自動検証します。
+各スクリプトはウィンドウなしでアプリを起動し、`artifacts/phase*/latest/` へUSD、1280×720 PNG、JSON要約などを保存して検査します。別の出力先は `-OutputDir` で指定できます。
+
+Phase 2検証は固定60 Hzで600 step（シミュレーション時間10秒）進めます。frame 30で5本目を追加し、永続ID、1 mを超える落下、最終1秒の静止、石囲い内への積層、Emitter追従誤差、Flow active block、画像寸法を自動判定します。
+
+```powershell
+.\scripts\run_phase2.bat -OutputDir .\artifacts\phase2\manual
+```
 
 ## GUI起動
 
@@ -73,25 +61,25 @@
 .\repo.bat launch
 ```
 
-表示される一覧から `campfire.simulator.kit` を選びます。起動時に固定Phase 0シーンが生成されます。
+表示される一覧から `campfire.simulator.kit` を選びます。既定でPhase 2シーンと `Campfire Controls` が開きます。`Add falling log` で薪を追加し、`Lift added log` で追加薪を持ち上げ、`Reset Phase2` で初期状態へ戻せます。
 
 ## 主な構成
 
-- `source/apps/campfire.simulator.kit`: アプリ定義と固定依存バージョン
-- `source/extensions/campfire.app/`: シーン生成、キャプチャ、自動テスト
-- `scripts/run_phase0.bat`: PowerShell実行ポリシーに依存しないヘッドレス検証の入口
-- `scripts/run_phase0.ps1`: 検証本体
-- `assets/scenes/phase0.usda`: 生成済み固定シーン
+- `source/apps/campfire.simulator.kit`: アプリ定義、固定依存バージョン、既定Phase
+- `source/extensions/campfire.app/`: シーン生成、薪サービス、操作UI、キャプチャ、自動テスト
+- `scripts/run_phase0.bat` / `run_phase1.bat` / `run_phase2.bat`: ヘッドレス検証の入口
+- `assets/scenes/phase0.usda` / `phase1_flow.usda` / `phase2_rigid.usda`: 生成済み正規シーン
 - `DESIGN.md`: 全体設計、段階計画、実測結果、判断ログ
 - `AGENTS.md`: 実装時のプロジェクトルール
-- `docs/devlog/`: 画面キャプチャ付きのWeb版開発日記
+- `docs/devlog/`: 実画面キャプチャ付きのWeb版開発日記
 
 ## 現在の制限
 
-- Flowの技術検証用火炎は実装済みですが、木材状態に基づく燃料放出と熱帰還は未実装です。
-- 木材の温度、水分、未燃物、炭、灰、質量の状態モデルは未実装です。
-- Phase 0の石と薪は検証用プリミティブで、最終形状ではありません。
-- raw NanoVDBはCPUへ取得できますが、世界座標一点を読む局所場アダプターは未実装です。
-- キャプチャ後のFabric interface version警告とFlow Python node登録警告が非阻害で残っています。
+- 薪は単純な円柱1剛体で、GUI操作も追加・持ち上げ・リセットの最小構成です。マウス拘束による自由な把持は未実装です。
+- 密度・摩擦・反発は、校正前の代表値・初期仮説です。実測木材に合わせた校正はPhase 6で行います。
+- 木材の温度、水分、未燃物、炭、灰、質量の状態モデルと、木材状態に基づくFlow燃料放出は未実装です。
+- ヘッドレス検証ではUSD transformを同期する `fetch_results` が平均約15.46 msを占めます。PhysX `simulate` 自体は平均約0.15 msですが、60 Hz実時間更新の性能条件はこの経路では未達です。
+- raw NanoVDBを世界座標一点へ変換する局所場アダプターは未実装です。
+- Fabric interface version警告とFlow Python node登録警告が非阻害で残っています。
 
-次のマイルストーンはPhase 2「薪・剛体MVP」です。薪の追加・把持・落下・積層とEmitter追従を実装します。
+次のマイルストーンはPhase 3「木材熱モデル」です。温度・水分・質量をFlowから独立した権威状態として実装します。

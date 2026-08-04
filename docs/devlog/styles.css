@@ -110,6 +110,7 @@ img { display: block; max-width: 100%; }
 .intro > p { margin: 0; color: var(--muted); font-size: 18px; }
 
 .entry-section { background: #f0ebe2; color: #181512; }
+.entry-section.phase-two { background: #eee5d8; }
 .entry-section.phase-one { background: #f4eee5; }
 .entry { display: grid; grid-template-columns: 140px 1fr; gap: 48px; }
 .entry-meta { padding-top: 7px; border-right: 1px solid rgba(24, 21, 18, 0.15); }

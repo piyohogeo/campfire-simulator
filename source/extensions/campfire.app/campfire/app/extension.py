@@ -15,8 +15,11 @@ import omni.kit.viewport.utility
 import omni.timeline
 import omni.usd
 from omni.flowusd import _flowusd
-from pxr import Gf, UsdPhysics
+from omni.physx import get_physx_simulation_interface
+from omni.physx.bindings._physx import SETTING_UPDATE_TO_USD
+from pxr import Gf, UsdPhysics, UsdUtils
 
+from .controls import CampfireControlWindow
 from .flow_scene import (
     EMITTER_END,
     EMITTER_START,
@@ -30,6 +33,20 @@ from .flow_scene import (
     populate_flow_scene,
 )
 from .scene import CAMERA_PATH, export_stage, populate_fixed_scene
+from .phase2_scene import (
+    PHASE2_ADDED_LOG_ID,
+    PHASE2_ADD_FRAME,
+    PHASE2_CAPTURE_FRAMES,
+    PHASE2_EMITTER_OFFSET_M,
+    PHASE2_FIXED_DT_SECONDS,
+    PHASE2_SPAWN_POSITION_M,
+    PHASE2_TOTAL_FRAMES,
+    add_scenario_log,
+    export_phase2_stage,
+    populate_phase2_scene,
+    set_emitter_follow,
+)
+from .wood import get_log_world_position, list_log_ids
 
 
 SETTINGS_ROOT = "/exts/campfire.app"
@@ -61,6 +78,7 @@ class CampfireAppExtension(omni.ext.IExt):
     def on_startup(self, ext_id):
         extension_manager = omni.kit.app.get_app().get_extension_manager()
         self._extension_path = Path(extension_manager.get_extension_path(ext_id)).resolve()
+        self._control_window = None
         self._startup_task = asyncio.ensure_future(self._initialize())
         carb.log_info("[campfire.app] Extension startup")
 
@@ -68,6 +86,9 @@ class CampfireAppExtension(omni.ext.IExt):
         if self._startup_task and not self._startup_task.done():
             self._startup_task.cancel()
         self._startup_task = None
+        if self._control_window is not None:
+            self._control_window.destroy()
+            self._control_window = None
         carb.log_info("[campfire.app] Extension shutdown")
 
     async def _initialize(self):
@@ -89,7 +110,13 @@ class CampfireAppExtension(omni.ext.IExt):
 
             stage = context.get_stage()
             repo_root = _find_repo_root(self._extension_path)
-            if phase == "phase1":
+            if phase == "phase2":
+                settings.set("/rtx/flow/enabled", True)
+                populate_phase2_scene(stage)
+                scene_path = export_phase2_stage(
+                    stage, repo_root / "assets" / "scenes" / "phase2_rigid.usda"
+                )
+            elif phase == "phase1":
                 settings.set("/rtx/flow/enabled", True)
                 populate_flow_scene(stage)
                 scene_path = export_flow_stage(
@@ -114,10 +141,15 @@ class CampfireAppExtension(omni.ext.IExt):
                 if viewport is None:
                     raise RuntimeError(f"No active viewport is available for {phase} capture")
                 await self._wait_for_capture_resolution(viewport)
-                if phase == "phase1":
+                if phase == "phase2":
+                    await self._run_phase2(viewport, stage, scene_path)
+                elif phase == "phase1":
                     await self._run_phase1(viewport, stage, scene_path)
                 else:
                     await self._capture_phase0(viewport, scene_path)
+
+            if phase == "phase2" and not capture_requested:
+                self._control_window = CampfireControlWindow()
 
             if capture_requested and quit_after_capture:
                 settings.set("/app/fastShutdown", True)
@@ -356,6 +388,182 @@ class CampfireAppExtension(omni.ext.IExt):
             )
         finally:
             timeline.pause()
+            _flowusd.release_flowusd_interface(flow_interface)
+
+    async def _run_phase2(self, viewport, stage, scene_path: Path):
+        """Run fixed-step PhysX, add one log, and keep Flow on that body."""
+
+        output_dir = self._output_dir()
+        settings = carb.settings.get_settings()
+        physics = get_physx_simulation_interface()
+        flow_interface = _flowusd.acquire_flowusd_interface()
+        stage_id = UsdUtils.StageCache.Get().GetId(stage).ToLongInt()
+        attached_before = int(physics.get_attached_stage())
+        attached_here = attached_before != stage_id
+        previous_update_to_usd = settings.get_as_bool(SETTING_UPDATE_TO_USD)
+        previous_fabric = settings.get_as_bool("/physics/fabricEnabled")
+
+        physics_times_ms = []
+        physics_simulate_times_ms = []
+        physics_fetch_times_ms = []
+        update_times_ms = []
+        positions = []
+        emitter_errors_m = []
+        active_block_counts = []
+        images = []
+        added_ids_before = list_log_ids(stage)
+
+        try:
+            settings.set(SETTING_UPDATE_TO_USD, True)
+            settings.set("/physics/fabricEnabled", False)
+            if attached_here:
+                physics.attach_stage(stage_id)
+
+            simulation_started = time.perf_counter()
+            for frame in range(1, PHASE2_TOTAL_FRAMES + 1):
+                if frame == PHASE2_ADD_FRAME:
+                    physics.detach_stage()
+                    add_scenario_log(stage)
+                    physics.attach_stage(stage_id)
+
+                physics_started = time.perf_counter()
+                physics.simulate(
+                    PHASE2_FIXED_DT_SECONDS, frame * PHASE2_FIXED_DT_SECONDS
+                )
+                fetch_started = time.perf_counter()
+                physics.fetch_results()
+                fetch_finished = time.perf_counter()
+                physics_simulate_times_ms.append(
+                    (fetch_started - physics_started) * 1000.0
+                )
+                physics_fetch_times_ms.append(
+                    (fetch_finished - fetch_started) * 1000.0
+                )
+                physics_times_ms.append(
+                    (fetch_finished - physics_started) * 1000.0
+                )
+
+                update_started = time.perf_counter()
+                if frame >= PHASE2_ADD_FRAME:
+                    log_position = get_log_world_position(stage, PHASE2_ADDED_LOG_ID)
+                    emitter_position = set_emitter_follow(stage, PHASE2_ADDED_LOG_ID)
+                    expected_emitter = Gf.Vec3f(log_position) + PHASE2_EMITTER_OFFSET_M
+                    emitter_errors_m.append(
+                        float((emitter_position - expected_emitter).GetLength())
+                    )
+                    positions.append(_vector_as_list(log_position))
+
+                await omni.kit.app.get_app().next_update_async()
+                update_times_ms.append((time.perf_counter() - update_started) * 1000.0)
+                active_block_counts.append(int(flow_interface.get_active_block_count()))
+
+                if frame in PHASE2_CAPTURE_FRAMES:
+                    image_path = output_dir / f"frame_{frame:04d}.png"
+                    resolution = await self._capture_image(viewport, image_path)
+                    images.append(
+                        {
+                            "frame": frame,
+                            "path": str(image_path),
+                            "resolution": list(resolution),
+                            "added_log_position_m": (
+                                positions[-1] if positions else None
+                            ),
+                        }
+                    )
+
+            simulation_elapsed = time.perf_counter() - simulation_started
+            final_stage_path = export_stage(stage, output_dir / "final_stage.usda")
+
+            final_position = Gf.Vec3d(*positions[-1])
+            settle_reference = Gf.Vec3d(*positions[-60])
+            settled_displacement = float((final_position - settle_reference).GetLength())
+            horizontal_radius = (
+                final_position[0] ** 2 + final_position[1] ** 2
+            ) ** 0.5
+            dropped_distance = PHASE2_SPAWN_POSITION_M[2] - final_position[2]
+            all_ids = list_log_ids(stage)
+
+            physics_sorted = sorted(physics_times_ms[30:])
+            update_sorted = sorted(update_times_ms[30:])
+            p95_index = min(len(physics_sorted) - 1, int(len(physics_sorted) * 0.95))
+            update_p95_index = min(
+                len(update_sorted) - 1, int(len(update_sorted) * 0.95)
+            )
+            summary = {
+                "status": "ok",
+                "phase": "phase2",
+                "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+                "scene": str(scene_path),
+                "final_stage": str(final_stage_path),
+                "camera": str(CAMERA_PATH),
+                "resolution": list(CAPTURE_RESOLUTION),
+                "images": images,
+                "logs": {
+                    "ids_before_add": added_ids_before,
+                    "ids_after_add": all_ids,
+                    "count_before_add": len(added_ids_before),
+                    "count_after_add": len(all_ids),
+                    "added_log_id": PHASE2_ADDED_LOG_ID,
+                    "identity_preserved": all(
+                        log_id in all_ids for log_id in added_ids_before
+                    ),
+                },
+                "rigid_body": {
+                    "fixed_dt_seconds": PHASE2_FIXED_DT_SECONDS,
+                    "simulation_steps": PHASE2_TOTAL_FRAMES,
+                    "simulation_wall_seconds": round(simulation_elapsed, 4),
+                    "spawn_position_m": list(PHASE2_SPAWN_POSITION_M),
+                    "final_position_m": _vector_as_list(final_position),
+                    "dropped_distance_m": round(float(dropped_distance), 6),
+                    "settled_displacement_last_second_m": round(
+                        settled_displacement, 6
+                    ),
+                    "settled": settled_displacement < 0.03,
+                    "inside_stone_ring": horizontal_radius < 1.30,
+                    "resting_above_ground": final_position[2] > 0.15,
+                },
+                "emitter_follow": {
+                    "samples": len(emitter_errors_m),
+                    "offset_m": _vector_as_list(PHASE2_EMITTER_OFFSET_M),
+                    "max_error_m": round(max(emitter_errors_m, default=0.0), 9),
+                    "followed": max(emitter_errors_m, default=1.0) < 1e-5,
+                },
+                "flow": {
+                    "active_blocks_final": active_block_counts[-1],
+                    "active_blocks_peak": max(active_block_counts, default=0),
+                },
+                "timing": {
+                    "warmup_steps_excluded": 30,
+                    "physics_mean_ms": round(
+                        statistics.fmean(physics_times_ms[30:]), 4
+                    ),
+                    "physics_p95_ms": round(physics_sorted[p95_index], 4),
+                    "physics_simulate_mean_ms": round(
+                        statistics.fmean(physics_simulate_times_ms[30:]), 4
+                    ),
+                    "physics_fetch_mean_ms": round(
+                        statistics.fmean(physics_fetch_times_ms[30:]), 4
+                    ),
+                    "flow_and_render_update_mean_ms": round(
+                        statistics.fmean(update_times_ms[30:]), 4
+                    ),
+                    "flow_and_render_update_p95_ms": round(
+                        update_sorted[update_p95_index], 4
+                    ),
+                },
+            }
+            self._write_summary(output_dir, summary)
+            carb.log_info(
+                "[campfire.app] Phase 2 complete: "
+                f"drop={summary['rigid_body']['dropped_distance_m']}m, "
+                f"settled={summary['rigid_body']['settled']}, "
+                f"physicsMeanMs={summary['timing']['physics_mean_ms']}"
+            )
+        finally:
+            if attached_here and int(physics.get_attached_stage()) == stage_id:
+                physics.detach_stage()
+            settings.set(SETTING_UPDATE_TO_USD, previous_update_to_usd)
+            settings.set("/physics/fabricEnabled", previous_fabric)
             _flowusd.release_flowusd_interface(flow_interface)
 
     @staticmethod

@@ -25,6 +25,7 @@ $kitArgs = @(
     "--/app/settings/persistent=0",
     "--/app/settings/loadUserConfig=0",
     "--/exts/campfire.app/autoCreateScene=true",
+    "--/exts/campfire.app/phase=phase0",
     "--/exts/campfire.app/captureOnStartup=true",
     "--/exts/campfire.app/quitAfterCapture=true",
     "--/exts/campfire.app/outputDir=$OutputDir"

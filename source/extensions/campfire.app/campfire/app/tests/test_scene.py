@@ -73,3 +73,44 @@ class TestScene(omni.kit.test.AsyncTestCase):
                 1e-5,
             )
         )
+
+    async def test_phase2_scene_has_dynamic_logs_with_persistent_ids(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase2_scene(stage)
+
+        self.assertEqual(campfire.app.list_log_ids(stage), [
+            "Log_00", "Log_01", "Log_02", "Log_03"
+        ])
+        for log_id in campfire.app.list_log_ids(stage):
+            log = stage.GetPrimAtPath(f"/World/Logs/{log_id}")
+            self.assertTrue(log.HasAPI(UsdPhysics.CollisionAPI))
+            self.assertTrue(log.HasAPI(UsdPhysics.RigidBodyAPI))
+            self.assertTrue(log.HasAPI(UsdPhysics.MassAPI))
+            self.assertGreater(log.GetAttribute("physics:mass").Get(), 0.0)
+            self.assertEqual(log.GetAttribute("campfire:logId").Get(), log_id)
+
+        self.assertEqual(
+            sum(
+                1
+                for stone in stage.GetPrimAtPath("/World/Stones").GetChildren()
+                if stone.HasAPI(UsdPhysics.CollisionAPI)
+            ),
+            12,
+        )
+
+    async def test_add_move_and_emitter_follow_share_log_identity(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase2_scene(stage)
+        campfire.app.add_scenario_log(stage)
+        self.assertEqual(len(campfire.app.list_log_ids(stage)), 5)
+
+        campfire.app.move_log(stage, "Log_04", (0.25, -0.10, 2.0), 15.0)
+        log_position = campfire.app.get_log_world_position(stage, "Log_04")
+        emitter_position = campfire.app.set_emitter_follow(stage, "Log_04")
+        self.assertTrue(Gf.IsClose(log_position, Gf.Vec3d(0.25, -0.10, 2.0), 1e-6))
+        self.assertTrue(
+            Gf.IsClose(emitter_position, Gf.Vec3f(0.25, -0.10, 2.12), 1e-5)
+        )
+
+        with self.assertRaises(ValueError):
+            campfire.app.add_scenario_log(stage)

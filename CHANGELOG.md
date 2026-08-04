@@ -15,10 +15,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - NVIDIA Flow 110.0.0によるPhase 1火炎シーン、移動Sphere Emitter、静的薪コライダー。
 - Flow active block、end-to-end更新時間、NanoVDB CPU読み戻し、GPU利用を記録するヘッドレス検証。
 - Phase 1の固定フレーム比較キャプチャと判断ゲートを掲載する開発日記エントリ。
+- 永続ID、SI寸法、密度・質量、剛体・衝突・減衰を持つPhase 2の動的薪モデル。
+- 5本目の薪を追加・持ち上げ・リセットできる最小GUIと、同じ操作を使うヘッドレス経路。
+- 固定60 Hzで落下・静止・石囲い内への積層・Emitter追従・Flow稼働を判定するPhase 2検証。
+- 落下中と積層後の実画面、物理タイミング、既知の同期コストを掲載するPhase 2開発日記。
 
 ### Changed
 
 - MVPのFlow結合方針を、木材状態を正とする一方向結合から開始する方針へ確定。
+- アプリの既定シーンをPhase 2へ変更し、薪の権威位置からFlow Emitterを更新する構成へ拡張。
 
 ### Notes
 

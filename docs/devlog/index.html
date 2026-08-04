@@ -15,7 +15,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-1">最新記録</a>
+        <a href="#phase-2">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -26,17 +26,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-1">Phase 1を読む</a>
+        <a class="button primary" href="#phase-2">Phase 2を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 1 完了</strong></div>
+        <div><span>現在地</span><strong>Phase 2 完了</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>5 / 5 passed</strong></div>
-        <div><span>次の焦点</span><strong>薪・剛体MVP</strong></div>
+        <div><span>テスト</span><strong>7 / 7 passed</strong></div>
+        <div><span>次の焦点</span><strong>木材熱モデル</strong></div>
       </div>
     </div>
   </header>
@@ -48,6 +48,105 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-2" class="section entry-section phase-two">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number">02</span>
+          <p><time datetime="2026-08-04">2026.08.04</time></p>
+          <span class="pill complete">Completed</span>
+        </aside>
+
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">PhysX rigid-body MVP</p>
+            <h2>薪が落ち、積み上がり、<br>火がついてくる。</h2>
+            <p>4本の薪を動的剛体へ置き換え、5本目を空中から追加しました。薪は永続IDを保ったまま落下・衝突・静止し、Flow Emitterは追跡対象の薪位置へ毎step追従します。</p>
+          </header>
+
+          <div class="capture-pair" aria-label="追加薪の落下と積層の比較キャプチャ">
+            <figure class="capture-card">
+              <a href="assets/phase2/frame_0045.png" aria-label="Phase 2 frame 45を原寸で開く">
+                <img src="assets/phase2/frame_0045.png" width="1280" height="720" alt="4本の薪の上へ5本目の薪が落下しているPhase 2 frame 45。中央ではFlow火炎が燃えている">
+              </a>
+              <figcaption><div><strong>Frame 45</strong><span>5本目の薪が落下中</span></div></figcaption>
+            </figure>
+            <figure class="capture-card">
+              <a href="assets/phase2/frame_0600.png" aria-label="Phase 2 frame 600を原寸で開く">
+                <img src="assets/phase2/frame_0600.png" width="1280" height="720" alt="5本の動的薪が石囲いの内側で積み上がり、Flow火炎が立ち上がるPhase 2 frame 600">
+              </a>
+              <figcaption><div><strong>Frame 600</strong><span>10秒後、石囲い内で静止</span></div></figcaption>
+            </figure>
+          </div>
+
+          <div class="story-grid">
+            <section class="story-card">
+              <span class="card-index">01</span>
+              <h3>物体になった薪</h3>
+              <ul>
+                <li>円柱1剛体に衝突・質量・減衰を設定</li>
+                <li>生成後も変わらない永続IDを保持</li>
+                <li>固定60 Hzで落下・衝突・積層</li>
+                <li>12個の石にもPhysXコライダーを適用</li>
+              </ul>
+            </section>
+            <section class="story-card warm">
+              <span class="card-index">02</span>
+              <h3>操作と連成</h3>
+              <ul>
+                <li>追加・持ち上げ・リセットの最小GUI</li>
+                <li>GUIとヘッドレスで同じ薪サービスを利用</li>
+                <li>Emitterが薪のworld位置へ誤差なく追従</li>
+                <li>木材モデルはFlowから独立する構造を維持</li>
+              </ul>
+            </section>
+          </div>
+
+          <section class="verification" aria-labelledby="phase2-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Verification</p>
+              <h3 id="phase2-verification-title">見た目と物理条件を一緒に確かめる。</h3>
+              <p>5本目のIDと落下量、最終1秒の変位、石囲い内の位置、Emitter誤差、Flow active block、2枚のPNGを1回の実行で検査します。</p>
+              <code>.\scripts\run_phase2.bat</code>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase 2検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Rigid body</strong><small>1.921 m drop · final 1 s displacement 0.0 m</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Identity</strong><small>4 → 5 persistent log IDs retained</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Coupling</strong><small>571 samples · max emitter error 0.0 m</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Regression</strong><small>Release build · 7 / 7 tests passed</small></p></div>
+            </div>
+          </section>
+
+          <section class="facts" aria-labelledby="phase2-facts-title">
+            <div class="facts-heading">
+              <p class="section-kicker">Measured on RTX 3090</p>
+              <h3 id="phase2-facts-title">600 stepの実測</h3>
+            </div>
+            <dl class="facts-grid">
+              <div><dt>Fixed step</dt><dd>1 / 60 s</dd></div>
+              <div><dt>Log mass</dt><dd>75.278 kg</dd></div>
+              <div><dt>PhysX simulate</dt><dd>0.147 ms mean</dd></div>
+              <div><dt>USD sync</dt><dd>15.465 ms mean</dd></div>
+              <div><dt>Flow + render</dt><dd>7.109 ms mean</dd></div>
+              <div><dt>Active blocks</dt><dd>peak 214</dd></div>
+            </dl>
+          </section>
+
+          <div class="notes-grid">
+            <section class="note caution">
+              <p class="note-label">Known limits</p>
+              <h3>同期読み戻しが支配的</h3>
+              <p>PhysXのsimulate自体は平均0.147 msですが、検証用にUSD transformを同期するfetch_resultsが平均15.465 msを占めます。Flow・描画を合わせた代表値は約22.72 msで30 fps枠内ですが、この経路では60 Hz実時間条件を満たしません。GUIは追加・持ち上げ・リセットのみで、マウス拘束による自由把持も未実装です。</p>
+            </section>
+            <section class="note next">
+              <p class="note-label">What comes next</p>
+              <h3>薪の内側に状態を持たせる</h3>
+              <p>Phase 3では温度、水分、未燃物、炭、灰、質量を薪ごとの権威状態として実装します。最初はFlowの読み戻しに依存せず、単体テストできる熱・乾燥・質量収支から始めます。</p>
+            </section>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section id="phase-1" class="section entry-section phase-one">
@@ -256,8 +355,8 @@
         <ol class="roadmap">
           <li class="done"><span>0</span><div><strong>環境成立確認</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>1</span><div><strong>Flow単体検証</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>2</span><div><strong>薪・剛体MVP</strong><small>次のマイルストーン</small></div></li>
-          <li><span>3</span><div><strong>木材熱モデル</strong><small>熱・水分・質量</small></div></li>
+          <li class="done"><span>2</span><div><strong>薪・剛体MVP</strong><small>完了 · 2026.08.04</small></div></li>
+          <li class="current"><span>3</span><div><strong>木材熱モデル</strong><small>次のマイルストーン</small></div></li>
         </ol>
       </div>
     </section>

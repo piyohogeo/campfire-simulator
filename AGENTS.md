@@ -19,9 +19,11 @@
 .\repo.bat test
 .\repo.bat launch
 .\scripts\run_phase0.bat
+.\scripts\run_phase1.bat
+.\scripts\run_phase2.bat
 ```
 
-生成物は `_build/` と `artifacts/` に置く。固定シーンの正規出力は `assets/scenes/phase0.usda`。
+生成物は `_build/` と `artifacts/` に置く。各Phaseの正規シーンは `assets/scenes/phase0.usda`、`phase1_flow.usda`、`phase2_rigid.usda`。
 
 ## 変更時の確認
 
