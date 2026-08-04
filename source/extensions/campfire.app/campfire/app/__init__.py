@@ -9,6 +9,16 @@
 # its affiliates is strictly prohibited.
 
 from .extension import CampfireAppExtension
+from .calibration import (
+    CouponResult,
+    calibration_candidates,
+    create_equivalent_coupon,
+    evaluate_parameters,
+    load_nist_plywood_reference,
+    run_nist_plywood_calibration,
+    simulate_equivalent_coupon,
+    write_calibration_svg,
+)
 from .combustion import (
     ASH,
     CHAR,
@@ -62,6 +72,13 @@ from .phase5_scene import (
     populate_phase5_scene,
     release_phase5_structure,
 )
+from .phase6_scene import (
+    PHASE6_BAR_ROOT,
+    PHASE6_FLUXES,
+    PHASE6_SERIES,
+    apply_phase6_calibration,
+    populate_phase6_scene,
+)
 from .support import (
     CrossSectionSupport,
     SegmentPhysicsUpdate,
@@ -89,9 +106,13 @@ __all__ = [
     "PHASE3_WET_LOG_ID",
     "PHASE5_JOINT_PATH",
     "PHASE5_SEGMENT_PATHS",
+    "PHASE6_BAR_ROOT",
+    "PHASE6_FLUXES",
+    "PHASE6_SERIES",
     "PYROLYZING",
     "WET_WOOD",
     "CampfireAppExtension",
+    "CouponResult",
     "CrossSectionSupport",
     "FlowSourceState",
     "LogSpec",
@@ -101,12 +122,15 @@ __all__ = [
     "WoodModelParameters",
     "WoodThermalModel",
     "add_scenario_log",
+    "apply_phase6_calibration",
     "create_log",
+    "create_equivalent_coupon",
     "create_cylindrical_wood_model",
     "create_phase3_models",
     "create_phase5_model",
     "dense_stack_placements",
     "estimate_air_supply",
+    "evaluate_parameters",
     "emitter_position_for_frame",
     "export_stage",
     "populate_fixed_scene",
@@ -115,9 +139,11 @@ __all__ = [
     "populate_phase3_scene",
     "populate_phase4_scene",
     "populate_phase5_scene",
+    "populate_phase6_scene",
     "get_log_world_position",
     "list_log_ids",
     "load_model_from_prim",
+    "load_nist_plywood_reference",
     "move_log",
     "set_emitter_follow",
     "save_model_to_prim",
@@ -126,6 +152,7 @@ __all__ = [
     "log_cabin_placements",
     "run_stack_air_comparison",
     "run_collapse_reignition_scenario",
+    "run_nist_plywood_calibration",
     "phase4_placements",
     "apply_oxygen_to_model",
     "assess_cross_section_support",
@@ -134,5 +161,8 @@ __all__ = [
     "release_phase5_structure",
     "release_segment_joint",
     "segment_mass_kg",
+    "simulate_equivalent_coupon",
+    "calibration_candidates",
     "update_flow_source",
+    "write_calibration_svg",
 ]

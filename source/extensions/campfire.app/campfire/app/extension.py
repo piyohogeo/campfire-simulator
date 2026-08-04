@@ -78,6 +78,12 @@ from .phase5_scene import (
 )
 from .support import burn_to_support_failure, run_collapse_reignition_scenario
 from .wood import get_log_world_position, list_log_ids
+from .calibration import run_nist_plywood_calibration, write_calibration_svg
+from .phase6_scene import (
+    apply_phase6_calibration,
+    export_phase6_stage,
+    populate_phase6_scene,
+)
 
 
 SETTINGS_ROOT = "/exts/campfire.app"
@@ -141,7 +147,12 @@ class CampfireAppExtension(omni.ext.IExt):
 
             stage = context.get_stage()
             repo_root = _find_repo_root(self._extension_path)
-            if phase == "phase5":
+            if phase == "phase6":
+                populate_phase6_scene(stage)
+                scene_path = export_phase6_stage(
+                    stage, repo_root / "assets" / "scenes" / "phase6_calibration.usda"
+                )
+            elif phase == "phase5":
                 settings.set("/rtx/flow/enabled", True)
                 populate_phase5_scene(stage)
                 scene_path = export_phase5_stage(
@@ -190,7 +201,9 @@ class CampfireAppExtension(omni.ext.IExt):
                 if viewport is None:
                     raise RuntimeError(f"No active viewport is available for {phase} capture")
                 await self._wait_for_capture_resolution(viewport)
-                if phase == "phase5":
+                if phase == "phase6":
+                    await self._capture_phase6(viewport, stage, scene_path)
+                elif phase == "phase5":
                     await self._run_phase5(viewport, stage, scene_path)
                 elif phase == "phase4":
                     await self._capture_phase4(viewport, stage, scene_path)
@@ -316,6 +329,65 @@ class CampfireAppExtension(omni.ext.IExt):
             "[campfire.app] Phase 4 comparison complete: "
             f"denseO2={comparison['dense']['oxygen_factor']:.4f}, "
             f"cabinO2={comparison['cabin']['oxygen_factor']:.4f}"
+        )
+
+    async def _capture_phase6(self, viewport, stage, scene_path: Path):
+        """Calibrate against the fixed NIST subset and visualize the result."""
+
+        output_dir = self._output_dir()
+        calibration_started = time.perf_counter()
+        calibration = run_nist_plywood_calibration()
+        calibration_wall_seconds = time.perf_counter() - calibration_started
+        apply_phase6_calibration(stage, calibration)
+
+        for _ in range(8):
+            await omni.kit.viewport.utility.next_viewport_frame_async(viewport)
+        image_path = output_dir / "frame_0000.png"
+        image_resolution = await self._capture_image(viewport, image_path)
+        report_path = write_calibration_svg(
+            calibration, output_dir / "calibration_report.svg"
+        )
+        candidates_path = output_dir / "top_candidates.csv"
+        with candidates_path.open("w", newline="", encoding="utf-8") as csv_file:
+            writer = csv.DictWriter(
+                csv_file,
+                fieldnames=(
+                    "rank",
+                    "score_rmse_relative",
+                    "radiant_absorptivity",
+                    "pyrolysis_start_temperature_k",
+                    "pyrolysis_full_temperature_k",
+                    "pyrolysis_max_fraction_s",
+                ),
+            )
+            writer.writeheader()
+            for rank, candidate in enumerate(calibration["top_candidates"], start=1):
+                writer.writerow(
+                    {
+                        "rank": rank,
+                        "score_rmse_relative": candidate["score_rmse_relative"],
+                        **candidate["parameters"],
+                    }
+                )
+        final_stage_path = export_stage(stage, output_dir / "final_stage.usda")
+        summary = {
+            "status": "ok",
+            "phase": "phase6",
+            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "scene": str(scene_path),
+            "final_stage": str(final_stage_path),
+            "image": str(image_path),
+            "report": str(report_path),
+            "top_candidates_csv": str(candidates_path),
+            "resolution": list(image_resolution),
+            "calibration_wall_seconds": round(calibration_wall_seconds, 4),
+            "calibration": calibration,
+        }
+        self._write_summary(output_dir, summary)
+        carb.log_info(
+            "[campfire.app] Phase 6 calibration complete: "
+            f"baseline={calibration['baseline']['score_rmse_relative']:.4f}, "
+            f"best={calibration['best']['score_rmse_relative']:.4f}"
         )
 
     async def _run_phase5(self, viewport, stage, scene_path: Path):

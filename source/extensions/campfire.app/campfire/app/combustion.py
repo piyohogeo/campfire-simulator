@@ -37,6 +37,7 @@ class WoodModelParameters:
     conductivity_radial_w_m_k: float = 0.12
     convection_w_m2_k: float = 12.0
     emissivity: float = 0.82
+    radiant_absorptivity: float = 1.0
     ambient_temperature_k: float = 293.15
     evaporation_start_temperature_k: float = 353.15
     water_latent_heat_j_kg: float = 2_256_000.0
@@ -276,7 +277,7 @@ class WoodThermalModel:
         for index, cell in enumerate(self.cells):
             heat_capacity = self._heat_capacity_j_k(cell)
             area = cell.external_area_m2 * cell.surface_exposure
-            external_heat_w = heat_fluxes[index] * area
+            external_heat_w = heat_fluxes[index] * p.radiant_absorptivity * area
             convective_loss_w = p.convection_w_m2_k * area * (
                 cell.temperature_k - ambient
             )

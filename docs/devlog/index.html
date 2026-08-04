@@ -15,7 +15,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-5">最新記録</a>
+        <a href="#phase-6">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -26,17 +26,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-5">Phase 5を読む</a>
+        <a class="button primary" href="#phase-6">Phase 6を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 5 完了</strong></div>
+        <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>21 / 21 passed</strong></div>
-        <div><span>次の焦点</span><strong>校正</strong></div>
+        <div><span>テスト</span><strong>24 / 24 passed</strong></div>
+        <div><span>次の焦点</span><strong>校正モデル拡張</strong></div>
       </div>
     </div>
   </header>
@@ -48,6 +48,70 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-6" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number">06</span>
+          <p><time datetime="2026-08-04">2026.08.04</time></p>
+          <span class="pill current">In progress</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Calibration baseline · NISTIR 7094</p>
+            <h2>「それらしい」から、<br>誤差を示せるモデルへ。</h2>
+            <p>NISTの5層合板コーンカロリメータ結果から、35・70 kW/m²の着火時刻と平均質量減少速度を固定入力にしました。36候補を同じ条件で評価し、初期係数と最良候補の差だけでなく、まだ残る大きな誤差も同じレポートに残します。</p>
+          </header>
+
+          <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
+            <figure class="capture-card">
+              <a href="assets/phase6/frame_0000.png" aria-label="Phase 6 USD棒グラフを原寸で開く">
+                <img src="assets/phase6/frame_0000.png" width="1280" height="720" alt="35と70 kW毎平方メートルについて、観測値・初期モデル・校正候補の着火時刻を色分けした六本の3D棒グラフ">
+              </a>
+              <figcaption><div><strong>USD result scene</strong><span>Observed · baseline · calibrated ignition time</span></div></figcaption>
+            </figure>
+            <figure class="capture-card">
+              <a href="assets/phase6/calibration_report.svg" aria-label="Phase 6 SVG校正レポートを開く">
+                <img src="assets/phase6/calibration_report.svg" width="1200" height="680" alt="着火時刻と平均質量減少速度について観測・初期・校正値を並べたSVGグラフ">
+              </a>
+              <figcaption><div><strong>Browser-readable report</strong><span>Exact values and remaining residuals</span></div></figcaption>
+            </figure>
+          </div>
+
+          <div class="story-grid">
+            <section class="story-card"><span class="card-index">01</span><h3>固定した根拠</h3><ul><li><a href="https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=101408">NISTIR 7094</a> Table 2</li><li>External 5 PLY Plywood</li><li>0.1 m角・水平・露出面以外を箔で被覆</li><li>各熱流束3試料の平均</li></ul></section>
+            <section class="story-card warm"><span class="card-index">02</span><h3>再現可能な探索</h3><ul><li>放射吸収率 4候補</li><li>熱分解開始温度 3候補</li><li>最大熱分解率 3候補</li><li>相対誤差RMSEで36候補を順位付け</li></ul></section>
+          </div>
+
+          <section class="verification" aria-labelledby="phase6-verification-title">
+            <div class="verification-copy"><p class="section-kicker">Verification</p><h3 id="phase6-verification-title">改善と限界を、同時に合格条件へ。</h3><p>スコア改善だけでなく、2熱流束の着火順、有限値、質量保存、固定探索数、PNG・SVG・CSV・USDの生成を検査します。</p><code>.\scripts\run_phase6.bat</code></div>
+            <div class="check-list" role="list" aria-label="Phase 6検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Score</strong><small>1.696 → 1.304 relative RMSE</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Search</strong><small>36 deterministic candidates</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 1.53 × 10⁻¹⁶ kg error</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Tests</strong><small>24 / 24 passed</small></p></div>
+            </div>
+          </section>
+
+          <section class="facts" aria-labelledby="phase6-facts-title">
+            <div class="facts-heading"><p class="section-kicker">Measured on RTX 3090</p><h3 id="phase6-facts-title">最初の校正結果</h3></div>
+            <dl class="facts-grid">
+              <div><dt>Score improvement</dt><dd>23.1%</dd></div>
+              <div><dt>Search time</dt><dd>約83 s</dd></div>
+              <div><dt>35 kW/m² ignition</dt><dd>47.1 → 62.0 s</dd></div>
+              <div><dt>70 kW/m² ignition</dt><dd>7.7 → 27.4 s</dd></div>
+              <div><dt>Best absorptivity</dt><dd>1.00</dd></div>
+              <div><dt>Pyrolysis start</dt><dd>520 K</dd></div>
+            </dl>
+          </section>
+
+          <div class="notes-grid">
+            <section class="note caution"><p class="note-label">Known limits</p><h3>これは合板の検証完了ではない</h3><p>既存の円柱セルへ露出面積と初期質量を合わせた等価クーポンで、着火は熱分解ガス閾値による代理値です。同じ2条件を探索と評価に使っており、独立した検証データもありません。23.1%改善後も、とくに70 kW/m²の着火残差は19.7秒あります。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>校正可能な自由度を増やしすぎない</h3><p>合板厚さ・水分・温度依存反応速度を明示した試験片モデルへ進み、別条件をホールドアウトにします。その後、FDSまたは追加実験との比較、見た目と性能の改善へ進みます。</p></section>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section id="phase-5" class="section entry-section phase-five">
@@ -562,7 +626,7 @@
           <li class="done"><span>3</span><div><strong>木材熱モデル</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>4</span><div><strong>配置と通気</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>5</span><div><strong>崩壊</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>次のマイルストーン</small></div></li>
+          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · NIST基準線</small></div></li>
         </ol>
       </div>
     </section>

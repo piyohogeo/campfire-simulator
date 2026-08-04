@@ -110,6 +110,7 @@ img { display: block; max-width: 100%; }
 .intro > p { margin: 0; color: var(--muted); font-size: 18px; }
 
 .entry-section { background: #f0ebe2; color: #181512; }
+.entry-section.phase-six { background: #d9d2c4; }
 .entry-section.phase-four { background: #e4d9c8; }
 .entry-section.phase-five { background: #ded4c3; }
 .entry-section.phase-three { background: #e9dfd0; }
@@ -121,6 +122,7 @@ img { display: block; max-width: 100%; }
 .entry-meta p { margin: 22px 0 11px; font-size: 13px; font-weight: 700; }
 .pill { display: inline-flex; padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
 .pill.complete { background: #d8eadc; color: #235b36; }
+.pill.current { background: #f4d7a4; color: #68400b; }
 .entry-body { min-width: 0; }
 .entry-header { max-width: 830px; }
 .entry-header h2 { margin: 0; font-size: clamp(44px, 6vw, 78px); line-height: 1.08; letter-spacing: -0.05em; }

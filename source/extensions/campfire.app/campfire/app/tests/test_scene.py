@@ -395,3 +395,70 @@ class TestScene(omni.kit.test.AsyncTestCase):
         )
         self.assertLess(abs(result["mass_balance_error_kg"]), 1.0e-9)
         self.assertTrue(result["all_values_finite"])
+
+    async def test_nist_reference_is_fixed_and_higher_flux_ignites_first(self):
+        reference = campfire.app.load_nist_plywood_reference()
+        self.assertEqual(reference["report"], "NISTIR 7094")
+        self.assertEqual(reference["method"]["replicates_per_flux"], 3)
+        parameters = campfire.app.WoodModelParameters()
+        results = [
+            campfire.app.simulate_equivalent_coupon(target, reference, parameters)
+            for target in reference["targets"]
+        ]
+        self.assertIsNotNone(results[0].ignition_seconds)
+        self.assertIsNotNone(results[1].ignition_seconds)
+        self.assertGreater(results[0].ignition_seconds, results[1].ignition_seconds)
+        for result in results:
+            self.assertLess(abs(result.mass_balance_error_kg), 1.0e-9)
+            self.assertTrue(result.all_values_finite)
+
+    async def test_nist_grid_search_improves_baseline_without_hiding_error(self):
+        calibration = campfire.app.run_nist_plywood_calibration()
+        self.assertGreater(calibration["candidate_count"], 30)
+        self.assertTrue(calibration["improved"])
+        self.assertGreater(calibration["improvement_fraction"], 0.0)
+        self.assertLess(
+            calibration["best"]["score_rmse_relative"],
+            calibration["baseline"]["score_rmse_relative"],
+        )
+        self.assertEqual(len(calibration["best"]["cases"]), 2)
+
+    async def test_phase6_scene_visualizes_observed_baseline_and_calibrated_values(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase6_scene(stage)
+        calibration = {
+            "baseline": {
+                "score_rmse_relative": 0.8,
+                "cases": [
+                    {"predicted_ignition_seconds": 25.0},
+                    {"predicted_ignition_seconds": 12.0},
+                ],
+            },
+            "best": {
+                "score_rmse_relative": 0.4,
+                "cases": [
+                    {"predicted_ignition_seconds": 44.0},
+                    {"predicted_ignition_seconds": 8.0},
+                ],
+            },
+            "improvement_fraction": 0.5,
+        }
+        campfire.app.apply_phase6_calibration(stage, calibration)
+        bars = []
+        for flux in campfire.app.PHASE6_FLUXES:
+            bars.extend(
+                stage.GetPrimAtPath(
+                    f"{campfire.app.PHASE6_BAR_ROOT}/Flux{flux}"
+                ).GetChildren()
+            )
+        self.assertEqual(len(bars), 6)
+        self.assertEqual(
+            {bar.GetAttribute("campfire:series").Get() for bar in bars},
+            {"observed", "baseline", "calibrated"},
+        )
+        self.assertTrue(
+            all(bar.GetAttribute("campfire:valueSeconds").Get() > 0.0 for bar in bars)
+        )
+        metadata = stage.GetRootLayer().customLayerData
+        self.assertEqual(metadata["campfire:phase"], "phase6")
+        self.assertAlmostEqual(metadata["campfire:improvementFraction"], 0.5)

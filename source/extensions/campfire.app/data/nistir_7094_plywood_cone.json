@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "reference_id": "NISTIR_7094_TABLE_2_PLYWOOD",
+  "title": "Structural Collapse Fire Tests: Single Story, Wood Frame Structures",
+  "report": "NISTIR 7094",
+  "authors": [
+    "David W. Stroup",
+    "Nelson P. Bryner",
+    "Jack Lee",
+    "Jay McElroy",
+    "Gary Roadarmel",
+    "William H. Twilley"
+  ],
+  "published": "2004-03",
+  "publisher": "National Institute of Standards and Technology",
+  "url": "https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=101408",
+  "location": "Table 2, PDF page 20 (printed page 14)",
+  "material": "External 5 PLY Plywood",
+  "method": {
+    "apparatus": "cone calorimeter",
+    "replicates_per_flux": 3,
+    "sample_width_m": 0.1,
+    "sample_depth_m": 0.1,
+    "exposed_area_m2": 0.01,
+    "orientation": "horizontal",
+    "wrapped_sides": true
+  },
+  "targets": [
+    {
+      "incident_heat_flux_kw_m2": 35.0,
+      "time_to_sustained_ignition_s": 47.1,
+      "average_mass_loss_rate_g_s_m2": 9.9,
+      "initial_specimen_mass_g": 64.7,
+      "final_specimen_mass_g": 16.8
+    },
+    {
+      "incident_heat_flux_kw_m2": 70.0,
+      "time_to_sustained_ignition_s": 7.7,
+      "average_mass_loss_rate_g_s_m2": 14.4,
+      "initial_specimen_mass_g": 64.0,
+      "final_specimen_mass_g": 16.0
+    }
+  ],
+  "adapter_assumptions": {
+    "geometry": "Equal exposed area and initial wet mass are mapped to a thin cylindrical coupon because the current authoritative grid is cylindrical.",
+    "moisture_ratio_dry_basis": 0.08,
+    "ignition_definition": "First model pyrolysis-gas rate at or above 1e-6 kg/s; this is a proxy, not the report's observed sustained flaming.",
+    "mass_loss_definition": "Mean modeled release rate after proxy ignition while release remains above 1e-6 kg/s."
+  }
+}
