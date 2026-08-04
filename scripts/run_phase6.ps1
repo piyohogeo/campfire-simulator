@@ -49,6 +49,16 @@ if (-not $calibration.improved -or $calibration.improvement_fraction -le 0.0) {
 if ($calibration.best.score_rmse_relative -ge $calibration.baseline.score_rmse_relative) {
     throw "Phase 6 best score is not lower than the baseline."
 }
+$selection = $calibration.selection
+if (-not $selection.improved -or $selection.sample_ids.Count -ne 2) {
+    throw "Phase 6 replicate selection set is invalid."
+}
+if (($selection.sample_ids -join ",") -ne "SAMP.1,SAMP.2") {
+    throw "Phase 6 replicate selection IDs changed."
+}
+if (($selection.best.parameters | ConvertTo-Json -Compress) -ne ($calibration.best.parameters | ConvertTo-Json -Compress)) {
+    throw "Phase 6 reported parameters do not match replicate selection."
+}
 if ($calibration.candidate_count -lt 30 -or $calibration.best.cases.Count -ne 2) {
     throw "Phase 6 did not evaluate the expected fixed search space."
 }
@@ -87,7 +97,25 @@ foreach ($case in $holdout.calibrated.cases) {
 if ($holdout.calibrated.cases[0].predicted_ignition_seconds -le $holdout.calibrated.cases[1].predicted_ignition_seconds) {
     throw "Phase 6 holdout lost the expected heat-flux ignition ordering."
 }
-foreach ($path in @($result.image, $result.report, $result.holdout_report, $result.top_candidates_csv, $result.final_stage)) {
+$replicateHoldout = $calibration.replicate_holdout
+if ($replicateHoldout.used_for_parameter_selection -or ($replicateHoldout.sample_ids -join ",") -ne "SAMP.3") {
+    throw "Phase 6 same-material holdout leaked into parameter selection."
+}
+if (($replicateHoldout.calibrated.parameters | ConvertTo-Json -Compress) -ne ($calibration.best.parameters | ConvertTo-Json -Compress)) {
+    throw "Phase 6 same-material holdout was refitted."
+}
+foreach ($case in $replicateHoldout.calibrated.cases) {
+    if (-not $case.all_values_finite -or $null -eq $case.predicted_ignition_seconds) {
+        throw "Phase 6 same-material holdout produced an invalid prediction."
+    }
+    if ([math]::Abs($case.mass_balance_error_kg) -gt 0.000001) {
+        throw "Phase 6 same-material holdout violated mass conservation."
+    }
+}
+if ($replicateHoldout.calibrated.cases[0].predicted_ignition_seconds -le $replicateHoldout.calibrated.cases[1].predicted_ignition_seconds) {
+    throw "Phase 6 same-material holdout lost the expected heat-flux ignition ordering."
+}
+foreach ($path in @($result.image, $result.report, $result.holdout_report, $result.replicate_holdout_report, $result.top_candidates_csv, $result.final_stage)) {
     if (-not (Test-Path -LiteralPath $path)) {
         throw "Phase 6 artifact was not produced: $path"
     }

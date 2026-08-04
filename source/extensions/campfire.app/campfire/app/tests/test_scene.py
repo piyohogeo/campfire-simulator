@@ -408,6 +408,13 @@ class TestScene(omni.kit.test.AsyncTestCase):
             [target["time_to_sustained_ignition_s"] for target in reference["holdout"]["targets"]],
             [39.7, 10.6],
         )
+        selection, validation = campfire.app.build_replicate_split_targets(reference)
+        self.assertEqual(selection[0]["sample_ids"], ["SAMP.1", "SAMP.2"])
+        self.assertEqual(validation[0]["sample_ids"], ["SAMP.3"])
+        self.assertAlmostEqual(selection[0]["time_to_sustained_ignition_s"], 43.515)
+        self.assertAlmostEqual(selection[1]["time_to_sustained_ignition_s"], 8.245)
+        self.assertAlmostEqual(validation[0]["time_to_sustained_ignition_s"], 54.23)
+        self.assertAlmostEqual(validation[1]["time_to_sustained_ignition_s"], 6.69)
         parameters = campfire.app.WoodModelParameters()
         results = [
             campfire.app.simulate_equivalent_coupon(target, reference, parameters)
@@ -430,6 +437,20 @@ class TestScene(omni.kit.test.AsyncTestCase):
             calibration["baseline"]["score_rmse_relative"],
         )
         self.assertEqual(len(calibration["best"]["cases"]), 2)
+        selection = calibration["selection"]
+        self.assertTrue(selection["improved"])
+        self.assertEqual(selection["sample_ids"], ["SAMP.1", "SAMP.2"])
+        self.assertEqual(selection["best"]["parameters"], calibration["best"]["parameters"])
+        replicate_holdout = calibration["replicate_holdout"]
+        self.assertFalse(replicate_holdout["used_for_parameter_selection"])
+        self.assertEqual(replicate_holdout["sample_ids"], ["SAMP.3"])
+        self.assertEqual(
+            replicate_holdout["calibrated"]["parameters"],
+            calibration["best"]["parameters"],
+        )
+        for case in replicate_holdout["calibrated"]["cases"]:
+            self.assertTrue(case["all_values_finite"])
+            self.assertLess(abs(case["mass_balance_error_kg"]), 1.0e-9)
         holdout = calibration["holdout"]
         self.assertFalse(holdout["used_for_parameter_selection"])
         self.assertEqual(holdout["calibrated"]["parameters"], calibration["best"]["parameters"])

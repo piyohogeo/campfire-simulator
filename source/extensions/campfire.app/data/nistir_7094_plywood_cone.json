@@ -41,6 +41,71 @@
       "final_specimen_mass_g": 16.0
     }
   ],
+  "plywood_replicates": [
+    {
+      "incident_heat_flux_kw_m2": 35.0,
+      "samples": [
+        {
+          "sample_id": "SAMP.1",
+          "time_to_sustained_ignition_s": 40.71,
+          "average_mass_loss_rate_g_s_m2": 9.555,
+          "initial_specimen_mass_g": 66.60,
+          "final_specimen_mass_g": 17.17,
+          "appendix_pdf_page": 77
+        },
+        {
+          "sample_id": "SAMP.2",
+          "time_to_sustained_ignition_s": 46.32,
+          "average_mass_loss_rate_g_s_m2": 9.897,
+          "initial_specimen_mass_g": 61.90,
+          "final_specimen_mass_g": 16.21,
+          "appendix_pdf_page": 78
+        },
+        {
+          "sample_id": "SAMP.3",
+          "time_to_sustained_ignition_s": 54.23,
+          "average_mass_loss_rate_g_s_m2": 10.248,
+          "initial_specimen_mass_g": 65.50,
+          "final_specimen_mass_g": 17.16,
+          "appendix_pdf_page": 79
+        }
+      ]
+    },
+    {
+      "incident_heat_flux_kw_m2": 70.0,
+      "samples": [
+        {
+          "sample_id": "SAMP.1",
+          "time_to_sustained_ignition_s": 6.73,
+          "average_mass_loss_rate_g_s_m2": 14.742,
+          "initial_specimen_mass_g": 60.90,
+          "final_specimen_mass_g": 15.54,
+          "appendix_pdf_page": 83
+        },
+        {
+          "sample_id": "SAMP.2",
+          "time_to_sustained_ignition_s": 9.76,
+          "average_mass_loss_rate_g_s_m2": 13.859,
+          "initial_specimen_mass_g": 63.20,
+          "final_specimen_mass_g": 15.66,
+          "appendix_pdf_page": 84
+        },
+        {
+          "sample_id": "SAMP.3",
+          "time_to_sustained_ignition_s": 6.69,
+          "average_mass_loss_rate_g_s_m2": 14.741,
+          "initial_specimen_mass_g": 67.80,
+          "final_specimen_mass_g": 16.91,
+          "appendix_pdf_page": 85
+        }
+      ]
+    }
+  ],
+  "replicate_split": {
+    "strategy": "Fixed by sample identifier before parameter search; average SAMP.1 and SAMP.2 within each heat flux for selection, reserve SAMP.3 for validation.",
+    "selection_sample_ids": ["SAMP.1", "SAMP.2"],
+    "validation_sample_ids": ["SAMP.3"]
+  },
   "holdout": {
     "material": "External Oriented Strandboard",
     "relationship": "Different wood product from the plywood calibration material; external-material holdout, not an in-material validation split.",

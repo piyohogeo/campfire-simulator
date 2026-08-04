@@ -12,3 +12,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added Phase 5 cross-section support loss, joint release, mass/collider updates, PhysX collapse, reignition, and headless validation.
 - Added Phase 6A fixed NIST plywood reference data, equivalent-coupon calibration search, USD/SVG result views, and headless validation.
 - Added Phase 6B no-refit OSB external-material holdout evaluation and a separate browser-readable residual report.
+- Added Phase 6C fixed SAMP.1/2-to-SAMP.3 plywood replicate holdout evaluation and a separate browser-readable report.

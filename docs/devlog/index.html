@@ -36,7 +36,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>24 / 24 passed</strong></div>
-        <div><span>次の焦点</span><strong>合板内の独立検証</strong></div>
+        <div><span>次の焦点</span><strong>試験片の層構造</strong></div>
       </div>
     </div>
   </header>
@@ -59,9 +59,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Calibration and external holdout · NISTIR 7094</p>
+            <p class="section-kicker">Calibration and two-stage holdout · NISTIR 7094</p>
             <h2>「それらしい」から、<br>誤差を示せるモデルへ。</h2>
-            <p>NISTの5層合板コーンカロリメータ結果から、35・70 kW/m²の着火時刻と平均質量減少速度を固定入力にしました。36候補から合板だけで係数を選び、同じ表のOSBへ再調整なしで適用します。改善率だけでなく、別材料で残る大きな誤差も同じ形で残します。</p>
+            <p>NISTの5層合板コーンカロリメータ結果から、35・70 kW/m²の着火時刻と平均質量減少速度を固定入力にしました。反復試験SAMP.1/2だけで36候補を選び、未使用のSAMP.3と別材料OSBへ再調整なしで適用します。改善率だけでなく、残る大きな誤差も同じ形で残します。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -86,9 +86,16 @@
             <figcaption><div><strong>External-material holdout</strong><span>OSB · plywood-fit parameters · no refitting</span></div></figcaption>
           </figure>
 
+          <figure class="capture-card">
+            <a href="assets/phase6/replicate_holdout_report.svg" aria-label="Phase 6C 合板反復ホールドアウトレポートを開く">
+              <img src="assets/phase6/replicate_holdout_report.svg" width="1200" height="680" alt="未使用の合板SAMP.3について、着火時刻と平均質量減少速度の観測・初期・SAMP.1/2選定値を並べたSVGグラフ">
+            </a>
+            <figcaption><div><strong>Same-material replicate holdout</strong><span>SAMP.1/2 fit → reserved SAMP.3 · no refitting</span></div></figcaption>
+          </figure>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>固定した根拠</h3><ul><li><a href="https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=101408">NISTIR 7094</a> Table 2</li><li>External 5 PLY Plywood</li><li>0.1 m角・水平・露出面以外を箔で被覆</li><li>各熱流束3試料の平均</li></ul></section>
-            <section class="story-card warm"><span class="card-index">02</span><h3>探索と評価を分離</h3><ul><li>合板だけで36候補を順位付け</li><li>OSBは候補選択に不使用</li><li>最良係数を再調整せず適用</li><li>材料外挿であり合板内検証ではない</li></ul></section>
+            <section class="story-card warm"><span class="card-index">02</span><h3>探索と評価を分離</h3><ul><li>SAMP.1/2だけで36候補を順位付け</li><li>SAMP.3とOSBは候補選択に不使用</li><li>最良係数を再調整せず適用</li><li>反復再現性と材料外挿を別々に表示</li></ul></section>
           </div>
 
           <section class="verification" aria-labelledby="phase6-verification-title">
@@ -97,15 +104,15 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Score</strong><small>1.696 → 1.304 relative RMSE</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Search</strong><small>36 deterministic candidates</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 3.61 × 10⁻¹⁶ kg · calibration + holdout</small></p></div>
-              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Holdout</strong><small>OSB excluded from selection · no refit</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Holdout</strong><small>SAMP.3 + OSB excluded · no refit</small></p></div>
             </div>
           </section>
 
           <section class="facts" aria-labelledby="phase6-facts-title">
-            <div class="facts-heading"><p class="section-kicker">Measured on RTX 3090</p><h3 id="phase6-facts-title">最初の校正結果</h3></div>
+            <div class="facts-heading"><p class="section-kicker">Measured on RTX 3090</p><h3 id="phase6-facts-title">校正と未使用データの結果</h3></div>
             <dl class="facts-grid">
               <div><dt>Score improvement</dt><dd>23.1%</dd></div>
-              <div><dt>Search time</dt><dd>約83 s</dd></div>
+              <div><dt>Search time</dt><dd>約96 s</dd></div>
               <div><dt>35 kW/m² ignition</dt><dd>47.1 → 62.0 s</dd></div>
               <div><dt>70 kW/m² ignition</dt><dd>7.7 → 27.4 s</dd></div>
               <div><dt>Best absorptivity</dt><dd>1.00</dd></div>
@@ -113,12 +120,16 @@
               <div><dt>OSB holdout score</dt><dd>1.543 → 1.175</dd></div>
               <div><dt>OSB 35 ignition</dt><dd>39.7 → 71.5 s</dd></div>
               <div><dt>OSB 70 ignition</dt><dd>10.6 → 33.7 s</dd></div>
+              <div><dt>SAMP.1/2 fit score</dt><dd>1.519 → 1.145</dd></div>
+              <div><dt>SAMP.3 holdout score</dt><dd>2.134 → 1.672</dd></div>
+              <div><dt>SAMP.3 35 ignition</dt><dd>54.23 → 62.6 s</dd></div>
+              <div><dt>SAMP.3 70 ignition</dt><dd>6.69 → 28.9 s</dd></div>
             </dl>
           </section>
 
           <div class="notes-grid">
-            <section class="note caution"><p class="note-label">Known limits</p><h3>スコア改善は外挿精度を意味しない</h3><p>OSBでも相対RMSEは23.9%改善しましたが、35 kW/m²着火は31.8秒、70 kW/m²着火は23.1秒遅れます。OSBは別材料なので、これは合板内の独立検証ではありません。既存の円柱セルと代理着火定義も継続しています。</p></section>
-            <section class="note next"><p class="note-label">What comes next</p><h3>同じ合板の未使用データで測る</h3><p>Appendix Aの反復試験を訓練・検証へ固定分割し、合板内の再現性を評価します。その後、試験片厚さ・水分・温度依存反応速度を明示し、FDS比較、見た目、性能改善へ進みます。</p></section>
+            <section class="note caution"><p class="note-label">Known limits</p><h3>反復でも大きな誤差が残る</h3><p>SAMP.3の相対RMSEは21.6%改善しましたが、70 kW/m²着火は22.21秒遅く、質量減少速度は5.4061 g/(s·m²)低いままです。検証試料は各熱流束1点だけで、分割の不確かさも残ります。既存の等価円柱セルと代理着火定義も継続しています。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>試験片そのものをモデル化する</h3><p>等価円柱を、実厚さと5層構造を明示する試験片へ置き換え、温度依存の反応速度を導入します。その後、追加条件とFDSで再検証し、見た目と性能の改善へ進みます。</p></section>
           </div>
         </div>
       </article>
@@ -636,7 +647,7 @@
           <li class="done"><span>3</span><div><strong>木材熱モデル</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>4</span><div><strong>配置と通気</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>5</span><div><strong>崩壊</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · OSB外挿評価</small></div></li>
+          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · 合板反復検証</small></div></li>
         </ol>
       </div>
     </section>

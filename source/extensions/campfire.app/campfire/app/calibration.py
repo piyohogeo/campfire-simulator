@@ -42,12 +42,66 @@ def load_nist_plywood_reference(path: Path | None = None) -> dict:
         raise ValueError("Unexpected calibration reference")
     if len(data.get("targets", [])) != 2:
         raise ValueError("Calibration reference must contain two flux targets")
+    replicate_groups = data.get("plywood_replicates", [])
+    if len(replicate_groups) != 2 or any(
+        len(group.get("samples", [])) != 3 for group in replicate_groups
+    ):
+        raise ValueError("Calibration reference must contain three plywood replicates per flux")
+    split = data.get("replicate_split", {})
+    selection_ids = set(split.get("selection_sample_ids", []))
+    validation_ids = set(split.get("validation_sample_ids", []))
+    if not selection_ids or not validation_ids or selection_ids & validation_ids:
+        raise ValueError("Replicate selection and validation IDs must be non-empty and disjoint")
+    for group in replicate_groups:
+        available_ids = {sample["sample_id"] for sample in group["samples"]}
+        if selection_ids | validation_ids != available_ids:
+            raise ValueError("Replicate split must account for every sample in each flux group")
     holdout = data.get("holdout", {})
     if holdout.get("used_for_parameter_selection") is not False:
         raise ValueError("Holdout must be excluded from parameter selection")
     if len(holdout.get("targets", [])) != 2:
         raise ValueError("Calibration reference must contain two holdout targets")
     return data
+
+
+def build_replicate_split_targets(reference: dict) -> tuple[list[dict], list[dict]]:
+    """Build fixed selection and same-material validation targets from raw replicates."""
+
+    split = reference["replicate_split"]
+    numeric_keys = (
+        "time_to_sustained_ignition_s",
+        "average_mass_loss_rate_g_s_m2",
+        "initial_specimen_mass_g",
+        "final_specimen_mass_g",
+    )
+
+    def aggregate(sample_ids: list[str]) -> list[dict]:
+        targets = []
+        for group in reference["plywood_replicates"]:
+            selected = [
+                sample
+                for sample in group["samples"]
+                if sample["sample_id"] in sample_ids
+            ]
+            if len(selected) != len(sample_ids):
+                raise ValueError("Replicate split references a missing sample")
+            target = {
+                "incident_heat_flux_kw_m2": group["incident_heat_flux_kw_m2"],
+                "sample_ids": list(sample_ids),
+            }
+            target.update(
+                {
+                    key: sum(float(sample[key]) for sample in selected) / len(selected)
+                    for key in numeric_keys
+                }
+            )
+            targets.append(target)
+        return targets
+
+    return (
+        aggregate(split["selection_sample_ids"]),
+        aggregate(split["validation_sample_ids"]),
+    )
 
 
 def create_equivalent_coupon(
@@ -219,14 +273,32 @@ def calibration_candidates() -> list[WoodModelParameters]:
 
 def run_nist_plywood_calibration() -> dict:
     reference = load_nist_plywood_reference()
-    baseline = evaluate_parameters(reference, WoodModelParameters())
+    selection_targets, validation_targets = build_replicate_split_targets(reference)
+    selection_baseline = evaluate_parameters(
+        reference, WoodModelParameters(), selection_targets
+    )
     evaluated = [
-        (candidate, evaluate_parameters(reference, candidate))
+        (
+            candidate,
+            evaluate_parameters(reference, candidate, selection_targets),
+        )
         for candidate in calibration_candidates()
     ]
     evaluated.sort(key=lambda item: item[1]["score_rmse_relative"])
-    best_parameters, best = evaluated[0]
+    best_parameters, selection_best = evaluated[0]
     ranked = [result for _, result in evaluated]
+    baseline = evaluate_parameters(reference, WoodModelParameters())
+    best = evaluate_parameters(reference, best_parameters)
+    validation_baseline = evaluate_parameters(
+        reference, WoodModelParameters(), validation_targets
+    )
+    validation_calibrated = evaluate_parameters(
+        reference, best_parameters, validation_targets
+    )
+    validation_score_change_fraction = 1.0 - (
+        validation_calibrated["score_rmse_relative"]
+        / validation_baseline["score_rmse_relative"]
+    )
     holdout = reference["holdout"]
     holdout_baseline = evaluate_parameters(
         reference, WoodModelParameters(), holdout["targets"]
@@ -246,12 +318,39 @@ def run_nist_plywood_calibration() -> dict:
         "calibration_material": reference["material"],
         "adapter_assumptions": reference["adapter_assumptions"],
         "candidate_count": len(ranked),
+        "selection": {
+            "strategy": reference["replicate_split"]["strategy"],
+            "sample_ids": reference["replicate_split"]["selection_sample_ids"],
+            "targets": selection_targets,
+            "baseline": selection_baseline,
+            "best": selection_best,
+            "improvement_fraction": 1.0
+            - selection_best["score_rmse_relative"]
+            / selection_baseline["score_rmse_relative"],
+            "improved": (
+                selection_best["score_rmse_relative"]
+                < selection_baseline["score_rmse_relative"]
+            ),
+        },
         "baseline": baseline,
         "best": best,
         "improvement_fraction": 1.0
         - best["score_rmse_relative"] / baseline["score_rmse_relative"],
         "improved": best["score_rmse_relative"] < baseline["score_rmse_relative"],
         "top_candidates": ranked[:5],
+        "replicate_holdout": {
+            "material": reference["material"],
+            "sample_ids": reference["replicate_split"]["validation_sample_ids"],
+            "used_for_parameter_selection": False,
+            "targets": validation_targets,
+            "baseline": validation_baseline,
+            "calibrated": validation_calibrated,
+            "score_change_fraction": validation_score_change_fraction,
+            "improved": (
+                validation_calibrated["score_rmse_relative"]
+                < validation_baseline["score_rmse_relative"]
+            ),
+        },
         "holdout": {
             "material": holdout["material"],
             "relationship": holdout["relationship"],
@@ -317,6 +416,32 @@ def write_holdout_svg(calibration: dict, destination: Path) -> Path:
         calibrated_label="Plywood-fit",
         ignition_maximum=100.0,
         mass_loss_maximum=22.0,
+    )
+
+
+def write_replicate_holdout_svg(calibration: dict, destination: Path) -> Path:
+    """Write the no-refit SAMP.3 same-material validation comparison."""
+
+    holdout = calibration["replicate_holdout"]
+    score_change = holdout["score_change_fraction"] * 100.0
+    return _write_comparison_svg(
+        holdout["baseline"],
+        holdout["calibrated"],
+        destination,
+        title="Phase 6C — Plywood replicate holdout",
+        subtitle="NISTIR 7094 Appendix A · SAMP.1/2 fit applied to reserved SAMP.3",
+        summary=(
+            "Relative RMSE (no refit): baseline "
+            f"{holdout['baseline']['score_rmse_relative']:.3f} → SAMP.1/2-fit "
+            f"{holdout['calibrated']['score_rmse_relative']:.3f} "
+            f"({score_change:+.1f}% score change)"
+        ),
+        scope=(
+            "Scope: same material and heat flux, held-out replicate. This tests "
+            "repeatability, not a new exposure condition."
+        ),
+        calibrated_label="SAMP.1/2-fit",
+        ignition_maximum=100.0,
     )
 
 

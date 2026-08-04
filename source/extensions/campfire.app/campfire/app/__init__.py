@@ -11,6 +11,7 @@
 from .extension import CampfireAppExtension
 from .calibration import (
     CouponResult,
+    build_replicate_split_targets,
     calibration_candidates,
     create_equivalent_coupon,
     evaluate_parameters,
@@ -19,6 +20,7 @@ from .calibration import (
     simulate_equivalent_coupon,
     write_calibration_svg,
     write_holdout_svg,
+    write_replicate_holdout_svg,
 )
 from .combustion import (
     ASH,
@@ -158,6 +160,7 @@ __all__ = [
     "apply_oxygen_to_model",
     "assess_cross_section_support",
     "burn_to_support_failure",
+    "build_replicate_split_targets",
     "create_collapse_support_model",
     "release_phase5_structure",
     "release_segment_joint",
@@ -167,4 +170,5 @@ __all__ = [
     "update_flow_source",
     "write_calibration_svg",
     "write_holdout_svg",
+    "write_replicate_holdout_svg",
 ]
