@@ -83,6 +83,7 @@ from .calibration import (
     write_calibration_svg,
     write_holdout_svg,
     write_layer_profile_svg,
+    write_kinetics_svg,
     write_replicate_holdout_svg,
 )
 from .phase6_scene import (
@@ -362,6 +363,9 @@ class CampfireAppExtension(omni.ext.IExt):
         layer_profile_report_path = write_layer_profile_svg(
             calibration, output_dir / "layer_profile_report.svg"
         )
+        kinetics_report_path = write_kinetics_svg(
+            calibration, output_dir / "kinetics_report.svg"
+        )
         candidates_path = output_dir / "top_candidates.csv"
         with candidates_path.open("w", newline="", encoding="utf-8") as csv_file:
             writer = csv.DictWriter(
@@ -369,10 +373,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 fieldnames=(
                     "rank",
                     "score_rmse_relative",
-                    "radiant_absorptivity",
-                    "pyrolysis_start_temperature_k",
-                    "pyrolysis_full_temperature_k",
-                    "pyrolysis_max_fraction_s",
+                    *calibration["top_candidates"][0]["parameters"].keys(),
                 ),
             )
             writer.writeheader()
@@ -396,6 +397,7 @@ class CampfireAppExtension(omni.ext.IExt):
             "holdout_report": str(holdout_report_path),
             "replicate_holdout_report": str(replicate_holdout_report_path),
             "layer_profile_report": str(layer_profile_report_path),
+            "kinetics_report": str(kinetics_report_path),
             "top_candidates_csv": str(candidates_path),
             "resolution": list(image_resolution),
             "calibration_wall_seconds": round(calibration_wall_seconds, 4),

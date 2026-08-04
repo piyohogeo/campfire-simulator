@@ -55,6 +55,16 @@ def load_nist_plywood_reference(path: Path | None = None) -> dict:
         raise ValueError("Plywood panel model must contain five plies")
     if panel_model.get("adhesive_layers_explicit") is not False:
         raise ValueError("Unreported adhesive layers must not be treated as explicit geometry")
+    kinetics = data.get("arrhenius_model", {})
+    if kinetics.get("reaction_order") != 1.0:
+        raise ValueError("Phase 6 Arrhenius calibration requires first-order kinetics")
+    pathways = kinetics.get("source_pathways", [])
+    if len(pathways) != 3 or any(
+        float(pathway.get("preexponential_s", 0.0)) <= 0.0
+        or float(pathway.get("activation_energy_j_mol", 0.0)) <= 0.0
+        for pathway in pathways
+    ):
+        raise ValueError("Phase 6 Arrhenius source pathways are incomplete")
     replicate_groups = data.get("plywood_replicates", [])
     if len(replicate_groups) != 2 or any(
         len(group.get("samples", [])) != 3 for group in replicate_groups
@@ -365,29 +375,72 @@ def evaluate_parameters(
         )
     return {
         "score_rmse_relative": math.sqrt(sum(squared_errors) / len(squared_errors)),
-        "parameters": {
-            "radiant_absorptivity": parameters.radiant_absorptivity,
-            "pyrolysis_start_temperature_k": parameters.pyrolysis_start_temperature_k,
-            "pyrolysis_full_temperature_k": parameters.pyrolysis_full_temperature_k,
-            "pyrolysis_max_fraction_s": parameters.pyrolysis_max_fraction_s,
-        },
+        "parameters": _parameter_summary(parameters),
         "cases": cases,
     }
 
 
-def calibration_candidates() -> list[WoodModelParameters]:
-    baseline = WoodModelParameters()
-    candidates = [baseline]
+def _parameter_summary(parameters: WoodModelParameters) -> dict:
+    return {
+        "radiant_absorptivity": parameters.radiant_absorptivity,
+        "pyrolysis_rate_model": parameters.pyrolysis_rate_model,
+        "pyrolysis_start_temperature_k": parameters.pyrolysis_start_temperature_k,
+        "pyrolysis_full_temperature_k": parameters.pyrolysis_full_temperature_k,
+        "pyrolysis_max_fraction_s": parameters.pyrolysis_max_fraction_s,
+        "pyrolysis_arrhenius_preexponential_s": (
+            parameters.pyrolysis_arrhenius_preexponential_s
+        ),
+        "pyrolysis_arrhenius_activation_energy_j_mol": (
+            parameters.pyrolysis_arrhenius_activation_energy_j_mol
+        ),
+        "pyrolysis_arrhenius_reaction_order": (
+            parameters.pyrolysis_arrhenius_reaction_order
+        ),
+        "pyrolysis_arrhenius_source_label": (
+            parameters.pyrolysis_arrhenius_source_label
+        ),
+    }
+
+
+def arrhenius_baseline_parameters(reference: dict | None = None) -> WoodModelParameters:
+    """Use the published char-pathway pair as the unscaled Arrhenius baseline."""
+
+    data = reference or load_nist_plywood_reference()
+    pathway = data["arrhenius_model"]["source_pathways"][2]
+    return replace(
+        WoodModelParameters(),
+        pyrolysis_rate_model="arrhenius_first_order",
+        pyrolysis_arrhenius_preexponential_s=float(pathway["preexponential_s"]),
+        pyrolysis_arrhenius_activation_energy_j_mol=float(
+            pathway["activation_energy_j_mol"]
+        ),
+        pyrolysis_arrhenius_reaction_order=float(
+            data["arrhenius_model"]["reaction_order"]
+        ),
+        pyrolysis_arrhenius_source_label=str(pathway["label"]),
+    )
+
+
+def calibration_candidates(reference: dict | None = None) -> list[WoodModelParameters]:
+    data = reference or load_nist_plywood_reference()
+    baseline = arrhenius_baseline_parameters(data)
+    candidates = []
     for absorptivity in (0.55, 0.70, 0.85, 1.0):
-        for start_temperature_k in (520.0, 573.15, 620.0):
-            for maximum_fraction_s in (0.010, 0.025, 0.050):
+        for pathway in data["arrhenius_model"]["source_pathways"]:
+            for scale in data["arrhenius_model"]["calibration_preexponential_scales"]:
                 candidates.append(
                     replace(
                         baseline,
                         radiant_absorptivity=absorptivity,
-                        pyrolysis_start_temperature_k=start_temperature_k,
-                        pyrolysis_full_temperature_k=start_temperature_k + 200.0,
-                        pyrolysis_max_fraction_s=maximum_fraction_s,
+                        pyrolysis_arrhenius_preexponential_s=(
+                            float(pathway["preexponential_s"]) * float(scale)
+                        ),
+                        pyrolysis_arrhenius_activation_energy_j_mol=float(
+                            pathway["activation_energy_j_mol"]
+                        ),
+                        pyrolysis_arrhenius_source_label=(
+                            f"{pathway['label']} × A scale {float(scale):g}"
+                        ),
                     )
                 )
     unique = {}
@@ -397,6 +450,9 @@ def calibration_candidates() -> list[WoodModelParameters]:
             candidate.pyrolysis_start_temperature_k,
             candidate.pyrolysis_full_temperature_k,
             candidate.pyrolysis_max_fraction_s,
+            candidate.pyrolysis_rate_model,
+            candidate.pyrolysis_arrhenius_preexponential_s,
+            candidate.pyrolysis_arrhenius_activation_energy_j_mol,
         )
         unique[key] = candidate
     return list(unique.values())
@@ -404,24 +460,25 @@ def calibration_candidates() -> list[WoodModelParameters]:
 
 def run_nist_plywood_calibration() -> dict:
     reference = load_nist_plywood_reference()
+    baseline_parameters = arrhenius_baseline_parameters(reference)
     selection_targets, validation_targets = build_replicate_split_targets(reference)
     selection_baseline = evaluate_parameters(
-        reference, WoodModelParameters(), selection_targets
+        reference, baseline_parameters, selection_targets
     )
     evaluated = [
         (
             candidate,
             evaluate_parameters(reference, candidate, selection_targets),
         )
-        for candidate in calibration_candidates()
+        for candidate in calibration_candidates(reference)
     ]
     evaluated.sort(key=lambda item: item[1]["score_rmse_relative"])
     best_parameters, selection_best = evaluated[0]
     ranked = [result for _, result in evaluated]
-    baseline = evaluate_parameters(reference, WoodModelParameters())
+    baseline = evaluate_parameters(reference, baseline_parameters)
     best = evaluate_parameters(reference, best_parameters)
     validation_baseline = evaluate_parameters(
-        reference, WoodModelParameters(), validation_targets
+        reference, baseline_parameters, validation_targets
     )
     validation_calibrated = evaluate_parameters(
         reference, best_parameters, validation_targets
@@ -433,7 +490,7 @@ def run_nist_plywood_calibration() -> dict:
     holdout = reference["holdout"]
     holdout_baseline = evaluate_parameters(
         reference,
-        WoodModelParameters(),
+        baseline_parameters,
         holdout["targets"],
         model_kind="layered_osb",
     )
@@ -455,6 +512,7 @@ def run_nist_plywood_calibration() -> dict:
         "calibration_material": reference["material"],
         "adapter_assumptions": reference["adapter_assumptions"],
         "panel_model": reference["panel_model"],
+        "arrhenius_model": reference["arrhenius_model"],
         "candidate_count": len(ranked),
         "selection": {
             "strategy": reference["replicate_split"]["strategy"],
@@ -506,7 +564,8 @@ def run_nist_plywood_calibration() -> dict:
         "model_scope": (
             "Nominal 12.7 mm planar panel with five equal plywood plies; cone-specimen "
             "thickness is inferred from the source roof panel, adhesive layers are omitted, "
-            "and the reaction law remains the Phase 3 piecewise-linear model."
+            "with a calibrated first-order Arrhenius surrogate based on published "
+            "wood-pyrolysis pathway pairs; adhesive layers remain omitted."
         ),
     }
 
@@ -519,8 +578,8 @@ def write_calibration_svg(calibration: dict, destination: Path) -> Path:
         calibration["baseline"],
         calibration["best"],
         destination,
-        title="Phase 6D — NIST plywood layered-panel calibration",
-        subtitle="NISTIR 7094 · nominal 12.7 mm planar specimen · five equal plies",
+        title="Phase 6E — Arrhenius plywood calibration",
+        subtitle="12.7 mm five-ply panel · first-order k(T) = A exp(-E/RT)",
         summary=(
             "Relative RMSE: baseline "
             f"{calibration['baseline']['score_rmse_relative']:.3f} → calibrated "
@@ -528,8 +587,8 @@ def write_calibration_svg(calibration: dict, destination: Path) -> Path:
             f"({improvement:.1f}% improvement)"
         ),
         scope=(
-            "Scope: nominal source-panel thickness and equal-ply geometry; adhesive "
-            "layers and Arrhenius kinetics are not yet modeled."
+            "Scope: apparent single-step kinetics calibrated on SAMP.1/2; adhesive "
+            "layers and the full three-pathway product mechanism are not modeled."
         ),
     )
 
@@ -570,8 +629,8 @@ def write_replicate_holdout_svg(calibration: dict, destination: Path) -> Path:
         holdout["baseline"],
         holdout["calibrated"],
         destination,
-        title="Phase 6D — Layered plywood replicate holdout",
-        subtitle="12.7 mm five-ply panel · SAMP.1/2 fit applied to reserved SAMP.3",
+        title="Phase 6E — Arrhenius plywood replicate holdout",
+        subtitle="First-order A/E fit on SAMP.1/2 applied to reserved SAMP.3",
         summary=(
             "Relative RMSE (no refit): baseline "
             f"{holdout['baseline']['score_rmse_relative']:.3f} → SAMP.1/2-fit "
@@ -647,12 +706,97 @@ def write_layer_profile_svg(calibration: dict, destination: Path) -> Path:
     .heat {{ font-size: 13px; fill: #f09a61; }}
     .note {{ font-size: 14px; fill: #f0d8ad; }}
   </style>
-  <text x="60" y="52" class="title">Phase 6D — Explicit five-ply specimen</text>
+  <text x="60" y="52" class="title">Phase 6E — Arrhenius five-ply specimen</text>
   <text x="60" y="82" class="subtitle">0.1 m × 0.1 m × 12.7 mm nominal · five equal 2.54 mm plies · exposed from ply 1</text>
   {''.join(panels)}
   <line x1="60" y1="585" x2="1140" y2="585" stroke="#53483d"/>
   <text x="60" y="620" class="note">Sides and rear are foil-wrapped. The 12.7 mm cone-specimen thickness is inferred from the reported source roof panel.</text>
   <text x="60" y="648" class="muted">Equal ply thickness and alternating 0°/90° grain are explicit assumptions; adhesive layers are not modeled.</text>
+</svg>'''
+    destination.write_text(svg, encoding="utf-8")
+    return destination
+
+
+def write_kinetics_svg(calibration: dict, destination: Path) -> Path:
+    """Plot baseline and selected first-order Arrhenius rate constants."""
+
+    destination = Path(destination).resolve()
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    baseline = calibration["baseline"]["parameters"]
+    selected = calibration["best"]["parameters"]
+    gas_constant = float(calibration["arrhenius_model"]["gas_constant_j_mol_k"])
+    temperatures = tuple(range(400, 801, 25))
+
+    def rate(parameters: dict, temperature_k: float) -> float:
+        return float(parameters["pyrolysis_arrhenius_preexponential_s"]) * math.exp(
+            -float(parameters["pyrolysis_arrhenius_activation_energy_j_mol"])
+            / (gas_constant * temperature_k)
+        )
+
+    left, top, width, height = 100.0, 150.0, 720.0, 390.0
+    minimum_log, maximum_log = -9.0, 2.0
+
+    def point(temperature_k: float, value: float) -> tuple[float, float]:
+        x = left + (temperature_k - 400.0) / 400.0 * width
+        log_value = min(maximum_log, max(minimum_log, math.log10(max(value, 1e-12))))
+        y = top + (maximum_log - log_value) / (maximum_log - minimum_log) * height
+        return x, y
+
+    def polyline(parameters: dict) -> str:
+        return " ".join(
+            f"{x:.1f},{y:.1f}"
+            for x, y in (point(t, rate(parameters, t)) for t in temperatures)
+        )
+
+    grid = []
+    for exponent in range(-8, 3, 2):
+        y = point(400.0, 10.0**exponent)[1]
+        grid.append(
+            f'<line x1="{left}" y1="{y:.1f}" x2="{left + width}" y2="{y:.1f}" class="grid"/>'
+            f'<text x="{left - 16}" y="{y + 5:.1f}" class="axis" text-anchor="end">10^{exponent}</text>'
+        )
+    for temperature in range(400, 801, 100):
+        x = point(float(temperature), 1.0)[0]
+        grid.append(
+            f'<line x1="{x:.1f}" y1="{top}" x2="{x:.1f}" y2="{top + height}" class="grid"/>'
+            f'<text x="{x:.1f}" y="{top + height + 28}" class="axis" text-anchor="middle">{temperature}</text>'
+        )
+
+    baseline_a = float(baseline["pyrolysis_arrhenius_preexponential_s"])
+    baseline_e = float(baseline["pyrolysis_arrhenius_activation_energy_j_mol"]) / 1000.0
+    selected_a = float(selected["pyrolysis_arrhenius_preexponential_s"])
+    selected_e = float(selected["pyrolysis_arrhenius_activation_energy_j_mol"]) / 1000.0
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#15120f"/>
+  <style>
+    text {{ font-family: "Segoe UI", Arial, sans-serif; fill: #fff7e9; }}
+    .title {{ font-size: 30px; font-weight: 700; }}
+    .subtitle {{ font-size: 15px; fill: #d7b982; }}
+    .axis {{ font-size: 13px; fill: #c9bda9; }}
+    .grid {{ stroke: #493f36; stroke-width: 1; }}
+    .legend {{ font-size: 14px; font-weight: 650; }}
+    .value {{ font-size: 14px; fill: #eadbc4; }}
+    .note {{ font-size: 13px; fill: #c9bda9; }}
+  </style>
+  <text x="60" y="52" class="title">Phase 6E — Temperature-dependent pyrolysis rate</text>
+  <text x="60" y="82" class="subtitle">First-order apparent reaction · k(T) = A exp(-E/RT) · logarithmic rate axis</text>
+  {''.join(grid)}
+  <polyline points="{polyline(baseline)}" fill="none" stroke="#df654e" stroke-width="4"/>
+  <polyline points="{polyline(selected)}" fill="none" stroke="#58b889" stroke-width="4"/>
+  <text x="{left + width / 2}" y="595" class="axis" text-anchor="middle">Temperature (K)</text>
+  <text x="30" y="{top + height / 2}" class="axis" text-anchor="middle" transform="rotate(-90 30 {top + height / 2})">Rate constant k (s⁻¹)</text>
+  <rect x="870" y="170" width="18" height="18" rx="3" fill="#df654e"/>
+  <text x="900" y="184" class="legend">Published baseline</text>
+  <text x="870" y="220" class="value">A = {baseline_a:.4g} s⁻¹</text>
+  <text x="870" y="246" class="value">E = {baseline_e:.1f} kJ/mol</text>
+  <text x="870" y="274" class="note">{baseline["pyrolysis_arrhenius_source_label"]}</text>
+  <rect x="870" y="326" width="18" height="18" rx="3" fill="#58b889"/>
+  <text x="900" y="340" class="legend">SAMP.1/2-selected</text>
+  <text x="870" y="376" class="value">A = {selected_a:.4g} s⁻¹</text>
+  <text x="870" y="402" class="value">E = {selected_e:.1f} kJ/mol</text>
+  <text x="870" y="430" class="note">{selected["pyrolysis_arrhenius_source_label"]}</text>
+  <line x1="60" y1="620" x2="1140" y2="620" stroke="#53483d"/>
+  <text x="60" y="650" class="note">Source experiment range: 573–673 K. Curves outside that range are extrapolation; SAMP.3 and OSB were not used for selection.</text>
 </svg>'''
     destination.write_text(svg, encoding="utf-8")
     return destination

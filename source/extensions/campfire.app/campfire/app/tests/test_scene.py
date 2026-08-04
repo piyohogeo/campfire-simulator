@@ -403,6 +403,13 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertAlmostEqual(reference["panel_model"]["nominal_thickness_m"], 0.0127)
         self.assertEqual(reference["panel_model"]["plywood_layer_count"], 5)
         self.assertFalse(reference["panel_model"]["adhesive_layers_explicit"])
+        self.assertEqual(reference["arrhenius_model"]["reaction_order"], 1.0)
+        self.assertEqual(len(reference["arrhenius_model"]["source_pathways"]), 3)
+        for pathway in reference["arrhenius_model"]["source_pathways"]:
+            self.assertAlmostEqual(
+                pathway["preexponential_per_min"] / 60.0,
+                pathway["preexponential_s"],
+            )
         self.assertEqual(
             reference["holdout"]["material"], "External Oriented Strandboard"
         )
@@ -453,9 +460,21 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertGreater(model.cells[1].temperature_k, model.cells[2].temperature_k)
         self.assertLess(abs(model.mass_balance_error_kg), 1.0e-9)
 
+    async def test_arrhenius_rate_is_first_order_and_increases_with_temperature(self):
+        parameters = campfire.app.arrhenius_baseline_parameters()
+        self.assertEqual(parameters.pyrolysis_rate_model, "arrhenius_first_order")
+        rates = [
+            campfire.app.arrhenius_pyrolysis_rate_constant_s(parameters, temperature)
+            for temperature in (500.0, 600.0, 700.0)
+        ]
+        self.assertGreater(rates[1], rates[0])
+        self.assertGreater(rates[2], rates[1])
+        with self.assertRaises(ValueError):
+            campfire.app.arrhenius_pyrolysis_rate_constant_s(parameters, 0.0)
+
     async def test_nist_grid_search_improves_baseline_without_hiding_error(self):
         calibration = campfire.app.run_nist_plywood_calibration()
-        self.assertGreater(calibration["candidate_count"], 30)
+        self.assertEqual(calibration["candidate_count"], 48)
         self.assertTrue(calibration["improved"])
         self.assertGreater(calibration["improvement_fraction"], 0.0)
         self.assertLess(
@@ -464,6 +483,16 @@ class TestScene(omni.kit.test.AsyncTestCase):
         )
         self.assertEqual(len(calibration["best"]["cases"]), 2)
         self.assertEqual(calibration["panel_model"]["plywood_layer_count"], 5)
+        self.assertEqual(
+            calibration["best"]["parameters"]["pyrolysis_rate_model"],
+            "arrhenius_first_order",
+        )
+        self.assertGreater(
+            calibration["best"]["parameters"][
+                "pyrolysis_arrhenius_preexponential_s"
+            ],
+            0.0,
+        )
         for case in calibration["best"]["cases"]:
             self.assertEqual(case["model_kind"], "layered_plywood")
             self.assertEqual(case["layer_count"], 5)

@@ -35,8 +35,8 @@
       <div class="shell status-grid">
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>25 / 25 passed</strong></div>
-        <div><span>次の焦点</span><strong>温度依存反応速度</strong></div>
+        <div><span>テスト</span><strong>26 / 26 passed</strong></div>
+        <div><span>次の焦点</span><strong>3経路反応と接着層</strong></div>
       </div>
     </div>
   </header>
@@ -59,9 +59,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Layered specimen and two-stage holdout · NISTIR 7094</p>
+            <p class="section-kicker">Arrhenius kinetics and two-stage holdout · NISTIR 7094</p>
             <h2>「それらしい」から、<br>誤差を示せるモデルへ。</h2>
-            <p>NISTの公称12.7 mm屋根合板を、0.1 m角・5等厚層の平板試験片として実装しました。反復試験SAMP.1/2だけで36候補を選び、未使用のSAMP.3と別材料OSBへ再調整なしで適用します。厚さの推定根拠とモデル化後に残る誤差も同じ形で残します。</p>
+            <p>5層試験片の熱分解を、温度閾値による直線補間から一次Arrhenius式へ置き換えました。公開されたガス・タール・炭経路のA/E組から48候補を作り、SAMP.1/2だけで選定します。未使用SAMP.3とOSBの結果、文献温度範囲外の外挿も隠さず残します。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -100,43 +100,51 @@
             <figcaption><div><strong>Explicit five-ply temperature profile</strong><span>12.7 mm nominal · five 2.54 mm plies · one-sided exposure</span></div></figcaption>
           </figure>
 
+          <figure class="capture-card">
+            <a href="assets/phase6/kinetics_report.svg" aria-label="Phase 6E Arrhenius熱分解速度曲線を開く">
+              <img src="assets/phase6/kinetics_report.svg" width="1200" height="680" alt="400から800 Kまでの公開基準とSAMP.1/2選定後の一次Arrhenius熱分解速度を対数軸で比較したSVGグラフ">
+            </a>
+            <figcaption><div><strong>Temperature-dependent reaction rate</strong><span>Published A/E baseline → SAMP.1/2-selected curve</span></div></figcaption>
+          </figure>
+
           <div class="story-grid">
-            <section class="story-card"><span class="card-index">01</span><h3>形状と質量を分離</h3><ul><li><a href="https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=101408">NISTIR 7094</a> の公称12.7 mm屋根材</li><li>0.1 m角・5枚の2.54 mm等厚層</li><li>観測初期質量から有効密度を算出</li><li>側面・裏面を箔被覆、片面だけ加熱</li></ul></section>
-            <section class="story-card warm"><span class="card-index">02</span><h3>仮定を隠さない</h3><ul><li>コーン試料への12.7 mm適用は推定</li><li>0°/90°交互木目は明示した仮定</li><li>接着層は未報告のため未実装</li><li>SAMP.3とOSBは候補選択に不使用</li></ul></section>
+            <section class="story-card"><span class="card-index">01</span><h3>式と単位を固定</h3><ul><li>一次反応 k(T) = A exp(-E/RT)</li><li>Aはmin⁻¹からs⁻¹へ変換して保存</li><li>EはJ/mol、TはK、Rは8.314 J/(mol·K)</li><li>公開実験範囲は573〜673 K</li></ul></section>
+            <section class="story-card warm"><span class="card-index">02</span><h3>探索と検証を隔離</h3><ul><li>3つの公開A/E組×A倍率4×吸収率4</li><li>SAMP.1/2だけで48候補を順位付け</li><li>SAMP.3とOSBは候補選択に不使用</li><li>3経路同時計算ではない簡略モデル</li></ul></section>
           </div>
 
           <section class="verification" aria-labelledby="phase6-verification-title">
             <div class="verification-copy"><p class="section-kicker">Verification</p><h3 id="phase6-verification-title">改善と限界を、同時に合格条件へ。</h3><p>スコア改善だけでなく、2熱流束の着火順、有限値、質量保存、固定探索数、PNG・SVG・CSV・USDの生成を検査します。</p><code>.\scripts\run_phase6.bat</code></div>
             <div class="check-list" role="list" aria-label="Phase 6検証結果">
-              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Score</strong><small>0.463 → 0.361 relative RMSE</small></p></div>
-              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Search</strong><small>36 deterministic candidates</small></p></div>
-              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 3.89 × 10⁻¹⁶ kg · calibration + holdout</small></p></div>
-              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Geometry</strong><small>12.7 mm · 5 plies · SAMP.3 + OSB excluded</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Score</strong><small>0.499 → 0.422 relative RMSE</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Search</strong><small>48 deterministic Arrhenius candidates</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 1.67 × 10⁻¹⁶ kg · calibration + holdout</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Isolation</strong><small>SAMP.3 + OSB excluded · no refit</small></p></div>
             </div>
           </section>
 
           <section class="facts" aria-labelledby="phase6-facts-title">
             <div class="facts-heading"><p class="section-kicker">Measured on RTX 3090</p><h3 id="phase6-facts-title">校正と未使用データの結果</h3></div>
             <dl class="facts-grid">
-              <div><dt>Score improvement</dt><dd>21.8%</dd></div>
-              <div><dt>Search time</dt><dd>約57 s</dd></div>
-              <div><dt>35 kW/m² ignition</dt><dd>47.1 → 25.3 s</dd></div>
-              <div><dt>70 kW/m² ignition</dt><dd>7.7 → 10.3 s</dd></div>
+              <div><dt>Score improvement</dt><dd>15.5%</dd></div>
+              <div><dt>Search time</dt><dd>約80 s</dd></div>
+              <div><dt>35 kW/m² ignition</dt><dd>47.1 → 32.2 s</dd></div>
+              <div><dt>70 kW/m² ignition</dt><dd>7.7 → 12.9 s</dd></div>
               <div><dt>Best absorptivity</dt><dd>1.00</dd></div>
-              <div><dt>Pyrolysis start</dt><dd>520 K</dd></div>
-              <div><dt>OSB holdout score</dt><dd>3.332 → 2.751</dd></div>
-              <div><dt>OSB 35 ignition</dt><dd>39.7 → 126.5 s</dd></div>
-              <div><dt>OSB 70 ignition</dt><dd>10.6 → 64.0 s</dd></div>
-              <div><dt>SAMP.1/2 fit score</dt><dd>0.399 → 0.318</dd></div>
-              <div><dt>SAMP.3 holdout score</dt><dd>0.625 → 0.465</dd></div>
-              <div><dt>SAMP.3 35 ignition</dt><dd>54.23 → 25.7 s</dd></div>
-              <div><dt>SAMP.3 70 ignition</dt><dd>6.69 → 10.9 s</dd></div>
+              <div><dt>Selected A</dt><dd>6.587 × 10⁷ s⁻¹</dd></div>
+              <div><dt>Selected E</dt><dd>112.7 kJ/mol</dd></div>
+              <div><dt>OSB holdout score</dt><dd>3.331 → 3.331</dd></div>
+              <div><dt>OSB 35 ignition</dt><dd>39.7 → 149.2 s</dd></div>
+              <div><dt>OSB 70 ignition</dt><dd>10.6 → 74.8 s</dd></div>
+              <div><dt>SAMP.1/2 fit score</dt><dd>0.438 → 0.343</dd></div>
+              <div><dt>SAMP.3 holdout score</dt><dd>0.652 → 0.599</dd></div>
+              <div><dt>SAMP.3 35 ignition</dt><dd>54.23 → 32.6 s</dd></div>
+              <div><dt>SAMP.3 70 ignition</dt><dd>6.69 → 13.7 s</dd></div>
             </dl>
           </section>
 
           <div class="notes-grid">
-            <section class="note caution"><p class="note-label">Known limits</p><h3>形状だけでは反応を説明できない</h3><p>SAMP.3の相対RMSEは25.6%改善しましたが、35 kW/m²着火は28.53秒早すぎ、70 kW/m²の質量減少速度は5.5595 g/(s·m²)低いままです。1層化したOSBは着火が53〜87秒遅れ、合板と同じ反応係数を流用できないことも明確になりました。</p></section>
-            <section class="note next"><p class="note-label">What comes next</p><h3>反応速度を温度の関数にする</h3><p>現在の区分線形熱分解を、出典と単位を持つArrhenius反応へ置き換えます。接着層とOSB固有物性を分離し、形状と化学反応を別々に検証します。</p></section>
+            <section class="note caution"><p class="note-label">Known limits</p><h3>一次反応だけではまだ足りない</h3><p>SAMP.3改善は8.1%に留まり、35 kW/m²着火は21.63秒早く、70 kW/m²は7.01秒遅れます。選定Aは探索上限の16倍に達し、係数同定は未収束です。文献の573〜673 K外は外挿で、OSBスコアは実質改善しません。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>3経路を同時に解く</h3><p>ガス・タール・炭の反応分率と生成物収率を一次資料から固定し、3つの並列反応として実装します。接着層とOSB固有物性も分離し、見かけの単一反応から進めます。</p></section>
           </div>
         </div>
       </article>
@@ -654,7 +662,7 @@
           <li class="done"><span>3</span><div><strong>木材熱モデル</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>4</span><div><strong>配置と通気</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>5</span><div><strong>崩壊</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · 5層試験片モデル</small></div></li>
+          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · Arrhenius反応</small></div></li>
         </ol>
       </div>
     </section>

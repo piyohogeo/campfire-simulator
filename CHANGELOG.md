@@ -33,6 +33,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - 合板の係数選択から隔離したNIST OSB外部材料ホールドアウトと、再調整なしの比較SVG・受け入れ判定。
 - NISTIR 7094 Appendix Aの合板反復試験をSAMP.1/2選定・SAMP.3検証へ固定分割した、同一材料内の再調整なしホールドアウト評価。
 - 公称12.7 mm、0.1 m角、5等厚層、片面加熱を明示し、観測初期質量を保持するPhase 6D平板試験片モデルと層温度SVG。
+- Thurner–Mannの公開A/E組をSI単位で固定したPhase 6E一次Arrhenius熱分解、48候補探索、温度–速度曲線SVG。
 
 ### Changed
 

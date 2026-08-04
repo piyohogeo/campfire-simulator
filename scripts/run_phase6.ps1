@@ -43,6 +43,9 @@ if ($result.status -ne "ok" -or $result.phase -ne "phase6") {
     throw "Phase 6 summary reported failure."
 }
 $calibration = $result.calibration
+if ($calibration.arrhenius_model.source_pathways.Count -ne 3 -or $calibration.arrhenius_model.reaction_order -ne 1.0) {
+    throw "Phase 6 Arrhenius source definition is invalid."
+}
 if ([math]::Abs($calibration.panel_model.nominal_thickness_m - 0.0127) -gt 0.0000001 -or $calibration.panel_model.plywood_layer_count -ne 5) {
     throw "Phase 6 layered plywood geometry is invalid."
 }
@@ -65,8 +68,14 @@ if (($selection.sample_ids -join ",") -ne "SAMP.1,SAMP.2") {
 if (($selection.best.parameters | ConvertTo-Json -Compress) -ne ($calibration.best.parameters | ConvertTo-Json -Compress)) {
     throw "Phase 6 reported parameters do not match replicate selection."
 }
-if ($calibration.candidate_count -lt 30 -or $calibration.best.cases.Count -ne 2) {
+if ($calibration.candidate_count -ne 48 -or $calibration.best.cases.Count -ne 2) {
     throw "Phase 6 did not evaluate the expected fixed search space."
+}
+if ($calibration.baseline.parameters.pyrolysis_rate_model -ne "arrhenius_first_order" -or $calibration.best.parameters.pyrolysis_rate_model -ne "arrhenius_first_order") {
+    throw "Phase 6 did not use first-order Arrhenius pyrolysis."
+}
+if ($calibration.best.parameters.pyrolysis_arrhenius_preexponential_s -le 0.0 -or $calibration.best.parameters.pyrolysis_arrhenius_activation_energy_j_mol -le 0.0) {
+    throw "Phase 6 selected invalid Arrhenius coefficients."
 }
 foreach ($case in $calibration.best.cases) {
     if (-not $case.all_values_finite) {
@@ -130,7 +139,7 @@ foreach ($case in $replicateHoldout.calibrated.cases) {
 if ($replicateHoldout.calibrated.cases[0].predicted_ignition_seconds -le $replicateHoldout.calibrated.cases[1].predicted_ignition_seconds) {
     throw "Phase 6 same-material holdout lost the expected heat-flux ignition ordering."
 }
-foreach ($path in @($result.image, $result.report, $result.holdout_report, $result.replicate_holdout_report, $result.layer_profile_report, $result.top_candidates_csv, $result.final_stage)) {
+foreach ($path in @($result.image, $result.report, $result.holdout_report, $result.replicate_holdout_report, $result.layer_profile_report, $result.kinetics_report, $result.top_candidates_csv, $result.final_stage)) {
     if (-not (Test-Path -LiteralPath $path)) {
         throw "Phase 6 artifact was not produced: $path"
     }

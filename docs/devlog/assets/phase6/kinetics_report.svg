@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#15120f"/>
+  <style>
+    text { font-family: "Segoe UI", Arial, sans-serif; fill: #fff7e9; }
+    .title { font-size: 30px; font-weight: 700; }
+    .subtitle { font-size: 15px; fill: #d7b982; }
+    .axis { font-size: 13px; fill: #c9bda9; }
+    .grid { stroke: #493f36; stroke-width: 1; }
+    .legend { font-size: 14px; font-weight: 650; }
+    .value { font-size: 14px; fill: #eadbc4; }
+    .note { font-size: 13px; fill: #c9bda9; }
+  </style>
+  <text x="60" y="52" class="title">Phase 6E — Temperature-dependent pyrolysis rate</text>
+  <text x="60" y="82" class="subtitle">First-order apparent reaction · k(T) = A exp(-E/RT) · logarithmic rate axis</text>
+  <line x1="100.0" y1="504.5" x2="820.0" y2="504.5" class="grid"/><text x="84.0" y="509.5" class="axis" text-anchor="end">10^-8</text><line x1="100.0" y1="433.6" x2="820.0" y2="433.6" class="grid"/><text x="84.0" y="438.6" class="axis" text-anchor="end">10^-6</text><line x1="100.0" y1="362.7" x2="820.0" y2="362.7" class="grid"/><text x="84.0" y="367.7" class="axis" text-anchor="end">10^-4</text><line x1="100.0" y1="291.8" x2="820.0" y2="291.8" class="grid"/><text x="84.0" y="296.8" class="axis" text-anchor="end">10^-2</text><line x1="100.0" y1="220.9" x2="820.0" y2="220.9" class="grid"/><text x="84.0" y="225.9" class="axis" text-anchor="end">10^0</text><line x1="100.0" y1="150.0" x2="820.0" y2="150.0" class="grid"/><text x="84.0" y="155.0" class="axis" text-anchor="end">10^2</text><line x1="100.0" y1="150.0" x2="100.0" y2="540.0" class="grid"/><text x="100.0" y="568.0" class="axis" text-anchor="middle">400</text><line x1="280.0" y1="150.0" x2="280.0" y2="540.0" class="grid"/><text x="280.0" y="568.0" class="axis" text-anchor="middle">500</text><line x1="460.0" y1="150.0" x2="460.0" y2="540.0" class="grid"/><text x="460.0" y="568.0" class="axis" text-anchor="middle">600</text><line x1="640.0" y1="150.0" x2="640.0" y2="540.0" class="grid"/><text x="640.0" y="568.0" class="axis" text-anchor="middle">700</text><line x1="820.0" y1="150.0" x2="820.0" y2="540.0" class="grid"/><text x="820.0" y="568.0" class="axis" text-anchor="middle">800</text>
+  <polyline points="100.0,505.9 145.0,476.9 190.0,451.1 235.0,428.1 280.0,407.3 325.0,388.5 370.0,371.5 415.0,355.9 460.0,341.6 505.0,328.4 550.0,316.3 595.0,305.0 640.0,294.6 685.0,284.9 730.0,275.8 775.0,267.3 820.0,259.4" fill="none" stroke="#df654e" stroke-width="4"/>
+  <polyline points="100.0,465.5 145.0,434.8 190.0,407.5 235.0,383.1 280.0,361.1 325.0,341.2 370.0,323.2 415.0,306.7 460.0,291.6 505.0,277.6 550.0,264.8 595.0,252.9 640.0,241.9 685.0,231.6 730.0,222.0 775.0,213.0 820.0,204.6" fill="none" stroke="#58b889" stroke-width="4"/>
+  <text x="460.0" y="595" class="axis" text-anchor="middle">Temperature (K)</text>
+  <text x="30" y="345.0" class="axis" text-anchor="middle" transform="rotate(-90 30 345.0)">Rate constant k (s⁻¹)</text>
+  <rect x="870" y="170" width="18" height="18" rx="3" fill="#df654e"/>
+  <text x="900" y="184" class="legend">Published baseline</text>
+  <text x="870" y="220" class="value">A = 7.383e+05 s⁻¹</text>
+  <text x="870" y="246" class="value">E = 106.5 kJ/mol</text>
+  <text x="870" y="274" class="note">Thurner-Mann char branch</text>
+  <rect x="870" y="326" width="18" height="18" rx="3" fill="#58b889"/>
+  <text x="900" y="340" class="legend">SAMP.1/2-selected</text>
+  <text x="870" y="376" class="value">A = 6.587e+07 s⁻¹</text>
+  <text x="870" y="402" class="value">E = 112.7 kJ/mol</text>
+  <text x="870" y="430" class="note">Thurner-Mann tar branch × A scale 16</text>
+  <line x1="60" y1="620" x2="1140" y2="620" stroke="#53483d"/>
+  <text x="60" y="650" class="note">Source experiment range: 573–673 K. Curves outside that range are extrapolation; SAMP.3 and OSB were not used for selection.</text>
+</svg>

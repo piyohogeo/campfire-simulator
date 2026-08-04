@@ -15,6 +15,7 @@ from pxr import Sdf, Usd
 MODEL_VERSION = 1
 STATE_ATTRIBUTE = "campfire:combustionStateJson"
 MODEL_VERSION_ATTRIBUTE = "campfire:combustionModelVersion"
+UNIVERSAL_GAS_CONSTANT_J_MOL_K = 8.31446261815324
 
 WET_WOOD = "WET_WOOD"
 DRY_WOOD = "DRY_WOOD"
@@ -45,6 +46,11 @@ class WoodModelParameters:
     pyrolysis_start_temperature_k: float = 573.15
     pyrolysis_full_temperature_k: float = 773.15
     pyrolysis_max_fraction_s: float = 0.025
+    pyrolysis_rate_model: str = "piecewise_linear"
+    pyrolysis_arrhenius_preexponential_s: float = 738_333.3333333334
+    pyrolysis_arrhenius_activation_energy_j_mol: float = 106_500.0
+    pyrolysis_arrhenius_reaction_order: float = 1.0
+    pyrolysis_arrhenius_source_label: str = "Thurner-Mann char branch"
     pyrolysis_heat_j_kg: float = 300_000.0
     pyrolysis_char_yield: float = 0.22
     char_oxidation_start_temperature_k: float = 673.15
@@ -317,30 +323,46 @@ class WoodThermalModel:
 
             if (
                 cell.dry_wood_mass_kg > 0.0
-                and cell.temperature_k > p.pyrolysis_start_temperature_k
-            ):
-                temperature_ramp = min(
-                    1.0,
-                    max(
-                        0.0,
-                        (cell.temperature_k - p.pyrolysis_start_temperature_k)
-                        / (
-                            p.pyrolysis_full_temperature_k
-                            - p.pyrolysis_start_temperature_k
-                        ),
-                    ),
+                and (
+                    p.pyrolysis_rate_model == "arrhenius_first_order"
+                    or cell.temperature_k > p.pyrolysis_start_temperature_k
                 )
+            ):
                 moisture_ratio = cell.moisture_mass_kg / max(
                     cell.dry_wood_mass_kg, 1.0e-12
                 )
                 dryness_factor = min(1.0, max(0.0, 1.0 - moisture_ratio / 0.10))
-                rate_limited_kg = (
-                    cell.dry_wood_mass_kg
-                    * p.pyrolysis_max_fraction_s
-                    * temperature_ramp
-                    * dryness_factor
-                    * dt_seconds
-                )
+                if p.pyrolysis_rate_model == "arrhenius_first_order":
+                    rate_constant_s = arrhenius_pyrolysis_rate_constant_s(
+                        p, cell.temperature_k
+                    )
+                    reacted_fraction = 1.0 - math.exp(
+                        -rate_constant_s * dryness_factor * dt_seconds
+                    )
+                    rate_limited_kg = cell.dry_wood_mass_kg * reacted_fraction
+                elif p.pyrolysis_rate_model == "piecewise_linear":
+                    temperature_ramp = min(
+                        1.0,
+                        max(
+                            0.0,
+                            (cell.temperature_k - p.pyrolysis_start_temperature_k)
+                            / (
+                                p.pyrolysis_full_temperature_k
+                                - p.pyrolysis_start_temperature_k
+                            ),
+                        ),
+                    )
+                    rate_limited_kg = (
+                        cell.dry_wood_mass_kg
+                        * p.pyrolysis_max_fraction_s
+                        * temperature_ramp
+                        * dryness_factor
+                        * dt_seconds
+                    )
+                else:
+                    raise ValueError(
+                        f"Unsupported pyrolysis rate model: {p.pyrolysis_rate_model}"
+                    )
                 heat_capacity = self._heat_capacity_j_k(cell)
                 energy_limited_kg = max(
                     0.0,
@@ -564,6 +586,26 @@ def create_cylindrical_wood_model(
                     )
                 )
     return WoodThermalModel(spec, cells, p)
+
+
+def arrhenius_pyrolysis_rate_constant_s(
+    parameters: WoodModelParameters,
+    temperature_k: float,
+) -> float:
+    """Return A exp(-E/RT) for the configured first-order solid reaction."""
+
+    if not math.isfinite(temperature_k) or temperature_k <= 0.0:
+        raise ValueError("temperature_k must be finite and positive")
+    if parameters.pyrolysis_arrhenius_preexponential_s <= 0.0:
+        raise ValueError("Arrhenius pre-exponential factor must be positive")
+    if parameters.pyrolysis_arrhenius_activation_energy_j_mol <= 0.0:
+        raise ValueError("Arrhenius activation energy must be positive")
+    if not math.isclose(parameters.pyrolysis_arrhenius_reaction_order, 1.0):
+        raise ValueError("Only first-order Arrhenius pyrolysis is implemented")
+    return parameters.pyrolysis_arrhenius_preexponential_s * math.exp(
+        -parameters.pyrolysis_arrhenius_activation_energy_j_mol
+        / (UNIVERSAL_GAS_CONSTANT_J_MOL_K * temperature_k)
+    )
 
 
 def flow_source_from_model(

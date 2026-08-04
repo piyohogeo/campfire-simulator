@@ -11,6 +11,7 @@
 from .extension import CampfireAppExtension
 from .calibration import (
     CouponResult,
+    arrhenius_baseline_parameters,
     build_replicate_split_targets,
     calibration_candidates,
     create_equivalent_coupon,
@@ -23,6 +24,7 @@ from .calibration import (
     write_calibration_svg,
     write_holdout_svg,
     write_layer_profile_svg,
+    write_kinetics_svg,
     write_replicate_holdout_svg,
 )
 from .panel import (
@@ -40,6 +42,7 @@ from .combustion import (
     FlowSourceState,
     WoodModelParameters,
     WoodThermalModel,
+    arrhenius_pyrolysis_rate_constant_s,
     create_cylindrical_wood_model,
     flow_source_from_model,
     load_model_from_prim,
@@ -107,6 +110,8 @@ __all__ = [
     "CAMERA_PATH",
     "ASH",
     "AirSupplyResult",
+    "arrhenius_baseline_parameters",
+    "arrhenius_pyrolysis_rate_constant_s",
     "CHAR",
     "DEPLETED",
     "DRY_WOOD",
@@ -184,5 +189,6 @@ __all__ = [
     "write_calibration_svg",
     "write_holdout_svg",
     "write_layer_profile_svg",
+    "write_kinetics_svg",
     "write_replicate_holdout_svg",
 ]

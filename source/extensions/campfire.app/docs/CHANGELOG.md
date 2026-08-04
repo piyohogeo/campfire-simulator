@@ -14,3 +14,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added Phase 6B no-refit OSB external-material holdout evaluation and a separate browser-readable residual report.
 - Added Phase 6C fixed SAMP.1/2-to-SAMP.3 plywood replicate holdout evaluation and a separate browser-readable report.
 - Added Phase 6D nominal 12.7 mm five-ply planar specimen model, mass-derived effective density, through-thickness conduction, and layer-temperature report.
+- Added Phase 6E first-order Arrhenius pyrolysis, fixed SI-unit literature pairs, 48-candidate calibration, and a browser-readable rate curve.

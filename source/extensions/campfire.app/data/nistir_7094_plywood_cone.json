@@ -35,6 +35,36 @@
     "osb_layer_count": 1,
     "adhesive_layers_explicit": false
   },
+  "arrhenius_model": {
+    "equation": "k(T) = A exp(-E / (R T)); first-order dry-wood consumption uses 1 - exp(-k dt).",
+    "gas_constant_j_mol_k": 8.31446261815324,
+    "reaction_order": 1.0,
+    "primary_source": "Thurner, F. and Mann, U., Kinetic investigation of wood pyrolysis, Ind. Eng. Chem. Process Des. Dev. 20(3), 1981, DOI 10.1021/i200014a015.",
+    "primary_source_url": "https://www.osti.gov/biblio/5354651",
+    "source_temperature_range_k": [573.15, 673.15],
+    "source_pathways": [
+      {
+        "label": "Thurner-Mann gas branch",
+        "preexponential_per_min": 861000.0,
+        "preexponential_s": 14350.0,
+        "activation_energy_j_mol": 88600.0
+      },
+      {
+        "label": "Thurner-Mann tar branch",
+        "preexponential_per_min": 247000000.0,
+        "preexponential_s": 4116666.6666666665,
+        "activation_energy_j_mol": 112700.0
+      },
+      {
+        "label": "Thurner-Mann char branch",
+        "preexponential_per_min": 44300000.0,
+        "preexponential_s": 738333.3333333334,
+        "activation_energy_j_mol": 106500.0
+      }
+    ],
+    "calibration_preexponential_scales": [0.25, 1.0, 4.0, 16.0],
+    "interpretation": "Each published pathway pair is used as an apparent single-step candidate and its A value is scaled during calibration. This does not reproduce the paper's full three-parallel-reaction product model."
+  },
   "targets": [
     {
       "incident_heat_flux_kw_m2": 35.0,
