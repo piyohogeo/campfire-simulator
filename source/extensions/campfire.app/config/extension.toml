@@ -1,0 +1,50 @@
+# SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: LicenseRef-NvidiaProprietary
+#
+# NVIDIA CORPORATION, its affiliates and licensors retain all intellectual
+# property and proprietary rights in and to this material, related
+# documentation and any modifications thereto. Any use, reproduction,
+# disclosure or distribution of this material and related documentation
+# without an express license agreement from NVIDIA CORPORATION or
+# its affiliates is strictly prohibited.
+
+[package]
+title = "Campfire App"
+version = "0.1.0"  # Semantic Versioning is used: https://semver.org/
+description = "Deterministic Phase 0 and NVIDIA Flow Phase 1 validation for Campfire Simulator."
+category = "Simulation"
+changelog = "docs/CHANGELOG.md"
+icon = "data/icon.png"  # Icon to show in the Extension Manager
+keywords = ["kit", "campfire", "simulation"]
+preview_image = "data/preview.png"  # Preview to show in the Extension Manager
+readme  = "docs/README.md"  # Path (relative to the root) or content of readme markdown file for UI
+repository = ""
+
+
+[dependencies]
+"omni.flowusd" = {}
+"omni.timeline" = {}
+"omni.usd" = {}
+"omni.kit.viewport.utility" = {}
+
+
+[settings]
+
+
+[[python.module]]  # Main python module this extension provides, it will be publicly available as "import campfire.app"
+name = "campfire.app"
+
+
+[documentation]
+pages = [
+    "docs/Overview.md",
+    "docs/CHANGELOG.md",
+]
+
+
+[[test]]
+dependencies = [
+]
+
+args = [
+]

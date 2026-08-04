@@ -1,0 +1,228 @@
+#usda 1.0
+(
+    customLayerData = {
+        string "campfire:phase" = "phase0"
+        string "campfire:scene" = "fixed_bootstrap"
+    }
+    defaultPrim = "World"
+    endTimeCode = 100
+    metersPerUnit = 1
+    startTimeCode = 0
+    timeCodesPerSecond = 60
+    upAxis = "Z"
+)
+
+def Xform "World"
+{
+    def PhysicsScene "PhysicsScene"
+    {
+        vector3f physics:gravityDirection = (0, 0, -1)
+        float physics:gravityMagnitude = 9.81
+    }
+
+    def Cylinder "Ground" (
+        prepend apiSchemas = ["PhysicsCollisionAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.2
+        color3f[] primvars:displayColor = [(0.08, 0.055, 0.035)]
+        double radius = 5
+        double3 xformOp:translate = (0, 0, -0.1)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Xform "Stones"
+    {
+        def Sphere "Stone_00"
+        {
+            color3f[] primvars:displayColor = [(0.22, 0.2, 0.18)]
+            double radius = 0.42
+            float3 xformOp:scale = (1.15, 0.85, 0.65)
+            double3 xformOp:translate = (1.55, 0, 0.22)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Sphere "Stone_01"
+        {
+            color3f[] primvars:displayColor = [(0.22, 0.2, 0.18)]
+            double radius = 0.42
+            float3 xformOp:scale = (1.15, 0.85, 0.65)
+            double3 xformOp:translate = (1.34233937586588, 0.7749999999999999, 0.22)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Sphere "Stone_02"
+        {
+            color3f[] primvars:displayColor = [(0.22, 0.2, 0.18)]
+            double radius = 0.42
+            float3 xformOp:scale = (1.15, 0.85, 0.65)
+            double3 xformOp:translate = (0.7750000000000002, 1.34233937586588, 0.22)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Sphere "Stone_03"
+        {
+            color3f[] primvars:displayColor = [(0.22, 0.2, 0.18)]
+            double radius = 0.42
+            float3 xformOp:scale = (1.15, 0.85, 0.65)
+            double3 xformOp:translate = (9.491012693391987e-17, 1.55, 0.22)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Sphere "Stone_04"
+        {
+            color3f[] primvars:displayColor = [(0.22, 0.2, 0.18)]
+            double radius = 0.42
+            float3 xformOp:scale = (1.15, 0.85, 0.65)
+            double3 xformOp:translate = (-0.7749999999999997, 1.34233937586588, 0.22)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Sphere "Stone_05"
+        {
+            color3f[] primvars:displayColor = [(0.22, 0.2, 0.18)]
+            double radius = 0.42
+            float3 xformOp:scale = (1.15, 0.85, 0.65)
+            double3 xformOp:translate = (-1.34233937586588, 0.7749999999999999, 0.22)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Sphere "Stone_06"
+        {
+            color3f[] primvars:displayColor = [(0.22, 0.2, 0.18)]
+            double radius = 0.42
+            float3 xformOp:scale = (1.15, 0.85, 0.65)
+            double3 xformOp:translate = (-1.55, 1.8982025386783975e-16, 0.22)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Sphere "Stone_07"
+        {
+            color3f[] primvars:displayColor = [(0.22, 0.2, 0.18)]
+            double radius = 0.42
+            float3 xformOp:scale = (1.15, 0.85, 0.65)
+            double3 xformOp:translate = (-1.34233937586588, -0.7750000000000002, 0.22)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Sphere "Stone_08"
+        {
+            color3f[] primvars:displayColor = [(0.22, 0.2, 0.18)]
+            double radius = 0.42
+            float3 xformOp:scale = (1.15, 0.85, 0.65)
+            double3 xformOp:translate = (-0.7750000000000007, -1.3423393758658797, 0.22)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Sphere "Stone_09"
+        {
+            color3f[] primvars:displayColor = [(0.22, 0.2, 0.18)]
+            double radius = 0.42
+            float3 xformOp:scale = (1.15, 0.85, 0.65)
+            double3 xformOp:translate = (-2.847303808017596e-16, -1.55, 0.22)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Sphere "Stone_10"
+        {
+            color3f[] primvars:displayColor = [(0.22, 0.2, 0.18)]
+            double radius = 0.42
+            float3 xformOp:scale = (1.15, 0.85, 0.65)
+            double3 xformOp:translate = (0.7750000000000002, -1.34233937586588, 0.22)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Sphere "Stone_11"
+        {
+            color3f[] primvars:displayColor = [(0.22, 0.2, 0.18)]
+            double radius = 0.42
+            float3 xformOp:scale = (1.15, 0.85, 0.65)
+            double3 xformOp:translate = (1.3423393758658795, -0.7750000000000007, 0.22)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+    }
+
+    def Xform "Logs"
+    {
+        def Cylinder "Log_00"
+        {
+            uniform token axis = "X"
+            double height = 2.7
+            color3f[] primvars:displayColor = [(0.3, 0.12, 0.045)]
+            double radius = 0.23
+            float3 xformOp:rotateXYZ = (0, 0, 0)
+            double3 xformOp:translate = (0, -0.42, 0.34)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ"]
+        }
+
+        def Cylinder "Log_01"
+        {
+            uniform token axis = "X"
+            double height = 2.7
+            color3f[] primvars:displayColor = [(0.3, 0.12, 0.045)]
+            double radius = 0.23
+            float3 xformOp:rotateXYZ = (0, 0, 0)
+            double3 xformOp:translate = (0, 0.42, 0.34)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ"]
+        }
+
+        def Cylinder "Log_02"
+        {
+            uniform token axis = "X"
+            double height = 2.7
+            color3f[] primvars:displayColor = [(0.3, 0.12, 0.045)]
+            double radius = 0.23
+            float3 xformOp:rotateXYZ = (0, 0, 90)
+            double3 xformOp:translate = (-0.42, 0, 0.78)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ"]
+        }
+
+        def Cylinder "Log_03"
+        {
+            uniform token axis = "X"
+            double height = 2.7
+            color3f[] primvars:displayColor = [(0.3, 0.12, 0.045)]
+            double radius = 0.23
+            float3 xformOp:rotateXYZ = (0, 0, 90)
+            double3 xformOp:translate = (0.42, 0, 0.78)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ"]
+        }
+    }
+
+    def Cone "IgnitionSource"
+    {
+        uniform token axis = "Z"
+        double height = 1.25
+        color3f[] primvars:displayColor = [(1, 0.18, 0.015)]
+        double radius = 0.38
+        double3 xformOp:translate = (0, 0, 0.68)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Camera "Camera"
+    {
+        float focalLength = 42
+        matrix4d xformOp:transform = ( (0.7071067811865477, 0.7071067811865477, 0, 0), (-0.2989343477455131, 0.2989343477455131, 0.9062430752706081, -0), (0.6408106239271978, -0.6408106239271978, 0.4227570088408596, 0), (7.199999999999999, -7.199999999999999, 5.300000000000001, 1) )
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def "Lights"
+    {
+        def DomeLight "Dome"
+        {
+            color3f inputs:color = (0.42, 0.5, 0.7)
+            float inputs:intensity = 650
+        }
+
+        def SphereLight "Key"
+        {
+            color3f inputs:color = (1, 0.35, 0.08)
+            float inputs:intensity = 24000
+            float inputs:radius = 0.35
+            double3 xformOp:translate = (0, 0, 2.5)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+    }
+}
+

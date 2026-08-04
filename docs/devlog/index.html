@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Campfire Simulatorの開発日記。実装内容、検証結果、画面キャプチャ、次の課題を人間が読みやすい形で記録します。">
+  <title>Campfire Simulator — Development Log</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <nav class="nav shell" aria-label="ページ内ナビゲーション">
+      <a class="brand" href="#top" aria-label="ページ先頭へ">
+        <span class="brand-mark" aria-hidden="true">△</span>
+        <span>Campfire Simulator</span>
+      </a>
+      <div class="nav-links">
+        <a href="#phase-1">最新記録</a>
+        <a href="#roadmap">ロードマップ</a>
+        <a href="../../DESIGN.md">設計書</a>
+      </div>
+    </nav>
+
+    <div id="top" class="hero-content shell">
+      <p class="eyebrow">Development log · 2026</p>
+      <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
+      <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
+      <div class="hero-actions">
+        <a class="button primary" href="#phase-1">Phase 1を読む</a>
+        <a class="button secondary" href="../../README.md">実行方法を見る</a>
+      </div>
+    </div>
+
+    <div class="status-strip" aria-label="現在のプロジェクト状態">
+      <div class="shell status-grid">
+        <div><span>現在地</span><strong>Phase 1 完了</strong></div>
+        <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
+        <div><span>テスト</span><strong>5 / 5 passed</strong></div>
+        <div><span>次の焦点</span><strong>薪・剛体MVP</strong></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section shell intro" aria-labelledby="about-title">
+      <div>
+        <p class="section-kicker">About this log</p>
+        <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
+      </div>
+      <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-1" class="section entry-section phase-one">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number">01</span>
+          <p><time datetime="2026-08-04">2026.08.04</time></p>
+          <span class="pill complete">Completed</span>
+        </aside>
+
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">NVIDIA Flow technical spike</p>
+            <h2>最初の火を、<br>測れる形で灯す。</h2>
+            <p>Flow 110.0.0のSphere Emitterから炎を生成し、薪の間を横切るように移動させました。見た目だけで終わらせず、疎ボクセルの割り当て、更新時間、GPU利用、NanoVDB読み戻しまで同じヘッドレス実行で記録しています。</p>
+          </header>
+
+          <div class="capture-pair" aria-label="移動するFlow Emitterの比較キャプチャ">
+            <figure class="capture-card">
+              <a href="assets/phase1/frame_0090.png" aria-label="Phase 1 frame 90を原寸で開く">
+                <img src="assets/phase1/frame_0090.png" width="1280" height="720" alt="4本の薪の間から立ち上がるFlow火炎。Emitter移動途中のframe 90">
+              </a>
+              <figcaption><div><strong>Frame 90</strong><span>Emitter x = −0.077 m</span></div></figcaption>
+            </figure>
+            <figure class="capture-card">
+              <a href="assets/phase1/frame_0220.png" aria-label="Phase 1 frame 220を原寸で開く">
+                <img src="assets/phase1/frame_0220.png" width="1280" height="720" alt="移動後の位置から薪に沿って立ち上がるFlow火炎。frame 220">
+              </a>
+              <figcaption><div><strong>Frame 220</strong><span>Emitter x = 0.180 m</span></div></figcaption>
+            </figure>
+          </div>
+
+          <div class="story-grid">
+            <section class="story-card">
+              <span class="card-index">01</span>
+              <h3>成立したこと</h3>
+              <ul>
+                <li>Flowの炎・煙をRTXで描画</li>
+                <li>Emitterを−0.18 mから0.18 mへ移動</li>
+                <li>4本の薪を静的Flow障害物として登録</li>
+                <li>固定フレーム2点のPNGとJSONを自動保存</li>
+              </ul>
+            </section>
+            <section class="story-card warm">
+              <span class="card-index">02</span>
+              <h3>今回の判断</h3>
+              <ul>
+                <li>Flow 110.0.0を継続採用</li>
+                <li>MVPは木材 → Flowの一方向結合から開始</li>
+                <li>Sphereは成立確認用、表面燃焼にはPointを次に評価</li>
+                <li>局所場の常時利用はNanoVDBアダプター評価後</li>
+              </ul>
+            </section>
+          </div>
+
+          <section class="verification" aria-labelledby="phase1-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Verification</p>
+              <h3 id="phase1-verification-title">火炎と数値を同じ実行で残す。</h3>
+              <p>終了コード、Flow active block、Emitter終点、4コライダー、PNG寸法、NanoVDBバッファ、GPUサンプルをスクリプトで検査します。</p>
+              <code>.\scripts\run_phase1.bat</code>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase 1検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Flow</strong><small>154 peak active blocks / 4,096 max</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Timing</strong><small>9.02 ms mean · 11.42 ms p95</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Readback</strong><small>Raw NanoVDB on CPU · query 17.32 ms</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Regression</strong><small>Release build · 5 / 5 tests passed</small></p></div>
+            </div>
+          </section>
+
+          <section class="facts" aria-labelledby="phase1-facts-title">
+            <div class="facts-heading">
+              <p class="section-kicker">Measured on RTX 3090</p>
+              <h3 id="phase1-facts-title">220 updateの実測</h3>
+            </div>
+            <dl class="facts-grid">
+              <div><dt>Flow</dt><dd>110.0.0</dd></div>
+              <div><dt>Cell size</dt><dd>0.025 m</dd></div>
+              <div><dt>Simulation</dt><dd>3.241 s</dd></div>
+              <div><dt>Active blocks</dt><dd>peak 154</dd></div>
+              <div><dt>GPU samples</dt><dd>92 × 250 ms</dd></div>
+              <div><dt>Max GPU memory</dt><dd>7,247 MiB</dd></div>
+            </dl>
+          </section>
+
+          <div class="notes-grid">
+            <section class="note caution">
+              <p class="note-label">Known limits</p>
+              <h3>局所点の取得は未実装</h3>
+              <p>温度・燃料・燃焼・煙・速度のraw NanoVDBはCPUへ取得できましたが、世界座標一点の値へ変換する専用アダプターはまだありません。Flow GPUカーネル単体時間も公開APIから得られず、今回はend-to-end更新時間と全GPUサンプルを記録しました。Fabric警告とFlow Python node登録警告も非阻害で残っています。</p>
+            </section>
+            <section class="note next">
+              <p class="note-label">What comes next</p>
+              <h3>薪を「物体」にする</h3>
+              <p>Phase 2では薪生成、把持・追加、PhysXによる落下と積層、Emitter追従のMVPを作ります。木材の熱・水分・質量モデルはその次のPhase 3で、Flowから独立した権威状態として実装します。</p>
+            </section>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section id="phase-0" class="section entry-section">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number">00</span>
+          <p><time datetime="2026-08-04">2026.08.04</time></p>
+          <span class="pill complete">Completed</span>
+        </aside>
+
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Environment bootstrap</p>
+            <h2>まず、同じ景色を<br>何度でも作れるようにする。</h2>
+            <p>炎を作る前に、開発環境そのものが再現可能かを確認しました。Kitアプリの起動、固定USDシーンの生成、同じカメラからの画像保存、テストと終了までをGUI操作なしで完結させています。</p>
+          </header>
+
+          <figure class="capture-card">
+            <a href="assets/phase0/frame_0000.png" aria-label="Phase 0キャプチャを原寸で開く">
+              <img src="assets/phase0/frame_0000.png" width="1280" height="720" alt="石を円形に12個並べ、中央に4本の薪と橙色の着火位置マーカーを置いたPhase 0固定シーン">
+            </a>
+            <figcaption>
+              <div>
+                <strong>Fixed bootstrap scene</strong>
+                <span>Headless RTX capture</span>
+              </div>
+              <dl>
+                <div><dt>Camera</dt><dd>/World/Camera</dd></div>
+                <div><dt>Output</dt><dd>1280 × 720 PNG</dd></div>
+              </dl>
+            </figcaption>
+          </figure>
+
+          <div class="story-grid">
+            <section class="story-card">
+              <span class="card-index">01</span>
+              <h3>作ったもの</h3>
+              <ul>
+                <li>Omniverse Kit Base Editorアプリ</li>
+                <li>決定的な固定シーン生成Extension</li>
+                <li>USD・PNG・JSONの自動保存経路</li>
+                <li>PowerShell実行ポリシーに依存しないバッチ入口</li>
+              </ul>
+            </section>
+            <section class="story-card warm">
+              <span class="card-index">02</span>
+              <h3>シーンの約束</h3>
+              <ul>
+                <li>Z-up、1 unit = 1 meter</li>
+                <li>重力 9.81 m/s²</li>
+                <li>石12個、薪4本、着火位置1点</li>
+                <li>固定カメラと固定出力解像度</li>
+              </ul>
+            </section>
+          </div>
+
+          <section class="verification" aria-labelledby="verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Verification</p>
+              <h3 id="verification-title">「動いた」を自動で確かめる。</h3>
+              <p>画像が存在するだけでは成功にしません。プロセスの終了コード、USDの構造、再生成性、JSONの内容、PNG実体の寸法をそれぞれ確認します。</p>
+              <code>.\scripts\run_phase0.bat</code>
+            </div>
+            <div class="check-list" role="list" aria-label="検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Build</strong><small>Kit release build succeeded</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Tests</strong><small>3 tests passed</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Capture</strong><small>PNG and JSON agree at 1280 × 720</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Shutdown</strong><small>Exit code 0, no Kit process left behind</small></p></div>
+            </div>
+          </section>
+
+          <section class="facts" aria-labelledby="facts-title">
+            <div class="facts-heading">
+              <p class="section-kicker">Measured environment</p>
+              <h3 id="facts-title">今回の検証条件</h3>
+            </div>
+            <dl class="facts-grid">
+              <div><dt>Kit SDK</dt><dd>110.2.0</dd></div>
+              <div><dt>PhysX</dt><dd>110.1.1</dd></div>
+              <div><dt>Warp</dt><dd>1.14.0</dd></div>
+              <div><dt>GPU</dt><dd>RTX 3090 · 24 GB</dd></div>
+              <div><dt>OS</dt><dd>Windows 11 Pro 23H2</dd></div>
+              <div><dt>Warm run</dt><dd>約22秒</dd></div>
+            </dl>
+          </section>
+
+          <div class="notes-grid">
+            <section class="note caution">
+              <p class="note-label">Known issue</p>
+              <h3>Fabricのversion警告</h3>
+              <p>キャプチャ後にinterface version警告が1件出ます。終了コード、USD、PNG、JSONには影響しません。Phase 1でも発生条件を追跡します。</p>
+            </section>
+            <section class="note next">
+              <p class="note-label">What comes next</p>
+              <h3>Flowを単独で試す</h3>
+              <p>Emitterから炎と煙を生成し、固定カメラで保存できるかを先に検証します。木材燃焼モデルとの結合は、単体成立を確認するまで行いません。</p>
+            </section>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section id="roadmap" class="section roadmap-section">
+      <div class="shell">
+        <p class="section-kicker">Roadmap</p>
+        <h2>小さく燃やして、確かめながら進む。</h2>
+        <ol class="roadmap">
+          <li class="done"><span>0</span><div><strong>環境成立確認</strong><small>完了 · 2026.08.04</small></div></li>
+          <li class="done"><span>1</span><div><strong>Flow単体検証</strong><small>完了 · 2026.08.04</small></div></li>
+          <li class="current"><span>2</span><div><strong>薪・剛体MVP</strong><small>次のマイルストーン</small></div></li>
+          <li><span>3</span><div><strong>木材熱モデル</strong><small>熱・水分・質量</small></div></li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell footer-inner">
+      <div>
+        <strong>Campfire Simulator</strong>
+        <p>Build the fire. Keep the evidence.</p>
+      </div>
+      <p>Last updated <time datetime="2026-08-04">2026.08.04</time></p>
+    </div>
+  </footer>
+</body>
+</html>
