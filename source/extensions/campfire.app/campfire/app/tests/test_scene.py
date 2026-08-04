@@ -243,3 +243,72 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(
             stage.GetRootLayer().customLayerData["campfire:phase"], "phase3"
         )
+
+    async def test_log_cabin_has_more_air_than_dense_parallel_stack(self):
+        dense = campfire.app.estimate_air_supply(
+            campfire.app.dense_stack_placements()
+        )
+        cabin = campfire.app.estimate_air_supply(
+            campfire.app.log_cabin_placements()
+        )
+        self.assertGreater(dense.contact_pairs, 0)
+        self.assertGreater(cabin.orientation_diversity, dense.orientation_diversity)
+        self.assertGreater(cabin.ventilation_factor, dense.ventilation_factor)
+        self.assertGreater(cabin.mean_oxygen_factor, dense.mean_oxygen_factor)
+        for oxygen in (*dense.oxygen_by_log.values(), *cabin.oxygen_by_log.values()):
+            self.assertGreaterEqual(oxygen, 0.05)
+            self.assertLessEqual(oxygen, 1.0)
+
+    async def test_crosswind_increases_bounded_dense_stack_oxygen(self):
+        placements = campfire.app.dense_stack_placements()
+        calm = campfire.app.estimate_air_supply(placements)
+        wind = campfire.app.estimate_air_supply(placements, (3.0, 0.0, 0.0))
+        self.assertGreater(wind.mean_oxygen_factor, calm.mean_oxygen_factor)
+        self.assertEqual(wind.wind_factor, 1.0)
+        self.assertLessEqual(max(wind.oxygen_by_log.values()), 1.0)
+
+    async def test_air_supply_updates_surface_cells_and_heat_feedback(self):
+        model = campfire.app.create_cylindrical_wood_model(
+            "AirLog", 0.03, 0.35, 0.12,
+            axial_cells=4, circumferential_cells=4, radial_cells=2
+        )
+        campfire.app.apply_oxygen_to_model(model, 0.42)
+        surface = [cell for cell in model.cells if cell.surface_exposure > 0.0]
+        interior = [cell for cell in model.cells if cell.surface_exposure == 0.0]
+        self.assertTrue(all(cell.oxygen_factor == 0.42 for cell in surface))
+        self.assertTrue(all(cell.oxygen_factor == 0.0 for cell in interior))
+        self.assertLess(
+            campfire.app.heat_feedback_factor(0.42),
+            campfire.app.heat_feedback_factor(0.80),
+        )
+
+    async def test_log_cabin_air_feedback_ignites_before_dense_stack(self):
+        comparison = campfire.app.run_stack_air_comparison()
+        dense = comparison["dense"]
+        cabin = comparison["cabin"]
+        self.assertIsNotNone(dense["ignition_seconds"])
+        self.assertIsNotNone(cabin["ignition_seconds"])
+        self.assertLess(cabin["ignition_seconds"], dense["ignition_seconds"])
+        self.assertGreater(cabin["oxygen_factor"], dense["oxygen_factor"])
+        self.assertGreater(
+            cabin["emitted_pyrolysis_gas_kg"],
+            dense["emitted_pyrolysis_gas_kg"],
+        )
+        self.assertLess(abs(dense["mass_balance_error_kg"]), 1.0e-9)
+        self.assertLess(abs(cabin["mass_balance_error_kg"]), 1.0e-9)
+
+    async def test_phase4_scene_contains_both_oxygen_annotated_stacks(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase4_scene(stage)
+        logs = list(stage.GetPrimAtPath("/World/Logs").GetChildren())
+        dense = [log for log in logs if log.GetAttribute("campfire:stackScenario").Get() == "dense"]
+        cabin = [log for log in logs if log.GetAttribute("campfire:stackScenario").Get() == "cabin"]
+        self.assertEqual(len(dense), 6)
+        self.assertEqual(len(cabin), 4)
+        self.assertTrue(all(log.GetAttribute("campfire:oxygenFactor").Get() > 0.0 for log in logs))
+        self.assertFalse(
+            stage.GetPrimAtPath(campfire.app.FLOW_EMITTER_PATH)
+            .GetAttribute("enabled")
+            .Get()
+        )
+        self.assertEqual(stage.GetRootLayer().customLayerData["campfire:phase"], "phase4")

@@ -2,7 +2,7 @@
 
 焚き火の木材状態、剛体、炎・煙を段階的に検証する、NVIDIA Omniverse Kitベースのリアルタイム・シミュレータです。
 
-現在は **Phase 3「木材熱モデルMVP」完了** の状態です。1本1,152セルの権威状態で熱伝導、水分蒸発、区分線形熱分解、炭化、質量収支を計算し、放出ガス量からFlow燃料入力を生成します。
+現在は **Phase 4「配置と通気」完了** の状態です。薪の接触、向き、隙間、上方開口、風から酸素係数を求め、密積みと井桁組みの燃焼差を比較できます。
 
 ## 必要環境
 
@@ -46,6 +46,7 @@
 .\scripts\run_phase1.bat
 .\scripts\run_phase2.bat
 .\scripts\run_phase3.bat
+.\scripts\run_phase4.bat
 ```
 
 各スクリプトはウィンドウなしでアプリを起動し、`artifacts/phase*/latest/` へUSD、1280×720 PNG、JSON要約などを保存して検査します。別の出力先は `-OutputDir` で指定できます。
@@ -62,20 +63,22 @@ Phase 3検証は乾量基準含水率12%と60%の薪を5 Hzで240秒加熱し、
 .\scripts\run_phase3.bat -OutputDir .\artifacts\phase3\manual
 ```
 
+Phase 4検証は6本の平行密積みと4本の井桁組みを比較し、酸素係数、着火順、熱分解ガス、質量収支と比較画像を検査します。
+
 ## GUI起動
 
 ```powershell
 .\repo.bat launch
 ```
 
-表示される一覧から `campfire.simulator.kit` を選びます。既定でPhase 3の初期シーンが開きます。再現可能な240秒比較は `run_phase3.bat` で実行します。Phase 2の追加・持ち上げ・リセットUIもコード内に保持しています。
+表示される一覧から `campfire.simulator.kit` を選びます。既定でPhase 4の積層比較シーンが開きます。
 
 ## 主な構成
 
 - `source/apps/campfire.simulator.kit`: アプリ定義、固定依存バージョン、既定Phase
 - `source/extensions/campfire.app/`: シーン生成、薪サービス、操作UI、キャプチャ、自動テスト
-- `scripts/run_phase0.bat` ～ `run_phase3.bat`: ヘッドレス検証の入口
-- `assets/scenes/phase0.usda` ～ `phase3_thermal.usda`: 生成済み正規シーン
+- `scripts/run_phase0.bat` ～ `run_phase4.bat`: ヘッドレス検証の入口
+- `assets/scenes/phase0.usda` ～ `phase4_air.usda`: 生成済み正規シーン
 - `DESIGN.md`: 全体設計、段階計画、実測結果、判断ログ
 - `AGENTS.md`: 実装時のプロジェクトルール
 - `docs/devlog/`: 実画面キャプチャ付きのWeb版開発日記
@@ -91,4 +94,4 @@ Phase 3検証は乾量基準含水率12%と60%の薪を5 Hzで240秒加熱し、
 - raw NanoVDBを世界座標一点へ変換する局所場アダプターは未実装です。
 - Fabric interface version警告とFlow Python node登録警告が非阻害で残っています。
 
-次のマイルストーンはPhase 4「配置と通気」です。接触・遮蔽から酸素係数を求め、積層方法による燃焼差を比較します。
+次のマイルストーンはPhase 5「崩壊」です。残存支持率、質量更新、セグメント拘束解除と再燃を扱います。

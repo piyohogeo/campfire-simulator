@@ -22,9 +22,10 @@
 .\scripts\run_phase1.bat
 .\scripts\run_phase2.bat
 .\scripts\run_phase3.bat
+.\scripts\run_phase4.bat
 ```
 
-生成物は `_build/` と `artifacts/` に置く。各Phaseの正規シーンは `assets/scenes/phase0.usda`、`phase1_flow.usda`、`phase2_rigid.usda`、`phase3_thermal.usda`。
+生成物は `_build/` と `artifacts/` に置く。各Phaseの正規シーンは `assets/scenes/phase0.usda`、`phase1_flow.usda`、`phase2_rigid.usda`、`phase3_thermal.usda`、`phase4_air.usda`。
 
 ## 変更時の確認
 

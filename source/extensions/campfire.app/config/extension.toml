@@ -11,7 +11,7 @@
 [package]
 title = "Campfire App"
 version = "0.1.0"  # Semantic Versioning is used: https://semver.org/
-description = "Deterministic Flow, rigid-log, and wood-thermal validation for Campfire Simulator."
+description = "Deterministic Flow, rigid-log, wood-thermal, and placement-aware air-supply validation for Campfire Simulator."
 category = "Simulation"
 changelog = "docs/CHANGELOG.md"
 icon = "data/icon.png"  # Icon to show in the Extension Manager

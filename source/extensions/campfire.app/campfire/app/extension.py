@@ -63,6 +63,8 @@ from .phase3_scene import (
     update_flow_source,
 )
 from .combustion import flow_source_from_model, load_model_from_prim, save_model_to_prim
+from .air_supply import run_stack_air_comparison
+from .phase4_scene import export_phase4_stage, populate_phase4_scene
 from .wood import get_log_world_position, list_log_ids
 
 
@@ -127,7 +129,13 @@ class CampfireAppExtension(omni.ext.IExt):
 
             stage = context.get_stage()
             repo_root = _find_repo_root(self._extension_path)
-            if phase == "phase3":
+            if phase == "phase4":
+                settings.set("/rtx/flow/enabled", True)
+                populate_phase4_scene(stage)
+                scene_path = export_phase4_stage(
+                    stage, repo_root / "assets" / "scenes" / "phase4_air.usda"
+                )
+            elif phase == "phase3":
                 settings.set("/rtx/flow/enabled", True)
                 populate_phase3_scene(stage)
                 scene_path = export_phase3_stage(
@@ -164,7 +172,9 @@ class CampfireAppExtension(omni.ext.IExt):
                 if viewport is None:
                     raise RuntimeError(f"No active viewport is available for {phase} capture")
                 await self._wait_for_capture_resolution(viewport)
-                if phase == "phase3":
+                if phase == "phase4":
+                    await self._capture_phase4(viewport, stage, scene_path)
+                elif phase == "phase3":
                     await self._run_phase3(viewport, stage, scene_path)
                 elif phase == "phase2":
                     await self._run_phase2(viewport, stage, scene_path)
@@ -259,6 +269,34 @@ class CampfireAppExtension(omni.ext.IExt):
         }
         self._write_summary(output_dir, summary)
         carb.log_info(f"[campfire.app] Phase 0 capture written to {image_path}")
+
+    async def _capture_phase4(self, viewport, stage, scene_path: Path):
+        output_dir = self._output_dir()
+        for _ in range(8):
+            await omni.kit.viewport.utility.next_viewport_frame_async(viewport)
+        image_path = output_dir / "frame_0000.png"
+        image_resolution = await self._capture_image(viewport, image_path)
+        comparison_started = time.perf_counter()
+        comparison = run_stack_air_comparison()
+        comparison_wall_seconds = time.perf_counter() - comparison_started
+        final_stage_path = export_stage(stage, output_dir / "final_stage.usda")
+        summary = {
+            "status": "ok",
+            "phase": "phase4",
+            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "scene": str(scene_path),
+            "final_stage": str(final_stage_path),
+            "image": str(image_path),
+            "resolution": list(image_resolution),
+            "comparison_wall_seconds": round(comparison_wall_seconds, 4),
+            "comparison": comparison,
+        }
+        self._write_summary(output_dir, summary)
+        carb.log_info(
+            "[campfire.app] Phase 4 comparison complete: "
+            f"denseO2={comparison['dense']['oxygen_factor']:.4f}, "
+            f"cabinO2={comparison['cabin']['oxygen_factor']:.4f}"
+        )
 
     async def _run_phase1(self, viewport, stage, scene_path: Path):
         output_dir = self._output_dir()

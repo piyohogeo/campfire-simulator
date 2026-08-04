@@ -24,6 +24,16 @@ from .combustion import (
     load_model_from_prim,
     save_model_to_prim,
 )
+from .air_supply import (
+    AirSupplyResult,
+    LogPlacement,
+    apply_oxygen_to_model,
+    dense_stack_placements,
+    estimate_air_supply,
+    heat_feedback_factor,
+    log_cabin_placements,
+    run_stack_air_comparison,
+)
 from .flow_scene import (
     FLOW_EMITTER_PATH,
     FLOW_SIMULATE_PATH,
@@ -44,11 +54,13 @@ from .phase3_scene import (
     populate_phase3_scene,
     update_flow_source,
 )
+from .phase4_scene import phase4_placements, populate_phase4_scene
 from .wood import LogSpec, create_log, get_log_world_position, list_log_ids, move_log
 
 __all__ = [
     "CAMERA_PATH",
     "ASH",
+    "AirSupplyResult",
     "CHAR",
     "DEPLETED",
     "DRY_WOOD",
@@ -62,18 +74,22 @@ __all__ = [
     "CampfireAppExtension",
     "FlowSourceState",
     "LogSpec",
+    "LogPlacement",
     "WoodModelParameters",
     "WoodThermalModel",
     "add_scenario_log",
     "create_log",
     "create_cylindrical_wood_model",
     "create_phase3_models",
+    "dense_stack_placements",
+    "estimate_air_supply",
     "emitter_position_for_frame",
     "export_stage",
     "populate_fixed_scene",
     "populate_flow_scene",
     "populate_phase2_scene",
     "populate_phase3_scene",
+    "populate_phase4_scene",
     "get_log_world_position",
     "list_log_ids",
     "load_model_from_prim",
@@ -81,5 +97,10 @@ __all__ = [
     "set_emitter_follow",
     "save_model_to_prim",
     "flow_source_from_model",
+    "heat_feedback_factor",
+    "log_cabin_placements",
+    "run_stack_air_comparison",
+    "phase4_placements",
+    "apply_oxygen_to_model",
     "update_flow_source",
 ]
