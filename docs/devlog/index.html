@@ -15,7 +15,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-4">最新記録</a>
+        <a href="#phase-5">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -26,17 +26,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-4">Phase 4を読む</a>
+        <a class="button primary" href="#phase-5">Phase 5を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 4 完了</strong></div>
+        <div><span>現在地</span><strong>Phase 5 完了</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>17 / 17 passed</strong></div>
-        <div><span>次の焦点</span><strong>崩壊</strong></div>
+        <div><span>テスト</span><strong>21 / 21 passed</strong></div>
+        <div><span>次の焦点</span><strong>校正</strong></div>
       </div>
     </div>
   </header>
@@ -48,6 +48,70 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-5" class="section entry-section phase-five">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number">05</span>
+          <p><time datetime="2026-08-04">2026.08.04</time></p>
+          <span class="pill complete">Completed</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Support loss and collapse</p>
+            <h2>燃えて細くなると、<br>薪は二つにほどける。</h2>
+            <p>木材セルを12の断面に集約し、残った未炭化木材と炭の低い強度から支持率を計算します。中央が閾値を下回るとFixedJointを解除し、二つの剛体が崩れて新しい空気の道が開きます。</p>
+          </header>
+
+          <div class="capture-pair" aria-label="支持喪失前後のPhysXキャプチャ">
+            <figure class="capture-card">
+              <a href="assets/phase5/frame_0020.png" aria-label="Phase 5拘束中を原寸で開く">
+                <img src="assets/phase5/frame_0020.png" width="1280" height="720" alt="二本の支持薪に載り、中央のFixedJointで一本に拘束された上段薪">
+              </a>
+              <figcaption><div><strong>Supported</strong><span>Frame 20 · fixed joint intact</span></div></figcaption>
+            </figure>
+            <figure class="capture-card">
+              <a href="assets/phase5/frame_0260.png" aria-label="Phase 5崩落後を原寸で開く">
+                <img src="assets/phase5/frame_0260.png" width="1280" height="720" alt="中央の拘束が外れ、二つの薪セグメントが傾いて中央からFlow火炎が再燃する様子">
+              </a>
+              <figcaption><div><strong>Collapsed</strong><span>Frame 260 · separated and reignited</span></div></figcaption>
+            </figure>
+          </div>
+
+          <div class="story-grid">
+            <section class="story-card"><span class="card-index">01</span><h3>木材から支持率へ</h3><ul><li>長さ方向12断面を毎step評価</li><li>未炭化木材 + 炭質量 × 0.12</li><li>初期断面質量との比を0〜1に制限</li><li>内部最小値0.58で支持喪失</li></ul></section>
+            <section class="story-card warm"><span class="card-index">02</span><h3>拘束から崩落へ</h3><ul><li>0.9 mの2剛体をFixedJointで接続</li><li>解除時に残存質量と半径を更新</li><li>PhysX変位 最大0.516 m</li><li>oxygen 0.30 → 0.82で再燃</li></ul></section>
+          </div>
+
+          <section class="verification" aria-labelledby="phase5-verification-title">
+            <div class="verification-copy"><p class="section-kicker">Verification</p><h3 id="phase5-verification-title">壊れた理由と、その後まで測る。</h3><p>Jointの有無だけでなく、支持率、分割質量、コライダー、剛体変位、再燃、質量保存、2枚のPNGを同じ実行で検査します。</p><code>.\scripts\run_phase5.bat</code></div>
+            <div class="check-list" role="list" aria-label="Phase 5検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Support</strong><small>1.0 → 0.5795 · threshold 0.58</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Collapse</strong><small>0.516 m / 0.117 m segment displacement</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Reignition</strong><small>5.23× post-collapse gas peak</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Tests</strong><small>21 / 21 passed</small></p></div>
+            </div>
+          </section>
+
+          <section class="facts" aria-labelledby="phase5-facts-title">
+            <div class="facts-heading"><p class="section-kicker">Measured on RTX 3090</p><h3 id="phase5-facts-title">崩落シナリオの実測</h3></div>
+            <dl class="facts-grid">
+              <div><dt>Failure</dt><dd>164.2 s</dd></div>
+              <div><dt>Remaining mass</dt><dd>54.194 kg</dd></div>
+              <div><dt>Mass error</dt><dd>0.0 kg</dd></div>
+              <div><dt>Vertical drop</dt><dd>約0.106 m</dd></div>
+              <div><dt>Flow peak</dt><dd>212 blocks</dd></div>
+              <div><dt>PhysX update</dt><dd>19.85 ms mean</dd></div>
+            </dl>
+          </section>
+
+          <div class="notes-grid">
+            <section class="note caution"><p class="note-label">Known limits</p><h3>破断強度は未校正</h3><p>炭強度0.12、閾値0.58、崩落後oxygen 0.82は因果確認用の初期仮説です。形状も事前に2分割した円柱で、亀裂進展や任意位置のメッシュ破断はまだ扱いません。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>実物へ近づける</h3><p>Phase 6では実験またはFDSとの比較で係数を校正し、反応モデル、炭化表現、火の粉、音、更新性能を改善します。</p></section>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section id="phase-4" class="section entry-section phase-four">
@@ -497,7 +561,8 @@
           <li class="done"><span>2</span><div><strong>薪・剛体MVP</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>3</span><div><strong>木材熱モデル</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>4</span><div><strong>配置と通気</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>5</span><div><strong>崩壊</strong><small>次のマイルストーン</small></div></li>
+          <li class="done"><span>5</span><div><strong>崩壊</strong><small>完了 · 2026.08.04</small></div></li>
+          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>次のマイルストーン</small></div></li>
         </ol>
       </div>
     </section>

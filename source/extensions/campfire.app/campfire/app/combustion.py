@@ -231,15 +231,26 @@ class WoodThermalModel:
     def step(
         self,
         dt_seconds: float,
-        external_heat_flux_w_m2: float,
+        external_heat_flux_w_m2: float | list[float] | tuple[float, ...],
         ambient_temperature_k: float | None = None,
     ) -> CombustionStepResult:
-        """Advance one explicit SI-unit thermal/reaction step."""
+        """Advance one explicit SI-unit thermal/reaction step.
+
+        A scalar applies a uniform surface flux.  A cell-sized sequence allows
+        later phases to represent a local flame without changing the
+        authoritative cell state or reaction accounting.
+        """
 
         if not math.isfinite(dt_seconds) or dt_seconds <= 0.0:
             raise ValueError("dt_seconds must be finite and positive")
-        if not math.isfinite(external_heat_flux_w_m2) or external_heat_flux_w_m2 < 0.0:
-            raise ValueError("external_heat_flux_w_m2 must be finite and non-negative")
+        if isinstance(external_heat_flux_w_m2, (int, float)):
+            heat_fluxes = [float(external_heat_flux_w_m2)] * len(self.cells)
+        else:
+            heat_fluxes = [float(value) for value in external_heat_flux_w_m2]
+            if len(heat_fluxes) != len(self.cells):
+                raise ValueError("Cell heat-flux sequence must match the cell count")
+        if any(not math.isfinite(value) or value < 0.0 for value in heat_fluxes):
+            raise ValueError("External heat flux must be finite and non-negative")
 
         p = self.parameters
         ambient = p.ambient_temperature_k if ambient_temperature_k is None else ambient_temperature_k
@@ -265,7 +276,7 @@ class WoodThermalModel:
         for index, cell in enumerate(self.cells):
             heat_capacity = self._heat_capacity_j_k(cell)
             area = cell.external_area_m2 * cell.surface_exposure
-            external_heat_w = external_heat_flux_w_m2 * area
+            external_heat_w = heat_fluxes[index] * area
             convective_loss_w = p.convection_w_m2_k * area * (
                 cell.temperature_k - ambient
             )

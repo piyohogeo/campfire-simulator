@@ -65,6 +65,18 @@ from .phase3_scene import (
 from .combustion import flow_source_from_model, load_model_from_prim, save_model_to_prim
 from .air_supply import run_stack_air_comparison
 from .phase4_scene import export_phase4_stage, populate_phase4_scene
+from .phase5_scene import (
+    PHASE5_FIXED_DT_SECONDS,
+    PHASE5_JOINT_PATH,
+    PHASE5_POST_CAPTURE_FRAME,
+    PHASE5_PRE_CAPTURE_FRAME,
+    PHASE5_RELEASE_FRAME,
+    PHASE5_SEGMENT_PATHS,
+    export_phase5_stage,
+    populate_phase5_scene,
+    release_phase5_structure,
+)
+from .support import burn_to_support_failure, run_collapse_reignition_scenario
 from .wood import get_log_world_position, list_log_ids
 
 
@@ -129,7 +141,13 @@ class CampfireAppExtension(omni.ext.IExt):
 
             stage = context.get_stage()
             repo_root = _find_repo_root(self._extension_path)
-            if phase == "phase4":
+            if phase == "phase5":
+                settings.set("/rtx/flow/enabled", True)
+                populate_phase5_scene(stage)
+                scene_path = export_phase5_stage(
+                    stage, repo_root / "assets" / "scenes" / "phase5_collapse.usda"
+                )
+            elif phase == "phase4":
                 settings.set("/rtx/flow/enabled", True)
                 populate_phase4_scene(stage)
                 scene_path = export_phase4_stage(
@@ -172,7 +190,9 @@ class CampfireAppExtension(omni.ext.IExt):
                 if viewport is None:
                     raise RuntimeError(f"No active viewport is available for {phase} capture")
                 await self._wait_for_capture_resolution(viewport)
-                if phase == "phase4":
+                if phase == "phase5":
+                    await self._run_phase5(viewport, stage, scene_path)
+                elif phase == "phase4":
                     await self._capture_phase4(viewport, stage, scene_path)
                 elif phase == "phase3":
                     await self._run_phase3(viewport, stage, scene_path)
@@ -297,6 +317,150 @@ class CampfireAppExtension(omni.ext.IExt):
             f"denseO2={comparison['dense']['oxygen_factor']:.4f}, "
             f"cabinO2={comparison['cabin']['oxygen_factor']:.4f}"
         )
+
+    async def _run_phase5(self, viewport, stage, scene_path: Path):
+        """Release a thermally failed joint and validate the PhysX collapse."""
+
+        output_dir = self._output_dir()
+        settings = carb.settings.get_settings()
+        physics = get_physx_simulation_interface()
+        flow_interface = _flowusd.acquire_flowusd_interface()
+        stage_id = UsdUtils.StageCache.Get().GetId(stage).ToLongInt()
+        attached_before = int(physics.get_attached_stage())
+        attached_here = attached_before != stage_id
+        previous_update_to_usd = settings.get_as_bool(SETTING_UPDATE_TO_USD)
+        previous_fabric = settings.get_as_bool("/physics/fabricEnabled")
+
+        numerical_started = time.perf_counter()
+        combustion = run_collapse_reignition_scenario()
+        failed_model, failure, _, _ = burn_to_support_failure()
+        numerical_wall_seconds = time.perf_counter() - numerical_started
+        release_positions = None
+        segment_updates = None
+        physics_times_ms = []
+        active_block_counts = []
+        images = []
+
+        try:
+            settings.set(SETTING_UPDATE_TO_USD, True)
+            settings.set("/physics/fabricEnabled", False)
+            if attached_here:
+                physics.attach_stage(stage_id)
+
+            for frame in range(1, PHASE5_POST_CAPTURE_FRAME + 1):
+                if frame == PHASE5_RELEASE_FRAME:
+                    release_positions = {
+                        path: _vector_as_list(
+                            get_log_world_position(stage, path.rsplit("/", 1)[-1])
+                        )
+                        for path in PHASE5_SEGMENT_PATHS
+                    }
+                    physics.detach_stage()
+                    segment_updates = release_phase5_structure(
+                        stage, failed_model, failure
+                    )
+                    physics.attach_stage(stage_id)
+
+                physics_started = time.perf_counter()
+                physics.simulate(PHASE5_FIXED_DT_SECONDS, frame * PHASE5_FIXED_DT_SECONDS)
+                physics.fetch_results()
+                physics_times_ms.append(
+                    (time.perf_counter() - physics_started) * 1000.0
+                )
+                await omni.kit.app.get_app().next_update_async()
+                active_block_counts.append(int(flow_interface.get_active_block_count()))
+
+                if frame in (PHASE5_PRE_CAPTURE_FRAME, PHASE5_POST_CAPTURE_FRAME):
+                    image_path = output_dir / f"frame_{frame:04d}.png"
+                    resolution = await self._capture_image(viewport, image_path)
+                    images.append(
+                        {
+                            "frame": frame,
+                            "state": "supported" if frame < PHASE5_RELEASE_FRAME else "collapsed",
+                            "path": str(image_path),
+                            "resolution": list(resolution),
+                        }
+                    )
+
+            final_positions = {
+                path: _vector_as_list(
+                    get_log_world_position(stage, path.rsplit("/", 1)[-1])
+                )
+                for path in PHASE5_SEGMENT_PATHS
+            }
+            displacements = {}
+            vertical_drops = {}
+            for path in PHASE5_SEGMENT_PATHS:
+                before = Gf.Vec3d(*release_positions[path])
+                after = Gf.Vec3d(*final_positions[path])
+                displacements[path] = float((after - before).GetLength())
+                vertical_drops[path] = float(before[2] - after[2])
+
+            final_stage_path = export_stage(stage, output_dir / "final_stage.usda")
+            measured = physics_times_ms[30:]
+            summary = {
+                "status": "ok",
+                "phase": "phase5",
+                "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+                "scene": str(scene_path),
+                "final_stage": str(final_stage_path),
+                "resolution": list(CAPTURE_RESOLUTION),
+                "images": images,
+                "combustion": combustion,
+                "structure": {
+                    "joint_path": PHASE5_JOINT_PATH,
+                    "constraint_released": not bool(
+                        stage.GetPrimAtPath(PHASE5_JOINT_PATH)
+                    ),
+                    "release_frame": PHASE5_RELEASE_FRAME,
+                    "failed_section": failure.weakest_section,
+                    "support_ratio_at_release": failure.weakest_support_ratio,
+                    "failure_threshold": failure.failure_threshold,
+                    "segment_updates": [
+                        {
+                            "path": update.path,
+                            "mass_kg": update.mass_kg,
+                            "mass_ratio": update.mass_ratio,
+                            "collider_radius_m": update.collider_radius_m,
+                        }
+                        for update in segment_updates
+                    ],
+                },
+                "rigid_body": {
+                    "fixed_dt_seconds": PHASE5_FIXED_DT_SECONDS,
+                    "simulation_steps": PHASE5_POST_CAPTURE_FRAME,
+                    "release_positions_m": release_positions,
+                    "final_positions_m": final_positions,
+                    "displacement_m": displacements,
+                    "vertical_drop_m": vertical_drops,
+                    "collapsed": max(displacements.values()) > 0.08,
+                },
+                "flow": {
+                    "active_blocks_final": active_block_counts[-1],
+                    "active_blocks_peak": max(active_block_counts, default=0),
+                },
+                "timing": {
+                    "numerical_wall_seconds": round(numerical_wall_seconds, 4),
+                    "physics_mean_ms": round(statistics.fmean(measured), 4),
+                    "physics_p95_ms": round(
+                        sorted(measured)[min(len(measured) - 1, int(len(measured) * 0.95))],
+                        4,
+                    ),
+                },
+            }
+            self._write_summary(output_dir, summary)
+            carb.log_info(
+                "[campfire.app] Phase 5 complete: "
+                f"support={failure.weakest_support_ratio:.4f}, "
+                f"reignitionGain={combustion['reignition_gain']:.3f}, "
+                f"collapsed={summary['rigid_body']['collapsed']}"
+            )
+        finally:
+            if attached_here and int(physics.get_attached_stage()) == stage_id:
+                physics.detach_stage()
+            settings.set(SETTING_UPDATE_TO_USD, previous_update_to_usd)
+            settings.set("/physics/fabricEnabled", previous_fabric)
+            _flowusd.release_flowusd_interface(flow_interface)
 
     async def _run_phase1(self, viewport, stage, scene_path: Path):
         output_dir = self._output_dir()

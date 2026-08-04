@@ -2,7 +2,7 @@
 
 焚き火の木材状態、剛体、炎・煙を段階的に検証する、NVIDIA Omniverse Kitベースのリアルタイム・シミュレータです。
 
-現在は **Phase 4「配置と通気」完了** の状態です。薪の接触、向き、隙間、上方開口、風から酸素係数を求め、密積みと井桁組みの燃焼差を比較できます。
+現在は **Phase 5「崩壊」完了** の状態です。木材セルから断面支持率を求め、閾値を下回った薪のセグメント拘束を解除し、質量・コライダー更新、PhysX崩落、通気回復後の再燃まで検証できます。
 
 ## 必要環境
 
@@ -47,6 +47,7 @@
 .\scripts\run_phase2.bat
 .\scripts\run_phase3.bat
 .\scripts\run_phase4.bat
+.\scripts\run_phase5.bat
 ```
 
 各スクリプトはウィンドウなしでアプリを起動し、`artifacts/phase*/latest/` へUSD、1280×720 PNG、JSON要約などを保存して検査します。別の出力先は `-OutputDir` で指定できます。
@@ -65,20 +66,22 @@ Phase 3検証は乾量基準含水率12%と60%の薪を5 Hzで240秒加熱し、
 
 Phase 4検証は6本の平行密積みと4本の井桁組みを比較し、酸素係数、着火順、熱分解ガス、質量収支と比較画像を検査します。
 
+Phase 5検証は中央断面を局所加熱し、支持率`0.58`でFixedJointを解除します。分割後の質量・コライダー、PhysX変位、酸素係数`0.30 → 0.82`による再燃、質量収支、崩落前後の2枚の画像を検査します。
+
 ## GUI起動
 
 ```powershell
 .\repo.bat launch
 ```
 
-表示される一覧から `campfire.simulator.kit` を選びます。既定でPhase 4の積層比較シーンが開きます。
+表示される一覧から `campfire.simulator.kit` を選びます。既定でPhase 5の拘束付き分割薪シーンが開きます。
 
 ## 主な構成
 
 - `source/apps/campfire.simulator.kit`: アプリ定義、固定依存バージョン、既定Phase
 - `source/extensions/campfire.app/`: シーン生成、薪サービス、操作UI、キャプチャ、自動テスト
-- `scripts/run_phase0.bat` ～ `run_phase4.bat`: ヘッドレス検証の入口
-- `assets/scenes/phase0.usda` ～ `phase4_air.usda`: 生成済み正規シーン
+- `scripts/run_phase0.bat` ～ `run_phase5.bat`: ヘッドレス検証の入口
+- `assets/scenes/phase0.usda` ～ `phase5_collapse.usda`: 生成済み正規シーン
 - `DESIGN.md`: 全体設計、段階計画、実測結果、判断ログ
 - `AGENTS.md`: 実装時のプロジェクトルール
 - `docs/devlog/`: 実画面キャプチャ付きのWeb版開発日記
@@ -88,10 +91,11 @@ Phase 4検証は6本の平行密積みと4本の井桁組みを比較し、酸�
 - 薪は単純な円柱1剛体で、GUI操作も追加・持ち上げ・リセットの最小構成です。マウス拘束による自由な把持は未実装です。
 - 密度・摩擦・反発は、校正前の代表値・初期仮説です。実測木材に合わせた校正はPhase 6で行います。
 - Phase 3の熱・反応係数と150 kW/m²の比較熱流束は校正前の初期仮説で、実測木材の予測値ではありません。
+- Phase 5の炭残存強度`0.12`、破断閾値`0.58`、崩落前後の酸素係数は校正前です。薪は事前に2セグメントへ分けた円柱で、連続亀裂や任意位置のメッシュ破断は扱いません。
 - 1,152セル×2本のPython更新は平均24.85 msです。5 Hzを60 Hzへ償却すると約2.07 ms/frameですが、更新フレームのスパイクは4 ms予算を超えます。
 - Phase 3ヘッドレス比較は成功しますが、Flow/USD更新を含む実行は約276秒かかります。配列化またはWarp化と、Flowアダプター更新コストの分離が必要です。
 - ヘッドレス検証ではUSD transformを同期する `fetch_results` が平均約15.46 msを占めます。PhysX `simulate` 自体は平均約0.15 msですが、60 Hz実時間更新の性能条件はこの経路では未達です。
 - raw NanoVDBを世界座標一点へ変換する局所場アダプターは未実装です。
 - Fabric interface version警告とFlow Python node登録警告が非阻害で残っています。
 
-次のマイルストーンはPhase 5「崩壊」です。残存支持率、質量更新、セグメント拘束解除と再燃を扱います。
+次のマイルストーンはPhase 6「校正と品質向上」です。実験またはFDSとの比較、反応係数、描画品質、性能最適化を扱います。

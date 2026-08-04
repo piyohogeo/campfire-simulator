@@ -25,6 +25,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - 着火遅延、質量収支、性能超過を実測値とともに掲載するPhase 3開発日記。
 - 接触・向き・隙間・上方開口・風から酸素係数を求めるPhase 4通気近似。
 - 密積みと井桁組みの着火・ガス放出比較、USD注釈、ヘッドレス画像検証。
+- 軸断面ごとの残存支持率、炭の低強度近似、局所熱流束、支持喪失判定。
+- 事前分割薪のFixedJoint解除、残存質量・コライダー更新、PhysX崩落、通気回復後の再燃検証。
+- Phase 5の崩落前後キャプチャ、JSON要約、PowerShell受け入れスクリプト、Web開発日記。
 
 ### Changed
 
@@ -32,6 +35,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - アプリの既定シーンをPhase 2へ変更し、薪の権威位置からFlow Emitterを更新する構成へ拡張。
 - アプリの既定シーンをPhase 3へ変更し、Flow入力の所有者を木材熱モデルへ移行。
 - アプリの既定シーンをPhase 4の積層通気比較へ変更。
+- アプリの既定シーンをPhase 5の拘束付き分割薪へ変更。
 
 ### Notes
 

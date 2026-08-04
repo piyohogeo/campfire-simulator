@@ -55,6 +55,24 @@ from .phase3_scene import (
     update_flow_source,
 )
 from .phase4_scene import phase4_placements, populate_phase4_scene
+from .phase5_scene import (
+    PHASE5_JOINT_PATH,
+    PHASE5_SEGMENT_PATHS,
+    create_phase5_model,
+    populate_phase5_scene,
+    release_phase5_structure,
+)
+from .support import (
+    CrossSectionSupport,
+    SegmentPhysicsUpdate,
+    SupportAssessment,
+    assess_cross_section_support,
+    burn_to_support_failure,
+    create_collapse_support_model,
+    release_segment_joint,
+    run_collapse_reignition_scenario,
+    segment_mass_kg,
+)
 from .wood import LogSpec, create_log, get_log_world_position, list_log_ids, move_log
 
 __all__ = [
@@ -69,18 +87,24 @@ __all__ = [
     "PHASE2_ADDED_LOG_ID",
     "PHASE3_DRY_LOG_ID",
     "PHASE3_WET_LOG_ID",
+    "PHASE5_JOINT_PATH",
+    "PHASE5_SEGMENT_PATHS",
     "PYROLYZING",
     "WET_WOOD",
     "CampfireAppExtension",
+    "CrossSectionSupport",
     "FlowSourceState",
     "LogSpec",
     "LogPlacement",
+    "SegmentPhysicsUpdate",
+    "SupportAssessment",
     "WoodModelParameters",
     "WoodThermalModel",
     "add_scenario_log",
     "create_log",
     "create_cylindrical_wood_model",
     "create_phase3_models",
+    "create_phase5_model",
     "dense_stack_placements",
     "estimate_air_supply",
     "emitter_position_for_frame",
@@ -90,6 +114,7 @@ __all__ = [
     "populate_phase2_scene",
     "populate_phase3_scene",
     "populate_phase4_scene",
+    "populate_phase5_scene",
     "get_log_world_position",
     "list_log_ids",
     "load_model_from_prim",
@@ -100,7 +125,14 @@ __all__ = [
     "heat_feedback_factor",
     "log_cabin_placements",
     "run_stack_air_comparison",
+    "run_collapse_reignition_scenario",
     "phase4_placements",
     "apply_oxygen_to_model",
+    "assess_cross_section_support",
+    "burn_to_support_failure",
+    "create_collapse_support_model",
+    "release_phase5_structure",
+    "release_segment_joint",
+    "segment_mass_kg",
     "update_flow_source",
 ]

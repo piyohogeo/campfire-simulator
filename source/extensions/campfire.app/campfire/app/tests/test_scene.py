@@ -312,3 +312,86 @@ class TestScene(omni.kit.test.AsyncTestCase):
             .Get()
         )
         self.assertEqual(stage.GetRootLayer().customLayerData["campfire:phase"], "phase4")
+
+    async def test_local_heat_flux_sequence_targets_selected_cells(self):
+        model = campfire.app.create_cylindrical_wood_model(
+            "LocalHeat", 0.04, 0.20, 0.0,
+            axial_cells=2, circumferential_cells=4, radial_cells=2
+        )
+        fluxes = [0.0] * len(model.cells)
+        target = next(
+            index for index, cell in enumerate(model.cells)
+            if cell.surface_exposure > 0.0
+        )
+        fluxes[target] = 50_000.0
+        initial = [cell.temperature_k for cell in model.cells]
+        model.step(0.1, fluxes)
+        self.assertGreater(model.cells[target].temperature_k, initial[target])
+        with self.assertRaises(ValueError):
+            model.step(0.1, fluxes[:-1])
+
+    async def test_cross_section_support_selects_burned_failure_location(self):
+        model = campfire.app.create_phase5_model()
+        initial = campfire.app.assess_cross_section_support(model)
+        self.assertAlmostEqual(initial.weakest_support_ratio, 1.0, places=9)
+        cells_per_section = (
+            model.spec.circumferential_cells * model.spec.radial_cells
+        )
+        failed_index = 5
+        start = failed_index * cells_per_section
+        for cell in model.cells[start : start + cells_per_section]:
+            original = cell.dry_wood_mass_kg
+            cell.dry_wood_mass_kg = original * 0.20
+            cell.char_mass_kg = original * 0.08
+        assessment = campfire.app.assess_cross_section_support(model)
+        self.assertTrue(assessment.failed)
+        self.assertEqual(assessment.weakest_section, failed_index)
+        self.assertEqual(assessment.split_index, failed_index + 1)
+        self.assertLess(
+            assessment.weakest_support_ratio,
+            assessment.failure_threshold,
+        )
+
+    async def test_phase5_release_removes_joint_and_updates_segment_physics(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase5_scene(stage)
+        model = campfire.app.create_phase5_model()
+        cells_per_section = (
+            model.spec.circumferential_cells * model.spec.radial_cells
+        )
+        for cell in model.cells[5 * cells_per_section : 6 * cells_per_section]:
+            cell.dry_wood_mass_kg *= 0.15
+        assessment = campfire.app.assess_cross_section_support(model)
+        updates = campfire.app.release_phase5_structure(stage, model, assessment)
+        self.assertFalse(stage.GetPrimAtPath(campfire.app.PHASE5_JOINT_PATH))
+        self.assertEqual(len(updates), 2)
+        self.assertAlmostEqual(
+            sum(update.mass_kg for update in updates),
+            model.current_mass_kg,
+            places=9,
+        )
+        for update in updates:
+            prim = stage.GetPrimAtPath(update.path)
+            self.assertTrue(prim.GetAttribute("campfire:constraintReleased").Get())
+            self.assertAlmostEqual(
+                prim.GetAttribute("physics:mass").Get(), update.mass_kg, places=6
+            )
+            self.assertLessEqual(update.collider_radius_m, model.spec.radius_m)
+
+    async def test_collapse_scenario_releases_and_reignites_with_mass_balance(self):
+        result = campfire.app.run_collapse_reignition_scenario()
+        self.assertGreater(result["initial_support_ratio"], result["failure_threshold"])
+        self.assertLessEqual(
+            result["support_ratio_at_release"], result["failure_threshold"]
+        )
+        self.assertGreater(
+            result["post_collapse_oxygen_factor"],
+            result["pre_collapse_oxygen_factor"],
+        )
+        self.assertTrue(result["reignited"], result)
+        self.assertGreater(result["reignition_gain"], 1.05)
+        self.assertAlmostEqual(
+            result["segment_mass_sum_kg"], result["remaining_mass_kg"], places=9
+        )
+        self.assertLess(abs(result["mass_balance_error_kg"]), 1.0e-9)
+        self.assertTrue(result["all_values_finite"])

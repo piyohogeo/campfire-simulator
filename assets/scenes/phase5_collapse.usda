@@ -1,0 +1,369 @@
+#usda 1.0
+(
+    customLayerData = {
+        double "campfire:fixedDtSeconds" = 0.016666666666666666
+        string "campfire:flowVersion" = "110.0.0"
+        string "campfire:phase" = "phase5"
+        string "campfire:scene" = "collapse_reignition"
+        dictionary renderSettings = {
+            bool "rtx:flow:enabled" = 1
+            bool "rtx:flow:pathTracingEnabled" = 1
+            bool "rtx:flow:rayTracedReflectionsEnabled" = 1
+            bool "rtx:flow:rayTracedTranslucencyEnabled" = 1
+        }
+    }
+    defaultPrim = "World"
+    endTimeCode = 260
+    metersPerUnit = 1
+    startTimeCode = 0
+    timeCodesPerSecond = 60
+    upAxis = "Z"
+)
+
+def Xform "World"
+{
+    def PhysicsScene "PhysicsScene"
+    {
+        vector3f physics:gravityDirection = (0, 0, -1)
+        float physics:gravityMagnitude = 9.81
+    }
+
+    def Cylinder "Ground" (
+        prepend apiSchemas = ["PhysicsCollisionAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.2
+        color3f[] primvars:displayColor = [(0.08, 0.055, 0.035)]
+        double radius = 5
+        double3 xformOp:translate = (0, 0, -0.1)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Camera "Camera"
+    {
+        float focalLength = 42
+        matrix4d xformOp:transform = ( (0.8087360843031887, 0.5881716976750463, 0, 0), (-0.2135494502278706, 0.29363049406332214, 0.931760572928209, -0), (0.5480351980058582, -0.7535483972580552, 0.36307331867888115, 0), (4.8, -6.6000000000000005, 3.6, 0.9999999999999999) )
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def "Lights"
+    {
+        def DomeLight "Dome"
+        {
+            color3f inputs:color = (0.42, 0.5, 0.7)
+            float inputs:intensity = 1200
+        }
+    }
+
+    def Xform "Flow"
+    {
+        def FlowEmitterSphere "Emitter"
+        {
+            float allocationScale = 1.5
+            float coupleRateFuel = 2
+            float coupleRateSmoke = 0
+            float coupleRateTemperature = 10
+            float coupleRateVelocity = 2
+            bool enabled = 1
+            float fuel = 0.08
+            int layer = 0
+            bool multisample = 1
+            uint numSubSteps = 2
+            float3 position = (0, 0, 0.38)
+            float radius = 0.18
+            bool radiusIsWorldSpace = 1
+            float smoke = 0.05
+            float temperature = 0.55
+            float3 velocity = (0, 0, 0.3)
+            bool velocityIsWorldSpace = 1
+        }
+
+        def FlowSimulate "Simulate"
+        {
+            uint blockMinLifetime = 4
+            float densityCellSize = 0.025
+            bool enableVariableTimeStep = 0
+            bool forceSimulate = 1
+            int layer = 0
+            uint maxStepsPerSimulate = 1
+            bool physicsCollisionEnabled = 1
+            bool physicsConvexCollision = 1
+            bool simulateWhenPaused = 1
+            float stepsPerSecond = 60
+            uint velocitySubSteps = 1
+
+            def FlowAdvectionCombustionParams "advection"
+            {
+                float buoyancyPerTemp = 6
+                float burnPerTemp = 4
+                bool combustionEnabled = 1
+                float coolingRate = 1.5
+                bool enabled = 1
+                float fuelPerBurn = 0.25
+                float3 gravity = (0, 0, -9.81)
+                float ignitionTemp = 0.05
+                float smokePerBurn = 3
+                float tempPerBurn = 5
+
+                def FlowAdvectionChannelParams "smoke"
+                {
+                    float damping = 0.3
+                    float fade = 2
+                    float secondOrderBlendFactor = 0.9
+                }
+
+                def FlowAdvectionChannelParams "velocity"
+                {
+                    float damping = 0.01
+                    float fade = 1
+                }
+
+                def FlowAdvectionChannelParams "divergence"
+                {
+                    float damping = 0.01
+                    float fade = 1
+                }
+
+                def FlowAdvectionChannelParams "temperature"
+                {
+                    float secondOrderBlendFactor = 0.9
+                }
+
+                def FlowAdvectionChannelParams "fuel"
+                {
+                    float secondOrderBlendFactor = 0.9
+                }
+
+                def FlowAdvectionChannelParams "burn"
+                {
+                    float secondOrderBlendFactor = 0.9
+                }
+            }
+
+            def FlowVorticityParams "vorticity"
+            {
+                bool enabled = 1
+                float forceScale = 1.5
+                float velocityMask = 1
+            }
+
+            def FlowPressureParams "pressure"
+            {
+                bool enabled = 1
+            }
+
+            def FlowSummaryAllocateParams "summaryAllocate"
+            {
+                bool enableNeighborAllocation = 1
+                float smokeThreshold = 0.02
+                float speedThreshold = 1
+            }
+
+            def FlowSparseNanoVdbExportParams "nanoVdbExport"
+            {
+                bool burnEnabled = 1
+                bool enabled = 1
+                bool fuelEnabled = 1
+                bool readbackEnabled = 0
+                bool smokeEnabled = 1
+                bool statisticsEnabled = 1
+                bool temperatureEnabled = 1
+                bool velocityEnabled = 1
+            }
+        }
+
+        def FlowOffscreen "flowOffscreen"
+        {
+            int layer = 0
+
+            def FlowRayMarchColormapParams "colormap"
+            {
+                float colorScale = 2.5
+                float[] colorScalePoints = [1, 1, 1, 1, 1, 1]
+                uint resolution = 32
+                float4[] rgbaPoints = [(0.0154, 0.0177, 0.0154, 0.004902), (0.03575, 0.03575, 0.03575, 0.504902), (0.03575, 0.03575, 0.03575, 0.504902), (1, 0.1594, 0.0134, 0.8), (13.53, 2.99, 0.12599, 0.8), (78, 39, 6.1, 0.7)]
+                float[] xPoints = [0, 0.05, 0.15, 0.6, 0.85, 1]
+            }
+
+            def FlowShadowParams "shadow"
+            {
+                float attenuation = 0.045
+                bool coarsePropagate = 1
+                bool enabled = 1
+                float3 lightDirection = (1, 1, 1)
+            }
+        }
+
+        def FlowRender "flowRender"
+        {
+            int layer = 0
+
+            def FlowRayMarchParams "rayMarch"
+            {
+                float attenuation = 0.05
+                float colorScale = 1
+                float shadowFactor = 1
+                float stepSizeScale = 0.75
+            }
+        }
+    }
+
+    def "PhysicsMaterials"
+    {
+        def Material "Wood" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            float physics:dynamicFriction = 0.55
+            float physics:restitution = 0.1
+            float physics:staticFriction = 0.7
+        }
+    }
+
+    def Xform "Logs"
+    {
+        def Cylinder "Support_00" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsRigidBodyAPI", "PhysicsMassAPI", "PhysxRigidBodyAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            custom double campfire:densityKgM3 = 520
+            custom double campfire:initialMassKg = 52.27610175573415
+            custom double campfire:lengthM = 1.25
+            custom string campfire:logId = "Support_00"
+            custom double campfire:radiusM = 0.16
+            custom string campfire:role = "support"
+            double height = 1.25
+            rel material:binding:physics = </World/PhysicsMaterials/Wood> (
+                bindMaterialAs = "weakerThanDescendants"
+            )
+            vector3f physics:angularVelocity = (0, 0, 0)
+            bool physics:kinematicEnabled = 1
+            float physics:mass = 52.2761
+            bool physics:rigidBodyEnabled = 1
+            vector3f physics:velocity = (0, 0, 0)
+            float physxRigidBody:angularDamping = 0.2
+            float physxRigidBody:linearDamping = 0.05
+            color3f[] primvars:displayColor = [(0.22, 0.075, 0.025)]
+            double radius = 0.16
+            quatf xformOp:orient = (0.70710677, 0, 0, 0.70710677)
+            double3 xformOp:translate = (-0.68, 0, 0.18)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+
+        def Cylinder "Support_01" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsRigidBodyAPI", "PhysicsMassAPI", "PhysxRigidBodyAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            custom double campfire:densityKgM3 = 520
+            custom double campfire:initialMassKg = 52.27610175573415
+            custom double campfire:lengthM = 1.25
+            custom string campfire:logId = "Support_01"
+            custom double campfire:radiusM = 0.16
+            custom string campfire:role = "support"
+            double height = 1.25
+            rel material:binding:physics = </World/PhysicsMaterials/Wood> (
+                bindMaterialAs = "weakerThanDescendants"
+            )
+            vector3f physics:angularVelocity = (0, 0, 0)
+            bool physics:kinematicEnabled = 1
+            float physics:mass = 52.2761
+            bool physics:rigidBodyEnabled = 1
+            vector3f physics:velocity = (0, 0, 0)
+            float physxRigidBody:angularDamping = 0.2
+            float physxRigidBody:linearDamping = 0.05
+            color3f[] primvars:displayColor = [(0.22, 0.075, 0.025)]
+            double radius = 0.16
+            quatf xformOp:orient = (0.70710677, 0, 0, 0.70710677)
+            double3 xformOp:translate = (0.68, 0, 0.18)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+
+        def Cylinder "CollapseLog_A" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsRigidBodyAPI", "PhysicsMassAPI", "PhysxRigidBodyAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            custom int campfire:axialEndExclusive = 6
+            custom int campfire:axialStart = 0
+            custom bool campfire:constraintReleased = 0
+            custom double campfire:densityKgM3 = 520
+            custom double campfire:initialMassKg = 28.81720109284846
+            custom double campfire:initialSegmentMassKg = 31.122577180276334
+            custom double campfire:lengthM = 0.9
+            custom string campfire:logId = "CollapseLog_A"
+            custom string campfire:parentLogId = "CollapseLog"
+            custom double campfire:radiusM = 0.14
+            custom string campfire:role = "burningSegment"
+            custom int campfire:segmentIndex = 0
+            double height = 0.9
+            rel material:binding:physics = </World/PhysicsMaterials/Wood> (
+                bindMaterialAs = "weakerThanDescendants"
+            )
+            vector3f physics:angularVelocity = (0, 0, 0)
+            bool physics:kinematicEnabled = 0
+            float physics:mass = 31.122578
+            bool physics:rigidBodyEnabled = 1
+            vector3f physics:velocity = (0, 0, 0)
+            float physxRigidBody:angularDamping = 0.2
+            float physxRigidBody:linearDamping = 0.05
+            color3f[] primvars:displayColor = [(0.34, 0.11, 0.035)]
+            double radius = 0.14
+            quatf xformOp:orient = (1, 0, 0, 0)
+            double3 xformOp:translate = (-0.45, 0, 0.49)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+
+        def Cylinder "CollapseLog_B" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsRigidBodyAPI", "PhysicsMassAPI", "PhysxRigidBodyAPI", "MaterialBindingAPI"]
+        )
+        {
+            uniform token axis = "X"
+            custom int campfire:axialEndExclusive = 12
+            custom int campfire:axialStart = 6
+            custom bool campfire:constraintReleased = 0
+            custom double campfire:densityKgM3 = 520
+            custom double campfire:initialMassKg = 28.81720109284846
+            custom double campfire:initialSegmentMassKg = 31.122577180276334
+            custom double campfire:lengthM = 0.9
+            custom string campfire:logId = "CollapseLog_B"
+            custom string campfire:parentLogId = "CollapseLog"
+            custom double campfire:radiusM = 0.14
+            custom string campfire:role = "burningSegment"
+            custom int campfire:segmentIndex = 1
+            double height = 0.9
+            rel material:binding:physics = </World/PhysicsMaterials/Wood> (
+                bindMaterialAs = "weakerThanDescendants"
+            )
+            vector3f physics:angularVelocity = (0, 0, 0)
+            bool physics:kinematicEnabled = 0
+            float physics:mass = 31.122578
+            bool physics:rigidBodyEnabled = 1
+            vector3f physics:velocity = (0, 0, 0)
+            float physxRigidBody:angularDamping = 0.2
+            float physxRigidBody:linearDamping = 0.05
+            color3f[] primvars:displayColor = [(0.34, 0.11, 0.035)]
+            double radius = 0.14
+            quatf xformOp:orient = (1, 0, 0, 0)
+            double3 xformOp:translate = (0.45, 0, 0.49)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
+    }
+
+    def Xform "Joints"
+    {
+        def PhysicsFixedJoint "CollapseLogJoint"
+        {
+            custom string campfire:releaseReason = "crossSectionSupport"
+            rel physics:body0 = </World/Logs/CollapseLog_A>
+            rel physics:body1 = </World/Logs/CollapseLog_B>
+            point3f physics:localPos0 = (0.45, 0, 0)
+            point3f physics:localPos1 = (-0.45, 0, 0)
+            quatf physics:localRot0 = (1, 0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
+        }
+    }
+}
+
