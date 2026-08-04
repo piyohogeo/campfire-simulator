@@ -82,6 +82,7 @@ from .calibration import (
     run_nist_plywood_calibration,
     write_calibration_svg,
     write_holdout_svg,
+    write_layer_profile_svg,
     write_replicate_holdout_svg,
 )
 from .phase6_scene import (
@@ -358,6 +359,9 @@ class CampfireAppExtension(omni.ext.IExt):
         replicate_holdout_report_path = write_replicate_holdout_svg(
             calibration, output_dir / "replicate_holdout_report.svg"
         )
+        layer_profile_report_path = write_layer_profile_svg(
+            calibration, output_dir / "layer_profile_report.svg"
+        )
         candidates_path = output_dir / "top_candidates.csv"
         with candidates_path.open("w", newline="", encoding="utf-8") as csv_file:
             writer = csv.DictWriter(
@@ -391,6 +395,7 @@ class CampfireAppExtension(omni.ext.IExt):
             "report": str(report_path),
             "holdout_report": str(holdout_report_path),
             "replicate_holdout_report": str(replicate_holdout_report_path),
+            "layer_profile_report": str(layer_profile_report_path),
             "top_candidates_csv": str(candidates_path),
             "resolution": list(image_resolution),
             "calibration_wall_seconds": round(calibration_wall_seconds, 4),

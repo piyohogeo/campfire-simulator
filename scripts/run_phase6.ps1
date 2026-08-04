@@ -43,6 +43,12 @@ if ($result.status -ne "ok" -or $result.phase -ne "phase6") {
     throw "Phase 6 summary reported failure."
 }
 $calibration = $result.calibration
+if ([math]::Abs($calibration.panel_model.nominal_thickness_m - 0.0127) -gt 0.0000001 -or $calibration.panel_model.plywood_layer_count -ne 5) {
+    throw "Phase 6 layered plywood geometry is invalid."
+}
+if ($calibration.panel_model.adhesive_layers_explicit) {
+    throw "Phase 6 must not invent unreported adhesive-layer geometry."
+}
 if (-not $calibration.improved -or $calibration.improvement_fraction -le 0.0) {
     throw "Phase 6 search did not improve the baseline."
 }
@@ -72,6 +78,12 @@ foreach ($case in $calibration.best.cases) {
     if ($null -eq $case.predicted_ignition_seconds) {
         throw "Phase 6 calibration did not predict ignition."
     }
+    if ($case.model_kind -ne "layered_plywood" -or $case.layer_count -ne 5 -or $case.final_layer_temperatures_k.Count -ne 5) {
+        throw "Phase 6 calibration did not use the explicit five-ply model."
+    }
+    if ([math]::Abs($case.specimen_thickness_m - 0.0127) -gt 0.0000001) {
+        throw "Phase 6 calibration specimen thickness changed."
+    }
 }
 if ($calibration.best.cases[0].predicted_ignition_seconds -le $calibration.best.cases[1].predicted_ignition_seconds) {
     throw "Phase 6 lost the expected heat-flux ignition ordering."
@@ -92,6 +104,9 @@ foreach ($case in $holdout.calibrated.cases) {
     }
     if ([math]::Abs($case.mass_balance_error_kg) -gt 0.000001) {
         throw "Phase 6 holdout violated mass conservation."
+    }
+    if ($case.model_kind -ne "layered_osb" -or $case.layer_count -ne 1) {
+        throw "Phase 6 OSB holdout did not use the planar single-layer adapter."
     }
 }
 if ($holdout.calibrated.cases[0].predicted_ignition_seconds -le $holdout.calibrated.cases[1].predicted_ignition_seconds) {
@@ -115,7 +130,7 @@ foreach ($case in $replicateHoldout.calibrated.cases) {
 if ($replicateHoldout.calibrated.cases[0].predicted_ignition_seconds -le $replicateHoldout.calibrated.cases[1].predicted_ignition_seconds) {
     throw "Phase 6 same-material holdout lost the expected heat-flux ignition ordering."
 }
-foreach ($path in @($result.image, $result.report, $result.holdout_report, $result.replicate_holdout_report, $result.top_candidates_csv, $result.final_stage)) {
+foreach ($path in @($result.image, $result.report, $result.holdout_report, $result.replicate_holdout_report, $result.layer_profile_report, $result.top_candidates_csv, $result.final_stage)) {
     if (-not (Test-Path -LiteralPath $path)) {
         throw "Phase 6 artifact was not produced: $path"
     }

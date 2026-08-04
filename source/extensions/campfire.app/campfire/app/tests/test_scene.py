@@ -400,6 +400,9 @@ class TestScene(omni.kit.test.AsyncTestCase):
         reference = campfire.app.load_nist_plywood_reference()
         self.assertEqual(reference["report"], "NISTIR 7094")
         self.assertEqual(reference["method"]["replicates_per_flux"], 3)
+        self.assertAlmostEqual(reference["panel_model"]["nominal_thickness_m"], 0.0127)
+        self.assertEqual(reference["panel_model"]["plywood_layer_count"], 5)
+        self.assertFalse(reference["panel_model"]["adhesive_layers_explicit"])
         self.assertEqual(
             reference["holdout"]["material"], "External Oriented Strandboard"
         )
@@ -417,7 +420,7 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertAlmostEqual(validation[1]["time_to_sustained_ignition_s"], 6.69)
         parameters = campfire.app.WoodModelParameters()
         results = [
-            campfire.app.simulate_equivalent_coupon(target, reference, parameters)
+            campfire.app.simulate_layered_coupon(target, reference, parameters)
             for target in reference["targets"]
         ]
         self.assertIsNotNone(results[0].ignition_seconds)
@@ -426,6 +429,29 @@ class TestScene(omni.kit.test.AsyncTestCase):
         for result in results:
             self.assertLess(abs(result.mass_balance_error_kg), 1.0e-9)
             self.assertTrue(result.all_values_finite)
+            self.assertEqual(result.model_kind, "layered_plywood")
+            self.assertEqual(result.layer_count, 5)
+            self.assertEqual(len(result.final_layer_temperatures_k), 5)
+
+    async def test_layered_panel_preserves_mass_and_heats_through_five_plies(self):
+        reference = campfire.app.load_nist_plywood_reference()
+        target = reference["targets"][0]
+        model = campfire.app.create_layered_coupon(
+            target, reference, campfire.app.WoodModelParameters()
+        )
+        self.assertEqual(model.spec.layer_count, 5)
+        self.assertAlmostEqual(model.spec.thickness_m, 0.0127)
+        self.assertEqual(model.spec.layer_orientations_deg, (0.0, 90.0, 0.0, 90.0, 0.0))
+        self.assertAlmostEqual(model.initial_mass_kg, 0.0647, places=9)
+        self.assertEqual(
+            [cell.surface_exposure for cell in model.cells],
+            [1.0, 0.0, 0.0, 0.0, 0.0],
+        )
+        for _ in range(20):
+            model.step(0.1, 35_000.0)
+        self.assertGreater(model.cells[0].temperature_k, model.cells[1].temperature_k)
+        self.assertGreater(model.cells[1].temperature_k, model.cells[2].temperature_k)
+        self.assertLess(abs(model.mass_balance_error_kg), 1.0e-9)
 
     async def test_nist_grid_search_improves_baseline_without_hiding_error(self):
         calibration = campfire.app.run_nist_plywood_calibration()
@@ -437,6 +463,11 @@ class TestScene(omni.kit.test.AsyncTestCase):
             calibration["baseline"]["score_rmse_relative"],
         )
         self.assertEqual(len(calibration["best"]["cases"]), 2)
+        self.assertEqual(calibration["panel_model"]["plywood_layer_count"], 5)
+        for case in calibration["best"]["cases"]:
+            self.assertEqual(case["model_kind"], "layered_plywood")
+            self.assertEqual(case["layer_count"], 5)
+            self.assertEqual(len(case["final_layer_temperatures_k"]), 5)
         selection = calibration["selection"]
         self.assertTrue(selection["improved"])
         self.assertEqual(selection["sample_ids"], ["SAMP.1", "SAMP.2"])
@@ -458,6 +489,8 @@ class TestScene(omni.kit.test.AsyncTestCase):
         for case in holdout["calibrated"]["cases"]:
             self.assertTrue(case["all_values_finite"])
             self.assertLess(abs(case["mass_balance_error_kg"]), 1.0e-9)
+            self.assertEqual(case["model_kind"], "layered_osb")
+            self.assertEqual(case["layer_count"], 1)
 
     async def test_phase6_scene_visualizes_observed_baseline_and_calibrated_values(self):
         stage = Usd.Stage.CreateInMemory()

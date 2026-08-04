@@ -10,6 +10,7 @@ from .combustion import (
     WoodThermalModel,
     create_cylindrical_wood_model,
 )
+from .panel import LayeredPanelThermalModel, create_layered_panel_model
 
 
 REFERENCE_PATH = (
@@ -31,6 +32,11 @@ class CouponResult:
     remaining_mass_kg: float
     mass_balance_error_kg: float
     all_values_finite: bool
+    model_kind: str
+    specimen_thickness_m: float
+    layer_count: int
+    effective_dry_density_kg_m3: float
+    final_layer_temperatures_k: tuple[float, ...]
 
 
 def load_nist_plywood_reference(path: Path | None = None) -> dict:
@@ -42,6 +48,13 @@ def load_nist_plywood_reference(path: Path | None = None) -> dict:
         raise ValueError("Unexpected calibration reference")
     if len(data.get("targets", [])) != 2:
         raise ValueError("Calibration reference must contain two flux targets")
+    panel_model = data.get("panel_model", {})
+    if not math.isclose(float(panel_model.get("nominal_thickness_m", 0.0)), 0.0127):
+        raise ValueError("Panel model must record the nominal 12.7 mm source thickness")
+    if panel_model.get("plywood_layer_count") != 5:
+        raise ValueError("Plywood panel model must contain five plies")
+    if panel_model.get("adhesive_layers_explicit") is not False:
+        raise ValueError("Unreported adhesive layers must not be treated as explicit geometry")
     replicate_groups = data.get("plywood_replicates", [])
     if len(replicate_groups) != 2 or any(
         len(group.get("samples", [])) != 3 for group in replicate_groups
@@ -141,6 +154,43 @@ def create_equivalent_coupon(
     return model
 
 
+def create_layered_coupon(
+    target: dict,
+    reference: dict,
+    parameters: WoodModelParameters,
+    *,
+    material_kind: str = "plywood",
+) -> LayeredPanelThermalModel:
+    """Create a mass-preserving planar panel with explicit nominal thickness."""
+
+    if material_kind not in {"plywood", "osb"}:
+        raise ValueError("material_kind must be 'plywood' or 'osb'")
+    panel = reference["panel_model"]
+    layer_count = (
+        panel["plywood_layer_count"]
+        if material_kind == "plywood"
+        else panel["osb_layer_count"]
+    )
+    orientations = (
+        tuple(panel["plywood_grain_orientation_assumption_deg"])
+        if material_kind == "plywood"
+        else (0.0,)
+    )
+    return create_layered_panel_model(
+        f"Nist_{material_kind}_{int(target['incident_heat_flux_kw_m2'])}",
+        width_m=float(reference["method"]["sample_width_m"]),
+        depth_m=float(reference["method"]["sample_depth_m"]),
+        thickness_m=float(panel["nominal_thickness_m"]),
+        layer_count=int(layer_count),
+        initial_wet_mass_kg=float(target["initial_specimen_mass_g"]) / 1000.0,
+        moisture_ratio_dry_basis=float(
+            reference["adapter_assumptions"]["moisture_ratio_dry_basis"]
+        ),
+        layer_orientations_deg=orientations,
+        parameters=parameters,
+    )
+
+
 def simulate_equivalent_coupon(
     target: dict,
     reference: dict,
@@ -148,9 +198,62 @@ def simulate_equivalent_coupon(
     dt_seconds: float = CALIBRATION_DT_SECONDS,
     duration_seconds: float = CALIBRATION_DURATION_SECONDS,
 ) -> CouponResult:
+    """Run the retained Phase 6A cylindrical adapter for comparison."""
+
     if parameters.radiant_absorptivity <= 0.0 or parameters.radiant_absorptivity > 1.0:
         raise ValueError("radiant_absorptivity must be within (0, 1]")
     model = create_equivalent_coupon(target, reference, parameters)
+    return _simulate_coupon_model(
+        model,
+        target,
+        reference,
+        dt_seconds,
+        duration_seconds,
+        model_kind="equivalent_cylinder_legacy",
+        layer_count=0,
+        effective_dry_density_kg_m3=parameters.dry_wood_density_kg_m3,
+    )
+
+
+def simulate_layered_coupon(
+    target: dict,
+    reference: dict,
+    parameters: WoodModelParameters,
+    dt_seconds: float = CALIBRATION_DT_SECONDS,
+    duration_seconds: float = CALIBRATION_DURATION_SECONDS,
+    *,
+    material_kind: str = "plywood",
+) -> CouponResult:
+    """Run an explicit planar plywood or OSB through-thickness model."""
+
+    if parameters.radiant_absorptivity <= 0.0 or parameters.radiant_absorptivity > 1.0:
+        raise ValueError("radiant_absorptivity must be within (0, 1]")
+    model = create_layered_coupon(
+        target, reference, parameters, material_kind=material_kind
+    )
+    return _simulate_coupon_model(
+        model,
+        target,
+        reference,
+        dt_seconds,
+        duration_seconds,
+        model_kind=f"layered_{material_kind}",
+        layer_count=model.spec.layer_count,
+        effective_dry_density_kg_m3=model.spec.effective_dry_density_kg_m3,
+    )
+
+
+def _simulate_coupon_model(
+    model: WoodThermalModel,
+    target: dict,
+    reference: dict,
+    dt_seconds: float,
+    duration_seconds: float,
+    *,
+    model_kind: str,
+    layer_count: int,
+    effective_dry_density_kg_m3: float,
+) -> CouponResult:
     heat_flux_w_m2 = float(target["incident_heat_flux_kw_m2"]) * 1000.0
     ignition_seconds = None
     burning_mass_loss_rates = []
@@ -188,6 +291,15 @@ def simulate_equivalent_coupon(
             and math.isfinite(cell.current_mass_kg)
             for cell in model.cells
         ),
+        model_kind=model_kind,
+        specimen_thickness_m=float(
+            reference["panel_model"]["nominal_thickness_m"]
+            if layer_count
+            else model.spec.length_m
+        ),
+        layer_count=layer_count,
+        effective_dry_density_kg_m3=effective_dry_density_kg_m3,
+        final_layer_temperatures_k=tuple(cell.temperature_k for cell in model.cells),
     )
 
 
@@ -201,11 +313,23 @@ def evaluate_parameters(
     reference: dict,
     parameters: WoodModelParameters,
     targets: list[dict] | None = None,
+    *,
+    model_kind: str = "layered_plywood",
 ) -> dict:
     cases = []
     squared_errors = []
     for target in targets or reference["targets"]:
-        result = simulate_equivalent_coupon(target, reference, parameters)
+        if model_kind == "equivalent_cylinder_legacy":
+            result = simulate_equivalent_coupon(target, reference, parameters)
+        elif model_kind in {"layered_plywood", "layered_osb"}:
+            result = simulate_layered_coupon(
+                target,
+                reference,
+                parameters,
+                material_kind=model_kind.removeprefix("layered_"),
+            )
+        else:
+            raise ValueError(f"Unsupported coupon model: {model_kind}")
         ignition_error = _relative_error(
             result.ignition_seconds,
             float(target["time_to_sustained_ignition_s"]),
@@ -230,6 +354,13 @@ def evaluate_parameters(
                 "mass_loss_relative_error": mass_loss_error,
                 "mass_balance_error_kg": result.mass_balance_error_kg,
                 "all_values_finite": result.all_values_finite,
+                "model_kind": result.model_kind,
+                "specimen_thickness_m": result.specimen_thickness_m,
+                "layer_count": result.layer_count,
+                "effective_dry_density_kg_m3": result.effective_dry_density_kg_m3,
+                "final_layer_temperatures_k": list(
+                    result.final_layer_temperatures_k
+                ),
             }
         )
     return {
@@ -301,10 +432,16 @@ def run_nist_plywood_calibration() -> dict:
     )
     holdout = reference["holdout"]
     holdout_baseline = evaluate_parameters(
-        reference, WoodModelParameters(), holdout["targets"]
+        reference,
+        WoodModelParameters(),
+        holdout["targets"],
+        model_kind="layered_osb",
     )
     holdout_calibrated = evaluate_parameters(
-        reference, best_parameters, holdout["targets"]
+        reference,
+        best_parameters,
+        holdout["targets"],
+        model_kind="layered_osb",
     )
     holdout_score_change_fraction = 1.0 - (
         holdout_calibrated["score_rmse_relative"]
@@ -317,6 +454,7 @@ def run_nist_plywood_calibration() -> dict:
         },
         "calibration_material": reference["material"],
         "adapter_assumptions": reference["adapter_assumptions"],
+        "panel_model": reference["panel_model"],
         "candidate_count": len(ranked),
         "selection": {
             "strategy": reference["replicate_split"]["strategy"],
@@ -365,7 +503,11 @@ def run_nist_plywood_calibration() -> dict:
                 < holdout_baseline["score_rmse_relative"]
             ),
         },
-        "model_scope": "Equivalent cylindrical coupon; not a direct plywood specimen model.",
+        "model_scope": (
+            "Nominal 12.7 mm planar panel with five equal plywood plies; cone-specimen "
+            "thickness is inferred from the source roof panel, adhesive layers are omitted, "
+            "and the reaction law remains the Phase 3 piecewise-linear model."
+        ),
     }
 
 
@@ -377,8 +519,8 @@ def write_calibration_svg(calibration: dict, destination: Path) -> Path:
         calibration["baseline"],
         calibration["best"],
         destination,
-        title="Phase 6A — NIST plywood calibration baseline",
-        subtitle="NISTIR 7094 Table 2 · equivalent cylindrical coupon adapter",
+        title="Phase 6D — NIST plywood layered-panel calibration",
+        subtitle="NISTIR 7094 · nominal 12.7 mm planar specimen · five equal plies",
         summary=(
             "Relative RMSE: baseline "
             f"{calibration['baseline']['score_rmse_relative']:.3f} → calibrated "
@@ -386,8 +528,8 @@ def write_calibration_svg(calibration: dict, destination: Path) -> Path:
             f"({improvement:.1f}% improvement)"
         ),
         scope=(
-            "Scope: proxy ignition and equivalent geometry; this is a reproducible "
-            "calibration baseline, not full plywood validation."
+            "Scope: nominal source-panel thickness and equal-ply geometry; adhesive "
+            "layers and Arrhenius kinetics are not yet modeled."
         ),
     )
 
@@ -414,7 +556,7 @@ def write_holdout_svg(calibration: dict, destination: Path) -> Path:
             "stress test, not in-plywood validation."
         ),
         calibrated_label="Plywood-fit",
-        ignition_maximum=100.0,
+        ignition_maximum=170.0,
         mass_loss_maximum=22.0,
     )
 
@@ -428,8 +570,8 @@ def write_replicate_holdout_svg(calibration: dict, destination: Path) -> Path:
         holdout["baseline"],
         holdout["calibrated"],
         destination,
-        title="Phase 6C — Plywood replicate holdout",
-        subtitle="NISTIR 7094 Appendix A · SAMP.1/2 fit applied to reserved SAMP.3",
+        title="Phase 6D — Layered plywood replicate holdout",
+        subtitle="12.7 mm five-ply panel · SAMP.1/2 fit applied to reserved SAMP.3",
         summary=(
             "Relative RMSE (no refit): baseline "
             f"{holdout['baseline']['score_rmse_relative']:.3f} → SAMP.1/2-fit "
@@ -443,6 +585,77 @@ def write_replicate_holdout_svg(calibration: dict, destination: Path) -> Path:
         calibrated_label="SAMP.1/2-fit",
         ignition_maximum=100.0,
     )
+
+
+def write_layer_profile_svg(calibration: dict, destination: Path) -> Path:
+    """Write the explicit five-ply geometry and final temperature profiles."""
+
+    destination = Path(destination).resolve()
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    panel = calibration["panel_model"]
+    cases = calibration["best"]["cases"]
+    orientations = panel["plywood_grain_orientation_assumption_deg"]
+
+    def temperature_color(temperature_k: float) -> str:
+        fraction = min(1.0, max(0.0, (temperature_k - 293.15) / 900.0))
+        red = round(55 + 200 * fraction)
+        green = round(117 - 67 * fraction)
+        blue = round(112 - 82 * fraction)
+        return f"#{red:02x}{green:02x}{blue:02x}"
+
+    panels = []
+    for case_index, case in enumerate(cases):
+        x = 80 + case_index * 570
+        panels.append(
+            f'<text x="{x}" y="135" class="panel-title">'
+            f'{case["incident_heat_flux_kw_m2"]:.0f} kW/m²</text>'
+        )
+        panels.append(
+            f'<text x="{x}" y="164" class="muted">final state at 600 s</text>'
+        )
+        temperatures = case["final_layer_temperatures_k"]
+        for layer, temperature_k in enumerate(temperatures):
+            y = 198 + layer * 66
+            panels.extend(
+                (
+                    f'<rect x="{x}" y="{y}" width="390" height="56" rx="5" '
+                    f'fill="{temperature_color(temperature_k)}"/>',
+                    f'<text x="{x + 18}" y="{y + 35}" class="layer">'
+                    f'Ply {layer + 1} · {orientations[layer]:.0f}°</text>',
+                    f'<text x="{x + 365}" y="{y + 35}" class="temperature" '
+                    f'text-anchor="end">{temperature_k:.1f} K</text>',
+                )
+            )
+        panels.append(
+            f'<text x="{x + 415}" y="232" class="heat">← incident heat</text>'
+        )
+        panels.append(
+            f'<text x="{x}" y="548" class="muted">effective dry density '
+            f'{case["effective_dry_density_kg_m3"]:.1f} kg/m³</text>'
+        )
+
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#15120f"/>
+  <style>
+    text {{ font-family: "Segoe UI", Arial, sans-serif; fill: #fff7e9; }}
+    .title {{ font-size: 30px; font-weight: 700; }}
+    .subtitle {{ font-size: 15px; fill: #d7b982; }}
+    .panel-title {{ font-size: 22px; font-weight: 700; }}
+    .layer {{ font-size: 15px; font-weight: 650; }}
+    .temperature {{ font-size: 15px; font-weight: 700; }}
+    .muted {{ font-size: 13px; fill: #c9bda9; }}
+    .heat {{ font-size: 13px; fill: #f09a61; }}
+    .note {{ font-size: 14px; fill: #f0d8ad; }}
+  </style>
+  <text x="60" y="52" class="title">Phase 6D — Explicit five-ply specimen</text>
+  <text x="60" y="82" class="subtitle">0.1 m × 0.1 m × 12.7 mm nominal · five equal 2.54 mm plies · exposed from ply 1</text>
+  {''.join(panels)}
+  <line x1="60" y1="585" x2="1140" y2="585" stroke="#53483d"/>
+  <text x="60" y="620" class="note">Sides and rear are foil-wrapped. The 12.7 mm cone-specimen thickness is inferred from the reported source roof panel.</text>
+  <text x="60" y="648" class="muted">Equal ply thickness and alternating 0°/90° grain are explicit assumptions; adhesive layers are not modeled.</text>
+</svg>'''
+    destination.write_text(svg, encoding="utf-8")
+    return destination
 
 
 def _write_comparison_svg(

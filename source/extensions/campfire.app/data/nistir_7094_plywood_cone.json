@@ -25,6 +25,16 @@
     "orientation": "horizontal",
     "wrapped_sides": true
   },
+  "panel_model": {
+    "nominal_thickness_m": 0.0127,
+    "thickness_basis": "NISTIR 7094 identifies the roof materials as nominal 12.7 mm plywood and OSB; applying that nominal source-panel thickness to the cone samples is an inference because individual cone specimen thicknesses were not reported.",
+    "thickness_source_location": "PDF page 9 (printed page 3), cone sample relationship on PDF pages 14 and 19",
+    "plywood_layer_count": 5,
+    "plywood_layer_thickness_assumption": "Five equal-thickness plies; individual veneer and adhesive thicknesses were not reported.",
+    "plywood_grain_orientation_assumption_deg": [0, 90, 0, 90, 0],
+    "osb_layer_count": 1,
+    "adhesive_layers_explicit": false
+  },
   "targets": [
     {
       "incident_heat_flux_kw_m2": 35.0,

@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
 <rect width="1200" height="680" fill="#17130f"/>
 <style>text{font-family:Segoe UI,Arial,sans-serif;fill:#f4eadb}.muted{fill:#b9aa98}.grid{stroke:#51483e;stroke-width:1}</style>
-<text x="60" y="58" font-size="30" font-weight="700">Phase 6C — Plywood replicate holdout</text>
-<text x="60" y="88" class="muted" font-size="16">NISTIR 7094 Appendix A · SAMP.1/2 fit applied to reserved SAMP.3</text>
+<text x="60" y="58" font-size="30" font-weight="700">Phase 6D — Layered plywood replicate holdout</text>
+<text x="60" y="88" class="muted" font-size="16">12.7 mm five-ply panel · SAMP.1/2 fit applied to reserved SAMP.3</text>
 <rect x="710" y="62" width="18" height="18" rx="3" fill="#f3d7a1"/>
 <text x="737" y="77" font-size="14">Observed</text>
 <rect x="860" y="62" width="18" height="18" rx="3" fill="#df654e"/>
@@ -22,17 +22,17 @@
 <text x="94" y="170.0" text-anchor="end" class="muted" font-size="13">100</text>
 <rect x="145" y="343.5" width="38" height="211.5" rx="3" fill="#f3d7a1"/>
 <text x="164" y="335.5" text-anchor="middle" font-size="12">54.23</text>
-<rect x="193" y="253.9" width="38" height="301.1" rx="3" fill="#df654e"/>
-<text x="212" y="245.9" text-anchor="middle" font-size="12">77.20</text>
-<rect x="241" y="310.9" width="38" height="244.1" rx="3" fill="#58b889"/>
-<text x="260" y="302.9" text-anchor="middle" font-size="12">62.60</text>
+<rect x="193" y="427.5" width="38" height="127.5" rx="3" fill="#df654e"/>
+<text x="212" y="419.5" text-anchor="middle" font-size="12">32.70</text>
+<rect x="241" y="454.8" width="38" height="100.2" rx="3" fill="#58b889"/>
+<text x="260" y="446.8" text-anchor="middle" font-size="12">25.70</text>
 <text x="212" y="583" text-anchor="middle" font-size="15">35 kW/m²</text>
 <rect x="370" y="528.9" width="38" height="26.1" rx="3" fill="#f3d7a1"/>
 <text x="389" y="520.9" text-anchor="middle" font-size="12">6.69</text>
-<rect x="418" y="418.5" width="38" height="136.5" rx="3" fill="#df654e"/>
-<text x="437" y="410.5" text-anchor="middle" font-size="12">35.00</text>
-<rect x="466" y="442.3" width="38" height="112.7" rx="3" fill="#58b889"/>
-<text x="485" y="434.3" text-anchor="middle" font-size="12">28.90</text>
+<rect x="418" y="501.6" width="38" height="53.4" rx="3" fill="#df654e"/>
+<text x="437" y="493.6" text-anchor="middle" font-size="12">13.70</text>
+<rect x="466" y="512.5" width="38" height="42.5" rx="3" fill="#58b889"/>
+<text x="485" y="504.5" text-anchor="middle" font-size="12">10.90</text>
 <text x="437" y="583" text-anchor="middle" font-size="15">70 kW/m²</text>
 <text x="630" y="135" font-size="20" font-weight="600">Average mass-loss rate (g/s/m²)</text>
 <line class="grid" x1="672" y1="555.0" x2="1130" y2="555.0"/>
@@ -47,18 +47,18 @@
 <text x="664" y="170.0" text-anchor="end" class="muted" font-size="13">18</text>
 <rect x="715" y="333.0" width="38" height="222.0" rx="3" fill="#f3d7a1"/>
 <text x="734" y="325.0" text-anchor="middle" font-size="12">10.25</text>
-<rect x="763" y="346.2" width="38" height="208.8" rx="3" fill="#df654e"/>
-<text x="782" y="338.2" text-anchor="middle" font-size="12">9.64</text>
-<rect x="811" y="351.2" width="38" height="203.8" rx="3" fill="#58b889"/>
-<text x="830" y="343.2" text-anchor="middle" font-size="12">9.41</text>
+<rect x="763" y="420.2" width="38" height="134.8" rx="3" fill="#df654e"/>
+<text x="782" y="412.2" text-anchor="middle" font-size="12">6.22</text>
+<rect x="811" y="382.8" width="38" height="172.2" rx="3" fill="#58b889"/>
+<text x="830" y="374.8" text-anchor="middle" font-size="12">7.95</text>
 <text x="782" y="583" text-anchor="middle" font-size="15">35 kW/m²</text>
 <rect x="940" y="235.6" width="38" height="319.4" rx="3" fill="#f3d7a1"/>
 <text x="959" y="227.6" text-anchor="middle" font-size="12">14.74</text>
-<rect x="988" y="351.3" width="38" height="203.7" rx="3" fill="#df654e"/>
-<text x="1007" y="343.3" text-anchor="middle" font-size="12">9.40</text>
-<rect x="1036" y="352.7" width="38" height="202.3" rx="3" fill="#58b889"/>
-<text x="1055" y="344.7" text-anchor="middle" font-size="12">9.33</text>
+<rect x="988" y="360.4" width="38" height="194.6" rx="3" fill="#df654e"/>
+<text x="1007" y="352.4" text-anchor="middle" font-size="12">8.98</text>
+<rect x="1036" y="356.1" width="38" height="198.9" rx="3" fill="#58b889"/>
+<text x="1055" y="348.1" text-anchor="middle" font-size="12">9.18</text>
 <text x="1007" y="583" text-anchor="middle" font-size="15">70 kW/m²</text>
-<text x="60" y="625" font-size="17">Relative RMSE (no refit): baseline 2.134 → SAMP.1/2-fit 1.672 (+21.6% score change)</text>
+<text x="60" y="625" font-size="17">Relative RMSE (no refit): baseline 0.625 → SAMP.1/2-fit 0.465 (+25.6% score change)</text>
 <text x="60" y="652" class="muted" font-size="14">Scope: same material and heat flux, held-out replicate. This tests repeatability, not a new exposure condition.</text>
 </svg>
