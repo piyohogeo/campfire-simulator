@@ -6,9 +6,14 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 
 from .combustion import (
+    CONSTANT_DRY_WOOD_SPECIFIC_HEAT_MODEL,
+    USDA_FPL_DRY_WOOD_CP_MAX_TEMPERATURE_K,
+    USDA_FPL_DRY_WOOD_CP_MIN_TEMPERATURE_K,
+    USDA_FPL_NORMALIZED_DRY_WOOD_SPECIFIC_HEAT_MODEL,
     WoodModelParameters,
     WoodThermalModel,
     create_cylindrical_wood_model,
+    temperature_adjusted_dry_wood_specific_heat_j_kg_k,
 )
 from .panel import LayeredPanelThermalModel, create_layered_panel_model
 
@@ -39,6 +44,14 @@ class CouponResult:
     final_layer_temperatures_k: tuple[float, ...]
     primary_product_mass_kg: dict[str, float]
     primary_product_yield_fraction: dict[str, float]
+    material_kind: str
+    through_thickness_conductivity_w_m_k: float
+    dry_wood_specific_heat_j_kg_k: float
+    dry_wood_specific_heat_model: str
+    dry_wood_specific_heat_valid_range_k: tuple[float, ...]
+    final_layer_dry_wood_specific_heats_j_kg_k: tuple[float, ...]
+    adhesive_interface_count: int
+    adhesive_geometry_explicit: bool
 
 
 def load_nist_plywood_reference(path: Path | None = None) -> dict:
@@ -57,6 +70,28 @@ def load_nist_plywood_reference(path: Path | None = None) -> dict:
         raise ValueError("Plywood panel model must contain five plies")
     if panel_model.get("adhesive_layers_explicit") is not False:
         raise ValueError("Unreported adhesive layers must not be treated as explicit geometry")
+    material_profiles = data.get("material_property_profiles", {})
+    for material_kind in ("plywood", "osb"):
+        profile = material_profiles.get(material_kind, {})
+        if (
+            float(profile.get("thermal_conductivity_w_m_k", 0.0)) <= 0.0
+            or float(profile.get("specific_heat_j_kg_k", 0.0)) <= 0.0
+        ):
+            raise ValueError(f"{material_kind} thermal property profile is incomplete")
+        if profile.get("adhesive_geometry_explicit") is not False:
+            raise ValueError("Unreported adhesive geometry must remain non-explicit")
+    heat_capacity_model = data.get("temperature_dependent_heat_capacity", {})
+    if heat_capacity_model.get("model") != USDA_FPL_NORMALIZED_DRY_WOOD_SPECIFIC_HEAT_MODEL:
+        raise ValueError("Unexpected dry-wood specific-heat model")
+    if heat_capacity_model.get("source_valid_temperature_range_k") != [
+        USDA_FPL_DRY_WOOD_CP_MIN_TEMPERATURE_K,
+        USDA_FPL_DRY_WOOD_CP_MAX_TEMPERATURE_K,
+    ]:
+        raise ValueError("Dry-wood specific-heat source range changed")
+    if not math.isclose(
+        float(heat_capacity_model.get("reference_temperature_k", 0.0)), 293.15
+    ):
+        raise ValueError("Dry-wood specific-heat reference temperature changed")
     kinetics = data.get("arrhenius_model", {})
     if kinetics.get("reaction_order") != 1.0:
         raise ValueError("Phase 6 Arrhenius calibration requires first-order kinetics")
@@ -183,6 +218,8 @@ def create_layered_coupon(
     if material_kind not in {"plywood", "osb"}:
         raise ValueError("material_kind must be 'plywood' or 'osb'")
     panel = reference["panel_model"]
+    material_profile = reference["material_property_profiles"][material_kind]
+    heat_capacity_model = reference["temperature_dependent_heat_capacity"]
     layer_count = (
         panel["plywood_layer_count"]
         if material_kind == "plywood"
@@ -205,6 +242,23 @@ def create_layered_coupon(
         ),
         layer_orientations_deg=orientations,
         parameters=parameters,
+        material_kind=material_kind,
+        through_thickness_conductivity_w_m_k=float(
+            material_profile["thermal_conductivity_w_m_k"]
+        ),
+        dry_wood_specific_heat_j_kg_k=float(
+            material_profile["specific_heat_j_kg_k"]
+        ),
+        dry_wood_specific_heat_model=str(heat_capacity_model["model"]),
+        adhesive_interface_count=int(
+            material_profile["adhesive_interface_count"]
+        ),
+        adhesive_geometry_explicit=bool(
+            material_profile["adhesive_geometry_explicit"]
+        ),
+        material_property_source=str(
+            reference["material_property_profiles"]["source"]
+        ),
     )
 
 
@@ -326,6 +380,61 @@ def _simulate_coupon_model(
         primary_product_yield_fraction=metrics[
             "primary_product_yield_fraction"
         ],
+        material_kind=getattr(model.spec, "material_kind", "generic_wood"),
+        through_thickness_conductivity_w_m_k=float(
+            getattr(
+                model.spec,
+                "through_thickness_conductivity_w_m_k",
+                model.parameters.conductivity_radial_w_m_k,
+            )
+        ),
+        dry_wood_specific_heat_j_kg_k=float(
+            getattr(
+                model.spec,
+                "dry_wood_specific_heat_j_kg_k",
+                model.parameters.wood_specific_heat_j_kg_k,
+            )
+        ),
+        dry_wood_specific_heat_model=str(
+            getattr(
+                model.spec,
+                "dry_wood_specific_heat_model",
+                CONSTANT_DRY_WOOD_SPECIFIC_HEAT_MODEL,
+            )
+        ),
+        dry_wood_specific_heat_valid_range_k=(
+            tuple(
+                float(value)
+                for value in reference["temperature_dependent_heat_capacity"][
+                    "source_valid_temperature_range_k"
+                ]
+            )
+            if getattr(
+                model.spec,
+                "dry_wood_specific_heat_model",
+                CONSTANT_DRY_WOOD_SPECIFIC_HEAT_MODEL,
+            )
+            == USDA_FPL_NORMALIZED_DRY_WOOD_SPECIFIC_HEAT_MODEL
+            else ()
+        ),
+        final_layer_dry_wood_specific_heats_j_kg_k=tuple(
+            temperature_adjusted_dry_wood_specific_heat_j_kg_k(
+                (
+                    cell.dry_wood_specific_heat_j_kg_k
+                    if cell.dry_wood_specific_heat_j_kg_k is not None
+                    else model.parameters.wood_specific_heat_j_kg_k
+                ),
+                cell.temperature_k,
+                cell.dry_wood_specific_heat_model,
+            )
+            for cell in model.cells
+        ),
+        adhesive_interface_count=int(
+            getattr(model.spec, "adhesive_interface_count", 0)
+        ),
+        adhesive_geometry_explicit=bool(
+            getattr(model.spec, "adhesive_geometry_explicit", False)
+        ),
     )
 
 
@@ -391,6 +500,22 @@ def evaluate_parameters(
                 "primary_product_yield_fraction": (
                     result.primary_product_yield_fraction
                 ),
+                "material_kind": result.material_kind,
+                "through_thickness_conductivity_w_m_k": (
+                    result.through_thickness_conductivity_w_m_k
+                ),
+                "dry_wood_specific_heat_j_kg_k": (
+                    result.dry_wood_specific_heat_j_kg_k
+                ),
+                "dry_wood_specific_heat_model": result.dry_wood_specific_heat_model,
+                "dry_wood_specific_heat_valid_range_k": list(
+                    result.dry_wood_specific_heat_valid_range_k
+                ),
+                "final_layer_dry_wood_specific_heats_j_kg_k": list(
+                    result.final_layer_dry_wood_specific_heats_j_kg_k
+                ),
+                "adhesive_interface_count": result.adhesive_interface_count,
+                "adhesive_geometry_explicit": result.adhesive_geometry_explicit,
             }
         )
     return {
@@ -585,6 +710,10 @@ def run_nist_plywood_calibration() -> dict:
         "calibration_material": reference["material"],
         "adapter_assumptions": reference["adapter_assumptions"],
         "panel_model": reference["panel_model"],
+        "material_property_profiles": reference["material_property_profiles"],
+        "temperature_dependent_heat_capacity": reference[
+            "temperature_dependent_heat_capacity"
+        ],
         "arrhenius_model": reference["arrhenius_model"],
         "candidate_count": len(ranked),
         "selection": {
@@ -636,7 +765,12 @@ def run_nist_plywood_calibration() -> dict:
         },
         "model_scope": (
             "Nominal 12.7 mm planar panel with five equal plywood plies; cone-specimen "
-            "thickness is inferred from the source roof panel, adhesive layers are omitted, "
+            "thickness is inferred from the source roof panel; aggregate NIST roof-sheathing "
+            "conductivity and heat capacity distinguish plywood from OSB while measured cone "
+            "mass still determines density; the USDA dry-wood cp(T) shape is normalized to "
+            "each panel value, clamped to its 280-420 K source range, and not extrapolated "
+            "through pyrolysis; four plywood adhesive interfaces are recorded "
+            "without invented geometry or extra resistance; "
             "with competing first-order gas, tar, and char pathways using published "
             "mass-basis kinetics and one common calibration scale."
         ),
@@ -651,8 +785,8 @@ def write_calibration_svg(calibration: dict, destination: Path) -> Path:
         calibration["baseline"],
         calibration["best"],
         destination,
-        title="Phase 6F — Three-pathway plywood calibration",
-        subtitle="12.7 mm five-ply panel · competing gas / tar / char first-order rates",
+        title="Phase 6H — Bounded cp(T) plywood calibration",
+        subtitle="Exterior-plywood k · USDA-normalized cp(T) · competing gas / tar / char rates",
         summary=(
             "Relative RMSE: baseline "
             f"{calibration['baseline']['score_rmse_relative']:.3f} → calibrated "
@@ -675,8 +809,8 @@ def write_holdout_svg(calibration: dict, destination: Path) -> Path:
         holdout["baseline"],
         holdout["calibrated"],
         destination,
-        title="Phase 6B — OSB external-material holdout",
-        subtitle="NISTIR 7094 Table 2 · plywood-fit parameters applied without refitting",
+        title="Phase 6H — Bounded cp(T) OSB holdout",
+        subtitle="OSB-specific k · USDA-normalized cp(T) · plywood-fit reaction parameters",
         summary=(
             "Relative RMSE (no refit): baseline "
             f"{holdout['baseline']['score_rmse_relative']:.3f} → plywood-fit "
@@ -702,8 +836,8 @@ def write_replicate_holdout_svg(calibration: dict, destination: Path) -> Path:
         holdout["baseline"],
         holdout["calibrated"],
         destination,
-        title="Phase 6F — Three-pathway plywood replicate holdout",
-        subtitle="Common-scale fit on SAMP.1/2 applied to reserved SAMP.3",
+        title="Phase 6H — Bounded cp(T) plywood replicate holdout",
+        subtitle="USDA-normalized cp(T) · SAMP.1/2 fit applied to reserved SAMP.3",
         summary=(
             "Relative RMSE (no refit): baseline "
             f"{holdout['baseline']['score_rmse_relative']:.3f} → SAMP.1/2-fit "
@@ -765,6 +899,13 @@ def write_layer_profile_svg(calibration: dict, destination: Path) -> Path:
             f'<text x="{x}" y="548" class="muted">effective dry density '
             f'{case["effective_dry_density_kg_m3"]:.1f} kg/m³</text>'
         )
+        panels.append(
+            f'<text x="{x}" y="570" class="muted">k '
+            f'{case["through_thickness_conductivity_w_m_k"]:.3f} W/(m·K) · cp(T) '
+            f'{case["dry_wood_specific_heat_j_kg_k"]:.0f} @293 K → '
+            f'{max(case["final_layer_dry_wood_specific_heats_j_kg_k"]):.0f} J/(kg·K) · '
+            f'{case["adhesive_interface_count"]} unresolved glue interfaces</text>'
+        )
 
     svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
   <rect width="1200" height="680" fill="#15120f"/>
@@ -779,12 +920,12 @@ def write_layer_profile_svg(calibration: dict, destination: Path) -> Path:
     .heat {{ font-size: 13px; fill: #f09a61; }}
     .note {{ font-size: 14px; fill: #f0d8ad; }}
   </style>
-  <text x="60" y="52" class="title">Phase 6F — Three-pathway five-ply specimen</text>
+  <text x="60" y="52" class="title">Phase 6H — Bounded temperature-dependent cp</text>
   <text x="60" y="82" class="subtitle">0.1 m × 0.1 m × 12.7 mm nominal · five equal 2.54 mm plies · exposed from ply 1</text>
   {''.join(panels)}
   <line x1="60" y1="585" x2="1140" y2="585" stroke="#53483d"/>
   <text x="60" y="620" class="note">Sides and rear are foil-wrapped. The 12.7 mm cone-specimen thickness is inferred from the reported source roof panel.</text>
-  <text x="60" y="648" class="muted">Equal ply thickness and alternating 0°/90° grain are explicit assumptions; adhesive layers are not modeled.</text>
+  <text x="60" y="648" class="muted">USDA dry-wood cp(T) is normalized at 293 K and clamped to 280–420 K; constant k and unresolved glue geometry remain explicit limits.</text>
 </svg>'''
     destination.write_text(svg, encoding="utf-8")
     return destination
@@ -877,7 +1018,7 @@ def write_kinetics_svg(calibration: dict, destination: Path) -> Path:
     .value {{ font-size: 13px; fill: #eadbc4; }}
     .note {{ font-size: 13px; fill: #c9bda9; }}
   </style>
-  <text x="60" y="52" class="title">Phase 6F — Three competing pyrolysis pathways</text>
+  <text x="60" y="52" class="title">Phase 6H — Bounded cp(T) three-pathway model</text>
   <text x="60" y="82" class="subtitle">Dry wood → gas / tar / char · first-order mass-basis rates · logarithmic axis</text>
   {''.join(grid)}
   {''.join(pathway_lines)}

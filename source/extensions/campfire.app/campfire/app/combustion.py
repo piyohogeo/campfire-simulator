@@ -16,6 +16,15 @@ MODEL_VERSION = 1
 STATE_ATTRIBUTE = "campfire:combustionStateJson"
 MODEL_VERSION_ATTRIBUTE = "campfire:combustionModelVersion"
 UNIVERSAL_GAS_CONSTANT_J_MOL_K = 8.31446261815324
+CONSTANT_DRY_WOOD_SPECIFIC_HEAT_MODEL = "constant"
+USDA_FPL_NORMALIZED_DRY_WOOD_SPECIFIC_HEAT_MODEL = (
+    "usda_fpl_normalized_linear_280_420_k"
+)
+USDA_FPL_DRY_WOOD_CP_INTERCEPT_J_KG_K = 103.1
+USDA_FPL_DRY_WOOD_CP_SLOPE_J_KG_K2 = 3.867
+USDA_FPL_DRY_WOOD_CP_MIN_TEMPERATURE_K = 280.0
+USDA_FPL_DRY_WOOD_CP_MAX_TEMPERATURE_K = 420.0
+USDA_FPL_DRY_WOOD_CP_REFERENCE_TEMPERATURE_K = 293.15
 
 WET_WOOD = "WET_WOOD"
 DRY_WOOD = "DRY_WOOD"
@@ -81,6 +90,8 @@ class WoodCellState:
     phase: str
     volume_m3: float
     external_area_m2: float
+    dry_wood_specific_heat_j_kg_k: float | None = None
+    dry_wood_specific_heat_model: str = CONSTANT_DRY_WOOD_SPECIFIC_HEAT_MODEL
 
     @property
     def current_mass_kg(self) -> float:
@@ -229,8 +240,18 @@ class WoodThermalModel:
 
     def _heat_capacity_j_k(self, cell: WoodCellState) -> float:
         p = self.parameters
+        reference_specific_heat_j_kg_k = (
+            cell.dry_wood_specific_heat_j_kg_k
+            if cell.dry_wood_specific_heat_j_kg_k is not None
+            else p.wood_specific_heat_j_kg_k
+        )
+        dry_wood_specific_heat_j_kg_k = temperature_adjusted_dry_wood_specific_heat_j_kg_k(
+            reference_specific_heat_j_kg_k,
+            cell.temperature_k,
+            cell.dry_wood_specific_heat_model,
+        )
         return max(
-            cell.dry_wood_mass_kg * p.wood_specific_heat_j_kg_k
+            cell.dry_wood_mass_kg * dry_wood_specific_heat_j_kg_k
             + cell.moisture_mass_kg * p.water_specific_heat_j_kg_k
             + cell.char_mass_kg * p.char_specific_heat_j_kg_k
             + cell.ash_mass_kg * p.ash_specific_heat_j_kg_k,
@@ -669,6 +690,51 @@ def create_cylindrical_wood_model(
                     )
                 )
     return WoodThermalModel(spec, cells, p)
+
+
+def temperature_adjusted_dry_wood_specific_heat_j_kg_k(
+    reference_specific_heat_j_kg_k: float,
+    temperature_k: float,
+    model: str = CONSTANT_DRY_WOOD_SPECIFIC_HEAT_MODEL,
+) -> float:
+    """Return dry-wood cp while respecting the selected source range.
+
+    The USDA Forest Products Laboratory relation is normalized at 293.15 K
+    so a panel keeps its NISTIR 4916 material-specific reference value.  The
+    equation is only published for 280--420 K; temperatures outside that
+    interval use the nearest endpoint rather than an unsupported extrapolation.
+    """
+
+    if (
+        not math.isfinite(reference_specific_heat_j_kg_k)
+        or reference_specific_heat_j_kg_k <= 0.0
+    ):
+        raise ValueError("reference_specific_heat_j_kg_k must be finite and positive")
+    if not math.isfinite(temperature_k) or temperature_k <= 0.0:
+        raise ValueError("temperature_k must be finite and positive")
+    if model == CONSTANT_DRY_WOOD_SPECIFIC_HEAT_MODEL:
+        return reference_specific_heat_j_kg_k
+    if model != USDA_FPL_NORMALIZED_DRY_WOOD_SPECIFIC_HEAT_MODEL:
+        raise ValueError(f"Unsupported dry-wood specific-heat model: {model}")
+
+    bounded_temperature_k = min(
+        USDA_FPL_DRY_WOOD_CP_MAX_TEMPERATURE_K,
+        max(USDA_FPL_DRY_WOOD_CP_MIN_TEMPERATURE_K, temperature_k),
+    )
+    source_specific_heat_j_kg_k = (
+        USDA_FPL_DRY_WOOD_CP_INTERCEPT_J_KG_K
+        + USDA_FPL_DRY_WOOD_CP_SLOPE_J_KG_K2 * bounded_temperature_k
+    )
+    source_reference_specific_heat_j_kg_k = (
+        USDA_FPL_DRY_WOOD_CP_INTERCEPT_J_KG_K
+        + USDA_FPL_DRY_WOOD_CP_SLOPE_J_KG_K2
+        * USDA_FPL_DRY_WOOD_CP_REFERENCE_TEMPERATURE_K
+    )
+    return (
+        reference_specific_heat_j_kg_k
+        * source_specific_heat_j_kg_k
+        / source_reference_specific_heat_j_kg_k
+    )
 
 
 def arrhenius_pyrolysis_rate_constant_s(

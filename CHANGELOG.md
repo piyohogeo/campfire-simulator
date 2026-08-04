@@ -35,6 +35,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - 公称12.7 mm、0.1 m角、5等厚層、片面加熱を明示し、観測初期質量を保持するPhase 6D平板試験片モデルと層温度SVG。
 - 出典付き一次Arrhenius係数を使うPhase 6E見かけ反応と、温度依存速度曲線SVG。
 - 同じ未反応木材に競合するガス・タール・チャーの3一次反応、経路別質量・収率追跡、共通倍率16候補探索を行うPhase 6Fモデル。
+- NISTIR 4916の材料表に基づく合板・OSB別の熱伝導率と比熱、観測質量由来密度の維持、未解決接着界面を記録するPhase 6G材料プロファイル。
+- USDA Wood Handbookの乾燥木材比熱式を材料別基準値へ正規化し、出典範囲280–420 Kへ固定するPhase 6H温度依存比熱モデル。
 - Thurner–Mannの公開A/E組をSI単位で固定したPhase 6E一次Arrhenius熱分解、48候補探索、温度–速度曲線SVG。
 
 ### Changed

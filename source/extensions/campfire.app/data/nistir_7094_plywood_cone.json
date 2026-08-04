@@ -35,6 +35,44 @@
     "osb_layer_count": 1,
     "adhesive_layers_explicit": false
   },
+  "material_property_profiles": {
+    "source": "NISTIR 4916, Controlling Moisture in the Roof Cavities of Manufactured Housing, Table 1 Heat Transfer Properties.",
+    "source_url": "https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir4916.pdf",
+    "source_scope": "Constant room-temperature roof-sheathing properties used by the NIST MOIST analysis; not measurements of the NISTIR 7094 cone specimens and not valid high-temperature reaction properties.",
+    "density_policy": "Reference densities are recorded for traceability but are not applied. Each cone specimen retains its measured initial mass and mass-derived effective density.",
+    "plywood": {
+      "label": "Exterior-Grade Plywood",
+      "thermal_conductivity_w_m_k": 0.115,
+      "specific_heat_j_kg_k": 1214.0,
+      "reference_density_kg_m3": 509.0,
+      "adhesive_interface_count": 4,
+      "adhesive_geometry_explicit": false,
+      "adhesive_additional_resistance_applied": false,
+      "adhesive_interpretation": "Four ply interfaces are recorded, but unknown glue-line geometry and resistance are not invented; the aggregate plywood conductivity is used without an extra interface penalty."
+    },
+    "osb": {
+      "label": "Oriented Strand Board",
+      "thermal_conductivity_w_m_k": 0.118,
+      "specific_heat_j_kg_k": 1298.0,
+      "reference_density_kg_m3": 641.0,
+      "adhesive_interface_count": 0,
+      "adhesive_geometry_explicit": false,
+      "adhesive_additional_resistance_applied": false,
+      "adhesive_interpretation": "The strand-binder composite remains an aggregate one-layer material because the NISTIR 7094 binder type, content, and density profile are unreported."
+    }
+  },
+  "temperature_dependent_heat_capacity": {
+    "model": "usda_fpl_normalized_linear_280_420_k",
+    "source": "USDA Forest Products Laboratory, Wood Handbook: Wood as an Engineering Material, Chapter 4, equation 4-18a (2021 edition).",
+    "source_url": "https://research.fs.usda.gov/download/treesearch/62243.pdf",
+    "source_equation": "cp0 = 0.1031 + 0.003867 T kJ/(kg K), with T in K",
+    "source_valid_temperature_range_k": [280.0, 420.0],
+    "reference_temperature_k": 293.15,
+    "application": "The published dry-wood curve is normalized at 293.15 K to preserve each NISTIR 4916 panel-specific reference cp. Only the remaining dry-wood mass uses this curve; water, char, and ash retain their existing separate heat capacities.",
+    "out_of_range_policy": "Clamp the equation input to 280-420 K. This avoids extrapolating the low-temperature dry-wood relation into the pyrolysis and char regimes.",
+    "conductivity_policy": "Keep each NISTIR 4916 panel conductivity constant. The Wood Handbook only gives an approximate 2-3 percent increase per 10 C here, without a validated cone-test temperature range for these composites.",
+    "composite_limit": "The curve describes wood and is not a direct high-temperature measurement of the NISTIR 7094 plywood adhesive or OSB binder composite."
+  },
   "arrhenius_model": {
     "equation": "k(T) = A exp(-E / (R T)); first-order dry-wood consumption uses 1 - exp(-k dt).",
     "gas_constant_j_mol_k": 8.31446261815324,

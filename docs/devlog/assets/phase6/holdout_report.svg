@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
 <rect width="1200" height="680" fill="#17130f"/>
 <style>text{font-family:Segoe UI,Arial,sans-serif;fill:#f4eadb}.muted{fill:#b9aa98}.grid{stroke:#51483e;stroke-width:1}</style>
-<text x="60" y="58" font-size="30" font-weight="700">Phase 6B — OSB external-material holdout</text>
-<text x="60" y="88" class="muted" font-size="16">NISTIR 7094 Table 2 · plywood-fit parameters applied without refitting</text>
+<text x="60" y="58" font-size="30" font-weight="700">Phase 6H — Bounded cp(T) OSB holdout</text>
+<text x="60" y="88" class="muted" font-size="16">OSB-specific k · USDA-normalized cp(T) · plywood-fit reaction parameters</text>
 <rect x="710" y="62" width="18" height="18" rx="3" fill="#f3d7a1"/>
 <text x="737" y="77" font-size="14">Observed</text>
 <rect x="860" y="62" width="18" height="18" rx="3" fill="#df654e"/>
@@ -22,10 +22,10 @@
 <text x="94" y="170.0" text-anchor="end" class="muted" font-size="13">170</text>
 <rect x="145" y="463.9" width="38" height="91.1" rx="3" fill="#f3d7a1"/>
 <text x="164" y="455.9" text-anchor="middle" font-size="12">39.70</text>
-<rect x="193" y="212.7" width="38" height="342.3" rx="3" fill="#df654e"/>
-<text x="212" y="204.7" text-anchor="middle" font-size="12">149.20</text>
-<rect x="241" y="212.7" width="38" height="342.3" rx="3" fill="#58b889"/>
-<text x="260" y="204.7" text-anchor="middle" font-size="12">149.20</text>
+<rect x="193" y="211.8" width="38" height="343.2" rx="3" fill="#df654e"/>
+<text x="212" y="203.8" text-anchor="middle" font-size="12">149.60</text>
+<rect x="241" y="211.8" width="38" height="343.2" rx="3" fill="#58b889"/>
+<text x="260" y="203.8" text-anchor="middle" font-size="12">149.60</text>
 <text x="212" y="583" text-anchor="middle" font-size="15">35 kW/m²</text>
 <rect x="370" y="530.7" width="38" height="24.3" rx="3" fill="#f3d7a1"/>
 <text x="389" y="522.7" text-anchor="middle" font-size="12">10.60</text>
@@ -47,18 +47,18 @@
 <text x="664" y="170.0" text-anchor="end" class="muted" font-size="13">22</text>
 <rect x="715" y="340.5" width="38" height="214.5" rx="3" fill="#f3d7a1"/>
 <text x="734" y="332.5" text-anchor="middle" font-size="12">12.10</text>
-<rect x="763" y="350.3" width="38" height="204.7" rx="3" fill="#df654e"/>
-<text x="782" y="342.3" text-anchor="middle" font-size="12">11.55</text>
-<rect x="811" y="350.0" width="38" height="205.0" rx="3" fill="#58b889"/>
-<text x="830" y="342.0" text-anchor="middle" font-size="12">11.56</text>
+<rect x="763" y="350.2" width="38" height="204.8" rx="3" fill="#df654e"/>
+<text x="782" y="342.2" text-anchor="middle" font-size="12">11.55</text>
+<rect x="811" y="349.9" width="38" height="205.1" rx="3" fill="#58b889"/>
+<text x="830" y="341.9" text-anchor="middle" font-size="12">11.57</text>
 <text x="782" y="583" text-anchor="middle" font-size="15">35 kW/m²</text>
 <rect x="940" y="255.4" width="38" height="299.6" rx="3" fill="#f3d7a1"/>
 <text x="959" y="247.4" text-anchor="middle" font-size="12">16.90</text>
-<rect x="988" y="366.4" width="38" height="188.6" rx="3" fill="#df654e"/>
-<text x="1007" y="358.4" text-anchor="middle" font-size="12">10.64</text>
-<rect x="1036" y="367.0" width="38" height="188.0" rx="3" fill="#58b889"/>
-<text x="1055" y="359.0" text-anchor="middle" font-size="12">10.60</text>
+<rect x="988" y="366.5" width="38" height="188.5" rx="3" fill="#df654e"/>
+<text x="1007" y="358.5" text-anchor="middle" font-size="12">10.63</text>
+<rect x="1036" y="367.1" width="38" height="187.9" rx="3" fill="#58b889"/>
+<text x="1055" y="359.1" text-anchor="middle" font-size="12">10.60</text>
 <text x="1007" y="583" text-anchor="middle" font-size="15">70 kW/m²</text>
-<text x="60" y="625" font-size="17">Relative RMSE (no refit): baseline 3.333 → plywood-fit 3.333 (-0.0% score change)</text>
+<text x="60" y="625" font-size="17">Relative RMSE (no refit): baseline 3.335 → plywood-fit 3.335 (-0.0% score change)</text>
 <text x="60" y="652" class="muted" font-size="14">Scope: OSB is a different wood product. This is an external-material stress test, not in-plywood validation.</text>
 </svg>

@@ -460,6 +460,83 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertGreater(model.cells[1].temperature_k, model.cells[2].temperature_k)
         self.assertLess(abs(model.mass_balance_error_kg), 1.0e-9)
 
+    async def test_plywood_and_osb_use_distinct_sourced_thermal_profiles(self):
+        reference = campfire.app.load_nist_plywood_reference()
+        parameters = campfire.app.parallel_arrhenius_baseline_parameters(reference)
+        plywood = campfire.app.create_layered_coupon(
+            reference["targets"][0], reference, parameters, material_kind="plywood"
+        )
+        osb = campfire.app.create_layered_coupon(
+            reference["holdout"]["targets"][0],
+            reference,
+            parameters,
+            material_kind="osb",
+        )
+        self.assertAlmostEqual(
+            plywood.spec.through_thickness_conductivity_w_m_k, 0.115
+        )
+        self.assertAlmostEqual(plywood.spec.dry_wood_specific_heat_j_kg_k, 1214.0)
+        self.assertAlmostEqual(osb.spec.through_thickness_conductivity_w_m_k, 0.118)
+        self.assertAlmostEqual(osb.spec.dry_wood_specific_heat_j_kg_k, 1298.0)
+        self.assertEqual(
+            plywood.spec.dry_wood_specific_heat_model,
+            campfire.app.USDA_FPL_NORMALIZED_DRY_WOOD_SPECIFIC_HEAT_MODEL,
+        )
+        self.assertEqual(
+            osb.spec.dry_wood_specific_heat_model,
+            campfire.app.USDA_FPL_NORMALIZED_DRY_WOOD_SPECIFIC_HEAT_MODEL,
+        )
+        self.assertEqual(plywood.spec.adhesive_interface_count, 4)
+        self.assertEqual(osb.spec.adhesive_interface_count, 0)
+        self.assertFalse(plywood.spec.adhesive_geometry_explicit)
+        self.assertFalse(osb.spec.adhesive_geometry_explicit)
+        self.assertNotAlmostEqual(
+            plywood.spec.effective_dry_density_kg_m3,
+            reference["material_property_profiles"]["plywood"][
+                "reference_density_kg_m3"
+            ],
+        )
+
+    async def test_temperature_dependent_heat_capacity_is_normalized_and_clamped(self):
+        model = campfire.app.USDA_FPL_NORMALIZED_DRY_WOOD_SPECIFIC_HEAT_MODEL
+        reference_cp = 1214.0
+        at_reference = campfire.app.temperature_adjusted_dry_wood_specific_heat_j_kg_k(
+            reference_cp, 293.15, model
+        )
+        below_source_range = (
+            campfire.app.temperature_adjusted_dry_wood_specific_heat_j_kg_k(
+                reference_cp, 200.0, model
+            )
+        )
+        at_source_minimum = (
+            campfire.app.temperature_adjusted_dry_wood_specific_heat_j_kg_k(
+                reference_cp, 280.0, model
+            )
+        )
+        at_source_maximum = (
+            campfire.app.temperature_adjusted_dry_wood_specific_heat_j_kg_k(
+                reference_cp, 420.0, model
+            )
+        )
+        above_source_range = (
+            campfire.app.temperature_adjusted_dry_wood_specific_heat_j_kg_k(
+                reference_cp, 900.0, model
+            )
+        )
+        self.assertAlmostEqual(at_reference, reference_cp, places=9)
+        self.assertAlmostEqual(below_source_range, at_source_minimum, places=9)
+        self.assertAlmostEqual(above_source_range, at_source_maximum, places=9)
+        self.assertLess(at_source_minimum, at_reference)
+        self.assertGreater(at_source_maximum, at_reference)
+        self.assertAlmostEqual(
+            campfire.app.temperature_adjusted_dry_wood_specific_heat_j_kg_k(
+                reference_cp,
+                900.0,
+                campfire.app.CONSTANT_DRY_WOOD_SPECIFIC_HEAT_MODEL,
+            ),
+            reference_cp,
+        )
+
     async def test_arrhenius_rate_is_first_order_and_increases_with_temperature(self):
         parameters = campfire.app.arrhenius_baseline_parameters()
         self.assertEqual(parameters.pyrolysis_rate_model, "arrhenius_first_order")
@@ -533,6 +610,19 @@ class TestScene(omni.kit.test.AsyncTestCase):
                 1.0,
                 places=9,
             )
+            self.assertEqual(case["material_kind"], "plywood")
+            self.assertAlmostEqual(case["through_thickness_conductivity_w_m_k"], 0.115)
+            self.assertAlmostEqual(case["dry_wood_specific_heat_j_kg_k"], 1214.0)
+            self.assertEqual(
+                case["dry_wood_specific_heat_model"],
+                campfire.app.USDA_FPL_NORMALIZED_DRY_WOOD_SPECIFIC_HEAT_MODEL,
+            )
+            self.assertEqual(case["dry_wood_specific_heat_valid_range_k"], [280.0, 420.0])
+            self.assertEqual(
+                len(case["final_layer_dry_wood_specific_heats_j_kg_k"]), 5
+            )
+            self.assertEqual(case["adhesive_interface_count"], 4)
+            self.assertFalse(case["adhesive_geometry_explicit"])
         selection = calibration["selection"]
         self.assertTrue(selection["improved"])
         self.assertEqual(selection["sample_ids"], ["SAMP.1", "SAMP.2"])

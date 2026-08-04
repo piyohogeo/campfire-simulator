@@ -52,6 +52,21 @@ if ([math]::Abs($calibration.panel_model.nominal_thickness_m - 0.0127) -gt 0.000
 if ($calibration.panel_model.adhesive_layers_explicit) {
     throw "Phase 6 must not invent unreported adhesive-layer geometry."
 }
+$plywoodProfile = $calibration.material_property_profiles.plywood
+$osbProfile = $calibration.material_property_profiles.osb
+$heatCapacityModel = $calibration.temperature_dependent_heat_capacity
+if ([math]::Abs($plywoodProfile.thermal_conductivity_w_m_k - 0.115) -gt 0.0000001 -or [math]::Abs($plywoodProfile.specific_heat_j_kg_k - 1214.0) -gt 0.0000001) {
+    throw "Phase 6 plywood thermal profile changed."
+}
+if ([math]::Abs($osbProfile.thermal_conductivity_w_m_k - 0.118) -gt 0.0000001 -or [math]::Abs($osbProfile.specific_heat_j_kg_k - 1298.0) -gt 0.0000001) {
+    throw "Phase 6 OSB thermal profile changed."
+}
+if ($heatCapacityModel.model -ne "usda_fpl_normalized_linear_280_420_k" -or $heatCapacityModel.source_valid_temperature_range_k.Count -ne 2 -or [math]::Abs($heatCapacityModel.source_valid_temperature_range_k[0] - 280.0) -gt 0.0000001 -or [math]::Abs($heatCapacityModel.source_valid_temperature_range_k[1] - 420.0) -gt 0.0000001 -or [math]::Abs($heatCapacityModel.reference_temperature_k - 293.15) -gt 0.0000001) {
+    throw "Phase 6 bounded temperature-dependent heat-capacity model changed."
+}
+if ($plywoodProfile.adhesive_interface_count -ne 4 -or $plywoodProfile.adhesive_geometry_explicit -or $plywoodProfile.adhesive_additional_resistance_applied) {
+    throw "Phase 6 plywood adhesive-interface assumptions changed."
+}
 if (-not $calibration.improved -or $calibration.improvement_fraction -le 0.0) {
     throw "Phase 6 search did not improve the baseline."
 }
@@ -100,6 +115,15 @@ foreach ($case in $calibration.best.cases) {
     if ([math]::Abs($case.specimen_thickness_m - 0.0127) -gt 0.0000001) {
         throw "Phase 6 calibration specimen thickness changed."
     }
+    if ($case.material_kind -ne "plywood" -or [math]::Abs($case.through_thickness_conductivity_w_m_k - 0.115) -gt 0.0000001 -or [math]::Abs($case.dry_wood_specific_heat_j_kg_k - 1214.0) -gt 0.0000001) {
+        throw "Phase 6 calibration did not use the sourced plywood profile."
+    }
+    if ($case.dry_wood_specific_heat_model -ne "usda_fpl_normalized_linear_280_420_k" -or $case.dry_wood_specific_heat_valid_range_k.Count -ne 2 -or [math]::Abs($case.dry_wood_specific_heat_valid_range_k[0] - 280.0) -gt 0.0000001 -or [math]::Abs($case.dry_wood_specific_heat_valid_range_k[1] - 420.0) -gt 0.0000001 -or $case.final_layer_dry_wood_specific_heats_j_kg_k.Count -ne 5) {
+        throw "Phase 6 calibration did not use bounded temperature-dependent plywood cp."
+    }
+    if ($case.adhesive_interface_count -ne 4 -or $case.adhesive_geometry_explicit) {
+        throw "Phase 6 calibration invented adhesive geometry."
+    }
     $yieldSum = $case.primary_product_yield_fraction.gas + $case.primary_product_yield_fraction.tar + $case.primary_product_yield_fraction.char
     if ([math]::Abs($yieldSum - 1.0) -gt 0.000001) {
         throw "Phase 6 primary-product yields do not close to one."
@@ -127,6 +151,12 @@ foreach ($case in $holdout.calibrated.cases) {
     }
     if ($case.model_kind -ne "layered_osb" -or $case.layer_count -ne 1) {
         throw "Phase 6 OSB holdout did not use the planar single-layer adapter."
+    }
+    if ($case.material_kind -ne "osb" -or [math]::Abs($case.through_thickness_conductivity_w_m_k - 0.118) -gt 0.0000001 -or [math]::Abs($case.dry_wood_specific_heat_j_kg_k - 1298.0) -gt 0.0000001) {
+        throw "Phase 6 holdout did not use the sourced OSB profile."
+    }
+    if ($case.dry_wood_specific_heat_model -ne "usda_fpl_normalized_linear_280_420_k" -or $case.dry_wood_specific_heat_valid_range_k.Count -ne 2 -or [math]::Abs($case.dry_wood_specific_heat_valid_range_k[0] - 280.0) -gt 0.0000001 -or [math]::Abs($case.dry_wood_specific_heat_valid_range_k[1] - 420.0) -gt 0.0000001 -or $case.final_layer_dry_wood_specific_heats_j_kg_k.Count -ne 1) {
+        throw "Phase 6 holdout did not use bounded temperature-dependent OSB cp."
     }
 }
 if ($holdout.calibrated.cases[0].predicted_ignition_seconds -le $holdout.calibrated.cases[1].predicted_ignition_seconds) {

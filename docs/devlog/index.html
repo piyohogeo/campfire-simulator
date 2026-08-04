@@ -35,8 +35,8 @@
       <div class="shell status-grid">
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>27 / 27 passed</strong></div>
-        <div><span>次の焦点</span><strong>接着層とOSB物性</strong></div>
+        <div><span>テスト</span><strong>29 / 29 passed</strong></div>
+        <div><span>次の焦点</span><strong>二次タール反応</strong></div>
       </div>
     </div>
   </header>
@@ -59,9 +59,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Three competing Arrhenius pathways · NISTIR 7094</p>
+            <p class="section-kicker">Bounded temperature-dependent heat capacity · USDA FPL / NIST</p>
             <h2>「それらしい」から、<br>誤差を示せるモデルへ。</h2>
-            <p>公開されたガス・タール・チャーの3経路を、同じ未反応木材に対する競合一次反応として同時に解きます。相対A/Eを一次資料へ固定し、共通倍率と吸収率の16候補だけをSAMP.1/2で選定しました。生成物収率、未使用SAMP.3、OSBの悪化、文献範囲外の外挿も隠さず残します。</p>
+            <p>USDA Wood Handbookの乾燥木材比熱式を、合板とOSBそれぞれの基準値へ正規化しました。ただし式の根拠は280〜420 Kまでです。熱分解域へ外挿せず、範囲外は端点へ固定します。低温加熱の根拠は増えましたが、Phase 6Gより全評価スコアは悪化しました。この負の結果もモデル選択の材料として残します。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -94,58 +94,60 @@
           </figure>
 
           <figure class="capture-card">
-            <a href="assets/phase6/layer_profile_report.svg" aria-label="Phase 6D 5層合板温度プロファイルを開く">
-              <img src="assets/phase6/layer_profile_report.svg" width="1200" height="680" alt="35と70 kW毎平方メートルについて、加熱面から裏面まで5層の600秒後温度を示したSVG図">
+            <a href="assets/phase6/layer_profile_report.svg" aria-label="Phase 6H 範囲限定温度依存比熱を含む5層合板温度プロファイルを開く">
+              <img src="assets/phase6/layer_profile_report.svg" width="1200" height="680" alt="合板の一定熱伝導率、293 K基準と420 K固定後の比熱、4つの未解決接着界面、5層温度を示したSVG図">
             </a>
-            <figcaption><div><strong>Explicit five-ply temperature profile</strong><span>12.7 mm nominal · five 2.54 mm plies · one-sided exposure</span></div></figcaption>
+            <figcaption><div><strong>Bounded cp(T) five-ply profile</strong><span>Normalized at 293 K · clamped to 280–420 K · constant conductivity</span></div></figcaption>
           </figure>
 
           <figure class="capture-card">
-            <a href="assets/phase6/kinetics_report.svg" aria-label="Phase 6F 3経路Arrhenius速度と生成物収率を開く">
+            <a href="assets/phase6/kinetics_report.svg" aria-label="Phase 6H 3経路Arrhenius速度と範囲限定比熱による生成物収率を開く">
               <img src="assets/phase6/kinetics_report.svg" width="1200" height="680" alt="400から800 Kまでのガス・タール・チャー経路、合計反応速度、35と70 kW毎平方メートルの生成物収率を示したSVGグラフ">
             </a>
             <figcaption><div><strong>Competing pathways and product yields</strong><span>Published gas / tar / char rates → temperature-dependent branching</span></div></figcaption>
           </figure>
 
           <div class="story-grid">
-            <section class="story-card"><span class="card-index">01</span><h3>3経路を同時に解く</h3><ul><li>総反応率 1 − exp(−Σk · dryness · dt)</li><li>生成物分率は kᵢ / Σk</li><li>ガス・タールは放出、チャーは固体へ保持</li><li>収率合計と全質量収支を別々に検査</li></ul></section>
-            <section class="story-card warm"><span class="card-index">02</span><h3>相対反応を固定</h3><ul><li>ガス・タール・チャーA/Eは一次資料値</li><li>共通倍率4×吸収率4の16候補</li><li>SAMP.1/2だけで順位付け</li><li>SAMP.3とOSBは候補選択に不使用</li></ul></section>
+            <section class="story-card"><span class="card-index">01</span><h3>比熱を温度で変える</h3><ul><li>USDA式 cp = 103.1 + 3.867T</li><li>293.15 Kで材料別基準値へ正規化</li><li>合板 1214 → 最大1696 J/(kg·K)</li><li>OSB 1298 → 最大1813 J/(kg·K)</li></ul></section>
+            <section class="story-card warm"><span class="card-index">02</span><h3>根拠の端で止める</h3><ul><li>公表範囲は280〜420 K</li><li>範囲外は最近傍端点へ固定</li><li>熱伝導率は温度依存化を保留</li><li>旧状態と一般薪は定数比熱を維持</li></ul></section>
           </div>
 
           <section class="verification" aria-labelledby="phase6-verification-title">
             <div class="verification-copy"><p class="section-kicker">Verification</p><h3 id="phase6-verification-title">改善と限界を、同時に合格条件へ。</h3><p>スコア改善だけでなく、2熱流束の着火順、有限値、質量保存、固定探索数、PNG・SVG・CSV・USDの生成を検査します。</p><code>.\scripts\run_phase6.bat</code></div>
             <div class="check-list" role="list" aria-label="Phase 6検証結果">
-              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Score</strong><small>0.492 → 0.475 relative RMSE</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Score</strong><small>0.469 → 0.452 relative RMSE</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Search</strong><small>16 deterministic common-scale candidates</small></p></div>
-              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Products</strong><small>gas + tar + char yield = 1.000000</small></p></div>
-              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 1.53 × 10⁻¹⁶ kg · calibration + holdout</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>cp(T) range</strong><small>normalized at 293 K · clamped to 280–420 K</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 2.36 × 10⁻¹⁶ kg · calibration + holdout</small></p></div>
             </div>
           </section>
 
           <section class="facts" aria-labelledby="phase6-facts-title">
             <div class="facts-heading"><p class="section-kicker">Measured on RTX 3090</p><h3 id="phase6-facts-title">校正と未使用データの結果</h3></div>
             <dl class="facts-grid">
-              <div><dt>Score improvement</dt><dd>3.4%</dd></div>
-              <div><dt>Search time</dt><dd>39.6 s</dd></div>
-              <div><dt>35 kW/m² ignition</dt><dd>47.1 → 32.2 s</dd></div>
-              <div><dt>70 kW/m² ignition</dt><dd>7.7 → 12.9 s</dd></div>
+              <div><dt>Score improvement</dt><dd>3.7%</dd></div>
+              <div><dt>Search time</dt><dd>54.8 s</dd></div>
+              <div><dt>35 kW/m² ignition</dt><dd>47.1 → 30.5 s</dd></div>
+              <div><dt>70 kW/m² ignition</dt><dd>7.7 → 12.2 s</dd></div>
               <div><dt>Best absorptivity</dt><dd>1.00</dd></div>
               <div><dt>Common A scale</dt><dd>4.0 upper bound</dd></div>
+              <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
+              <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² products</dt><dd>18.0 / 51.8 / 30.2%</dd></div>
               <div><dt>70 kW/m² products</dt><dd>15.9 / 54.1 / 30.0%</dd></div>
-              <div><dt>OSB holdout score</dt><dd>3.333 → 3.333 worse</dd></div>
-              <div><dt>OSB 35 ignition</dt><dd>39.7 → 149.2 s</dd></div>
+              <div><dt>OSB holdout score</dt><dd>3.335 → 3.335 worse</dd></div>
+              <div><dt>OSB 35 ignition</dt><dd>39.7 → 149.6 s</dd></div>
               <div><dt>OSB 70 ignition</dt><dd>10.6 → 74.8 s</dd></div>
-              <div><dt>SAMP.1/2 fit score</dt><dd>0.430 → 0.411</dd></div>
-              <div><dt>SAMP.3 holdout score</dt><dd>0.647 → 0.633</dd></div>
-              <div><dt>SAMP.3 35 ignition</dt><dd>54.23 → 32.6 s</dd></div>
-              <div><dt>SAMP.3 70 ignition</dt><dd>6.69 → 13.7 s</dd></div>
+              <div><dt>SAMP.1/2 fit score</dt><dd>0.417 → 0.398</dd></div>
+              <div><dt>SAMP.3 holdout score</dt><dd>0.612 → 0.597</dd></div>
+              <div><dt>SAMP.3 35 ignition</dt><dd>54.23 → 30.9 s</dd></div>
+              <div><dt>SAMP.3 70 ignition</dt><dd>6.69 → 13.0 s</dd></div>
             </dl>
           </section>
 
           <div class="notes-grid">
-            <section class="note caution"><p class="note-label">Known limits</p><h3>経路を分けても精度は上がらない</h3><p>SAMP.3改善は2.1%に留まり、OSBは0.0016%悪化しました。共通倍率は探索上限4で、係数同定は未収束です。窒素中オーク鋸屑の573〜673 Kから合板へ外挿し、接着剤と二次タール反応を扱っていません。</p></section>
-            <section class="note next"><p class="note-label">What comes next</p><h3>材料の中身を分ける</h3><p>合板の単板・接着層、OSBのストランド・バインダーを別物性として扱います。倍率範囲を広げる前に、追加熱流束、生成物収率実測、またはFDSを外部条件として用意します。</p></section>
+            <section class="note caution"><p class="note-label">Known limits</p><h3>根拠を増やしても、スコアは悪化した</h3><p>Phase 6G比でTable 2は18.2%、SAMP.3は26.6%、OSBは24.8%悪化しました。式の根拠は熱分解開始前の420 Kで終わり、それ以上は固定値です。高温複合材物性の検証ではなく、共通倍率も探索上限4のままです。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>二次タール反応を分けて試す</h3><p>比熱変更と混ぜず、一次タールから二次ガス・チャーへの反応を独立評価します。高温物性、接着剤、OSBバインダーは直接測定の根拠を得てから追加します。</p></section>
           </div>
         </div>
       </article>
@@ -663,7 +665,7 @@
           <li class="done"><span>3</span><div><strong>木材熱モデル</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>4</span><div><strong>配置と通気</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>5</span><div><strong>崩壊</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · Arrhenius反応</small></div></li>
+          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · 範囲限定 cp(T)</small></div></li>
         </ol>
       </div>
     </section>
