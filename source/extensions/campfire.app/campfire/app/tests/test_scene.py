@@ -490,6 +490,36 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertIsNone(diagnostic.shrinkage_factor)
         self.assertFalse(diagnostic.ready_for_darcy_layer_thickness)
 
+    async def test_external_char_depth_benchmark_blocks_cross_material_transfer(self):
+        reference = campfire.app.load_nist_plywood_reference()
+        benchmark = campfire.app.evaluate_external_plywood_char_depth_benchmark(
+            reference,
+            {
+                "cases": [
+                    {
+                        "incident_heat_flux_kw_m2": 35.0,
+                        "specimen_thickness_m": 0.0127,
+                        "effective_dry_density_kg_m3": 471.7,
+                        "equivalent_unshrunk_pyrolysis_depth_m": 0.00924,
+                        "physical_char_layer_thickness_m": None,
+                    }
+                ]
+            },
+        )
+        self.assertFalse(benchmark["used_for_parameter_selection"])
+        self.assertFalse(benchmark["scored"])
+        self.assertFalse(benchmark["ready_for_physical_thickness_transfer"])
+        self.assertIsNone(benchmark["comparison_error_metric"])
+        self.assertEqual(benchmark["matched_condition_count"], 3)
+        self.assertEqual(benchmark["condition_count"], 10)
+        self.assertAlmostEqual(
+            benchmark["external_observation"]["char_depth_m"], 0.01377
+        )
+        self.assertAlmostEqual(benchmark["current_model"]["depth_m"], 0.00924)
+        self.assertIsNone(
+            benchmark["current_model"]["physical_char_layer_thickness_m"]
+        )
+
     async def test_plywood_and_osb_use_distinct_sourced_thermal_profiles(self):
         reference = campfire.app.load_nist_plywood_reference()
         parameters = campfire.app.parallel_arrhenius_baseline_parameters(reference)
@@ -830,6 +860,21 @@ class TestScene(omni.kit.test.AsyncTestCase):
             self.assertIsNone(case["physical_char_layer_thickness_m"])
             self.assertIsNone(case["shrinkage_factor"])
             self.assertFalse(case["ready_for_darcy_layer_thickness"])
+        char_benchmark = calibration["external_plywood_char_depth_benchmark"]
+        self.assertFalse(char_benchmark["used_for_parameter_selection"])
+        self.assertFalse(char_benchmark["scored"])
+        self.assertFalse(
+            char_benchmark["ready_for_physical_thickness_transfer"]
+        )
+        self.assertIsNone(char_benchmark["comparison_error_metric"])
+        self.assertEqual(char_benchmark["matched_condition_count"], 3)
+        self.assertEqual(char_benchmark["condition_count"], 10)
+        self.assertAlmostEqual(
+            char_benchmark["external_observation"]["char_depth_m"], 0.01377
+        )
+        self.assertIsNone(
+            char_benchmark["current_model"]["physical_char_layer_thickness_m"]
+        )
 
     async def test_phase6_scene_visualizes_observed_baseline_and_calibrated_values(self):
         stage = Usd.Stage.CreateInMemory()

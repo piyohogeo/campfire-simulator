@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#15120f"/>
+  <style>
+    text { font-family: "Segoe UI", Arial, sans-serif; fill: #fff7e9; }
+    .title { font-size: 30px; font-weight: 700; }
+    .subtitle { font-size: 15px; fill: #d7b982; }
+    .heading { font-size: 18px; font-weight: 700; }
+    .label { font-size: 14px; fill: #ded2c0; }
+    .value { font-size: 15px; font-weight: 700; }
+    .condition { font-size: 12px; fill: #ded2c0; }
+    .mark { font-size: 10px; font-weight: 800; fill: #15120f; }
+    .small { font-size: 12px; fill: #bcae9a; }
+  </style>
+  <text x="60" y="52" class="title">Phase 6M · External plywood char-depth comparability gate</text>
+  <text x="60" y="82" class="subtitle">A direct measurement is useful evidence, but a near heat flux does not make unlike specimens interchangeable</text>
+
+  <text x="60" y="136" class="heading">Depth at 600 s · side-by-side context only</text>
+  <text x="60" y="190" class="label">Current NIST model</text>
+  <rect x="275.0" y="168" width="780.0" height="30" rx="5" fill="#332c25"/>
+  <rect x="275.0" y="168" width="343.2" height="30" rx="5" fill="#e9a75b"/>
+  <text x="1075" y="190" class="value" text-anchor="end">9.24 mm</text>
+  <text x="60" y="246" class="label">Kasymov birch plywood</text>
+  <rect x="275.0" y="224" width="780.0" height="30" rx="5" fill="#332c25"/>
+  <rect x="275.0" y="224" width="511.5" height="30" rx="5" fill="#58b889"/>
+  <line x1="764.2" y1="239" x2="808.7" y2="239" stroke="#fff7e9" stroke-width="3"/>
+  <text x="1075" y="246" class="value" text-anchor="end">13.77 ± 0.60 mm</text>
+  <text x="275" y="282" class="small">Scale ends at the external specimen thickness: 21.0 mm</text>
+
+  <rect x="60" y="306" width="1080" height="58" rx="9" fill="#261817" stroke="#ad5149"/>
+  <text x="82" y="341" class="heading" fill="#ff8f7e">NOT SCORED · matched conditions 3/10 · physical-thickness transfer blocked</text>
+
+  <rect x="60" y="382" width="82" height="23" rx="4" fill="#58b889"/><text x="101" y="398" class="mark" text-anchor="middle">MATCH</text><text x="156" y="398" class="condition">incident_heat_flux · 35.0 versus 34.7 kW/m2</text><rect x="610" y="382" width="82" height="23" rx="4" fill="#58b889"/><text x="651" y="398" class="mark" text-anchor="middle">MATCH</text><text x="706" y="398" class="condition">exposure_duration · 600 s in both datasets</text><rect x="60" y="416" width="82" height="23" rx="4" fill="#58b889"/><text x="101" y="432" class="mark" text-anchor="middle">MATCH</text><text x="156" y="432" class="condition">exposed_dimensions · 100 x 100 mm in both datasets</text><rect x="610" y="416" width="82" height="23" rx="4" fill="#df654e"/><text x="651" y="432" class="mark" text-anchor="middle">MISMATCH</text><text x="706" y="432" class="condition">specimen_thickness · 12.7 versus 21.0 mm</text><rect x="60" y="450" width="82" height="23" rx="4" fill="#df654e"/><text x="101" y="466" class="mark" text-anchor="middle">MISMATCH</text><text x="156" y="466" class="condition">dry_density · 471.7 versus 705-725 kg/m3</text><rect x="610" y="450" width="82" height="23" rx="4" fill="#df654e"/><text x="651" y="466" class="mark" text-anchor="middle">MISMATCH</text><text x="706" y="466" class="condition">wood_species · NIST species unreported versus birch</text><rect x="60" y="484" width="82" height="23" rx="4" fill="#df654e"/><text x="101" y="500" class="mark" text-anchor="middle">MISMATCH</text><text x="156" y="500" class="condition">adhesive · NIST adhesive unreported versus urea glue</text><rect x="610" y="484" width="82" height="23" rx="4" fill="#df654e"/><text x="651" y="500" class="mark" text-anchor="middle">MISMATCH</text><text x="706" y="500" class="condition">moisture_condition · 8% dry-basis model versus 4.2% with basis unreported</text><rect x="60" y="518" width="82" height="23" rx="4" fill="#df654e"/><text x="101" y="534" class="mark" text-anchor="middle">MISMATCH</text><text x="156" y="534" class="condition">exposure_mode · NIST cone sustained flaming versus blackbody apparatus</text><rect x="610" y="518" width="82" height="23" rx="4" fill="#df654e"/><text x="651" y="534" class="mark" text-anchor="middle">MISMATCH</text><text x="706" y="534" class="condition">depth_definition · mass-equivalent conversion versus IR carbonization boundary</text>
+
+  <line x1="60" y1="592" x2="1140" y2="592" stroke="#53483d"/>
+  <text x="60" y="620" class="small">External: untreated birch plywood · urea glue · 21 mm · 705–725 kg/m3 · 34.7 kW/m2 blackbody · end-face IR carbonization boundary.</text>
+  <text x="60" y="645" class="small">Current quantity is unshrunk dry-mass-equivalent reaction depth, not a measured physical char depth. Comparison error remains null.</text>
+</svg>

@@ -256,7 +256,20 @@ foreach ($case in $charGeometry.cases) {
 if ($gasTransport.fixed_grid_reaction_progress.Count -ne 2) {
     throw "Phase 6 gas-transport report lost fixed-grid reaction progress."
 }
-foreach ($path in @($result.image, $result.report, $result.holdout_report, $result.replicate_holdout_report, $result.layer_profile_report, $result.kinetics_report, $result.tar_residence_sensitivity_report, $result.gas_transport_readiness_report, $result.char_geometry_report, $result.top_candidates_csv, $result.final_stage)) {
+$charBenchmark = $calibration.external_plywood_char_depth_benchmark
+if ($charBenchmark.used_for_parameter_selection -or $charBenchmark.scored -or $charBenchmark.ready_for_physical_thickness_transfer -or $null -ne $charBenchmark.comparison_error_metric) {
+    throw "Phase 6 external char-depth benchmark gate changed."
+}
+if ($charBenchmark.matched_condition_count -ne 3 -or $charBenchmark.condition_count -ne 10) {
+    throw "Phase 6 external char-depth comparability matrix changed."
+}
+if ([math]::Abs($charBenchmark.external_observation.char_depth_m - 0.01377) -gt 0.000000001 -or [math]::Abs($charBenchmark.external_observation.char_depth_95_percent_interval_half_width_m - 0.00060) -gt 0.000000001) {
+    throw "Phase 6 external char-depth observation changed."
+}
+if ($null -ne $charBenchmark.current_model.physical_char_layer_thickness_m -or $charBenchmark.current_model.depth_m -le 0.0 -or $charBenchmark.current_model.depth_m -gt 0.0127) {
+    throw "Phase 6 external char-depth benchmark used an invalid current quantity."
+}
+foreach ($path in @($result.image, $result.report, $result.holdout_report, $result.replicate_holdout_report, $result.layer_profile_report, $result.kinetics_report, $result.tar_residence_sensitivity_report, $result.gas_transport_readiness_report, $result.char_geometry_report, $result.char_depth_benchmark_report, $result.top_candidates_csv, $result.final_stage)) {
     if (-not (Test-Path -LiteralPath $path)) {
         throw "Phase 6 artifact was not produced: $path"
     }

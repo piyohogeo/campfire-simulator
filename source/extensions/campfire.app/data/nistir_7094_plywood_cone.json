@@ -150,6 +150,39 @@
     "physical_char_layer_thickness_policy": "Withhold physical char-layer thickness until a plywood shrinkage relation and a defensible front definition are available. The fixed-grid mass-equivalent depth is diagnostic only and cannot satisfy the Darcy layer-thickness input.",
     "interpretation": "Each equal-thickness panel cell contributes its dry-wood conversion fraction times its original thickness. The sum is an unshrunk mass-equivalent reaction depth, not a contiguous front location and not a physical char-layer thickness."
   },
+  "external_plywood_char_depth_benchmark": {
+    "source": "Kasymov et al., Experimental Investigation of the Effect of Heat Flux on the Fire Behavior of Engineered Wood Samples, Fire 3(4), 61 (2020).",
+    "source_doi": "https://doi.org/10.3390/fire3040061",
+    "source_url": "https://mdpi-res.com/d_attachment/fire/fire-03-00061/article_deploy/fire-03-00061.pdf",
+    "used_for_parameter_selection": false,
+    "scored": false,
+    "external_specimen": {
+      "material": "untreated broadleaf birch plywood",
+      "adhesive": "urea glue",
+      "width_m": 0.1,
+      "depth_m": 0.1,
+      "thickness_m": 0.021,
+      "density_range_kg_m3": [705.0, 725.0],
+      "reported_moisture_content_percent": 4.2,
+      "moisture_basis_reported": false
+    },
+    "external_exposure": {
+      "radiant_source": "1100 C blackbody radiator",
+      "incident_heat_flux_kw_m2": 34.7,
+      "duration_s": 600.0,
+      "atmosphere_and_flame": "The reported surface-temperature result is described as smoldering without flame; the apparatus is not the NIST cone-calorimeter exposure."
+    },
+    "external_observation": {
+      "method": "End-face narrow-band infrared thermography at 5 frames/s; final carbonization boundary referenced to the initial sample end; three replicates.",
+      "char_depth_m": 0.01377,
+      "char_depth_95_percent_interval_half_width_m": 0.0006,
+      "charring_rate_mm_min": 1.38,
+      "charring_rate_95_percent_interval_half_width_mm_min": 0.06,
+      "front_temperature_threshold_reported": false
+    },
+    "heat_flux_match_tolerance_kw_m2": 0.5,
+    "policy": "Display the direct plywood char-depth measurement beside the current fixed-grid mass-equivalent depth only as an external context benchmark. Do not score the quantities or transfer a shrinkage factor because specimen thickness, species, density, moisture basis, adhesive, exposure mode, and front definition are not matched."
+  },
   "arrhenius_model": {
     "equation": "k(T) = A exp(-E / (R T)); first-order dry-wood consumption uses 1 - exp(-k dt).",
     "gas_constant_j_mol_k": 8.31446261815324,

@@ -41,6 +41,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Borosonらの一次実験範囲0.9–2.2秒・773–1073 Kで二次タール生成物分配を比較し、係数選定から隔離するPhase 6J滞留時間感度評価とSVGレポート。
 - 完全なSI入力を要求する一次元Darcy気相輸送計算器、合板固有の欠測5入力、滞留時間を保留するPhase 6K結合ゲートとSVGレポート。
 - 各層の乾燥木材消費率から未収縮の質量等価熱分解深さを求め、物理炭化層厚さと収縮係数を未確定のまま分離するPhase 6L診断とSVGレポート。
+- 34.7 kW/m²・600秒のカバ合板炭化深さ実測を非採点で並べ、10条件中3条件だけの一致から物理厚さへの転用を拒否するPhase 6M外部比較可能性ゲートとSVGレポート。
 - Thurner–Mannの公開A/E組をSI単位で固定したPhase 6E一次Arrhenius熱分解、48候補探索、温度–速度曲線SVG。
 
 ### Changed

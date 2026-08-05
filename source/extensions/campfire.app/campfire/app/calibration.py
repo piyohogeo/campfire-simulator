@@ -184,6 +184,31 @@ def load_nist_plywood_reference(path: Path | None = None) -> dict:
         != 0.00095
     ):
         raise ValueError("Char-geometry diagnostic definition is incomplete")
+    char_benchmark = data.get("external_plywood_char_depth_benchmark", {})
+    benchmark_specimen = char_benchmark.get("external_specimen", {})
+    benchmark_exposure = char_benchmark.get("external_exposure", {})
+    benchmark_observation = char_benchmark.get("external_observation", {})
+    if (
+        char_benchmark.get("used_for_parameter_selection") is not False
+        or char_benchmark.get("scored") is not False
+        or benchmark_specimen.get("material")
+        != "untreated broadleaf birch plywood"
+        or float(benchmark_specimen.get("thickness_m", 0.0)) != 0.021
+        or benchmark_specimen.get("density_range_kg_m3") != [705.0, 725.0]
+        or float(benchmark_exposure.get("incident_heat_flux_kw_m2", 0.0))
+        != 34.7
+        or float(benchmark_exposure.get("duration_s", 0.0)) != 600.0
+        or float(benchmark_observation.get("char_depth_m", 0.0)) != 0.01377
+        or float(
+            benchmark_observation.get(
+                "char_depth_95_percent_interval_half_width_m", 0.0
+            )
+        )
+        != 0.0006
+        or benchmark_observation.get("front_temperature_threshold_reported")
+        is not False
+    ):
+        raise ValueError("External plywood char-depth benchmark is incomplete")
     common_scales = kinetics.get("parallel_common_scales", [])
     if not common_scales or any(float(scale) <= 0.0 for scale in common_scales):
         raise ValueError("Parallel Arrhenius common scales must be positive")
@@ -919,6 +944,125 @@ def evaluate_char_geometry_diagnostic(reference: dict, best_evaluation: dict) ->
     }
 
 
+def evaluate_external_plywood_char_depth_benchmark(
+    reference: dict, best_evaluation: dict
+) -> dict:
+    """Gate a near-flux plywood observation from unsupported coefficient transfer."""
+
+    definition = reference["external_plywood_char_depth_benchmark"]
+    external_specimen = definition["external_specimen"]
+    external_exposure = definition["external_exposure"]
+    observation = definition["external_observation"]
+    current_case = min(
+        best_evaluation["cases"],
+        key=lambda case: abs(
+            float(case["incident_heat_flux_kw_m2"])
+            - float(external_exposure["incident_heat_flux_kw_m2"])
+        ),
+    )
+    current_density = float(current_case["effective_dry_density_kg_m3"])
+    external_density = external_specimen["density_range_kg_m3"]
+    comparisons = [
+        {
+            "condition": "incident_heat_flux",
+            "matches": abs(
+                float(current_case["incident_heat_flux_kw_m2"])
+                - float(external_exposure["incident_heat_flux_kw_m2"])
+            )
+            <= float(definition["heat_flux_match_tolerance_kw_m2"]),
+            "detail": "35.0 versus 34.7 kW/m2",
+        },
+        {
+            "condition": "exposure_duration",
+            "matches": math.isclose(
+                CALIBRATION_DURATION_SECONDS,
+                float(external_exposure["duration_s"]),
+            ),
+            "detail": "600 s in both datasets",
+        },
+        {
+            "condition": "exposed_dimensions",
+            "matches": math.isclose(
+                float(reference["method"]["sample_width_m"]),
+                float(external_specimen["width_m"]),
+            )
+            and math.isclose(
+                float(reference["method"]["sample_depth_m"]),
+                float(external_specimen["depth_m"]),
+            ),
+            "detail": "100 x 100 mm in both datasets",
+        },
+        {
+            "condition": "specimen_thickness",
+            "matches": math.isclose(
+                float(reference["panel_model"]["nominal_thickness_m"]),
+                float(external_specimen["thickness_m"]),
+            ),
+            "detail": "12.7 versus 21.0 mm",
+        },
+        {
+            "condition": "dry_density",
+            "matches": float(external_density[0])
+            <= current_density
+            <= float(external_density[1]),
+            "detail": (
+                f"{current_density:.1f} versus "
+                f"{float(external_density[0]):.0f}-{float(external_density[1]):.0f} kg/m3"
+            ),
+        },
+        {
+            "condition": "wood_species",
+            "matches": False,
+            "detail": "NIST species unreported versus birch",
+        },
+        {
+            "condition": "adhesive",
+            "matches": False,
+            "detail": "NIST adhesive unreported versus urea glue",
+        },
+        {
+            "condition": "moisture_condition",
+            "matches": False,
+            "detail": "8% dry-basis model versus 4.2% with basis unreported",
+        },
+        {
+            "condition": "exposure_mode",
+            "matches": False,
+            "detail": "NIST cone sustained flaming versus blackbody apparatus",
+        },
+        {
+            "condition": "depth_definition",
+            "matches": False,
+            "detail": "mass-equivalent conversion versus IR carbonization boundary",
+        },
+    ]
+    return {
+        **definition,
+        "current_model": {
+            "incident_heat_flux_kw_m2": current_case[
+                "incident_heat_flux_kw_m2"
+            ],
+            "duration_s": CALIBRATION_DURATION_SECONDS,
+            "nominal_thickness_m": current_case["specimen_thickness_m"],
+            "effective_dry_density_kg_m3": current_density,
+            "quantity": "equivalent_unshrunk_pyrolysis_depth_m",
+            "depth_m": current_case["equivalent_unshrunk_pyrolysis_depth_m"],
+            "physical_char_layer_thickness_m": current_case[
+                "physical_char_layer_thickness_m"
+            ],
+        },
+        "comparisons": comparisons,
+        "matched_condition_count": sum(
+            comparison["matches"] for comparison in comparisons
+        ),
+        "condition_count": len(comparisons),
+        "ready_for_physical_thickness_transfer": all(
+            comparison["matches"] for comparison in comparisons
+        ),
+        "comparison_error_metric": None,
+    }
+
+
 def evaluate_gas_transport_readiness(
     reference: dict, best_evaluation: dict | None = None
 ) -> dict:
@@ -984,6 +1128,9 @@ def run_nist_plywood_calibration() -> dict:
         )
     )
     char_geometry_diagnostic = evaluate_char_geometry_diagnostic(reference, best)
+    external_plywood_char_depth_benchmark = (
+        evaluate_external_plywood_char_depth_benchmark(reference, best)
+    )
     gas_transport_readiness = evaluate_gas_transport_readiness(reference, best)
     validation_baseline = evaluate_parameters(
         reference, baseline_parameters, validation_targets
@@ -1030,6 +1177,9 @@ def run_nist_plywood_calibration() -> dict:
         ),
         "gas_transport_readiness": gas_transport_readiness,
         "char_geometry_diagnostic": char_geometry_diagnostic,
+        "external_plywood_char_depth_benchmark": (
+            external_plywood_char_depth_benchmark
+        ),
         "arrhenius_model": reference["arrhenius_model"],
         "candidate_count": len(ranked),
         "selection": {
@@ -1638,6 +1788,82 @@ def write_char_geometry_svg(calibration: dict, destination: Path) -> Path:
   <text x="82" y="544" class="small">Different material and geometry: the reported beech shrinkage is evidence for separation, not a plywood coefficient.</text>
   <line x1="60" y1="610" x2="1140" y2="610" stroke="#53483d"/>
   <text x="60" y="640" class="small">Layer percentages show dry-wood conversion; “char” is retained char mass / initial dry mass. Neither defines a contiguous physical front.</text>
+</svg>'''
+    destination.write_text(svg, encoding="utf-8")
+    return destination
+
+
+def write_char_depth_benchmark_svg(calibration: dict, destination: Path) -> Path:
+    """Render the external plywood observation and its comparability gate."""
+
+    destination = Path(destination).resolve()
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    benchmark = calibration["external_plywood_char_depth_benchmark"]
+    current = benchmark["current_model"]
+    observation = benchmark["external_observation"]
+    specimen = benchmark["external_specimen"]
+    maximum_depth_m = float(specimen["thickness_m"])
+    bar_left = 275.0
+    bar_width = 780.0
+    current_width = bar_width * float(current["depth_m"]) / maximum_depth_m
+    observed_width = bar_width * float(observation["char_depth_m"]) / maximum_depth_m
+    interval_half_width = (
+        bar_width
+        * float(observation["char_depth_95_percent_interval_half_width_m"])
+        / maximum_depth_m
+    )
+    comparison_markup = []
+    for index, comparison in enumerate(benchmark["comparisons"]):
+        column = index % 2
+        row = index // 2
+        x = 60.0 + column * 550.0
+        y = 398.0 + row * 34.0
+        color = "#58b889" if comparison["matches"] else "#df654e"
+        mark = "MATCH" if comparison["matches"] else "MISMATCH"
+        comparison_markup.append(
+            f'<rect x="{x:.0f}" y="{y - 16:.0f}" width="82" height="23" '
+            f'rx="4" fill="{color}"/>'
+            f'<text x="{x + 41:.0f}" y="{y:.0f}" class="mark" '
+            f'text-anchor="middle">{mark}</text>'
+            f'<text x="{x + 96:.0f}" y="{y:.0f}" class="condition">'
+            f'{comparison["condition"]} · {comparison["detail"]}</text>'
+        )
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#15120f"/>
+  <style>
+    text {{ font-family: "Segoe UI", Arial, sans-serif; fill: #fff7e9; }}
+    .title {{ font-size: 30px; font-weight: 700; }}
+    .subtitle {{ font-size: 15px; fill: #d7b982; }}
+    .heading {{ font-size: 18px; font-weight: 700; }}
+    .label {{ font-size: 14px; fill: #ded2c0; }}
+    .value {{ font-size: 15px; font-weight: 700; }}
+    .condition {{ font-size: 12px; fill: #ded2c0; }}
+    .mark {{ font-size: 10px; font-weight: 800; fill: #15120f; }}
+    .small {{ font-size: 12px; fill: #bcae9a; }}
+  </style>
+  <text x="60" y="52" class="title">Phase 6M · External plywood char-depth comparability gate</text>
+  <text x="60" y="82" class="subtitle">A direct measurement is useful evidence, but a near heat flux does not make unlike specimens interchangeable</text>
+
+  <text x="60" y="136" class="heading">Depth at 600 s · side-by-side context only</text>
+  <text x="60" y="190" class="label">Current NIST model</text>
+  <rect x="{bar_left}" y="168" width="{bar_width}" height="30" rx="5" fill="#332c25"/>
+  <rect x="{bar_left}" y="168" width="{current_width:.1f}" height="30" rx="5" fill="#e9a75b"/>
+  <text x="1075" y="190" class="value" text-anchor="end">{1000.0 * float(current["depth_m"]):.2f} mm</text>
+  <text x="60" y="246" class="label">Kasymov birch plywood</text>
+  <rect x="{bar_left}" y="224" width="{bar_width}" height="30" rx="5" fill="#332c25"/>
+  <rect x="{bar_left}" y="224" width="{observed_width:.1f}" height="30" rx="5" fill="#58b889"/>
+  <line x1="{bar_left + observed_width - interval_half_width:.1f}" y1="239" x2="{bar_left + observed_width + interval_half_width:.1f}" y2="239" stroke="#fff7e9" stroke-width="3"/>
+  <text x="1075" y="246" class="value" text-anchor="end">{1000.0 * float(observation["char_depth_m"]):.2f} ± {1000.0 * float(observation["char_depth_95_percent_interval_half_width_m"]):.2f} mm</text>
+  <text x="275" y="282" class="small">Scale ends at the external specimen thickness: {1000.0 * maximum_depth_m:.1f} mm</text>
+
+  <rect x="60" y="306" width="1080" height="58" rx="9" fill="#261817" stroke="#ad5149"/>
+  <text x="82" y="341" class="heading" fill="#ff8f7e">NOT SCORED · matched conditions {benchmark["matched_condition_count"]}/{benchmark["condition_count"]} · physical-thickness transfer blocked</text>
+
+  {''.join(comparison_markup)}
+
+  <line x1="60" y1="592" x2="1140" y2="592" stroke="#53483d"/>
+  <text x="60" y="620" class="small">External: untreated birch plywood · urea glue · 21 mm · 705–725 kg/m3 · 34.7 kW/m2 blackbody · end-face IR carbonization boundary.</text>
+  <text x="60" y="645" class="small">Current quantity is unshrunk dry-mass-equivalent reaction depth, not a measured physical char depth. Comparison error remains null.</text>
 </svg>'''
     destination.write_text(svg, encoding="utf-8")
     return destination

@@ -35,8 +35,8 @@
       <div class="shell status-grid">
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>32 / 32 passed</strong></div>
-        <div><span>次の焦点</span><strong>合板収縮の一次根拠</strong></div>
+        <div><span>テスト</span><strong>33 / 33 passed</strong></div>
+        <div><span>次の焦点</span><strong>一致条件での断面計測</strong></div>
       </div>
     </div>
   </header>
@@ -59,9 +59,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Fixed-grid reaction progress · physical char thickness withheld</p>
+            <p class="section-kicker">External plywood char depth · explicit comparability gate</p>
             <h2>「それらしい」から、<br>誤差を示せるモデルへ。</h2>
-            <p>5層の乾燥木材消費率から、元の固定格子上で未収縮の質量等価熱分解深さを求めました。600秒で35 kW/m²は9.240 mm、70 kW/m²は12.700 mmです。ただし、これは連続した前線位置でも収縮後の物理炭化層厚さでもありません。物理厚さはnullのままにし、Darcy滞留時間への結合ゲートも閉じています。</p>
+            <p><a href="https://doi.org/10.3390/fire3040061">Kasymovらの一次実験</a>が、34.7 kW/m²・600秒のカバ合板について端面IRから炭化深さ13.77 ± 0.60 mmを得ています。現在の35 kW/m²未収縮相当値は9.240 mmですが、一致するのは熱流束・時間・100 mm角の3 / 10条件だけです。異なる量の差を誤差として採点せず、物理厚さへの転用ゲートを閉じます。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -91,6 +91,13 @@
               <img src="assets/phase6/char_geometry_report.svg" width="1200" height="680" alt="35と70 kW毎平方メートルの5層乾燥木材変換率、未収縮相当深さ、保留した物理炭化層厚さ、ブナ球の収縮補正文脈を示すSVG図">
             </a>
             <figcaption><div><strong>Reaction progress ≠ physical thickness</strong><span>9.240 / 12.700 mm unshrunk equivalent · shrinkage withheld</span></div></figcaption>
+          </figure>
+
+          <figure class="capture-card">
+            <a href="assets/phase6/char_depth_benchmark_report.svg" aria-label="Phase 6M 外部合板炭化深さの比較可能性レポートを開く">
+              <img src="assets/phase6/char_depth_benchmark_report.svg" width="1200" height="680" alt="現在の未収縮相当深さ9.24 mmと外部カバ合板の炭化深さ13.77プラスマイナス0.60 mm、10条件中3条件の一致、非採点と転用禁止を示すSVG図">
+            </a>
+            <figcaption><div><strong>External char-depth comparability gate</strong><span>3 / 10 conditions match · error null · transfer blocked</span></div></figcaption>
           </figure>
 
           <figure class="capture-card">
@@ -129,8 +136,8 @@
           </figure>
 
           <div class="story-grid">
-            <section class="story-card"><span class="card-index">01</span><h3>反応した量を測る</h3><ul><li>初期乾燥木材を層ごとに保持</li><li>消費率 × 元の層厚を積算</li><li>残存チャー率も別に記録</li><li>係数選定には不使用</li></ul></section>
-            <section class="story-card warm"><span class="card-index">02</span><h3>物理厚さと呼ばない</h3><ul><li>固定格子は収縮を解かない</li><li>ブナ球の収縮率は移植しない</li><li>物理炭化層厚さはnull</li><li>Darcy厚さ入力は欠測のまま</li></ul></section>
+            <section class="story-card"><span class="card-index">01</span><h3>直接測定を取り込む</h3><ul><li>端面IRを5 Hzで取得</li><li>600秒・3反復</li><li>13.77 ± 0.60 mm</li><li>係数選定には不使用</li></ul></section>
+            <section class="story-card warm"><span class="card-index">02</span><h3>比較可能性を先に判定</h3><ul><li>一致3条件、不一致7条件</li><li>比較誤差はnull</li><li>収縮係数を逆算しない</li><li>Darcy厚さ入力は欠測のまま</li></ul></section>
           </div>
 
           <section class="verification" aria-labelledby="phase6-verification-title">
@@ -141,6 +148,7 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Tar split</strong><small>primary = secondary gas + surviving tar</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Transport gate</strong><small>5 missing inputs · residence time withheld</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Char geometry</strong><small>5 plies · physical thickness and shrinkage null</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>External depth</strong><small>3 / 10 match · not scored · transfer blocked</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>
             </div>
           </section>
@@ -149,7 +157,7 @@
             <div class="facts-heading"><p class="section-kicker">Measured on RTX 3090</p><h3 id="phase6-facts-title">校正と未使用データの結果</h3></div>
             <dl class="facts-grid">
               <div><dt>Score improvement</dt><dd>3.7%</dd></div>
-              <div><dt>Search time</dt><dd>58.0 s</dd></div>
+              <div><dt>Search time</dt><dd>56.3 s</dd></div>
               <div><dt>35 kW/m² ignition</dt><dd>47.1 → 30.5 s</dd></div>
               <div><dt>70 kW/m² ignition</dt><dd>7.7 → 12.2 s</dd></div>
               <div><dt>Best absorptivity</dt><dd>1.00</dd></div>
@@ -158,6 +166,8 @@
               <div><dt>Missing transport inputs</dt><dd>5 / τ withheld</dd></div>
               <div><dt>Unshrunk depth · 35 / 70</dt><dd>9.240 / 12.700 mm</dd></div>
               <div><dt>Physical char thickness</dt><dd>null · shrinkage unresolved</dd></div>
+              <div><dt>External plywood char depth</dt><dd>13.77 ± 0.60 mm</dd></div>
+              <div><dt>Comparable conditions</dt><dd>3 / 10 · error null</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
@@ -173,8 +183,8 @@
           </section>
 
           <div class="notes-grid">
-            <section class="note caution"><p class="note-label">Known limits</p><h3>12.7 mmは物理炭化層ではない</h3><p>70 kW/m²の12.700 mmは全5層の乾燥木材消費率が100%になった質量等価値です。連続前線、亀裂、空隙、体積収縮を解いていないため、流路長や見た目の厚さへ直接使えません。</p></section>
-            <section class="note next"><p class="note-label">What comes next</p><h3>合板の厚さ方向収縮を調べる</h3><p>合板または積層単板で、温度・転化率に対する厚さ方向収縮と炭化前線の直接根拠を探します。根拠と前線定義が揃って初めて物理厚さを追加し、その後に透過率・空隙率・粘度・圧力差を接続します。</p></section>
+            <section class="note caution"><p class="note-label">Known limits</p><h3>近い熱流束でも別の合板</h3><p>外部試験は21 mm・カバ・尿素接着剤・高密度材・黒体放射です。NIST試験片は12.7 mm外装5層合板で、樹種と接着剤が未報告です。端面IR炭化境界と質量等価深さも同じ量ではありません。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>一致条件で断面を測る</h3><p>NIST試験片に近い樹種・接着剤・密度・含水率・厚さと、明示的な前線定義を持つ資料を探します。なければ厚さ変位と断面炭化境界を同時に取る専用試験の仕様を定義します。</p></section>
           </div>
         </div>
       </article>
@@ -692,7 +702,7 @@
           <li class="done"><span>3</span><div><strong>木材熱モデル</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>4</span><div><strong>配置と通気</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>5</span><div><strong>崩壊</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · 反応深さと物理厚さを分離</small></div></li>
+          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · 外部炭化深さの比較可能性</small></div></li>
         </ol>
       </div>
     </section>
