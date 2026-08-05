@@ -17,6 +17,7 @@ from .calibration import (
     create_equivalent_coupon,
     create_layered_coupon,
     evaluate_parameters,
+    evaluate_secondary_tar_residence_sensitivity,
     load_nist_plywood_reference,
     parallel_arrhenius_baseline_parameters,
     run_nist_plywood_calibration,
@@ -26,6 +27,7 @@ from .calibration import (
     write_holdout_svg,
     write_layer_profile_svg,
     write_kinetics_svg,
+    write_tar_residence_sensitivity_svg,
     write_replicate_holdout_svg,
 )
 from .panel import (
@@ -49,6 +51,7 @@ from .combustion import (
     create_cylindrical_wood_model,
     flow_source_from_model,
     parallel_arrhenius_rate_constants_s,
+    secondary_tar_conversion_fraction,
     load_model_from_prim,
     save_model_to_prim,
     temperature_adjusted_dry_wood_specific_heat_j_kg_k,
@@ -119,6 +122,7 @@ __all__ = [
     "arrhenius_pyrolysis_rate_constant_s",
     "parallel_arrhenius_baseline_parameters",
     "parallel_arrhenius_rate_constants_s",
+    "secondary_tar_conversion_fraction",
     "CHAR",
     "CONSTANT_DRY_WOOD_SPECIFIC_HEAT_MODEL",
     "DEPLETED",
@@ -160,6 +164,7 @@ __all__ = [
     "dense_stack_placements",
     "estimate_air_supply",
     "evaluate_parameters",
+    "evaluate_secondary_tar_residence_sensitivity",
     "emitter_position_for_frame",
     "export_stage",
     "populate_fixed_scene",
@@ -200,5 +205,6 @@ __all__ = [
     "write_holdout_svg",
     "write_layer_profile_svg",
     "write_kinetics_svg",
+    "write_tar_residence_sensitivity_svg",
     "write_replicate_holdout_svg",
 ]

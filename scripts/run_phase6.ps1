@@ -1,5 +1,6 @@
 param(
-    [string]$OutputDir = ""
+    [string]$OutputDir = "",
+    [switch]$ValidateOnly
 )
 
 $ErrorActionPreference = "Stop"
@@ -7,31 +8,33 @@ $repoRoot = Split-Path -Parent $PSScriptRoot
 $releaseRoot = Join-Path $repoRoot "_build\windows-x86_64\release"
 $kit = Join-Path $releaseRoot "kit\kit.exe"
 $app = Join-Path $releaseRoot "apps\campfire.simulator.kit"
-if (-not (Test-Path -LiteralPath $kit) -or -not (Test-Path -LiteralPath $app)) {
+if (-not $ValidateOnly -and (-not (Test-Path -LiteralPath $kit) -or -not (Test-Path -LiteralPath $app))) {
     throw "Application is not built. Run .\repo.bat build first."
 }
 if (-not $OutputDir) {
     $OutputDir = Join-Path $repoRoot "artifacts\phase6\latest"
 }
 $OutputDir = [System.IO.Path]::GetFullPath($OutputDir)
-New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
+if (-not $ValidateOnly) {
+    New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
 
-& $kit @(
-    $app,
-    "--no-window",
-    "--/app/quitAfter=600",
-    "--/app/settings/persistent=0",
-    "--/app/settings/loadUserConfig=0",
-    "--/exts/campfire.app/autoCreateScene=true",
-    "--/exts/campfire.app/phase=phase6",
-    "--/exts/campfire.app/captureOnStartup=true",
-    "--/exts/campfire.app/quitAfterCapture=true",
-    "--/exts/campfire.app/outputDir=$OutputDir",
-    "--/app/viewport/grid/enabled=false",
-    "--/persistent/app/viewport/displayOptions=1152"
-)
-if ($LASTEXITCODE -ne 0) {
-    throw "Phase 6 application failed with exit code $LASTEXITCODE."
+    & $kit @(
+        $app,
+        "--no-window",
+        "--/app/quitAfter=600",
+        "--/app/settings/persistent=0",
+        "--/app/settings/loadUserConfig=0",
+        "--/exts/campfire.app/autoCreateScene=true",
+        "--/exts/campfire.app/phase=phase6",
+        "--/exts/campfire.app/captureOnStartup=true",
+        "--/exts/campfire.app/quitAfterCapture=true",
+        "--/exts/campfire.app/outputDir=$OutputDir",
+        "--/app/viewport/grid/enabled=false",
+        "--/persistent/app/viewport/displayOptions=1152"
+    )
+    if ($LASTEXITCODE -ne 0) {
+        throw "Phase 6 application failed with exit code $LASTEXITCODE."
+    }
 }
 
 $summaryPath = Join-Path $OutputDir "summary.json"
@@ -55,6 +58,7 @@ if ($calibration.panel_model.adhesive_layers_explicit) {
 $plywoodProfile = $calibration.material_property_profiles.plywood
 $osbProfile = $calibration.material_property_profiles.osb
 $heatCapacityModel = $calibration.temperature_dependent_heat_capacity
+$secondaryTar = $calibration.secondary_tar_cracking
 if ([math]::Abs($plywoodProfile.thermal_conductivity_w_m_k - 0.115) -gt 0.0000001 -or [math]::Abs($plywoodProfile.specific_heat_j_kg_k - 1214.0) -gt 0.0000001) {
     throw "Phase 6 plywood thermal profile changed."
 }
@@ -63,6 +67,9 @@ if ([math]::Abs($osbProfile.thermal_conductivity_w_m_k - 0.118) -gt 0.0000001 -o
 }
 if ($heatCapacityModel.model -ne "usda_fpl_normalized_linear_280_420_k" -or $heatCapacityModel.source_valid_temperature_range_k.Count -ne 2 -or [math]::Abs($heatCapacityModel.source_valid_temperature_range_k[0] - 280.0) -gt 0.0000001 -or [math]::Abs($heatCapacityModel.source_valid_temperature_range_k[1] - 420.0) -gt 0.0000001 -or [math]::Abs($heatCapacityModel.reference_temperature_k - 293.15) -gt 0.0000001) {
     throw "Phase 6 bounded temperature-dependent heat-capacity model changed."
+}
+if ([math]::Abs($secondaryTar.preexponential_s - 4280000.0) -gt 0.0000001 -or [math]::Abs($secondaryTar.activation_energy_j_mol - 108000.0) -gt 0.0000001 -or [math]::Abs($secondaryTar.residence_time_s - 1.0) -gt 0.0000001 -or $secondaryTar.application_temperature_range_k.Count -ne 2 -or [math]::Abs($secondaryTar.application_temperature_range_k[0] - 773.0) -gt 0.0000001 -or [math]::Abs($secondaryTar.application_temperature_range_k[1] - 1073.0) -gt 0.0000001) {
+    throw "Phase 6 secondary-tar diagnostic definition changed."
 }
 if ($plywoodProfile.adhesive_interface_count -ne 4 -or $plywoodProfile.adhesive_geometry_explicit -or $plywoodProfile.adhesive_additional_resistance_applied) {
     throw "Phase 6 plywood adhesive-interface assumptions changed."
@@ -91,6 +98,9 @@ if ($calibration.baseline.parameters.pyrolysis_rate_model -ne "arrhenius_paralle
 }
 if ($calibration.best.parameters.pyrolysis_parallel_common_scale -le 0.0) {
     throw "Phase 6 selected an invalid common Arrhenius scale."
+}
+if (-not $calibration.best.parameters.secondary_tar_cracking_enabled -or [math]::Abs($calibration.best.parameters.secondary_tar_cracking_residence_time_s - 1.0) -gt 0.0000001) {
+    throw "Phase 6 secondary-tar diagnostic is not enabled with the fixed scenario."
 }
 foreach ($product in @("gas", "tar", "char")) {
     $aName = "pyrolysis_parallel_${product}_preexponential_s"
@@ -127,6 +137,10 @@ foreach ($case in $calibration.best.cases) {
     $yieldSum = $case.primary_product_yield_fraction.gas + $case.primary_product_yield_fraction.tar + $case.primary_product_yield_fraction.char
     if ([math]::Abs($yieldSum - 1.0) -gt 0.000001) {
         throw "Phase 6 primary-product yields do not close to one."
+    }
+    $postSecondaryYieldSum = $case.post_secondary_product_yield_fraction.gas + $case.post_secondary_product_yield_fraction.tar + $case.post_secondary_product_yield_fraction.char
+    if ([math]::Abs($postSecondaryYieldSum - 1.0) -gt 0.000001 -or $case.post_secondary_product_yield_fraction.gas -le $case.primary_product_yield_fraction.gas -or $case.post_secondary_product_yield_fraction.tar -ge $case.primary_product_yield_fraction.tar) {
+        throw "Phase 6 post-secondary product yields are invalid."
     }
 }
 if ($calibration.best.cases[0].predicted_ignition_seconds -le $calibration.best.cases[1].predicted_ignition_seconds) {
@@ -180,7 +194,33 @@ foreach ($case in $replicateHoldout.calibrated.cases) {
 if ($replicateHoldout.calibrated.cases[0].predicted_ignition_seconds -le $replicateHoldout.calibrated.cases[1].predicted_ignition_seconds) {
     throw "Phase 6 same-material holdout lost the expected heat-flux ignition ordering."
 }
-foreach ($path in @($result.image, $result.report, $result.holdout_report, $result.replicate_holdout_report, $result.layer_profile_report, $result.kinetics_report, $result.top_candidates_csv, $result.final_stage)) {
+$tarSensitivity = $calibration.secondary_tar_residence_sensitivity
+if ($tarSensitivity.used_for_parameter_selection -or $tarSensitivity.scenarios.Count -ne 3) {
+    throw "Phase 6 secondary-tar residence sensitivity definition is invalid."
+}
+$expectedResidenceTimes = @(0.9, 1.0, 2.2)
+for ($scenarioIndex = 0; $scenarioIndex -lt $expectedResidenceTimes.Count; $scenarioIndex++) {
+    if ([math]::Abs([double]$tarSensitivity.scenarios[$scenarioIndex].residence_time_s - $expectedResidenceTimes[$scenarioIndex]) -gt 0.000000000001) {
+        throw "Phase 6 secondary-tar residence sensitivity definition is invalid."
+    }
+}
+foreach ($scenario in $tarSensitivity.scenarios) {
+    if ($scenario.used_for_parameter_selection -or [math]::Abs($scenario.score_rmse_relative - $calibration.best.score_rmse_relative) -gt 0.000000000001) {
+        throw "Phase 6 secondary-tar residence scenario changed the selected score."
+    }
+    foreach ($case in $scenario.cases) {
+        $yieldSum = $case.post_secondary_product_yield_fraction.gas + $case.post_secondary_product_yield_fraction.tar + $case.post_secondary_product_yield_fraction.char
+        if ([math]::Abs($yieldSum - 1.0) -gt 0.000001) {
+            throw "Phase 6 secondary-tar residence scenario does not conserve product mass."
+        }
+    }
+}
+for ($caseIndex = 0; $caseIndex -lt 2; $caseIndex++) {
+    if ($tarSensitivity.scenarios[0].cases[$caseIndex].post_secondary_product_yield_fraction.gas -gt $tarSensitivity.scenarios[1].cases[$caseIndex].post_secondary_product_yield_fraction.gas -or $tarSensitivity.scenarios[1].cases[$caseIndex].post_secondary_product_yield_fraction.gas -gt $tarSensitivity.scenarios[2].cases[$caseIndex].post_secondary_product_yield_fraction.gas) {
+        throw "Phase 6 secondary gas yield is not monotonic with residence time."
+    }
+}
+foreach ($path in @($result.image, $result.report, $result.holdout_report, $result.replicate_holdout_report, $result.layer_profile_report, $result.kinetics_report, $result.tar_residence_sensitivity_report, $result.top_candidates_csv, $result.final_stage)) {
     if (-not (Test-Path -LiteralPath $path)) {
         throw "Phase 6 artifact was not produced: $path"
     }

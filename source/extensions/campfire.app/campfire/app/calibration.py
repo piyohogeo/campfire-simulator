@@ -44,6 +44,8 @@ class CouponResult:
     final_layer_temperatures_k: tuple[float, ...]
     primary_product_mass_kg: dict[str, float]
     primary_product_yield_fraction: dict[str, float]
+    post_secondary_product_mass_kg: dict[str, float]
+    post_secondary_product_yield_fraction: dict[str, float]
     material_kind: str
     through_thickness_conductivity_w_m_k: float
     dry_wood_specific_heat_j_kg_k: float
@@ -104,6 +106,35 @@ def load_nist_plywood_reference(path: Path | None = None) -> dict:
         raise ValueError("Phase 6 Arrhenius source pathways are incomplete")
     if {pathway.get("product") for pathway in pathways} != {"gas", "tar", "char"}:
         raise ValueError("Phase 6 Arrhenius pathways must identify gas, tar, and char")
+    secondary_tar = data.get("secondary_tar_cracking", {})
+    secondary_range = secondary_tar.get("application_temperature_range_k", [])
+    if (
+        float(secondary_tar.get("preexponential_s", 0.0)) <= 0.0
+        or float(secondary_tar.get("activation_energy_j_mol", 0.0)) <= 0.0
+        or float(secondary_tar.get("residence_time_s", 0.0)) <= 0.0
+        or len(secondary_range) != 2
+        or float(secondary_range[1]) < float(secondary_range[0])
+    ):
+        raise ValueError("Secondary-tar diagnostic definition is incomplete")
+    sensitivity = secondary_tar.get("residence_time_sensitivity", {})
+    scenarios = sensitivity.get("scenarios_s", [])
+    experiment_temperature_range = sensitivity.get(
+        "experiment_temperature_range_k", []
+    )
+    experiment_residence_range = sensitivity.get(
+        "experiment_residence_time_range_s", []
+    )
+    experiment_conversion_range = sensitivity.get(
+        "experiment_tar_conversion_range_fraction", []
+    )
+    if (
+        scenarios != [0.9, 1.0, 2.2]
+        or sensitivity.get("used_for_parameter_selection") is not False
+        or experiment_temperature_range != [773.0, 1073.0]
+        or experiment_residence_range != [0.9, 2.2]
+        or experiment_conversion_range != [0.05, 0.88]
+    ):
+        raise ValueError("Secondary-tar residence sensitivity definition changed")
     common_scales = kinetics.get("parallel_common_scales", [])
     if not common_scales or any(float(scale) <= 0.0 for scale in common_scales):
         raise ValueError("Parallel Arrhenius common scales must be positive")
@@ -380,6 +411,15 @@ def _simulate_coupon_model(
         primary_product_yield_fraction=metrics[
             "primary_product_yield_fraction"
         ],
+        post_secondary_product_mass_kg={
+            "gas": metrics["emitted_primary_gas_kg"]
+            + metrics["converted_secondary_tar_kg"],
+            "tar": metrics["emitted_uncracked_tar_kg"],
+            "char": metrics["produced_primary_char_kg"],
+        },
+        post_secondary_product_yield_fraction=metrics[
+            "post_secondary_product_yield_fraction"
+        ],
         material_kind=getattr(model.spec, "material_kind", "generic_wood"),
         through_thickness_conductivity_w_m_k=float(
             getattr(
@@ -500,6 +540,12 @@ def evaluate_parameters(
                 "primary_product_yield_fraction": (
                     result.primary_product_yield_fraction
                 ),
+                "post_secondary_product_mass_kg": (
+                    result.post_secondary_product_mass_kg
+                ),
+                "post_secondary_product_yield_fraction": (
+                    result.post_secondary_product_yield_fraction
+                ),
                 "material_kind": result.material_kind,
                 "through_thickness_conductivity_w_m_k": (
                     result.through_thickness_conductivity_w_m_k
@@ -564,6 +610,25 @@ def _parameter_summary(parameters: WoodModelParameters) -> dict:
             parameters.pyrolysis_parallel_char_activation_energy_j_mol
         ),
         "pyrolysis_parallel_source_label": parameters.pyrolysis_parallel_source_label,
+        "secondary_tar_cracking_enabled": parameters.secondary_tar_cracking_enabled,
+        "secondary_tar_cracking_residence_time_s": (
+            parameters.secondary_tar_cracking_residence_time_s
+        ),
+        "secondary_tar_cracking_preexponential_s": (
+            parameters.secondary_tar_cracking_preexponential_s
+        ),
+        "secondary_tar_cracking_activation_energy_j_mol": (
+            parameters.secondary_tar_cracking_activation_energy_j_mol
+        ),
+        "secondary_tar_cracking_min_temperature_k": (
+            parameters.secondary_tar_cracking_min_temperature_k
+        ),
+        "secondary_tar_cracking_max_temperature_k": (
+            parameters.secondary_tar_cracking_max_temperature_k
+        ),
+        "secondary_tar_cracking_source_label": (
+            parameters.secondary_tar_cracking_source_label
+        ),
     }
 
 
@@ -596,6 +661,8 @@ def parallel_arrhenius_baseline_parameters(
         pathway["product"]: pathway
         for pathway in data["arrhenius_model"]["source_pathways"]
     }
+    secondary_tar = data["secondary_tar_cracking"]
+    secondary_temperature_range = secondary_tar["application_temperature_range_k"]
     return replace(
         WoodModelParameters(),
         pyrolysis_rate_model="arrhenius_parallel_first_order",
@@ -624,6 +691,23 @@ def parallel_arrhenius_baseline_parameters(
         pyrolysis_parallel_source_label=(
             "Thurner-Mann gas + tar + char competing branches"
         ),
+        secondary_tar_cracking_enabled=True,
+        secondary_tar_cracking_residence_time_s=float(
+            secondary_tar["residence_time_s"]
+        ),
+        secondary_tar_cracking_preexponential_s=float(
+            secondary_tar["preexponential_s"]
+        ),
+        secondary_tar_cracking_activation_energy_j_mol=float(
+            secondary_tar["activation_energy_j_mol"]
+        ),
+        secondary_tar_cracking_min_temperature_k=float(
+            secondary_temperature_range[0]
+        ),
+        secondary_tar_cracking_max_temperature_k=float(
+            secondary_temperature_range[1]
+        ),
+        secondary_tar_cracking_source_label="Di Blasi Model III tar-to-gas branch",
     )
 
 
@@ -656,6 +740,56 @@ def calibration_candidates(reference: dict | None = None) -> list[WoodModelParam
     return list(unique.values())
 
 
+def evaluate_secondary_tar_residence_sensitivity(
+    reference: dict,
+    parameters: WoodModelParameters,
+    one_second_evaluation: dict,
+) -> dict:
+    """Apply source-bounded residence scenarios without selecting or refitting them."""
+
+    definition = reference["secondary_tar_cracking"]["residence_time_sensitivity"]
+    scenarios = []
+    for residence_time_s in definition["scenarios_s"]:
+        if math.isclose(
+            float(residence_time_s),
+            parameters.secondary_tar_cracking_residence_time_s,
+        ):
+            evaluation = one_second_evaluation
+        else:
+            evaluation = evaluate_parameters(
+                reference,
+                replace(
+                    parameters,
+                    secondary_tar_cracking_residence_time_s=float(
+                        residence_time_s
+                    ),
+                ),
+            )
+        scenarios.append(
+            {
+                "residence_time_s": float(residence_time_s),
+                "used_for_parameter_selection": False,
+                "score_rmse_relative": evaluation["score_rmse_relative"],
+                "cases": evaluation["cases"],
+            }
+        )
+    return {
+        "source": definition["source"],
+        "source_doi": definition["source_doi"],
+        "experiment_temperature_range_k": definition[
+            "experiment_temperature_range_k"
+        ],
+        "experiment_residence_time_range_s": definition[
+            "experiment_residence_time_range_s"
+        ],
+        "experiment_tar_conversion_range_fraction": definition[
+            "experiment_tar_conversion_range_fraction"
+        ],
+        "used_for_parameter_selection": False,
+        "scenarios": scenarios,
+    }
+
+
 def run_nist_plywood_calibration() -> dict:
     reference = load_nist_plywood_reference()
     baseline_parameters = parallel_arrhenius_baseline_parameters(reference)
@@ -675,6 +809,11 @@ def run_nist_plywood_calibration() -> dict:
     ranked = [result for _, result in evaluated]
     baseline = evaluate_parameters(reference, baseline_parameters)
     best = evaluate_parameters(reference, best_parameters)
+    secondary_tar_residence_sensitivity = (
+        evaluate_secondary_tar_residence_sensitivity(
+            reference, best_parameters, best
+        )
+    )
     validation_baseline = evaluate_parameters(
         reference, baseline_parameters, validation_targets
     )
@@ -714,6 +853,10 @@ def run_nist_plywood_calibration() -> dict:
         "temperature_dependent_heat_capacity": reference[
             "temperature_dependent_heat_capacity"
         ],
+        "secondary_tar_cracking": reference["secondary_tar_cracking"],
+        "secondary_tar_residence_sensitivity": (
+            secondary_tar_residence_sensitivity
+        ),
         "arrhenius_model": reference["arrhenius_model"],
         "candidate_count": len(ranked),
         "selection": {
@@ -772,7 +915,9 @@ def run_nist_plywood_calibration() -> dict:
             "through pyrolysis; four plywood adhesive interfaces are recorded "
             "without invented geometry or extra resistance; "
             "with competing first-order gas, tar, and char pathways using published "
-            "mass-basis kinetics and one common calibration scale."
+            "mass-basis kinetics and one common calibration scale; a bounded, fixed-one-second "
+            "tar-to-gas diagnostic reclassifies product mass without changing the solid heat "
+            "balance or total volatile release."
         ),
     }
 
@@ -958,6 +1103,18 @@ def write_kinetics_svg(calibration: dict, destination: Path) -> Path:
             for product in ("gas", "tar", "char")
         )
 
+    secondary_tar = calibration["secondary_tar_cracking"]
+
+    def secondary_tar_rate(temperature_k: float) -> float:
+        minimum_k, maximum_k = secondary_tar["application_temperature_range_k"]
+        if temperature_k < float(minimum_k):
+            return 0.0
+        bounded_temperature_k = min(temperature_k, float(maximum_k))
+        return float(secondary_tar["preexponential_s"]) * math.exp(
+            -float(secondary_tar["activation_energy_j_mol"])
+            / (gas_constant * bounded_temperature_k)
+        )
+
     left, top, width, height = 100.0, 150.0, 720.0, 390.0
     minimum_log, maximum_log = -9.0, 2.0
 
@@ -997,12 +1154,15 @@ def write_kinetics_svg(calibration: dict, destination: Path) -> Path:
 
     yield_rows = []
     for index, case in enumerate(calibration["best"]["cases"]):
-        yields = case["primary_product_yield_fraction"]
+        primary_yields = case["primary_product_yield_fraction"]
+        final_yields = case["post_secondary_product_yield_fraction"]
         yield_rows.append(
-            f'<text x="870" y="{410 + index * 28}" class="value">'
+            f'<text x="870" y="{402 + index * 52}" class="value">'
             f'{case["incident_heat_flux_kw_m2"]:.0f} kW/m² · '
-            f'gas {100.0 * yields["gas"]:.1f}% · tar {100.0 * yields["tar"]:.1f}% · '
-            f'char {100.0 * yields["char"]:.1f}%</text>'
+            f'primary gas/tar {100.0 * primary_yields["gas"]:.1f}/{100.0 * primary_yields["tar"]:.1f}%</text>'
+            f'<text x="890" y="{423 + index * 52}" class="value">'
+            f'after 1 s gas/tar {100.0 * final_yields["gas"]:.1f}/{100.0 * final_yields["tar"]:.1f}% · '
+            f'char {100.0 * final_yields["char"]:.1f}%</text>'
         )
 
     selected_scale = float(selected["pyrolysis_parallel_common_scale"])
@@ -1018,12 +1178,13 @@ def write_kinetics_svg(calibration: dict, destination: Path) -> Path:
     .value {{ font-size: 13px; fill: #eadbc4; }}
     .note {{ font-size: 13px; fill: #c9bda9; }}
   </style>
-  <text x="60" y="52" class="title">Phase 6H — Bounded cp(T) three-pathway model</text>
-  <text x="60" y="82" class="subtitle">Dry wood → gas / tar / char · first-order mass-basis rates · logarithmic axis</text>
+  <text x="60" y="52" class="title">Phase 6I — Secondary tar diagnostic</text>
+  <text x="60" y="82" class="subtitle">Primary gas / tar / char plus bounded tar → gas conversion · logarithmic axis</text>
   {''.join(grid)}
   {''.join(pathway_lines)}
   <polyline points="{polyline(lambda t: total_rate(baseline, t))}" fill="none" stroke="#df654e" stroke-width="4" stroke-dasharray="10 7"/>
   <polyline points="{polyline(lambda t: total_rate(selected, t))}" fill="none" stroke="#58b889" stroke-width="4"/>
+  <polyline points="{polyline(secondary_tar_rate)}" fill="none" stroke="#b987d9" stroke-width="3" stroke-dasharray="5 5"/>
   <text x="{left + width / 2}" y="595" class="axis" text-anchor="middle">Temperature (K)</text>
   <text x="30" y="{top + height / 2}" class="axis" text-anchor="middle" transform="rotate(-90 30 {top + height / 2})">Rate constant k (s⁻¹)</text>
   <text x="870" y="158" class="legend">Published branches</text>
@@ -1034,10 +1195,124 @@ def write_kinetics_svg(calibration: dict, destination: Path) -> Path:
   <text x="900" y="283" class="value">published total · common scale 1</text>
   <line x1="870" y1="310" x2="888" y2="310" stroke="#58b889" stroke-width="4"/>
   <text x="900" y="315" class="value">selected total · common scale {selected_scale:g}</text>
-  <text x="870" y="370" class="legend">Predicted primary-product yields</text>
+  <line x1="870" y1="340" x2="888" y2="340" stroke="#b987d9" stroke-width="3" stroke-dasharray="5 5"/>
+  <text x="900" y="345" class="value">secondary tar → gas · A 4.28e6 · E 108 kJ/mol</text>
+  <text x="870" y="378" class="legend">Predicted product yields</text>
   {''.join(yield_rows)}
   <line x1="60" y1="620" x2="1140" y2="620" stroke="#53483d"/>
-  <text x="60" y="650" class="note">Source range: 573–673 K. Branch fractions are kᵢ/Σk; SAMP.3 and OSB remain excluded from selection.</text>
+  <text x="60" y="650" class="note">Secondary scenario: τ = 1 s; zero below {float(secondary_tar["application_temperature_range_k"][0]):g} K, clamp above {float(secondary_tar["application_temperature_range_k"][1]):g} K. Diagnostic only; calibration and total volatile mass are unchanged.</text>
+</svg>'''
+    destination.write_text(svg, encoding="utf-8")
+    return destination
+
+
+def write_tar_residence_sensitivity_svg(
+    calibration: dict,
+    destination: Path,
+) -> Path:
+    """Plot post-secondary gas/tar yields across source-bounded residence times."""
+
+    destination = Path(destination).resolve()
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    sensitivity = calibration["secondary_tar_residence_sensitivity"]
+    scenarios = sensitivity["scenarios"]
+    left, top, width, height = 110.0, 145.0, 690.0, 390.0
+    minimum_residence_s, maximum_residence_s = map(
+        float, sensitivity["experiment_residence_time_range_s"]
+    )
+    maximum_yield_percent = 60.0
+
+    def point(residence_time_s: float, yield_fraction: float) -> tuple[float, float]:
+        x = left + (
+            (residence_time_s - minimum_residence_s)
+            / (maximum_residence_s - minimum_residence_s)
+            * width
+        )
+        y = top + height * (1.0 - 100.0 * yield_fraction / maximum_yield_percent)
+        return x, y
+
+    series = (
+        ("35 kW/m² gas", 0, "gas", "#f0a45d"),
+        ("35 kW/m² tar", 0, "tar", "#66a8d8"),
+        ("70 kW/m² gas", 1, "gas", "#58b889"),
+        ("70 kW/m² tar", 1, "tar", "#b987d9"),
+    )
+    grid = []
+    for yield_percent in range(0, 61, 10):
+        y = top + height * (1.0 - yield_percent / maximum_yield_percent)
+        grid.append(
+            f'<line x1="{left}" y1="{y:.1f}" x2="{left + width}" y2="{y:.1f}" class="grid"/>'
+            f'<text x="{left - 18}" y="{y + 5:.1f}" class="axis" text-anchor="end">{yield_percent}%</text>'
+        )
+    lines = []
+    legend = []
+    for series_index, (label, case_index, product, color) in enumerate(series):
+        points = []
+        markers = []
+        for scenario_index, scenario in enumerate(scenarios):
+            value = scenario["cases"][case_index][
+                "post_secondary_product_yield_fraction"
+            ][product]
+            x, y = point(scenario["residence_time_s"], value)
+            if scenario_index == 0:
+                label_x, label_anchor = x - 7.0, "end"
+            elif scenario_index == 1:
+                label_x, label_anchor = x + 7.0, "start"
+            else:
+                label_x, label_anchor = x, "middle"
+            label_y = y - 11.0 if case_index == 0 else y + 20.0
+            points.append(f"{x:.1f},{y:.1f}")
+            markers.append(
+                f'<circle cx="{x:.1f}" cy="{y:.1f}" r="5" fill="{color}"/>'
+                f'<text x="{label_x:.1f}" y="{label_y:.1f}" class="value" text-anchor="{label_anchor}">{100.0 * value:.2f}</text>'
+            )
+        lines.append(
+            f'<polyline points="{" ".join(points)}" fill="none" stroke="{color}" stroke-width="3"/>'
+            + "".join(markers)
+        )
+        legend_y = 180 + series_index * 34
+        legend.append(
+            f'<line x1="855" y1="{legend_y}" x2="880" y2="{legend_y}" stroke="{color}" stroke-width="4"/>'
+            f'<text x="895" y="{legend_y + 5}" class="value">{label}</text>'
+        )
+    x_labels = []
+    for scenario in scenarios:
+        x, _ = point(scenario["residence_time_s"], 0.0)
+        x_labels.append(
+            f'<line x1="{x:.1f}" y1="{top}" x2="{x:.1f}" y2="{top + height}" class="grid"/>'
+            f'<text x="{x:.1f}" y="{top + height + 30}" class="axis" text-anchor="middle">{scenario["residence_time_s"]:g}</text>'
+        )
+    conversion_range = sensitivity["experiment_tar_conversion_range_fraction"]
+    temperature_range = sensitivity["experiment_temperature_range_k"]
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#15120f"/>
+  <style>
+    text {{ font-family: "Segoe UI", Arial, sans-serif; fill: #fff7e9; }}
+    .title {{ font-size: 30px; font-weight: 700; }}
+    .subtitle {{ font-size: 15px; fill: #d7b982; }}
+    .axis {{ font-size: 13px; fill: #c9bda9; }}
+    .grid {{ stroke: #493f36; stroke-width: 1; }}
+    .legend {{ font-size: 15px; font-weight: 650; }}
+    .value {{ font-size: 13px; fill: #eadbc4; }}
+    .note {{ font-size: 13px; fill: #c9bda9; }}
+  </style>
+  <text x="60" y="52" class="title">Phase 6J — Tar residence-time sensitivity</text>
+  <text x="60" y="82" class="subtitle">Same selected solid model · no refitting · post-secondary product split only</text>
+  {''.join(grid)}
+  {''.join(x_labels)}
+  {''.join(lines)}
+  <text x="{left + width / 2}" y="600" class="axis" text-anchor="middle">Fixed vapor residence scenario τ (s)</text>
+  <text x="30" y="{top + height / 2}" class="axis" text-anchor="middle" transform="rotate(-90 30 {top + height / 2})">Cumulative product yield</text>
+  <text x="855" y="145" class="legend">Modeled yield sensitivity</text>
+  {''.join(legend)}
+  <text x="855" y="340" class="legend">Primary experiment envelope</text>
+  <text x="855" y="372" class="value">Temperature · {float(temperature_range[0]):g}–{float(temperature_range[1]):g} K</text>
+  <text x="855" y="400" class="value">Residence · {minimum_residence_s:g}–{maximum_residence_s:g} s</text>
+  <text x="855" y="428" class="value">Observed tar conversion · {100 * conversion_range[0]:.0f}–{100 * conversion_range[1]:.0f}%</text>
+  <text x="855" y="468" class="note">Boroson et al. · sweet gum hardwood</text>
+  <text x="855" y="491" class="note">Distributed kinetics fit better than one reaction.</text>
+  <line x1="60" y1="620" x2="1140" y2="620" stroke="#53483d"/>
+  <text x="60" y="650" class="note">The experiment envelope is context, not a fit target. Di Blasi Model III kinetics remain separate; ignition, MLR, heat, and total volatile mass are unchanged.</text>
 </svg>'''
     destination.write_text(svg, encoding="utf-8")
     return destination

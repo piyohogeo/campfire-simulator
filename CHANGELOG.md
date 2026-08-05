@@ -37,6 +37,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - 同じ未反応木材に競合するガス・タール・チャーの3一次反応、経路別質量・収率追跡、共通倍率16候補探索を行うPhase 6Fモデル。
 - NISTIR 4916の材料表に基づく合板・OSB別の熱伝導率と比熱、観測質量由来密度の維持、未解決接着界面を記録するPhase 6G材料プロファイル。
 - USDA Wood Handbookの乾燥木材比熱式を材料別基準値へ正規化し、出典範囲280–420 Kへ固定するPhase 6H温度依存比熱モデル。
+- NIST Model IIIの係数と固定1秒シナリオで、一次タールを二次ガスと残存タールへ質量保存的に再分類するPhase 6I診断モデル。
+- Borosonらの一次実験範囲0.9–2.2秒・773–1073 Kで二次タール生成物分配を比較し、係数選定から隔離するPhase 6J滞留時間感度評価とSVGレポート。
 - Thurner–Mannの公開A/E組をSI単位で固定したPhase 6E一次Arrhenius熱分解、48候補探索、温度–速度曲線SVG。
 
 ### Changed

@@ -73,6 +73,32 @@
     "conductivity_policy": "Keep each NISTIR 4916 panel conductivity constant. The Wood Handbook only gives an approximate 2-3 percent increase per 10 C here, without a validated cone-test temperature range for these composites.",
     "composite_limit": "The curve describes wood and is not a direct high-temperature measurement of the NISTIR 7094 plywood adhesive or OSB binder composite."
   },
+  "secondary_tar_cracking": {
+    "equation": "tar -> gas; k(T) = A exp(-E / (R T)); converted fraction = 1 - exp(-k tau).",
+    "model_source": "NIST, Thermal Decomposition of Vegetative Fuels, Model III reaction R4 and Supplemental Table SI-4.",
+    "model_source_url": "https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=933335",
+    "listed_primary_source": "C. Di Blasi, Analysis of convection and secondary reaction effects within porous solid fuels undergoing pyrolysis, Combustion Science and Technology 90, 315-340 (1993).",
+    "listed_primary_source_doi": "https://doi.org/10.1080/00102209308907620",
+    "preexponential_s": 4280000.0,
+    "activation_energy_j_mol": 108000.0,
+    "residence_time_s": 1.0,
+    "residence_time_policy": "One second is the nominal diagnostic scenario, not a fitted parameter; sensitivity is reported at 0.9, 1.0, and 2.2 seconds. The current solid-cell model has no gas-phase control volume or predicted char-layer residence time.",
+    "application_temperature_range_k": [773.0, 1073.0],
+    "out_of_range_policy": "No conversion below 773 K; clamp the Arrhenius input at 1073 K above the range. These are the reported homogeneous vapor-phase cracking experiment limits, not a claimed validation range for the separate Di Blasi Model III coefficient pair.",
+    "residence_time_sensitivity": {
+      "source": "Boroson, Howard, Longwell, and Peters, Product yields and kinetics from the vapor phase cracking of wood pyrolysis tars, AIChE Journal 35, 120-128 (1989).",
+      "source_doi": "https://doi.org/10.1002/aic.690350113",
+      "experiment_temperature_range_k": [773.0, 1073.0],
+      "experiment_residence_time_range_s": [0.9, 2.2],
+      "experiment_tar_conversion_range_fraction": [0.05, 0.88],
+      "feedstock": "Sweet gum hardwood; approximately 2 cm deep bed; primary pyrolysis heating rate 0.2 K/s.",
+      "scenarios_s": [0.9, 1.0, 2.2],
+      "used_for_parameter_selection": false,
+      "interpretation": "The endpoint residence times and the existing one-second diagnostic are applied without refitting. The experiment envelope is contextual evidence only because Boroson's distributed-activation-energy model and tar source differ from the single Di Blasi Model III branch used here."
+    },
+    "scope": "Reclassify primary tar as secondary gas or surviving tar without changing total volatile mass, solid heat balance, Flow fuel source, ignition time, or mass-loss rate.",
+    "validation_limit": "NIST describes Model III as a literature re-examination rather than a fit to a dedicated secondary-tar experiment. Product partition is therefore diagnostic and is not used for parameter selection."
+  },
   "arrhenius_model": {
     "equation": "k(T) = A exp(-E / (R T)); first-order dry-wood consumption uses 1 - exp(-k dt).",
     "gas_constant_j_mol_k": 8.31446261815324,

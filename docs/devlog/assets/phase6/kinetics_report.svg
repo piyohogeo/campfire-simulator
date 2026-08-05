@@ -10,12 +10,13 @@
     .value { font-size: 13px; fill: #eadbc4; }
     .note { font-size: 13px; fill: #c9bda9; }
   </style>
-  <text x="60" y="52" class="title">Phase 6H — Bounded cp(T) three-pathway model</text>
-  <text x="60" y="82" class="subtitle">Dry wood → gas / tar / char · first-order mass-basis rates · logarithmic axis</text>
+  <text x="60" y="52" class="title">Phase 6I — Secondary tar diagnostic</text>
+  <text x="60" y="82" class="subtitle">Primary gas / tar / char plus bounded tar → gas conversion · logarithmic axis</text>
   <line x1="100.0" y1="504.5" x2="820.0" y2="504.5" class="grid"/><text x="84.0" y="509.5" class="axis" text-anchor="end">10^-8</text><line x1="100.0" y1="433.6" x2="820.0" y2="433.6" class="grid"/><text x="84.0" y="438.6" class="axis" text-anchor="end">10^-6</text><line x1="100.0" y1="362.7" x2="820.0" y2="362.7" class="grid"/><text x="84.0" y="367.7" class="axis" text-anchor="end">10^-4</text><line x1="100.0" y1="291.8" x2="820.0" y2="291.8" class="grid"/><text x="84.0" y="296.8" class="axis" text-anchor="end">10^-2</text><line x1="100.0" y1="220.9" x2="820.0" y2="220.9" class="grid"/><text x="84.0" y="225.9" class="axis" text-anchor="end">10^0</text><line x1="100.0" y1="150.0" x2="820.0" y2="150.0" class="grid"/><text x="84.0" y="155.0" class="axis" text-anchor="end">10^2</text><line x1="100.0" y1="150.0" x2="100.0" y2="540.0" class="grid"/><text x="100.0" y="568.0" class="axis" text-anchor="middle">400</text><line x1="280.0" y1="150.0" x2="280.0" y2="540.0" class="grid"/><text x="280.0" y="568.0" class="axis" text-anchor="middle">500</text><line x1="460.0" y1="150.0" x2="460.0" y2="540.0" class="grid"/><text x="460.0" y="568.0" class="axis" text-anchor="middle">600</text><line x1="640.0" y1="150.0" x2="640.0" y2="540.0" class="grid"/><text x="640.0" y="568.0" class="axis" text-anchor="middle">700</text><line x1="820.0" y1="150.0" x2="820.0" y2="540.0" class="grid"/><text x="820.0" y="568.0" class="axis" text-anchor="middle">800</text>
   <polyline points="100.0,483.7 145.0,459.6 190.0,438.2 235.0,419.0 280.0,401.7 325.0,386.1 370.0,371.9 415.0,358.9 460.0,347.0 505.0,336.1 550.0,326.0 595.0,316.6 640.0,307.9 685.0,299.8 730.0,292.3 775.0,285.2 820.0,278.6" fill="none" stroke="#f0a45d" stroke-width="2.5"/><polyline points="100.0,508.2 145.0,477.5 190.0,450.2 235.0,425.8 280.0,403.8 325.0,383.9 370.0,365.9 415.0,349.4 460.0,334.2 505.0,320.3 550.0,307.5 595.0,295.6 640.0,284.6 685.0,274.3 730.0,264.7 775.0,255.7 820.0,247.3" fill="none" stroke="#66a8d8" stroke-width="2.5"/><polyline points="100.0,505.9 145.0,476.9 190.0,451.1 235.0,428.1 280.0,407.3 325.0,388.5 370.0,371.5 415.0,355.9 460.0,341.6 505.0,328.4 550.0,316.3 595.0,305.0 640.0,294.6 685.0,284.9 730.0,275.8 775.0,267.3 820.0,259.4" fill="none" stroke="#c98b72" stroke-width="2.5"/>
   <polyline points="100.0,478.1 145.0,452.0 190.0,428.4 235.0,406.9 280.0,387.2 325.0,369.1 370.0,352.6 415.0,337.3 460.0,323.1 505.0,310.0 550.0,297.9 595.0,286.6 640.0,276.0 685.0,266.2 730.0,257.0 775.0,248.3 820.0,240.2" fill="none" stroke="#df654e" stroke-width="4" stroke-dasharray="10 7"/>
   <polyline points="100.0,456.8 145.0,430.7 190.0,407.0 235.0,385.5 280.0,365.8 325.0,347.8 370.0,331.2 415.0,315.9 460.0,301.8 505.0,288.7 550.0,276.5 595.0,265.2 640.0,254.7 685.0,244.8 730.0,235.6 775.0,227.0 820.0,218.8" fill="none" stroke="#58b889" stroke-width="4"/>
+  <polyline points="100.0,540.0 145.0,540.0 190.0,540.0 235.0,540.0 280.0,540.0 325.0,540.0 370.0,540.0 415.0,540.0 460.0,540.0 505.0,540.0 550.0,540.0 595.0,540.0 640.0,540.0 685.0,540.0 730.0,540.0 775.0,243.9 820.0,235.8" fill="none" stroke="#b987d9" stroke-width="3" stroke-dasharray="5 5"/>
   <text x="460.0" y="595" class="axis" text-anchor="middle">Temperature (K)</text>
   <text x="30" y="345.0" class="axis" text-anchor="middle" transform="rotate(-90 30 345.0)">Rate constant k (s⁻¹)</text>
   <text x="870" y="158" class="legend">Published branches</text>
@@ -26,8 +27,10 @@
   <text x="900" y="283" class="value">published total · common scale 1</text>
   <line x1="870" y1="310" x2="888" y2="310" stroke="#58b889" stroke-width="4"/>
   <text x="900" y="315" class="value">selected total · common scale 4</text>
-  <text x="870" y="370" class="legend">Predicted primary-product yields</text>
-  <text x="870" y="410" class="value">35 kW/m² · gas 18.0% · tar 51.8% · char 30.2%</text><text x="870" y="438" class="value">70 kW/m² · gas 15.9% · tar 54.1% · char 30.0%</text>
+  <line x1="870" y1="340" x2="888" y2="340" stroke="#b987d9" stroke-width="3" stroke-dasharray="5 5"/>
+  <text x="900" y="345" class="value">secondary tar → gas · A 4.28e6 · E 108 kJ/mol</text>
+  <text x="870" y="378" class="legend">Predicted product yields</text>
+  <text x="870" y="402" class="value">35 kW/m² · primary gas/tar 18.0/51.8%</text><text x="890" y="423" class="value">after 1 s gas/tar 18.0/51.8% · char 30.2%</text><text x="870" y="454" class="value">70 kW/m² · primary gas/tar 15.9/54.1%</text><text x="890" y="475" class="value">after 1 s gas/tar 17.1/52.8% · char 30.0%</text>
   <line x1="60" y1="620" x2="1140" y2="620" stroke="#53483d"/>
-  <text x="60" y="650" class="note">Source range: 573–673 K. Branch fractions are kᵢ/Σk; SAMP.3 and OSB remain excluded from selection.</text>
+  <text x="60" y="650" class="note">Secondary scenario: τ = 1 s; zero below 773 K, clamp above 1073 K. Diagnostic only; calibration and total volatile mass are unchanged.</text>
 </svg>

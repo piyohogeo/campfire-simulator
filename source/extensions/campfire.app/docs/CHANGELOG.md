@@ -18,3 +18,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added Phase 6F competing gas/tar/char first-order pathways, explicit product mass and yield accounting, and a constrained 16-candidate common-scale search.
 - Added Phase 6G sourced plywood/OSB conductivity and heat-capacity profiles, preserved mass-derived coupon density, and explicit unresolved adhesive-interface metadata without invented geometry.
 - Added Phase 6H USDA-FPL normalized dry-wood cp(T), clamped to its published 280-420 K range with constant-model backward compatibility and explicit negative validation results.
+- Added Phase 6I bounded secondary tar-to-gas diagnostics using the NIST Model III coefficients and a fixed one-second residence scenario without altering total volatile release or solid heat balance.
+- Added Phase 6J experiment-bounded 0.9/1.0/2.2-second secondary-tar residence sensitivity, isolated from parameter selection, with a browser-readable yield report.

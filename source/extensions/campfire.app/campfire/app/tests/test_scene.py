@@ -562,11 +562,18 @@ class TestScene(omni.kit.test.AsyncTestCase):
         target = reference["targets"][1]
         model = campfire.app.create_layered_coupon(target, reference, parameters)
         for cell in model.cells:
-            cell.temperature_k = 650.0
+            cell.temperature_k = 850.0
         result = model.step(0.1, 0.0)
         self.assertGreater(result.primary_gas_kg, 0.0)
         self.assertGreater(result.primary_tar_kg, 0.0)
         self.assertGreater(result.primary_char_kg, 0.0)
+        self.assertGreater(result.secondary_tar_cracked_kg, 0.0)
+        self.assertGreater(result.uncracked_tar_kg, 0.0)
+        self.assertAlmostEqual(
+            result.primary_tar_kg,
+            result.secondary_tar_cracked_kg + result.uncracked_tar_kg,
+            places=12,
+        )
         self.assertAlmostEqual(
             result.pyrolysis_gas_kg,
             result.primary_gas_kg + result.primary_tar_kg,
@@ -578,7 +585,50 @@ class TestScene(omni.kit.test.AsyncTestCase):
             1.0,
             places=12,
         )
+        self.assertAlmostEqual(
+            sum(metrics["post_secondary_product_yield_fraction"].values()),
+            1.0,
+            places=12,
+        )
+        self.assertGreater(
+            metrics["post_secondary_product_yield_fraction"]["gas"],
+            metrics["primary_product_yield_fraction"]["gas"],
+        )
         self.assertLess(abs(model.mass_balance_error_kg), 1.0e-9)
+
+    async def test_secondary_tar_diagnostic_is_bounded_and_round_trips(self):
+        parameters = campfire.app.parallel_arrhenius_baseline_parameters()
+        self.assertEqual(
+            campfire.app.secondary_tar_conversion_fraction(parameters, 650.0), 0.0
+        )
+        at_minimum = campfire.app.secondary_tar_conversion_fraction(
+            parameters, parameters.secondary_tar_cracking_min_temperature_k
+        )
+        in_range = campfire.app.secondary_tar_conversion_fraction(parameters, 800.0)
+        at_maximum = campfire.app.secondary_tar_conversion_fraction(
+            parameters, parameters.secondary_tar_cracking_max_temperature_k
+        )
+        above_range = campfire.app.secondary_tar_conversion_fraction(
+            parameters, 1200.0
+        )
+        self.assertGreater(at_minimum, 0.0)
+        self.assertGreater(in_range, at_minimum)
+        self.assertGreater(at_maximum, in_range)
+        self.assertAlmostEqual(above_range, at_maximum, places=12)
+
+        model = campfire.app.create_cylindrical_wood_model(
+            "SecondaryTar", 0.03, 0.1, 0.0,
+            axial_cells=1, circumferential_cells=1, radial_cells=1,
+            parameters=parameters,
+        )
+        model.cells[0].temperature_k = 850.0
+        model.step(0.1, 0.0)
+        restored = campfire.app.WoodThermalModel.from_dict(model.to_dict())
+        self.assertAlmostEqual(
+            restored.converted_secondary_tar_kg,
+            model.converted_secondary_tar_kg,
+            places=12,
+        )
 
     async def test_nist_grid_search_improves_baseline_without_hiding_error(self):
         calibration = campfire.app.run_nist_plywood_calibration()
@@ -609,6 +659,15 @@ class TestScene(omni.kit.test.AsyncTestCase):
                 sum(case["primary_product_yield_fraction"].values()),
                 1.0,
                 places=9,
+            )
+            self.assertAlmostEqual(
+                sum(case["post_secondary_product_yield_fraction"].values()),
+                1.0,
+                places=9,
+            )
+            self.assertGreater(
+                case["post_secondary_product_yield_fraction"]["gas"],
+                case["primary_product_yield_fraction"]["gas"],
             )
             self.assertEqual(case["material_kind"], "plywood")
             self.assertAlmostEqual(case["through_thickness_conductivity_w_m_k"], 0.115)
@@ -646,6 +705,29 @@ class TestScene(omni.kit.test.AsyncTestCase):
             self.assertLess(abs(case["mass_balance_error_kg"]), 1.0e-9)
             self.assertEqual(case["model_kind"], "layered_osb")
             self.assertEqual(case["layer_count"], 1)
+        sensitivity = calibration["secondary_tar_residence_sensitivity"]
+        self.assertFalse(sensitivity["used_for_parameter_selection"])
+        self.assertEqual(
+            [scenario["residence_time_s"] for scenario in sensitivity["scenarios"]],
+            [0.9, 1.0, 2.2],
+        )
+        self.assertEqual(sensitivity["experiment_temperature_range_k"], [773.0, 1073.0])
+        self.assertEqual(sensitivity["experiment_residence_time_range_s"], [0.9, 2.2])
+        for case_index in range(2):
+            gas_yields = [
+                scenario["cases"][case_index][
+                    "post_secondary_product_yield_fraction"
+                ]["gas"]
+                for scenario in sensitivity["scenarios"]
+            ]
+            self.assertLessEqual(gas_yields[0], gas_yields[1])
+            self.assertLessEqual(gas_yields[1], gas_yields[2])
+            for scenario in sensitivity["scenarios"]:
+                self.assertAlmostEqual(
+                    scenario["score_rmse_relative"],
+                    calibration["best"]["score_rmse_relative"],
+                    places=12,
+                )
 
     async def test_phase6_scene_visualizes_observed_baseline_and_calibrated_values(self):
         stage = Usd.Stage.CreateInMemory()

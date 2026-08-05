@@ -68,6 +68,13 @@ class WoodModelParameters:
     pyrolysis_parallel_char_preexponential_s: float = 738_333.3333333334
     pyrolysis_parallel_char_activation_energy_j_mol: float = 106_500.0
     pyrolysis_parallel_source_label: str = "Thurner-Mann three parallel branches"
+    secondary_tar_cracking_enabled: bool = False
+    secondary_tar_cracking_residence_time_s: float = 1.0
+    secondary_tar_cracking_preexponential_s: float = 4_280_000.0
+    secondary_tar_cracking_activation_energy_j_mol: float = 108_000.0
+    secondary_tar_cracking_min_temperature_k: float = 773.0
+    secondary_tar_cracking_max_temperature_k: float = 1073.0
+    secondary_tar_cracking_source_label: str = "Di Blasi Model III tar-to-gas branch"
     pyrolysis_heat_j_kg: float = 300_000.0
     pyrolysis_char_yield: float = 0.22
     char_oxidation_start_temperature_k: float = 673.15
@@ -133,6 +140,10 @@ class CombustionStepResult:
     primary_gas_rate_kg_s: float
     primary_tar_rate_kg_s: float
     primary_char_rate_kg_s: float
+    secondary_tar_cracked_kg: float
+    secondary_gas_rate_kg_s: float
+    uncracked_tar_kg: float
+    uncracked_tar_rate_kg_s: float
 
 
 @dataclass(frozen=True)
@@ -158,6 +169,7 @@ class WoodThermalModel:
         emitted_primary_gas_kg: float = 0.0,
         emitted_tar_kg: float = 0.0,
         produced_primary_char_kg: float = 0.0,
+        converted_secondary_tar_kg: float = 0.0,
         initial_mass_kg: float | None = None,
     ):
         if len(cells) != spec.cell_count:
@@ -174,6 +186,7 @@ class WoodThermalModel:
         self.emitted_primary_gas_kg = float(emitted_primary_gas_kg)
         self.emitted_tar_kg = float(emitted_tar_kg)
         self.produced_primary_char_kg = float(produced_primary_char_kg)
+        self.converted_secondary_tar_kg = float(converted_secondary_tar_kg)
         self.initial_mass_kg = (
             float(initial_mass_kg)
             if initial_mass_kg is not None
@@ -321,6 +334,8 @@ class WoodThermalModel:
         primary_gas_total = 0.0
         primary_tar_total = 0.0
         primary_char_total = 0.0
+        secondary_tar_cracked_total = 0.0
+        uncracked_tar_total = 0.0
         external_heat_total = 0.0
         sigma = 5.670374419e-8
 
@@ -431,6 +446,7 @@ class WoodThermalModel:
                     raise ValueError(
                         f"Unsupported pyrolysis rate model: {p.pyrolysis_rate_model}"
                     )
+                pyrolysis_temperature_k = cell.temperature_k
                 heat_capacity = self._heat_capacity_j_k(cell)
                 energy_limited_kg = max(
                     0.0,
@@ -457,6 +473,12 @@ class WoodThermalModel:
                 primary_gas_total += gas_created_kg
                 primary_tar_total += tar_created_kg
                 primary_char_total += char_created_kg
+                secondary_fraction = secondary_tar_conversion_fraction(
+                    p, pyrolysis_temperature_k
+                )
+                secondary_tar_cracked_kg = tar_created_kg * secondary_fraction
+                secondary_tar_cracked_total += secondary_tar_cracked_kg
+                uncracked_tar_total += tar_created_kg - secondary_tar_cracked_kg
 
             if (
                 cell.char_mass_kg > 0.0
@@ -507,6 +529,7 @@ class WoodThermalModel:
         self.emitted_primary_gas_kg += primary_gas_total
         self.emitted_tar_kg += primary_tar_total
         self.produced_primary_char_kg += primary_char_total
+        self.converted_secondary_tar_kg += secondary_tar_cracked_total
         return CombustionStepResult(
             elapsed_seconds=self.elapsed_seconds,
             evaporated_water_kg=evaporated_total,
@@ -522,6 +545,10 @@ class WoodThermalModel:
             primary_gas_rate_kg_s=primary_gas_total / dt_seconds,
             primary_tar_rate_kg_s=primary_tar_total / dt_seconds,
             primary_char_rate_kg_s=primary_char_total / dt_seconds,
+            secondary_tar_cracked_kg=secondary_tar_cracked_total,
+            secondary_gas_rate_kg_s=secondary_tar_cracked_total / dt_seconds,
+            uncracked_tar_kg=uncracked_tar_total,
+            uncracked_tar_rate_kg_s=uncracked_tar_total / dt_seconds,
         )
 
     @property
@@ -558,6 +585,14 @@ class WoodThermalModel:
             "char": self.produced_primary_char_kg
             / max(primary_product_total_kg, 1.0e-12),
         }
+        post_secondary_product_yields = {
+            "gas": (self.emitted_primary_gas_kg + self.converted_secondary_tar_kg)
+            / max(primary_product_total_kg, 1.0e-12),
+            "tar": (self.emitted_tar_kg - self.converted_secondary_tar_kg)
+            / max(primary_product_total_kg, 1.0e-12),
+            "char": self.produced_primary_char_kg
+            / max(primary_product_total_kg, 1.0e-12),
+        }
         return {
             "elapsed_seconds": self.elapsed_seconds,
             "cell_count": len(self.cells),
@@ -577,7 +612,12 @@ class WoodThermalModel:
             "emitted_primary_gas_kg": self.emitted_primary_gas_kg,
             "emitted_tar_kg": self.emitted_tar_kg,
             "produced_primary_char_kg": self.produced_primary_char_kg,
+            "converted_secondary_tar_kg": self.converted_secondary_tar_kg,
+            "emitted_uncracked_tar_kg": (
+                self.emitted_tar_kg - self.converted_secondary_tar_kg
+            ),
             "primary_product_yield_fraction": primary_product_yields,
+            "post_secondary_product_yield_fraction": post_secondary_product_yields,
             "initial_mass_kg": self.initial_mass_kg,
             "accounted_mass_kg": self.accounted_mass_kg,
             "mass_balance_error_kg": self.mass_balance_error_kg,
@@ -595,6 +635,7 @@ class WoodThermalModel:
             "emitted_primary_gas_kg": self.emitted_primary_gas_kg,
             "emitted_tar_kg": self.emitted_tar_kg,
             "produced_primary_char_kg": self.produced_primary_char_kg,
+            "converted_secondary_tar_kg": self.converted_secondary_tar_kg,
             "initial_mass_kg": self.initial_mass_kg,
             "cells": [asdict(cell) for cell in self.cells],
         }
@@ -614,6 +655,7 @@ class WoodThermalModel:
             emitted_primary_gas_kg=data.get("emitted_primary_gas_kg", 0.0),
             emitted_tar_kg=data.get("emitted_tar_kg", 0.0),
             produced_primary_char_kg=data.get("produced_primary_char_kg", 0.0),
+            converted_secondary_tar_kg=data.get("converted_secondary_tar_kg", 0.0),
             initial_mass_kg=data["initial_mass_kg"],
         )
 
@@ -755,6 +797,52 @@ def arrhenius_pyrolysis_rate_constant_s(
         -parameters.pyrolysis_arrhenius_activation_energy_j_mol
         / (UNIVERSAL_GAS_CONSTANT_J_MOL_K * temperature_k)
     )
+
+
+def secondary_tar_conversion_fraction(
+    parameters: WoodModelParameters,
+    temperature_k: float,
+) -> float:
+    """Return bounded tar-to-gas conversion for the fixed residence scenario.
+
+    This is a diagnostic product split.  It does not add a gas-phase control
+    volume, alter the total volatile release, or feed heat back to the solid.
+    Below the documented application range conversion is zero; above it the
+    temperature is clamped rather than extrapolated.
+    """
+
+    if not math.isfinite(temperature_k) or temperature_k <= 0.0:
+        raise ValueError("temperature_k must be finite and positive")
+    if not parameters.secondary_tar_cracking_enabled:
+        return 0.0
+    residence_time_s = parameters.secondary_tar_cracking_residence_time_s
+    preexponential_s = parameters.secondary_tar_cracking_preexponential_s
+    activation_energy_j_mol = (
+        parameters.secondary_tar_cracking_activation_energy_j_mol
+    )
+    minimum_temperature_k = parameters.secondary_tar_cracking_min_temperature_k
+    maximum_temperature_k = parameters.secondary_tar_cracking_max_temperature_k
+    if not math.isfinite(residence_time_s) or residence_time_s <= 0.0:
+        raise ValueError("Secondary-tar residence time must be finite and positive")
+    if not math.isfinite(preexponential_s) or preexponential_s <= 0.0:
+        raise ValueError("Secondary-tar pre-exponential factor must be positive")
+    if not math.isfinite(activation_energy_j_mol) or activation_energy_j_mol <= 0.0:
+        raise ValueError("Secondary-tar activation energy must be positive")
+    if (
+        not math.isfinite(minimum_temperature_k)
+        or not math.isfinite(maximum_temperature_k)
+        or minimum_temperature_k <= 0.0
+        or maximum_temperature_k < minimum_temperature_k
+    ):
+        raise ValueError("Secondary-tar temperature bounds are invalid")
+    if temperature_k < minimum_temperature_k:
+        return 0.0
+    bounded_temperature_k = min(temperature_k, maximum_temperature_k)
+    rate_constant_s = preexponential_s * math.exp(
+        -activation_energy_j_mol
+        / (UNIVERSAL_GAS_CONSTANT_J_MOL_K * bounded_temperature_k)
+    )
+    return 1.0 - math.exp(-rate_constant_s * residence_time_s)
 
 
 def parallel_arrhenius_rate_constants_s(

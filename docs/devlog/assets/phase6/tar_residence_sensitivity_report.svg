@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#15120f"/>
+  <style>
+    text { font-family: "Segoe UI", Arial, sans-serif; fill: #fff7e9; }
+    .title { font-size: 30px; font-weight: 700; }
+    .subtitle { font-size: 15px; fill: #d7b982; }
+    .axis { font-size: 13px; fill: #c9bda9; }
+    .grid { stroke: #493f36; stroke-width: 1; }
+    .legend { font-size: 15px; font-weight: 650; }
+    .value { font-size: 13px; fill: #eadbc4; }
+    .note { font-size: 13px; fill: #c9bda9; }
+  </style>
+  <text x="60" y="52" class="title">Phase 6J — Tar residence-time sensitivity</text>
+  <text x="60" y="82" class="subtitle">Same selected solid model · no refitting · post-secondary product split only</text>
+  <line x1="110.0" y1="535.0" x2="800.0" y2="535.0" class="grid"/><text x="92.0" y="540.0" class="axis" text-anchor="end">0%</text><line x1="110.0" y1="470.0" x2="800.0" y2="470.0" class="grid"/><text x="92.0" y="475.0" class="axis" text-anchor="end">10%</text><line x1="110.0" y1="405.0" x2="800.0" y2="405.0" class="grid"/><text x="92.0" y="410.0" class="axis" text-anchor="end">20%</text><line x1="110.0" y1="340.0" x2="800.0" y2="340.0" class="grid"/><text x="92.0" y="345.0" class="axis" text-anchor="end">30%</text><line x1="110.0" y1="275.0" x2="800.0" y2="275.0" class="grid"/><text x="92.0" y="280.0" class="axis" text-anchor="end">40%</text><line x1="110.0" y1="210.0" x2="800.0" y2="210.0" class="grid"/><text x="92.0" y="215.0" class="axis" text-anchor="end">50%</text><line x1="110.0" y1="145.0" x2="800.0" y2="145.0" class="grid"/><text x="92.0" y="150.0" class="axis" text-anchor="end">60%</text>
+  <line x1="110.0" y1="145.0" x2="110.0" y2="535.0" class="grid"/><text x="110.0" y="565.0" class="axis" text-anchor="middle">0.9</text><line x1="163.1" y1="145.0" x2="163.1" y2="535.0" class="grid"/><text x="163.1" y="565.0" class="axis" text-anchor="middle">1</text><line x1="800.0" y1="145.0" x2="800.0" y2="535.0" class="grid"/><text x="800.0" y="565.0" class="axis" text-anchor="middle">2.2</text>
+  <polyline points="110.0,417.8 163.1,417.8 800.0,417.7" fill="none" stroke="#f0a45d" stroke-width="3"/><circle cx="110.0" cy="417.8" r="5" fill="#f0a45d"/><text x="103.0" y="406.8" class="value" text-anchor="end">18.04</text><circle cx="163.1" cy="417.8" r="5" fill="#f0a45d"/><text x="170.1" y="406.8" class="value" text-anchor="start">18.04</text><circle cx="800.0" cy="417.7" r="5" fill="#f0a45d"/><text x="800.0" y="406.7" class="value" text-anchor="middle">18.04</text><polyline points="110.0,198.4 163.1,198.4 800.0,198.4" fill="none" stroke="#66a8d8" stroke-width="3"/><circle cx="110.0" cy="198.4" r="5" fill="#66a8d8"/><text x="103.0" y="187.4" class="value" text-anchor="end">51.79</text><circle cx="163.1" cy="198.4" r="5" fill="#66a8d8"/><text x="170.1" y="187.4" class="value" text-anchor="start">51.79</text><circle cx="800.0" cy="198.4" r="5" fill="#66a8d8"/><text x="800.0" y="187.4" class="value" text-anchor="middle">51.78</text><polyline points="110.0,423.8 163.1,423.6 800.0,421.5" fill="none" stroke="#58b889" stroke-width="3"/><circle cx="110.0" cy="423.8" r="5" fill="#58b889"/><text x="103.0" y="443.8" class="value" text-anchor="end">17.11</text><circle cx="163.1" cy="423.6" r="5" fill="#58b889"/><text x="170.1" y="443.6" class="value" text-anchor="start">17.15</text><circle cx="800.0" cy="421.5" r="5" fill="#58b889"/><text x="800.0" y="441.5" class="value" text-anchor="middle">17.46</text><polyline points="110.0,191.5 163.1,191.7 800.0,193.8" fill="none" stroke="#b987d9" stroke-width="3"/><circle cx="110.0" cy="191.5" r="5" fill="#b987d9"/><text x="103.0" y="211.5" class="value" text-anchor="end">52.85</text><circle cx="163.1" cy="191.7" r="5" fill="#b987d9"/><text x="170.1" y="211.7" class="value" text-anchor="start">52.81</text><circle cx="800.0" cy="193.8" r="5" fill="#b987d9"/><text x="800.0" y="213.8" class="value" text-anchor="middle">52.49</text>
+  <text x="455.0" y="600" class="axis" text-anchor="middle">Fixed vapor residence scenario τ (s)</text>
+  <text x="30" y="340.0" class="axis" text-anchor="middle" transform="rotate(-90 30 340.0)">Cumulative product yield</text>
+  <text x="855" y="145" class="legend">Modeled yield sensitivity</text>
+  <line x1="855" y1="180" x2="880" y2="180" stroke="#f0a45d" stroke-width="4"/><text x="895" y="185" class="value">35 kW/m² gas</text><line x1="855" y1="214" x2="880" y2="214" stroke="#66a8d8" stroke-width="4"/><text x="895" y="219" class="value">35 kW/m² tar</text><line x1="855" y1="248" x2="880" y2="248" stroke="#58b889" stroke-width="4"/><text x="895" y="253" class="value">70 kW/m² gas</text><line x1="855" y1="282" x2="880" y2="282" stroke="#b987d9" stroke-width="4"/><text x="895" y="287" class="value">70 kW/m² tar</text>
+  <text x="855" y="340" class="legend">Primary experiment envelope</text>
+  <text x="855" y="372" class="value">Temperature · 773–1073 K</text>
+  <text x="855" y="400" class="value">Residence · 0.9–2.2 s</text>
+  <text x="855" y="428" class="value">Observed tar conversion · 5–88%</text>
+  <text x="855" y="468" class="note">Boroson et al. · sweet gum hardwood</text>
+  <text x="855" y="491" class="note">Distributed kinetics fit better than one reaction.</text>
+  <line x1="60" y1="620" x2="1140" y2="620" stroke="#53483d"/>
+  <text x="60" y="650" class="note">The experiment envelope is context, not a fit target. Di Blasi Model III kinetics remain separate; ignition, MLR, heat, and total volatile mass are unchanged.</text>
+</svg>

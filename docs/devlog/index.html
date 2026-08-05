@@ -35,8 +35,8 @@
       <div class="shell status-grid">
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>29 / 29 passed</strong></div>
-        <div><span>次の焦点</span><strong>二次タール反応</strong></div>
+        <div><span>テスト</span><strong>30 / 30 passed</strong></div>
+        <div><span>次の焦点</span><strong>独立した気相輸送状態</strong></div>
       </div>
     </div>
   </header>
@@ -59,9 +59,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Bounded temperature-dependent heat capacity · USDA FPL / NIST</p>
+            <p class="section-kicker">Residence-time sensitivity · Boroson experiment envelope</p>
             <h2>「それらしい」から、<br>誤差を示せるモデルへ。</h2>
-            <p>USDA Wood Handbookの乾燥木材比熱式を、合板とOSBそれぞれの基準値へ正規化しました。ただし式の根拠は280〜420 Kまでです。熱分解域へ外挿せず、範囲外は端点へ固定します。低温加熱の根拠は増えましたが、Phase 6Gより全評価スコアは悪化しました。この負の結果もモデル選択の材料として残します。</p>
+            <p>固定1秒だった二次タール診断を、Borosonらの一次実験が扱った0.9–2.2秒・773–1073 Kの範囲で感度評価しました。NIST Model IIIの係数は再調整せず、総揮発分、熱収支、着火、質量減少にも戻しません。異なる原料・速度式の実験を「検証済み」とはせず、未計算の滞留時間が結果をどれだけ動かすかだけを示します。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -101,15 +101,22 @@
           </figure>
 
           <figure class="capture-card">
-            <a href="assets/phase6/kinetics_report.svg" aria-label="Phase 6H 3経路Arrhenius速度と範囲限定比熱による生成物収率を開く">
-              <img src="assets/phase6/kinetics_report.svg" width="1200" height="680" alt="400から800 Kまでのガス・タール・チャー経路、合計反応速度、35と70 kW毎平方メートルの生成物収率を示したSVGグラフ">
+            <a href="assets/phase6/kinetics_report.svg" aria-label="Phase 6J 二次タール反応と変換前後の生成物収率を開く">
+              <img src="assets/phase6/kinetics_report.svg" width="1200" height="680" alt="一次ガス・タール・チャー経路、二次タール反応速度、35と70 kW毎平方メートルの変換前後収率を示したSVGグラフ">
             </a>
-            <figcaption><div><strong>Competing pathways and product yields</strong><span>Published gas / tar / char rates → temperature-dependent branching</span></div></figcaption>
+            <figcaption><div><strong>Primary pathways and secondary tar split</strong><span>τ = 1 s · bounded 773–1073 K · diagnostic only</span></div></figcaption>
+          </figure>
+
+          <figure class="capture-card">
+            <a href="assets/phase6/tar_residence_sensitivity_report.svg" aria-label="Phase 6J 滞留時間感度レポートを開く">
+              <img src="assets/phase6/tar_residence_sensitivity_report.svg" width="1200" height="680" alt="滞留時間0.9、1.0、2.2秒に対する35と70 kW毎平方メートルの二次ガスと残存タール収率を示したSVGグラフ">
+            </a>
+            <figcaption><div><strong>Residence-time sensitivity</strong><span>0.9 / 1.0 / 2.2 s · experiment-bounded scenario, not validation</span></div></figcaption>
           </figure>
 
           <div class="story-grid">
-            <section class="story-card"><span class="card-index">01</span><h3>比熱を温度で変える</h3><ul><li>USDA式 cp = 103.1 + 3.867T</li><li>293.15 Kで材料別基準値へ正規化</li><li>合板 1214 → 最大1696 J/(kg·K)</li><li>OSB 1298 → 最大1813 J/(kg·K)</li></ul></section>
-            <section class="story-card warm"><span class="card-index">02</span><h3>根拠の端で止める</h3><ul><li>公表範囲は280〜420 K</li><li>範囲外は最近傍端点へ固定</li><li>熱伝導率は温度依存化を保留</li><li>旧状態と一般薪は定数比熱を維持</li></ul></section>
+            <section class="story-card"><span class="card-index">01</span><h3>一次タールを分け直す</h3><ul><li>tar → gas の一次Arrhenius反応</li><li>A = 4.28×10⁶ s⁻¹</li><li>E = 108 kJ/mol</li><li>一次収率と二次反応後収率を併記</li></ul></section>
+            <section class="story-card warm"><span class="card-index">02</span><h3>実験範囲で感度を測る</h3><ul><li>滞留時間0.9 / 1.0 / 2.2秒</li><li>773 K未満は変換なし</li><li>1073 K超は端点へ固定</li><li>熱・Flow・質量減少へ非結合</li></ul></section>
           </div>
 
           <section class="verification" aria-labelledby="phase6-verification-title">
@@ -117,8 +124,8 @@
             <div class="check-list" role="list" aria-label="Phase 6検証結果">
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Score</strong><small>0.469 → 0.452 relative RMSE</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Search</strong><small>16 deterministic common-scale candidates</small></p></div>
-              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>cp(T) range</strong><small>normalized at 293 K · clamped to 280–420 K</small></p></div>
-              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 2.36 × 10⁻¹⁶ kg · calibration + holdout</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Tar split</strong><small>primary = secondary gas + surviving tar</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>
             </div>
           </section>
 
@@ -126,15 +133,15 @@
             <div class="facts-heading"><p class="section-kicker">Measured on RTX 3090</p><h3 id="phase6-facts-title">校正と未使用データの結果</h3></div>
             <dl class="facts-grid">
               <div><dt>Score improvement</dt><dd>3.7%</dd></div>
-              <div><dt>Search time</dt><dd>54.8 s</dd></div>
+              <div><dt>Search time</dt><dd>53.8 s</dd></div>
               <div><dt>35 kW/m² ignition</dt><dd>47.1 → 30.5 s</dd></div>
               <div><dt>70 kW/m² ignition</dt><dd>7.7 → 12.2 s</dd></div>
               <div><dt>Best absorptivity</dt><dd>1.00</dd></div>
               <div><dt>Common A scale</dt><dd>4.0 upper bound</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
-              <div><dt>35 kW/m² products</dt><dd>18.0 / 51.8 / 30.2%</dd></div>
-              <div><dt>70 kW/m² products</dt><dd>15.9 / 54.1 / 30.0%</dd></div>
+              <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
+              <div><dt>70 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>17.1066 / 17.1460 / 17.4616%</dd></div>
               <div><dt>OSB holdout score</dt><dd>3.335 → 3.335 worse</dd></div>
               <div><dt>OSB 35 ignition</dt><dd>39.7 → 149.6 s</dd></div>
               <div><dt>OSB 70 ignition</dt><dd>10.6 → 74.8 s</dd></div>
@@ -146,8 +153,8 @@
           </section>
 
           <div class="notes-grid">
-            <section class="note caution"><p class="note-label">Known limits</p><h3>根拠を増やしても、スコアは悪化した</h3><p>Phase 6G比でTable 2は18.2%、SAMP.3は26.6%、OSBは24.8%悪化しました。式の根拠は熱分解開始前の420 Kで終わり、それ以上は固定値です。高温複合材物性の検証ではなく、共通倍率も探索上限4のままです。</p></section>
-            <section class="note next"><p class="note-label">What comes next</p><h3>二次タール反応を分けて試す</h3><p>比熱変更と混ぜず、一次タールから二次ガス・チャーへの反応を独立評価します。高温物性、接着剤、OSBバインダーは直接測定の根拠を得てから追加します。</p></section>
+            <section class="note caution"><p class="note-label">Known limits</p><h3>範囲の借用は、モデルの検証ではない</h3><p>Borosonらの実験はsweet gum hardwood、773–1073 K、0.9–2.2秒で約5–88%のタール変換を報告します。しかし原料、加熱条件、速度式が現在の合板モデルと異なるため、今回は温度・時間のシナリオ境界だけを借用しました。係数の適合や予測精度の主張には使いません。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>固体セルから気相輸送を分離する</h3><p>チャー層の厚さ、透過率、圧力、流速、気相温度から滞留時間を求める独立状態を設計します。生成物収率または追加熱流束の一次データで外部検証できるまで、二次反応は熱・着火・Flowへ結合しません。</p></section>
           </div>
         </div>
       </article>

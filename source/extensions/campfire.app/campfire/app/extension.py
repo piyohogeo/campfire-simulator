@@ -85,6 +85,7 @@ from .calibration import (
     write_layer_profile_svg,
     write_kinetics_svg,
     write_replicate_holdout_svg,
+    write_tar_residence_sensitivity_svg,
 )
 from .phase6_scene import (
     apply_phase6_calibration,
@@ -366,6 +367,12 @@ class CampfireAppExtension(omni.ext.IExt):
         kinetics_report_path = write_kinetics_svg(
             calibration, output_dir / "kinetics_report.svg"
         )
+        tar_residence_sensitivity_report_path = (
+            write_tar_residence_sensitivity_svg(
+                calibration,
+                output_dir / "tar_residence_sensitivity_report.svg",
+            )
+        )
         candidates_path = output_dir / "top_candidates.csv"
         with candidates_path.open("w", newline="", encoding="utf-8") as csv_file:
             writer = csv.DictWriter(
@@ -398,6 +405,9 @@ class CampfireAppExtension(omni.ext.IExt):
             "replicate_holdout_report": str(replicate_holdout_report_path),
             "layer_profile_report": str(layer_profile_report_path),
             "kinetics_report": str(kinetics_report_path),
+            "tar_residence_sensitivity_report": str(
+                tar_residence_sensitivity_report_path
+            ),
             "top_candidates_csv": str(candidates_path),
             "resolution": list(image_resolution),
             "calibration_wall_seconds": round(calibration_wall_seconds, 4),
