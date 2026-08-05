@@ -39,6 +39,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - USDA Wood Handbookの乾燥木材比熱式を材料別基準値へ正規化し、出典範囲280–420 Kへ固定するPhase 6H温度依存比熱モデル。
 - NIST Model IIIの係数と固定1秒シナリオで、一次タールを二次ガスと残存タールへ質量保存的に再分類するPhase 6I診断モデル。
 - Borosonらの一次実験範囲0.9–2.2秒・773–1073 Kで二次タール生成物分配を比較し、係数選定から隔離するPhase 6J滞留時間感度評価とSVGレポート。
+- 完全なSI入力を要求する一次元Darcy気相輸送計算器、合板固有の欠測5入力、滞留時間を保留するPhase 6K結合ゲートとSVGレポート。
 - Thurner–Mannの公開A/E組をSI単位で固定したPhase 6E一次Arrhenius熱分解、48候補探索、温度–速度曲線SVG。
 
 ### Changed

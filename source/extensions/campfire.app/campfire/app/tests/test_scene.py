@@ -630,6 +630,40 @@ class TestScene(omni.kit.test.AsyncTestCase):
             places=12,
         )
 
+    async def test_darcy_gas_transport_requires_complete_explicit_inputs(self):
+        inputs = campfire.app.DarcyGasTransportInput(
+            layer_thickness_m=0.01,
+            porosity_fraction=0.5,
+            permeability_m2=1.0e-11,
+            dynamic_viscosity_pa_s=4.0e-5,
+            pressure_drop_pa=1000.0,
+        )
+        result = campfire.app.evaluate_darcy_gas_transport(inputs)
+        self.assertAlmostEqual(result.pressure_gradient_pa_m, 100000.0)
+        self.assertAlmostEqual(result.superficial_velocity_m_s, 0.025)
+        self.assertAlmostEqual(result.interstitial_velocity_m_s, 0.05)
+        self.assertAlmostEqual(result.residence_time_s, 0.2)
+        faster = campfire.app.evaluate_darcy_gas_transport(
+            campfire.app.DarcyGasTransportInput(
+                layer_thickness_m=inputs.layer_thickness_m,
+                porosity_fraction=inputs.porosity_fraction,
+                permeability_m2=inputs.permeability_m2,
+                dynamic_viscosity_pa_s=inputs.dynamic_viscosity_pa_s,
+                pressure_drop_pa=2000.0,
+            )
+        )
+        self.assertLess(faster.residence_time_s, result.residence_time_s)
+        with self.assertRaises(ValueError):
+            campfire.app.evaluate_darcy_gas_transport(
+                campfire.app.DarcyGasTransportInput(
+                    layer_thickness_m=0.01,
+                    porosity_fraction=0.0,
+                    permeability_m2=1.0e-11,
+                    dynamic_viscosity_pa_s=4.0e-5,
+                    pressure_drop_pa=1000.0,
+                )
+            )
+
     async def test_nist_grid_search_improves_baseline_without_hiding_error(self):
         calibration = campfire.app.run_nist_plywood_calibration()
         self.assertEqual(calibration["candidate_count"], 16)
@@ -728,6 +762,21 @@ class TestScene(omni.kit.test.AsyncTestCase):
                     calibration["best"]["score_rmse_relative"],
                     places=12,
                 )
+        transport = calibration["gas_transport_readiness"]
+        self.assertEqual(transport["model"], "steady_one_dimensional_darcy")
+        self.assertFalse(transport["ready_for_secondary_tar_coupling"])
+        self.assertFalse(transport["used_for_parameter_selection"])
+        self.assertIsNone(transport["predicted_residence_time_s"])
+        self.assertEqual(
+            set(transport["missing_current_panel_inputs"]),
+            {
+                "char_layer_thickness_m",
+                "through_thickness_porosity_fraction",
+                "through_thickness_permeability_m2",
+                "gas_dynamic_viscosity_pa_s",
+                "char_layer_pressure_drop_pa",
+            },
+        )
 
     async def test_phase6_scene_visualizes_observed_baseline_and_calibrated_values(self):
         stage = Usd.Stage.CreateInMemory()

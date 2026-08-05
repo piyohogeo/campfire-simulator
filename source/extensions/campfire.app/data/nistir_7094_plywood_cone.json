@@ -99,6 +99,39 @@
     "scope": "Reclassify primary tar as secondary gas or surviving tar without changing total volatile mass, solid heat balance, Flow fuel source, ignition time, or mass-loss rate.",
     "validation_limit": "NIST describes Model III as a literature re-examination rather than a fit to a dedicated secondary-tar experiment. Product partition is therefore diagnostic and is not used for parameter selection."
   },
+  "gas_transport_diagnostic": {
+    "model": "steady_one_dimensional_darcy",
+    "equations": {
+      "superficial_velocity_m_s": "q = K deltaP / (mu L)",
+      "interstitial_velocity_m_s": "u = q / porosity",
+      "residence_time_s": "tau = L / u = porosity mu L^2 / (K deltaP)"
+    },
+    "source": "Pozzobon et al., Radiative pyrolysis of wet wood under intermediate heat flux: experiments and modelling, Fuel Processing Technology 128, 319-330 (2014).",
+    "source_doi": "https://doi.org/10.1016/j.fuproc.2014.07.007",
+    "source_context": {
+      "material": "Beech wood spheres, not plywood",
+      "wood_porosity_fraction": 0.51,
+      "char_porosity_fraction": 0.85,
+      "wood_permeability_m2": 7.52e-13,
+      "char_permeability_m2": 1.0e-11,
+      "reported_reference_pressure_drop_pa": 30000.0,
+      "reference_specimen_diameter_m": 0.01,
+      "interpretation": "Values reported in the paper's physical-properties table for its beech-sphere model. They are context only and are not assigned to the NIST plywood coupon."
+    },
+    "current_panel_known_inputs": {
+      "overall_specimen_thickness_m": 0.0127
+    },
+    "missing_current_panel_inputs": [
+      "char_layer_thickness_m",
+      "through_thickness_porosity_fraction",
+      "through_thickness_permeability_m2",
+      "gas_dynamic_viscosity_pa_s",
+      "char_layer_pressure_drop_pa"
+    ],
+    "ready_for_secondary_tar_coupling": false,
+    "used_for_parameter_selection": false,
+    "policy": "Expose a complete SI-unit Darcy input contract and report missing plywood state. Do not calculate residence time from beech context values or feed it into secondary-tar conversion."
+  },
   "arrhenius_model": {
     "equation": "k(T) = A exp(-E / (R T)); first-order dry-wood consumption uses 1 - exp(-k dt).",
     "gas_constant_j_mol_k": 8.31446261815324,

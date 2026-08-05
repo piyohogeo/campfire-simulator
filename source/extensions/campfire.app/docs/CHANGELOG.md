@@ -20,3 +20,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added Phase 6H USDA-FPL normalized dry-wood cp(T), clamped to its published 280-420 K range with constant-model backward compatibility and explicit negative validation results.
 - Added Phase 6I bounded secondary tar-to-gas diagnostics using the NIST Model III coefficients and a fixed one-second residence scenario without altering total volatile release or solid heat balance.
 - Added Phase 6J experiment-bounded 0.9/1.0/2.2-second secondary-tar residence sensitivity, isolated from parameter selection, with a browser-readable yield report.
+- Added Phase 6K independent one-dimensional Darcy gas-transport diagnostics, an explicit five-input plywood readiness gate, and a browser-readable no-coupling report.

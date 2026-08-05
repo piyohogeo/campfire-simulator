@@ -81,6 +81,7 @@ from .wood import get_log_world_position, list_log_ids
 from .calibration import (
     run_nist_plywood_calibration,
     write_calibration_svg,
+    write_gas_transport_readiness_svg,
     write_holdout_svg,
     write_layer_profile_svg,
     write_kinetics_svg,
@@ -373,6 +374,10 @@ class CampfireAppExtension(omni.ext.IExt):
                 output_dir / "tar_residence_sensitivity_report.svg",
             )
         )
+        gas_transport_readiness_report_path = write_gas_transport_readiness_svg(
+            calibration,
+            output_dir / "gas_transport_readiness_report.svg",
+        )
         candidates_path = output_dir / "top_candidates.csv"
         with candidates_path.open("w", newline="", encoding="utf-8") as csv_file:
             writer = csv.DictWriter(
@@ -407,6 +412,9 @@ class CampfireAppExtension(omni.ext.IExt):
             "kinetics_report": str(kinetics_report_path),
             "tar_residence_sensitivity_report": str(
                 tar_residence_sensitivity_report_path
+            ),
+            "gas_transport_readiness_report": str(
+                gas_transport_readiness_report_path
             ),
             "top_candidates_csv": str(candidates_path),
             "resolution": list(image_resolution),

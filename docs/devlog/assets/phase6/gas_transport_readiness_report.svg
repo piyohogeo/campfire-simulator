@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#15120f"/>
+  <style>
+    text { font-family: "Segoe UI", Arial, sans-serif; fill: #fff7e9; }
+    .title { font-size: 30px; font-weight: 700; }
+    .subtitle { font-size: 15px; fill: #d7b982; }
+    .label { font-size: 13px; font-weight: 700; letter-spacing: 1px; }
+    .heading { font-size: 19px; font-weight: 700; }
+    .body { font-size: 14px; fill: #ded2c0; }
+    .small { font-size: 12px; fill: #bcae9a; }
+    .formula { font-size: 18px; font-weight: 650; fill: #f4c36d; }
+  </style>
+  <text x="60" y="52" class="title">Phase 6K — Independent gas-transport readiness</text>
+  <text x="60" y="82" class="subtitle">Complete Darcy input contract · no invented plywood transport properties · no secondary-reaction coupling</text>
+
+  <rect x="60" y="120" width="1080" height="80" rx="10" fill="#1c2820" stroke="#4f966b"/>
+  <text x="82" y="148" class="label" fill="#73d79a">KNOWN GEOMETRY</text>
+  <text x="82" y="177" class="heading">Overall coupon thickness · 12.7 mm</text>
+  <text x="650" y="169" class="formula">τ = ε μ L² / (K ΔP)</text>
+
+  <rect x="60" y="220" width="1080" height="112" rx="10" fill="#282218" stroke="#a77a38"/>
+  <text x="82" y="248" class="label" fill="#e7ad59">SOURCE CONTEXT — NOT PLYWOOD INPUT</text>
+  <text x="82" y="278" class="heading">Beech sphere model</text>
+  <text x="82" y="306" class="body">wood ε 0.51 · char ε 0.85 · wood K 7.52e-13 m² · char K 1.0e-11 m² · reference ΔP 30 kPa</text>
+
+  <rect x="60" y="352" width="1080" height="126" rx="10" fill="#2a1918" stroke="#ad5149"/>
+  <text x="82" y="380" class="label" fill="#ef7f72">MISSING CURRENT-PANEL STATE · 5 INPUTS</text>
+  <text x="82" y="410" class="body">char-layer thickness L · plywood char porosity ε · through-thickness permeability K</text>
+  <text x="82" y="437" class="body">hot mixed-gas viscosity μ(T, composition) · char-layer pressure drop ΔP</text>
+  <text x="82" y="462" class="small">The five-ply thermal cells do not yet resolve shrinkage, open pore volume, pressure, or gas composition.</text>
+
+  <rect x="60" y="498" width="1080" height="92" rx="10" fill="#211817" stroke="#e06555" stroke-width="2"/>
+  <text x="82" y="530" class="label" fill="#ff8f7e">COUPLING GATE</text>
+  <text x="82" y="563" class="heading">Residence time withheld · secondary tar remains a non-coupled sensitivity diagnostic</text>
+
+  <line x1="60" y1="620" x2="1140" y2="620" stroke="#53483d"/>
+  <text x="60" y="650" class="small">Pozzobon et al. (2014), Fuel Processing Technology 128, 319–330 · Darcy flow validated for their beech-sphere model; values are contextual here.</text>
+</svg>

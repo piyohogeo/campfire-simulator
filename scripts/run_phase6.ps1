@@ -220,7 +220,23 @@ for ($caseIndex = 0; $caseIndex -lt 2; $caseIndex++) {
         throw "Phase 6 secondary gas yield is not monotonic with residence time."
     }
 }
-foreach ($path in @($result.image, $result.report, $result.holdout_report, $result.replicate_holdout_report, $result.layer_profile_report, $result.kinetics_report, $result.tar_residence_sensitivity_report, $result.top_candidates_csv, $result.final_stage)) {
+$gasTransport = $calibration.gas_transport_readiness
+$expectedMissingTransportInputs = @(
+    "char_layer_pressure_drop_pa",
+    "char_layer_thickness_m",
+    "gas_dynamic_viscosity_pa_s",
+    "through_thickness_permeability_m2",
+    "through_thickness_porosity_fraction"
+)
+$actualMissingTransportInputs = @($gasTransport.missing_current_panel_inputs | Sort-Object)
+if ($gasTransport.ready_for_secondary_tar_coupling -or $gasTransport.used_for_parameter_selection -or $null -ne $gasTransport.predicted_residence_time_s -or ($actualMissingTransportInputs -join ",") -ne ($expectedMissingTransportInputs -join ",")) {
+    throw "Phase 6 gas-transport coupling gate changed."
+}
+$transportContext = $gasTransport.source_context
+if ([math]::Abs($transportContext.wood_porosity_fraction - 0.51) -gt 0.0000001 -or [math]::Abs($transportContext.char_porosity_fraction - 0.85) -gt 0.0000001 -or [math]::Abs($transportContext.wood_permeability_m2 - 0.000000000000752) -gt 1.0e-20 -or [math]::Abs($transportContext.char_permeability_m2 - 0.00000000001) -gt 1.0e-20 -or [math]::Abs($transportContext.reported_reference_pressure_drop_pa - 30000.0) -gt 0.0000001) {
+    throw "Phase 6 gas-transport source context changed."
+}
+foreach ($path in @($result.image, $result.report, $result.holdout_report, $result.replicate_holdout_report, $result.layer_profile_report, $result.kinetics_report, $result.tar_residence_sensitivity_report, $result.gas_transport_readiness_report, $result.top_candidates_csv, $result.final_stage)) {
     if (-not (Test-Path -LiteralPath $path)) {
         throw "Phase 6 artifact was not produced: $path"
     }

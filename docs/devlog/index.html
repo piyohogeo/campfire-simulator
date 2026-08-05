@@ -35,8 +35,8 @@
       <div class="shell status-grid">
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>30 / 30 passed</strong></div>
-        <div><span>次の焦点</span><strong>独立した気相輸送状態</strong></div>
+        <div><span>テスト</span><strong>31 / 31 passed</strong></div>
+        <div><span>次の焦点</span><strong>チャー層幾何の観測状態</strong></div>
       </div>
     </div>
   </header>
@@ -59,9 +59,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Residence-time sensitivity · Boroson experiment envelope</p>
+            <p class="section-kicker">Independent gas transport · explicit Darcy coupling gate</p>
             <h2>「それらしい」から、<br>誤差を示せるモデルへ。</h2>
-            <p>固定1秒だった二次タール診断を、Borosonらの一次実験が扱った0.9–2.2秒・773–1073 Kの範囲で感度評価しました。NIST Model IIIの係数は再調整せず、総揮発分、熱収支、着火、質量減少にも戻しません。異なる原料・速度式の実験を「検証済み」とはせず、未計算の滞留時間が結果をどれだけ動かすかだけを示します。</p>
+            <p>滞留時間を固体セルへ埋め込まず、Darcy流の独立したSI入力契約を追加しました。現在わかるのは試験片全厚12.7 mmだけです。合板チャー層の厚さ・空隙率・厚さ方向透過率・高温混合気粘度・圧力差が欠けるため、滞留時間は計算せず、二次タール反応への結合ゲートを閉じたままにします。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -114,9 +114,16 @@
             <figcaption><div><strong>Residence-time sensitivity</strong><span>0.9 / 1.0 / 2.2 s · experiment-bounded scenario, not validation</span></div></figcaption>
           </figure>
 
+          <figure class="capture-card">
+            <a href="assets/phase6/gas_transport_readiness_report.svg" aria-label="Phase 6K 気相輸送入力充足レポートを開く">
+              <img src="assets/phase6/gas_transport_readiness_report.svg" width="1200" height="680" alt="Darcy滞留時間式、既知の試験片全厚、ブナ球の文献値、合板で欠けている5入力、閉じた結合ゲートを示したSVG図">
+            </a>
+            <figcaption><div><strong>Gas-transport coupling gate</strong><span>Darcy input contract · 5 plywood inputs missing · τ withheld</span></div></figcaption>
+          </figure>
+
           <div class="story-grid">
-            <section class="story-card"><span class="card-index">01</span><h3>一次タールを分け直す</h3><ul><li>tar → gas の一次Arrhenius反応</li><li>A = 4.28×10⁶ s⁻¹</li><li>E = 108 kJ/mol</li><li>一次収率と二次反応後収率を併記</li></ul></section>
-            <section class="story-card warm"><span class="card-index">02</span><h3>実験範囲で感度を測る</h3><ul><li>滞留時間0.9 / 1.0 / 2.2秒</li><li>773 K未満は変換なし</li><li>1073 K超は端点へ固定</li><li>熱・Flow・質量減少へ非結合</li></ul></section>
+            <section class="story-card"><span class="card-index">01</span><h3>Darcy計算を独立させる</h3><ul><li>q = KΔP / μL</li><li>u = q / ε</li><li>τ = ε μ L² / KΔP</li><li>全入力をSI単位で必須化</li></ul></section>
+            <section class="story-card warm"><span class="card-index">02</span><h3>欠測値を既定値にしない</h3><ul><li>ブナ球の文献値は文脈だけ</li><li>合板固有の欠測入力は5つ</li><li>予測滞留時間はnull</li><li>熱・着火・Flowへ非結合</li></ul></section>
           </div>
 
           <section class="verification" aria-labelledby="phase6-verification-title">
@@ -125,6 +132,7 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Score</strong><small>0.469 → 0.452 relative RMSE</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Search</strong><small>16 deterministic common-scale candidates</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Tar split</strong><small>primary = secondary gas + surviving tar</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Transport gate</strong><small>5 missing inputs · residence time withheld</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>
             </div>
           </section>
@@ -138,6 +146,8 @@
               <div><dt>70 kW/m² ignition</dt><dd>7.7 → 12.2 s</dd></div>
               <div><dt>Best absorptivity</dt><dd>1.00</dd></div>
               <div><dt>Common A scale</dt><dd>4.0 upper bound</dd></div>
+              <div><dt>Darcy transport model</dt><dd>independent · not coupled</dd></div>
+              <div><dt>Missing transport inputs</dt><dd>5 / τ withheld</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
@@ -153,8 +163,8 @@
           </section>
 
           <div class="notes-grid">
-            <section class="note caution"><p class="note-label">Known limits</p><h3>範囲の借用は、モデルの検証ではない</h3><p>Borosonらの実験はsweet gum hardwood、773–1073 K、0.9–2.2秒で約5–88%のタール変換を報告します。しかし原料、加熱条件、速度式が現在の合板モデルと異なるため、今回は温度・時間のシナリオ境界だけを借用しました。係数の適合や予測精度の主張には使いません。</p></section>
-            <section class="note next"><p class="note-label">What comes next</p><h3>固体セルから気相輸送を分離する</h3><p>チャー層の厚さ、透過率、圧力、流速、気相温度から滞留時間を求める独立状態を設計します。生成物収率または追加熱流束の一次データで外部検証できるまで、二次反応は熱・着火・Flowへ結合しません。</p></section>
+            <section class="note caution"><p class="note-label">Known limits</p><h3>ブナ球の値を合板へ移植しない</h3><p>Pozzobonらのブナ球モデルは空隙率、木材・チャー透過率、参考圧力差を示しますが、現在の5層合板とは材種・形状・木目・接着界面が異なります。これらは式と必要入力を確認する文脈として記録し、計算入力には採用していません。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>チャー層の厚さを状態にする</h3><p>まず熱分解前線と収縮を区別してチャー層厚さを定義します。その後、合板の厚さ方向透過率・空隙率、圧力差、高温混合気粘度の直接根拠を順に追加し、5入力が揃った場合だけDarcy滞留時間を二次反応候補へ渡します。</p></section>
           </div>
         </div>
       </article>

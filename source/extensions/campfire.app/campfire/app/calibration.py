@@ -135,6 +135,33 @@ def load_nist_plywood_reference(path: Path | None = None) -> dict:
         or experiment_conversion_range != [0.05, 0.88]
     ):
         raise ValueError("Secondary-tar residence sensitivity definition changed")
+    transport = data.get("gas_transport_diagnostic", {})
+    transport_context = transport.get("source_context", {})
+    missing_transport_inputs = transport.get("missing_current_panel_inputs", [])
+    required_missing_transport_inputs = {
+        "char_layer_thickness_m",
+        "through_thickness_porosity_fraction",
+        "through_thickness_permeability_m2",
+        "gas_dynamic_viscosity_pa_s",
+        "char_layer_pressure_drop_pa",
+    }
+    if (
+        transport.get("model") != "steady_one_dimensional_darcy"
+        or transport.get("ready_for_secondary_tar_coupling") is not False
+        or transport.get("used_for_parameter_selection") is not False
+        or set(missing_transport_inputs) != required_missing_transport_inputs
+        or float(transport_context.get("wood_porosity_fraction", 0.0)) <= 0.0
+        or float(transport_context.get("char_porosity_fraction", 0.0)) <= 0.0
+        or float(transport_context.get("wood_permeability_m2", 0.0)) <= 0.0
+        or float(transport_context.get("char_permeability_m2", 0.0)) <= 0.0
+        or float(transport_context.get("reported_reference_pressure_drop_pa", 0.0))
+        <= 0.0
+        or transport.get("current_panel_known_inputs", {}).get(
+            "overall_specimen_thickness_m"
+        )
+        != panel_model.get("nominal_thickness_m")
+    ):
+        raise ValueError("Gas-transport diagnostic definition is incomplete")
     common_scales = kinetics.get("parallel_common_scales", [])
     if not common_scales or any(float(scale) <= 0.0 for scale in common_scales):
         raise ValueError("Parallel Arrhenius common scales must be positive")
@@ -790,6 +817,26 @@ def evaluate_secondary_tar_residence_sensitivity(
     }
 
 
+def evaluate_gas_transport_readiness(reference: dict) -> dict:
+    """Report the independent Darcy input contract without inventing missing state."""
+
+    definition = reference["gas_transport_diagnostic"]
+    missing_inputs = list(definition["missing_current_panel_inputs"])
+    return {
+        "model": definition["model"],
+        "equations": definition["equations"],
+        "source": definition["source"],
+        "source_doi": definition["source_doi"],
+        "source_context": definition["source_context"],
+        "current_panel_known_inputs": definition["current_panel_known_inputs"],
+        "missing_current_panel_inputs": missing_inputs,
+        "ready_for_secondary_tar_coupling": not missing_inputs,
+        "used_for_parameter_selection": False,
+        "predicted_residence_time_s": None,
+        "policy": definition["policy"],
+    }
+
+
 def run_nist_plywood_calibration() -> dict:
     reference = load_nist_plywood_reference()
     baseline_parameters = parallel_arrhenius_baseline_parameters(reference)
@@ -814,6 +861,7 @@ def run_nist_plywood_calibration() -> dict:
             reference, best_parameters, best
         )
     )
+    gas_transport_readiness = evaluate_gas_transport_readiness(reference)
     validation_baseline = evaluate_parameters(
         reference, baseline_parameters, validation_targets
     )
@@ -857,6 +905,7 @@ def run_nist_plywood_calibration() -> dict:
         "secondary_tar_residence_sensitivity": (
             secondary_tar_residence_sensitivity
         ),
+        "gas_transport_readiness": gas_transport_readiness,
         "arrhenius_model": reference["arrhenius_model"],
         "candidate_count": len(ranked),
         "selection": {
@@ -1313,6 +1362,71 @@ def write_tar_residence_sensitivity_svg(
   <text x="855" y="491" class="note">Distributed kinetics fit better than one reaction.</text>
   <line x1="60" y1="620" x2="1140" y2="620" stroke="#53483d"/>
   <text x="60" y="650" class="note">The experiment envelope is context, not a fit target. Di Blasi Model III kinetics remain separate; ignition, MLR, heat, and total volatile mass are unchanged.</text>
+</svg>'''
+    destination.write_text(svg, encoding="utf-8")
+    return destination
+
+
+def write_gas_transport_readiness_svg(
+    calibration: dict,
+    destination: Path,
+) -> Path:
+    """Render the Darcy input contract and the current no-coupling gate."""
+
+    destination = Path(destination).resolve()
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    transport = calibration["gas_transport_readiness"]
+    context = transport["source_context"]
+    known = transport["current_panel_known_inputs"]
+    missing_labels = {
+        "char_layer_thickness_m": "char-layer thickness L",
+        "through_thickness_porosity_fraction": "plywood char porosity ε",
+        "through_thickness_permeability_m2": "through-thickness permeability K",
+        "gas_dynamic_viscosity_pa_s": "hot mixed-gas viscosity μ(T, composition)",
+        "char_layer_pressure_drop_pa": "char-layer pressure drop ΔP",
+    }
+    missing_values = [
+        missing_labels[name] for name in transport["missing_current_panel_inputs"]
+    ]
+    missing_text_line_1 = " · ".join(missing_values[:3])
+    missing_text_line_2 = " · ".join(missing_values[3:])
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#15120f"/>
+  <style>
+    text {{ font-family: "Segoe UI", Arial, sans-serif; fill: #fff7e9; }}
+    .title {{ font-size: 30px; font-weight: 700; }}
+    .subtitle {{ font-size: 15px; fill: #d7b982; }}
+    .label {{ font-size: 13px; font-weight: 700; letter-spacing: 1px; }}
+    .heading {{ font-size: 19px; font-weight: 700; }}
+    .body {{ font-size: 14px; fill: #ded2c0; }}
+    .small {{ font-size: 12px; fill: #bcae9a; }}
+    .formula {{ font-size: 18px; font-weight: 650; fill: #f4c36d; }}
+  </style>
+  <text x="60" y="52" class="title">Phase 6K — Independent gas-transport readiness</text>
+  <text x="60" y="82" class="subtitle">Complete Darcy input contract · no invented plywood transport properties · no secondary-reaction coupling</text>
+
+  <rect x="60" y="120" width="1080" height="80" rx="10" fill="#1c2820" stroke="#4f966b"/>
+  <text x="82" y="148" class="label" fill="#73d79a">KNOWN GEOMETRY</text>
+  <text x="82" y="177" class="heading">Overall coupon thickness · {1000.0 * float(known["overall_specimen_thickness_m"]):.1f} mm</text>
+  <text x="650" y="169" class="formula">τ = ε μ L² / (K ΔP)</text>
+
+  <rect x="60" y="220" width="1080" height="112" rx="10" fill="#282218" stroke="#a77a38"/>
+  <text x="82" y="248" class="label" fill="#e7ad59">SOURCE CONTEXT — NOT PLYWOOD INPUT</text>
+  <text x="82" y="278" class="heading">Beech sphere model</text>
+  <text x="82" y="306" class="body">wood ε {float(context["wood_porosity_fraction"]):.2f} · char ε {float(context["char_porosity_fraction"]):.2f} · wood K {float(context["wood_permeability_m2"]):.2e} m² · char K {float(context["char_permeability_m2"]):.1e} m² · reference ΔP {float(context["reported_reference_pressure_drop_pa"])/1000.0:.0f} kPa</text>
+
+  <rect x="60" y="352" width="1080" height="126" rx="10" fill="#2a1918" stroke="#ad5149"/>
+  <text x="82" y="380" class="label" fill="#ef7f72">MISSING CURRENT-PANEL STATE · 5 INPUTS</text>
+  <text x="82" y="410" class="body">{missing_text_line_1}</text>
+  <text x="82" y="437" class="body">{missing_text_line_2}</text>
+  <text x="82" y="462" class="small">The five-ply thermal cells do not yet resolve shrinkage, open pore volume, pressure, or gas composition.</text>
+
+  <rect x="60" y="498" width="1080" height="92" rx="10" fill="#211817" stroke="#e06555" stroke-width="2"/>
+  <text x="82" y="530" class="label" fill="#ff8f7e">COUPLING GATE</text>
+  <text x="82" y="563" class="heading">Residence time withheld · secondary tar remains a non-coupled sensitivity diagnostic</text>
+
+  <line x1="60" y1="620" x2="1140" y2="620" stroke="#53483d"/>
+  <text x="60" y="650" class="small">Pozzobon et al. (2014), Fuel Processing Technology 128, 319–330 · Darcy flow validated for their beech-sphere model; values are contextual here.</text>
 </svg>'''
     destination.write_text(svg, encoding="utf-8")
     return destination
