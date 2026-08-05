@@ -1,0 +1,36 @@
+{
+  "phase": "6W",
+  "microbenchmark": {
+    "steps": 400,
+    "runs": 3,
+    "total_cells": 2304,
+    "python_median_ms_per_model_step": 3.1313496248912998,
+    "numpy_median_ms_per_model_step": 2.8227956249611452,
+    "numpy_improvement_fraction": 0.09853706449048005,
+    "exact_state_sha256_match": true,
+    "exact_step_history_sha256_match": true,
+    "exact_metrics_match": true
+  },
+  "phase3_trial": {
+    "steps": 1200,
+    "dry_state_sha256_match": true,
+    "wet_state_sha256_match": true,
+    "metrics_csv_sha256_match": true,
+    "ignition_times_match": true,
+    "flow_active_blocks_peak_match": true,
+    "python_two_log_step_mean_ms": 441.1423,
+    "numpy_two_log_step_mean_ms": 170.9927,
+    "absolute_timing_accepted": false,
+    "timing_exclusion_reason": "omni.kit.debug.python remained active and both timings were more than an order of magnitude above the controlled microbenchmark",
+    "python_runner_seconds": 556.902,
+    "numpy_runner_seconds": 233.334,
+    "python_metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759",
+    "numpy_metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759"
+  },
+  "decision": {
+    "default_backend": "python",
+    "numpy_backend_available": true,
+    "numpy_default_adoption": false,
+    "reason": "controlled gain is 9.9%; retain opt-in until a debugger-free end-to-end profile confirms the gain"
+  }
+}

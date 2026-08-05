@@ -2,7 +2,7 @@
 
 ## 1. 文書情報
 
-- 文書状態: 実装中・Phase 6U 配列バックエンド転送境界評価完了
+- 文書状態: 実装中・Phase 6W 全step NumPy限定試作完了
 - 初版日: 2026-08-04
 - 想定開発環境: Windows 11、NVIDIA RTX 3090（24 GB）、VS Code + Codex
 - 開発リポジトリ（作成済み）: `C:\Users\junic\src\campfire-simulator`
@@ -1338,3 +1338,28 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 検証: 全40テストはcoverageなしで`31.281 s`、NIST校正単体は`23.719 s`で成功した。標準`\.\repo.bat test`はcoverage付き同テストがランナー内蔵`300 s`上限へ達して停止した。これはPhase 6Uの独立スクリプトによる数値失敗ではないが、標準検証経路が完走しない既知問題として残し、次の本番変更前にcoverage対象・重い校正テストの分離を設計する。
 - 判断: 次の本番候補は、既存AoSを維持して顕熱・状態確定だけを毎step NumPyへ往復する限定試作である。効果の上限は隔離区間で約`0.89 ms/step`であり、全stepで状態SHA-256と性能が改善した場合だけ採用する。Warpは毎step往復では採用せず、伝導・反応・メトリクス・Flow境界までGPU常駐へ再設計できる将来案として保留する。
 - 次: NumPy限定試作を`WoodThermalModel.step()`の選択可能な経路として実装し、既存Python経路との400 step SHA-256一致、全40テスト、Phase 3 end-to-endを測る。約199秒のviewport準備待機は別課題のまま維持し、実設備dry runは責任研究室の外部レビュー受領まで保留する。
+
+## 50. Phase 6V 標準テスト分割とcoverage経路復旧
+
+### 2026-08-05: 数値校正を削らず、プロセス境界で計測負荷を隔離する
+
+- 原因: 40件を一つのcoverageプロセスで実行すると、候補グリッドを決定論的に全探索する`test_nist_grid_search_improves_baseline_without_hiding_error`がPython coverage計測下でKitの既定`300 s`プロセス上限へ達した。同テスト単体はcoverageなしで`23.719 s`、全40件もcoverageなしで`31.281 s`に成功しており、数値不一致ではなく計測オーバーヘッドによる標準経路の失敗だった。
+- 分離: 既定テスト構成は重い校正1件だけを除外し、残る通常テストとKit Template生成のExtensionActions API文書整合性検査をcoverage付きで実行する。`calibration`構成はその校正1件だけを明示し、`pyCoverageEnabled = false`とした。タイムアウト値、候補数、物理式、期待値は変更していない。
+- 自動検査の維持: 主テスト構成を`unit`と命名すると、既定test idにだけ注入される`TestExtensionActionsAPI.test_extensions_api_md_is_uptodate`が消えることをプレイリスト差分で検出した。主構成を意図的に無名の既定test idへ戻し、通常38件と生成API検査1件の計39件になることを受け入れ条件にした。
+- 最終実測: 標準`.\repo.bat test`はstartup`3.8 s`、coverage付き既定構成39件`217.7 s`、coverageなし校正1件`24.5 s`、全体`246.9 s`で成功した。全40件が実行され、各プロセスは既定`300 s`上限内だった。
+- 可視化: Web開発日記に`test_partition_report.svg`を追加し、旧単一プロセスの300秒停止と、39＋1件へ分けた最終時間、coverage境界、合格件数を並べた。
+- 判断: 標準検証経路は復旧した。coverageを外すのは候補全探索1件だけに限定し、その数値テスト自体は標準コマンドから外さない。今後テスト構成を命名する場合は、生成API検査を別の実テストへ置換するか、プレイリスト40件を明示的に保証してから行う。
+- 次: Phase 6Uで選んだNumPy限定経路を`WoodThermalModel.step()`へ選択可能に試作し、Python経路との400 step SHA-256一致、復旧した標準40テスト、Phase 3 end-to-end性能を採用ゲートにする。実設備dry runは責任研究室の外部レビュー受領まで保留する。
+
+## 51. Phase 6W 全step NumPy限定試作
+
+### 2026-08-05: 完全同値を保つ任意選択経路として境界を確定する
+
+- 実装: `WoodThermalModel.step(..., array_backend="python" | "numpy")`を追加し、既定値は従来どおり`python`とした。NumPy経路は既存AoSセルからfloat64配列へ毎step往復し、顕熱更新と最終clamp・相判定だけを配列化する。伝導、蒸発、一次／並列熱分解、炭酸化、集計、Flow／USD境界は従来のPython処理を維持する。
+- 制御測定: Kit同梱Pythonで2モデル×1,152セル、400 step、3 run、20 warmupを交互順序で測定した。完全な木材stepの中央値はPython`3.13135 ms/model-step`、NumPy`2.82280 ms/model-step`で、NumPyは`9.85%`短縮した。変換と書戻しを含み、隔離した配列カーネル値ではない。
+- 同値性: 400 stepの毎step `CombustionStepResult`履歴、最終状態SHA-256、`metrics()`は完全一致した。定数比熱経路だけでなく、USDA温度依存比熱と並列Arrhenius経路を含む別条件もテストで完全一致させた。不明なbackend名は明示的に拒否する。
+- Phase 3: `-ArrayBackend python|numpy`をrunnerへ追加し、summaryへ選択backendと乾燥／湿潤薪の権威状態SHA-256を保存した。各1,200 stepの試行では両backendの状態、`wood_metrics.csv`、着火時刻`66.2 / 166.4 s`、Flow active block peak`302`が一致した。
+- 性能判断: Phase 3試行では`omni.kit.debug.python`が有効なままで、木材step絶対時間が制御測定より一桁以上大きかった。このため試行間の見かけの差は相対診断に限定し、本番性能値にも既定backend変更の根拠にも使わない。NumPyは明示選択可能とするが、既定はPythonを維持する。
+- テスト構成: 新しい400 step同値試験はNIST全探索と同じcoverageなし`numerical`プロセスへ置き、coverage付き通常39件の300秒上限を守った。標準`.\repo.bat test`はstartup`3.6 s`、通常39件`294.7 s`、数値2件`28.3 s`、全体`327.4 s`で41/41件成功した。
+- 可視化: 制御時間、9.9%短縮、同値ゲート、Phase 3時間除外、既定値維持を`wood_numpy_prototype_report.svg`へまとめ、JSON根拠とともにWeb開発日記から閲覧可能にした。
+- 次: 開発用デバッガーを読み込まない最小のPhase 3実行構成を作り、同じアプリ境界でPython／NumPyを再測定する。絶対時間が制御測定と整合し、出力ハッシュを維持したままend-to-end改善が再現した場合だけ、既定backendの変更を再検討する。実設備dry runは責任研究室の外部レビュー受領まで保留する。

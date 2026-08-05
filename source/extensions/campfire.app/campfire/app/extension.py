@@ -2,6 +2,7 @@
 
 import asyncio
 import csv
+import hashlib
 import json
 import math
 import statistics
@@ -63,7 +64,13 @@ from .phase3_scene import (
     populate_phase3_scene,
     update_flow_source,
 )
-from .combustion import flow_source_from_model, load_model_from_prim, save_model_to_prim
+from .combustion import (
+    NUMPY_ARRAY_BACKEND,
+    PYTHON_ARRAY_BACKEND,
+    flow_source_from_model,
+    load_model_from_prim,
+    save_model_to_prim,
+)
 from .air_supply import run_stack_air_comparison
 from .phase4_scene import export_phase4_stage, populate_phase4_scene
 from .phase5_scene import (
@@ -985,6 +992,13 @@ class CampfireAppExtension(omni.ext.IExt):
         """Compare dry/wet wood and drive Flow from released volatile mass."""
 
         output_dir = self._output_dir()
+        settings = carb.settings.get_settings()
+        array_backend = (
+            settings.get_as_string(f"{SETTINGS_ROOT}/woodArrayBackend")
+            or PYTHON_ARRAY_BACKEND
+        )
+        if array_backend not in (PYTHON_ARRAY_BACKEND, NUMPY_ARRAY_BACKEND):
+            raise ValueError(f"Unsupported wood-step array backend: {array_backend}")
         flow_interface = _flowusd.acquire_flowusd_interface()
         dry_prim = stage.GetPrimAtPath(f"/World/Logs/{PHASE3_DRY_LOG_ID}")
         wet_prim = stage.GetPrimAtPath(f"/World/Logs/{PHASE3_WET_LOG_ID}")
@@ -1017,10 +1031,14 @@ class CampfireAppExtension(omni.ext.IExt):
                 step_loop_started = time.perf_counter()
                 model_started = time.perf_counter()
                 dry_result = dry_model.step(
-                    PHASE3_MODEL_DT_SECONDS, PHASE3_EXTERNAL_HEAT_FLUX_W_M2
+                    PHASE3_MODEL_DT_SECONDS,
+                    PHASE3_EXTERNAL_HEAT_FLUX_W_M2,
+                    array_backend=array_backend,
                 )
                 wet_result = wet_model.step(
-                    PHASE3_MODEL_DT_SECONDS, PHASE3_EXTERNAL_HEAT_FLUX_W_M2
+                    PHASE3_MODEL_DT_SECONDS,
+                    PHASE3_EXTERNAL_HEAT_FLUX_W_M2,
+                    array_backend=array_backend,
                 )
                 model_step_times_ms.append(
                     (time.perf_counter() - model_started) * 1000.0
@@ -1242,6 +1260,14 @@ class CampfireAppExtension(omni.ext.IExt):
                         >= 0.0
                         for cell in model.cells
                     ),
+                    "authoritative_state_sha256": hashlib.sha256(
+                        json.dumps(
+                            model.to_dict(),
+                            allow_nan=False,
+                            separators=(",", ":"),
+                            sort_keys=True,
+                        ).encode("utf-8")
+                    ).hexdigest(),
                 }
 
             summary = {
@@ -1256,6 +1282,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 "images": images,
                 "startup": startup_timing,
                 "scenario": {
+                    "wood_array_backend": array_backend,
                     "model_dt_seconds": PHASE3_MODEL_DT_SECONDS,
                     "flow_update_interval_steps": PHASE3_FLOW_UPDATE_INTERVAL_STEPS,
                     "flow_update_interval_seconds": (

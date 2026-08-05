@@ -1,5 +1,7 @@
 param(
-    [string]$OutputDir = ""
+    [string]$OutputDir = "",
+    [ValidateSet("python", "numpy")]
+    [string]$ArrayBackend = "python"
 )
 
 $ErrorActionPreference = "Stop"
@@ -29,6 +31,7 @@ $kitArgs = @(
     "--/exts/campfire.app/captureOnStartup=true",
     "--/exts/campfire.app/quitAfterCapture=true",
     "--/exts/campfire.app/outputDir=$OutputDir",
+    "--/exts/campfire.app/woodArrayBackend=$ArrayBackend",
     "--/rtx/flow/enabled=true",
     "--/app/viewport/grid/enabled=false",
     "--/persistent/app/viewport/displayOptions=1152"
@@ -50,6 +53,9 @@ if (-not (Test-Path -LiteralPath $summary)) {
 $result = Get-Content -LiteralPath $summary -Raw | ConvertFrom-Json
 if ($result.status -ne "ok" -or $result.phase -ne "phase3") {
     throw "Phase 3 summary reported a failure or unexpected phase: $summary"
+}
+if ($result.scenario.wood_array_backend -ne $ArrayBackend) {
+    throw "Phase 3 used an unexpected wood array backend."
 }
 if ($result.scenario.steps -ne 1200 -or $result.scenario.model_duration_seconds -ne 240) {
     throw "Phase 3 did not complete the expected 240 second model scenario."

@@ -50,6 +50,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - 起動、CPU木材、集計、Flow写像、Emitter USD、薪表示USD、Kit／Flow更新、画像保存、最終出力を排他的に測り、2 runの中央値と範囲を示すPhase 6S時間内訳レポート。
 - CPU木材stepを8つの排他的区間へ分けるオプトイン計測、状態SHA-256不変条件、3 run中央値、相判定・定数比熱ホットパス改善を示すPhase 6T内部プロファイルとSVGレポート。
 - 顕熱更新・状態確定をPython AoS、NumPy変換／常駐、Warp CUDA転送／常駐で比較し、毎step転送を含むGPU案を棄却するPhase 6U配列バックエンド境界ベンチマークとSVGレポート。
+- coverage付き通常39件とcoverageなしNIST校正1件へ分離し、Kitの300秒上限内で標準40テストと生成API文書検査を復旧するPhase 6Vテスト構成とSVGレポート。
+- 顕熱更新と状態確定だけをNumPy化する任意選択のPhase 6W全step経路、400 stepの完全同値ゲート、制御ベンチマーク、Phase 3出力比較、デバッガー混入時間の除外判断、SVGレポート。
 - Thurner–Mannの公開A/E組をSI単位で固定したPhase 6E一次Arrhenius熱分解、48候補探索、温度–速度曲線SVG。
 
 ### Changed

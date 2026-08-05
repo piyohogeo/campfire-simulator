@@ -19,6 +19,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added Phase 6S repeatable startup, CPU, USD, Flow, capture, and finalization timing segments with strict sample-count validation and an aggregate SVG report.
 - Added Phase 6T opt-in timings for eight CPU wood-step segments, authoritative-state SHA-256 checks, repeated-profile aggregation, and phase/fixed-cp hot-path improvements without changing equations, grid, or timestep.
 - Added the Phase 6U Python/NumPy/Warp float64 backend boundary benchmark, including AoS conversion, CUDA transfers, synchronization intervals, exact isolated state checks, and a no-roundtrip-GPU decision report.
+- Restored the standard Phase 6V coverage path by separating 39 coverage-instrumented checks from one deterministic calibration grid search while retaining all 40 tests and the generated ExtensionActions API documentation check.
+- Added the opt-in Phase 6W complete-step NumPy backend for sensible heat and final-state classification, exact 400-step equivalence gates, controlled performance evidence, Phase 3 output hashes, and a debugger-contamination exclusion decision while retaining Python as the default.
 - Added Phase 6B no-refit OSB external-material holdout evaluation and a separate browser-readable residual report.
 - Added Phase 6C fixed SAMP.1/2-to-SAMP.3 plywood replicate holdout evaluation and a separate browser-readable report.
 - Added Phase 6D nominal 12.7 mm five-ply planar specimen model, mass-derived effective density, through-thickness conduction, and layer-temperature report.

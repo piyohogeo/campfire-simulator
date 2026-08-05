@@ -44,9 +44,36 @@ pages = [
 ]
 
 
+# Keep the primary test unnamed.  The Kit template injects its generated
+# ExtensionActions API documentation check only for the default test id.
 [[test]]
 dependencies = [
 ]
 
 args = [
+]
+
+pythonTests.include = [
+    "campfire.app.*",
+]
+pythonTests.exclude = [
+    "campfire.app.tests.test_scene.TestScene.test_nist_grid_search_improves_baseline_without_hiding_error",
+    "campfire.app.tests.test_scene.TestScene.test_numpy_backend_matches_python_for_complete_steps",
+]
+
+
+[[test]]
+name = "numerical"
+dependencies = [
+]
+
+args = [
+]
+
+pyCoverageEnabled = false
+# These deterministic long-running numerical checks are verified separately
+# because coverage instrumentation expands them beyond Kit's 300-second limit.
+pythonTests.include = [
+    "campfire.app.tests.test_scene.TestScene.test_nist_grid_search_improves_baseline_without_hiding_error",
+    "campfire.app.tests.test_scene.TestScene.test_numpy_backend_matches_python_for_complete_steps",
 ]

@@ -37,6 +37,23 @@ PYROLYZING = "PYROLYZING"
 CHAR = "CHAR"
 ASH = "ASH"
 DEPLETED = "DEPLETED"
+_PHASE_NAMES = (WET_WOOD, DRY_WOOD, PYROLYZING, CHAR, ASH, DEPLETED)
+PYTHON_ARRAY_BACKEND = "python"
+NUMPY_ARRAY_BACKEND = "numpy"
+_NUMPY = None
+
+
+def _require_numpy():
+    global _NUMPY
+    if _NUMPY is None:
+        try:
+            import numpy
+        except ImportError as exc:
+            raise RuntimeError(
+                "The NumPy wood-step backend requires the numpy package"
+            ) from exc
+        _NUMPY = numpy
+    return _NUMPY
 
 
 @dataclass(frozen=True)
@@ -257,7 +274,7 @@ class WoodThermalModel:
                         pairs.append((index, neighbor, conductance))
         return pairs
 
-    def _heat_capacity_j_k(self, cell: WoodCellState) -> float:
+    def _dry_wood_specific_heat_j_kg_k(self, cell: WoodCellState) -> float:
         p = self.parameters
         reference_specific_heat_j_kg_k = (
             cell.dry_wood_specific_heat_j_kg_k
@@ -283,6 +300,11 @@ class WoodThermalModel:
                     cell.dry_wood_specific_heat_model,
                 )
             )
+        return dry_wood_specific_heat_j_kg_k
+
+    def _heat_capacity_j_k(self, cell: WoodCellState) -> float:
+        p = self.parameters
+        dry_wood_specific_heat_j_kg_k = self._dry_wood_specific_heat_j_kg_k(cell)
         return max(
             cell.dry_wood_mass_kg * dry_wood_specific_heat_j_kg_k
             + cell.moisture_mass_kg * p.water_specific_heat_j_kg_k
@@ -291,12 +313,162 @@ class WoodThermalModel:
             1.0e-9,
         )
 
+    def _numpy_sensible_heat(
+        self,
+        dt_seconds: float,
+        scalar_heat_flux_w_m2: float | None,
+        heat_fluxes: list[float] | None,
+        ambient: float,
+        conduction_energy_j: list[float],
+    ) -> tuple[list[float], float]:
+        np = _require_numpy()
+        cells = self.cells
+        p = self.parameters
+        cell_count = len(cells)
+        temperature_k = np.fromiter(
+            (cell.temperature_k for cell in cells),
+            dtype=np.float64,
+            count=cell_count,
+        )
+        moisture_mass_kg = np.fromiter(
+            (cell.moisture_mass_kg for cell in cells),
+            dtype=np.float64,
+            count=cell_count,
+        )
+        dry_wood_mass_kg = np.fromiter(
+            (cell.dry_wood_mass_kg for cell in cells),
+            dtype=np.float64,
+            count=cell_count,
+        )
+        char_mass_kg = np.fromiter(
+            (cell.char_mass_kg for cell in cells),
+            dtype=np.float64,
+            count=cell_count,
+        )
+        ash_mass_kg = np.fromiter(
+            (cell.ash_mass_kg for cell in cells),
+            dtype=np.float64,
+            count=cell_count,
+        )
+        dry_specific_heat_j_kg_k = np.fromiter(
+            (self._dry_wood_specific_heat_j_kg_k(cell) for cell in cells),
+            dtype=np.float64,
+            count=cell_count,
+        )
+        heat_capacities_j_k = (
+            dry_wood_mass_kg * dry_specific_heat_j_kg_k
+            + moisture_mass_kg * p.water_specific_heat_j_kg_k
+            + char_mass_kg * p.char_specific_heat_j_kg_k
+            + ash_mass_kg * p.ash_specific_heat_j_kg_k
+        )
+        np.maximum(heat_capacities_j_k, 1.0e-9, out=heat_capacities_j_k)
+        area_m2 = np.fromiter(
+            (cell.external_area_m2 * cell.surface_exposure for cell in cells),
+            dtype=np.float64,
+            count=cell_count,
+        )
+        if scalar_heat_flux_w_m2 is None:
+            heat_flux_w_m2 = np.asarray(heat_fluxes, dtype=np.float64)
+        else:
+            heat_flux_w_m2 = scalar_heat_flux_w_m2
+        external_heat_w = heat_flux_w_m2 * p.radiant_absorptivity * area_m2
+        convective_loss_w = (
+            p.convection_w_m2_k * area_m2 * (temperature_k - ambient)
+        )
+        radiation_loss_w = (
+            p.emissivity
+            * 5.670374419e-8
+            * area_m2
+            * (np.power(temperature_k, 4) - ambient**4)
+        )
+        temperature_k += (
+            np.asarray(conduction_energy_j, dtype=np.float64)
+            + (external_heat_w - convective_loss_w - radiation_loss_w)
+            * dt_seconds
+        ) / heat_capacities_j_k
+        for index, cell in enumerate(cells):
+            cell.temperature_k = float(temperature_k[index])
+
+        external_heat_total = 0.0
+        for index, cell in enumerate(cells):
+            cell_heat_flux_w_m2 = (
+                scalar_heat_flux_w_m2
+                if scalar_heat_flux_w_m2 is not None
+                else heat_fluxes[index]
+            )
+            external_heat_total += (
+                cell_heat_flux_w_m2
+                * p.radiant_absorptivity
+                * cell.external_area_m2
+                * cell.surface_exposure
+                * dt_seconds
+            )
+        return heat_capacities_j_k.tolist(), external_heat_total
+
+    def _numpy_finalize_state(self, ambient: float) -> None:
+        np = _require_numpy()
+        cells = self.cells
+        cell_count = len(cells)
+        temperature_k = np.fromiter(
+            (cell.temperature_k for cell in cells),
+            dtype=np.float64,
+            count=cell_count,
+        )
+        moisture_mass_kg = np.fromiter(
+            (cell.moisture_mass_kg for cell in cells),
+            dtype=np.float64,
+            count=cell_count,
+        )
+        dry_wood_mass_kg = np.fromiter(
+            (cell.dry_wood_mass_kg for cell in cells),
+            dtype=np.float64,
+            count=cell_count,
+        )
+        char_mass_kg = np.fromiter(
+            (cell.char_mass_kg for cell in cells),
+            dtype=np.float64,
+            count=cell_count,
+        )
+        ash_mass_kg = np.fromiter(
+            (cell.ash_mass_kg for cell in cells),
+            dtype=np.float64,
+            count=cell_count,
+        )
+        np.clip(temperature_k, ambient, self.parameters.max_temperature_k, out=temperature_k)
+        np.maximum(moisture_mass_kg, 0.0, out=moisture_mass_kg)
+        np.maximum(dry_wood_mass_kg, 0.0, out=dry_wood_mass_kg)
+        np.maximum(char_mass_kg, 0.0, out=char_mass_kg)
+        np.maximum(ash_mass_kg, 0.0, out=ash_mass_kg)
+
+        phase_code = np.full(cell_count, 1, dtype=np.int8)
+        phase_code[moisture_mass_kg > dry_wood_mass_kg * 0.01] = 0
+        phase_code[
+            (temperature_k >= self.parameters.pyrolysis_start_temperature_k)
+            & (dry_wood_mass_kg > self._mass_epsilon_kg)
+        ] = 2
+        phase_code[ash_mass_kg > dry_wood_mass_kg + char_mass_kg] = 4
+        phase_code[
+            (char_mass_kg > dry_wood_mass_kg) & (char_mass_kg > ash_mass_kg)
+        ] = 3
+        phase_code[
+            moisture_mass_kg + dry_wood_mass_kg + char_mass_kg + ash_mass_kg
+            <= self._mass_epsilon_kg
+        ] = 5
+        for index, cell in enumerate(cells):
+            cell.temperature_k = float(temperature_k[index])
+            cell.moisture_mass_kg = float(moisture_mass_kg[index])
+            cell.dry_wood_mass_kg = float(dry_wood_mass_kg[index])
+            cell.char_mass_kg = float(char_mass_kg[index])
+            cell.ash_mass_kg = float(ash_mass_kg[index])
+            cell.phase = _PHASE_NAMES[int(phase_code[index])]
+
     def step(
         self,
         dt_seconds: float,
         external_heat_flux_w_m2: float | list[float] | tuple[float, ...],
         ambient_temperature_k: float | None = None,
         timing_ms: dict[str, float] | None = None,
+        array_backend: str = PYTHON_ARRAY_BACKEND,
     ) -> CombustionStepResult:
         """Advance one explicit SI-unit thermal/reaction step.
 
@@ -307,6 +479,8 @@ class WoodThermalModel:
 
         timing_enabled = timing_ms is not None
         segment_started = time.perf_counter() if timing_enabled else 0.0
+        if array_backend not in (PYTHON_ARRAY_BACKEND, NUMPY_ARRAY_BACKEND):
+            raise ValueError(f"Unsupported wood-step array backend: {array_backend}")
         if not math.isfinite(dt_seconds) or dt_seconds <= 0.0:
             raise ValueError("dt_seconds must be finite and positive")
         scalar_heat_flux_w_m2 = None
@@ -365,31 +539,40 @@ class WoodThermalModel:
         external_heat_total = 0.0
         sigma = 5.670374419e-8
 
-        heat_capacities_j_k = [0.0] * len(cells)
-        for index, cell in enumerate(cells):
-            heat_capacity = self._heat_capacity_j_k(cell)
-            heat_capacities_j_k[index] = heat_capacity
-            area = cell.external_area_m2 * cell.surface_exposure
-            heat_flux_w_m2 = (
-                scalar_heat_flux_w_m2
-                if scalar_heat_flux_w_m2 is not None
-                else heat_fluxes[index]
+        if array_backend == NUMPY_ARRAY_BACKEND:
+            heat_capacities_j_k, external_heat_total = self._numpy_sensible_heat(
+                dt_seconds,
+                scalar_heat_flux_w_m2,
+                heat_fluxes,
+                ambient,
+                conduction_energy_j,
             )
-            external_heat_w = heat_flux_w_m2 * p.radiant_absorptivity * area
-            convective_loss_w = p.convection_w_m2_k * area * (
-                cell.temperature_k - ambient
-            )
-            radiation_loss_w = (
-                p.emissivity
-                * sigma
-                * area
-                * (cell.temperature_k**4 - ambient**4)
-            )
-            external_heat_total += external_heat_w * dt_seconds
-            net_energy_j = conduction_energy_j[index] + (
-                external_heat_w - convective_loss_w - radiation_loss_w
-            ) * dt_seconds
-            cell.temperature_k += net_energy_j / heat_capacity
+        else:
+            heat_capacities_j_k = [0.0] * len(cells)
+            for index, cell in enumerate(cells):
+                heat_capacity = self._heat_capacity_j_k(cell)
+                heat_capacities_j_k[index] = heat_capacity
+                area = cell.external_area_m2 * cell.surface_exposure
+                heat_flux_w_m2 = (
+                    scalar_heat_flux_w_m2
+                    if scalar_heat_flux_w_m2 is not None
+                    else heat_fluxes[index]
+                )
+                external_heat_w = heat_flux_w_m2 * p.radiant_absorptivity * area
+                convective_loss_w = p.convection_w_m2_k * area * (
+                    cell.temperature_k - ambient
+                )
+                radiation_loss_w = (
+                    p.emissivity
+                    * sigma
+                    * area
+                    * (cell.temperature_k**4 - ambient**4)
+                )
+                external_heat_total += external_heat_w * dt_seconds
+                net_energy_j = conduction_energy_j[index] + (
+                    external_heat_w - convective_loss_w - radiation_loss_w
+                ) * dt_seconds
+                cell.temperature_k += net_energy_j / heat_capacity
         if timing_enabled:
             timing_ms["sensible_heat"] = (
                 time.perf_counter() - segment_started
@@ -570,40 +753,43 @@ class WoodThermalModel:
             ) * 1000.0
             segment_started = time.perf_counter()
 
-        mass_epsilon = self._mass_epsilon_kg
-        pyrolysis_start_temperature_k = p.pyrolysis_start_temperature_k
-        for cell in cells:
-            cell.temperature_k = min(
-                p.max_temperature_k, max(ambient, cell.temperature_k)
-            )
-            cell.moisture_mass_kg = max(0.0, cell.moisture_mass_kg)
-            cell.dry_wood_mass_kg = max(0.0, cell.dry_wood_mass_kg)
-            cell.char_mass_kg = max(0.0, cell.char_mass_kg)
-            cell.ash_mass_kg = max(0.0, cell.ash_mass_kg)
-            if (
-                cell.moisture_mass_kg
-                + cell.dry_wood_mass_kg
-                + cell.char_mass_kg
-                + cell.ash_mass_kg
-                <= mass_epsilon
-            ):
-                cell.phase = DEPLETED
-            elif (
-                cell.char_mass_kg > cell.dry_wood_mass_kg
-                and cell.char_mass_kg > cell.ash_mass_kg
-            ):
-                cell.phase = CHAR
-            elif cell.ash_mass_kg > cell.dry_wood_mass_kg + cell.char_mass_kg:
-                cell.phase = ASH
-            elif (
-                cell.temperature_k >= pyrolysis_start_temperature_k
-                and cell.dry_wood_mass_kg > mass_epsilon
-            ):
-                cell.phase = PYROLYZING
-            elif cell.moisture_mass_kg > cell.dry_wood_mass_kg * 0.01:
-                cell.phase = WET_WOOD
-            else:
-                cell.phase = DRY_WOOD
+        if array_backend == NUMPY_ARRAY_BACKEND:
+            self._numpy_finalize_state(ambient)
+        else:
+            mass_epsilon = self._mass_epsilon_kg
+            pyrolysis_start_temperature_k = p.pyrolysis_start_temperature_k
+            for cell in cells:
+                cell.temperature_k = min(
+                    p.max_temperature_k, max(ambient, cell.temperature_k)
+                )
+                cell.moisture_mass_kg = max(0.0, cell.moisture_mass_kg)
+                cell.dry_wood_mass_kg = max(0.0, cell.dry_wood_mass_kg)
+                cell.char_mass_kg = max(0.0, cell.char_mass_kg)
+                cell.ash_mass_kg = max(0.0, cell.ash_mass_kg)
+                if (
+                    cell.moisture_mass_kg
+                    + cell.dry_wood_mass_kg
+                    + cell.char_mass_kg
+                    + cell.ash_mass_kg
+                    <= mass_epsilon
+                ):
+                    cell.phase = DEPLETED
+                elif (
+                    cell.char_mass_kg > cell.dry_wood_mass_kg
+                    and cell.char_mass_kg > cell.ash_mass_kg
+                ):
+                    cell.phase = CHAR
+                elif cell.ash_mass_kg > cell.dry_wood_mass_kg + cell.char_mass_kg:
+                    cell.phase = ASH
+                elif (
+                    cell.temperature_k >= pyrolysis_start_temperature_k
+                    and cell.dry_wood_mass_kg > mass_epsilon
+                ):
+                    cell.phase = PYROLYZING
+                elif cell.moisture_mass_kg > cell.dry_wood_mass_kg * 0.01:
+                    cell.phase = WET_WOOD
+                else:
+                    cell.phase = DRY_WOOD
         if timing_enabled:
             timing_ms["state_finalize"] = (
                 time.perf_counter() - segment_started

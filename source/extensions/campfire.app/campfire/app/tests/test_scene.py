@@ -195,6 +195,69 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(scalar.to_dict(), per_cell.to_dict())
         self.assertEqual(scalar.metrics(), per_cell.metrics())
 
+    async def test_numpy_backend_matches_python_for_complete_steps(self):
+        python_model = campfire.app.create_cylindrical_wood_model(
+            "python_backend",
+            radius_m=0.04,
+            length_m=0.20,
+            moisture_ratio_dry_basis=0.12,
+            axial_cells=4,
+            circumferential_cells=6,
+            radial_cells=3,
+        )
+        numpy_model = campfire.app.WoodThermalModel.from_dict(
+            python_model.to_dict()
+        )
+        heat_fluxes = [
+            150_000.0 if cell.surface_exposure > 0.0 else 0.0
+            for cell in python_model.cells
+        ]
+
+        for _ in range(400):
+            python_result = python_model.step(0.2, heat_fluxes)
+            numpy_result = numpy_model.step(
+                0.2,
+                heat_fluxes,
+                array_backend=campfire.app.NUMPY_ARRAY_BACKEND,
+            )
+            self.assertEqual(numpy_result, python_result)
+
+        self.assertEqual(numpy_model.to_dict(), python_model.to_dict())
+        self.assertEqual(numpy_model.metrics(), python_model.metrics())
+
+        arrhenius_python = campfire.app.create_cylindrical_wood_model(
+            "arrhenius_python",
+            radius_m=0.04,
+            length_m=0.20,
+            moisture_ratio_dry_basis=0.12,
+            initial_temperature_k=650.0,
+            axial_cells=2,
+            circumferential_cells=4,
+            radial_cells=2,
+            parameters=campfire.app.parallel_arrhenius_baseline_parameters(),
+        )
+        for cell in arrhenius_python.cells:
+            cell.dry_wood_specific_heat_j_kg_k = 1214.0
+            cell.dry_wood_specific_heat_model = (
+                campfire.app.USDA_FPL_NORMALIZED_DRY_WOOD_SPECIFIC_HEAT_MODEL
+            )
+        arrhenius_numpy = campfire.app.WoodThermalModel.from_dict(
+            arrhenius_python.to_dict()
+        )
+        for _ in range(120):
+            python_result = arrhenius_python.step(0.2, 70_000.0)
+            numpy_result = arrhenius_numpy.step(
+                0.2,
+                70_000.0,
+                array_backend=campfire.app.NUMPY_ARRAY_BACKEND,
+            )
+            self.assertEqual(numpy_result, python_result)
+        self.assertEqual(arrhenius_numpy.to_dict(), arrhenius_python.to_dict())
+        self.assertEqual(arrhenius_numpy.metrics(), arrhenius_python.metrics())
+
+        with self.assertRaisesRegex(ValueError, "Unsupported wood-step array backend"):
+            numpy_model.step(0.2, 0.0, array_backend="unknown")
+
     async def test_wood_step_internal_timing_is_opt_in_and_state_neutral(self):
         unprofiled = campfire.app.create_cylindrical_wood_model(
             "unprofiled",

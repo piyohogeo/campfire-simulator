@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6W complete wood-step NumPy prototype</title>
+  <desc id="desc">A controlled benchmark shows a 9.9 percent NumPy improvement with exact state, history, and metrics. Phase 3 outputs also match, but its timing is excluded because the Python debugger remained active. Python stays the default.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#101827"/><stop offset="1" stop-color="#07131a"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="12" stdDeviation="16" flood-opacity=".28"/></filter>
+  </defs>
+  <rect width="1200" height="680" rx="30" fill="url(#bg)"/>
+  <circle cx="1100" cy="45" r="130" fill="#38bdf8" opacity=".06"/>
+  <text x="64" y="68" fill="#38bdf8" font-family="Segoe UI,sans-serif" font-size="18" font-weight="700" letter-spacing="2">PHASE 6W · COMPLETE WOOD STEP</text>
+  <text x="64" y="112" fill="#f8fafc" font-family="Segoe UI,sans-serif" font-size="36" font-weight="750">NumPy helps — keep it opt-in</text>
+  <text x="64" y="143" fill="#94a3b8" font-family="Segoe UI,sans-serif" font-size="17">Conduction · sensible heat · evaporation · pyrolysis · char oxidation · final state</text>
+
+  <g filter="url(#shadow)"><rect x="64" y="184" width="670" height="320" rx="22" fill="#152133" stroke="#334155"/><rect x="766" y="184" width="370" height="320" rx="22" fill="#10231f" stroke="#166534"/></g>
+  <text x="96" y="226" fill="#cbd5e1" font-family="Segoe UI,sans-serif" font-size="15" font-weight="700" letter-spacing="1.5">CONTROLLED KIT PYTHON · 2 × 1,152 CELLS</text>
+  <text x="96" y="274" fill="#f8fafc" font-family="Segoe UI,sans-serif" font-size="20" font-weight="700">Python AoS</text>
+  <text x="690" y="274" text-anchor="end" fill="#f8fafc" font-family="Segoe UI,sans-serif" font-size="22" font-weight="750">3.1313 ms</text>
+  <rect x="96" y="292" width="420.0" height="32" rx="16" fill="#64748b"/>
+  <text x="96" y="368" fill="#f8fafc" font-family="Segoe UI,sans-serif" font-size="20" font-weight="700">NumPy roundtrip</text>
+  <text x="690" y="368" text-anchor="end" fill="#86efac" font-family="Segoe UI,sans-serif" font-size="22" font-weight="750">2.8228 ms</text>
+  <rect x="96" y="386" width="378.6" height="32" rx="16" fill="#22c55e"/>
+  <text x="96" y="458" fill="#86efac" font-family="Segoe UI,sans-serif" font-size="30" font-weight="750">−9.9%</text>
+  <text x="214" y="454" fill="#94a3b8" font-family="Segoe UI,sans-serif" font-size="16">400 steps × 3 runs · conversion included</text>
+
+  <text x="798" y="226" fill="#86efac" font-family="Segoe UI,sans-serif" font-size="15" font-weight="700" letter-spacing="1.5">EQUIVALENCE GATES</text>
+  <text x="798" y="278" fill="#f8fafc" font-family="Segoe UI,sans-serif" font-size="19" font-weight="700">✓ 400-step state SHA-256</text>
+  <text x="798" y="317" fill="#f8fafc" font-family="Segoe UI,sans-serif" font-size="19" font-weight="700">✓ every-step result history</text>
+  <text x="798" y="356" fill="#f8fafc" font-family="Segoe UI,sans-serif" font-size="19" font-weight="700">✓ Phase 3 dry / wet state</text>
+  <text x="798" y="395" fill="#f8fafc" font-family="Segoe UI,sans-serif" font-size="19" font-weight="700">✓ Phase 3 CSV / ignition / Flow</text>
+  <rect x="798" y="432" width="250" height="38" rx="19" fill="#17452a"/>
+  <text x="923" y="457" text-anchor="middle" fill="#86efac" font-family="Segoe UI,sans-serif" font-size="15" font-weight="750">EXACT OUTPUT MATCH</text>
+
+  <line x1="64" y1="550" x2="1136" y2="550" stroke="#273449"/>
+  <text x="64" y="594" fill="#fdba74" font-family="Segoe UI,sans-serif" font-size="16" font-weight="700">PHASE 3 TIMING EXCLUDED</text>
+  <text x="64" y="624" fill="#94a3b8" font-family="Segoe UI,sans-serif" font-size="15">debug extension remained active · 441.1 / 171.0 ms are relative diagnostics only</text>
+  <text x="1136" y="594" text-anchor="end" fill="#f8fafc" font-family="Segoe UI,sans-serif" font-size="24" font-weight="750">Default: Python</text>
+  <text x="1136" y="626" text-anchor="end" fill="#38bdf8" font-family="Segoe UI,sans-serif" font-size="16" font-weight="700">NumPy available by explicit selection</text>
+</svg>
