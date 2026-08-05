@@ -85,6 +85,12 @@ Phase 3のFlow入力、CSV、表示、着火判定はセルの`phase`を読ま�
 .\scripts\run_phase6ad_deferred_phase_benchmark.ps1
 ```
 
+Phase 3の毎step集計を監査し、Flow、CSV、薪表示が使う表面平均温度と4質量だけを同じセル順序で集計する経路を追加しました。完全な`metrics()` APIと最終summaryは維持しています。交互順序3組では集計中央値を`0.9889 → 0.3283 ms`、集計を含むstep loopを`9.9631 → 9.3976 ms`、シナリオを`11.9105 → 11.2295 s`へ短縮しました。
+
+```powershell
+.\scripts\run_phase6ae_runtime_metrics_benchmark.ps1
+```
+
 ```powershell
 .\scripts\run_phase3.bat -OutputDir .\artifacts\phase3\manual
 ```

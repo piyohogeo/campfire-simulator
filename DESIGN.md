@@ -1473,3 +1473,20 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 最終検証: 採用既定値でreleaseを再ビルドした。標準`repo.bat test`はstartup`3.2 s`、coverage通常35件`216.7 s`、coverage熱モデル4件`158.8 s`、coverageなし数値2件`19.4 s`、全41件をrunner`403.3 s`で成功させた。無指定の通常Phase 3も成功し、surface-boundary fast／条件付きclamp／deferred phaseの3既定値、最終refresh`0.524 ms`、状態SHA-256、着火`66.2 / 166.4 s`を確認した。シナリオは`11.8883 s`、RTX ready待機を含むrunnerは`187.442 s`だった。
 - 可視化と再現: `run_phase6ad_deferred_phase_benchmark.ps1`がprofile 2本と交互順序6本を取得し、`compare_phase3_deferred_phases.py`が依存境界、設定、同値性、時間、組別改善を検査して`phase3_deferred_phase_report.json/.svg`を生成する。SVGはEdgeの1200×680描画で文字切れがないことを確認した。実設備dry runは責任研究室の外部レビュー受領まで保留する。
 - 次: Phase 3は毎step二本の完全な`metrics()`を作るが、Flow／CSV／表示が使う値はその一部である。Phase 6AEではmetricsの下流フィールド依存と走査回数を監査し、最終専用集計とhot-loop投影を分けても出力が完全一致するか評価する。
+
+## 59. Phase 6AE metrics下流依存監査とhot-loop投影
+
+### 2026-08-06: 最終専用の集計を毎stepから外し、公開APIは完全なまま保つ
+
+- 依存監査: Phase 3の毎stepで`metrics()`から読む値は`surface_mean_temperature_k`、`moisture_mass_kg`、`dry_wood_mass_kg`、`char_mass_kg`、`ash_mass_kg`の5つだけだった。Flow入力は表面温度、CSVは5値、10 stepごとの薪表示は表面温度・炭・灰を使う。質量加重平均温度、最高温度、累積放出量、生成物収率、初期／計上質量、質量収支は最終summaryだけが使う。
+- API境界: `WoodThermalModel.runtime_metrics()`を追加し、同じセル順序、同じ表面判定、同じ加算順序で5値だけを返す。既存`metrics()`の返却項目と計算は変更しない。Phase 3は設定でfull／compactを切替え、ループ終了後のモデルsummaryでは従来どおり完全な`metrics()`を呼ぶ。
+- 単体同値性: 120 step後の小型円柱モデルで、compactの5値辞書をfull辞書の同名5項目と完全一致させた。これは近似、丸め、キャッシュではなく、不要な同時集計と最終専用辞書構築を外した投影である。
+- 正式測定: 採用済みsurface-boundary／条件付きclamp／deferred phase、Python backend、1,200 step、Flow更新、2画像capture、内部timer／診断無効、debug拡張なしで3組を交互順序に測定した。full→compact、compact→full、full→compactの順で、`wood_metrics`と`step_loop`は両経路共通の外側タイマーで測った。
+- 同値性: 非計測6本すべてで乾燥／湿潤状態SHA-256、CSV SHA-256`01aaf0c…7759`、着火`66.2 / 166.4 s`が完全一致した。Flow active block peakはfull`299`、compact`299 / 352`で、GPU側の非権威診断として採用ゲートから分離した。
+- 計測境界の修正: 最初の比較スクリプトは誤ってmetrics呼出し前に停止する`two_log_model_step`を採用ゲートへ使い、局所集計`66.80%`短縮とシナリオ`5.72%`短縮にもかかわらず不採用を返した。コード位置を照合し、同じ6本に既に記録済みの、metrics・Flow変換・CSV行生成を含む`step_loop`へゲートを修正した。再測定や都合のよいrun選別は行っていない。影響を受けない木材モデル区間の中央値`6.2655 → 6.4970 ms`は制御値の揺らぎとしてレポートに残す。
+- 性能結果: metrics平均中央値は`0.9889 → 0.3283 ms`（`66.80%`短縮）、p95は`1.1888 → 0.3917 ms`（`67.05%`短縮）した。step loop平均は`9.9631 → 9.3976 ms`（`5.68%`短縮）、p95は`16.3838 → 15.4466 ms`（`5.72%`短縮）、シナリオは`11.9105 → 11.2295 s`（`5.72%`短縮）だった。3/3組でstep loopとシナリオがともに改善した。
+- runner境界: viewport／RTX準備待機が各run約3分を占め、runner中央値は`187.607 → 193.817 s`と逆方向だった。変更対象より前の非決定的待機なので採否から分離し、モデル開始後のシナリオと内部step loopをend-to-end境界とする。
+- 判断: 完全同値、metrics・step loop・シナリオ中央値、3/3反復ゲートを満たしたため採用する。通常／benchmarkアプリと`run_phase3.ps1`はcompactを既定とし、`-RuntimeMetrics full`を比較用に残す。Phase 6AD以前の再現runnerは当時の条件を保つためfullを明示する。
+- 最終検証: 採用既定値でreleaseを再ビルドした。標準`repo.bat test`はstartup`3.3 s`、coverage通常35件`232.8 s`、coverage熱モデル4件`179.3 s`、coverageなし数値2件`22.2 s`、全41件をrunner`442.6 s`で成功させた。無指定の通常Phase 3も成功し、surface fast／条件付きclamp／deferred phase／compact metricsの4既定値、完全な最終収率・質量収支、着火`66.2 / 166.4 s`を確認した。metricsは`0.3311 ms`、step loopは`9.5884 ms`、シナリオは`11.4625 s`、RTX ready待機を含むrunnerは`201.135 s`だった。
+- 可視化と再現: `run_phase6ae_runtime_metrics_benchmark.ps1`が交互順序6本を取得し、`compare_phase3_runtime_metrics.py`が設定、依存フィールド、同値性、時間、組別改善を検査して`phase3_runtime_metrics_report.json/.svg`を生成する。SVGはEdgeの1200×680描画で文字切れがないことを確認した。実設備dry runは責任研究室の外部レビュー受領まで保留する。
+- 次: compact集計にも毎セルの表面判定が残り、薪表示は10 stepごとに初期乾燥質量を再走査する。Phase 6AFでは表面セル集合、表面セル数、表示用基準質量がモデル寿命中に不変かを監査し、ロード／編集契約を壊さず静的トポロジー情報として保持できるか評価する。

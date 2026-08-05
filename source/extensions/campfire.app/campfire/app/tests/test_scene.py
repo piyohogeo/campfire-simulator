@@ -367,6 +367,20 @@ class TestScene(omni.kit.test.AsyncTestCase):
                 )
         self.assertEqual(fast_state_clamp.to_dict(), original_clamp.to_dict())
         self.assertEqual(fast_state_clamp.metrics(), original_clamp.metrics())
+        full_metrics = fast_state_clamp.metrics()
+        self.assertEqual(
+            fast_state_clamp.runtime_metrics(),
+            {
+                name: full_metrics[name]
+                for name in (
+                    "surface_mean_temperature_k",
+                    "moisture_mass_kg",
+                    "dry_wood_mass_kg",
+                    "char_mass_kg",
+                    "ash_mass_kg",
+                )
+            },
+        )
 
         eager_phases = campfire.app.create_cylindrical_wood_model(
             "eager_phases",

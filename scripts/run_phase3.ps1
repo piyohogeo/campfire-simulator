@@ -9,7 +9,9 @@ param(
     [ValidateSet("original", "fast")]
     [string]$PythonStateClampPath = "fast",
     [ValidateSet("eager", "deferred")]
-    [string]$CellPhaseUpdates = "deferred"
+    [string]$CellPhaseUpdates = "deferred",
+    [ValidateSet("full", "compact")]
+    [string]$RuntimeMetrics = "compact"
 )
 
 $ErrorActionPreference = "Stop"
@@ -20,6 +22,7 @@ $app = Join-Path $releaseRoot "apps\campfire.simulator.benchmark.kit"
 $usePythonSurfaceBoundaryFastPath = $PythonSurfaceBoundaryPath -eq "fast"
 $usePythonStateClampFastPath = $PythonStateClampPath -eq "fast"
 $deferCellPhaseUpdates = $CellPhaseUpdates -eq "deferred"
+$compactRuntimeMetrics = $RuntimeMetrics -eq "compact"
 
 if ($CollectWoodStateDiagnostics.IsPresent -and $deferCellPhaseUpdates) {
     throw "Wood state diagnostics require eager cell phase updates."
@@ -53,6 +56,7 @@ $kitArgs = @(
     "--/exts/campfire.app/pythonSurfaceBoundaryFastPath=$($usePythonSurfaceBoundaryFastPath.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/pythonStateClampFastPath=$($usePythonStateClampFastPath.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/deferCellPhaseUpdates=$($deferCellPhaseUpdates.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/compactRuntimeMetrics=$($compactRuntimeMetrics.ToString().ToLowerInvariant())",
     "--/rtx/flow/enabled=true",
     "--/app/viewport/grid/enabled=false",
     "--/persistent/app/viewport/displayOptions=1152"
@@ -102,6 +106,9 @@ if ([bool]$result.scenario.python_state_clamp_fast_path -ne $usePythonStateClamp
 }
 if ([bool]$result.scenario.deferred_cell_phase_updates -ne $deferCellPhaseUpdates) {
     throw "Phase 3 used an unexpected cell-phase update setting."
+}
+if ([bool]$result.scenario.compact_runtime_metrics -ne $compactRuntimeMetrics) {
+    throw "Phase 3 used an unexpected runtime-metrics setting."
 }
 foreach ($name in @("dry", "wet")) {
     if ($result.scenario.zero_area_cell_count.$name -ne 792) {

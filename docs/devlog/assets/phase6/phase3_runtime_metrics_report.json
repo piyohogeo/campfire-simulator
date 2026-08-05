@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "phase": "phase6ae",
+  "status": "ok",
+  "paired_run_count": 3,
+  "environment": {
+    "application": "campfire.simulator.benchmark.kit",
+    "backend": "python",
+    "debugger_free_all_runs": true,
+    "adopted_surface_clamp_and_phase_paths": true,
+    "alternating_order": true
+  },
+  "dependency_audit": {
+    "hot_loop_fields": [
+      "surface_mean_temperature_k",
+      "moisture_mass_kg",
+      "dry_wood_mass_kg",
+      "char_mass_kg",
+      "ash_mass_kg"
+    ],
+    "hot_loop_consumers": [
+      "Flow source",
+      "CSV row",
+      "wood visual"
+    ],
+    "final_only_groups": [
+      "weighted and maximum temperature",
+      "emitted totals",
+      "product yields",
+      "mass accounting"
+    ],
+    "public_metrics_api_unchanged": true
+  },
+  "timings": {
+    "metrics_mean_ms": {
+      "full_median": 0.9889,
+      "compact_median": 0.3283,
+      "improvement_percent": 66.80149661239763
+    },
+    "metrics_p95_ms": {
+      "full_median": 1.1888,
+      "compact_median": 0.3917,
+      "improvement_percent": 67.05080753701212
+    },
+    "step_loop_mean_ms": {
+      "full_median": 9.9631,
+      "compact_median": 9.3976,
+      "improvement_percent": 5.675944234224288
+    },
+    "step_loop_p95_ms": {
+      "full_median": 16.3838,
+      "compact_median": 15.4466,
+      "improvement_percent": 5.720284671443747
+    },
+    "wood_model_control_mean_ms": {
+      "full_median": 6.2655,
+      "compact_median": 6.497,
+      "improvement_percent": -3.6948368047242774
+    },
+    "scenario_seconds": {
+      "full_median": 11.9105,
+      "compact_median": 11.2295,
+      "improvement_percent": 5.717644095545955
+    },
+    "runner_seconds": {
+      "full_median": 187.607,
+      "compact_median": 193.817,
+      "improvement_percent": -3.310111029972233
+    }
+  },
+  "paired_results": [
+    {
+      "pair": 1,
+      "metrics_improvement_percent": 69.13198350206224,
+      "step_loop_improvement_percent": 10.52117753079002,
+      "scenario_improvement_percent": 10.664386409457832
+    },
+    {
+      "pair": 2,
+      "metrics_improvement_percent": 66.69709880300263,
+      "step_loop_improvement_percent": 5.212620027434841,
+      "scenario_improvement_percent": 5.312196972890938
+    },
+    {
+      "pair": 3,
+      "metrics_improvement_percent": 67.93406815653756,
+      "step_loop_improvement_percent": 6.862321968062149,
+      "scenario_improvement_percent": 6.87628563032619
+    }
+  ],
+  "equivalence": {
+    "exact_authoritative_outputs_all_runs": true,
+    "dry_state_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+    "wet_state_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+    "metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759",
+    "ignition_seconds": {
+      "dry": 66.2,
+      "wet": 166.4
+    },
+    "flow_peak_full": [
+      299
+    ],
+    "flow_peak_compact": [
+      299,
+      352
+    ],
+    "flow_peak_is_not_authoritative": true
+  },
+  "decision": {
+    "adopt_compact_metrics": true,
+    "median_metrics_loop_and_scenario_improved": true,
+    "pairs_improving_loop_and_scenario": 3,
+    "required_improving_pairs": 2,
+    "reason": "compact aggregation improved metrics, step-loop, and scenario time in a majority of alternating pairs"
+  },
+  "runs": {
+    "full": [
+      "artifacts\\phase3\\phase6ae\\formal\\pair_1_full\\summary.json",
+      "artifacts\\phase3\\phase6ae\\formal\\pair_2_full\\summary.json",
+      "artifacts\\phase3\\phase6ae\\formal\\pair_3_full\\summary.json"
+    ],
+    "compact": [
+      "artifacts\\phase3\\phase6ae\\formal\\pair_1_compact\\summary.json",
+      "artifacts\\phase3\\phase6ae\\formal\\pair_2_compact\\summary.json",
+      "artifacts\\phase3\\phase6ae\\formal\\pair_3_compact\\summary.json"
+    ]
+  }
+}

@@ -22,11 +22,11 @@ $fastSummaries = @()
 if (-not $OriginalProfileSummary -and -not $FastProfileSummary) {
     $originalProfileOutput = Join-Path $OutputDir "profile_original"
     $fastProfileOutput = Join-Path $OutputDir "profile_fast"
-    & $phase3Runner -OutputDir $originalProfileOutput -ArrayBackend python -ProfileWoodInternals -PythonSurfaceBoundaryPath original -PythonStateClampPath original -CellPhaseUpdates eager
+    & $phase3Runner -OutputDir $originalProfileOutput -ArrayBackend python -ProfileWoodInternals -PythonSurfaceBoundaryPath original -PythonStateClampPath original -CellPhaseUpdates eager -RuntimeMetrics full
     if ($LASTEXITCODE -ne 0) {
         exit $LASTEXITCODE
     }
-    & $phase3Runner -OutputDir $fastProfileOutput -ArrayBackend python -ProfileWoodInternals -PythonSurfaceBoundaryPath fast -PythonStateClampPath original -CellPhaseUpdates eager
+    & $phase3Runner -OutputDir $fastProfileOutput -ArrayBackend python -ProfileWoodInternals -PythonSurfaceBoundaryPath fast -PythonStateClampPath original -CellPhaseUpdates eager -RuntimeMetrics full
     if ($LASTEXITCODE -ne 0) {
         exit $LASTEXITCODE
     }
@@ -42,10 +42,10 @@ for ($pair = 1; $pair -le $PairCount; $pair++) {
     foreach ($pathName in $paths) {
         $runOutput = Join-Path $OutputDir ("pair_{0}_{1}" -f $pair, $pathName)
         if ($pathName -eq "fast") {
-            & $phase3Runner -OutputDir $runOutput -ArrayBackend python -PythonSurfaceBoundaryPath fast -PythonStateClampPath original -CellPhaseUpdates eager
+            & $phase3Runner -OutputDir $runOutput -ArrayBackend python -PythonSurfaceBoundaryPath fast -PythonStateClampPath original -CellPhaseUpdates eager -RuntimeMetrics full
         }
         else {
-            & $phase3Runner -OutputDir $runOutput -ArrayBackend python -PythonSurfaceBoundaryPath original -PythonStateClampPath original -CellPhaseUpdates eager
+            & $phase3Runner -OutputDir $runOutput -ArrayBackend python -PythonSurfaceBoundaryPath original -PythonStateClampPath original -CellPhaseUpdates eager -RuntimeMetrics full
         }
         if ($LASTEXITCODE -ne 0) {
             exit $LASTEXITCODE

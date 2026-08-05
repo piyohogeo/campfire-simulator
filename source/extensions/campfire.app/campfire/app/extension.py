@@ -1031,6 +1031,9 @@ class CampfireAppExtension(omni.ext.IExt):
         defer_cell_phase_updates = settings.get_as_bool(
             f"{SETTINGS_ROOT}/deferCellPhaseUpdates"
         )
+        compact_runtime_metrics = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/compactRuntimeMetrics"
+        )
         if array_backend not in (PYTHON_ARRAY_BACKEND, NUMPY_ARRAY_BACKEND):
             raise ValueError(f"Unsupported wood-step array backend: {array_backend}")
         if collect_wood_state_diagnostics and defer_cell_phase_updates:
@@ -1136,8 +1139,12 @@ class CampfireAppExtension(omni.ext.IExt):
                         ignition_seconds[name] = result.elapsed_seconds
 
                 metrics_started = time.perf_counter()
-                dry_metrics = dry_model.metrics()
-                wet_metrics = wet_model.metrics()
+                if compact_runtime_metrics:
+                    dry_metrics = dry_model.runtime_metrics()
+                    wet_metrics = wet_model.runtime_metrics()
+                else:
+                    dry_metrics = dry_model.metrics()
+                    wet_metrics = wet_model.metrics()
                 metrics_times_ms.append(
                     (time.perf_counter() - metrics_started) * 1000.0
                 )
@@ -1383,6 +1390,7 @@ class CampfireAppExtension(omni.ext.IExt):
                     ),
                     "python_state_clamp_fast_path": python_state_clamp_fast_path,
                     "deferred_cell_phase_updates": defer_cell_phase_updates,
+                    "compact_runtime_metrics": compact_runtime_metrics,
                     "final_phase_refresh_seconds": round(
                         final_phase_refresh_seconds, 6
                     ),

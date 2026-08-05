@@ -979,6 +979,33 @@ class WoodThermalModel:
     def mass_balance_error_kg(self) -> float:
         return self.accounted_mass_kg - self.initial_mass_kg
 
+    def runtime_metrics(self) -> dict:
+        """Return the aggregate fields consumed inside the Phase 3 step loop."""
+
+        surface_temperature_sum = 0.0
+        surface_cell_count = 0
+        moisture_mass_kg = 0.0
+        dry_wood_mass_kg = 0.0
+        char_mass_kg = 0.0
+        ash_mass_kg = 0.0
+        for cell in self.cells:
+            if cell.surface_exposure > 0.0:
+                surface_temperature_sum += cell.temperature_k
+                surface_cell_count += 1
+            moisture_mass_kg += cell.moisture_mass_kg
+            dry_wood_mass_kg += cell.dry_wood_mass_kg
+            char_mass_kg += cell.char_mass_kg
+            ash_mass_kg += cell.ash_mass_kg
+        return {
+            "surface_mean_temperature_k": (
+                surface_temperature_sum / surface_cell_count
+            ),
+            "moisture_mass_kg": moisture_mass_kg,
+            "dry_wood_mass_kg": dry_wood_mass_kg,
+            "char_mass_kg": char_mass_kg,
+            "ash_mass_kg": ash_mass_kg,
+        }
+
     def metrics(self) -> dict:
         total_mass = 0.0
         weighted_temperature_sum = 0.0

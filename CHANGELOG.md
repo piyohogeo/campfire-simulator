@@ -59,6 +59,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - 乾燥／湿潤薪ごとの温度・質量clamp、相割当、相遷移を通常無効で集計し、性能値から分離するPhase 6AB状態分岐診断とJSON／SVGレポート。
 - 温度・4質量の安全境界とNaN／負のゼロ処理を維持した比較分岐、profileと交互順序3組の採用ゲート、20.40%の木材step短縮を含むPhase 6AC。
 - 相状態の下流依存監査、公開APIの逐次更新維持、Phase 3最終一回更新、完全な永続出力同値性、交互順序3組の採用ゲートを含むPhase 6AD。
+- metrics下流フィールド監査、5値のhot-loop集計、完全な公開metricsと最終要約の維持、交互順序3組の採用ゲートを含むPhase 6AE。
 - Thurner–Mannの公開A/E組をSI単位で固定したPhase 6E一次Arrhenius熱分解、48候補探索、温度–速度曲線SVG。
 
 ### Changed
