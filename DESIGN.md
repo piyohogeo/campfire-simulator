@@ -2,7 +2,7 @@
 
 ## 1. 文書情報
 
-- 文書状態: 実装中・Phase 6T CPU木材step内部計測完了
+- 文書状態: 実装中・Phase 6U 配列バックエンド転送境界評価完了
 - 初版日: 2026-08-04
 - 想定開発環境: Windows 11、NVIDIA RTX 3090（24 GB）、VS Code + Codex
 - 開発リポジトリ（作成済み）: `C:\Users\junic\src\campfire-simulator`
@@ -1324,3 +1324,17 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 可視化と検証: `wood_step_internal_report.json/.svg`は前後各3 profile、通常経路の基準1 runと最適化後3 run、区間別中央値と比率、CPU限定境界を保持する。Edgeの1200×680描画で文字切れを確認した。`python -m py_compile`と`git diff --check`は成功し、`\.\repo.bat test`は`40 / 40`成功した。呼出し側タイムアウト後に2組のKitが並行したため完了ログは`645.781 s`であり、これは性能値として採用しない。
 - 判断: 現状の最大候補は顕熱更新`40.2%`と状態確定`33.2%`である。ただし1本1,152セルの状態を毎step CPU–GPU往復させる移植は、約5 msの全CPU計算より転送・同期が支配する可能性がある。次はPython配列、NumPy、Warpの小規模比較を、変換・転送込みで測定し、常駐状態を設計できない場合はCPU経路を維持する。
 - 次: 顕熱と状態確定を対象に、同一SHA-256を合格条件とする転送込みプロトタイプを作る。約199秒のviewport準備待機は別課題として扱い、GPU利用率を論じる場合はengine別時系列またはKit profilerを採取する。実設備dry runは責任研究室の外部レビュー受領まで保留する。
+
+## 49. Phase 6U 配列バックエンド転送境界評価
+
+### 2026-08-05: GPUカーネルだけでなく、状態の往復を時間へ含める
+
+- 状態: Phase 6Tで合計約73%を占めた顕熱更新と状態確定だけを独立し、2,304セル、`dt=0.2 s`、`150 kW/m²`、400 stepを3 run測定した。Pythonの`WoodCellState`走査を基準に、NumPyの毎step AoS変換と配列常駐、Warp CUDAの毎step AoS/H2D/kernel/D2H往復とGPU常駐を同じfloat64式で比較する。伝導、蒸発、熱分解、炭酸化、メトリクス、Flow／USDは明示的に除外した。
+- 実行環境: Kit同梱Python 3.12、NumPy`2.3.1`、Warp`1.14.0`、CUDA Toolkit`12.9`、Driver API`13.1`、RTX 3090 `cuda:0`を使用した。Warpコンパイルはwarmupで除外し、カーネルキャッシュはリポジトリのignored成果物領域へ置いた。GPUカーネルの実行は確認したが、GPU利用率や占有率は採取していない。
+- 変換込み結果: 再現入口からのPython AoS中央値は`3.9524 ms/step`。NumPy AoS変換＋演算＋書戻しは`3.0668 ms/step`で`22.4%`短縮した。Warp AoS変換＋H2D＋kernel＋D2H＋書戻しは`4.1594 ms/step`でPythonより`5.2%`遅く、毎step CPU–GPU往復案を棄却する。
+- 常駐下限: 400 stepの前後だけ境界を越えるNumPyは`0.06417 ms/step`、Warp最終syncは`0.07060 ms/step`、Warp各step syncは`0.08639 ms/step`、5 stepごとのsyncは`0.07061 ms/step`だった。2,304セルの二つの局所区間ではGPU常駐でもNumPyを明確に上回らず、常駐値は他の物理とアダプターを除くアーキテクチャ下限である。
+- 数値同一性: 全6候補は400 step後の温度最大誤差`0 K`、質量最大誤差`0 kg`、相不一致`0`で、Python基準の状態SHA-256`4411b4dd…2fbdd`と完全一致した。これは隔離した二区間の一致であり、全`WoodThermalModel.step()`の同一性をまだ保証しない。
+- 可視化と再現: `wood_array_backend_report.json/.svg`へ3 runのmin／median／max、各境界、採否判断を保存した。Edgeの1200×680描画で文字切れがないことを確認した。`scripts/run_phase6u_benchmark.ps1`がKit Python、CUDAベンチ、JSON検査、SVG生成を一括実行する。
+- 検証: 全40テストはcoverageなしで`31.281 s`、NIST校正単体は`23.719 s`で成功した。標準`\.\repo.bat test`はcoverage付き同テストがランナー内蔵`300 s`上限へ達して停止した。これはPhase 6Uの独立スクリプトによる数値失敗ではないが、標準検証経路が完走しない既知問題として残し、次の本番変更前にcoverage対象・重い校正テストの分離を設計する。
+- 判断: 次の本番候補は、既存AoSを維持して顕熱・状態確定だけを毎step NumPyへ往復する限定試作である。効果の上限は隔離区間で約`0.89 ms/step`であり、全stepで状態SHA-256と性能が改善した場合だけ採用する。Warpは毎step往復では採用せず、伝導・反応・メトリクス・Flow境界までGPU常駐へ再設計できる将来案として保留する。
+- 次: NumPy限定試作を`WoodThermalModel.step()`の選択可能な経路として実装し、既存Python経路との400 step SHA-256一致、全40テスト、Phase 3 end-to-endを測る。約199秒のviewport準備待機は別課題のまま維持し、実設備dry runは責任研究室の外部レビュー受領まで保留する。

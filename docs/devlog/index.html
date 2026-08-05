@@ -36,7 +36,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>40 / 40 passed</strong></div>
-        <div><span>次の焦点</span><strong>配列化の転送込み比較</strong></div>
+        <div><span>次の焦点</span><strong>NumPy限定試作</strong></div>
       </div>
     </div>
   </header>
@@ -59,9 +59,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6T · CPU wood-step internals measured</p>
+            <p class="section-kicker">Phase 6U · Python, NumPy, and Warp transfer boundary</p>
             <h2>「それらしい」から、<br>誤差を示せるモデルへ。</h2>
-            <p>責任研究室による実環境検証は保留し、CPU木材stepの中を8区間へ分けました。顕熱更新と状態確定が内部時間の約75%を占めます。相判定と定数比熱経路の重複を除き、非計測step平均を6.4%短縮しました。RTX 3090はアクティブですが、これはCPU単体結果でありGPU利用率を測った値ではありません。</p>
+            <p>責任研究室による実環境検証は保留し、支配区間の顕熱更新と状態確定をPython、NumPy、Warp CUDAで比較しました。変換込みNumPyは22.4%速く、毎step GPU往復は5.2%遅い結果です。GPU常駐は非常に速い下限ですが、このセル数ではNumPy常駐を上回らず、他の物理やFlowもまだ含みません。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -149,6 +149,13 @@
             <figcaption><div><strong>CPU wood-step internals</strong><span>3 + 3 profiles · internal −9.5% · production step −6.4% · state SHA-256 identical</span></div></figcaption>
           </figure>
 
+          <figure id="phase6u-array-backends" class="capture-card">
+            <a href="assets/phase6/wood_array_backend_report.svg" aria-label="Phase 6U 配列バックエンド転送境界レポートを開く">
+              <img src="assets/phase6/wood_array_backend_report.svg" width="1200" height="680" alt="Python AoS、NumPy変換・常駐、Warp CUDA転送・常駐の一step時間と、NumPy試作採用・毎step Warp往復棄却を示すSVGグラフ">
+            </a>
+            <figcaption><div><strong>Array backend transfer boundary</strong><span>NumPy roundtrip −22.4% · Warp roundtrip +5.2% · exact isolated SHA-256</span></div></figcaption>
+          </figure>
+
           <figure class="capture-card">
             <a href="assets/phase6/replicate_holdout_report.svg" aria-label="Phase 6C 合板反復ホールドアウトレポートを開く">
               <img src="assets/phase6/replicate_holdout_report.svg" width="1200" height="680" alt="未使用の合板SAMP.3について、着火時刻と平均質量減少速度の観測・初期・SAMP.1/2選定値を並べたSVGグラフ">
@@ -185,8 +192,8 @@
           </figure>
 
           <div class="story-grid">
-            <section class="story-card"><span class="card-index">01</span><h3>8区間を3回ずつ測る</h3><ul><li>2,304 cells・400 step</li><li>顕熱2.259 → 2.102 ms</li><li>状態確定2.099 → 1.735 ms</li><li>内部合計 −9.5%</li></ul></section>
-            <section class="story-card warm"><span class="card-index">02</span><h3>状態を変えずに速くする</h3><ul><li>通常step −6.4%</li><li>JSON SHA-256完全一致</li><li>発火66.2秒・質量保存</li><li>GPU利用率は未採取</li></ul></section>
+            <section class="story-card"><span class="card-index">01</span><h3>転送込みで比べる</h3><ul><li>2,304 cells・400 step × 3</li><li>Python 3.952 ms</li><li>NumPy往復3.067 ms</li><li>Warp往復4.159 ms</li></ul></section>
+            <section class="story-card warm"><span class="card-index">02</span><h3>速い下限を本番値にしない</h3><ul><li>常駐NumPy 0.0642 ms</li><li>常駐Warp 0.0706 ms</li><li>伝導・反応・Flowは除外</li><li>GPU利用率は未採取</li></ul></section>
           </div>
 
           <section class="verification" aria-labelledby="phase6-verification-title">
@@ -205,6 +212,7 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>CPU performance</strong><small>step −14.5% · metrics −59.0% · ignition unchanged</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Time anatomy</strong><small>2 runs · 10 exclusive segments · exact sample counts</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Step internals</strong><small>8 segments · 3 + 3 profiles · state SHA-256 identical</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Array boundary</strong><small>7 paths · 3 runs · exact isolated SHA-256</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>
             </div>
           </section>
@@ -246,6 +254,9 @@
               <div><dt>Step internal total</dt><dd>5.778 → 5.231 ms</dd></div>
               <div><dt>Unprofiled step mean</dt><dd>5.652 → 5.292 ms</dd></div>
               <div><dt>Largest internal shares</dt><dd>40.2% sensible / 33.2% finalize</dd></div>
+              <div><dt>NumPy AoS roundtrip</dt><dd>3.952 → 3.067 ms</dd></div>
+              <div><dt>Warp AoS roundtrip</dt><dd>4.159 ms · 5.2% slower</dd></div>
+              <div><dt>Resident lower bound</dt><dd>NumPy 0.0642 / Warp 0.0706 ms</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
@@ -261,8 +272,8 @@
           </section>
 
           <div class="notes-grid">
-            <section class="note caution"><p class="note-label">Known limits</p><h3>GPU利用率を測った値ではない</h3><p>RTX activeとFlow active blockは確認しましたが、GPU engine別時系列やカーネル占有率は未採取です。capture-resolution待機とログのRTX readyは近接しますが、APIイベントとして直接結び付けてはいません。実環境検証も0/24件です。</p></section>
-            <section class="note next"><p class="note-label">What comes next</p><h3>転送を含めて配列化を比べる</h3><p>支配区間の顕熱と状態確定をPython配列・NumPy・Warp候補で比較します。状態変換、CPU–GPU転送、同期を時間へ含め、GPU常駐設計が成立しない場合はCPU経路を維持します。約199秒のviewport準備待機は別経路で調査します。</p></section>
+            <section class="note caution"><p class="note-label">Known limits</p><h3>GPU利用率とcoverage時間は未解決</h3><p>Warp CUDAカーネルはRTX 3090で実行しましたが、GPU engine別時系列やカーネル占有率は未採取です。全40テストはcoverageなし31.281秒で成功しますが、標準coverage付き経路はNIST校正テストが300秒上限へ達します。実環境検証も0/24件です。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>NumPyを全stepで限定試作する</h3><p>有利だったAoS往復NumPyを顕熱と状態確定だけへ選択可能に実装し、伝導・蒸発・反応込みでSHA-256一致と性能改善を確認します。毎step Warp往復は採用せず、GPU常駐はFlowやメトリクスまで再設計できる場合だけ再検討します。</p></section>
           </div>
         </div>
       </article>

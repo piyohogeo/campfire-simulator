@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#15120f"/>
+  <style>
+    text { font-family: "Segoe UI", Arial, sans-serif; fill: #fff7e9; }
+    .title { font-size: 30px; font-weight: 700; }
+    .subtitle { font-size: 14px; fill: #d7b982; }
+    .label { font-size: 14px; font-weight: 700; }
+    .detail { font-size: 10px; fill: #a99c89; }
+    .value { font-size: 13px; fill: #ded2c0; }
+    .heading { font-size: 16px; font-weight: 700; }
+    .big { font-size: 24px; font-weight: 700; }
+    .good { fill: #82d8aa; }
+    .bad { fill: #ef9a81; }
+    .small { font-size: 12px; fill: #bcae9a; }
+  </style>
+  <text x="56" y="48" class="title">Phase 6U · Array backend transfer boundary</text>
+  <text x="56" y="76" class="subtitle">2,304 cells · 400 steps × 3 runs · sensible heat + state finalize only · RTX 3090</text>
+  <rect x="52" y="100" width="832" height="438" rx="10" fill="#1b211d" stroke="#4f966b"/>
+  <text x="72" y="143" class="label">Python AoS</text>
+  <text x="72" y="160" class="detail">production-shaped CPU baseline</text>
+  <rect x="360" y="128" width="332.58" height="18" rx="4" fill="#d7b982"/>
+  <text x="728" y="143" class="value">3.9524 ms/step</text><text x="72" y="197" class="label">NumPy roundtrip</text>
+  <text x="72" y="214" class="detail">AoS convert + compute + writeback</text>
+  <rect x="360" y="182" width="258.06" height="18" rx="4" fill="#58b889"/>
+  <text x="728" y="197" class="value">3.0668 ms/step</text><text x="72" y="251" class="label">Warp roundtrip</text>
+  <text x="72" y="268" class="detail">AoS + H2D + kernel + D2H</text>
+  <rect x="360" y="236" width="350.00" height="18" rx="4" fill="#cf765f"/>
+  <text x="728" y="251" class="value">4.1594 ms/step</text><text x="72" y="305" class="label">NumPy resident</text>
+  <text x="72" y="322" class="detail">one boundary crossing per 400 steps</text>
+  <rect x="360" y="290" width="5.40" height="18" rx="4" fill="#699fd1"/>
+  <text x="728" y="305" class="value">0.0642 ms/step</text><text x="72" y="359" class="label">Warp resident · sync/step</text>
+  <text x="72" y="376" class="detail">GPU state resident, CPU waits every step</text>
+  <rect x="360" y="344" width="7.27" height="18" rx="4" fill="#699fd1"/>
+  <text x="728" y="359" class="value">0.0864 ms/step</text><text x="72" y="413" class="label">Warp resident · sync/5</text>
+  <text x="72" y="430" class="detail">GPU state resident, CPU waits every 5 steps</text>
+  <rect x="360" y="398" width="5.94" height="18" rx="4" fill="#699fd1"/>
+  <text x="728" y="413" class="value">0.0706 ms/step</text><text x="72" y="467" class="label">Warp resident · final sync</text>
+  <text x="72" y="484" class="detail">architectural lower bound</text>
+  <rect x="360" y="452" width="5.94" height="18" rx="4" fill="#699fd1"/>
+  <text x="728" y="467" class="value">0.0706 ms/step</text>
+  <rect x="908" y="100" width="238" height="438" rx="10" fill="#211817" stroke="#a77a38"/>
+  <text x="930" y="136" class="heading">DECISION</text>
+  <text x="930" y="178" class="small">Prototype next</text>
+  <text x="930" y="207" class="big good">NumPy</text>
+  <text x="930" y="232" class="small">AoS roundtrip −22.4%</text>
+  <text x="930" y="278" class="small">Reject now</text>
+  <text x="930" y="307" class="big bad">Warp roundtrip</text>
+  <text x="930" y="332" class="small">per-step transfer +5.2%</text>
+  <text x="930" y="380" class="small">Resident GPU is a lower bound</text>
+  <text x="930" y="404" class="small">not a production result</text>
+  <text x="930" y="448" class="small">GPU kernels executed</text>
+  <text x="930" y="472" class="small">utilization not sampled</text>
+  <text x="930" y="506" class="small">No production code changed</text>
+  <rect x="52" y="564" width="1094" height="66" rx="9" fill="#1c2820" stroke="#58b889" stroke-width="2"/>
+  <text x="76" y="592" class="heading">EXACT ISOLATED STATE MATCH · all six candidates match Python SHA-256</text>
+  <text x="76" y="616" class="small">Float64 · zero temperature/mass error · zero phase mismatch · Warp compilation excluded.</text>
+  <text x="56" y="658" class="small">Excluded: conduction, evaporation, pyrolysis, char oxidation, metrics, Flow/USD. Resident paths include one initial upload and final download.</text>
+</svg>

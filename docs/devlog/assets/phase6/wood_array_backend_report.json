@@ -1,0 +1,142 @@
+{
+  "benchmark": "isolated_sensible_heat_and_state_finalize",
+  "boundary": {
+    "excluded_segments": [
+      "conduction",
+      "evaporation",
+      "pyrolysis",
+      "char_oxidation",
+      "metrics",
+      "Flow/USD adapters"
+    ],
+    "included_segments": [
+      "sensible_heat",
+      "state_finalize"
+    ],
+    "production_model_changed": false,
+    "resident_includes_initial_upload_and_final_download": true,
+    "roundtrip_includes_aos_conversion_and_device_transfer": true,
+    "warp_compilation_excluded": true
+  },
+  "candidate_comparisons": {
+    "numpy_aos_roundtrip": {
+      "exact_state_sha256_match": true,
+      "max_mass_error_kg": 0.0,
+      "max_temperature_error_k": 0.0,
+      "phase_mismatch_count": 0,
+      "within_candidate_tolerance": true
+    },
+    "numpy_resident": {
+      "exact_state_sha256_match": true,
+      "max_mass_error_kg": 0.0,
+      "max_temperature_error_k": 0.0,
+      "phase_mismatch_count": 0,
+      "within_candidate_tolerance": true
+    },
+    "warp_aos_roundtrip": {
+      "exact_state_sha256_match": true,
+      "max_mass_error_kg": 0.0,
+      "max_temperature_error_k": 0.0,
+      "phase_mismatch_count": 0,
+      "within_candidate_tolerance": true
+    },
+    "warp_resident_final_sync": {
+      "exact_state_sha256_match": true,
+      "max_mass_error_kg": 0.0,
+      "max_temperature_error_k": 0.0,
+      "phase_mismatch_count": 0,
+      "within_candidate_tolerance": true
+    },
+    "warp_resident_sync_each_step": {
+      "exact_state_sha256_match": true,
+      "max_mass_error_kg": 0.0,
+      "max_temperature_error_k": 0.0,
+      "phase_mismatch_count": 0,
+      "within_candidate_tolerance": true
+    },
+    "warp_resident_sync_every_5_steps": {
+      "exact_state_sha256_match": true,
+      "max_mass_error_kg": 0.0,
+      "max_temperature_error_k": 0.0,
+      "phase_mismatch_count": 0,
+      "within_candidate_tolerance": true
+    }
+  },
+  "cell_count": 2304,
+  "decision": {
+    "gpu_utilization_measured": false,
+    "numpy_roundtrip_improvement_fraction": 0.22405871185455065,
+    "prototype_next": "numpy_aos_roundtrip",
+    "reject_now": "warp_aos_roundtrip",
+    "resident_results_are_architectural_lower_bounds": true,
+    "warp_roundtrip_regression_fraction": 0.052373129781142495
+  },
+  "dt_seconds": 0.2,
+  "external_heat_flux_w_m2": 150000.0,
+  "measurements": {
+    "numpy_aos_roundtrip": {
+      "per_step_ms_median": 3.066848000162281,
+      "relative_to_python": 0.7759412881454494,
+      "run_count": 3,
+      "total_ms_max": 1343.818600056693,
+      "total_ms_median": 1226.7392000649124,
+      "total_ms_min": 1188.071999931708
+    },
+    "numpy_resident": {
+      "per_step_ms_median": 0.06417024997062981,
+      "relative_to_python": 0.01623567467973347,
+      "run_count": 3,
+      "total_ms_max": 25.748400017619133,
+      "total_ms_median": 25.668099988251925,
+      "total_ms_min": 23.063400061801076
+    },
+    "python_aos": {
+      "per_step_ms_median": 3.952422750298865,
+      "relative_to_python": 1.0,
+      "run_count": 3,
+      "total_ms_max": 1584.57350009121,
+      "total_ms_median": 1580.969100119546,
+      "total_ms_min": 1515.1084000244737
+    },
+    "warp_aos_roundtrip": {
+      "per_step_ms_median": 4.159423499950208,
+      "relative_to_python": 1.0523731297811425,
+      "run_count": 3,
+      "total_ms_max": 1782.3115000501275,
+      "total_ms_median": 1663.769399980083,
+      "total_ms_min": 1587.397700175643
+    },
+    "warp_resident_final_sync": {
+      "per_step_ms_median": 0.07059975003357977,
+      "relative_to_python": 0.01786239845629907,
+      "run_count": 3,
+      "total_ms_max": 31.8811999168247,
+      "total_ms_median": 28.239900013431907,
+      "total_ms_min": 26.814499869942665
+    },
+    "warp_resident_sync_each_step": {
+      "per_step_ms_median": 0.08639325038529932,
+      "relative_to_python": 0.021858302070234426,
+      "run_count": 3,
+      "total_ms_max": 39.16169982403517,
+      "total_ms_median": 34.55730015411973,
+      "total_ms_min": 29.10599997267127
+    },
+    "warp_resident_sync_every_5_steps": {
+      "per_step_ms_median": 0.07061099982820451,
+      "relative_to_python": 0.01786524475977809,
+      "run_count": 3,
+      "total_ms_max": 37.56780014373362,
+      "total_ms_median": 28.244399931281805,
+      "total_ms_min": 24.958099937066436
+    }
+  },
+  "numpy_version": "2.3.1",
+  "reference_state_sha256": "4411b4ddbf6fdc200bf69dbbc1ad1db62248e80b741d8251aea7dd831782fbdd",
+  "runs": 3,
+  "schema_version": 1,
+  "steps": 400,
+  "warp_device": "cuda:0",
+  "warp_device_name": "NVIDIA GeForce RTX 3090",
+  "warp_version": "1.14.0"
+}
