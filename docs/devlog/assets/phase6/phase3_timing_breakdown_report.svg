@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#15120f"/>
+  <style>
+    text { font-family: "Segoe UI", Arial, sans-serif; fill: #fff7e9; }
+    .title { font-size: 30px; font-weight: 700; }
+    .subtitle { font-size: 15px; fill: #d7b982; }
+    .heading { font-size: 17px; font-weight: 700; }
+    .label { font-size: 14px; font-weight: 600; }
+    .small { font-size: 12px; fill: #bcae9a; }
+    .value { font-size: 20px; font-weight: 700; fill: #7ed7a7; }
+  </style>
+  <text x="60" y="50" class="title">Phase 6S · Phase 3 time anatomy</text>
+  <text x="60" y="78" class="subtitle">2 repeated runs · RTX 3090 active · same 1,200-step physics scenario</text>
+
+  <rect x="60" y="102" width="1080" height="142" rx="10" fill="#1c1a18" stroke="#5b5049"/>
+  <text x="82" y="132" class="heading">Runner wall · 256.73 s median</text>
+  <rect x="82.00" y="150" width="803.70" height="34" fill="#a77a38"/><rect x="885.70" y="150" width="194.61" height="34" fill="#58b889"/><rect x="1080.31" y="150" width="37.69" height="34" fill="#665c57"/>
+  <text x="82" y="207" class="small">Capture / RTX readiness 199.17 s (77.6%)</text>
+  <text x="430" y="207" class="small">Scenario 48.23 s</text>
+  <text x="690" y="207" class="small">Other startup / shutdown 9.34 s</text>
+
+  <rect x="60" y="264" width="1080" height="278" rx="10" fill="#1b211d" stroke="#4f966b"/>
+  <text x="82" y="296" class="heading">Scenario breakdown · wood model owns 82.7%</text>
+  <rect x="82.00" y="320" width="856.99" height="34" fill="#e57638"/><rect x="938.99" y="320" width="51.01" height="34" fill="#d7b982"/><rect x="990.00" y="320" width="35.16" height="34" fill="#8d7bd1"/><rect x="1025.16" y="320" width="41.52" height="34" fill="#58b889"/><rect x="1066.68" y="320" width="27.34" height="34" fill="#5b8ec9"/><rect x="1094.03" y="320" width="23.97" height="34" fill="#665c57"/>
+  <circle cx="67" cy="405" r="6" fill="#e57638"/>
+  <text x="82" y="410" class="label">Wood model</text>
+  <text x="82" y="432" class="small">39.894 s median</text><circle cx="427" cy="405" r="6" fill="#d7b982"/>
+  <text x="442" y="410" class="label">Metrics</text>
+  <text x="442" y="432" class="small">2.375 s median</text><circle cx="787" cy="405" r="6" fill="#8d7bd1"/>
+  <text x="802" y="410" class="label">Wood visual USD</text>
+  <text x="802" y="432" class="small">1.637 s median</text><circle cx="67" cy="467" r="6" fill="#58b889"/>
+  <text x="82" y="472" class="label">Kit / Flow / render</text>
+  <text x="82" y="494" class="small">1.933 s median</text><circle cx="427" cy="467" r="6" fill="#5b8ec9"/>
+  <text x="442" y="472" class="label">Viewport capture</text>
+  <text x="442" y="494" class="small">1.273 s median</text><circle cx="787" cy="467" r="6" fill="#665c57"/>
+  <text x="802" y="472" class="label">Warmup + loop overhead</text>
+  <text x="802" y="494" class="small">1.116 s median</text>
+  <text x="82" y="526" class="small">Flow is updated every 1.0 model s. Segment totals exclude their declared warmup samples; remainder includes warmup and Python loop overhead.</text>
+
+  <rect x="60" y="566" width="1080" height="66" rx="9" fill="#1c2820" stroke="#58b889" stroke-width="2"/>
+  <text x="84" y="594" class="heading">INVARIANTS PASS · ignition 66.2 / 166.4 s · mass error ≤ 1e-06 kg</text>
+  <text x="84" y="617" class="small">GPU utilization was not sampled. This report separates CPU/API wall intervals; it does not claim GPU kernel occupancy.</text>
+  <text x="60" y="660" class="small">Conclusion: optimize the CPU wood step next; investigate the long viewport / RTX readiness wait independently.</text>
+</svg>

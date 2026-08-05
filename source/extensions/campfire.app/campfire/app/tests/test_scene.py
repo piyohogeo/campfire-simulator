@@ -9,6 +9,15 @@ from pxr import Gf, Usd, UsdGeom, UsdPhysics
 
 
 class TestScene(omni.kit.test.AsyncTestCase):
+    async def test_timing_summary_excludes_warmup_and_reports_tail(self):
+        summary = campfire.app.summarize_timing_ms([99.0, 1.0, 2.0, 3.0], 1)
+        self.assertEqual(summary["sample_count"], 3)
+        self.assertEqual(summary["warmup_samples_excluded"], 1)
+        self.assertEqual(summary["total_ms"], 6.0)
+        self.assertEqual(summary["mean_ms"], 2.0)
+        self.assertEqual(summary["p95_ms"], 3.0)
+        self.assertEqual(summary["max_ms"], 3.0)
+
     async def test_fixed_scene_has_expected_structure(self):
         stage = Usd.Stage.CreateInMemory()
         campfire.app.populate_fixed_scene(stage)

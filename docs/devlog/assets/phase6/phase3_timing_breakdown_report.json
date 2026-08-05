@@ -1,0 +1,249 @@
+{
+  "aggregates": {
+    "capture_resolution_wait_seconds": {
+      "maximum": 201.5615,
+      "median": 199.16655,
+      "minimum": 196.7716
+    },
+    "finalization_seconds": {
+      "maximum": 0.4675,
+      "median": 0.45135000000000003,
+      "minimum": 0.4352
+    },
+    "runner_wall_seconds": {
+      "maximum": 258.01,
+      "median": 256.7335,
+      "minimum": 255.457
+    },
+    "scenario_wall_seconds": {
+      "maximum": 49.7459,
+      "median": 48.22765,
+      "minimum": 46.7094
+    },
+    "segments": {
+      "active_block_query": {
+        "mean_ms": {
+          "maximum": 0.0117,
+          "median": 0.01145,
+          "minimum": 0.0112
+        },
+        "p95_ms": {
+          "maximum": 0.0172,
+          "median": 0.016800000000000002,
+          "minimum": 0.0164
+        },
+        "sample_count": 236,
+        "total_seconds": {
+          "maximum": 0.002761,
+          "median": 0.00270135,
+          "minimum": 0.0026417000000000003
+        }
+      },
+      "csv_row_build": {
+        "mean_ms": {
+          "maximum": 0.0118,
+          "median": 0.0116,
+          "minimum": 0.0114
+        },
+        "p95_ms": {
+          "maximum": 0.0168,
+          "median": 0.016300000000000002,
+          "minimum": 0.0158
+        },
+        "sample_count": 1180,
+        "total_seconds": {
+          "maximum": 0.0139333,
+          "median": 0.0136896,
+          "minimum": 0.0134459
+        }
+      },
+      "flow_emitter_usd": {
+        "mean_ms": {
+          "maximum": 1.3724,
+          "median": 1.34225,
+          "minimum": 1.3121
+        },
+        "p95_ms": {
+          "maximum": 2.0649,
+          "median": 2.00285,
+          "minimum": 1.9408
+        },
+        "sample_count": 236,
+        "total_seconds": {
+          "maximum": 0.3238902,
+          "median": 0.31677774999999997,
+          "minimum": 0.3096653
+        }
+      },
+      "flow_source_mapping": {
+        "mean_ms": {
+          "maximum": 0.0206,
+          "median": 0.01985,
+          "minimum": 0.0191
+        },
+        "p95_ms": {
+          "maximum": 0.0355,
+          "median": 0.03425,
+          "minimum": 0.033
+        },
+        "sample_count": 1180,
+        "total_seconds": {
+          "maximum": 0.0243554,
+          "median": 0.02346935,
+          "minimum": 0.0225833
+        }
+      },
+      "kit_flow_render_update": {
+        "mean_ms": {
+          "maximum": 8.2439,
+          "median": 8.19005,
+          "minimum": 8.1362
+        },
+        "p95_ms": {
+          "maximum": 10.2185,
+          "median": 10.0752,
+          "minimum": 9.9319
+        },
+        "sample_count": 236,
+        "total_seconds": {
+          "maximum": 1.9455569000000001,
+          "median": 1.93284625,
+          "minimum": 1.9201356
+        }
+      },
+      "step_loop": {
+        "mean_ms": {
+          "maximum": 41.4908,
+          "median": 40.2455,
+          "minimum": 39.0002
+        },
+        "p95_ms": {
+          "maximum": 60.7817,
+          "median": 59.0655,
+          "minimum": 57.3493
+        },
+        "sample_count": 1180,
+        "total_seconds": {
+          "maximum": 48.9591459,
+          "median": 47.48966875,
+          "minimum": 46.0201916
+        }
+      },
+      "viewport_capture": {
+        "mean_ms": {
+          "maximum": 638.9474,
+          "median": 636.46715,
+          "minimum": 633.9869
+        },
+        "p95_ms": {
+          "maximum": 641.5585,
+          "median": 640.40975,
+          "minimum": 639.261
+        },
+        "sample_count": 2,
+        "total_seconds": {
+          "maximum": 1.2778948,
+          "median": 1.27293425,
+          "minimum": 1.2679737
+        }
+      },
+      "wood_metrics": {
+        "mean_ms": {
+          "maximum": 2.0789,
+          "median": 2.01235,
+          "minimum": 1.9458
+        },
+        "p95_ms": {
+          "maximum": 2.9502,
+          "median": 2.834,
+          "minimum": 2.7178
+        },
+        "sample_count": 1180,
+        "total_seconds": {
+          "maximum": 2.4531108,
+          "median": 2.3745526000000003,
+          "minimum": 2.2959944
+        }
+      },
+      "wood_model_step": {
+        "mean_ms": {
+          "maximum": 34.9311,
+          "median": 33.80875,
+          "minimum": 32.6864
+        },
+        "p95_ms": {
+          "maximum": 45.3931,
+          "median": 43.25964999999999,
+          "minimum": 41.1262
+        },
+        "sample_count": 1180,
+        "total_seconds": {
+          "maximum": 41.218686999999996,
+          "median": 39.89429045,
+          "minimum": 38.569893900000004
+        }
+      },
+      "wood_visual_usd": {
+        "mean_ms": {
+          "maximum": 14.5122,
+          "median": 13.8726,
+          "minimum": 13.233
+        },
+        "p95_ms": {
+          "maximum": 19.1521,
+          "median": 18.644199999999998,
+          "minimum": 18.1363
+        },
+        "sample_count": 118,
+        "total_seconds": {
+          "maximum": 1.7124386999999999,
+          "median": 1.63696585,
+          "minimum": 1.561493
+        }
+      }
+    }
+  },
+  "configuration": {
+    "external_heat_flux_w_m2": 150000.0,
+    "flow_update_interval_seconds": 1.0,
+    "flow_update_interval_steps": 5,
+    "model_dt_seconds": 0.2,
+    "model_duration_seconds": 240.0,
+    "steps": 1200
+  },
+  "interpretation": {
+    "capture_readiness_share_of_runner": 0.7757715685720796,
+    "flow_update_cadence_model_seconds": 1.0,
+    "gpu_utilization_sampled": false,
+    "wood_model_share_of_scenario": 0.827207845499418
+  },
+  "invariants": {
+    "dry_ignition_seconds": 66.2,
+    "flow_active_in_all_profiles": true,
+    "mass_balance_limit_kg": 1e-06,
+    "wet_ignition_seconds": 166.4
+  },
+  "profile_count": 2,
+  "runs": [
+    {
+      "capture_resolution_wait_seconds": 196.7716,
+      "dry_ignition_seconds": 66.2,
+      "flow_active_blocks_peak": 302,
+      "runner_wall_seconds": 255.457,
+      "scenario_wall_seconds": 49.7459,
+      "source": "artifacts\\phase3\\phase6s_profile_run1\\summary.json",
+      "wet_ignition_seconds": 166.4
+    },
+    {
+      "capture_resolution_wait_seconds": 201.5615,
+      "dry_ignition_seconds": 66.2,
+      "flow_active_blocks_peak": 302,
+      "runner_wall_seconds": 258.01,
+      "scenario_wall_seconds": 46.7094,
+      "source": "artifacts\\phase3\\phase6s_profile_run2\\summary.json",
+      "wet_ignition_seconds": 166.4
+    }
+  ],
+  "schema_version": 1,
+  "status": "ok"
+}

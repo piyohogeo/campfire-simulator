@@ -150,6 +150,7 @@ from .support import (
     run_collapse_reignition_scenario,
     segment_mass_kg,
 )
+from .performance import summarize_timing_ms
 from .wood import LogSpec, create_log, get_log_world_position, list_log_ids, move_log
 
 __all__ = [
@@ -199,6 +200,7 @@ __all__ = [
     "SupportAssessment",
     "WoodModelParameters",
     "WoodThermalModel",
+    "summarize_timing_ms",
     "add_scenario_log",
     "apply_phase6_calibration",
     "create_log",

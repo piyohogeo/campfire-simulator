@@ -88,10 +88,44 @@ if ($result.images.Count -ne 2) {
     throw "Phase 3 must produce two fixed-step captures."
 }
 
+$expectedTimingSamples = @{
+    step_loop = 1180
+    wood_model_step = 1180
+    wood_metrics = 1180
+    flow_source_mapping = 1180
+    csv_row_build = 1180
+    flow_emitter_usd = 236
+    wood_visual_usd = 118
+    kit_flow_render_update = 236
+    active_block_query = 236
+    viewport_capture = 2
+}
+foreach ($name in $expectedTimingSamples.Keys) {
+    $segment = $result.timing.segments.$name
+    if ($null -eq $segment -or $segment.sample_count -ne $expectedTimingSamples[$name]) {
+        throw "Phase 3 timing segment has an unexpected sample count: $name"
+    }
+    foreach ($field in @("total_ms", "mean_ms", "p95_ms", "max_ms")) {
+        $value = [double]$segment.$field
+        if ([double]::IsNaN($value) -or [double]::IsInfinity($value) -or $value -lt 0) {
+            throw "Phase 3 timing segment has an invalid $field value: $name"
+        }
+    }
+}
+if ($result.startup.extension_to_scenario_seconds -le 0) {
+    throw "Phase 3 did not report extension-to-scenario startup time."
+}
+if ($result.timing.finalization.total_seconds -lt 0) {
+    throw "Phase 3 reported invalid finalization time."
+}
+
 Add-Type -AssemblyName System.Drawing
 foreach ($capture in $result.images) {
     if (-not (Test-Path -LiteralPath $capture.path)) {
         throw "Phase 3 capture was not produced: $($capture.path)"
+    }
+    if ($capture.capture_wall_seconds -le 0) {
+        throw "Phase 3 capture did not report positive wall time."
     }
     $image = [System.Drawing.Image]::FromFile($capture.path)
     try {
@@ -104,7 +138,14 @@ foreach ($capture in $result.images) {
     }
 }
 
-$result | Add-Member -NotePropertyName runner_wall_seconds -NotePropertyValue ([math]::Round($runTimer.Elapsed.TotalSeconds, 3)) -Force
+$runnerWallSeconds = [math]::Round($runTimer.Elapsed.TotalSeconds, 3)
+$accountedRunnerSeconds = (
+    [double]$result.startup.extension_to_scenario_seconds +
+    [double]$result.scenario.simulation_wall_seconds +
+    [double]$result.timing.finalization.total_seconds
+)
+$result | Add-Member -NotePropertyName runner_wall_seconds -NotePropertyValue $runnerWallSeconds -Force
+$result | Add-Member -NotePropertyName runner_unattributed_seconds -NotePropertyValue ([math]::Round($runnerWallSeconds - $accountedRunnerSeconds, 4)) -Force
 $json = $result | ConvertTo-Json -Depth 12
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllText($summary, $json + [Environment]::NewLine, $utf8NoBom)

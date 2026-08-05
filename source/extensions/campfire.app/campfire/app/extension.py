@@ -78,6 +78,7 @@ from .phase5_scene import (
     release_phase5_structure,
 )
 from .support import burn_to_support_failure, run_collapse_reignition_scenario
+from .performance import summarize_timing_ms
 from .wood import get_log_world_position, list_log_ids
 from .char_depth_experiment import (
     create_char_depth_dry_run_package,
@@ -134,6 +135,8 @@ class CampfireAppExtension(omni.ext.IExt):
     """Create a deterministic stage and optionally run its headless validation."""
 
     def on_startup(self, ext_id):
+        self._extension_start_perf = time.perf_counter()
+        self._startup_timing = {}
         extension_manager = omni.kit.app.get_app().get_extension_manager()
         self._extension_path = Path(extension_manager.get_extension_path(ext_id)).resolve()
         self._control_window = None
@@ -158,6 +161,7 @@ class CampfireAppExtension(omni.ext.IExt):
         quit_after_capture = settings.get_as_bool(f"{SETTINGS_ROOT}/quitAfterCapture")
         phase = settings.get_as_string(f"{SETTINGS_ROOT}/phase") or "phase0"
         try:
+            scene_setup_started = time.perf_counter()
             context = omni.usd.get_context()
             for _ in range(30):
                 if context.get_stage() is not None:
@@ -210,18 +214,29 @@ class CampfireAppExtension(omni.ext.IExt):
                 )
             else:
                 raise ValueError(f"Unsupported campfire validation phase: {phase}")
+            self._startup_timing["scene_build_export_seconds"] = round(
+                time.perf_counter() - scene_setup_started, 4
+            )
             carb.log_info(f"[campfire.app] {phase} scene exported to {scene_path}")
 
+            viewport_setup_started = time.perf_counter()
             viewport = await self._get_viewport()
             if viewport is not None:
                 viewport.camera_path = CAMERA_PATH
                 viewport.fill_frame = False
                 viewport.resolution = CAPTURE_RESOLUTION
+            self._startup_timing["viewport_setup_seconds"] = round(
+                time.perf_counter() - viewport_setup_started, 4
+            )
 
             if capture_requested:
                 if viewport is None:
                     raise RuntimeError(f"No active viewport is available for {phase} capture")
+                capture_readiness_started = time.perf_counter()
                 await self._wait_for_capture_resolution(viewport)
+                self._startup_timing["capture_resolution_wait_seconds"] = round(
+                    time.perf_counter() - capture_readiness_started, 4
+                )
                 if phase == "phase6":
                     await self._capture_phase6(viewport, stage, scene_path)
                 elif phase == "phase5":
@@ -979,15 +994,27 @@ class CampfireAppExtension(omni.ext.IExt):
         ignition_seconds = {"dry": None, "wet": None}
         peak_gas_rate_kg_s = {"dry": 0.0, "wet": 0.0}
         model_step_times_ms = []
+        metrics_times_ms = []
+        source_mapping_times_ms = []
+        row_build_times_ms = []
         flow_adapter_times_ms = []
+        flow_emitter_usd_times_ms = []
+        wood_visual_usd_times_ms = []
         update_times_ms = []
+        active_block_query_times_ms = []
+        capture_times_ms = []
+        step_loop_times_ms = []
         active_block_counts = []
         images = []
         rows = []
 
         try:
+            extension_to_scenario_seconds = (
+                time.perf_counter() - self._extension_start_perf
+            )
             simulation_started = time.perf_counter()
             for step_index in range(1, PHASE3_TOTAL_STEPS + 1):
+                step_loop_started = time.perf_counter()
                 model_started = time.perf_counter()
                 dry_result = dry_model.step(
                     PHASE3_MODEL_DT_SECONDS, PHASE3_EXTERNAL_HEAT_FLUX_W_M2
@@ -1011,13 +1038,22 @@ class CampfireAppExtension(omni.ext.IExt):
                     ):
                         ignition_seconds[name] = result.elapsed_seconds
 
+                metrics_started = time.perf_counter()
                 dry_metrics = dry_model.metrics()
                 wet_metrics = wet_model.metrics()
+                metrics_times_ms.append(
+                    (time.perf_counter() - metrics_started) * 1000.0
+                )
+                source_mapping_started = time.perf_counter()
                 source = flow_source_from_model(
                     dry_model,
                     dry_result,
                     surface_temperature_k=dry_metrics["surface_mean_temperature_k"],
                 )
+                source_mapping_times_ms.append(
+                    (time.perf_counter() - source_mapping_started) * 1000.0
+                )
+                row_build_started = time.perf_counter()
                 rows.append(
                     {
                         "time_s": round(dry_result.elapsed_seconds, 6),
@@ -1041,6 +1077,9 @@ class CampfireAppExtension(omni.ext.IExt):
                         "flow_temperature": source.temperature,
                     }
                 )
+                row_build_times_ms.append(
+                    (time.perf_counter() - row_build_started) * 1000.0
+                )
 
                 update_flow = (
                     step_index % PHASE3_FLOW_UPDATE_INTERVAL_STEPS == 0
@@ -1048,10 +1087,18 @@ class CampfireAppExtension(omni.ext.IExt):
                 )
                 if update_flow:
                     adapter_started = time.perf_counter()
+                    flow_emitter_started = time.perf_counter()
                     update_flow_source(stage, PHASE3_DRY_LOG_ID, source)
+                    flow_emitter_usd_times_ms.append(
+                        (time.perf_counter() - flow_emitter_started) * 1000.0
+                    )
                     if step_index % 10 == 0 or step_index in PHASE3_CAPTURE_STEPS:
+                        wood_visual_started = time.perf_counter()
                         apply_model_visual_state(dry_prim, dry_model, dry_metrics)
                         apply_model_visual_state(wet_prim, wet_model, wet_metrics)
+                        wood_visual_usd_times_ms.append(
+                            (time.perf_counter() - wood_visual_started) * 1000.0
+                        )
                     flow_adapter_times_ms.append(
                         (time.perf_counter() - adapter_started) * 1000.0
                     )
@@ -1060,13 +1107,19 @@ class CampfireAppExtension(omni.ext.IExt):
                     update_times_ms.append(
                         (time.perf_counter() - update_started) * 1000.0
                     )
-                    active_block_counts.append(
-                        int(flow_interface.get_active_block_count())
+                    active_block_query_started = time.perf_counter()
+                    active_block_count = int(flow_interface.get_active_block_count())
+                    active_block_query_times_ms.append(
+                        (time.perf_counter() - active_block_query_started) * 1000.0
                     )
+                    active_block_counts.append(active_block_count)
 
                     if step_index in PHASE3_CAPTURE_STEPS:
                         image_path = output_dir / f"frame_{step_index:04d}.png"
+                        capture_started = time.perf_counter()
                         resolution = await self._capture_image(viewport, image_path)
+                        capture_wall_seconds = time.perf_counter() - capture_started
+                        capture_times_ms.append(capture_wall_seconds * 1000.0)
                         images.append(
                             {
                                 "step": step_index,
@@ -1074,18 +1127,31 @@ class CampfireAppExtension(omni.ext.IExt):
                                 "path": str(image_path),
                                 "resolution": list(resolution),
                                 "dry_flow_fuel": source.fuel,
+                                "capture_wall_seconds": round(
+                                    capture_wall_seconds, 4
+                                ),
                             }
                         )
+                step_loop_times_ms.append(
+                    (time.perf_counter() - step_loop_started) * 1000.0
+                )
 
             simulation_elapsed = time.perf_counter() - simulation_started
+            persistence_started = time.perf_counter()
             save_model_to_prim(dry_model, dry_prim)
             save_model_to_prim(wet_model, wet_prim)
+            persistence_seconds = time.perf_counter() - persistence_started
+            export_started = time.perf_counter()
             final_stage_path = export_stage(stage, output_dir / "final_stage.usda")
+            export_seconds = time.perf_counter() - export_started
             metrics_path = output_dir / "wood_metrics.csv"
+            csv_started = time.perf_counter()
             with metrics_path.open("w", newline="", encoding="utf-8") as csv_file:
                 writer = csv.DictWriter(csv_file, fieldnames=list(rows[0]))
                 writer.writeheader()
                 writer.writerows(rows)
+            csv_seconds = time.perf_counter() - csv_started
+            finalization_seconds = persistence_seconds + export_seconds + csv_seconds
 
             model_measured = model_step_times_ms[20:]
             model_sorted = sorted(model_measured)
@@ -1102,6 +1168,50 @@ class CampfireAppExtension(omni.ext.IExt):
             adapter_p95_index = min(
                 len(adapter_sorted) - 1, int(len(adapter_sorted) * 0.95)
             )
+            step_warmup_samples = 20
+            flow_warmup_samples = 4
+            visual_warmup_samples = 2
+            startup_known_seconds = sum(self._startup_timing.values())
+            startup_timing = {
+                **self._startup_timing,
+                "extension_to_scenario_seconds": round(
+                    extension_to_scenario_seconds, 4
+                ),
+                "unattributed_extension_seconds": round(
+                    max(0.0, extension_to_scenario_seconds - startup_known_seconds),
+                    4,
+                ),
+            }
+            detailed_timing = {
+                "step_loop": summarize_timing_ms(
+                    step_loop_times_ms, step_warmup_samples
+                ),
+                "wood_model_step": summarize_timing_ms(
+                    model_step_times_ms, step_warmup_samples
+                ),
+                "wood_metrics": summarize_timing_ms(
+                    metrics_times_ms, step_warmup_samples
+                ),
+                "flow_source_mapping": summarize_timing_ms(
+                    source_mapping_times_ms, step_warmup_samples
+                ),
+                "csv_row_build": summarize_timing_ms(
+                    row_build_times_ms, step_warmup_samples
+                ),
+                "flow_emitter_usd": summarize_timing_ms(
+                    flow_emitter_usd_times_ms, flow_warmup_samples
+                ),
+                "wood_visual_usd": summarize_timing_ms(
+                    wood_visual_usd_times_ms, visual_warmup_samples
+                ),
+                "kit_flow_render_update": summarize_timing_ms(
+                    update_times_ms, flow_warmup_samples
+                ),
+                "active_block_query": summarize_timing_ms(
+                    active_block_query_times_ms, flow_warmup_samples
+                ),
+                "viewport_capture": summarize_timing_ms(capture_times_ms),
+            }
 
             model_summaries = {}
             for name, model in models.items():
@@ -1144,6 +1254,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 "camera": str(CAMERA_PATH),
                 "resolution": list(CAPTURE_RESOLUTION),
                 "images": images,
+                "startup": startup_timing,
                 "scenario": {
                     "model_dt_seconds": PHASE3_MODEL_DT_SECONDS,
                     "flow_update_interval_steps": PHASE3_FLOW_UPDATE_INTERVAL_STEPS,
@@ -1197,6 +1308,15 @@ class CampfireAppExtension(omni.ext.IExt):
                     "flow_and_render_update_p95_ms": round(
                         update_sorted[update_p95_index], 4
                     ),
+                    "segments": detailed_timing,
+                    "finalization": {
+                        "model_persistence_seconds": round(
+                            persistence_seconds, 4
+                        ),
+                        "stage_export_seconds": round(export_seconds, 4),
+                        "metrics_csv_seconds": round(csv_seconds, 4),
+                        "total_seconds": round(finalization_seconds, 4),
+                    },
                 },
             }
             self._write_summary(output_dir, summary)

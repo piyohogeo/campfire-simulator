@@ -2,7 +2,7 @@
 
 ## 1. 文書情報
 
-- 文書状態: 実装中・Phase 6R CPU木材ホットパス最適化完了
+- 文書状態: 実装中・Phase 6S Phase 3時間内訳計測完了
 - 初版日: 2026-08-04
 - 想定開発環境: Windows 11、NVIDIA RTX 3090（24 GB）、VS Code + Codex
 - 開発リポジトリ（作成済み）: `C:\Users\junic\src\campfire-simulator`
@@ -1297,3 +1297,17 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 全体時間の扱い: シナリオwall timeは診断ベースライン`276.602 s`から最適化後`50.1253 s`へ変化したが、最適化後runではRTX readyまで約216秒を起動側で待ち、初回runとはシェーダー／RTXキャッシュ状態が異なる。この大幅差はコード変更だけへ帰属せず、木材stepとアダプターの区間計測を採用値とする。
 - 可視化と検証: `wood_cpu_performance_report.svg`へ単体ベンチのbefore／after、CPU限定、同一物理条件、合格した不変条件を表示した。Edgeの1200×680描画とPhase 3最終キャプチャを目視確認した。`.\repo.bat test`は`38 / 38`成功した。
 - 次: Flow／USD属性同期、キャプチャ、RTX warmupを区間分離し、同一キャッシュ条件で複数回測定する。CPU単体で残る約`5.9 ms`の更新をプロファイルし、配列化またはWarp化は転送・同期コストを含めて有利な処理だけへ適用する。実設備dry runは外部レビュー受領まで保留する。
+
+## 47. Phase 6S Phase 3時間内訳計測
+
+### 2026-08-05: CPU、USD、Flow、キャプチャ、起動待機を同じ時計で分ける
+
+- 状態: Phase 3の既存互換タイミングを残し、排他的な詳細区間を追加した。1,200 model stepに対し、warmup後のstep系`1,180`サンプル、Flow系`236`サンプル、薪表示USD`118`サンプル、viewport capture`2`サンプルを記録する。各区間はsample count、合計、平均、p95、最大値を持ち、PowerShell受け入れ検査が数と有限・非負値を確認する。
+- 起動区間: 拡張起動からシナリオ開始、シーン生成・export、viewport取得、capture resolution待機を別々に測る。2 runの拡張起動からシナリオ開始は`199.9751 / 205.4824 s`、capture resolution待機は`196.7716 / 201.5615 s`だった。Kitログの`RTX ready`は起動後`204.012 / 209.614 s`で待機終了付近に現れたため関連を示唆するが、APIイベントとして直接計測していない。
+- シナリオ区間: wall timeは`49.7459 / 46.7094 s`、中央値`48.2277 s`。warmup後のCPU木材step合計は`41.2187 / 38.5699 s`、中央値`39.8943 s`でシナリオの`82.7%`を占めた。木材step平均は`34.9311 / 32.6864 ms`、p95は`45.3931 / 41.1262 ms`だった。
+- 周辺区間: 中央値で木材メトリクス`2.3746 s`、薪表示USD`1.6370 s`、Kit／Flow／render更新待機`1.9328 s`、2画像capture`1.2729 s`、Flow Emitter USD`0.3168 s`だった。Flow source写像、CSV行生成、active block照会はそれぞれ`0.024 / 0.014 / 0.003 s`未満で支配要因ではない。
+- runner全体: wall timeは`255.457 / 258.010 s`、中央値`256.7335 s`。capture resolution待機の中央値`199.1666 s`はrunnerの`77.6%`である。RTX 3090は両runでアクティブGPUとして認識され、Flow peak active blocksは両run`302`だった。ただしGPU利用率・カーネル時間・占有率は採取していないため、この結果はGPU稼働率の測定ではない。
+- 不変条件: 乾燥／湿潤薪の発火は両runとも`66.2 / 166.4 s`、最終質量収支誤差は`0 kg`。Flowは両runでactive。`.\repo.bat test`はタイミング集計器のwarmup・合計・p95・最大値テストを含む`39 / 39`成功、Phase 3 PowerShell受け入れも2回成功した。
+- 可視化: `phase3_timing_breakdown_report.svg`にrunner中央値のcapture／RTX readiness、シナリオ、その他と、シナリオ内のCPU木材、メトリクス、USD、Kit／Flow、captureを表示した。Edgeの1200×680描画で文字切れがないことを確認した。JSONは2 runの入力値、中央値、最小、最大、sample countを保持する。
+- 判断: 現在のシナリオ最優先対象はFlow APIや画像保存ではなくCPU木材stepである。Warp化を即断せず、まずstep内部の伝導ペア走査、熱収支、相変化・反応を区間分離する。約199秒の起動待機は別問題として、capture resolution待機とRTX readyの対応、サンドボックスで読取り専用になったOptiX cacheを調査する。
+- 次: CPU木材step内部の排他的プロファイルを追加し、データ転送なしの配列化候補を先に評価する。GPU側はFlowがモデル時間1秒ごとの疎な更新であることを維持し、利用率を論じる場合はGPU engine別の時系列またはKit profilerを別途採取する。実設備dry runは外部レビュー受領まで保留する。
