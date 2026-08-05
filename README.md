@@ -79,6 +79,12 @@ Python経路では、外部面積が厳密に0の内部セルについて放射�
 .\scripts\run_phase6ac_state_clamp_benchmark.ps1
 ```
 
+Phase 3のFlow入力、CSV、表示、着火判定はセルの`phase`を読まず、診断と最終永続化だけが必要とすることを監査しました。通常の`step()`は従来どおり逐次更新しますが、Phase 3 runnerでは相分類を最終一回へ遅延します。交互順序3組では木材step中央値を`7.6849 → 7.2286 ms`、シナリオ中央値を`13.8153 → 13.2939 s`へ短縮し、最終状態とCSVは完全一致しました。
+
+```powershell
+.\scripts\run_phase6ad_deferred_phase_benchmark.ps1
+```
+
 ```powershell
 .\scripts\run_phase3.bat -OutputDir .\artifacts\phase3\manual
 ```

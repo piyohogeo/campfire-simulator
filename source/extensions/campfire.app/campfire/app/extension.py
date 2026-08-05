@@ -1028,8 +1028,15 @@ class CampfireAppExtension(omni.ext.IExt):
         python_state_clamp_fast_path = settings.get_as_bool(
             f"{SETTINGS_ROOT}/pythonStateClampFastPath"
         )
+        defer_cell_phase_updates = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/deferCellPhaseUpdates"
+        )
         if array_backend not in (PYTHON_ARRAY_BACKEND, NUMPY_ARRAY_BACKEND):
             raise ValueError(f"Unsupported wood-step array backend: {array_backend}")
+        if collect_wood_state_diagnostics and defer_cell_phase_updates:
+            raise ValueError(
+                "Wood state diagnostics are incompatible with deferred cell phases"
+            )
         flow_interface = _flowusd.acquire_flowusd_interface()
         dry_prim = stage.GetPrimAtPath(f"/World/Logs/{PHASE3_DRY_LOG_ID}")
         wet_prim = stage.GetPrimAtPath(f"/World/Logs/{PHASE3_WET_LOG_ID}")
@@ -1081,6 +1088,7 @@ class CampfireAppExtension(omni.ext.IExt):
                         else None
                     ),
                     python_state_clamp_fast_path=python_state_clamp_fast_path,
+                    update_cell_phases=not defer_cell_phase_updates,
                 )
                 wet_result = wet_model.step(
                     PHASE3_MODEL_DT_SECONDS,
@@ -1096,6 +1104,7 @@ class CampfireAppExtension(omni.ext.IExt):
                         else None
                     ),
                     python_state_clamp_fast_path=python_state_clamp_fast_path,
+                    update_cell_phases=not defer_cell_phase_updates,
                 )
                 model_step_times_ms.append(
                     (time.perf_counter() - model_started) * 1000.0
@@ -1224,6 +1233,11 @@ class CampfireAppExtension(omni.ext.IExt):
                     (time.perf_counter() - step_loop_started) * 1000.0
                 )
 
+            phase_refresh_started = time.perf_counter()
+            if defer_cell_phase_updates:
+                dry_model.refresh_cell_phases()
+                wet_model.refresh_cell_phases()
+            final_phase_refresh_seconds = time.perf_counter() - phase_refresh_started
             simulation_elapsed = time.perf_counter() - simulation_started
             persistence_started = time.perf_counter()
             save_model_to_prim(dry_model, dry_prim)
@@ -1368,6 +1382,10 @@ class CampfireAppExtension(omni.ext.IExt):
                         python_surface_boundary_fast_path
                     ),
                     "python_state_clamp_fast_path": python_state_clamp_fast_path,
+                    "deferred_cell_phase_updates": defer_cell_phase_updates,
+                    "final_phase_refresh_seconds": round(
+                        final_phase_refresh_seconds, 6
+                    ),
                     "zero_area_cell_count": {
                         name: sum(
                             cell.external_area_m2 * cell.surface_exposure == 0.0

@@ -225,6 +225,31 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(numpy_model.to_dict(), python_model.to_dict())
         self.assertEqual(numpy_model.metrics(), python_model.metrics())
 
+        eager_numpy_phases = campfire.app.WoodThermalModel.from_dict(
+            numpy_model.to_dict()
+        )
+        deferred_numpy_phases = campfire.app.WoodThermalModel.from_dict(
+            numpy_model.to_dict()
+        )
+        for _ in range(20):
+            eager_result = eager_numpy_phases.step(
+                0.2, 70_000.0, array_backend=campfire.app.NUMPY_ARRAY_BACKEND
+            )
+            deferred_result = deferred_numpy_phases.step(
+                0.2,
+                70_000.0,
+                array_backend=campfire.app.NUMPY_ARRAY_BACKEND,
+                update_cell_phases=False,
+            )
+            self.assertEqual(deferred_result, eager_result)
+            self.assertEqual(
+                deferred_numpy_phases.metrics(), eager_numpy_phases.metrics()
+            )
+        deferred_numpy_phases.refresh_cell_phases()
+        self.assertEqual(
+            deferred_numpy_phases.to_dict(), eager_numpy_phases.to_dict()
+        )
+
         arrhenius_python = campfire.app.create_cylindrical_wood_model(
             "arrhenius_python",
             radius_m=0.04,
@@ -343,6 +368,36 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(fast_state_clamp.to_dict(), original_clamp.to_dict())
         self.assertEqual(fast_state_clamp.metrics(), original_clamp.metrics())
 
+        eager_phases = campfire.app.create_cylindrical_wood_model(
+            "eager_phases",
+            radius_m=0.04,
+            length_m=0.20,
+            moisture_ratio_dry_basis=0.12,
+            axial_cells=4,
+            circumferential_cells=6,
+            radial_cells=3,
+        )
+        deferred_phases = campfire.app.WoodThermalModel.from_dict(
+            eager_phases.to_dict()
+        )
+        initial_deferred_phases = tuple(
+            cell.phase for cell in deferred_phases.cells
+        )
+        for step_index in range(120):
+            heat_flux = 150_000.0 if step_index < 60 else 0.0
+            eager_result = eager_phases.step(0.2, heat_flux)
+            deferred_result = deferred_phases.step(
+                0.2, heat_flux, update_cell_phases=False
+            )
+            self.assertEqual(deferred_result, eager_result)
+            self.assertEqual(deferred_phases.metrics(), eager_phases.metrics())
+        self.assertEqual(
+            tuple(cell.phase for cell in deferred_phases.cells),
+            initial_deferred_phases,
+        )
+        deferred_phases.refresh_cell_phases()
+        self.assertEqual(deferred_phases.to_dict(), eager_phases.to_dict())
+
         with self.assertRaisesRegex(ValueError, "Unsupported wood-step array backend"):
             numpy_model.step(0.2, 0.0, array_backend="unknown")
 
@@ -368,6 +423,15 @@ class TestScene(omni.kit.test.AsyncTestCase):
             150_000.0,
             state_diagnostics=state_diagnostics,
         )
+        with self.assertRaisesRegex(
+            ValueError, "diagnostics require cell phase updates"
+        ):
+            diagnosed.step(
+                0.2,
+                150_000.0,
+                state_diagnostics={},
+                update_cell_phases=False,
+            )
 
         self.assertEqual(profiled_result, unprofiled_result)
         self.assertEqual(profiled.to_dict(), unprofiled.to_dict())

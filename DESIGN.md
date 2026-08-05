@@ -1455,3 +1455,21 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 最終検証: 採用後にreleaseを再ビルドし、無指定の通常Phase 3がsurface-boundaryと条件付きclampの両既定経路を選んで全検査に成功することを確認した。標準`.\repo.bat test`はstartup`3.5 s`、coverage通常35件`217.2 s`、coverage熱モデル4件`163.2 s`、coverageなし数値2件`22.4 s`、全41件をrunner`407.0 s`で成功させた。
 - 可視化と再現: `run_phase6ac_state_clamp_benchmark.ps1`がprofile 2本と交互順序6本を取得し、`compare_phase3_state_clamp.py`が設定、同値性、時間、組別改善を検査して`phase3_state_clamp_report.json/.svg`を生成する。実設備dry runは責任研究室の外部レビュー受領まで保留する。
 - 次: 状態確定区間の残りは相分類である。Phase 6ABで相変更が0.0477%と疎だった事実を使うが、分類結果は毎stepの権威状態なので、更新契機を変える前に相依存の下流利用箇所と永続化境界を監査する。
+
+## 58. Phase 6AD 相状態の下流依存監査と遅延更新
+
+### 2026-08-05: 値が必要な境界で分類し、最終状態の意味は変えない
+
+- 依存監査: Phase 3の各step後に動くFlow入力変換、`wood_metrics.csv`行生成、薪の表示更新、着火判定、熱・反応の次stepは`cell.phase`を参照しない。相を読むのは、相割当・遷移を数える任意診断と、最終モデル辞書をUSDへ保存して状態SHA-256を作る境界だけだった。崩落判定を含む他Phaseにも直接参照はなかった。
+- API境界: `WoodThermalModel.step(..., update_cell_phases=True)`を追加し、公開APIの既定は従来の逐次分類を維持した。`False`は数値clampを毎step維持したまま文字列相分類だけを遅らせる。`refresh_cell_phases()`は現在の温度・4質量から全セルを同じ優先順位で再分類する。
+- 安全条件: 状態診断は前step相との遷移を必要とするため、遅延更新との併用を明示的に拒否する。Phase 6AB再現runnerはeagerを固定する。Phase 6AC比較runnerも過去条件を維持するためeagerを明示する。通常のPython／NumPy stepは指定なしなら従来どおり相を更新する。
+- Phase 3接続: 通常シナリオだけ`update_cell_phases=False`で1,200 stepを進め、ループ終了直後かつ`simulation_wall_seconds`停止前に乾燥薪・湿潤薪を一度ずつ再分類する。保存、最終USD、状態ハッシュより前なので、必要な一回分の処理は時間にも成果物にも含まれる。
+- 単体同値性: 小型円柱モデルをPythonで120 step進め、eager／deferredの毎step結果とmetricsを一致させた。遅延中は相文字列が初期値のままであることを確認し、最終refresh後の`to_dict()`を完全一致させた。NumPy経路も追加20 stepと最終refreshで完全一致させ、診断と遅延を同時指定した場合の拒否も検査する。
+- profile診断: 同一ビルドのprofile 1組で二本の状態確定区間は`0.8502 → 0.4137 ms`、`51.34%`短縮した。遅延側の最終二本refreshは`0.564 ms`だった。profile時間は作用区間の確認だけに使い、採否は非計測runで決める。
+- 正式測定: 採用済みsurface-boundary／条件付きclamp、Python backend、1,200 step、Flow更新、2画像capture、内部timer／診断無効、debug拡張なしで3組を交互順序に測定した。eager→deferred、deferred→eager、eager→deferredの順である。
+- 同値性: profile 2本と非計測6本の全runで乾燥／湿潤状態SHA-256、CSV SHA-256`01aaf0c…7759`、着火`66.2 / 166.4 s`が完全一致した。Flow active block peakも両群`299`だったが、非権威GPU診断として採用条件から分離した。
+- 性能結果: 木材step平均中央値は`7.6849 → 7.2286 ms`（`5.94%`短縮）、p95は`11.2551 → 10.2417 ms`（`9.00%`短縮）、シナリオ中央値は`13.8153 → 13.2939 s`（`3.77%`短縮）だった。3/3組でstepとシナリオがともに改善した。viewport解像度準備が各run約3分へ伸びたためrunner中央値は`189.680 → 204.956 s`と逆方向だが、これはモデル開始前の待機であり採否から除外した。
+- 判断: 完全同値、非計測step・シナリオ中央値、反復ゲートを満たしたためPhase 3の既定に採用する。通常／benchmarkアプリと`run_phase3.ps1`はdeferredを既定とし、比較・診断用の`-CellPhaseUpdates eager`を残す。
+- 最終検証: 採用既定値でreleaseを再ビルドした。標準`repo.bat test`はstartup`3.2 s`、coverage通常35件`216.7 s`、coverage熱モデル4件`158.8 s`、coverageなし数値2件`19.4 s`、全41件をrunner`403.3 s`で成功させた。無指定の通常Phase 3も成功し、surface-boundary fast／条件付きclamp／deferred phaseの3既定値、最終refresh`0.524 ms`、状態SHA-256、着火`66.2 / 166.4 s`を確認した。シナリオは`11.8883 s`、RTX ready待機を含むrunnerは`187.442 s`だった。
+- 可視化と再現: `run_phase6ad_deferred_phase_benchmark.ps1`がprofile 2本と交互順序6本を取得し、`compare_phase3_deferred_phases.py`が依存境界、設定、同値性、時間、組別改善を検査して`phase3_deferred_phase_report.json/.svg`を生成する。SVGはEdgeの1200×680描画で文字切れがないことを確認した。実設備dry runは責任研究室の外部レビュー受領まで保留する。
+- 次: Phase 3は毎step二本の完全な`metrics()`を作るが、Flow／CSV／表示が使う値はその一部である。Phase 6AEではmetricsの下流フィールド依存と走査回数を監査し、最終専用集計とhot-loop投影を分けても出力が完全一致するか評価する。

@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "phase": "phase6ad",
+  "status": "ok",
+  "paired_run_count": 3,
+  "environment": {
+    "application": "campfire.simulator.benchmark.kit",
+    "backend": "python",
+    "debugger_free_all_runs": true,
+    "adopted_surface_and_clamp_paths": true,
+    "alternating_order": true,
+    "internal_timing_disabled_for_formal_runs": true
+  },
+  "dependency_audit": {
+    "hot_loop_consumers": [
+      "thermal state",
+      "Flow source",
+      "CSV metrics",
+      "visual metrics",
+      "ignition"
+    ],
+    "cell_phase_consumers": [
+      "state diagnostics",
+      "final persistent state"
+    ],
+    "public_step_default_remains_eager": true,
+    "diagnostics_require_eager_updates": true
+  },
+  "profile": {
+    "eager_mean_ms": 0.8502,
+    "deferred_mean_ms": 0.4137,
+    "improvement_percent": 51.34086097388849,
+    "final_refresh_ms": 0.5640000000000001
+  },
+  "timings": {
+    "two_log_step_mean_ms": {
+      "eager_median": 7.6849,
+      "deferred_median": 7.2286,
+      "improvement_percent": 5.937617926062795
+    },
+    "two_log_step_p95_ms": {
+      "eager_median": 11.2551,
+      "deferred_median": 10.2417,
+      "improvement_percent": 9.003918223738578
+    },
+    "scenario_seconds": {
+      "eager_median": 13.8153,
+      "deferred_median": 13.2939,
+      "improvement_percent": 3.7740765672840966
+    },
+    "runner_seconds": {
+      "eager_median": 189.68,
+      "deferred_median": 204.956,
+      "improvement_percent": -8.053563897089825
+    }
+  },
+  "paired_results": [
+    {
+      "pair": 1,
+      "step_improvement_percent": 6.807230451520789,
+      "scenario_improvement_percent": 4.701630059695334
+    },
+    {
+      "pair": 2,
+      "step_improvement_percent": 5.937617926062795,
+      "scenario_improvement_percent": 3.7740765672840966
+    },
+    {
+      "pair": 3,
+      "step_improvement_percent": 5.810287361498958,
+      "scenario_improvement_percent": 3.4829740174513275
+    }
+  ],
+  "equivalence": {
+    "exact_authoritative_outputs_all_runs": true,
+    "dry_state_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+    "wet_state_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+    "metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759",
+    "ignition_seconds": {
+      "dry": 66.2,
+      "wet": 166.4
+    },
+    "flow_peak_eager": [
+      299
+    ],
+    "flow_peak_deferred": [
+      299
+    ],
+    "flow_peak_is_not_authoritative": true
+  },
+  "decision": {
+    "adopt_deferred_updates": true,
+    "median_step_and_scenario_improved": true,
+    "pairs_improving_step_and_scenario": 3,
+    "required_improving_pairs": 2,
+    "reason": "deferred classification improved median wood-step and scenario time in a majority of alternating pairs"
+  },
+  "runs": {
+    "eager": [
+      "artifacts\\phase3\\phase6ad\\formal\\pair_1_eager\\summary.json",
+      "artifacts\\phase3\\phase6ad\\formal\\pair_2_eager\\summary.json",
+      "artifacts\\phase3\\phase6ad\\formal\\pair_3_eager\\summary.json"
+    ],
+    "deferred": [
+      "artifacts\\phase3\\phase6ad\\formal\\pair_1_deferred\\summary.json",
+      "artifacts\\phase3\\phase6ad\\formal\\pair_2_deferred\\summary.json",
+      "artifacts\\phase3\\phase6ad\\formal\\pair_3_deferred\\summary.json"
+    ],
+    "eager_profile": "artifacts\\phase3\\phase6ad\\formal\\profile_eager\\summary.json",
+    "deferred_profile": "artifacts\\phase3\\phase6ad\\formal\\profile_deferred\\summary.json"
+  }
+}

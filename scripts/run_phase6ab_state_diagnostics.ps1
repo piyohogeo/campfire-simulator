@@ -18,6 +18,7 @@ $OutputDir = [System.IO.Path]::GetFullPath($OutputDir)
     -ArrayBackend python `
     -PythonSurfaceBoundaryPath fast `
     -PythonStateClampPath original `
+    -CellPhaseUpdates eager `
     -CollectWoodStateDiagnostics
 if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE

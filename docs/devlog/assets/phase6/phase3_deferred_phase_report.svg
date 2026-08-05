@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6AD deferred cell-phase decision</title>
+  <desc id="desc">3 alternating pairs compare eager per-step classification with one final refresh.</desc>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#111827"/><stop offset="1" stop-color="#25160d"/></linearGradient></defs>
+  <style>.title{font:750 38px 'Segoe UI',sans-serif;fill:#f8fafc}.kicker{font:700 17px 'Segoe UI',sans-serif;fill:#fb923c;letter-spacing:2px}.sub{font:16px 'Segoe UI',sans-serif;fill:#cbd5e1}.heading{font:700 16px 'Segoe UI',sans-serif;fill:#f8fafc}.value{font:750 28px 'Segoe UI',sans-serif;fill:#fdba74}.small{font:14px 'Segoe UI',sans-serif;fill:#94a3b8}.decision{font:750 24px 'Segoe UI',sans-serif;fill:#86efac}</style>
+  <rect width="1200" height="680" rx="30" fill="url(#bg)"/>
+  <text x="64" y="64" class="kicker">PHASE 6AD - DOWNSTREAM DEPENDENCY AUDIT</text>
+  <text x="64" y="114" class="title">Classify when the phase value is consumed</text>
+  <text x="64" y="148" class="sub">3 alternating pairs - final refresh retained - exact persistent state</text>
+  <rect x="64" y="188" width="336" height="292" rx="22" fill="#2a1d16" stroke="#c2410c"/>
+  <text x="92" y="230" class="heading">PROFILED STATE FINALIZE</text>
+  <text x="92" y="280" class="value">51.34% faster</text>
+  <text x="92" y="316" class="sub">0.8502 to 0.4137 ms</text>
+  <text x="92" y="374" class="small">One final refresh: 0.564 ms</text>
+  <text x="92" y="402" class="small">Numerical clamps remain per step</text>
+  <text x="92" y="430" class="small">Diagnostics force eager mode</text>
+  <rect x="432" y="188" width="336" height="292" rx="22" fill="#2a1d16" stroke="#c2410c"/>
+  <text x="460" y="230" class="heading">UNPROFILED WOOD STEP</text>
+  <text x="460" y="280" class="value">5.94% faster</text>
+  <text x="460" y="316" class="sub">7.6849 to 7.2286 ms</text>
+  <text x="460" y="374" class="small">Flow, CSV, visuals do not read cell.phase</text>
+  <text x="460" y="402" class="small">Public step API remains eager</text>
+  <text x="460" y="430" class="small">Exact authoritative outputs</text>
+  <rect x="800" y="188" width="336" height="292" rx="22" fill="#2a1d16" stroke="#c2410c"/>
+  <text x="828" y="230" class="heading">SCENARIO WALL TIME</text>
+  <text x="828" y="280" class="value">3.77% faster</text>
+  <text x="828" y="316" class="sub">13.8153 to 13.2939 s</text>
+  <text x="828" y="374" class="small">Flow and 2 captures retained</text>
+  <text x="828" y="402" class="small">3 / 3 pairs improve both</text>
+  <text x="828" y="430" class="small">Debugger extensions: 0</text>
+  <rect x="64" y="522" width="1072" height="94" rx="18" fill="#251a14" stroke="#86efac" stroke-width="2"/>
+  <text x="92" y="566" class="decision">ADOPTED - defer phase classification</text>
+  <text x="92" y="594" class="sub">State SHA-256, CSV SHA-256, ignition, equations, grid, dt, and cell order remain unchanged.</text>
+  <text x="64" y="654" class="small">Only unprofiled end-to-end timing drives adoption; profile timing explains the affected segment.</text>
+</svg>

@@ -406,7 +406,9 @@ class WoodThermalModel:
             )
         return heat_capacities_j_k.tolist(), external_heat_total
 
-    def _numpy_finalize_state(self, ambient: float) -> None:
+    def _numpy_finalize_state(
+        self, ambient: float, update_cell_phases: bool
+    ) -> None:
         np = _require_numpy()
         cells = self.cells
         cell_count = len(cells)
@@ -441,27 +443,62 @@ class WoodThermalModel:
         np.maximum(char_mass_kg, 0.0, out=char_mass_kg)
         np.maximum(ash_mass_kg, 0.0, out=ash_mass_kg)
 
-        phase_code = np.full(cell_count, 1, dtype=np.int8)
-        phase_code[moisture_mass_kg > dry_wood_mass_kg * 0.01] = 0
-        phase_code[
-            (temperature_k >= self.parameters.pyrolysis_start_temperature_k)
-            & (dry_wood_mass_kg > self._mass_epsilon_kg)
-        ] = 2
-        phase_code[ash_mass_kg > dry_wood_mass_kg + char_mass_kg] = 4
-        phase_code[
-            (char_mass_kg > dry_wood_mass_kg) & (char_mass_kg > ash_mass_kg)
-        ] = 3
-        phase_code[
-            moisture_mass_kg + dry_wood_mass_kg + char_mass_kg + ash_mass_kg
-            <= self._mass_epsilon_kg
-        ] = 5
+        if update_cell_phases:
+            phase_code = np.full(cell_count, 1, dtype=np.int8)
+            phase_code[moisture_mass_kg > dry_wood_mass_kg * 0.01] = 0
+            phase_code[
+                (temperature_k >= self.parameters.pyrolysis_start_temperature_k)
+                & (dry_wood_mass_kg > self._mass_epsilon_kg)
+            ] = 2
+            phase_code[ash_mass_kg > dry_wood_mass_kg + char_mass_kg] = 4
+            phase_code[
+                (char_mass_kg > dry_wood_mass_kg) & (char_mass_kg > ash_mass_kg)
+            ] = 3
+            phase_code[
+                moisture_mass_kg + dry_wood_mass_kg + char_mass_kg + ash_mass_kg
+                <= self._mass_epsilon_kg
+            ] = 5
         for index, cell in enumerate(cells):
             cell.temperature_k = float(temperature_k[index])
             cell.moisture_mass_kg = float(moisture_mass_kg[index])
             cell.dry_wood_mass_kg = float(dry_wood_mass_kg[index])
             cell.char_mass_kg = float(char_mass_kg[index])
             cell.ash_mass_kg = float(ash_mass_kg[index])
-            cell.phase = _PHASE_NAMES[int(phase_code[index])]
+            if update_cell_phases:
+                cell.phase = _PHASE_NAMES[int(phase_code[index])]
+
+    def refresh_cell_phases(self) -> None:
+        """Classify every cell from its current authoritative numerical state."""
+
+        mass_epsilon = self._mass_epsilon_kg
+        pyrolysis_start_temperature_k = (
+            self.parameters.pyrolysis_start_temperature_k
+        )
+        for cell in self.cells:
+            if (
+                cell.moisture_mass_kg
+                + cell.dry_wood_mass_kg
+                + cell.char_mass_kg
+                + cell.ash_mass_kg
+                <= mass_epsilon
+            ):
+                cell.phase = DEPLETED
+            elif (
+                cell.char_mass_kg > cell.dry_wood_mass_kg
+                and cell.char_mass_kg > cell.ash_mass_kg
+            ):
+                cell.phase = CHAR
+            elif cell.ash_mass_kg > cell.dry_wood_mass_kg + cell.char_mass_kg:
+                cell.phase = ASH
+            elif (
+                cell.temperature_k >= pyrolysis_start_temperature_k
+                and cell.dry_wood_mass_kg > mass_epsilon
+            ):
+                cell.phase = PYROLYZING
+            elif cell.moisture_mass_kg > cell.dry_wood_mass_kg * 0.01:
+                cell.phase = WET_WOOD
+            else:
+                cell.phase = DRY_WOOD
 
     def step(
         self,
@@ -473,6 +510,7 @@ class WoodThermalModel:
         python_surface_boundary_fast_path: bool = True,
         state_diagnostics: dict[str, int] | None = None,
         python_state_clamp_fast_path: bool = True,
+        update_cell_phases: bool = True,
     ) -> CombustionStepResult:
         """Advance one explicit SI-unit thermal/reaction step.
 
@@ -487,6 +525,8 @@ class WoodThermalModel:
             raise ValueError(f"Unsupported wood-step array backend: {array_backend}")
         if state_diagnostics is not None and array_backend != PYTHON_ARRAY_BACKEND:
             raise ValueError("Wood state diagnostics require the Python backend")
+        if state_diagnostics is not None and not update_cell_phases:
+            raise ValueError("Wood state diagnostics require cell phase updates")
         if not math.isfinite(dt_seconds) or dt_seconds <= 0.0:
             raise ValueError("dt_seconds must be finite and positive")
         scalar_heat_flux_w_m2 = None
@@ -763,7 +803,7 @@ class WoodThermalModel:
             segment_started = time.perf_counter()
 
         if array_backend == NUMPY_ARRAY_BACKEND:
-            self._numpy_finalize_state(ambient)
+            self._numpy_finalize_state(ambient, update_cell_phases)
         else:
             mass_epsilon = self._mass_epsilon_kg
             pyrolysis_start_temperature_k = p.pyrolysis_start_temperature_k
@@ -813,30 +853,34 @@ class WoodThermalModel:
                     cell.dry_wood_mass_kg = max(0.0, cell.dry_wood_mass_kg)
                     cell.char_mass_kg = max(0.0, cell.char_mass_kg)
                     cell.ash_mass_kg = max(0.0, cell.ash_mass_kg)
-                if (
-                    cell.moisture_mass_kg
-                    + cell.dry_wood_mass_kg
-                    + cell.char_mass_kg
-                    + cell.ash_mass_kg
-                    <= mass_epsilon
-                ):
-                    cell.phase = DEPLETED
-                elif (
-                    cell.char_mass_kg > cell.dry_wood_mass_kg
-                    and cell.char_mass_kg > cell.ash_mass_kg
-                ):
-                    cell.phase = CHAR
-                elif cell.ash_mass_kg > cell.dry_wood_mass_kg + cell.char_mass_kg:
-                    cell.phase = ASH
-                elif (
-                    cell.temperature_k >= pyrolysis_start_temperature_k
-                    and cell.dry_wood_mass_kg > mass_epsilon
-                ):
-                    cell.phase = PYROLYZING
-                elif cell.moisture_mass_kg > cell.dry_wood_mass_kg * 0.01:
-                    cell.phase = WET_WOOD
-                else:
-                    cell.phase = DRY_WOOD
+                if update_cell_phases:
+                    if (
+                        cell.moisture_mass_kg
+                        + cell.dry_wood_mass_kg
+                        + cell.char_mass_kg
+                        + cell.ash_mass_kg
+                        <= mass_epsilon
+                    ):
+                        cell.phase = DEPLETED
+                    elif (
+                        cell.char_mass_kg > cell.dry_wood_mass_kg
+                        and cell.char_mass_kg > cell.ash_mass_kg
+                    ):
+                        cell.phase = CHAR
+                    elif (
+                        cell.ash_mass_kg
+                        > cell.dry_wood_mass_kg + cell.char_mass_kg
+                    ):
+                        cell.phase = ASH
+                    elif (
+                        cell.temperature_k >= pyrolysis_start_temperature_k
+                        and cell.dry_wood_mass_kg > mass_epsilon
+                    ):
+                        cell.phase = PYROLYZING
+                    elif cell.moisture_mass_kg > cell.dry_wood_mass_kg * 0.01:
+                        cell.phase = WET_WOOD
+                    else:
+                        cell.phase = DRY_WOOD
                 if diagnostics_enabled:
                     phase_index = _PHASE_INDEX[cell.phase]
                     phase_assignments[phase_index] += 1

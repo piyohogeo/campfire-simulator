@@ -21,7 +21,7 @@ for ($pair = 1; $pair -le $PairCount; $pair++) {
     $backends = if ($pair % 2 -eq 1) { @("python", "numpy") } else { @("numpy", "python") }
     foreach ($backend in $backends) {
         $runOutput = Join-Path $OutputDir ("pair_{0}_{1}" -f $pair, $backend)
-        & $phase3Runner -OutputDir $runOutput -ArrayBackend $backend
+        & $phase3Runner -OutputDir $runOutput -ArrayBackend $backend -PythonSurfaceBoundaryPath original -PythonStateClampPath original -CellPhaseUpdates eager
         if ($LASTEXITCODE -ne 0) {
             exit $LASTEXITCODE
         }

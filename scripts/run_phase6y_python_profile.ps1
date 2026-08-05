@@ -18,7 +18,7 @@ $summaries = @()
 
 for ($run = 1; $run -le $RunCount; $run++) {
     $runOutput = Join-Path $OutputDir ("python_profile_{0}" -f $run)
-    & $phase3Runner -OutputDir $runOutput -ArrayBackend python -ProfileWoodInternals
+    & $phase3Runner -OutputDir $runOutput -ArrayBackend python -ProfileWoodInternals -PythonSurfaceBoundaryPath original -PythonStateClampPath original -CellPhaseUpdates eager
     if ($LASTEXITCODE -ne 0) {
         exit $LASTEXITCODE
     }
