@@ -35,8 +35,8 @@
       <div class="shell status-grid">
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>33 / 33 passed</strong></div>
-        <div><span>次の焦点</span><strong>一致条件での断面計測</strong></div>
+        <div><span>テスト</span><strong>35 / 35 passed</strong></div>
+        <div><span>次の焦点</span><strong>承認後のdry run</strong></div>
       </div>
     </div>
   </header>
@@ -59,9 +59,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">External plywood char depth · explicit comparability gate</p>
+            <p class="section-kicker">Synchronized experiment plan · technical and authorization gates</p>
             <h2>「それらしい」から、<br>誤差を示せるモデルへ。</h2>
-            <p><a href="https://doi.org/10.3390/fire3040061">Kasymovらの一次実験</a>が、34.7 kW/m²・600秒のカバ合板について端面IRから炭化深さ13.77 ± 0.60 mmを得ています。現在の35 kW/m²未収縮相当値は9.240 mmですが、一致するのは熱流束・時間・100 mm角の3 / 10条件だけです。異なる量の差を誤差として採点せず、物理厚さへの転用ゲートを閉じます。</p>
+            <p><a href="https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=101408">NISTのコーン手順</a>と<a href="https://www.iso.org/standard/57957.html">ISO 5660-1</a>を基準に、24試験へ一意なRun IDを発行しました。初期露出面とDAQ時刻を共通原点にし、質量・温度・表面変位・断面画像の生データを同期します。技術計画は完成していますが、安全SOP・装置責任者・消火法パイロットの承認は外部責任なので、実行許可は閉じたままです。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -101,6 +101,20 @@
           </figure>
 
           <figure class="capture-card">
+            <a href="assets/phase6/char_depth_measurement_protocol_report.svg" aria-label="Phase 6N 一致条件炭化深さ測定契約を開く">
+              <img src="assets/phase6/char_depth_measurement_protocol_report.svg" width="1200" height="680" alt="35と70 kW毎平方メートル、60・180・300・600秒、各3反復の24試験と、厚さ変位・二つの炭化前線・試験片識別情報・不確かさを要求する閉じたデータゲート">
+            </a>
+            <figcaption><div><strong>Matched measurement contract</strong><span>24 scheduled · 0 complete · physical thickness withheld</span></div></figcaption>
+          </figure>
+
+          <figure class="capture-card">
+            <a href="assets/phase6/char_depth_experiment_plan_report.svg" aria-label="Phase 6O 同期実験実施計画を開く">
+              <img src="assets/phase6/char_depth_experiment_plan_report.svg" width="1200" height="680" alt="初期露出面基準の座標、DAQ基準の露出・点火・中断・消火タイムライン、質量・温度・表面・断面の取得、技術完成と実行未承認を示すSVG図">
+            </a>
+            <figcaption><div><strong>Synchronized execution plan</strong><span>24 runs · 6 templates · technical complete · not authorized</span></div></figcaption>
+          </figure>
+
+          <figure class="capture-card">
             <a href="assets/phase6/replicate_holdout_report.svg" aria-label="Phase 6C 合板反復ホールドアウトレポートを開く">
               <img src="assets/phase6/replicate_holdout_report.svg" width="1200" height="680" alt="未使用の合板SAMP.3について、着火時刻と平均質量減少速度の観測・初期・SAMP.1/2選定値を並べたSVGグラフ">
             </a>
@@ -136,8 +150,8 @@
           </figure>
 
           <div class="story-grid">
-            <section class="story-card"><span class="card-index">01</span><h3>直接測定を取り込む</h3><ul><li>端面IRを5 Hzで取得</li><li>600秒・3反復</li><li>13.77 ± 0.60 mm</li><li>係数選定には不使用</li></ul></section>
-            <section class="story-card warm"><span class="card-index">02</span><h3>比較可能性を先に判定</h3><ul><li>一致3条件、不一致7条件</li><li>比較誤差はnull</li><li>収縮係数を逆算しない</li><li>Darcy厚さ入力は欠測のまま</li></ul></section>
+            <section class="story-card"><span class="card-index">01</span><h3>原点と時計を一つにする</h3><ul><li>初期面中心・内部方向+z</li><li>後退+、外向き膨張−</li><li>DAQの露出開始をt=0</li><li>カメラoffsetをイベント記録</li></ul></section>
+            <section class="story-card warm"><span class="card-index">02</span><h3>完成と許可を分ける</h3><ul><li>24 Run ID・6テンプレート</li><li>生値・raw ID・不確かさ</li><li>技術計画はcomplete</li><li>3外部承認までnot authorized</li></ul></section>
           </div>
 
           <section class="verification" aria-labelledby="phase6-verification-title">
@@ -149,6 +163,8 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Transport gate</strong><small>5 missing inputs · residence time withheld</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Char geometry</strong><small>5 plies · physical thickness and shrinkage null</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>External depth</strong><small>3 / 10 match · not scored · transfer blocked</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Measurement gate</strong><small>24 scheduled · 0 complete · calibration blocked</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Execution plan</strong><small>24 runs · 6 templates · 3 approvals missing</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>
             </div>
           </section>
@@ -157,7 +173,7 @@
             <div class="facts-heading"><p class="section-kicker">Measured on RTX 3090</p><h3 id="phase6-facts-title">校正と未使用データの結果</h3></div>
             <dl class="facts-grid">
               <div><dt>Score improvement</dt><dd>3.7%</dd></div>
-              <div><dt>Search time</dt><dd>56.3 s</dd></div>
+              <div><dt>Search time</dt><dd>55.0 s</dd></div>
               <div><dt>35 kW/m² ignition</dt><dd>47.1 → 30.5 s</dd></div>
               <div><dt>70 kW/m² ignition</dt><dd>7.7 → 12.2 s</dd></div>
               <div><dt>Best absorptivity</dt><dd>1.00</dd></div>
@@ -168,6 +184,11 @@
               <div><dt>Physical char thickness</dt><dd>null · shrinkage unresolved</dd></div>
               <div><dt>External plywood char depth</dt><dd>13.77 ± 0.60 mm</dd></div>
               <div><dt>Comparable conditions</dt><dd>3 / 10 · error null</dd></div>
+              <div><dt>Matched measurement slots</dt><dd>24 scheduled / 0 complete</dd></div>
+              <div><dt>Physical thickness gate</dt><dd>closed · all 24 required</dd></div>
+              <div><dt>Execution schedule</dt><dd>24 unique Run IDs</dd></div>
+              <div><dt>Technical templates</dt><dd>6 / 6 present</dd></div>
+              <div><dt>External approvals</dt><dd>0 / 3 · not authorized</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
@@ -183,8 +204,8 @@
           </section>
 
           <div class="notes-grid">
-            <section class="note caution"><p class="note-label">Known limits</p><h3>近い熱流束でも別の合板</h3><p>外部試験は21 mm・カバ・尿素接着剤・高密度材・黒体放射です。NIST試験片は12.7 mm外装5層合板で、樹種と接着剤が未報告です。端面IR炭化境界と質量等価深さも同じ量ではありません。</p></section>
-            <section class="note next"><p class="note-label">What comes next</p><h3>一致条件で断面を測る</h3><p>NIST試験片に近い樹種・接着剤・密度・含水率・厚さと、明示的な前線定義を持つ資料を探します。なければ厚さ変位と断面炭化境界を同時に取る専用試験の仕様を定義します。</p></section>
+            <section class="note caution"><p class="note-label">Known limits</p><h3>技術計画は火災試験の許可ではない</h3><p>実設備、熱電対型式、消火媒体、安全手順は責任研究室が決める外部入力です。現在は3承認とも未取得で、実測完了数も0です。リポジトリは規格や安全SOPを置換しません。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>承認後に一条件だけdry run</h3><p>本番24試験の前に、時計offset、熱電対実深さ、炎・煙による視野、シャッター後の温度継続、消火による形状変化、ファイル名を非本番runで確認します。</p></section>
           </div>
         </div>
       </article>

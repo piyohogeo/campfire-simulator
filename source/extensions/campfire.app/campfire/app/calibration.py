@@ -2,7 +2,7 @@
 
 import json
 import math
-from dataclasses import dataclass, replace
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 
 from .combustion import (
@@ -16,12 +16,26 @@ from .combustion import (
     temperature_adjusted_dry_wood_specific_heat_j_kg_k,
 )
 from .panel import LayeredPanelThermalModel, create_layered_panel_model
+from .char_depth_measurement import (
+    evaluate_char_depth_measurement_readiness,
+    load_char_depth_measurement_csv,
+)
+from .char_depth_experiment import (
+    evaluate_char_depth_experiment_plan,
+    load_char_depth_experiment_protocol,
+    load_char_depth_run_schedule,
+)
 
 
 REFERENCE_PATH = (
     Path(__file__).resolve().parents[2]
     / "data"
     / "nistir_7094_plywood_cone.json"
+)
+CHAR_DEPTH_MEASUREMENT_TEMPLATE_PATH = (
+    Path(__file__).resolve().parents[2]
+    / "data"
+    / "char_depth_measurement_template.csv"
 )
 CALIBRATION_DT_SECONDS = 0.10
 CALIBRATION_DURATION_SECONDS = 600.0
@@ -209,6 +223,24 @@ def load_nist_plywood_reference(path: Path | None = None) -> dict:
         is not False
     ):
         raise ValueError("External plywood char-depth benchmark is incomplete")
+    measurement_protocol = data.get("matched_char_depth_measurement_protocol", {})
+    required_heat_fluxes = measurement_protocol.get(
+        "required_heat_fluxes_kw_m2", []
+    )
+    required_times = measurement_protocol.get("required_times_s", [])
+    required_replicates = measurement_protocol.get("required_replicate_ids", [])
+    if (
+        measurement_protocol.get("status") != "awaiting_matched_experiments"
+        or measurement_protocol.get("used_for_parameter_selection") is not False
+        or required_heat_fluxes != [35.0, 70.0]
+        or required_times != [60.0, 180.0, 300.0, 600.0]
+        or required_replicates != [1, 2, 3]
+        or int(measurement_protocol.get("required_observation_count", 0)) != 24
+        or measurement_protocol.get("template_filename")
+        != "char_depth_measurement_template.csv"
+        or len(measurement_protocol.get("method_sources", [])) != 3
+    ):
+        raise ValueError("Matched char-depth measurement protocol is incomplete")
     common_scales = kinetics.get("parallel_common_scales", [])
     if not common_scales or any(float(scale) <= 0.0 for scale in common_scales):
         raise ValueError("Parallel Arrhenius common scales must be positive")
@@ -1063,6 +1095,40 @@ def evaluate_external_plywood_char_depth_benchmark(
     }
 
 
+def evaluate_matched_char_depth_measurement_readiness(
+    reference: dict, template_path: Path | None = None
+) -> dict:
+    """Evaluate the blank or populated matched-measurement observation matrix."""
+
+    definition = reference["matched_char_depth_measurement_protocol"]
+    path = Path(template_path or CHAR_DEPTH_MEASUREMENT_TEMPLATE_PATH).resolve()
+    observations = load_char_depth_measurement_csv(path)
+    readiness = evaluate_char_depth_measurement_readiness(
+        observations,
+        required_heat_fluxes_kw_m2=tuple(definition["required_heat_fluxes_kw_m2"]),
+        required_times_s=tuple(definition["required_times_s"]),
+        required_replicate_ids=tuple(definition["required_replicate_ids"]),
+    )
+    return {
+        **definition,
+        "template_path": str(path),
+        **asdict(readiness),
+    }
+
+
+def evaluate_char_depth_experiment_execution_plan() -> dict:
+    """Return the issued run plan while preserving its external safety gate."""
+
+    protocol = load_char_depth_experiment_protocol()
+    schedule = load_char_depth_run_schedule()
+    readiness = evaluate_char_depth_experiment_plan()
+    return {
+        "protocol": protocol,
+        "schedule": [asdict(run) for run in schedule],
+        "readiness": asdict(readiness),
+    }
+
+
 def evaluate_gas_transport_readiness(
     reference: dict, best_evaluation: dict | None = None
 ) -> dict:
@@ -1131,6 +1197,12 @@ def run_nist_plywood_calibration() -> dict:
     external_plywood_char_depth_benchmark = (
         evaluate_external_plywood_char_depth_benchmark(reference, best)
     )
+    matched_char_depth_measurement_readiness = (
+        evaluate_matched_char_depth_measurement_readiness(reference)
+    )
+    char_depth_experiment_execution_plan = (
+        evaluate_char_depth_experiment_execution_plan()
+    )
     gas_transport_readiness = evaluate_gas_transport_readiness(reference, best)
     validation_baseline = evaluate_parameters(
         reference, baseline_parameters, validation_targets
@@ -1179,6 +1251,12 @@ def run_nist_plywood_calibration() -> dict:
         "char_geometry_diagnostic": char_geometry_diagnostic,
         "external_plywood_char_depth_benchmark": (
             external_plywood_char_depth_benchmark
+        ),
+        "matched_char_depth_measurement_readiness": (
+            matched_char_depth_measurement_readiness
+        ),
+        "char_depth_experiment_execution_plan": (
+            char_depth_experiment_execution_plan
         ),
         "arrhenius_model": reference["arrhenius_model"],
         "candidate_count": len(ranked),
@@ -1864,6 +1942,157 @@ def write_char_depth_benchmark_svg(calibration: dict, destination: Path) -> Path
   <line x1="60" y1="592" x2="1140" y2="592" stroke="#53483d"/>
   <text x="60" y="620" class="small">External: untreated birch plywood · urea glue · 21 mm · 705–725 kg/m3 · 34.7 kW/m2 blackbody · end-face IR carbonization boundary.</text>
   <text x="60" y="645" class="small">Current quantity is unshrunk dry-mass-equivalent reaction depth, not a measured physical char depth. Comparison error remains null.</text>
+</svg>'''
+    destination.write_text(svg, encoding="utf-8")
+    return destination
+
+
+def write_char_depth_measurement_protocol_svg(
+    calibration: dict, destination: Path
+) -> Path:
+    """Render the required matched-experiment matrix and its closed data gate."""
+
+    destination = Path(destination).resolve()
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    readiness = calibration["matched_char_depth_measurement_readiness"]
+    times = readiness["required_times_s"]
+    fluxes = readiness["required_heat_fluxes_kw_m2"]
+    replicates = readiness["required_replicate_ids"]
+    gate_open = readiness["ready_for_physical_char_thickness_calibration"]
+    gate_label = "OPEN" if gate_open else "CLOSED"
+    gate_outcome = (
+        "measurement input complete"
+        if gate_open
+        else "physical thickness calibration withheld"
+    )
+    matrix_markup = []
+    for row, flux in enumerate(fluxes):
+        y = 164.0 + row * 94.0
+        matrix_markup.append(
+            f'<text x="60" y="{y + 43:.0f}" class="flux">{float(flux):g} kW/m2</text>'
+        )
+        for column, time_s in enumerate(times):
+            x = 210.0 + column * 225.0
+            matrix_markup.append(
+                f'<rect x="{x:.0f}" y="{y:.0f}" width="190" height="72" '
+                'rx="8" fill="#211c18" stroke="#665746"/>'
+                f'<text x="{x + 14:.0f}" y="{y + 24:.0f}" class="time">'
+                f'{float(time_s):g} s</text>'
+            )
+            for replicate_index, replicate_id in enumerate(replicates):
+                circle_x = x + 88.0 + replicate_index * 39.0
+                matrix_markup.append(
+                    f'<circle cx="{circle_x:.0f}" cy="{y + 38:.0f}" r="12" '
+                    'fill="#2a1918" stroke="#df654e" stroke-width="2"/>'
+                    f'<text x="{circle_x:.0f}" y="{y + 42:.0f}" class="rep" '
+                    f'text-anchor="middle">R{int(replicate_id)}</text>'
+                )
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#15120f"/>
+  <style>
+    text {{ font-family: "Segoe UI", Arial, sans-serif; fill: #fff7e9; }}
+    .title {{ font-size: 30px; font-weight: 700; }}
+    .subtitle {{ font-size: 15px; fill: #d7b982; }}
+    .flux {{ font-size: 17px; font-weight: 700; }}
+    .time {{ font-size: 14px; font-weight: 700; fill: #e9c98f; }}
+    .rep {{ font-size: 9px; font-weight: 700; fill: #ff9c8e; }}
+    .heading {{ font-size: 17px; font-weight: 700; }}
+    .body {{ font-size: 13px; fill: #ded2c0; }}
+    .small {{ font-size: 12px; fill: #bcae9a; }}
+  </style>
+  <text x="60" y="52" class="title">Phase 6N · Matched char-depth measurement contract</text>
+  <text x="60" y="82" class="subtitle">2 heat fluxes × 4 interruption times × 3 independent replicates · every SI value, identity field, and uncertainty required</text>
+  <text x="60" y="126" class="heading">Required observation matrix · {readiness["complete_observation_count"]}/{readiness["required_observation_count"]} complete</text>
+  {''.join(matrix_markup)}
+
+  <rect x="60" y="368" width="335" height="124" rx="9" fill="#1c2820" stroke="#4f966b"/>
+  <text x="82" y="400" class="heading">Geometry observation</text>
+  <text x="82" y="430" class="body">initial + current total thickness</text>
+  <text x="82" y="454" class="body">signed exposed-surface displacement</text>
+  <text x="82" y="478" class="small">Swelling remains possible; never clamp to shrinkage.</text>
+
+  <rect x="432" y="368" width="335" height="124" rx="9" fill="#282218" stroke="#a77a38"/>
+  <text x="454" y="400" class="heading">Two front definitions</text>
+  <text x="454" y="430" class="body">calibrated optical cross-section</text>
+  <text x="454" y="454" class="body">independent 300 °C isotherm</text>
+  <text x="454" y="478" class="small">Keep both until their offset is measured.</text>
+
+  <rect x="804" y="368" width="336" height="124" rx="9" fill="#211817" stroke="#ad5149"/>
+  <text x="826" y="400" class="heading">Uncertainty and identity</text>
+  <text x="826" y="430" class="body">positive thickness + front uncertainty</text>
+  <text x="826" y="454" class="body">species, glue, plies, density, moisture</text>
+  <text x="826" y="478" class="small">No anonymous “plywood” coefficient transfer.</text>
+
+  <rect x="60" y="520" width="1080" height="64" rx="9" fill="#2a1918" stroke="#df654e" stroke-width="2"/>
+  <text x="82" y="560" class="heading" fill="#ff8f7e">DATA GATE {gate_label} · {readiness["scheduled_observation_count"]} slots scheduled · {readiness["complete_observation_count"]} complete · {gate_outcome}</text>
+  <line x1="60" y1="612" x2="1140" y2="612" stroke="#53483d"/>
+  <text x="60" y="640" class="small">The CSV template is executable acceptance data, not invented observations. Completing this gate still does not supply Darcy porosity, permeability, viscosity, or pressure drop.</text>
+</svg>'''
+    destination.write_text(svg, encoding="utf-8")
+    return destination
+
+
+def write_char_depth_experiment_plan_svg(
+    calibration: dict, destination: Path
+) -> Path:
+    """Render the synchronized acquisition plan and its external safety gate."""
+
+    destination = Path(destination).resolve()
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    plan = calibration["char_depth_experiment_execution_plan"]
+    readiness = plan["readiness"]
+    approval_count = len(readiness["missing_external_approvals"])
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#15120f"/>
+  <style>
+    text {{ font-family: "Segoe UI", Arial, sans-serif; fill: #fff7e9; }}
+    .title {{ font-size: 30px; font-weight: 700; }}
+    .subtitle {{ font-size: 15px; fill: #d7b982; }}
+    .heading {{ font-size: 17px; font-weight: 700; }}
+    .body {{ font-size: 13px; fill: #ded2c0; }}
+    .small {{ font-size: 12px; fill: #bcae9a; }}
+    .tag {{ font-size: 11px; font-weight: 700; }}
+  </style>
+  <text x="60" y="52" class="title">Phase 6O · Synchronized experiment execution plan</text>
+  <text x="60" y="82" class="subtitle">One master clock · explicit geometry · raw files retained · no fire-test authorization inferred</text>
+
+  <rect x="60" y="116" width="330" height="248" rx="10" fill="#1b2520" stroke="#4f966b"/>
+  <text x="82" y="150" class="heading">One coordinate frame</text>
+  <rect x="118" y="196" width="204" height="102" fill="#8e6744" stroke="#e9c98f" stroke-width="2"/>
+  <line x1="118" y1="186" x2="322" y2="186" stroke="#ff7058" stroke-width="3"/>
+  <text x="220" y="178" class="tag" text-anchor="middle">initial exposed plane · z = 0</text>
+  <line x1="220" y1="186" x2="220" y2="332" stroke="#58b889" stroke-width="3"/>
+  <polygon points="220,340 214,328 226,328" fill="#58b889"/>
+  <text x="237" y="326" class="tag" fill="#7ed7a7">+z into specimen</text>
+  <line x1="105" y1="186" x2="105" y2="166" stroke="#df654e" stroke-width="3"/>
+  <polygon points="105,158 99,170 111,170" fill="#df654e"/>
+  <text x="82" y="340" class="small">recession + · outward swelling −</text>
+  <text x="82" y="358" class="small">all depths surveyed from the initial z = 0 plane</text>
+
+  <rect x="420" y="116" width="720" height="248" rx="10" fill="#211c18" stroke="#806c51"/>
+  <text x="442" y="150" class="heading">Exposure and interruption share the DAQ clock</text>
+  <line x1="462" y1="223" x2="1098" y2="223" stroke="#d7b982" stroke-width="3"/>
+  <circle cx="485" cy="223" r="9" fill="#58b889"/><text x="485" y="191" class="tag" text-anchor="middle">t = 0</text><text x="485" y="258" class="small" text-anchor="middle">exposure_start</text>
+  <circle cx="660" cy="223" r="9" fill="#e4aa55"/><text x="660" y="191" class="tag" text-anchor="middle">spark</text><text x="660" y="258" class="small" text-anchor="middle">flaming event</text>
+  <circle cx="875" cy="223" r="9" fill="#df654e"/><text x="875" y="191" class="tag" text-anchor="middle">60 / 180 / 300 / 600 s</text><text x="875" y="258" class="small" text-anchor="middle">shutter · exposure_end</text>
+  <circle cx="1068" cy="223" r="9" fill="#9c76c4"/><text x="1068" y="191" class="tag" text-anchor="middle">record delay</text><text x="1068" y="258" class="small" text-anchor="middle">quench · section</text>
+  <text x="442" y="310" class="body">Camera clocks store a synchronization event and offset. Missing values stay null—never zero-filled.</text>
+  <text x="442" y="338" class="small">24 independent specimens · holder/grid recorded · actual heat flux and thermocouple depths surveyed</text>
+
+  <text x="60" y="406" class="heading">Acquisition tracks and immutable evidence</text>
+  <rect x="60" y="430" width="250" height="92" rx="8" fill="#1c2820" stroke="#4f966b"/>
+  <text x="82" y="460" class="heading">Mass · ≥ 1 Hz</text><text x="82" y="486" class="body">kg + uncertainty + raw record ID</text><text x="82" y="508" class="small">cone load platform · master clock</text>
+  <rect x="328" y="430" width="250" height="92" rx="8" fill="#282218" stroke="#a77a38"/>
+  <text x="350" y="460" class="heading">Temperature · ≥ 1 Hz</text><text x="350" y="486" class="body">7 target depths · actual survey</text><text x="350" y="508" class="small">300 °C only by bracketing interpolation</text>
+  <rect x="596" y="430" width="250" height="92" rx="8" fill="#211c28" stroke="#8364a8"/>
+  <text x="618" y="460" class="heading">Surface · ≥ 5 Hz</text><text x="618" y="486" class="body">z displacement + calibrated image</text><text x="618" y="508" class="small">fixed holder reference · raw frames retained</text>
+  <rect x="864" y="430" width="276" height="92" rx="8" fill="#211817" stroke="#ad5149"/>
+  <text x="886" y="460" class="heading">Section · post-stabilization</text><text x="886" y="486" class="body">optical trace + scale + operator</text><text x="886" y="508" class="small">saw kerf, material loss, elapsed delay</text>
+
+  <rect x="60" y="548" width="1080" height="70" rx="9" fill="#2a1918" stroke="#df654e" stroke-width="2"/>
+  <text x="82" y="579" class="heading" fill="#ff8f7e">TECHNICAL PLAN COMPLETE · {readiness["scheduled_run_count"]} runs · {readiness["template_file_count"]} templates</text>
+  <text x="82" y="603" class="body">EXECUTION NOT AUTHORIZED · {approval_count} external approvals remain: lab safety SOP · apparatus owner · quench pilot</text>
+  <text x="60" y="650" class="small">This plan defines synchronized data acceptance; it does not replace ISO 5660-1, the apparatus manual, or the responsible laboratory safety procedure.</text>
 </svg>'''
     destination.write_text(svg, encoding="utf-8")
     return destination

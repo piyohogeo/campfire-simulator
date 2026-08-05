@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "protocol_id": "CAMPFIRE_PHASE6O_MATCHED_CHAR_DEPTH_V1",
+  "status": "technical_plan_complete_awaiting_lab_approval",
+  "purpose": "Collect matched plywood geometry, thermal-front, and mass histories without treating a measurement convention as a physical shrinkage coefficient.",
+  "sources": [
+    {
+      "source": "NISTIR 7094 / NIST SP 1021, cone calorimeter appendix",
+      "url": "https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=101408",
+      "use": "100 mm square horizontal specimen, foil-wrapped non-exposed faces, 25 mm specimen-to-cone-housing distance, 35/70 kW/m2 exposure, spark ignition, three tests, and synchronized mass history."
+    },
+    {
+      "source": "ISO 5660-1:2015",
+      "url": "https://www.iso.org/standard/57957.html",
+      "use": "Controlled irradiance, horizontal orientation, external igniter, sustained-flaming time, heat-release and smoke record context."
+    },
+    {
+      "source": "Kasymov et al., Fire 3(4), 61 (2020)",
+      "url": "https://doi.org/10.3390/fire3040061",
+      "use": "Five-frame-per-second optical observation is retained as a documented imaging design choice; its birch-plywood values are not transferred."
+    },
+    {
+      "source": "Rinta-Paavola, Sukhomlinov, and Hostikka, Fire Technology 59 (2023)",
+      "url": "https://doi.org/10.1007/s10694-023-01458-9",
+      "use": "Keep the interpolated 300 C isotherm as a separate thermal char-front convention and preserve measurement variation."
+    }
+  ],
+  "coordinate_frame": {
+    "origin": "Center of the initial exposed surface before heating.",
+    "x_axis": "Parallel to the face-ply grain direction.",
+    "y_axis": "In the exposed plane, completing a right-handed frame.",
+    "z_axis": "Positive from the initial exposed surface into the specimen toward the unexposed face.",
+    "surface_displacement_sign": "exposed_surface_displacement_m = current_surface_z_m; recession is positive and outward swelling is negative.",
+    "depth_reference": "All thermocouple depths are surveyed from the initial exposed surface; optical depth is additionally reported from the current exposed surface."
+  },
+  "timebase": {
+    "master_clock": "Cone calorimeter data-acquisition clock.",
+    "time_zero_event": "exposure_start, when the protective shutter clears the specimen.",
+    "required_events": [
+      "pre_exposure_ready",
+      "exposure_start",
+      "spark_on",
+      "sustained_flaming",
+      "spark_off",
+      "exposure_end",
+      "quench_start",
+      "quench_complete",
+      "section_image_start"
+    ],
+    "timestamp_rule": "Every instrument record uses elapsed_time_s from the master clock; camera clocks require a recorded synchronization event and offset."
+  },
+  "apparatus_contract": {
+    "method": "ISO 5660-1 / ASTM E1354 compatible cone calorimeter operated by the responsible laboratory.",
+    "specimen_width_m": 0.1,
+    "specimen_depth_m": 0.1,
+    "orientation": "horizontal",
+    "non_exposed_faces_foil_wrapped": true,
+    "initial_exposed_surface_to_cone_housing_m": 0.025,
+    "external_igniter": "spark",
+    "target_heat_fluxes_kw_m2": [35.0, 70.0],
+    "heat_flux_calibration_record_required": true,
+    "actual_heat_flux_record_required": true,
+    "holder_and_restraining_grid_configuration_record_required": true
+  },
+  "thermal_front_instrumentation": {
+    "sensor_type": "Fine-wire thermocouples compatible with the laboratory fire-test SOP; type, wire diameter, junction construction, and calibration are recorded per run.",
+    "target_depths_from_initial_exposed_surface_m": [
+      0.001,
+      0.003,
+      0.005,
+      0.007,
+      0.009,
+      0.011,
+      0.012
+    ],
+    "actual_depth_survey_required": true,
+    "placement": "Central region, away from edges; lateral insertion path and junction coordinates are photographed and recorded.",
+    "minimum_sampling_hz": 1.0,
+    "front_rule": "Interpolate depth at 300 C only between valid surveyed junctions that bracket 300 C at the requested time. Never extrapolate beyond the outer valid junctions.",
+    "unbracketed_result": "null"
+  },
+  "optical_instrumentation": {
+    "surface_view_minimum_frames_per_second": 5.0,
+    "surface_view": "Orthogonal calibrated side view containing a fixed reference tied to the specimen holder and the initial z=0 plane.",
+    "section_view": "Post-stabilization orthogonal cross-section image with an in-plane traceable scale and run identifier.",
+    "raw_images_retained": true,
+    "image_processing_script_version_required": true,
+    "front_rule": "Trace current exposed surface and visible char/pyrolysis boundary independently; retain raw trace points and operator identifier."
+  },
+  "acquisition_contract": {
+    "mass_history_minimum_sampling_hz": 1.0,
+    "temperature_history_minimum_sampling_hz": 1.0,
+    "surface_history_minimum_sampling_hz": 5.0,
+    "raw_values_required": true,
+    "processed_values_must_reference_raw_files": true,
+    "missing_or_invalid_values": "blank or null; never replace with zero"
+  },
+  "interruption_contract": {
+    "separate_specimen_per_slot": true,
+    "exposure_end": "Insert the apparatus shutter at the scheduled interruption time and record the actual exposure_end timestamp.",
+    "quench": "The laboratory must approve and record one fixed quench method during the pilot. Record quench_start, quench_complete, medium, enclosure, and specimen-contact details; do not infer instantaneous cooling.",
+    "handling": "Keep the specimen in its holder until quench_complete unless the approved SOP requires otherwise; record every move and contact.",
+    "sectioning": "Section only after the approved stabilization criterion is met. Record section plane, saw kerf, material loss, and elapsed time since exposure_end."
+  },
+  "required_template_files": [
+    "char_depth_run_schedule.csv",
+    "char_depth_event_log_template.csv",
+    "char_depth_mass_history_template.csv",
+    "char_depth_temperature_history_template.csv",
+    "char_depth_surface_history_template.csv",
+    "char_depth_measurement_template.csv"
+  ],
+  "run_directory_contract": {
+    "directory_pattern": "runs/{run_id}",
+    "required_files": [
+      "run_manifest.json",
+      "events.csv",
+      "mass_history.csv",
+      "temperature_history.csv",
+      "surface_history.csv",
+      "section_measurement.json"
+    ],
+    "required_directories": [
+      "raw_images",
+      "processed_traces"
+    ]
+  },
+  "external_authorization_gate": {
+    "authorized_to_execute": false,
+    "missing_approvals": [
+      "laboratory_fire_safety_sop_approval",
+      "cone_calorimeter_owner_approval",
+      "quench_method_pilot_approval"
+    ],
+    "policy": "This repository defines data and synchronization acceptance. It does not authorize a fire test or replace the laboratory safety SOP."
+  }
+}

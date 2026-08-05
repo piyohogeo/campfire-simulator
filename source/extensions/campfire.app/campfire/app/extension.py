@@ -82,6 +82,8 @@ from .calibration import (
     run_nist_plywood_calibration,
     write_calibration_svg,
     write_char_depth_benchmark_svg,
+    write_char_depth_measurement_protocol_svg,
+    write_char_depth_experiment_plan_svg,
     write_char_geometry_svg,
     write_gas_transport_readiness_svg,
     write_holdout_svg,
@@ -388,6 +390,16 @@ class CampfireAppExtension(omni.ext.IExt):
             calibration,
             output_dir / "char_depth_benchmark_report.svg",
         )
+        char_depth_measurement_protocol_report_path = (
+            write_char_depth_measurement_protocol_svg(
+                calibration,
+                output_dir / "char_depth_measurement_protocol_report.svg",
+            )
+        )
+        char_depth_experiment_plan_report_path = write_char_depth_experiment_plan_svg(
+            calibration,
+            output_dir / "char_depth_experiment_plan_report.svg",
+        )
         candidates_path = output_dir / "top_candidates.csv"
         with candidates_path.open("w", newline="", encoding="utf-8") as csv_file:
             writer = csv.DictWriter(
@@ -429,6 +441,12 @@ class CampfireAppExtension(omni.ext.IExt):
             "char_geometry_report": str(char_geometry_report_path),
             "char_depth_benchmark_report": str(
                 char_depth_benchmark_report_path
+            ),
+            "char_depth_measurement_protocol_report": str(
+                char_depth_measurement_protocol_report_path
+            ),
+            "char_depth_experiment_plan_report": str(
+                char_depth_experiment_plan_report_path
             ),
             "top_candidates_csv": str(candidates_path),
             "resolution": list(image_resolution),

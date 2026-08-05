@@ -183,6 +183,64 @@
     "heat_flux_match_tolerance_kw_m2": 0.5,
     "policy": "Display the direct plywood char-depth measurement beside the current fixed-grid mass-equivalent depth only as an external context benchmark. Do not score the quantities or transfer a shrinkage factor because specimen thickness, species, density, moisture basis, adhesive, exposure mode, and front definition are not matched."
   },
+  "matched_char_depth_measurement_protocol": {
+    "template_filename": "char_depth_measurement_template.csv",
+    "status": "awaiting_matched_experiments",
+    "used_for_parameter_selection": false,
+    "required_heat_fluxes_kw_m2": [35.0, 70.0],
+    "required_times_s": [60.0, 180.0, 300.0, 600.0],
+    "required_replicate_ids": [1, 2, 3],
+    "required_observation_count": 24,
+    "specimen_contract": {
+      "material": "External five-ply plywood from a characterized replacement lot",
+      "width_m": 0.1,
+      "depth_m": 0.1,
+      "nominal_thickness_m": 0.0127,
+      "required_metadata": [
+        "wood_species_by_ply",
+        "adhesive_type",
+        "individual_ply_thickness_m",
+        "oven_dry_density_kg_m3",
+        "moisture_ratio_dry_basis",
+        "grain_orientation_by_ply_deg"
+      ]
+    },
+    "exposure_contract": {
+      "apparatus": "cone calorimeter matched to NISTIR 7094",
+      "orientation": "horizontal",
+      "wrapped_sides": true,
+      "ignition": "spark ignition and sustained flaming recorded",
+      "interrupted_test_policy": "Use separate specimens for each required time and quench immediately before sectioning. Do not repeatedly section one specimen."
+    },
+    "measurement_contract": {
+      "initial_thickness_m": "Measured before exposure at the section plane, not replaced by nominal thickness.",
+      "current_total_thickness_m": "Post-quench thickness at the same section plane.",
+      "exposed_surface_displacement_m": "Signed displacement of the exposed surface relative to its initial position; retain swelling as a possible positive or negative observation rather than clamping it to shrinkage.",
+      "optical_char_layer_thickness_m": "Distance from the current exposed surface to the visible char/pyrolysis boundary on a calibrated cross-section.",
+      "isotherm_300c_layer_thickness_m": "Independent 300 C isotherm depth from interface thermocouples; record separately from the optical boundary.",
+      "thickness_uncertainty_m": "Positive expanded uncertainty for thickness and surface displacement.",
+      "char_front_uncertainty_m": "Positive expanded uncertainty for both front methods.",
+      "mass_history": "Retain the cone mass history and synchronize all measurements to exposure time."
+    },
+    "method_sources": [
+      {
+        "source": "NISTIR 7094, Table 2 and Appendix A",
+        "url": "https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=101408",
+        "use": "Match the 100 mm square horizontal cone exposure, 35/70 kW/m2 cases, specimen mass history, ignition, and three-replicate structure. The report does not provide char depth or thickness displacement."
+      },
+      {
+        "source": "Kasymov et al., Fire 3(4), 61 (2020)",
+        "doi": "https://doi.org/10.3390/fire3040061",
+        "use": "End-face infrared imaging demonstrates time-resolved observation of a plywood carbonization boundary, but its specimen and blackbody exposure are not transferred."
+      },
+      {
+        "source": "Rinta-Paavola and Hostikka, Modelling Charring and Burning of Spruce and Pine Woods During Pyrolysis, Smoldering and Flaming, Fire Technology (2023)",
+        "doi": "https://doi.org/10.1007/s10694-023-01458-9",
+        "use": "Record the 300 C isotherm as an independent thermal char-front convention and preserve the possibility of macroscopic swelling caused by cracks. Solid-wood shrinkage values are not transferred to plywood."
+      }
+    ],
+    "gate_policy": "Physical char-layer calibration may start only when all 24 unique slots contain finite SI measurements with positive uncertainty, complete five-ply specimen identity, and a synchronized mass-history file reference. Optical and 300 C front depths remain separate outputs until their offset is quantified. This gate does not open Darcy coupling, which still requires porosity, permeability, gas viscosity, and pressure drop."
+  },
   "arrhenius_model": {
     "equation": "k(T) = A exp(-E / (R T)); first-order dry-wood consumption uses 1 - exp(-k dt).",
     "gas_constant_j_mol_k": 8.31446261815324,

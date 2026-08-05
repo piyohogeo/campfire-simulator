@@ -11,6 +11,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added Phase 4 placement-aware air supply, oxygen-limited heat feedback, dense-stack/log-cabin comparison, and headless validation.
 - Added Phase 5 cross-section support loss, joint release, mass/collider updates, PhysX collapse, reignition, and headless validation.
 - Added Phase 6A fixed NIST plywood reference data, equivalent-coupon calibration search, USD/SVG result views, and headless validation.
+- Added the Phase 6N 24-slot matched char-depth measurement contract, strict CSV readiness gate, and SVG report.
+- Added the Phase 6O synchronized experiment execution plan, 24-run schedule, raw-data templates, external authorization gate, and SVG report.
 - Added Phase 6B no-refit OSB external-material holdout evaluation and a separate browser-readable residual report.
 - Added Phase 6C fixed SAMP.1/2-to-SAMP.3 plywood replicate holdout evaluation and a separate browser-readable report.
 - Added Phase 6D nominal 12.7 mm five-ply planar specimen model, mass-derived effective density, through-thickness conduction, and layer-temperature report.

@@ -520,6 +520,73 @@ class TestScene(omni.kit.test.AsyncTestCase):
             benchmark["current_model"]["physical_char_layer_thickness_m"]
         )
 
+    async def test_matched_char_depth_gate_requires_all_24_valid_observations(self):
+        reference = campfire.app.load_nist_plywood_reference()
+        blank = campfire.app.evaluate_matched_char_depth_measurement_readiness(
+            reference
+        )
+        self.assertEqual(blank["required_observation_count"], 24)
+        self.assertEqual(blank["scheduled_observation_count"], 24)
+        self.assertEqual(blank["complete_observation_count"], 0)
+        self.assertEqual(len(blank["incomplete_slots"]), 24)
+        self.assertFalse(blank["ready_for_physical_char_thickness_calibration"])
+
+        protocol = reference["matched_char_depth_measurement_protocol"]
+        completed = tuple(
+            campfire.app.CharDepthMeasurementObservation(
+                incident_heat_flux_kw_m2=flux,
+                time_s=time_s,
+                replicate_id=replicate_id,
+                initial_thickness_m=0.0127,
+                current_total_thickness_m=0.0120,
+                exposed_surface_displacement_m=0.0002,
+                optical_char_layer_thickness_m=0.0040,
+                isotherm_300c_layer_thickness_m=0.0038,
+                thickness_uncertainty_m=0.0001,
+                char_front_uncertainty_m=0.0002,
+                wood_species_by_ply="Douglas-fir;Douglas-fir;Douglas-fir;Douglas-fir;Douglas-fir",
+                adhesive_type="phenol-formaldehyde",
+                individual_ply_thickness_m="0.00254;0.00254;0.00254;0.00254;0.00254",
+                oven_dry_density_kg_m3=510.0,
+                moisture_ratio_dry_basis=0.08,
+                grain_orientation_by_ply_deg="0;90;0;90;0",
+                mass_history_file=f"flux_{flux:g}_time_{time_s:g}_rep_{replicate_id}.csv",
+            )
+            for flux in protocol["required_heat_fluxes_kw_m2"]
+            for time_s in protocol["required_times_s"]
+            for replicate_id in protocol["required_replicate_ids"]
+        )
+        ready = campfire.app.evaluate_char_depth_measurement_readiness(
+            completed,
+            required_heat_fluxes_kw_m2=tuple(
+                protocol["required_heat_fluxes_kw_m2"]
+            ),
+            required_times_s=tuple(protocol["required_times_s"]),
+            required_replicate_ids=tuple(protocol["required_replicate_ids"]),
+        )
+        self.assertEqual(ready.complete_observation_count, 24)
+        self.assertTrue(ready.ready_for_physical_char_thickness_calibration)
+
+    async def test_char_depth_experiment_plan_is_complete_but_not_authorized(self):
+        protocol = campfire.app.load_char_depth_experiment_protocol()
+        schedule = campfire.app.load_char_depth_run_schedule()
+        readiness = campfire.app.evaluate_char_depth_experiment_plan()
+
+        self.assertEqual(
+            protocol["coordinate_frame"]["z_axis"],
+            "Positive from the initial exposed surface into the specimen toward the unexposed face.",
+        )
+        self.assertEqual(len(schedule), 24)
+        self.assertEqual(schedule[0].run_id, "CF6O-F035-T0060-R01")
+        self.assertEqual(schedule[-1].run_id, "CF6O-F070-T0600-R03")
+        self.assertEqual(readiness.unique_slot_count, 24)
+        self.assertEqual(readiness.template_file_count, 6)
+        self.assertFalse(readiness.missing_template_files)
+        self.assertFalse(readiness.invalid_schedule_rows)
+        self.assertTrue(readiness.technical_plan_complete)
+        self.assertFalse(readiness.authorized_to_execute)
+        self.assertEqual(len(readiness.missing_external_approvals), 3)
+
     async def test_plywood_and_osb_use_distinct_sourced_thermal_profiles(self):
         reference = campfire.app.load_nist_plywood_reference()
         parameters = campfire.app.parallel_arrhenius_baseline_parameters(reference)
@@ -874,6 +941,25 @@ class TestScene(omni.kit.test.AsyncTestCase):
         )
         self.assertIsNone(
             char_benchmark["current_model"]["physical_char_layer_thickness_m"]
+        )
+        measurement_gate = calibration[
+            "matched_char_depth_measurement_readiness"
+        ]
+        self.assertEqual(measurement_gate["required_observation_count"], 24)
+        self.assertEqual(measurement_gate["scheduled_observation_count"], 24)
+        self.assertEqual(measurement_gate["complete_observation_count"], 0)
+        self.assertEqual(len(measurement_gate["incomplete_slots"]), 24)
+        self.assertFalse(
+            measurement_gate[
+                "ready_for_physical_char_thickness_calibration"
+            ]
+        )
+        execution_plan = calibration["char_depth_experiment_execution_plan"]
+        self.assertEqual(len(execution_plan["schedule"]), 24)
+        self.assertTrue(execution_plan["readiness"]["technical_plan_complete"])
+        self.assertFalse(execution_plan["readiness"]["authorized_to_execute"])
+        self.assertEqual(
+            len(execution_plan["readiness"]["missing_external_approvals"]), 3
         )
 
     async def test_phase6_scene_visualizes_observed_baseline_and_calibrated_values(self):

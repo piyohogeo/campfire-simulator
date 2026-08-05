@@ -269,7 +269,22 @@ if ([math]::Abs($charBenchmark.external_observation.char_depth_m - 0.01377) -gt 
 if ($null -ne $charBenchmark.current_model.physical_char_layer_thickness_m -or $charBenchmark.current_model.depth_m -le 0.0 -or $charBenchmark.current_model.depth_m -gt 0.0127) {
     throw "Phase 6 external char-depth benchmark used an invalid current quantity."
 }
-foreach ($path in @($result.image, $result.report, $result.holdout_report, $result.replicate_holdout_report, $result.layer_profile_report, $result.kinetics_report, $result.tar_residence_sensitivity_report, $result.gas_transport_readiness_report, $result.char_geometry_report, $result.char_depth_benchmark_report, $result.top_candidates_csv, $result.final_stage)) {
+$measurementReadiness = $calibration.matched_char_depth_measurement_readiness
+if ($measurementReadiness.status -ne "awaiting_matched_experiments" -or $measurementReadiness.used_for_parameter_selection) {
+    throw "Phase 6 matched char-depth measurement protocol changed."
+}
+if ($measurementReadiness.required_observation_count -ne 24 -or $measurementReadiness.scheduled_observation_count -ne 24 -or $measurementReadiness.complete_observation_count -ne 0 -or $measurementReadiness.incomplete_slots.Count -ne 24 -or $measurementReadiness.missing_slots.Count -ne 0 -or $measurementReadiness.invalid_slots.Count -ne 0 -or $measurementReadiness.duplicate_slots.Count -ne 0 -or $measurementReadiness.unexpected_slots.Count -ne 0 -or $measurementReadiness.ready_for_physical_char_thickness_calibration) {
+    throw "Phase 6 matched char-depth data gate changed."
+}
+$experimentPlan = $calibration.char_depth_experiment_execution_plan
+$experimentReadiness = $experimentPlan.readiness
+if ($experimentPlan.schedule.Count -ne 24 -or $experimentReadiness.scheduled_run_count -ne 24 -or $experimentReadiness.unique_slot_count -ne 24 -or $experimentReadiness.template_file_count -ne 6 -or $experimentReadiness.missing_template_files.Count -ne 0 -or $experimentReadiness.invalid_schedule_rows.Count -ne 0 -or -not $experimentReadiness.technical_plan_complete -or $experimentReadiness.authorized_to_execute -or $experimentReadiness.missing_external_approvals.Count -ne 3) {
+    throw "Phase 6 char-depth experiment execution plan gate changed."
+}
+if ($experimentPlan.schedule[0].run_id -ne "CF6O-F035-T0060-R01" -or $experimentPlan.schedule[23].run_id -ne "CF6O-F070-T0600-R03") {
+    throw "Phase 6 char-depth run schedule changed."
+}
+foreach ($path in @($result.image, $result.report, $result.holdout_report, $result.replicate_holdout_report, $result.layer_profile_report, $result.kinetics_report, $result.tar_residence_sensitivity_report, $result.gas_transport_readiness_report, $result.char_geometry_report, $result.char_depth_benchmark_report, $result.char_depth_measurement_protocol_report, $result.char_depth_experiment_plan_report, $measurementReadiness.template_path, $result.top_candidates_csv, $result.final_stage)) {
     if (-not (Test-Path -LiteralPath $path)) {
         throw "Phase 6 artifact was not produced: $path"
     }
