@@ -1019,6 +1019,12 @@ class CampfireAppExtension(omni.ext.IExt):
         profile_wood_internals = settings.get_as_bool(
             f"{SETTINGS_ROOT}/woodInternalTiming"
         )
+        collect_wood_state_diagnostics = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/woodStateDiagnostics"
+        )
+        python_surface_boundary_fast_path = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/pythonSurfaceBoundaryFastPath"
+        )
         if array_backend not in (PYTHON_ARRAY_BACKEND, NUMPY_ARRAY_BACKEND):
             raise ValueError(f"Unsupported wood-step array backend: {array_backend}")
         flow_interface = _flowusd.acquire_flowusd_interface()
@@ -1041,6 +1047,9 @@ class CampfireAppExtension(omni.ext.IExt):
         capture_times_ms = []
         step_loop_times_ms = []
         wood_internal_times_ms: dict[str, list[float]] = {}
+        wood_state_diagnostics = (
+            {"dry": {}, "wet": {}} if collect_wood_state_diagnostics else {}
+        )
         active_block_counts = []
         images = []
         rows = []
@@ -1060,12 +1069,28 @@ class CampfireAppExtension(omni.ext.IExt):
                     PHASE3_EXTERNAL_HEAT_FLUX_W_M2,
                     timing_ms=dry_internal_timing,
                     array_backend=array_backend,
+                    python_surface_boundary_fast_path=(
+                        python_surface_boundary_fast_path
+                    ),
+                    state_diagnostics=(
+                        wood_state_diagnostics["dry"]
+                        if collect_wood_state_diagnostics
+                        else None
+                    ),
                 )
                 wet_result = wet_model.step(
                     PHASE3_MODEL_DT_SECONDS,
                     PHASE3_EXTERNAL_HEAT_FLUX_W_M2,
                     timing_ms=wet_internal_timing,
                     array_backend=array_backend,
+                    python_surface_boundary_fast_path=(
+                        python_surface_boundary_fast_path
+                    ),
+                    state_diagnostics=(
+                        wood_state_diagnostics["wet"]
+                        if collect_wood_state_diagnostics
+                        else None
+                    ),
                 )
                 model_step_times_ms.append(
                     (time.perf_counter() - model_started) * 1000.0
@@ -1330,6 +1355,20 @@ class CampfireAppExtension(omni.ext.IExt):
                 "scenario": {
                     "wood_array_backend": array_backend,
                     "wood_internal_timing_enabled": profile_wood_internals,
+                    "wood_state_diagnostics_enabled": (
+                        collect_wood_state_diagnostics
+                    ),
+                    "wood_state_diagnostics": wood_state_diagnostics,
+                    "python_surface_boundary_fast_path": (
+                        python_surface_boundary_fast_path
+                    ),
+                    "zero_area_cell_count": {
+                        name: sum(
+                            cell.external_area_m2 * cell.surface_exposure == 0.0
+                            for cell in model.cells
+                        )
+                        for name, model in models.items()
+                    },
                     "debug_extension_status": debug_extension_status,
                     "debugger_free": not any(debug_extension_status.values()),
                     "model_dt_seconds": PHASE3_MODEL_DT_SECONDS,

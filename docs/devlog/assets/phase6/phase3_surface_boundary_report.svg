@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6AA zero-area surface-boundary decision</title>
+  <desc id="desc">3 alternating pairs compare the original Python boundary calculation with an exact zero-area early skip.</desc>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#111827"/><stop offset="1" stop-color="#0d251c"/></linearGradient></defs>
+  <style>.title{font:750 38px 'Segoe UI',sans-serif;fill:#f8fafc}.kicker{font:700 17px 'Segoe UI',sans-serif;fill:#34d399;letter-spacing:2px}.sub{font:16px 'Segoe UI',sans-serif;fill:#cbd5e1}.heading{font:700 16px 'Segoe UI',sans-serif;fill:#f8fafc}.value{font:750 28px 'Segoe UI',sans-serif;fill:#86efac}.small{font:14px 'Segoe UI',sans-serif;fill:#94a3b8}.decision{font:750 24px 'Segoe UI',sans-serif;fill:#86efac}</style>
+  <rect width="1200" height="680" rx="30" fill="url(#bg)"/>
+  <text x="64" y="64" class="kicker">PHASE 6AA · ZERO-AREA BOUNDARY FAST PATH</text>
+  <text x="64" y="114" class="title">Do boundary work only at the boundary</text>
+  <text x="64" y="148" class="sub">3 alternating pairs · debugger-free Phase 3 · 792 / 1,152 cells skipped per log</text>
+  <rect x="64" y="188" width="336" height="292" rx="22" fill="#13261f" stroke="#15803d"/>
+  <text x="92" y="230" class="heading">PROFILED SENSIBLE HEAT</text>
+  <text x="92" y="280" class="value">7.56% faster</text>
+  <text x="92" y="316" class="sub">4.2070 → 3.8890 ms</text>
+  <text x="92" y="374" class="small">Zero external area only</text>
+  <text x="92" y="402" class="small">Conduction still applied</text>
+  <text x="92" y="430" class="small">Exact state and CSV</text>
+  <rect x="432" y="188" width="336" height="292" rx="22" fill="#13261f" stroke="#15803d"/>
+  <text x="460" y="230" class="heading">UNPROFILED WOOD STEP</text>
+  <text x="460" y="280" class="value">7.93% faster</text>
+  <text x="460" y="316" class="sub">11.3241 → 10.4262 ms</text>
+  <text x="460" y="374" class="small">Median of 3 runs per path</text>
+  <text x="460" y="402" class="small">No internal timers</text>
+  <text x="460" y="430" class="small">Same build and cache state</text>
+  <rect x="800" y="188" width="336" height="292" rx="22" fill="#13261f" stroke="#15803d"/>
+  <text x="828" y="230" class="heading">SCENARIO WALL TIME</text>
+  <text x="828" y="280" class="value">5.91% faster</text>
+  <text x="828" y="316" class="sub">17.6416 → 16.5991 s</text>
+  <text x="828" y="374" class="small">Flow and 2 captures retained</text>
+  <text x="828" y="402" class="small">3 / 3 pairs improve both</text>
+  <text x="828" y="430" class="small">Debugger extensions: 0</text>
+  <rect x="64" y="522" width="1072" height="94" rx="18" fill="#10251d" stroke="#86efac" stroke-width="2"/>
+  <text x="92" y="566" class="decision">ADOPTED · enable surface-only boundary path</text>
+  <text x="92" y="594" class="sub">Equations, grid, dt, cell order, state SHA-256, CSV SHA-256, and ignition remain unchanged.</text>
+  <text x="64" y="654" class="small">Flow active blocks are recorded separately as a non-authoritative GPU diagnostic.</text>
+</svg>

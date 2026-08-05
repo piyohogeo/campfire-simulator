@@ -255,6 +255,52 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(arrhenius_numpy.to_dict(), arrhenius_python.to_dict())
         self.assertEqual(arrhenius_numpy.metrics(), arrhenius_python.metrics())
 
+        original_boundary = campfire.app.create_cylindrical_wood_model(
+            "original_surface_boundary",
+            radius_m=0.04,
+            length_m=0.20,
+            moisture_ratio_dry_basis=0.12,
+            axial_cells=4,
+            circumferential_cells=6,
+            radial_cells=3,
+        )
+        fast_surface_boundary = campfire.app.WoodThermalModel.from_dict(
+            original_boundary.to_dict()
+        )
+        self.assertGreater(
+            sum(
+                cell.external_area_m2 * cell.surface_exposure == 0.0
+                for cell in original_boundary.cells
+            ),
+            0,
+        )
+        for step_index in range(120):
+            heat_flux = (
+                150_000.0
+                if step_index < 60
+                else [
+                    150_000.0 if cell.surface_exposure > 0.0 else 0.0
+                    for cell in original_boundary.cells
+                ]
+            )
+            original_result = original_boundary.step(
+                0.2,
+                heat_flux,
+                python_surface_boundary_fast_path=False,
+            )
+            fast_result = fast_surface_boundary.step(
+                0.2,
+                heat_flux,
+                python_surface_boundary_fast_path=True,
+            )
+            self.assertEqual(fast_result, original_result)
+        self.assertEqual(
+            fast_surface_boundary.to_dict(), original_boundary.to_dict()
+        )
+        self.assertEqual(
+            fast_surface_boundary.metrics(), original_boundary.metrics()
+        )
+
         with self.assertRaisesRegex(ValueError, "Unsupported wood-step array backend"):
             numpy_model.step(0.2, 0.0, array_backend="unknown")
 
@@ -269,13 +315,31 @@ class TestScene(omni.kit.test.AsyncTestCase):
             radial_cells=2,
         )
         profiled = campfire.app.WoodThermalModel.from_dict(unprofiled.to_dict())
+        diagnosed = campfire.app.WoodThermalModel.from_dict(unprofiled.to_dict())
         timing_ms = {}
+        state_diagnostics = {}
 
         unprofiled_result = unprofiled.step(0.2, 150_000.0)
         profiled_result = profiled.step(0.2, 150_000.0, timing_ms=timing_ms)
+        diagnosed_result = diagnosed.step(
+            0.2,
+            150_000.0,
+            state_diagnostics=state_diagnostics,
+        )
 
         self.assertEqual(profiled_result, unprofiled_result)
         self.assertEqual(profiled.to_dict(), unprofiled.to_dict())
+        self.assertEqual(diagnosed_result, unprofiled_result)
+        self.assertEqual(diagnosed.to_dict(), unprofiled.to_dict())
+        self.assertEqual(state_diagnostics["cells_evaluated"], len(diagnosed.cells))
+        self.assertEqual(
+            sum(
+                count
+                for name, count in state_diagnostics.items()
+                if name.startswith("phase_") and name != "phase_changes"
+            ),
+            len(diagnosed.cells),
+        )
         self.assertEqual(
             set(timing_ms),
             {

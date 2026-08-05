@@ -38,6 +38,7 @@ CHAR = "CHAR"
 ASH = "ASH"
 DEPLETED = "DEPLETED"
 _PHASE_NAMES = (WET_WOOD, DRY_WOOD, PYROLYZING, CHAR, ASH, DEPLETED)
+_PHASE_INDEX = {name: index for index, name in enumerate(_PHASE_NAMES)}
 PYTHON_ARRAY_BACKEND = "python"
 NUMPY_ARRAY_BACKEND = "numpy"
 _NUMPY = None
@@ -469,6 +470,8 @@ class WoodThermalModel:
         ambient_temperature_k: float | None = None,
         timing_ms: dict[str, float] | None = None,
         array_backend: str = PYTHON_ARRAY_BACKEND,
+        python_surface_boundary_fast_path: bool = True,
+        state_diagnostics: dict[str, int] | None = None,
     ) -> CombustionStepResult:
         """Advance one explicit SI-unit thermal/reaction step.
 
@@ -481,6 +484,8 @@ class WoodThermalModel:
         segment_started = time.perf_counter() if timing_enabled else 0.0
         if array_backend not in (PYTHON_ARRAY_BACKEND, NUMPY_ARRAY_BACKEND):
             raise ValueError(f"Unsupported wood-step array backend: {array_backend}")
+        if state_diagnostics is not None and array_backend != PYTHON_ARRAY_BACKEND:
+            raise ValueError("Wood state diagnostics require the Python backend")
         if not math.isfinite(dt_seconds) or dt_seconds <= 0.0:
             raise ValueError("dt_seconds must be finite and positive")
         scalar_heat_flux_w_m2 = None
@@ -553,6 +558,9 @@ class WoodThermalModel:
                 heat_capacity = self._heat_capacity_j_k(cell)
                 heat_capacities_j_k[index] = heat_capacity
                 area = cell.external_area_m2 * cell.surface_exposure
+                if python_surface_boundary_fast_path and area == 0.0:
+                    cell.temperature_k += conduction_energy_j[index] / heat_capacity
+                    continue
                 heat_flux_w_m2 = (
                     scalar_heat_flux_w_m2
                     if scalar_heat_flux_w_m2 is not None
@@ -758,7 +766,30 @@ class WoodThermalModel:
         else:
             mass_epsilon = self._mass_epsilon_kg
             pyrolysis_start_temperature_k = p.pyrolysis_start_temperature_k
+            diagnostics_enabled = state_diagnostics is not None
+            if diagnostics_enabled:
+                cells_evaluated = 0
+                temperature_clamped_low = 0
+                temperature_clamped_high = 0
+                moisture_mass_clamped = 0
+                dry_wood_mass_clamped = 0
+                char_mass_clamped = 0
+                ash_mass_clamped = 0
+                phase_changes = 0
+                phase_assignments = [0] * len(_PHASE_NAMES)
+                phase_transitions = [0] * (len(_PHASE_NAMES) ** 2)
             for cell in cells:
+                if diagnostics_enabled:
+                    cells_evaluated += 1
+                    previous_phase_index = _PHASE_INDEX[cell.phase]
+                    if cell.temperature_k < ambient:
+                        temperature_clamped_low += 1
+                    elif cell.temperature_k > p.max_temperature_k:
+                        temperature_clamped_high += 1
+                    moisture_mass_clamped += cell.moisture_mass_kg < 0.0
+                    dry_wood_mass_clamped += cell.dry_wood_mass_kg < 0.0
+                    char_mass_clamped += cell.char_mass_kg < 0.0
+                    ash_mass_clamped += cell.ash_mass_kg < 0.0
                 cell.temperature_k = min(
                     p.max_temperature_k, max(ambient, cell.temperature_k)
                 )
@@ -790,6 +821,47 @@ class WoodThermalModel:
                     cell.phase = WET_WOOD
                 else:
                     cell.phase = DRY_WOOD
+                if diagnostics_enabled:
+                    phase_index = _PHASE_INDEX[cell.phase]
+                    phase_assignments[phase_index] += 1
+                    if phase_index != previous_phase_index:
+                        phase_changes += 1
+                        phase_transitions[
+                            previous_phase_index * len(_PHASE_NAMES) + phase_index
+                        ] += 1
+            if diagnostics_enabled:
+                diagnostic_values = {
+                    "cells_evaluated": cells_evaluated,
+                    "temperature_clamped_low": temperature_clamped_low,
+                    "temperature_clamped_high": temperature_clamped_high,
+                    "moisture_mass_clamped": moisture_mass_clamped,
+                    "dry_wood_mass_clamped": dry_wood_mass_clamped,
+                    "char_mass_clamped": char_mass_clamped,
+                    "ash_mass_clamped": ash_mass_clamped,
+                    "phase_changes": phase_changes,
+                }
+                diagnostic_values.update(
+                    {
+                        f"phase_{phase.lower()}": phase_assignments[index]
+                        for index, phase in enumerate(_PHASE_NAMES)
+                    }
+                )
+                diagnostic_values.update(
+                    {
+                        f"transition_{source.lower()}_to_{target.lower()}": (
+                            phase_transitions[
+                                source_index * len(_PHASE_NAMES) + target_index
+                            ]
+                        )
+                        for source_index, source in enumerate(_PHASE_NAMES)
+                        for target_index, target in enumerate(_PHASE_NAMES)
+                        if phase_transitions[
+                            source_index * len(_PHASE_NAMES) + target_index
+                        ]
+                    }
+                )
+                for name, value in diagnostic_values.items():
+                    state_diagnostics[name] = state_diagnostics.get(name, 0) + value
         if timing_enabled:
             timing_ms["state_finalize"] = (
                 time.perf_counter() - segment_started

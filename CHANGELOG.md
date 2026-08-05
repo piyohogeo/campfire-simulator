@@ -55,6 +55,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - developer bundleをversion lockから除いたPhase 6X測定専用Kitアプリ、debug拡張実行時ゲート、成果物シーン隔離、交互順序2組のPython／NumPy end-to-end比較、Python既定確定レポート、coverageを保つ35＋4＋2件の標準テスト分割。
 - debugger-free Phase 3で既定Python木材stepの8区間を3回測定し、顕熱更新を次の候補へ選ぶPhase 6Yオプトイン内部プロファイル、同値ゲート、JSON／SVGレポート。
 - 顕熱ループ局所試作のprofile／非計測前後各3 runを分離し、内部5.45%短縮でもend-to-end悪化なら元コードへ戻すPhase 6Z採否ゲートとJSON／SVGレポート。
+- 外部面積0の内部セルを境界熱計算から外すPhase 6AA早期分岐、debugger-free交互順序3組の採用ゲート、権威出力の完全一致検査、再現可能なJSON／SVGレポート。
+- 乾燥／湿潤薪ごとの温度・質量clamp、相割当、相遷移を通常無効で集計し、性能値から分離するPhase 6AB状態分岐診断とJSON／SVGレポート。
 - Thurner–Mannの公開A/E組をSI単位で固定したPhase 6E一次Arrhenius熱分解、48候補探索、温度–速度曲線SVG。
 
 ### Changed

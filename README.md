@@ -61,6 +61,18 @@ Phase 2検証は固定60 Hzで600 step（シミュレーション時間10秒）�
 
 Phase 3検証は乾量基準含水率12%と60%の薪を5 Hzで240秒加熱し、全1,200点をCSVへ保存します。着火順、質量収支、負値・非有限値、炭と熱分解ガス、木材由来のFlow入力、2枚のPNGを判定します。
 
+Python経路では、外部面積が厳密に0の内部セルについて放射・対流・外部加熱を省略し、伝導だけを適用します。1本1,152セル中792セルが対象です。debugger-free Phase 3の交互順序3組では、権威出力を完全一致させたまま木材step中央値を`11.3241 → 10.4262 ms`、シナリオ中央値を`17.6416 → 16.5991 s`へ短縮しました。比較を再実行する場合は次を使います。
+
+```powershell
+.\scripts\run_phase6aa_surface_boundary_benchmark.ps1
+```
+
+状態確定区間の分岐頻度は、通常無効の診断runで再現できます。時間値は性能根拠に使わず、温度・質量clamp、相割当、実際の相遷移だけを記録します。
+
+```powershell
+.\scripts\run_phase6ab_state_diagnostics.ps1
+```
+
 ```powershell
 .\scripts\run_phase3.bat -OutputDir .\artifacts\phase3\manual
 ```

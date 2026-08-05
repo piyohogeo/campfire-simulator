@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "phase": "phase6ab",
+  "status": "ok",
+  "environment": {
+    "application": "campfire.simulator.benchmark.kit",
+    "backend": "python",
+    "debugger_free": true,
+    "surface_boundary_fast_path": true,
+    "internal_timing_enabled": false,
+    "diagnostic_timing_is_not_performance_evidence": true
+  },
+  "configuration": {
+    "steps": 1200,
+    "model_dt_seconds": 0.2,
+    "cells_per_log": 1152,
+    "cell_updates_per_log": 1382400
+  },
+  "models": {
+    "dry": {
+      "cells_evaluated": 1382400,
+      "phase_assignments": {
+        "wet_wood": 1065576,
+        "dry_wood": 93744,
+        "pyrolyzing": 151680,
+        "char": 71400,
+        "ash": 0,
+        "depleted": 0
+      },
+      "phase_percent": {
+        "wet_wood": 77.08159722222221,
+        "dry_wood": 6.78125,
+        "pyrolyzing": 10.972222222222221,
+        "char": 5.164930555555555,
+        "ash": 0.0,
+        "depleted": 0.0
+      },
+      "phase_changes": 1008,
+      "phase_change_rate_percent": 0.07291666666666667,
+      "transitions": {
+        "wet_wood_to_dry_wood": 360,
+        "dry_wood_to_pyrolyzing": 360,
+        "pyrolyzing_to_char": 288
+      },
+      "clamps": {
+        "temperature_low": 0,
+        "temperature_high": 0,
+        "moisture_mass": 0,
+        "dry_wood_mass": 0,
+        "char_mass": 0,
+        "ash_mass": 0
+      },
+      "clamp_total": 0
+    },
+    "wet": {
+      "cells_evaluated": 1382400,
+      "phase_assignments": {
+        "wet_wood": 1321320,
+        "dry_wood": 52224,
+        "pyrolyzing": 8856,
+        "char": 0,
+        "ash": 0,
+        "depleted": 0
+      },
+      "phase_percent": {
+        "wet_wood": 95.58159722222223,
+        "dry_wood": 3.7777777777777777,
+        "pyrolyzing": 0.640625,
+        "char": 0.0,
+        "ash": 0.0,
+        "depleted": 0.0
+      },
+      "phase_changes": 312,
+      "phase_change_rate_percent": 0.022569444444444444,
+      "transitions": {
+        "wet_wood_to_dry_wood": 288,
+        "dry_wood_to_pyrolyzing": 24
+      },
+      "clamps": {
+        "temperature_low": 0,
+        "temperature_high": 0,
+        "moisture_mass": 0,
+        "dry_wood_mass": 0,
+        "char_mass": 0,
+        "ash_mass": 0
+      },
+      "clamp_total": 0
+    }
+  },
+  "combined": {
+    "cells_evaluated": 2764800,
+    "clamp_total": 0,
+    "clamp_rate_percent": 0.0,
+    "phase_changes": 1320,
+    "phase_change_rate_percent": 0.04774305555555555
+  },
+  "equivalence": {
+    "exact_authoritative_outputs": true,
+    "dry_state_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+    "wet_state_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+    "metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759",
+    "ignition_seconds": {
+      "dry": 66.2,
+      "wet": 166.4
+    }
+  },
+  "decision": {
+    "production_change": false,
+    "reason": "diagnostic phase only; branch frequency selects the next trial",
+    "next_candidate": "conditional clamp checks preserving all bounds"
+  },
+  "run": "artifacts\\phase3\\phase6ab\\state_diagnostics\\summary.json"
+}

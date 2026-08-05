@@ -2,7 +2,10 @@ param(
     [string]$OutputDir = "",
     [ValidateSet("python", "numpy")]
     [string]$ArrayBackend = "python",
-    [switch]$ProfileWoodInternals
+    [switch]$ProfileWoodInternals,
+    [switch]$CollectWoodStateDiagnostics,
+    [ValidateSet("original", "fast")]
+    [string]$PythonSurfaceBoundaryPath = "fast"
 )
 
 $ErrorActionPreference = "Stop"
@@ -10,6 +13,7 @@ $repoRoot = Split-Path -Parent $PSScriptRoot
 $releaseRoot = Join-Path $repoRoot "_build\windows-x86_64\release"
 $kit = Join-Path $releaseRoot "kit\kit.exe"
 $app = Join-Path $releaseRoot "apps\campfire.simulator.benchmark.kit"
+$usePythonSurfaceBoundaryFastPath = $PythonSurfaceBoundaryPath -eq "fast"
 
 if (-not (Test-Path -LiteralPath $kit) -or -not (Test-Path -LiteralPath $app)) {
     throw "Application is not built. Run .\repo.bat build first."
@@ -35,6 +39,8 @@ $kitArgs = @(
     "--/exts/campfire.app/sceneOutputDir=$OutputDir",
     "--/exts/campfire.app/woodArrayBackend=$ArrayBackend",
     "--/exts/campfire.app/woodInternalTiming=$($ProfileWoodInternals.IsPresent.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/woodStateDiagnostics=$($CollectWoodStateDiagnostics.IsPresent.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/pythonSurfaceBoundaryFastPath=$($usePythonSurfaceBoundaryFastPath.ToString().ToLowerInvariant())",
     "--/rtx/flow/enabled=true",
     "--/app/viewport/grid/enabled=false",
     "--/persistent/app/viewport/displayOptions=1152"
@@ -62,6 +68,27 @@ if ($result.scenario.wood_array_backend -ne $ArrayBackend) {
 }
 if ([bool]$result.scenario.wood_internal_timing_enabled -ne $ProfileWoodInternals.IsPresent) {
     throw "Phase 3 used an unexpected wood internal timing setting."
+}
+if ([bool]$result.scenario.wood_state_diagnostics_enabled -ne $CollectWoodStateDiagnostics.IsPresent) {
+    throw "Phase 3 used an unexpected wood state-diagnostics setting."
+}
+if ($CollectWoodStateDiagnostics.IsPresent) {
+    foreach ($name in @("dry", "wet")) {
+        if ($result.scenario.wood_state_diagnostics.$name.cells_evaluated -ne 1382400) {
+            throw "Phase 3 $name wood has an unexpected diagnostic cell count."
+        }
+    }
+}
+elseif (@($result.scenario.wood_state_diagnostics.PSObject.Properties).Count -ne 0) {
+    throw "Phase 3 collected wood state diagnostics without an explicit request."
+}
+if ([bool]$result.scenario.python_surface_boundary_fast_path -ne $usePythonSurfaceBoundaryFastPath) {
+    throw "Phase 3 used an unexpected Python surface-boundary setting."
+}
+foreach ($name in @("dry", "wet")) {
+    if ($result.scenario.zero_area_cell_count.$name -ne 792) {
+        throw "Phase 3 $name wood has an unexpected zero-area cell count."
+    }
 }
 if (-not $result.scenario.debugger_free) {
     $enabledDebugExtensions = @(

@@ -1407,3 +1407,35 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 可視化と再現: `compare_phase3_sensible_heat_trial.py`が4群のdebugger-free、profile mode、各区間サンプル数、権威出力を検査し、棄却を`phase3_sensible_heat_trial_report.json/.svg`へ保存する。SVGはEdgeの1200×680描画で文字切れがないことを確認した。
 - 最終ビルドとテスト: 試作を戻した後に再ビルドし、sourceとrelease成果物の`combustion.py` SHA-256一致を確認した。標準`.\repo.bat test`はstartup`3.6 s`、coverage通常35件`272.2 s`、coverage熱モデル4件`126.6 s`、coverageなし数値2件`26.6 s`、全41件をrunner`429.8 s`で成功させた。通常区分は前回より遅いが、各プロセスは既定`300 s`上限内である。
 - 次: 外部面積が0の内部セルでは放射4乗と対流を計算せず、伝導だけを適用する等価な早期分岐を試す。次回は前後を交互順序で測定し、同じ権威出力・非計測end-to-endゲートを使う。実設備dry runは責任研究室の外部レビュー受領まで保留する。
+
+## 55. Phase 6AA 面積ゼロ内部セルの境界計算省略
+
+### 2026-08-05: 境界条件を境界セルだけで計算し、実アプリの既定経路へ採用する
+
+- 実装: Python顕熱更新で`external_area_m2 * surface_exposure == 0.0`のセルを早期分岐し、外部熱流束、対流、放射の計算を省略する。熱容量は従来どおり求め、隣接セルからの伝導エネルギーだけで温度を更新する。近似閾値は使わず、外部面積が厳密に0のセルだけを対象とする。
+- 対象範囲: Phase 3の薪は1本1,152セルで、そのうち792セル（68.75%）が外部面積0である。物理式、格子、`dt=0.2 s`、セル順序、演算順序は境界セルで変更しない。元経路は比較用に明示選択可能なまま残す。
+- 単体同値性: 小型円柱モデルでスカラー熱流束60 stepとセル別熱流束60 stepを連続実行し、元経路と早期分岐経路の毎step結果、最終状態辞書、metricsを完全一致させる。既定値を採用経路へ変えた後も、テストでは元経路を明示して比較境界を固定する。
+- profile診断: 同一ビルドのprofile 1組で顕熱区間は`4.2070 → 3.8890 ms`、`7.56%`短縮した。profile付きstep全体とシナリオは採用根拠にせず、内部候補が意図した区間へ作用した確認だけに使う。
+- 正式測定: `campfire.simulator.benchmark.kit`、Python backend、1,200 step、Flow更新、2画像capture、内部timer無効、debug拡張なしで3組を測定した。順序はoriginal→fast、fast→original、original→fastとし、同一ビルド内の時間ドリフトを片側へ偏らせない。
+- 同値性: 全6 runで乾燥／湿潤の権威状態SHA-256、`wood_metrics.csv` SHA-256`01aaf0c…7759`、着火`66.2 / 166.4 s`が完全一致した。Flow active block peakはoriginal`293 / 294`、fast`294`で、GPUスケジューリングの非権威診断として採用ゲートから分離した。
+- 性能結果: 木材step平均中央値は`11.3241 → 10.4262 ms`（`7.93%`短縮）、p95は`15.5417 → 13.8339 ms`（`10.99%`短縮）、シナリオ中央値は`17.6416 → 16.5991 s`（`5.91%`短縮）、runner中央値は`35.912 → 34.381 s`（`4.26%`短縮）だった。3/3組でstepとシナリオの両方が改善し、要求した2/3組を上回った。
+- 判断: 権威出力の完全一致、非計測step・シナリオ中央値の改善、反復ゲートをすべて満たしたため採用する。`WoodThermalModel.step()`と通常／benchmarkアプリの既定値を早期分岐有効へ変更し、`run_phase3.ps1`は既定`fast`、比較用`-PythonSurfaceBoundaryPath original`を提供する。
+- 最終検証: 採用後にreleaseを再ビルドし、無指定の通常`run_phase3.ps1`が新経路を選んで全検査に成功することを確認した。標準`.\repo.bat test`はstartup`3.7 s`、coverage通常35件`174.9 s`、coverage熱モデル4件`135.5 s`、coverageなし数値2件`26.6 s`、全41件をrunner`342.0 s`で成功させた。
+- 可視化と再現: `run_phase6aa_surface_boundary_benchmark.ps1`がprofile 2本と交互順序6本を取得し、`compare_phase3_surface_boundary.py`が環境、同値性、時間、組別改善を検査して`phase3_surface_boundary_report.json/.svg`を生成する。実設備dry runは責任研究室の外部レビュー受領まで保留する。
+- 次: 次点の状態clamp・相判定区間を、セル状態の遷移頻度と分岐分布から診断する。変更を加える場合も完全同値、交互順序、非計測end-to-endの同じ採用ゲートを使う。
+
+## 56. Phase 6AB 状態確定区間の分岐診断
+
+### 2026-08-05: 変更する前に、clampと相遷移が実際に起きる頻度を測る
+
+- 診断境界: `WoodThermalModel.step(..., state_diagnostics=dict)`をPython backendだけの任意診断として追加した。温度の上下限、4つの質量下限、6相の割当、変更された相の遷移元／先を数える。未指定時はカウンター作成も追加分岐も行わない。
+- アプリ接続: `woodStateDiagnostics`は通常／benchmarkアプリとも既定`false`とする。明示時だけ乾燥薪と湿潤薪に別の累積辞書を渡し、Phase 3 summaryへ保存する。`run_phase3.ps1`は各薪`1,382,400`セル更新を検査し、無指定時に診断値が出た場合も失敗させる。
+- 測定条件: debugger-free benchmarkアプリ、採用済みPython surface-boundary経路、1,200 step、`dt=0.2 s`、Flow更新、2画像captureで1 runを実行した。内部timerは無効で、診断が加える分岐と集計を含む時間値は性能比較・採用根拠に使わない。
+- clamp結果: 2本合計`2,764,800`セル更新で、温度下限／上限と水分・乾燥木材・炭・灰の負質量clampはすべて0回だった。このシナリオでは5つの`max`と温度の`min`は状態を一度も変更していないが、一般入力に対する安全境界なので削除はしない。
+- 乾燥薪の相分布: `WET_WOOD 77.082%`、`DRY_WOOD 6.781%`、`PYROLYZING 10.972%`、`CHAR 5.165%`、`ASH / DEPLETED 0%`だった。相変更は1,008回で、wet→dry 360、dry→pyrolyzing 360、pyrolyzing→char 288である。
+- 湿潤薪の相分布: `WET_WOOD 95.582%`、`DRY_WOOD 3.778%`、`PYROLYZING 0.641%`、残り3相は0%だった。相変更は312回で、wet→dry 288、dry→pyrolyzing 24である。
+- 遷移頻度: 実変更は合計1,320回、全相割当の`0.0477%`だった。低頻度だから相判定を削除できるわけではないが、毎stepの再代入に対して状態変化が極めて疎であることを記録した。
+- 同値性: 診断runの乾燥／湿潤状態SHA-256、CSV SHA-256`01aaf0c…7759`、着火`66.2 / 166.4 s`はPhase 6AA権威出力と完全一致した。単体テストでも診断あり／なしのstep結果と最終状態を完全一致させ、相割当数がセル数を覆うことを検査する。
+- 判断: Phase 6ABでは本番物理更新を変更しない。次の局所試作は、正常範囲で呼ばれている組込み`min/max`を同値な比較分岐へ変えることに限定する。clamp自体は維持し、内部区間と交互順序の非計測end-to-endゲートをともに満たす場合だけ採用する。
+- 最終検証: release再ビルド後の標準`.\repo.bat test`はstartup`3.9 s`、coverage通常35件`220.7 s`、coverage熱モデル4件`165.3 s`、coverageなし数値2件`25.3 s`、全41件をrunner`416.0 s`で成功させた。診断無指定の通常Phase 3も再実行し、診断辞書が空で権威出力検査に成功することを確認した。最初の確認ではPowerShellが空JSONオブジェクトのプロパティ数を誤判定したため、列挙を配列化するrunner検査へ修正した。アプリrun自体は成功していた。
+- 可視化と再現: `run_phase6ab_state_diagnostics.ps1`が診断runを実行し、`analyze_phase3_state_diagnostics.py`が環境、セル数、分布、遷移、権威出力を検査して`phase3_state_diagnostics_report.json/.svg`を生成する。実設備dry runは責任研究室の外部レビュー受領まで保留する。
