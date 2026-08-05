@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "phase": "phase6z",
+  "status": "ok",
+  "trial": {
+    "description": "split scalar heat-flux loop and hoist ambient power and coefficient lookups without changing equations",
+    "production_code_retained": "original Python loop",
+    "trial_reverted": true
+  },
+  "run_counts": {
+    "before_profile": 3,
+    "after_profile": 3,
+    "before_unprofile": 3,
+    "after_unprofile": 3
+  },
+  "environment": {
+    "application": "campfire.simulator.benchmark.kit",
+    "backend": "python",
+    "debugger_free_all_runs": true,
+    "profile_and_unprofiled_evidence_separated": true
+  },
+  "profiled": {
+    "sensible_heat_mean_ms": {
+      "before_median": 4.5321,
+      "after_median": 4.2853,
+      "improvement_percent": 5.445599170362513
+    },
+    "two_log_step_mean_ms": {
+      "before_median": 11.716,
+      "after_median": 11.8573,
+      "improvement_percent": -1.2060430180949222
+    }
+  },
+  "unprofiled": {
+    "two_log_step_mean_ms": {
+      "before_median": 12.0693,
+      "after_median": 12.18,
+      "improvement_percent": -0.917203151798361
+    },
+    "two_log_step_p95_ms": {
+      "before_median": 16.4493,
+      "after_median": 16.4749,
+      "improvement_percent": -0.15562972284535348
+    },
+    "scenario_seconds": {
+      "before_median": 18.7336,
+      "after_median": 19.0102,
+      "improvement_percent": -1.4764914378443117
+    },
+    "runner_seconds": {
+      "before_median": 37.576,
+      "after_median": 38.272,
+      "improvement_percent": -1.8522461145411908
+    }
+  },
+  "equivalence": {
+    "exact_authoritative_outputs_all_runs": true,
+    "dry_state_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+    "wet_state_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+    "metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759",
+    "ignition_seconds": {
+      "dry": 66.2,
+      "wet": 166.4
+    },
+    "flow_peak_before": [
+      293
+    ],
+    "flow_peak_after": [
+      294
+    ],
+    "flow_peak_is_not_authoritative": true
+  },
+  "decision": {
+    "adopt_trial": false,
+    "internal_candidate_improved": true,
+    "unprofiled_step_and_scenario_improved": false,
+    "reason": "the isolated sensible-heat segment improved, but unprofiled wood-step and scenario medians regressed; keep the original loop"
+  },
+  "measurement_limit": "before and after were separate three-run cohorts, not alternating pairs; the absence of an end-to-end gain is sufficient for conservative rejection",
+  "runs": {
+    "before_profile": [
+      "artifacts\\phase3\\phase6y\\python_profile_1\\summary.json",
+      "artifacts\\phase3\\phase6y\\python_profile_2\\summary.json",
+      "artifacts\\phase3\\phase6y\\python_profile_3\\summary.json"
+    ],
+    "after_profile": [
+      "artifacts\\phase3\\phase6z\\after_profile_1\\summary.json",
+      "artifacts\\phase3\\phase6z\\after_profile_2\\summary.json",
+      "artifacts\\phase3\\phase6z\\after_profile_3\\summary.json"
+    ],
+    "before_unprofile": [
+      "artifacts\\phase3\\phase6y\\default_gate_retry\\summary.json",
+      "artifacts\\phase3\\phase6z\\before_2\\summary.json",
+      "artifacts\\phase3\\phase6z\\before_3\\summary.json"
+    ],
+    "after_unprofile": [
+      "artifacts\\phase3\\phase6z\\after_1\\summary.json",
+      "artifacts\\phase3\\phase6z\\after_2\\summary.json",
+      "artifacts\\phase3\\phase6z\\after_3\\summary.json"
+    ]
+  }
+}

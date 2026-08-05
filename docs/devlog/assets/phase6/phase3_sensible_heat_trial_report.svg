@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6Z sensible-heat optimization trial decision</title>
+  <desc id="desc">Three profiled and three unprofiled runs before and after show an internal improvement but no end-to-end gain, so the trial is rejected.</desc>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#16120f"/><stop offset="1" stop-color="#251313"/></linearGradient></defs>
+  <style>.title{font:750 38px 'Segoe UI',sans-serif;fill:#fff7ed}.kicker{font:700 17px 'Segoe UI',sans-serif;fill:#fb923c;letter-spacing:2px}.sub{font:16px 'Segoe UI',sans-serif;fill:#cbd5e1}.heading{font:700 17px 'Segoe UI',sans-serif;fill:#f8fafc}.value{font:750 29px 'Segoe UI',sans-serif}.small{font:14px 'Segoe UI',sans-serif;fill:#94a3b8}.decision{font:750 25px 'Segoe UI',sans-serif;fill:#fca5a5}</style>
+  <rect width="1200" height="680" rx="30" fill="url(#bg)"/>
+  <text x="64" y="64" class="kicker">PHASE 6Z · CONSERVATIVE PERFORMANCE GATE</text>
+  <text x="64" y="114" class="title">A faster inner segment is not enough</text>
+  <text x="64" y="148" class="sub">3 profiled + 3 unprofiled runs before and after · debugger-free Phase 3</text>
+  <rect x="64" y="188" width="500" height="300" rx="22" fill="#17251f" stroke="#15803d"/>
+  <text x="94" y="232" class="heading">PROFILED SENSIBLE-HEAT SEGMENT</text>
+  <text x="94" y="288" class="value" fill="#86efac">5.45% faster</text>
+  <text x="94" y="326" class="sub">4.5321 → 4.2853 ms</text>
+  <text x="94" y="382" class="small">Scalar branch split · ambient T⁴ hoisted</text>
+  <text x="94" y="410" class="small">Authoritative state, CSV, ignition exact</text>
+  <text x="94" y="438" class="small">Useful diagnosis, not an adoption result</text>
+  <rect x="594" y="188" width="542" height="300" rx="22" fill="#32191a" stroke="#dc2626"/>
+  <text x="624" y="232" class="heading">UNPROFILED APPLICATION BOUNDARY</text>
+  <text x="624" y="282" class="value" fill="#fca5a5">Step 0.92% slower</text>
+  <text x="624" y="318" class="sub">12.0693 → 12.1800 ms</text>
+  <text x="624" y="368" class="value" fill="#fca5a5">Scenario 1.48% slower</text>
+  <text x="624" y="404" class="sub">18.7336 → 19.0102 s</text>
+  <text x="624" y="450" class="small">Runner 37.576 → 38.272 s</text>
+  <rect x="64" y="526" width="1072" height="92" rx="18" fill="#351718" stroke="#ef4444" stroke-width="2"/>
+  <text x="92" y="568" class="decision">REJECTED · original Python loop retained</text>
+  <text x="92" y="596" class="sub">No physical equations, grid, dt, backend default, or authoritative output changed.</text>
+  <text x="64" y="654" class="small">Cohorts were not alternating pairs. With no end-to-end gain, conservative rejection does not require attributing the regression to the trial.</text>
+</svg>

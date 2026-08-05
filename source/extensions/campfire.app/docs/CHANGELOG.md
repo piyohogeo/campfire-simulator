@@ -23,6 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added the opt-in Phase 6W complete-step NumPy backend for sensible heat and final-state classification, exact 400-step equivalence gates, controlled performance evidence, Phase 3 output hashes, and a debugger-contamination exclusion decision while retaining Python as the default.
 - Added the Phase 6X debugger-free benchmark application, runtime debug-extension gate, isolated Phase 3 scene output, alternating paired backend runner, exact output digests, end-to-end evidence retaining Python as the default, and a coverage-preserving 35 + 4 + 2 standard test partition.
 - Added Phase 6Y opt-in timings for eight Python wood-step segments in the debugger-free Phase 3 application, three-run invariant validation, candidate selection, and JSON/SVG reporting.
+- Added a Phase 6Z conservative performance gate comparing three profiled and three unprofiled runs before and after a sensible-heat loop trial, preserving the original loop when end-to-end timing did not improve.
 - Added Phase 6B no-refit OSB external-material holdout evaluation and a separate browser-readable residual report.
 - Added Phase 6C fixed SAMP.1/2-to-SAMP.3 plywood replicate holdout evaluation and a separate browser-readable report.
 - Added Phase 6D nominal 12.7 mm five-ply planar specimen model, mass-derived effective density, through-thickness conduction, and layer-temperature report.
