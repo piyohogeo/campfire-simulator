@@ -460,6 +460,36 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertGreater(model.cells[1].temperature_k, model.cells[2].temperature_k)
         self.assertLess(abs(model.mass_balance_error_kg), 1.0e-9)
 
+    async def test_fixed_grid_reaction_depth_does_not_claim_physical_char_thickness(self):
+        reference = campfire.app.load_nist_plywood_reference()
+        model = campfire.app.create_layered_coupon(
+            reference["targets"][0], reference, campfire.app.WoodModelParameters()
+        )
+        conversions = (1.0, 0.75, 0.5, 0.25, 0.0)
+        char_fractions = (0.2, 0.15, 0.1, 0.05, 0.0)
+        for cell, conversion, char_fraction in zip(
+            model.cells, conversions, char_fractions
+        ):
+            initial_dry_mass_kg = (
+                model.spec.effective_dry_density_kg_m3 * cell.volume_m3
+            )
+            cell.dry_wood_mass_kg = initial_dry_mass_kg * (1.0 - conversion)
+            cell.char_mass_kg = initial_dry_mass_kg * char_fraction
+
+        diagnostic = model.char_geometry_diagnostic()
+        self.assertEqual(
+            diagnostic.layer_pyrolysis_conversion_fractions, conversions
+        )
+        self.assertEqual(
+            diagnostic.layer_char_mass_fractions_initial_dry, char_fractions
+        )
+        self.assertAlmostEqual(
+            diagnostic.equivalent_unshrunk_pyrolysis_depth_m, 0.00635
+        )
+        self.assertIsNone(diagnostic.physical_char_layer_thickness_m)
+        self.assertIsNone(diagnostic.shrinkage_factor)
+        self.assertFalse(diagnostic.ready_for_darcy_layer_thickness)
+
     async def test_plywood_and_osb_use_distinct_sourced_thermal_profiles(self):
         reference = campfire.app.load_nist_plywood_reference()
         parameters = campfire.app.parallel_arrhenius_baseline_parameters(reference)
@@ -777,6 +807,29 @@ class TestScene(omni.kit.test.AsyncTestCase):
                 "char_layer_pressure_drop_pa",
             },
         )
+        self.assertEqual(len(transport["fixed_grid_reaction_progress"]), 2)
+        char_geometry = calibration["char_geometry_diagnostic"]
+        self.assertFalse(char_geometry["shrinkage_applied"])
+        self.assertFalse(char_geometry["used_for_parameter_selection"])
+        self.assertEqual(len(char_geometry["cases"]), 2)
+        for case in char_geometry["cases"]:
+            self.assertEqual(len(case["layer_pyrolysis_conversion_fractions"]), 5)
+            self.assertEqual(len(case["layer_char_mass_fractions_initial_dry"]), 5)
+            self.assertTrue(
+                all(
+                    0.0 <= fraction <= 1.0
+                    for fraction in case["layer_pyrolysis_conversion_fractions"]
+                )
+            )
+            self.assertGreaterEqual(
+                case["equivalent_unshrunk_pyrolysis_depth_m"], 0.0
+            )
+            self.assertLessEqual(
+                case["equivalent_unshrunk_pyrolysis_depth_m"], 0.0127
+            )
+            self.assertIsNone(case["physical_char_layer_thickness_m"])
+            self.assertIsNone(case["shrinkage_factor"])
+            self.assertFalse(case["ready_for_darcy_layer_thickness"])
 
     async def test_phase6_scene_visualizes_observed_baseline_and_calibrated_values(self):
         stage = Usd.Stage.CreateInMemory()

@@ -132,6 +132,24 @@
     "used_for_parameter_selection": false,
     "policy": "Expose a complete SI-unit Darcy input contract and report missing plywood state. Do not calculate residence time from beech context values or feed it into secondary-tar conversion."
   },
+  "char_geometry_diagnostic": {
+    "model": "fixed_grid_dry_wood_conversion_equivalent_depth",
+    "equation": "L_equivalent = sum_i(delta_x_i (1 - m_dry_i / m_dry_i_initial))",
+    "source": "Pozzobon et al., Radiative pyrolysis of wet wood under intermediate heat flux: experiments and modelling, Fuel Processing Technology 128, 319-330 (2014).",
+    "source_doi": "https://doi.org/10.1016/j.fuproc.2014.07.007",
+    "source_context": {
+      "material": "10 mm diameter beech sphere at 9 percent initial moisture under 120 kW/m2, not plywood",
+      "comparison_time_s": 26.0,
+      "predicted_front_depth_m": 0.0013,
+      "observed_front_depth_m": 0.001,
+      "shrinkage_corrected_predicted_depth_m": 0.00095,
+      "interpretation": "The paper reports that correcting its predicted length with the experimentally observed shrinkage factor moves the modeled front from 1.3 mm to 0.95 mm versus a 1.0 mm observation. This demonstrates that a fixed-grid reaction front and a physical shrunk thickness are distinct quantities. Its beech shrinkage is not transferred to plywood."
+    },
+    "shrinkage_applied": false,
+    "used_for_parameter_selection": false,
+    "physical_char_layer_thickness_policy": "Withhold physical char-layer thickness until a plywood shrinkage relation and a defensible front definition are available. The fixed-grid mass-equivalent depth is diagnostic only and cannot satisfy the Darcy layer-thickness input.",
+    "interpretation": "Each equal-thickness panel cell contributes its dry-wood conversion fraction times its original thickness. The sum is an unshrunk mass-equivalent reaction depth, not a contiguous front location and not a physical char-layer thickness."
+  },
   "arrhenius_model": {
     "equation": "k(T) = A exp(-E / (R T)); first-order dry-wood consumption uses 1 - exp(-k dt).",
     "gas_constant_j_mol_k": 8.31446261815324,

@@ -17,6 +17,7 @@ from .calibration import (
     create_equivalent_coupon,
     create_layered_coupon,
     evaluate_parameters,
+    evaluate_char_geometry_diagnostic,
     evaluate_gas_transport_readiness,
     evaluate_secondary_tar_residence_sensitivity,
     load_nist_plywood_reference,
@@ -25,6 +26,7 @@ from .calibration import (
     simulate_equivalent_coupon,
     simulate_layered_coupon,
     write_calibration_svg,
+    write_char_geometry_svg,
     write_holdout_svg,
     write_gas_transport_readiness_svg,
     write_layer_profile_svg,
@@ -40,6 +42,7 @@ from .gas_transport import (
 from .panel import (
     LayeredPanelSpec,
     LayeredPanelThermalModel,
+    PanelCharGeometryDiagnostic,
     create_layered_panel_model,
 )
 from .combustion import (
@@ -157,6 +160,7 @@ __all__ = [
     "LogPlacement",
     "LayeredPanelSpec",
     "LayeredPanelThermalModel",
+    "PanelCharGeometryDiagnostic",
     "SegmentPhysicsUpdate",
     "SupportAssessment",
     "WoodModelParameters",
@@ -173,6 +177,7 @@ __all__ = [
     "dense_stack_placements",
     "estimate_air_supply",
     "evaluate_parameters",
+    "evaluate_char_geometry_diagnostic",
     "evaluate_darcy_gas_transport",
     "evaluate_gas_transport_readiness",
     "evaluate_secondary_tar_residence_sensitivity",
@@ -213,6 +218,7 @@ __all__ = [
     "update_flow_source",
     "temperature_adjusted_dry_wood_specific_heat_j_kg_k",
     "write_calibration_svg",
+    "write_char_geometry_svg",
     "write_holdout_svg",
     "write_gas_transport_readiness_svg",
     "write_layer_profile_svg",

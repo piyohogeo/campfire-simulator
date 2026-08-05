@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#15120f"/>
+  <style>
+    text { font-family: "Segoe UI", Arial, sans-serif; fill: #fff7e9; }
+    .title { font-size: 30px; font-weight: 700; }
+    .subtitle { font-size: 15px; fill: #d7b982; }
+    .case { font-size: 21px; font-weight: 700; }
+    .hint { font-size: 13px; fill: #bcae9a; }
+    .ply { font-size: 18px; font-weight: 700; }
+    .char { font-size: 11px; fill: #f0dbc0; }
+    .value { font-size: 15px; font-weight: 650; fill: #f4c36d; }
+    .withheld { font-size: 14px; font-weight: 700; fill: #ff8f7e; }
+    .body { font-size: 13px; fill: #ded2c0; }
+    .small { font-size: 12px; fill: #bcae9a; }
+  </style>
+  <text x="60" y="52" class="title">Phase 6L · Reaction progress is not physical char thickness</text>
+  <text x="60" y="82" class="subtitle">Dry-wood conversion on the original 12.7 mm grid · shrinkage is not modeled · Darcy thickness gate stays closed</text>
+  <text x="70.0" y="148" class="case">35 kW/m2 at 600 s</text><text x="70.0" y="177" class="hint">Exposed face →  five fixed plies</text><rect x="70.0" y="200" width="88.0" height="116" fill="rgb(183,50,26)" stroke="#dfc28d" stroke-width="1"/><rect x="158.0" y="200" width="88.0" height="116" fill="rgb(183,50,26)" stroke="#dfc28d" stroke-width="1"/><rect x="246.0" y="200" width="88.0" height="116" fill="rgb(183,50,26)" stroke="#dfc28d" stroke-width="1"/><rect x="334.0" y="200" width="88.0" height="116" fill="rgb(135,63,38)" stroke="#dfc28d" stroke-width="1"/><rect x="422.0" y="200" width="88.0" height="116" fill="rgb(107,70,44)" stroke="#dfc28d" stroke-width="1"/><text x="114.0" y="250" class="ply" text-anchor="middle">100%</text><text x="114.0" y="278" class="char" text-anchor="middle">char 26%</text><text x="202.0" y="250" class="ply" text-anchor="middle">100%</text><text x="202.0" y="278" class="char" text-anchor="middle">char 30%</text><text x="290.0" y="250" class="ply" text-anchor="middle">100%</text><text x="290.0" y="278" class="char" text-anchor="middle">char 30%</text><text x="378.0" y="250" class="ply" text-anchor="middle">47%</text><text x="378.0" y="278" class="char" text-anchor="middle">char 14%</text><text x="466.0" y="250" class="ply" text-anchor="middle">17%</text><text x="466.0" y="278" class="char" text-anchor="middle">char 5%</text><rect x="70.0" y="340" width="440.0" height="12" rx="6" fill="#332c25"/><rect x="70.0" y="340" width="320.1" height="12" rx="6" fill="#e9a75b"/><text x="70.0" y="383" class="value">Unshrunk mass-equivalent depth: 9.24 mm</text><text x="70.0" y="411" class="withheld">Physical char-layer thickness: WITHHELD</text><text x="630.0" y="148" class="case">70 kW/m2 at 600 s</text><text x="630.0" y="177" class="hint">Exposed face →  five fixed plies</text><rect x="630.0" y="200" width="88.0" height="116" fill="rgb(183,50,26)" stroke="#dfc28d" stroke-width="1"/><rect x="718.0" y="200" width="88.0" height="116" fill="rgb(183,50,26)" stroke="#dfc28d" stroke-width="1"/><rect x="806.0" y="200" width="88.0" height="116" fill="rgb(183,50,26)" stroke="#dfc28d" stroke-width="1"/><rect x="894.0" y="200" width="88.0" height="116" fill="rgb(183,50,26)" stroke="#dfc28d" stroke-width="1"/><rect x="982.0" y="200" width="88.0" height="116" fill="rgb(183,50,26)" stroke="#dfc28d" stroke-width="1"/><text x="674.0" y="250" class="ply" text-anchor="middle">100%</text><text x="674.0" y="278" class="char" text-anchor="middle">char 22%</text><text x="762.0" y="250" class="ply" text-anchor="middle">100%</text><text x="762.0" y="278" class="char" text-anchor="middle">char 30%</text><text x="850.0" y="250" class="ply" text-anchor="middle">100%</text><text x="850.0" y="278" class="char" text-anchor="middle">char 30%</text><text x="938.0" y="250" class="ply" text-anchor="middle">100%</text><text x="938.0" y="278" class="char" text-anchor="middle">char 30%</text><text x="1026.0" y="250" class="ply" text-anchor="middle">100%</text><text x="1026.0" y="278" class="char" text-anchor="middle">char 30%</text><rect x="630.0" y="340" width="440.0" height="12" rx="6" fill="#332c25"/><rect x="630.0" y="340" width="440.0" height="12" rx="6" fill="#e9a75b"/><text x="630.0" y="383" class="value">Unshrunk mass-equivalent depth: 12.70 mm</text><text x="630.0" y="411" class="withheld">Physical char-layer thickness: WITHHELD</text>
+  <rect x="60" y="455" width="1080" height="112" rx="10" fill="#282218" stroke="#a77a38"/>
+  <text x="82" y="486" class="case">Why the distinction matters</text>
+  <text x="82" y="516" class="body">Pozzobon beech-sphere context at 26 s: fixed-grid prediction 1.30 mm → shrinkage-corrected 0.95 mm; observed 1.00 mm.</text>
+  <text x="82" y="544" class="small">Different material and geometry: the reported beech shrinkage is evidence for separation, not a plywood coefficient.</text>
+  <line x1="60" y1="610" x2="1140" y2="610" stroke="#53483d"/>
+  <text x="60" y="640" class="small">Layer percentages show dry-wood conversion; “char” is retained char mass / initial dry mass. Neither defines a contiguous physical front.</text>
+</svg>

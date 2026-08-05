@@ -35,8 +35,8 @@
       <div class="shell status-grid">
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>31 / 31 passed</strong></div>
-        <div><span>次の焦点</span><strong>チャー層幾何の観測状態</strong></div>
+        <div><span>テスト</span><strong>32 / 32 passed</strong></div>
+        <div><span>次の焦点</span><strong>合板収縮の一次根拠</strong></div>
       </div>
     </div>
   </header>
@@ -59,9 +59,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Independent gas transport · explicit Darcy coupling gate</p>
+            <p class="section-kicker">Fixed-grid reaction progress · physical char thickness withheld</p>
             <h2>「それらしい」から、<br>誤差を示せるモデルへ。</h2>
-            <p>滞留時間を固体セルへ埋め込まず、Darcy流の独立したSI入力契約を追加しました。現在わかるのは試験片全厚12.7 mmだけです。合板チャー層の厚さ・空隙率・厚さ方向透過率・高温混合気粘度・圧力差が欠けるため、滞留時間は計算せず、二次タール反応への結合ゲートを閉じたままにします。</p>
+            <p>5層の乾燥木材消費率から、元の固定格子上で未収縮の質量等価熱分解深さを求めました。600秒で35 kW/m²は9.240 mm、70 kW/m²は12.700 mmです。ただし、これは連続した前線位置でも収縮後の物理炭化層厚さでもありません。物理厚さはnullのままにし、Darcy滞留時間への結合ゲートも閉じています。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -84,6 +84,13 @@
               <img src="assets/phase6/holdout_report.svg" width="1200" height="680" alt="OSBの着火時刻と平均質量減少速度について観測・初期・合板校正値を並べたSVGグラフ">
             </a>
             <figcaption><div><strong>External-material holdout</strong><span>OSB · plywood-fit parameters · no refitting</span></div></figcaption>
+          </figure>
+
+          <figure class="capture-card">
+            <a href="assets/phase6/char_geometry_report.svg" aria-label="Phase 6L 固定格子反応進行と物理炭化層厚さの分離レポートを開く">
+              <img src="assets/phase6/char_geometry_report.svg" width="1200" height="680" alt="35と70 kW毎平方メートルの5層乾燥木材変換率、未収縮相当深さ、保留した物理炭化層厚さ、ブナ球の収縮補正文脈を示すSVG図">
+            </a>
+            <figcaption><div><strong>Reaction progress ≠ physical thickness</strong><span>9.240 / 12.700 mm unshrunk equivalent · shrinkage withheld</span></div></figcaption>
           </figure>
 
           <figure class="capture-card">
@@ -122,8 +129,8 @@
           </figure>
 
           <div class="story-grid">
-            <section class="story-card"><span class="card-index">01</span><h3>Darcy計算を独立させる</h3><ul><li>q = KΔP / μL</li><li>u = q / ε</li><li>τ = ε μ L² / KΔP</li><li>全入力をSI単位で必須化</li></ul></section>
-            <section class="story-card warm"><span class="card-index">02</span><h3>欠測値を既定値にしない</h3><ul><li>ブナ球の文献値は文脈だけ</li><li>合板固有の欠測入力は5つ</li><li>予測滞留時間はnull</li><li>熱・着火・Flowへ非結合</li></ul></section>
+            <section class="story-card"><span class="card-index">01</span><h3>反応した量を測る</h3><ul><li>初期乾燥木材を層ごとに保持</li><li>消費率 × 元の層厚を積算</li><li>残存チャー率も別に記録</li><li>係数選定には不使用</li></ul></section>
+            <section class="story-card warm"><span class="card-index">02</span><h3>物理厚さと呼ばない</h3><ul><li>固定格子は収縮を解かない</li><li>ブナ球の収縮率は移植しない</li><li>物理炭化層厚さはnull</li><li>Darcy厚さ入力は欠測のまま</li></ul></section>
           </div>
 
           <section class="verification" aria-labelledby="phase6-verification-title">
@@ -133,6 +140,7 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Search</strong><small>16 deterministic common-scale candidates</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Tar split</strong><small>primary = secondary gas + surviving tar</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Transport gate</strong><small>5 missing inputs · residence time withheld</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Char geometry</strong><small>5 plies · physical thickness and shrinkage null</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>
             </div>
           </section>
@@ -141,13 +149,15 @@
             <div class="facts-heading"><p class="section-kicker">Measured on RTX 3090</p><h3 id="phase6-facts-title">校正と未使用データの結果</h3></div>
             <dl class="facts-grid">
               <div><dt>Score improvement</dt><dd>3.7%</dd></div>
-              <div><dt>Search time</dt><dd>53.8 s</dd></div>
+              <div><dt>Search time</dt><dd>58.0 s</dd></div>
               <div><dt>35 kW/m² ignition</dt><dd>47.1 → 30.5 s</dd></div>
               <div><dt>70 kW/m² ignition</dt><dd>7.7 → 12.2 s</dd></div>
               <div><dt>Best absorptivity</dt><dd>1.00</dd></div>
               <div><dt>Common A scale</dt><dd>4.0 upper bound</dd></div>
               <div><dt>Darcy transport model</dt><dd>independent · not coupled</dd></div>
               <div><dt>Missing transport inputs</dt><dd>5 / τ withheld</dd></div>
+              <div><dt>Unshrunk depth · 35 / 70</dt><dd>9.240 / 12.700 mm</dd></div>
+              <div><dt>Physical char thickness</dt><dd>null · shrinkage unresolved</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
@@ -163,8 +173,8 @@
           </section>
 
           <div class="notes-grid">
-            <section class="note caution"><p class="note-label">Known limits</p><h3>ブナ球の値を合板へ移植しない</h3><p>Pozzobonらのブナ球モデルは空隙率、木材・チャー透過率、参考圧力差を示しますが、現在の5層合板とは材種・形状・木目・接着界面が異なります。これらは式と必要入力を確認する文脈として記録し、計算入力には採用していません。</p></section>
-            <section class="note next"><p class="note-label">What comes next</p><h3>チャー層の厚さを状態にする</h3><p>まず熱分解前線と収縮を区別してチャー層厚さを定義します。その後、合板の厚さ方向透過率・空隙率、圧力差、高温混合気粘度の直接根拠を順に追加し、5入力が揃った場合だけDarcy滞留時間を二次反応候補へ渡します。</p></section>
+            <section class="note caution"><p class="note-label">Known limits</p><h3>12.7 mmは物理炭化層ではない</h3><p>70 kW/m²の12.700 mmは全5層の乾燥木材消費率が100%になった質量等価値です。連続前線、亀裂、空隙、体積収縮を解いていないため、流路長や見た目の厚さへ直接使えません。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>合板の厚さ方向収縮を調べる</h3><p>合板または積層単板で、温度・転化率に対する厚さ方向収縮と炭化前線の直接根拠を探します。根拠と前線定義が揃って初めて物理厚さを追加し、その後に透過率・空隙率・粘度・圧力差を接続します。</p></section>
           </div>
         </div>
       </article>
@@ -682,7 +692,7 @@
           <li class="done"><span>3</span><div><strong>木材熱モデル</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>4</span><div><strong>配置と通気</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>5</span><div><strong>崩壊</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · 範囲限定 cp(T)</small></div></li>
+          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · 反応深さと物理厚さを分離</small></div></li>
         </ol>
       </div>
     </section>
@@ -694,7 +704,7 @@
         <strong>Campfire Simulator</strong>
         <p>Build the fire. Keep the evidence.</p>
       </div>
-      <p>Last updated <time datetime="2026-08-04">2026.08.04</time></p>
+      <p>Last updated <time datetime="2026-08-05">2026.08.05</time></p>
     </div>
   </footer>
 </body>

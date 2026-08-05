@@ -236,7 +236,27 @@ $transportContext = $gasTransport.source_context
 if ([math]::Abs($transportContext.wood_porosity_fraction - 0.51) -gt 0.0000001 -or [math]::Abs($transportContext.char_porosity_fraction - 0.85) -gt 0.0000001 -or [math]::Abs($transportContext.wood_permeability_m2 - 0.000000000000752) -gt 1.0e-20 -or [math]::Abs($transportContext.char_permeability_m2 - 0.00000000001) -gt 1.0e-20 -or [math]::Abs($transportContext.reported_reference_pressure_drop_pa - 30000.0) -gt 0.0000001) {
     throw "Phase 6 gas-transport source context changed."
 }
-foreach ($path in @($result.image, $result.report, $result.holdout_report, $result.replicate_holdout_report, $result.layer_profile_report, $result.kinetics_report, $result.tar_residence_sensitivity_report, $result.gas_transport_readiness_report, $result.top_candidates_csv, $result.final_stage)) {
+$charGeometry = $calibration.char_geometry_diagnostic
+if ($charGeometry.used_for_parameter_selection -or $charGeometry.shrinkage_applied -or $charGeometry.cases.Count -ne 2) {
+    throw "Phase 6 char-geometry diagnostic definition is invalid."
+}
+foreach ($case in $charGeometry.cases) {
+    if ($case.layer_pyrolysis_conversion_fractions.Count -ne 5 -or $case.layer_char_mass_fractions_initial_dry.Count -ne 5) {
+        throw "Phase 6 char-geometry diagnostic lost the five-ply state."
+    }
+    foreach ($fraction in $case.layer_pyrolysis_conversion_fractions) {
+        if ($fraction -lt 0.0 -or $fraction -gt 1.0) {
+            throw "Phase 6 char-geometry conversion fraction is outside [0, 1]."
+        }
+    }
+    if ($case.equivalent_unshrunk_pyrolysis_depth_m -lt 0.0 -or $case.equivalent_unshrunk_pyrolysis_depth_m -gt 0.0127 -or $null -ne $case.physical_char_layer_thickness_m -or $null -ne $case.shrinkage_factor -or $case.ready_for_darcy_layer_thickness) {
+        throw "Phase 6 char-geometry physical-thickness gate changed."
+    }
+}
+if ($gasTransport.fixed_grid_reaction_progress.Count -ne 2) {
+    throw "Phase 6 gas-transport report lost fixed-grid reaction progress."
+}
+foreach ($path in @($result.image, $result.report, $result.holdout_report, $result.replicate_holdout_report, $result.layer_profile_report, $result.kinetics_report, $result.tar_residence_sensitivity_report, $result.gas_transport_readiness_report, $result.char_geometry_report, $result.top_candidates_csv, $result.final_stage)) {
     if (-not (Test-Path -LiteralPath $path)) {
         throw "Phase 6 artifact was not produced: $path"
     }

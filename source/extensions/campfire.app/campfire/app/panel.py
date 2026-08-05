@@ -51,6 +51,18 @@ class LayeredPanelSpec:
         return 1
 
 
+@dataclass(frozen=True)
+class PanelCharGeometryDiagnostic:
+    """Fixed-grid reaction progress kept separate from physical shrinkage."""
+
+    layer_pyrolysis_conversion_fractions: tuple[float, ...]
+    layer_char_mass_fractions_initial_dry: tuple[float, ...]
+    equivalent_unshrunk_pyrolysis_depth_m: float
+    physical_char_layer_thickness_m: float | None
+    shrinkage_factor: float | None
+    ready_for_darcy_layer_thickness: bool
+
+
 class LayeredPanelThermalModel(WoodThermalModel):
     """Wood reaction state on explicit planar layers, exposed from one face."""
 
@@ -68,6 +80,37 @@ class LayeredPanelThermalModel(WoodThermalModel):
             (layer, layer + 1, conductance_w_k)
             for layer in range(self.spec.layer_count - 1)
         ]
+
+    def char_geometry_diagnostic(self) -> PanelCharGeometryDiagnostic:
+        """Summarize reacted depth on the fixed grid without claiming shrinkage."""
+
+        layer_thickness_m = self.spec.thickness_m / self.spec.layer_count
+        conversion_fractions = []
+        char_mass_fractions = []
+        for cell in self.cells:
+            initial_dry_mass_kg = (
+                self.spec.effective_dry_density_kg_m3 * cell.volume_m3
+            )
+            if initial_dry_mass_kg <= 0.0:
+                raise ValueError("Panel layer initial dry mass must be positive")
+            conversion_fractions.append(
+                min(
+                    1.0,
+                    max(0.0, 1.0 - cell.dry_wood_mass_kg / initial_dry_mass_kg),
+                )
+            )
+            char_mass_fractions.append(
+                min(1.0, max(0.0, cell.char_mass_kg / initial_dry_mass_kg))
+            )
+        equivalent_depth_m = layer_thickness_m * sum(conversion_fractions)
+        return PanelCharGeometryDiagnostic(
+            layer_pyrolysis_conversion_fractions=tuple(conversion_fractions),
+            layer_char_mass_fractions_initial_dry=tuple(char_mass_fractions),
+            equivalent_unshrunk_pyrolysis_depth_m=equivalent_depth_m,
+            physical_char_layer_thickness_m=None,
+            shrinkage_factor=None,
+            ready_for_darcy_layer_thickness=False,
+        )
 
 
 def create_layered_panel_model(

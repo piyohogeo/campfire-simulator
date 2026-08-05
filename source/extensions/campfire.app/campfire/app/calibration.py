@@ -54,6 +54,12 @@ class CouponResult:
     final_layer_dry_wood_specific_heats_j_kg_k: tuple[float, ...]
     adhesive_interface_count: int
     adhesive_geometry_explicit: bool
+    layer_pyrolysis_conversion_fractions: tuple[float, ...]
+    layer_char_mass_fractions_initial_dry: tuple[float, ...]
+    equivalent_unshrunk_pyrolysis_depth_m: float | None
+    physical_char_layer_thickness_m: float | None
+    shrinkage_factor: float | None
+    ready_for_darcy_layer_thickness: bool
 
 
 def load_nist_plywood_reference(path: Path | None = None) -> dict:
@@ -162,6 +168,22 @@ def load_nist_plywood_reference(path: Path | None = None) -> dict:
         != panel_model.get("nominal_thickness_m")
     ):
         raise ValueError("Gas-transport diagnostic definition is incomplete")
+    char_geometry = data.get("char_geometry_diagnostic", {})
+    char_context = char_geometry.get("source_context", {})
+    if (
+        char_geometry.get("model")
+        != "fixed_grid_dry_wood_conversion_equivalent_depth"
+        or char_geometry.get("shrinkage_applied") is not False
+        or char_geometry.get("used_for_parameter_selection") is not False
+        or float(char_context.get("comparison_time_s", 0.0)) != 26.0
+        or float(char_context.get("predicted_front_depth_m", 0.0)) != 0.0013
+        or float(char_context.get("observed_front_depth_m", 0.0)) != 0.001
+        or float(
+            char_context.get("shrinkage_corrected_predicted_depth_m", 0.0)
+        )
+        != 0.00095
+    ):
+        raise ValueError("Char-geometry diagnostic definition is incomplete")
     common_scales = kinetics.get("parallel_common_scales", [])
     if not common_scales or any(float(scale) <= 0.0 for scale in common_scales):
         raise ValueError("Parallel Arrhenius common scales must be positive")
@@ -409,6 +431,11 @@ def _simulate_coupon_model(
         else 0.0
     )
     metrics = model.metrics()
+    char_geometry = (
+        model.char_geometry_diagnostic()
+        if isinstance(model, LayeredPanelThermalModel)
+        else None
+    )
     return CouponResult(
         incident_heat_flux_kw_m2=heat_flux_w_m2 / 1000.0,
         ignition_seconds=ignition_seconds,
@@ -502,6 +529,34 @@ def _simulate_coupon_model(
         adhesive_geometry_explicit=bool(
             getattr(model.spec, "adhesive_geometry_explicit", False)
         ),
+        layer_pyrolysis_conversion_fractions=(
+            char_geometry.layer_pyrolysis_conversion_fractions
+            if char_geometry is not None
+            else ()
+        ),
+        layer_char_mass_fractions_initial_dry=(
+            char_geometry.layer_char_mass_fractions_initial_dry
+            if char_geometry is not None
+            else ()
+        ),
+        equivalent_unshrunk_pyrolysis_depth_m=(
+            char_geometry.equivalent_unshrunk_pyrolysis_depth_m
+            if char_geometry is not None
+            else None
+        ),
+        physical_char_layer_thickness_m=(
+            char_geometry.physical_char_layer_thickness_m
+            if char_geometry is not None
+            else None
+        ),
+        shrinkage_factor=(
+            char_geometry.shrinkage_factor if char_geometry is not None else None
+        ),
+        ready_for_darcy_layer_thickness=(
+            char_geometry.ready_for_darcy_layer_thickness
+            if char_geometry is not None
+            else False
+        ),
     )
 
 
@@ -589,6 +644,22 @@ def evaluate_parameters(
                 ),
                 "adhesive_interface_count": result.adhesive_interface_count,
                 "adhesive_geometry_explicit": result.adhesive_geometry_explicit,
+                "layer_pyrolysis_conversion_fractions": list(
+                    result.layer_pyrolysis_conversion_fractions
+                ),
+                "layer_char_mass_fractions_initial_dry": list(
+                    result.layer_char_mass_fractions_initial_dry
+                ),
+                "equivalent_unshrunk_pyrolysis_depth_m": (
+                    result.equivalent_unshrunk_pyrolysis_depth_m
+                ),
+                "physical_char_layer_thickness_m": (
+                    result.physical_char_layer_thickness_m
+                ),
+                "shrinkage_factor": result.shrinkage_factor,
+                "ready_for_darcy_layer_thickness": (
+                    result.ready_for_darcy_layer_thickness
+                ),
             }
         )
     return {
@@ -817,11 +888,61 @@ def evaluate_secondary_tar_residence_sensitivity(
     }
 
 
-def evaluate_gas_transport_readiness(reference: dict) -> dict:
+def evaluate_char_geometry_diagnostic(reference: dict, best_evaluation: dict) -> dict:
+    """Expose fixed-grid reaction progress while withholding physical thickness."""
+
+    definition = reference["char_geometry_diagnostic"]
+    return {
+        **definition,
+        "cases": [
+            {
+                "incident_heat_flux_kw_m2": case["incident_heat_flux_kw_m2"],
+                "layer_pyrolysis_conversion_fractions": case[
+                    "layer_pyrolysis_conversion_fractions"
+                ],
+                "layer_char_mass_fractions_initial_dry": case[
+                    "layer_char_mass_fractions_initial_dry"
+                ],
+                "equivalent_unshrunk_pyrolysis_depth_m": case[
+                    "equivalent_unshrunk_pyrolysis_depth_m"
+                ],
+                "physical_char_layer_thickness_m": case[
+                    "physical_char_layer_thickness_m"
+                ],
+                "shrinkage_factor": case["shrinkage_factor"],
+                "ready_for_darcy_layer_thickness": case[
+                    "ready_for_darcy_layer_thickness"
+                ],
+            }
+            for case in best_evaluation["cases"]
+        ],
+    }
+
+
+def evaluate_gas_transport_readiness(
+    reference: dict, best_evaluation: dict | None = None
+) -> dict:
     """Report the independent Darcy input contract without inventing missing state."""
 
     definition = reference["gas_transport_diagnostic"]
     missing_inputs = list(definition["missing_current_panel_inputs"])
+    fixed_grid_progress = []
+    if best_evaluation is not None:
+        fixed_grid_progress = [
+            {
+                "incident_heat_flux_kw_m2": case["incident_heat_flux_kw_m2"],
+                "equivalent_unshrunk_pyrolysis_depth_m": case[
+                    "equivalent_unshrunk_pyrolysis_depth_m"
+                ],
+                "physical_char_layer_thickness_m": case[
+                    "physical_char_layer_thickness_m"
+                ],
+                "ready_for_darcy_layer_thickness": case[
+                    "ready_for_darcy_layer_thickness"
+                ],
+            }
+            for case in best_evaluation["cases"]
+        ]
     return {
         "model": definition["model"],
         "equations": definition["equations"],
@@ -833,6 +954,7 @@ def evaluate_gas_transport_readiness(reference: dict) -> dict:
         "ready_for_secondary_tar_coupling": not missing_inputs,
         "used_for_parameter_selection": False,
         "predicted_residence_time_s": None,
+        "fixed_grid_reaction_progress": fixed_grid_progress,
         "policy": definition["policy"],
     }
 
@@ -861,7 +983,8 @@ def run_nist_plywood_calibration() -> dict:
             reference, best_parameters, best
         )
     )
-    gas_transport_readiness = evaluate_gas_transport_readiness(reference)
+    char_geometry_diagnostic = evaluate_char_geometry_diagnostic(reference, best)
+    gas_transport_readiness = evaluate_gas_transport_readiness(reference, best)
     validation_baseline = evaluate_parameters(
         reference, baseline_parameters, validation_targets
     )
@@ -906,6 +1029,7 @@ def run_nist_plywood_calibration() -> dict:
             secondary_tar_residence_sensitivity
         ),
         "gas_transport_readiness": gas_transport_readiness,
+        "char_geometry_diagnostic": char_geometry_diagnostic,
         "arrhenius_model": reference["arrhenius_model"],
         "candidate_count": len(ranked),
         "selection": {
@@ -1427,6 +1551,93 @@ def write_gas_transport_readiness_svg(
 
   <line x1="60" y1="620" x2="1140" y2="620" stroke="#53483d"/>
   <text x="60" y="650" class="small">Pozzobon et al. (2014), Fuel Processing Technology 128, 319–330 · Darcy flow validated for their beech-sphere model; values are contextual here.</text>
+</svg>'''
+    destination.write_text(svg, encoding="utf-8")
+    return destination
+
+
+def write_char_geometry_svg(calibration: dict, destination: Path) -> Path:
+    """Render fixed-grid reaction progress and the withheld shrinkage state."""
+
+    destination = Path(destination).resolve()
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    diagnostic = calibration["char_geometry_diagnostic"]
+    context = diagnostic["source_context"]
+    panel_thickness_m = float(calibration["panel_model"]["nominal_thickness_m"])
+    panel_width = 440.0
+    panel_x_positions = (70.0, 630.0)
+    case_markup = []
+    for case_index, case in enumerate(diagnostic["cases"]):
+        panel_x = panel_x_positions[case_index]
+        conversions = case["layer_pyrolysis_conversion_fractions"]
+        char_fractions = case["layer_char_mass_fractions_initial_dry"]
+        ply_width = panel_width / len(conversions)
+        plies = []
+        labels = []
+        for layer_index, (conversion, char_fraction) in enumerate(
+            zip(conversions, char_fractions)
+        ):
+            x = panel_x + layer_index * ply_width
+            conversion = min(1.0, max(0.0, float(conversion)))
+            red = round(92 + 91 * conversion)
+            green = round(74 - 24 * conversion)
+            blue = round(48 - 22 * conversion)
+            plies.append(
+                f'<rect x="{x:.1f}" y="200" width="{ply_width:.1f}" '
+                f'height="116" fill="rgb({red},{green},{blue})" '
+                'stroke="#dfc28d" stroke-width="1"/>'
+            )
+            labels.append(
+                f'<text x="{x + ply_width / 2:.1f}" y="250" class="ply" '
+                f'text-anchor="middle">{100.0 * conversion:.0f}%</text>'
+                f'<text x="{x + ply_width / 2:.1f}" y="278" class="char" '
+                f'text-anchor="middle">char {100.0 * float(char_fraction):.0f}%</text>'
+            )
+        equivalent_depth_m = float(
+            case["equivalent_unshrunk_pyrolysis_depth_m"]
+        )
+        equivalent_width = panel_width * equivalent_depth_m / panel_thickness_m
+        case_markup.extend(
+            (
+                f'<text x="{panel_x:.1f}" y="148" class="case">'
+                f'{float(case["incident_heat_flux_kw_m2"]):g} kW/m2 at 600 s</text>',
+                f'<text x="{panel_x:.1f}" y="177" class="hint">Exposed face →  five fixed plies</text>',
+                *plies,
+                *labels,
+                f'<rect x="{panel_x:.1f}" y="340" width="{panel_width:.1f}" '
+                'height="12" rx="6" fill="#332c25"/>',
+                f'<rect x="{panel_x:.1f}" y="340" width="{equivalent_width:.1f}" '
+                'height="12" rx="6" fill="#e9a75b"/>',
+                f'<text x="{panel_x:.1f}" y="383" class="value">'
+                f'Unshrunk mass-equivalent depth: {1000.0 * equivalent_depth_m:.2f} mm</text>',
+                f'<text x="{panel_x:.1f}" y="411" class="withheld">'
+                'Physical char-layer thickness: WITHHELD</text>',
+            )
+        )
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#15120f"/>
+  <style>
+    text {{ font-family: "Segoe UI", Arial, sans-serif; fill: #fff7e9; }}
+    .title {{ font-size: 30px; font-weight: 700; }}
+    .subtitle {{ font-size: 15px; fill: #d7b982; }}
+    .case {{ font-size: 21px; font-weight: 700; }}
+    .hint {{ font-size: 13px; fill: #bcae9a; }}
+    .ply {{ font-size: 18px; font-weight: 700; }}
+    .char {{ font-size: 11px; fill: #f0dbc0; }}
+    .value {{ font-size: 15px; font-weight: 650; fill: #f4c36d; }}
+    .withheld {{ font-size: 14px; font-weight: 700; fill: #ff8f7e; }}
+    .body {{ font-size: 13px; fill: #ded2c0; }}
+    .small {{ font-size: 12px; fill: #bcae9a; }}
+  </style>
+  <text x="60" y="52" class="title">Phase 6L · Reaction progress is not physical char thickness</text>
+  <text x="60" y="82" class="subtitle">Dry-wood conversion on the original 12.7 mm grid · shrinkage is not modeled · Darcy thickness gate stays closed</text>
+  {''.join(case_markup)}
+  <rect x="60" y="455" width="1080" height="112" rx="10" fill="#282218" stroke="#a77a38"/>
+  <text x="82" y="486" class="case">Why the distinction matters</text>
+  <text x="82" y="516" class="body">Pozzobon beech-sphere context at {float(context["comparison_time_s"]):g} s: fixed-grid prediction {1000.0 * float(context["predicted_front_depth_m"]):.2f} mm → shrinkage-corrected {1000.0 * float(context["shrinkage_corrected_predicted_depth_m"]):.2f} mm; observed {1000.0 * float(context["observed_front_depth_m"]):.2f} mm.</text>
+  <text x="82" y="544" class="small">Different material and geometry: the reported beech shrinkage is evidence for separation, not a plywood coefficient.</text>
+  <line x1="60" y1="610" x2="1140" y2="610" stroke="#53483d"/>
+  <text x="60" y="640" class="small">Layer percentages show dry-wood conversion; “char” is retained char mass / initial dry mass. Neither defines a contiguous physical front.</text>
 </svg>'''
     destination.write_text(svg, encoding="utf-8")
     return destination
