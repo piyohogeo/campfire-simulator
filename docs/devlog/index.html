@@ -36,7 +36,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>41 / 41 passed</strong></div>
-        <div><span>次の焦点</span><strong>debugger-free測定</strong></div>
+        <div><span>次の焦点</span><strong>Python hot path</strong></div>
       </div>
     </div>
   </header>
@@ -59,9 +59,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6W · Complete wood-step NumPy prototype</p>
+            <p class="section-kicker">Phase 6X · Debugger-free end-to-end decision</p>
             <h2>「それらしい」から、<br>誤差を示せるモデルへ。</h2>
-            <p>責任研究室による実環境検証は保留したまま、完全な木材stepへ任意選択のNumPy経路を追加しました。2,304セル・400 step・3 runの制御測定は3.1313から2.8228 ms/model-stepへ9.9%短縮し、毎step結果、最終状態、集計値は完全一致しました。ただしデバッグ拡張が残ったPhase 3の時間は判断から除外し、既定backendはPythonのままです。標準テストは41件すべて成功しています。</p>
+            <p>developer bundleをversion lockから除いた測定専用Kitアプリを作り、PythonとNumPyを交互順序2組でend-to-end再測定しました。全4 runでdebug拡張は0、状態・CSV・着火・Flowは完全一致です。一方、木材step平均はNumPyが2.3%遅く、シナリオ全体も1.9%遅かったため、既定backendをPythonに確定しました。標準テストは41件すべて成功しています。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -170,6 +170,13 @@
             <figcaption><div><strong>Complete wood-step NumPy prototype</strong><span>−9.9% controlled · exact outputs · Phase 3 timing excluded · Python default</span></div></figcaption>
           </figure>
 
+          <figure id="phase6x-debugger-free" class="capture-card">
+            <a href="assets/phase6/phase3_backend_report.svg" aria-label="Phase 6X debugger-free Phase 3比較レポートを開く">
+              <img src="assets/phase6/phase3_backend_report.svg" width="1200" height="680" alt="debug拡張なしの交互順序2組でPythonとNumPyの木材step、シナリオ時間、完全同値ゲート、Python既定維持を示すSVG図">
+            </a>
+            <figcaption><div><strong>Debugger-free application boundary</strong><span>2 alternating pairs · exact outputs · NumPy 2.3% slower · Python default</span></div></figcaption>
+          </figure>
+
           <figure class="capture-card">
             <a href="assets/phase6/replicate_holdout_report.svg" aria-label="Phase 6C 合板反復ホールドアウトレポートを開く">
               <img src="assets/phase6/replicate_holdout_report.svg" width="1200" height="680" alt="未使用の合板SAMP.3について、着火時刻と平均質量減少速度の観測・初期・SAMP.1/2選定値を並べたSVGグラフ">
@@ -206,8 +213,8 @@
           </figure>
 
           <div class="story-grid">
-            <section class="story-card"><span class="card-index">01</span><h3>完全なstepで比べる</h3><ul><li>2,304 cells・400 step × 3</li><li>Python 3.1313 ms</li><li>NumPy 2.8228 ms</li><li>変換・書戻し込み −9.9%</li></ul></section>
-            <section class="story-card warm"><span class="card-index">02</span><h3>一致と測定品質を優先する</h3><ul><li>全step履歴・状態・集計一致</li><li>Phase 3出力一致</li><li>debug混入時間は除外</li><li>既定はPythonを維持</li></ul></section>
+            <section class="story-card"><span class="card-index">01</span><h3>アプリ境界をきれいにする</h3><ul><li>developer bundleを分離</li><li>debug拡張4種を実行時検査</li><li>追跡sceneを書き換えない</li><li>4 runを143.8秒で完了</li></ul></section>
+            <section class="story-card warm"><span class="card-index">02</span><h3>小さな速さを既定化しない</h3><ul><li>Python 11.218 ms</li><li>NumPy 11.472 ms</li><li>平均2.3%・scenario 1.9%遅い</li><li>既定Pythonを確定</li></ul></section>
           </div>
 
           <section class="verification" aria-labelledby="phase6-verification-title">
@@ -228,7 +235,8 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Step internals</strong><small>8 segments · 3 + 3 profiles · state SHA-256 identical</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Array boundary</strong><small>7 paths · 3 runs · exact isolated SHA-256</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Complete-step backend</strong><small>400-step history + state + metrics exact</small></p></div>
-              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Standard tests</strong><small>39 coverage + 2 numerical · 41 / 41 passed</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Standard tests</strong><small>35 + 4 coverage · 2 numerical · 41 / 41 passed</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Debugger-free E2E</strong><small>4 runs · 0 debug extensions · exact outputs</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>
             </div>
           </section>
@@ -276,7 +284,12 @@
               <div><dt>Complete Python step</dt><dd>3.1313 ms/model-step</dd></div>
               <div><dt>Complete NumPy step</dt><dd>2.8228 ms · 9.9% faster</dd></div>
               <div><dt>Phase 3 output equality</dt><dd>state / CSV / ignition / Flow exact</dd></div>
-              <div><dt>Current standard suite</dt><dd>41 / 41 · 327.4 s</dd></div>
+              <div><dt>Current standard suite</dt><dd>41 / 41 · 353.5 s</dd></div>
+              <div><dt>Coverage process times</dt><dd>186.0 / 135.3 s</dd></div>
+              <div><dt>Debugger-free wood step</dt><dd>Python 11.218 / NumPy 11.472 ms</dd></div>
+              <div><dt>Debugger-free scenario</dt><dd>17.532 / 17.858 s</dd></div>
+              <div><dt>Debugger-free runner</dt><dd>35.413 / 35.909 s</dd></div>
+              <div><dt>Phase 6X decision</dt><dd>Python default · NumPy opt-in</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
@@ -292,8 +305,8 @@
           </section>
 
           <div class="notes-grid">
-            <section class="note caution"><p class="note-label">Known limits</p><h3>Phase 3の絶対時間は採用できない</h3><p>Python／NumPy両試行で開発用デバッグ拡張が有効なままになり、木材step時間は制御測定より一桁以上大きくなりました。出力同値性には使えますが、見かけの速度差は本番性能値ではありません。実環境検証も0/24件のまま保留しています。</p></section>
-            <section class="note next"><p class="note-label">What comes next</p><h3>デバッガーなしでend-to-endを測る</h3><p>開発用デバッガーを読み込まない最小のPhase 3実行構成を整え、同じアプリ境界でPythonとNumPyを再測定します。絶対時間が制御測定と整合し、出力ハッシュを維持したまま改善が再現した場合だけ、既定backendの変更を再検討します。</p></section>
+            <section class="note caution"><p class="note-label">Known limits</p><h3>NumPyの局所改善はend-to-endで消えた</h3><p>制御測定では9.9%短縮しましたが、Phase 3では平均とシナリオがともに遅くなりました。p95だけは2.1%改善しており、選択経路は同値検証用に残します。実環境検証は0/24件のまま保留しています。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>既定Pythonのホットパスへ戻る</h3><p>debugger-free Phase 3を基準に木材step内部を再プロファイルし、AoS配列往復を増やさない改善候補を選びます。GPU常駐案はFlow・集計・USD境界まで一緒に再設計できる場合だけ再検討します。</p></section>
           </div>
         </div>
       </article>

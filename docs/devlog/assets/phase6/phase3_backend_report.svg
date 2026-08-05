@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6X debugger-free Phase 3 backend comparison</title>
+  <desc id="desc">Two or more alternating Python and NumPy runs compare complete Phase 3 timing with exact authoritative outputs and no debug extensions.</desc>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#111827"/><stop offset="1" stop-color="#071b18"/></linearGradient></defs>
+  <rect width="1200" height="680" rx="30" fill="url(#bg)"/>
+  <text x="64" y="68" fill="#34d399" font-family="Segoe UI,sans-serif" font-size="18" font-weight="700" letter-spacing="2">PHASE 6X · DEBUGGER-FREE END-TO-END</text>
+  <text x="64" y="116" fill="#f8fafc" font-family="Segoe UI,sans-serif" font-size="38" font-weight="750">Measure the application boundary cleanly</text>
+  <text x="64" y="148" fill="#94a3b8" font-family="Segoe UI,sans-serif" font-size="17">2 alternating pairs · 1,200 steps · captures and Flow retained</text>
+  <rect x="64" y="188" width="672" height="330" rx="22" fill="#162133" stroke="#334155"/>
+  <text x="96" y="232" fill="#cbd5e1" font-family="Segoe UI,sans-serif" font-size="15" font-weight="700" letter-spacing="1.5">TWO-LOG WOOD STEP · MEDIAN MEAN</text>
+  <text x="96" y="286" fill="#f8fafc" font-family="Segoe UI,sans-serif" font-size="20" font-weight="700">Python</text>
+  <text x="690" y="286" text-anchor="end" fill="#f8fafc" font-family="Segoe UI,sans-serif" font-size="22" font-weight="750">11.218 ms</text>
+  <rect x="96" y="304" width="381.4" height="34" rx="17" fill="#64748b"/>
+  <text x="96" y="382" fill="#f8fafc" font-family="Segoe UI,sans-serif" font-size="20" font-weight="700">NumPy</text>
+  <text x="690" y="382" text-anchor="end" fill="#86efac" font-family="Segoe UI,sans-serif" font-size="22" font-weight="750">11.472 ms</text>
+  <rect x="96" y="400" width="390.0" height="34" rx="17" fill="#22c55e"/>
+  <text x="96" y="484" fill="#86efac" font-family="Segoe UI,sans-serif" font-size="30" font-weight="750">2.3% slower</text>
+  <rect x="768" y="188" width="368" height="330" rx="22" fill="#10231f" stroke="#166534"/>
+  <text x="800" y="232" fill="#86efac" font-family="Segoe UI,sans-serif" font-size="15" font-weight="700" letter-spacing="1.5">ACCEPTANCE GATES</text>
+  <text x="800" y="286" fill="#f8fafc" font-family="Segoe UI,sans-serif" font-size="19" font-weight="700">✓ no debug extensions</text>
+  <text x="800" y="328" fill="#f8fafc" font-family="Segoe UI,sans-serif" font-size="19" font-weight="700">✓ dry / wet state SHA-256</text>
+  <text x="800" y="370" fill="#f8fafc" font-family="Segoe UI,sans-serif" font-size="19" font-weight="700">✓ CSV / ignition / Flow</text>
+  <text x="800" y="412" fill="#f8fafc" font-family="Segoe UI,sans-serif" font-size="19" font-weight="700">✓ tracked scene untouched</text>
+  <text x="800" y="468" fill="#94a3b8" font-family="Segoe UI,sans-serif" font-size="16">Scenario 17.53 → 17.86 s</text>
+  <line x1="64" y1="558" x2="1136" y2="558" stroke="#273449"/>
+  <text x="64" y="606" fill="#f8fafc" font-family="Segoe UI,sans-serif" font-size="22" font-weight="750">Default remains Python — NumPy did not improve end-to-end</text>
+  <text x="64" y="638" fill="#94a3b8" font-family="Segoe UI,sans-serif" font-size="16">Debugger-free evidence is eligible for performance interpretation; NumPy remains available by explicit selection.</text>
+</svg>

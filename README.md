@@ -128,8 +128,9 @@ Phase 6検証は[NISTIR 7094](https://tsapps.nist.gov/publication/get_pdf.cfm?pu
 - Phase 6Uでは支配区間の顕熱更新＋状態確定だけを、2,304セル・400 step・3 runでPython AoS、NumPy、Warp CUDAへ同じfloat64式として実装しました。AoS変換込みNumPyは`3.952 → 3.067 ms/step`（`22.4%`短縮）でしたが、毎step H2D／D2Hを含むWarpは`4.159 ms/step`でPythonより`5.2%`遅く、現構成では不採用です。NumPy／Warp常駐の`0.064 / 0.071 ms/step`は、伝導・反応・Flowを含まないアーキテクチャ下限であり本番性能とは扱いません。全候補の最終状態SHA-256はPythonと完全一致しました。
 - Phase 6Vでは標準`repo.bat test`を、coverage付きの通常39件とcoverageなしの決定論的NIST校正1件へ分離しました。最終実測は通常`217.7 s`、校正`24.5 s`、全体`246.9 s`で40/40成功し、各プロセスはKitの`300 s`上限内です。タイムアウト値を緩めたり校正テストを削除したりせず、API文書整合性の自動検査も維持しています。
 - Phase 6Wでは`WoodThermalModel.step()`へ任意選択のNumPy経路を追加し、既定のPython経路を維持しました。2,304セル・400 step・3 runの完全な木材stepは`3.1313 → 2.8228 ms/model-step`（`9.9%`短縮）で、毎step結果履歴、最終状態SHA-256、集計値は完全一致しました。Phase 3の1,200 stepでも乾燥／湿潤状態、CSV、着火時刻、Flowピークが一致しましたが、デバッグ拡張が残った実行時間は採用判断から除外しています。標準テストは通常39件＋数値検証2件の41/41件が成功しました。
+- Phase 6Xではdeveloper bundleをversion lockから除いた測定専用`campfire.simulator.benchmark.kit`を追加しました。debug拡張4種を実行時にも検査し、Python→NumPy／NumPy→Pythonの交互順序2組でPhase 3を再測定しています。全4 runの状態SHA-256、CSV SHA-256、着火時刻`66.2 / 166.4 s`、Flow peak`294`は完全一致しました。木材step平均の中央値はPython`11.218 ms`、NumPy`11.472 ms`でNumPyが`2.3%`遅く、シナリオも`17.532 → 17.858 s`（`1.9%`遅い）ため、既定はPythonに確定しました。runner中央値は約`35.4 / 35.9 s`です。標準テストはcoverage付き35件＋熱モデル4件、coverageなし数値2件へ分割し、`186.0 / 135.3 / 27.6 s`、全41件を`353.5 s`で成功させました。
 - ヘッドレス検証ではUSD transformを同期する `fetch_results` が平均約15.46 msを占めます。PhysX `simulate` 自体は平均約0.15 msですが、60 Hz実時間更新の性能条件はこの経路では未達です。
 - raw NanoVDBを世界座標一点へ変換する局所場アダプターは未実装です。
 - Fabric interface version警告とFlow Python node登録警告が非阻害で残っています。
 
-次の作業は、実環境の実験検証を保留したまま、開発用デバッガーを読み込まない最小のPhase 3実行構成を整え、NumPy経路のend-to-end性能を再測定することです。制御ベンチマークの`9.9%`短縮だけでは既定値を変更せず、通常のアプリ境界でも改善し、同じ出力ハッシュを保つことを採用条件にします。Warpは全状態をGPU常駐させ、CPU側のメトリクス・Flow・USD境界まで再設計できる場合に限って再検討します。責任研究室からレビュー済み票を受領するまで設備dry runは開始しません。
+次の作業は、実環境の実験検証を保留したまま、debugger-free Phase 3で支配的な既定Python木材stepを再プロファイルし、配列往復を増やさず改善できる区間を選ぶことです。NumPyは明示選択可能な検証経路として残しますが、現AoS境界では既定化しません。Warpは全状態をGPU常駐させ、CPU側のメトリクス・Flow・USD境界まで再設計できる場合に限って再検討します。責任研究室からレビュー済み票を受領するまで設備dry runは開始しません。

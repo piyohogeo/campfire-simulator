@@ -8,7 +8,7 @@ $ErrorActionPreference = "Stop"
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $releaseRoot = Join-Path $repoRoot "_build\windows-x86_64\release"
 $kit = Join-Path $releaseRoot "kit\kit.exe"
-$app = Join-Path $releaseRoot "apps\campfire.simulator.kit"
+$app = Join-Path $releaseRoot "apps\campfire.simulator.benchmark.kit"
 
 if (-not (Test-Path -LiteralPath $kit) -or -not (Test-Path -LiteralPath $app)) {
     throw "Application is not built. Run .\repo.bat build first."
@@ -31,6 +31,7 @@ $kitArgs = @(
     "--/exts/campfire.app/captureOnStartup=true",
     "--/exts/campfire.app/quitAfterCapture=true",
     "--/exts/campfire.app/outputDir=$OutputDir",
+    "--/exts/campfire.app/sceneOutputDir=$OutputDir",
     "--/exts/campfire.app/woodArrayBackend=$ArrayBackend",
     "--/rtx/flow/enabled=true",
     "--/app/viewport/grid/enabled=false",
@@ -56,6 +57,14 @@ if ($result.status -ne "ok" -or $result.phase -ne "phase3") {
 }
 if ($result.scenario.wood_array_backend -ne $ArrayBackend) {
     throw "Phase 3 used an unexpected wood array backend."
+}
+if (-not $result.scenario.debugger_free) {
+    $enabledDebugExtensions = @(
+        $result.scenario.debug_extension_status.PSObject.Properties |
+            Where-Object { $_.Value } |
+            ForEach-Object { $_.Name }
+    )
+    throw "Phase 3 loaded forbidden debug extensions: $($enabledDebugExtensions -join ', ')"
 }
 if ($result.scenario.steps -ne 1200 -or $result.scenario.model_duration_seconds -ne 240) {
     throw "Phase 3 did not complete the expected 240 second model scenario."

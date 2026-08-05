@@ -126,7 +126,10 @@ publish_pip_cache = false
 # extension id and only produces a false "extension not found" message.  The
 # extension launcher remains the authoritative Phase 0 unit-test target.
 [repo_test.suites.alltests]
-exclude = ["tests-campfire.simulator.kit${shell_ext}"]
+exclude = [
+    "tests-campfire.simulator.kit${shell_ext}",
+    "tests-campfire.simulator.benchmark.kit${shell_ext}",
+]
 
 ########################################################################################################################
 # Extensions precacher
@@ -134,7 +137,10 @@ exclude = ["tests-campfire.simulator.kit${shell_ext}"]
 
 [repo_precache_exts]
 # Apps to run and precache
-apps = ["${root}/source/apps/campfire.simulator.kit"]
+apps = [
+    "${root}/source/apps/campfire.simulator.kit",
+    "${root}/source/apps/campfire.simulator.benchmark.kit",
+]
 
 # registries = [
 #     { name = "kit/default", url = "https://ovextensionsprod.blob.core.windows.net/exts/kit/prod/${kit_version_short}/shared" },

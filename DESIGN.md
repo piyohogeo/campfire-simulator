@@ -2,7 +2,7 @@
 
 ## 1. 文書情報
 
-- 文書状態: 実装中・Phase 6W 全step NumPy限定試作完了
+- 文書状態: 実装中・Phase 6X debugger-free end-to-end比較完了
 - 初版日: 2026-08-04
 - 想定開発環境: Windows 11、NVIDIA RTX 3090（24 GB）、VS Code + Codex
 - 開発リポジトリ（作成済み）: `C:\Users\junic\src\campfire-simulator`
@@ -1363,3 +1363,18 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - テスト構成: 新しい400 step同値試験はNIST全探索と同じcoverageなし`numerical`プロセスへ置き、coverage付き通常39件の300秒上限を守った。標準`.\repo.bat test`はstartup`3.6 s`、通常39件`294.7 s`、数値2件`28.3 s`、全体`327.4 s`で41/41件成功した。
 - 可視化: 制御時間、9.9%短縮、同値ゲート、Phase 3時間除外、既定値維持を`wood_numpy_prototype_report.svg`へまとめ、JSON根拠とともにWeb開発日記から閲覧可能にした。
 - 次: 開発用デバッガーを読み込まない最小のPhase 3実行構成を作り、同じアプリ境界でPython／NumPyを再測定する。絶対時間が制御測定と整合し、出力ハッシュを維持したままend-to-end改善が再現した場合だけ、既定backendの変更を再検討する。実設備dry runは責任研究室の外部レビュー受領まで保留する。
+
+## 52. Phase 6X debugger-free Phase 3 end-to-end比較
+
+### 2026-08-05: 開発用依存をversion lockから分離し、既定backendを実測で確定する
+
+- 原因確認: 既存アプリは`omni.kit.developer.bundle`を直接依存と生成`app.exts.enabled`の両方に持つため、CLIの`--disable`ではbundle配下の`omni.kit.debug.vscode`と`omni.kit.debug.python`を抑止できなかった。ゲート試行はdebug拡張4種を検出して失敗し、性能根拠から除外した。
+- 測定専用アプリ: UI／Flow／RTX／viewport／PhysXの既存依存は維持し、developer bundleだけを依存とversion lockから除いた`campfire.simulator.benchmark.kit`を追加した。Phase 3 summaryには4拡張の有効状態と`debugger_free`を保存し、runnerは一つでも有効なら失敗する。
+- 成果物隔離: Phase 3の初期scene export先を設定可能にし、測定runnerでは各runの成果物ディレクトリへ`phase3_thermal.usda`を出力する。従来の追跡対象`assets/scenes/phase3_thermal.usda`をベンチマークが変更しないことをGit差分で確認した。
+- 測定方法: 1,200 step、Flow更新、2画像captureを維持し、Python→NumPyとNumPy→Pythonの交互順序で2組、計4 runを実行した。全runでdebug拡張4種は無効だった。runner全体は4 runで`143.8 s`だった。
+- 同値性: 乾燥／湿潤の権威状態SHA-256、`wood_metrics.csv` SHA-256`01aaf0c…7759`、着火時刻`66.2 / 166.4 s`、Flow active block peak`294`は4 runで完全一致した。
+- 性能結果: warmup除外後の二本の木材step平均はPython中央値`11.21845 ms`、NumPy中央値`11.47180 ms`で、NumPyは`2.26%`遅かった。p95だけは`15.50025 → 15.18060 ms`（`2.06%`改善）だが、シナリオ中央値は`17.5317 → 17.8578 s`（`1.86%`遅い）、runner中央値も`35.4130 → 35.9085 s`（`1.40%`遅い）だった。
+- 判断: 制御マイクロベンチの`9.9%`短縮はアプリ境界で再現しなかった。平均とend-to-endの両採用条件を満たさないため既定backendはPythonに確定し、NumPyは明示選択可能な同値検証経路として残す。毎step Warp往復の棄却も維持する。
+- 可視化と再現: `run_phase6x_backend_benchmark.ps1`が交互順序2組を実行し、`compare_phase3_backends.py`がdebugger-free、同値性、時間を検査して`phase3_backend_report.json/.svg`を生成する。SVGはEdgeの1200×680描画で文字切れがないことを確認した。
+- 標準テスト: 変更後の初回はcoverage付き39件がKitの`300 s`上限へ再到達した。数値失敗ではなく最後のテスト開始後のプロセス打切りだったため、coverageを外さず、通常35件と多step熱モデル4件の二つのcoverageプロセスへ分割した。最終`.\repo.bat test`はstartup`3.9 s`、通常35件`186.0 s`、熱モデル4件`135.3 s`、coverageなし数値2件`27.6 s`、全体`353.5 s`で41/41件成功した。
+- 次: debugger-freeの既定Python経路を基準に内部区間を再プロファイルし、AoS配列往復を増やさないホットパス改善を選ぶ。実設備dry runは責任研究室の外部レビュー受領まで保留する。

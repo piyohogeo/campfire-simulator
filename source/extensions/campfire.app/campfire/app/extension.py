@@ -117,6 +117,12 @@ from .phase6_scene import (
 
 SETTINGS_ROOT = "/exts/campfire.app"
 CAPTURE_RESOLUTION = (1280, 720)
+PHASE3_DEBUG_EXTENSION_IDS = (
+    "omni.kit.developer.bundle",
+    "omni.kit.dev.utilities.bundle",
+    "omni.kit.debug.vscode",
+    "omni.kit.debug.python",
+)
 
 
 def _find_repo_root(extension_path: Path) -> Path:
@@ -199,8 +205,16 @@ class CampfireAppExtension(omni.ext.IExt):
             elif phase == "phase3":
                 settings.set("/rtx/flow/enabled", True)
                 populate_phase3_scene(stage)
+                configured_scene_output_dir = settings.get_as_string(
+                    f"{SETTINGS_ROOT}/sceneOutputDir"
+                )
+                phase3_scene_dir = (
+                    Path(configured_scene_output_dir).resolve()
+                    if configured_scene_output_dir
+                    else repo_root / "assets" / "scenes"
+                )
                 scene_path = export_phase3_stage(
-                    stage, repo_root / "assets" / "scenes" / "phase3_thermal.usda"
+                    stage, phase3_scene_dir / "phase3_thermal.usda"
                 )
             elif phase == "phase2":
                 settings.set("/rtx/flow/enabled", True)
@@ -993,6 +1007,11 @@ class CampfireAppExtension(omni.ext.IExt):
 
         output_dir = self._output_dir()
         settings = carb.settings.get_settings()
+        extension_manager = omni.kit.app.get_app().get_extension_manager()
+        debug_extension_status = {
+            extension_id: bool(extension_manager.is_extension_enabled(extension_id))
+            for extension_id in PHASE3_DEBUG_EXTENSION_IDS
+        }
         array_backend = (
             settings.get_as_string(f"{SETTINGS_ROOT}/woodArrayBackend")
             or PYTHON_ARRAY_BACKEND
@@ -1169,6 +1188,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 writer.writeheader()
                 writer.writerows(rows)
             csv_seconds = time.perf_counter() - csv_started
+            metrics_csv_sha256 = hashlib.sha256(metrics_path.read_bytes()).hexdigest()
             finalization_seconds = persistence_seconds + export_seconds + csv_seconds
 
             model_measured = model_step_times_ms[20:]
@@ -1277,12 +1297,15 @@ class CampfireAppExtension(omni.ext.IExt):
                 "scene": str(scene_path),
                 "final_stage": str(final_stage_path),
                 "metrics_csv": str(metrics_path),
+                "metrics_csv_sha256": metrics_csv_sha256,
                 "camera": str(CAMERA_PATH),
                 "resolution": list(CAPTURE_RESOLUTION),
                 "images": images,
                 "startup": startup_timing,
                 "scenario": {
                     "wood_array_backend": array_backend,
+                    "debug_extension_status": debug_extension_status,
+                    "debugger_free": not any(debug_extension_status.values()),
                     "model_dt_seconds": PHASE3_MODEL_DT_SECONDS,
                     "flow_update_interval_steps": PHASE3_FLOW_UPDATE_INTERVAL_STEPS,
                     "flow_update_interval_seconds": (

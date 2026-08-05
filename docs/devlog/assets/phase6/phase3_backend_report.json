@@ -1,0 +1,67 @@
+{
+  "phase": "6X",
+  "status": "ok",
+  "paired_run_count": 2,
+  "execution_order": "alternating within consecutive pairs",
+  "configuration": {
+    "model_dt_seconds": 0.2,
+    "flow_update_interval_steps": 5,
+    "flow_update_interval_seconds": 1.0,
+    "steps": 1200,
+    "model_duration_seconds": 240.0,
+    "external_heat_flux_w_m2": 150000.0
+  },
+  "environment": {
+    "debugger_free_all_runs": true,
+    "debug_extension_status_recorded": true
+  },
+  "equivalence": {
+    "exact_outputs": true,
+    "dry_state_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+    "wet_state_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+    "metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759",
+    "ignition_seconds": [
+      66.2,
+      166.4
+    ],
+    "flow_active_blocks_peak": 294
+  },
+  "timings": {
+    "wood_model_step_mean_ms": {
+      "python_median": 11.21845,
+      "numpy_median": 11.4718,
+      "numpy_improvement_percent": -2.258333370474519
+    },
+    "wood_model_step_p95_ms": {
+      "python_median": 15.500250000000001,
+      "numpy_median": 15.1806,
+      "numpy_improvement_percent": 2.062224802825763
+    },
+    "scenario_wall_seconds": {
+      "python_median": 17.5317,
+      "numpy_median": 17.8578,
+      "numpy_improvement_percent": -1.860059207036402
+    },
+    "runner_wall_seconds": {
+      "python_median": 35.413,
+      "numpy_median": 35.908500000000004,
+      "numpy_improvement_percent": -1.3992036822636056
+    }
+  },
+  "decision": {
+    "default_backend": "python",
+    "numpy_default_adoption": false,
+    "repeatable_end_to_end_gain_observed": false,
+    "reason": "paired debugger-free evidence did not show a NumPy improvement; retain Python as the default"
+  },
+  "runs": {
+    "python": [
+      "artifacts\\phase3\\phase6x\\pair_1_python\\summary.json",
+      "artifacts\\phase3\\phase6x\\pair_2_python\\summary.json"
+    ],
+    "numpy": [
+      "artifacts\\phase3\\phase6x\\pair_1_numpy\\summary.json",
+      "artifacts\\phase3\\phase6x\\pair_2_numpy\\summary.json"
+    ]
+  }
+}
