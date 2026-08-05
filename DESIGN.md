@@ -2,7 +2,7 @@
 
 ## 1. 文書情報
 
-- 文書状態: 実装中・Phase 6X debugger-free end-to-end比較完了
+- 文書状態: 実装中・Phase 6Y debugger-free Python内部プロファイル完了
 - 初版日: 2026-08-04
 - 想定開発環境: Windows 11、NVIDIA RTX 3090（24 GB）、VS Code + Codex
 - 開発リポジトリ（作成済み）: `C:\Users\junic\src\campfire-simulator`
@@ -1378,3 +1378,17 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 可視化と再現: `run_phase6x_backend_benchmark.ps1`が交互順序2組を実行し、`compare_phase3_backends.py`がdebugger-free、同値性、時間を検査して`phase3_backend_report.json/.svg`を生成する。SVGはEdgeの1200×680描画で文字切れがないことを確認した。
 - 標準テスト: 変更後の初回はcoverage付き39件がKitの`300 s`上限へ再到達した。数値失敗ではなく最後のテスト開始後のプロセス打切りだったため、coverageを外さず、通常35件と多step熱モデル4件の二つのcoverageプロセスへ分割した。最終`.\repo.bat test`はstartup`3.9 s`、通常35件`186.0 s`、熱モデル4件`135.3 s`、coverageなし数値2件`27.6 s`、全体`353.5 s`で41/41件成功した。
 - 次: debugger-freeの既定Python経路を基準に内部区間を再プロファイルし、AoS配列往復を増やさないホットパス改善を選ぶ。実設備dry runは責任研究室の外部レビュー受領まで保留する。
+
+## 53. Phase 6Y debugger-free Python内部プロファイル
+
+### 2026-08-05: 実アプリの既定経路で、次に変更する一つの区間を選ぶ
+
+- 計測境界: `woodInternalTiming`を明示した場合だけ、既存`WoodThermalModel.step()`の8区間タイマーをPhase 3へ接続する。乾燥・湿潤二本の各区間をstepごとに合算し、先頭20 stepを除く各`1,180`サンプルをsummaryへ保存する。既定値は無効で、通常経路に辞書生成とタイマー呼出しを追加しない。
+- 実測方法: Phase 6Xの`campfire.simulator.benchmark.kit`を使い、Python backend、1,200 step、Flow更新、2画像captureを維持して3 runを実行した。debug拡張4種は全runで無効、全体は`114.6 s`で完走した。
+- 内部結果: 二本の木材step内部合計は3 run中央値`11.6346 ms`、step全体中央値は`11.7160 ms`だった。顕熱更新`4.5321 ms`（`38.95%`）、状態clamp・相判定`3.7012 ms`（`31.81%`）、熱分解`1.2511 ms`（`10.75%`）、伝導`1.0293 ms`（`8.85%`）の順で、上位二区間が内部時間の`70.8%`を占めた。
+- アプリ時間: プロファイル付きシナリオ中央値は`18.2749 s`、runner中央値は`36.834 s`だった。計測で実行形状が変わるためPhase 6Xの非計測値と速度比較せず、区間比率と候補選定にだけ使う。
+- 同値性: 3 runの乾燥状態SHA-256`0dec57f…be10`、湿潤状態SHA-256`148585…20c9`、CSV SHA-256`01aaf0…7759`、着火`66.2 / 166.4 s`は完全一致した。Flow active block peakは3回とも`293`だったが、GPUスケジューリング診断でありCPU権威状態の完全一致とは分けて記録する。
+- 可視化と再現: `run_phase6y_python_profile.ps1`が3 runを実行し、`summarize_phase3_python_profiles.py`がdebugger-free、backend、サンプル数、同値性を検査して`phase3_python_internal_report.json/.svg`を生成する。SVGはEdgeの1200×680描画で文字切れがないことを確認した。
+- 既定経路と標準テスト: 計測指定なしのPhase 3を別runで完走させ、内部区間が空、内部合計が0であることを確認した。標準`.\repo.bat test`はstartup`3.9 s`、coverage通常35件`180.2 s`、coverage熱モデル4件`129.6 s`、coverageなし数値2件`25.3 s`、全41件をrunner`339.9 s`で成功させた。
+- 判断: 次の改善対象は顕熱更新とする。物理式、格子、`dt`、セル順序を維持し、新しいAoS–配列往復を追加せず、一時値・属性参照・分岐の削減を先に試す。状態・CSV・着火の完全一致と非計測3 runのend-to-end改善が揃った場合だけ採用する。
+- 次: 顕熱更新ループのPython実装を局所試作し、内部プロファイルと非計測Phase 3を前後比較する。実設備dry runは責任研究室の外部レビュー受領まで保留する。

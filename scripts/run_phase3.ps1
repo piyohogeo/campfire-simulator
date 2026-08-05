@@ -1,7 +1,8 @@
 param(
     [string]$OutputDir = "",
     [ValidateSet("python", "numpy")]
-    [string]$ArrayBackend = "python"
+    [string]$ArrayBackend = "python",
+    [switch]$ProfileWoodInternals
 )
 
 $ErrorActionPreference = "Stop"
@@ -33,6 +34,7 @@ $kitArgs = @(
     "--/exts/campfire.app/outputDir=$OutputDir",
     "--/exts/campfire.app/sceneOutputDir=$OutputDir",
     "--/exts/campfire.app/woodArrayBackend=$ArrayBackend",
+    "--/exts/campfire.app/woodInternalTiming=$($ProfileWoodInternals.IsPresent.ToString().ToLowerInvariant())",
     "--/rtx/flow/enabled=true",
     "--/app/viewport/grid/enabled=false",
     "--/persistent/app/viewport/displayOptions=1152"
@@ -57,6 +59,9 @@ if ($result.status -ne "ok" -or $result.phase -ne "phase3") {
 }
 if ($result.scenario.wood_array_backend -ne $ArrayBackend) {
     throw "Phase 3 used an unexpected wood array backend."
+}
+if ([bool]$result.scenario.wood_internal_timing_enabled -ne $ProfileWoodInternals.IsPresent) {
+    throw "Phase 3 used an unexpected wood internal timing setting."
 }
 if (-not $result.scenario.debugger_free) {
     $enabledDebugExtensions = @(
@@ -126,6 +131,36 @@ foreach ($name in $expectedTimingSamples.Keys) {
             throw "Phase 3 timing segment has an invalid $field value: $name"
         }
     }
+}
+if ($ProfileWoodInternals.IsPresent) {
+    $expectedInternalSegments = @(
+        "input_validation",
+        "conduction",
+        "sensible_heat",
+        "evaporation",
+        "pyrolysis",
+        "char_oxidation",
+        "state_finalize",
+        "result_aggregation"
+    )
+    foreach ($name in $expectedInternalSegments) {
+        $segment = $result.timing.wood_model_internal_segments.$name
+        if ($null -eq $segment -or $segment.sample_count -ne 1180) {
+            throw "Phase 3 wood internal segment has an unexpected sample count: $name"
+        }
+        foreach ($field in @("total_ms", "mean_ms", "p95_ms", "max_ms")) {
+            $value = [double]$segment.$field
+            if ([double]::IsNaN($value) -or [double]::IsInfinity($value) -or $value -lt 0) {
+                throw "Phase 3 wood internal segment has an invalid $field value: $name"
+            }
+        }
+    }
+    if ($result.timing.wood_model_internal_total_mean_ms -le 0) {
+        throw "Phase 3 wood internal timing total is invalid."
+    }
+}
+elseif (@($result.timing.wood_model_internal_segments.PSObject.Properties).Count -ne 0) {
+    throw "Phase 3 collected wood internal timings without an explicit request."
 }
 if ($result.startup.extension_to_scenario_seconds -le 0) {
     throw "Phase 3 did not report extension-to-scenario startup time."

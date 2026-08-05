@@ -53,6 +53,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - coverage付き通常39件とcoverageなしNIST校正1件へ分離し、Kitの300秒上限内で標準40テストと生成API文書検査を復旧するPhase 6Vテスト構成とSVGレポート。
 - 顕熱更新と状態確定だけをNumPy化する任意選択のPhase 6W全step経路、400 stepの完全同値ゲート、制御ベンチマーク、Phase 3出力比較、デバッガー混入時間の除外判断、SVGレポート。
 - developer bundleをversion lockから除いたPhase 6X測定専用Kitアプリ、debug拡張実行時ゲート、成果物シーン隔離、交互順序2組のPython／NumPy end-to-end比較、Python既定確定レポート、coverageを保つ35＋4＋2件の標準テスト分割。
+- debugger-free Phase 3で既定Python木材stepの8区間を3回測定し、顕熱更新を次の候補へ選ぶPhase 6Yオプトイン内部プロファイル、同値ゲート、JSON／SVGレポート。
 - Thurner–Mannの公開A/E組をSI単位で固定したPhase 6E一次Arrhenius熱分解、48候補探索、温度–速度曲線SVG。
 
 ### Changed

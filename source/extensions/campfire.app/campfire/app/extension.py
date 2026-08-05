@@ -1016,6 +1016,9 @@ class CampfireAppExtension(omni.ext.IExt):
             settings.get_as_string(f"{SETTINGS_ROOT}/woodArrayBackend")
             or PYTHON_ARRAY_BACKEND
         )
+        profile_wood_internals = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/woodInternalTiming"
+        )
         if array_backend not in (PYTHON_ARRAY_BACKEND, NUMPY_ARRAY_BACKEND):
             raise ValueError(f"Unsupported wood-step array backend: {array_backend}")
         flow_interface = _flowusd.acquire_flowusd_interface()
@@ -1037,6 +1040,7 @@ class CampfireAppExtension(omni.ext.IExt):
         active_block_query_times_ms = []
         capture_times_ms = []
         step_loop_times_ms = []
+        wood_internal_times_ms: dict[str, list[float]] = {}
         active_block_counts = []
         images = []
         rows = []
@@ -1049,19 +1053,36 @@ class CampfireAppExtension(omni.ext.IExt):
             for step_index in range(1, PHASE3_TOTAL_STEPS + 1):
                 step_loop_started = time.perf_counter()
                 model_started = time.perf_counter()
+                dry_internal_timing = {} if profile_wood_internals else None
+                wet_internal_timing = {} if profile_wood_internals else None
                 dry_result = dry_model.step(
                     PHASE3_MODEL_DT_SECONDS,
                     PHASE3_EXTERNAL_HEAT_FLUX_W_M2,
+                    timing_ms=dry_internal_timing,
                     array_backend=array_backend,
                 )
                 wet_result = wet_model.step(
                     PHASE3_MODEL_DT_SECONDS,
                     PHASE3_EXTERNAL_HEAT_FLUX_W_M2,
+                    timing_ms=wet_internal_timing,
                     array_backend=array_backend,
                 )
                 model_step_times_ms.append(
                     (time.perf_counter() - model_started) * 1000.0
                 )
+                if (
+                    dry_internal_timing is not None
+                    and wet_internal_timing is not None
+                ):
+                    if dry_internal_timing.keys() != wet_internal_timing.keys():
+                        raise RuntimeError(
+                            "Dry and wet wood internal timing segments differ"
+                        )
+                    for segment in dry_internal_timing:
+                        wood_internal_times_ms.setdefault(segment, []).append(
+                            dry_internal_timing[segment]
+                            + wet_internal_timing[segment]
+                        )
                 results = {"dry": dry_result, "wet": wet_result}
 
                 for name, result in results.items():
@@ -1250,6 +1271,10 @@ class CampfireAppExtension(omni.ext.IExt):
                 ),
                 "viewport_capture": summarize_timing_ms(capture_times_ms),
             }
+            wood_internal_timing = {
+                segment: summarize_timing_ms(values, step_warmup_samples)
+                for segment, values in wood_internal_times_ms.items()
+            }
 
             model_summaries = {}
             for name, model in models.items():
@@ -1304,6 +1329,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 "startup": startup_timing,
                 "scenario": {
                     "wood_array_backend": array_backend,
+                    "wood_internal_timing_enabled": profile_wood_internals,
                     "debug_extension_status": debug_extension_status,
                     "debugger_free": not any(debug_extension_status.values()),
                     "model_dt_seconds": PHASE3_MODEL_DT_SECONDS,
@@ -1359,6 +1385,14 @@ class CampfireAppExtension(omni.ext.IExt):
                         update_sorted[update_p95_index], 4
                     ),
                     "segments": detailed_timing,
+                    "wood_model_internal_segments": wood_internal_timing,
+                    "wood_model_internal_total_mean_ms": round(
+                        sum(
+                            segment["mean_ms"]
+                            for segment in wood_internal_timing.values()
+                        ),
+                        4,
+                    ),
                     "finalization": {
                         "model_persistence_seconds": round(
                             persistence_seconds, 4

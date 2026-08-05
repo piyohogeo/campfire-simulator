@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "phase": "phase6y",
+  "status": "ok",
+  "run_count": 3,
+  "environment": {
+    "application": "campfire.simulator.benchmark.kit",
+    "backend": "python",
+    "debugger_free_all_runs": true,
+    "internal_timing_opt_in": true
+  },
+  "configuration": {
+    "steps": 1200,
+    "warmup_steps_excluded": 20,
+    "model_dt_seconds": 0.2,
+    "model_duration_seconds": 240.0
+  },
+  "timing": {
+    "two_log_step_median_mean_ms": 11.716,
+    "internal_total_median_mean_ms": 11.6346,
+    "scenario_median_seconds": 18.2749,
+    "runner_median_seconds": 36.834,
+    "segments": {
+      "input_validation": {
+        "label": "Input validation",
+        "median_mean_ms": 0.0086,
+        "median_p95_ms": 0.014,
+        "share_percent": 0.07391745311398759
+      },
+      "conduction": {
+        "label": "Conduction",
+        "median_mean_ms": 1.0293,
+        "median_p95_ms": 1.3576,
+        "share_percent": 8.846887731421795
+      },
+      "sensible_heat": {
+        "label": "Sensible heat",
+        "median_mean_ms": 4.5321,
+        "median_p95_ms": 6.3873,
+        "share_percent": 38.95363828580269
+      },
+      "evaporation": {
+        "label": "Evaporation",
+        "median_mean_ms": 0.6469,
+        "median_p95_ms": 0.9168,
+        "share_percent": 5.560139583655648
+      },
+      "pyrolysis": {
+        "label": "Pyrolysis",
+        "median_mean_ms": 1.2511,
+        "median_p95_ms": 2.4879,
+        "share_percent": 10.75327041754766
+      },
+      "char_oxidation": {
+        "label": "Char oxidation",
+        "median_mean_ms": 0.4346,
+        "median_p95_ms": 1.0404,
+        "share_percent": 3.7354098980626746
+      },
+      "state_finalize": {
+        "label": "Clamp + phase",
+        "median_mean_ms": 3.7012,
+        "median_p95_ms": 4.88,
+        "share_percent": 31.812009007615217
+      },
+      "result_aggregation": {
+        "label": "Result aggregation",
+        "median_mean_ms": 0.0308,
+        "median_p95_ms": 0.0503,
+        "share_percent": 0.26472762278032763
+      }
+    }
+  },
+  "selection": {
+    "primary_candidate": "sensible_heat",
+    "candidate_order": [
+      "sensible_heat",
+      "state_finalize",
+      "pyrolysis",
+      "conduction",
+      "evaporation",
+      "char_oxidation",
+      "result_aggregation",
+      "input_validation"
+    ],
+    "constraint": "avoid new AoS-to-array roundtrips and preserve equations"
+  },
+  "equivalence": {
+    "exact_authoritative_outputs_across_runs": true,
+    "dry_state_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+    "wet_state_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+    "metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759",
+    "ignition_seconds": {
+      "dry": 66.2,
+      "wet": 166.4
+    },
+    "flow_active_blocks_peak": 293,
+    "flow_peak_consistent_across_runs": true
+  },
+  "runs": [
+    "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6y\\python_profile_1\\summary.json",
+    "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6y\\python_profile_2\\summary.json",
+    "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6y\\python_profile_3\\summary.json"
+  ]
+}

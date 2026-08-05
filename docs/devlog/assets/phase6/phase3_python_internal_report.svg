@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6Y debugger-free Python wood-step profile</title>
+  <desc id="desc">Three Phase 3 runs rank eight internal Python wood-model segments while preserving exact state, CSV, ignition, and Flow outputs.</desc>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#18130c"/><stop offset="1" stop-color="#10241d"/></linearGradient></defs>
+  <style>.title{font:750 38px 'Segoe UI',sans-serif;fill:#fff7ed}.kicker{font:700 17px 'Segoe UI',sans-serif;fill:#fbbf24;letter-spacing:2px}.sub{font:16px 'Segoe UI',sans-serif;fill:#cbd5e1}.label{font:650 15px 'Segoe UI',sans-serif;fill:#f8fafc}.value{font:14px 'Segoe UI',sans-serif;fill:#fde68a}.small{font:14px 'Segoe UI',sans-serif;fill:#94a3b8}.decision{font:750 22px 'Segoe UI',sans-serif;fill:#86efac}</style>
+  <rect width="1200" height="680" rx="30" fill="url(#bg)"/>
+  <text x="64" y="62" class="kicker">PHASE 6Y · DEBUGGER-FREE PYTHON PROFILE</text>
+  <text x="64" y="112" class="title">Find the next CPU hot path in the real app</text>
+  <text x="64" y="146" class="sub">3 runs · 1,180 measured two-log steps each · Flow and captures retained</text>
+  <rect x="64" y="174" width="820" height="420" rx="22" fill="#1f2937" stroke="#475569"/>
+  <text x="92" y="226" class="label">Sensible heat</text><rect x="276" y="209" width="430.0" height="24" rx="12" fill="#f59e0b"/><text x="724" y="226" class="value">4.532 ms · 39.0%</text><text x="92" y="272" class="label">Clamp + phase</text><rect x="276" y="255" width="351.2" height="24" rx="12" fill="#f59e0b"/><text x="724" y="272" class="value">3.701 ms · 31.8%</text><text x="92" y="318" class="label">Pyrolysis</text><rect x="276" y="301" width="118.7" height="24" rx="12" fill="#f59e0b"/><text x="724" y="318" class="value">1.251 ms · 10.8%</text><text x="92" y="364" class="label">Conduction</text><rect x="276" y="347" width="97.7" height="24" rx="12" fill="#f59e0b"/><text x="724" y="364" class="value">1.029 ms · 8.8%</text><text x="92" y="410" class="label">Evaporation</text><rect x="276" y="393" width="61.4" height="24" rx="12" fill="#f59e0b"/><text x="724" y="410" class="value">0.647 ms · 5.6%</text><text x="92" y="456" class="label">Char oxidation</text><rect x="276" y="439" width="41.2" height="24" rx="12" fill="#f59e0b"/><text x="724" y="456" class="value">0.435 ms · 3.7%</text><text x="92" y="502" class="label">Result aggregation</text><rect x="276" y="485" width="2.9" height="24" rx="12" fill="#f59e0b"/><text x="724" y="502" class="value">0.031 ms · 0.3%</text><text x="92" y="548" class="label">Input validation</text><rect x="276" y="531" width="0.8" height="24" rx="12" fill="#f59e0b"/><text x="724" y="548" class="value">0.009 ms · 0.1%</text>
+  <rect x="912" y="174" width="224" height="420" rx="22" fill="#102a22" stroke="#15803d"/>
+  <text x="938" y="216" class="kicker">SELECTED</text>
+  <text x="938" y="258" class="decision">Sensible heat</text>
+  <text x="938" y="286" class="sub">4.532 ms</text>
+  <text x="938" y="310" class="sub">39.0% of internals</text>
+  <line x1="938" y1="340" x2="1110" y2="340" stroke="#365b4b"/>
+  <text x="938" y="376" class="small">Full step median</text>
+  <text x="938" y="400" class="sub">11.716 ms</text>
+  <text x="938" y="438" class="small">Scenario median</text>
+  <text x="938" y="462" class="sub">18.275 s</text>
+  <text x="938" y="500" class="small">Output gates</text>
+  <text x="938" y="524" class="sub">state · CSV · ignition</text>
+  <text x="938" y="548" class="sub">Flow peak 293 · consistent</text>
+  <line x1="64" y1="624" x2="1136" y2="624" stroke="#334155"/>
+  <text x="64" y="654" class="small">Instrumentation is opt-in. Next change must avoid new AoS array roundtrips and preserve equations, grid, dt, and hashes.</text>
+</svg>
