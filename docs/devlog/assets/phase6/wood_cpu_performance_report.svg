@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#15120f"/>
+  <style>
+    text { font-family: "Segoe UI", Arial, sans-serif; fill: #fff7e9; }
+    .title { font-size: 30px; font-weight: 700; }
+    .subtitle { font-size: 15px; fill: #d7b982; }
+    .label { font-size: 15px; font-weight: 600; }
+    .value { font-size: 13px; fill: #ded2c0; }
+    .gain { font-size: 18px; font-weight: 700; fill: #7ed7a7; }
+    .small { font-size: 12px; fill: #bcae9a; }
+    .heading { font-size: 16px; font-weight: 700; }
+  </style>
+  <text x="60" y="52" class="title">Phase 6R · Wood CPU hot-path</text>
+  <text x="60" y="82" class="subtitle">2,304 cells · 400 steps · isolated from Kit, Flow, USD, and rendering</text>
+  <rect x="60" y="112" width="920" height="428" rx="10" fill="#1b211d" stroke="#4f966b"/>
+  <text x="310" y="130" class="small">BEFORE</text>
+  <text x="390" y="130" class="small">AFTER</text>
+  <text x="84" y="166" class="label">Two-log step mean</text>
+  <rect x="310" y="144" width="340.00" height="18" rx="4" fill="#d7b982"/>
+  <rect x="310" y="174" width="290.86" height="18" rx="4" fill="#58b889"/>
+  <text x="670" y="159" class="value">6.935 ms</text>
+  <text x="670" y="189" class="value">5.932 ms</text>
+  <text x="842" y="174" class="gain">−14.5%</text><text x="84" y="258" class="label">Two-log step p95</text>
+  <rect x="310" y="236" width="340.00" height="18" rx="4" fill="#d7b982"/>
+  <rect x="310" y="266" width="291.54" height="18" rx="4" fill="#58b889"/>
+  <text x="670" y="251" class="value">10.268 ms</text>
+  <text x="670" y="281" class="value">8.805 ms</text>
+  <text x="842" y="266" class="gain">−14.3%</text><text x="84" y="350" class="label">Metrics mean</text>
+  <rect x="310" y="328" width="340.00" height="18" rx="4" fill="#d7b982"/>
+  <rect x="310" y="358" width="139.52" height="18" rx="4" fill="#58b889"/>
+  <text x="670" y="343" class="value">1.751 ms</text>
+  <text x="670" y="373" class="value">0.719 ms</text>
+  <text x="842" y="358" class="gain">−59.0%</text><text x="84" y="442" class="label">80 s model wall time</text>
+  <rect x="310" y="420" width="340.00" height="18" rx="4" fill="#d7b982"/>
+  <rect x="310" y="450" width="261.34" height="18" rx="4" fill="#58b889"/>
+  <text x="670" y="435" class="value">3.467 s</text>
+  <text x="670" y="465" class="value">2.665 s</text>
+  <text x="842" y="450" class="gain">−23.1%</text>
+  <rect x="1004" y="112" width="136" height="428" rx="10" fill="#211817" stroke="#a77a38"/>
+  <text x="1022" y="150" class="heading">BOUNDARY</text>
+  <text x="1022" y="184" class="small">CPU only</text>
+  <text x="1022" y="208" class="small">No GPU claim</text>
+  <text x="1022" y="248" class="small">Same physics</text>
+  <text x="1022" y="272" class="small">Same inputs</text>
+  <text x="1022" y="312" class="small">No grid change</text>
+  <text x="1022" y="336" class="small">No dt change</text>
+  <text x="1022" y="376" class="small">Python</text>
+  <text x="1022" y="400" class="small">microbench</text>
+  <text x="1022" y="456" class="small">End-to-end</text>
+  <text x="1022" y="480" class="small">measured</text>
+  <text x="1022" y="504" class="small">separately</text>
+  <rect x="60" y="566" width="1080" height="64" rx="9" fill="#1c2820" stroke="#58b889" stroke-width="2"/>
+  <text x="84" y="594" class="heading">INVARIANTS PASS · dry ignition 66.2 s · wet not ignited by 80 s</text>
+  <text x="84" y="616" class="small">Mass-balance error ≤ 1e-09 kg · arithmetic and aggregation optimized; model equations unchanged.</text>
+  <text x="60" y="658" class="small">Bars use a per-row scale. Values are the evidence; bar length is only a visual aid.</text>
+</svg>

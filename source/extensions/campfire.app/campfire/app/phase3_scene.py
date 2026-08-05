@@ -67,10 +67,12 @@ def update_flow_source(
             raise RuntimeError(f"Unable to update Flow emitter attribute: {name}")
 
 
-def apply_model_visual_state(prim: Usd.Prim, model: WoodThermalModel) -> None:
+def apply_model_visual_state(
+    prim: Usd.Prim, model: WoodThermalModel, metrics: dict | None = None
+) -> None:
     """Expose aggregate drying/char state without changing collision geometry."""
 
-    metrics = model.metrics()
+    metrics = model.metrics() if metrics is None else metrics
     initial_dry_mass = sum(
         cell.dry_wood_mass_kg + cell.char_mass_kg + cell.ash_mass_kg
         for cell in model.cells

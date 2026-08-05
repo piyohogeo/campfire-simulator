@@ -170,6 +170,22 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertLess(model.cells[0].temperature_k, 500.0)
         self.assertGreater(max(cell.temperature_k for cell in model.cells[1:]), 293.15)
 
+    async def test_scalar_and_uniform_cell_heat_flux_are_equivalent(self):
+        scalar = campfire.app.create_cylindrical_wood_model(
+            "scalar_flux",
+            radius_m=0.16,
+            length_m=1.8,
+            moisture_ratio_dry_basis=0.12,
+        )
+        per_cell = campfire.app.WoodThermalModel.from_dict(scalar.to_dict())
+        uniform_fluxes = [150_000.0] * len(per_cell.cells)
+        for _ in range(20):
+            scalar_result = scalar.step(0.2, 150_000.0)
+            per_cell_result = per_cell.step(0.2, uniform_fluxes)
+        self.assertEqual(scalar_result, per_cell_result)
+        self.assertEqual(scalar.to_dict(), per_cell.to_dict())
+        self.assertEqual(scalar.metrics(), per_cell.metrics())
+
     async def test_wet_kindling_evaporates_and_ignites_after_dry_kindling(self):
         dry = campfire.app.create_cylindrical_wood_model(
             "DryKindling", 0.03, 0.35, 0.0,

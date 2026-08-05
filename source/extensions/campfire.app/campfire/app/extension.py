@@ -1011,10 +1011,13 @@ class CampfireAppExtension(omni.ext.IExt):
                     ):
                         ignition_seconds[name] = result.elapsed_seconds
 
-                source = flow_source_from_model(dry_model, dry_result)
-
                 dry_metrics = dry_model.metrics()
                 wet_metrics = wet_model.metrics()
+                source = flow_source_from_model(
+                    dry_model,
+                    dry_result,
+                    surface_temperature_k=dry_metrics["surface_mean_temperature_k"],
+                )
                 rows.append(
                     {
                         "time_s": round(dry_result.elapsed_seconds, 6),
@@ -1047,8 +1050,8 @@ class CampfireAppExtension(omni.ext.IExt):
                     adapter_started = time.perf_counter()
                     update_flow_source(stage, PHASE3_DRY_LOG_ID, source)
                     if step_index % 10 == 0 or step_index in PHASE3_CAPTURE_STEPS:
-                        apply_model_visual_state(dry_prim, dry_model)
-                        apply_model_visual_state(wet_prim, wet_model)
+                        apply_model_visual_state(dry_prim, dry_model, dry_metrics)
+                        apply_model_visual_state(wet_prim, wet_model, wet_metrics)
                     flow_adapter_times_ms.append(
                         (time.perf_counter() - adapter_started) * 1000.0
                     )

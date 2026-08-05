@@ -1,0 +1,45 @@
+{
+  "configuration": {
+    "benchmark": "two_log_cpu_wood_model",
+    "cell_count_per_log": 1152,
+    "combined_cell_count": 2304,
+    "dt_seconds": 0.2,
+    "external_heat_flux_w_m2": 150000.0,
+    "model_duration_seconds": 80.0,
+    "steps": 400,
+    "warmup_steps_excluded": 20
+  },
+  "invariants": {
+    "dry_mass_balance_error_kg": 8.242295734817162e-13,
+    "ignition_seconds": {
+      "dry": 66.2000000000004,
+      "wet": null
+    },
+    "mass_balance_limit_kg": 1e-09,
+    "wet_mass_balance_error_kg": 4.263256414560601e-14
+  },
+  "measurements": {
+    "two_log_metrics_mean_ms": {
+      "after": 0.718525526315787,
+      "before": 1.7509392105263102,
+      "improvement_fraction": 0.5896342248799104
+    },
+    "two_log_step_mean_ms": {
+      "after": 5.932331052631573,
+      "before": 6.934503684210529,
+      "improvement_fraction": 0.1445197345357024
+    },
+    "two_log_step_p95_ms": {
+      "after": 8.804899999999893,
+      "before": 10.268300000000007,
+      "improvement_fraction": 0.1425162879931549
+    },
+    "wall_seconds": {
+      "after": 2.6646740999999996,
+      "before": 3.4667559999999997,
+      "improvement_fraction": 0.23136381677856768
+    }
+  },
+  "schema_version": 1,
+  "status": "ok"
+}

@@ -5,11 +5,15 @@ not calibrated material data.  Keeping them in one immutable parameter object
 makes later comparison against measured wood straightforward.
 """
 
+from __future__ import annotations
+
 import json
 import math
+from typing import TYPE_CHECKING
 from dataclasses import asdict, dataclass
 
-from pxr import Sdf, Usd
+if TYPE_CHECKING:
+    from pxr import Usd
 
 
 MODEL_VERSION = 1
@@ -193,6 +197,7 @@ class WoodThermalModel:
             else sum(cell.current_mass_kg for cell in cells)
         )
         self._conduction_pairs = self._build_conduction_pairs()
+        self._mass_epsilon_kg = max(self.initial_mass_kg * 1.0e-10, 1.0e-12)
 
     def _index(self, axial: int, circumferential: int, radial: int) -> int:
         return (
@@ -272,7 +277,7 @@ class WoodThermalModel:
         )
 
     def _update_phase(self, cell: WoodCellState) -> None:
-        mass_epsilon = max(self.initial_mass_kg * 1.0e-10, 1.0e-12)
+        mass_epsilon = self._mass_epsilon_kg
         if cell.current_mass_kg <= mass_epsilon:
             cell.phase = DEPLETED
         elif cell.char_mass_kg > cell.dry_wood_mass_kg and cell.char_mass_kg > cell.ash_mass_kg:
@@ -304,13 +309,22 @@ class WoodThermalModel:
 
         if not math.isfinite(dt_seconds) or dt_seconds <= 0.0:
             raise ValueError("dt_seconds must be finite and positive")
+        scalar_heat_flux_w_m2 = None
         if isinstance(external_heat_flux_w_m2, (int, float)):
-            heat_fluxes = [float(external_heat_flux_w_m2)] * len(self.cells)
+            scalar_heat_flux_w_m2 = float(external_heat_flux_w_m2)
+            if (
+                not math.isfinite(scalar_heat_flux_w_m2)
+                or scalar_heat_flux_w_m2 < 0.0
+            ):
+                raise ValueError("External heat flux must be finite and non-negative")
+            heat_fluxes = None
         else:
             heat_fluxes = [float(value) for value in external_heat_flux_w_m2]
             if len(heat_fluxes) != len(self.cells):
                 raise ValueError("Cell heat-flux sequence must match the cell count")
-        if any(not math.isfinite(value) or value < 0.0 for value in heat_fluxes):
+        if heat_fluxes is not None and any(
+            not math.isfinite(value) or value < 0.0 for value in heat_fluxes
+        ):
             raise ValueError("External heat flux must be finite and non-negative")
 
         p = self.parameters
@@ -318,11 +332,13 @@ class WoodThermalModel:
         if not math.isfinite(ambient) or ambient <= 0.0:
             raise ValueError("ambient_temperature_k must be finite and positive")
 
-        conduction_energy_j = [0.0] * len(self.cells)
+        cells = self.cells
+        temperatures_k = [cell.temperature_k for cell in cells]
+        conduction_energy_j = [0.0] * len(cells)
         for first, second, conductance_w_k in self._conduction_pairs:
             energy_j = (
                 conductance_w_k
-                * (self.cells[second].temperature_k - self.cells[first].temperature_k)
+                * (temperatures_k[second] - temperatures_k[first])
                 * dt_seconds
             )
             conduction_energy_j[first] += energy_j
@@ -339,10 +355,15 @@ class WoodThermalModel:
         external_heat_total = 0.0
         sigma = 5.670374419e-8
 
-        for index, cell in enumerate(self.cells):
+        for index, cell in enumerate(cells):
             heat_capacity = self._heat_capacity_j_k(cell)
             area = cell.external_area_m2 * cell.surface_exposure
-            external_heat_w = heat_fluxes[index] * p.radiant_absorptivity * area
+            heat_flux_w_m2 = (
+                scalar_heat_flux_w_m2
+                if scalar_heat_flux_w_m2 is not None
+                else heat_fluxes[index]
+            )
+            external_heat_w = heat_flux_w_m2 * p.radiant_absorptivity * area
             convective_loss_w = p.convection_w_m2_k * area * (
                 cell.temperature_k - ambient
             )
@@ -569,11 +590,39 @@ class WoodThermalModel:
         return self.accounted_mass_kg - self.initial_mass_kg
 
     def metrics(self) -> dict:
-        total_mass = self.current_mass_kg
-        surface_cells = [cell for cell in self.cells if cell.surface_exposure > 0.0]
-        weighted_temperature = sum(
-            cell.temperature_k * cell.current_mass_kg for cell in self.cells
-        ) / max(total_mass, 1.0e-12)
+        total_mass = 0.0
+        weighted_temperature_sum = 0.0
+        max_temperature_k = -math.inf
+        surface_temperature_sum = 0.0
+        surface_cell_count = 0
+        moisture_mass_kg = 0.0
+        dry_wood_mass_kg = 0.0
+        char_mass_kg = 0.0
+        ash_mass_kg = 0.0
+        for cell in self.cells:
+            cell_mass_kg = (
+                cell.moisture_mass_kg
+                + cell.dry_wood_mass_kg
+                + cell.char_mass_kg
+                + cell.ash_mass_kg
+            )
+            total_mass += cell_mass_kg
+            weighted_temperature_sum += cell.temperature_k * cell_mass_kg
+            max_temperature_k = max(max_temperature_k, cell.temperature_k)
+            if cell.surface_exposure > 0.0:
+                surface_temperature_sum += cell.temperature_k
+                surface_cell_count += 1
+            moisture_mass_kg += cell.moisture_mass_kg
+            dry_wood_mass_kg += cell.dry_wood_mass_kg
+            char_mass_kg += cell.char_mass_kg
+            ash_mass_kg += cell.ash_mass_kg
+        weighted_temperature = weighted_temperature_sum / max(total_mass, 1.0e-12)
+        accounted_mass_kg = (
+            total_mass
+            + self.emitted_water_kg
+            + self.emitted_pyrolysis_gas_kg
+            + self.emitted_char_gas_kg
+        )
         primary_product_total_kg = (
             self.emitted_primary_gas_kg
             + self.emitted_tar_kg
@@ -597,15 +646,14 @@ class WoodThermalModel:
             "elapsed_seconds": self.elapsed_seconds,
             "cell_count": len(self.cells),
             "mean_temperature_k": weighted_temperature,
-            "max_temperature_k": max(cell.temperature_k for cell in self.cells),
-            "surface_mean_temperature_k": sum(
-                cell.temperature_k for cell in surface_cells
-            )
-            / len(surface_cells),
-            "moisture_mass_kg": sum(cell.moisture_mass_kg for cell in self.cells),
-            "dry_wood_mass_kg": sum(cell.dry_wood_mass_kg for cell in self.cells),
-            "char_mass_kg": sum(cell.char_mass_kg for cell in self.cells),
-            "ash_mass_kg": sum(cell.ash_mass_kg for cell in self.cells),
+            "max_temperature_k": max_temperature_k,
+            "surface_mean_temperature_k": (
+                surface_temperature_sum / surface_cell_count
+            ),
+            "moisture_mass_kg": moisture_mass_kg,
+            "dry_wood_mass_kg": dry_wood_mass_kg,
+            "char_mass_kg": char_mass_kg,
+            "ash_mass_kg": ash_mass_kg,
             "emitted_water_kg": self.emitted_water_kg,
             "emitted_pyrolysis_gas_kg": self.emitted_pyrolysis_gas_kg,
             "emitted_char_gas_kg": self.emitted_char_gas_kg,
@@ -619,8 +667,8 @@ class WoodThermalModel:
             "primary_product_yield_fraction": primary_product_yields,
             "post_secondary_product_yield_fraction": post_secondary_product_yields,
             "initial_mass_kg": self.initial_mass_kg,
-            "accounted_mass_kg": self.accounted_mass_kg,
-            "mass_balance_error_kg": self.mass_balance_error_kg,
+            "accounted_mass_kg": accounted_mass_kg,
+            "mass_balance_error_kg": accounted_mass_kg - self.initial_mass_kg,
         }
 
     def to_dict(self) -> dict:
@@ -901,12 +949,17 @@ def flow_source_from_model(
     model: WoodThermalModel,
     step_result: CombustionStepResult,
     reference_fuel_rate_kg_s: float = 0.02,
+    surface_temperature_k: float | None = None,
 ) -> FlowSourceState:
     """Map authoritative mass release to dimensionless Flow display inputs."""
 
     if reference_fuel_rate_kg_s <= 0.0:
         raise ValueError("reference_fuel_rate_kg_s must be positive")
-    surface_temperature = model.metrics()["surface_mean_temperature_k"]
+    surface_temperature = (
+        model.metrics()["surface_mean_temperature_k"]
+        if surface_temperature_k is None
+        else float(surface_temperature_k)
+    )
     fuel = min(1.0, step_result.pyrolysis_gas_rate_kg_s / reference_fuel_rate_kg_s)
     normalized_temperature = min(
         2.0,
@@ -926,6 +979,8 @@ def flow_source_from_model(
 
 def save_model_to_prim(model: WoodThermalModel, prim: Usd.Prim) -> None:
     """Persist the authoritative state as versioned JSON on its log prim."""
+
+    from pxr import Sdf
 
     if not prim:
         raise ValueError("A valid log prim is required")
