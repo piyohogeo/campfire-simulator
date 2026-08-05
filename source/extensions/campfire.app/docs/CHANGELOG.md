@@ -26,6 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added a Phase 6Z conservative performance gate comparing three profiled and three unprofiled runs before and after a sensible-heat loop trial, preserving the original loop when end-to-end timing did not improve.
 - Added the Phase 6AA exact zero-area surface-boundary path, alternating three-pair debugger-free adoption gate, authoritative output checks, reproducible JSON/SVG evidence, and a default Python-path end-to-end speedup.
 - Added opt-in Phase 6AB state-finalize diagnostics for per-log temperature and mass clamps, phase assignments, and actual phase transitions, with timing excluded from performance evidence.
+- Added the Phase 6AC conditional state-clamp path preserving every temperature/mass bound plus NaN and negative-zero behavior, with profiled and alternating-pair adoption evidence.
 - Added Phase 6B no-refit OSB external-material holdout evaluation and a separate browser-readable residual report.
 - Added Phase 6C fixed SAMP.1/2-to-SAMP.3 plywood replicate holdout evaluation and a separate browser-readable report.
 - Added Phase 6D nominal 12.7 mm five-ply planar specimen model, mass-derived effective density, through-thickness conduction, and layer-temperature report.

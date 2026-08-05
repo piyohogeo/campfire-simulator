@@ -472,6 +472,7 @@ class WoodThermalModel:
         array_backend: str = PYTHON_ARRAY_BACKEND,
         python_surface_boundary_fast_path: bool = True,
         state_diagnostics: dict[str, int] | None = None,
+        python_state_clamp_fast_path: bool = True,
     ) -> CombustionStepResult:
         """Advance one explicit SI-unit thermal/reaction step.
 
@@ -790,13 +791,28 @@ class WoodThermalModel:
                     dry_wood_mass_clamped += cell.dry_wood_mass_kg < 0.0
                     char_mass_clamped += cell.char_mass_kg < 0.0
                     ash_mass_clamped += cell.ash_mass_kg < 0.0
-                cell.temperature_k = min(
-                    p.max_temperature_k, max(ambient, cell.temperature_k)
-                )
-                cell.moisture_mass_kg = max(0.0, cell.moisture_mass_kg)
-                cell.dry_wood_mass_kg = max(0.0, cell.dry_wood_mass_kg)
-                cell.char_mass_kg = max(0.0, cell.char_mass_kg)
-                cell.ash_mass_kg = max(0.0, cell.ash_mass_kg)
+                if python_state_clamp_fast_path:
+                    temperature_k = cell.temperature_k
+                    if not temperature_k > ambient:
+                        cell.temperature_k = ambient
+                    elif temperature_k > p.max_temperature_k:
+                        cell.temperature_k = p.max_temperature_k
+                    if not cell.moisture_mass_kg > 0.0:
+                        cell.moisture_mass_kg = 0.0
+                    if not cell.dry_wood_mass_kg > 0.0:
+                        cell.dry_wood_mass_kg = 0.0
+                    if not cell.char_mass_kg > 0.0:
+                        cell.char_mass_kg = 0.0
+                    if not cell.ash_mass_kg > 0.0:
+                        cell.ash_mass_kg = 0.0
+                else:
+                    cell.temperature_k = min(
+                        p.max_temperature_k, max(ambient, cell.temperature_k)
+                    )
+                    cell.moisture_mass_kg = max(0.0, cell.moisture_mass_kg)
+                    cell.dry_wood_mass_kg = max(0.0, cell.dry_wood_mass_kg)
+                    cell.char_mass_kg = max(0.0, cell.char_mass_kg)
+                    cell.ash_mass_kg = max(0.0, cell.ash_mass_kg)
                 if (
                     cell.moisture_mass_kg
                     + cell.dry_wood_mass_kg

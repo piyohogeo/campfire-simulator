@@ -1025,6 +1025,9 @@ class CampfireAppExtension(omni.ext.IExt):
         python_surface_boundary_fast_path = settings.get_as_bool(
             f"{SETTINGS_ROOT}/pythonSurfaceBoundaryFastPath"
         )
+        python_state_clamp_fast_path = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/pythonStateClampFastPath"
+        )
         if array_backend not in (PYTHON_ARRAY_BACKEND, NUMPY_ARRAY_BACKEND):
             raise ValueError(f"Unsupported wood-step array backend: {array_backend}")
         flow_interface = _flowusd.acquire_flowusd_interface()
@@ -1077,6 +1080,7 @@ class CampfireAppExtension(omni.ext.IExt):
                         if collect_wood_state_diagnostics
                         else None
                     ),
+                    python_state_clamp_fast_path=python_state_clamp_fast_path,
                 )
                 wet_result = wet_model.step(
                     PHASE3_MODEL_DT_SECONDS,
@@ -1091,6 +1095,7 @@ class CampfireAppExtension(omni.ext.IExt):
                         if collect_wood_state_diagnostics
                         else None
                     ),
+                    python_state_clamp_fast_path=python_state_clamp_fast_path,
                 )
                 model_step_times_ms.append(
                     (time.perf_counter() - model_started) * 1000.0
@@ -1362,6 +1367,7 @@ class CampfireAppExtension(omni.ext.IExt):
                     "python_surface_boundary_fast_path": (
                         python_surface_boundary_fast_path
                     ),
+                    "python_state_clamp_fast_path": python_state_clamp_fast_path,
                     "zero_area_cell_count": {
                         name: sum(
                             cell.external_area_m2 * cell.surface_exposure == 0.0

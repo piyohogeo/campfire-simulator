@@ -5,7 +5,9 @@ param(
     [switch]$ProfileWoodInternals,
     [switch]$CollectWoodStateDiagnostics,
     [ValidateSet("original", "fast")]
-    [string]$PythonSurfaceBoundaryPath = "fast"
+    [string]$PythonSurfaceBoundaryPath = "fast",
+    [ValidateSet("original", "fast")]
+    [string]$PythonStateClampPath = "fast"
 )
 
 $ErrorActionPreference = "Stop"
@@ -14,6 +16,7 @@ $releaseRoot = Join-Path $repoRoot "_build\windows-x86_64\release"
 $kit = Join-Path $releaseRoot "kit\kit.exe"
 $app = Join-Path $releaseRoot "apps\campfire.simulator.benchmark.kit"
 $usePythonSurfaceBoundaryFastPath = $PythonSurfaceBoundaryPath -eq "fast"
+$usePythonStateClampFastPath = $PythonStateClampPath -eq "fast"
 
 if (-not (Test-Path -LiteralPath $kit) -or -not (Test-Path -LiteralPath $app)) {
     throw "Application is not built. Run .\repo.bat build first."
@@ -41,6 +44,7 @@ $kitArgs = @(
     "--/exts/campfire.app/woodInternalTiming=$($ProfileWoodInternals.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/woodStateDiagnostics=$($CollectWoodStateDiagnostics.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/pythonSurfaceBoundaryFastPath=$($usePythonSurfaceBoundaryFastPath.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/pythonStateClampFastPath=$($usePythonStateClampFastPath.ToString().ToLowerInvariant())",
     "--/rtx/flow/enabled=true",
     "--/app/viewport/grid/enabled=false",
     "--/persistent/app/viewport/displayOptions=1152"
@@ -84,6 +88,9 @@ elseif (@($result.scenario.wood_state_diagnostics.PSObject.Properties).Count -ne
 }
 if ([bool]$result.scenario.python_surface_boundary_fast_path -ne $usePythonSurfaceBoundaryFastPath) {
     throw "Phase 3 used an unexpected Python surface-boundary setting."
+}
+if ([bool]$result.scenario.python_state_clamp_fast_path -ne $usePythonStateClampFastPath) {
+    throw "Phase 3 used an unexpected Python state-clamp setting."
 }
 foreach ($name in @("dry", "wet")) {
     if ($result.scenario.zero_area_cell_count.$name -ne 792) {

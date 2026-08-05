@@ -57,6 +57,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - 顕熱ループ局所試作のprofile／非計測前後各3 runを分離し、内部5.45%短縮でもend-to-end悪化なら元コードへ戻すPhase 6Z採否ゲートとJSON／SVGレポート。
 - 外部面積0の内部セルを境界熱計算から外すPhase 6AA早期分岐、debugger-free交互順序3組の採用ゲート、権威出力の完全一致検査、再現可能なJSON／SVGレポート。
 - 乾燥／湿潤薪ごとの温度・質量clamp、相割当、相遷移を通常無効で集計し、性能値から分離するPhase 6AB状態分岐診断とJSON／SVGレポート。
+- 温度・4質量の安全境界とNaN／負のゼロ処理を維持した比較分岐、profileと交互順序3組の採用ゲート、20.40%の木材step短縮を含むPhase 6AC。
 - Thurner–Mannの公開A/E組をSI単位で固定したPhase 6E一次Arrhenius熱分解、48候補探索、温度–速度曲線SVG。
 
 ### Changed

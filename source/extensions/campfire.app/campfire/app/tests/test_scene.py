@@ -301,6 +301,48 @@ class TestScene(omni.kit.test.AsyncTestCase):
             fast_surface_boundary.metrics(), original_boundary.metrics()
         )
 
+        original_clamp = campfire.app.create_cylindrical_wood_model(
+            "original_state_clamp",
+            radius_m=0.04,
+            length_m=0.20,
+            moisture_ratio_dry_basis=0.12,
+            axial_cells=4,
+            circumferential_cells=6,
+            radial_cells=3,
+        )
+        fast_state_clamp = campfire.app.WoodThermalModel.from_dict(
+            original_clamp.to_dict()
+        )
+        for model in (original_clamp, fast_state_clamp):
+            model.cells[0].moisture_mass_kg = -0.0
+            model.cells[0].char_mass_kg = -0.0
+        for step_index in range(120):
+            heat_flux = 150_000.0 if step_index < 60 else 0.0
+            original_result = original_clamp.step(
+                0.2,
+                heat_flux,
+                python_state_clamp_fast_path=False,
+            )
+            fast_result = fast_state_clamp.step(
+                0.2,
+                heat_flux,
+                python_state_clamp_fast_path=True,
+            )
+            self.assertEqual(fast_result, original_result)
+            if step_index == 0:
+                self.assertEqual(
+                    math.copysign(
+                        1.0, fast_state_clamp.cells[0].moisture_mass_kg
+                    ),
+                    1.0,
+                )
+                self.assertEqual(
+                    math.copysign(1.0, fast_state_clamp.cells[0].char_mass_kg),
+                    1.0,
+                )
+        self.assertEqual(fast_state_clamp.to_dict(), original_clamp.to_dict())
+        self.assertEqual(fast_state_clamp.metrics(), original_clamp.metrics())
+
         with self.assertRaisesRegex(ValueError, "Unsupported wood-step array backend"):
             numpy_model.step(0.2, 0.0, array_backend="unknown")
 

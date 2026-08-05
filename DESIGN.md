@@ -1439,3 +1439,19 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 判断: Phase 6ABでは本番物理更新を変更しない。次の局所試作は、正常範囲で呼ばれている組込み`min/max`を同値な比較分岐へ変えることに限定する。clamp自体は維持し、内部区間と交互順序の非計測end-to-endゲートをともに満たす場合だけ採用する。
 - 最終検証: release再ビルド後の標準`.\repo.bat test`はstartup`3.9 s`、coverage通常35件`220.7 s`、coverage熱モデル4件`165.3 s`、coverageなし数値2件`25.3 s`、全41件をrunner`416.0 s`で成功させた。診断無指定の通常Phase 3も再実行し、診断辞書が空で権威出力検査に成功することを確認した。最初の確認ではPowerShellが空JSONオブジェクトのプロパティ数を誤判定したため、列挙を配列化するrunner検査へ修正した。アプリrun自体は成功していた。
 - 可視化と再現: `run_phase6ab_state_diagnostics.ps1`が診断runを実行し、`analyze_phase3_state_diagnostics.py`が環境、セル数、分布、遷移、権威出力を検査して`phase3_state_diagnostics_report.json/.svg`を生成する。実設備dry runは責任研究室の外部レビュー受領まで保留する。
+
+## 57. Phase 6AC 条件付き状態clampの採否
+
+### 2026-08-05: 安全境界を残し、正常範囲の組込み関数呼出しだけを避ける
+
+- 試作: Python状態確定ループの温度`min(max())`と4質量`max()`を条件比較へ置き換える任意経路を追加した。温度のambient／上限、各質量の0下限は削除しない。Phase 6ABで0回だった正常範囲では代入を避ける。
+- 同値条件: 温度は`not temperature > ambient`でambientへ戻し、それ以外で上限を超えた場合だけ最大温度へ戻す。質量は`not mass > 0.0`で0へ戻す。これにより単純な`<`比較では失われるNaN回復と、`max(0.0, -0.0)`が正のゼロを返す挙動を維持する。
+- 単体検査: 元経路と試作経路を120 step比較し、毎step結果、最終状態、metricsを完全一致させた。負のゼロが正のゼロへ正規化されることも符号ビットで検査する。非有限温度は状態確定より前の比熱入力検査で拒否されるため、clamp到達を仮定したNaN注入テストはAPI契約に反し、標準テスト初回で検出して削除した。
+- profile診断: 同一ビルドのprofile 1組で状態確定区間は`3.6813 → 0.8582 ms`、`76.69%`短縮した。profile付き時間は実行形状を変えるため、試作が意図した区間へ作用した確認だけに使う。
+- 正式測定: 採用済みsurface-boundary経路、Python backend、1,200 step、Flow更新、2画像capture、内部timer／状態診断無効、debug拡張なしで3組を測定した。順序はoriginal→fast、fast→original、original→fastである。
+- 同値性: profile 2本と非計測6本の全runで乾燥／湿潤状態SHA-256、CSV SHA-256`01aaf0c…7759`、着火`66.2 / 166.4 s`が完全一致した。Flow active block peakも全run`294`だったが、従来どおり非権威GPU診断として扱う。
+- 性能結果: 木材step平均中央値は`10.3717 → 8.2559 ms`（`20.40%`短縮）、p95は`14.3180 → 11.7346 ms`（`18.04%`短縮）、シナリオ中央値は`16.4571 → 14.1304 s`（`14.14%`短縮）、runner中央値は`34.571 → 32.564 s`（`5.81%`短縮）だった。3/3組でstepとシナリオがともに改善した。
+- 判断: 完全同値、非計測中央値、反復ゲートをすべて満たしたため採用する。`WoodThermalModel.step()`、通常／benchmarkアプリ、通常Phase 3 runnerの既定を条件付きclampへ変更し、元の組込み`min/max`経路は比較用に明示選択可能なまま残す。
+- 最終検証: 採用後にreleaseを再ビルドし、無指定の通常Phase 3がsurface-boundaryと条件付きclampの両既定経路を選んで全検査に成功することを確認した。標準`.\repo.bat test`はstartup`3.5 s`、coverage通常35件`217.2 s`、coverage熱モデル4件`163.2 s`、coverageなし数値2件`22.4 s`、全41件をrunner`407.0 s`で成功させた。
+- 可視化と再現: `run_phase6ac_state_clamp_benchmark.ps1`がprofile 2本と交互順序6本を取得し、`compare_phase3_state_clamp.py`が設定、同値性、時間、組別改善を検査して`phase3_state_clamp_report.json/.svg`を生成する。実設備dry runは責任研究室の外部レビュー受領まで保留する。
+- 次: 状態確定区間の残りは相分類である。Phase 6ABで相変更が0.0477%と疎だった事実を使うが、分類結果は毎stepの権威状態なので、更新契機を変える前に相依存の下流利用箇所と永続化境界を監査する。

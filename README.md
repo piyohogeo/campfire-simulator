@@ -73,6 +73,12 @@ Python経路では、外部面積が厳密に0の内部セルについて放射�
 .\scripts\run_phase6ab_state_diagnostics.ps1
 ```
 
+診断でclampが0回だったことを受け、安全境界・NaN・`-0.0`の扱いを維持しながら、正常範囲の組込み`min/max`を比較分岐へ変更しました。交互順序3組では木材step中央値を`10.3717 → 8.2559 ms`、シナリオ中央値を`16.4571 → 14.1304 s`へ短縮しています。
+
+```powershell
+.\scripts\run_phase6ac_state_clamp_benchmark.ps1
+```
+
 ```powershell
 .\scripts\run_phase3.bat -OutputDir .\artifacts\phase3\manual
 ```
