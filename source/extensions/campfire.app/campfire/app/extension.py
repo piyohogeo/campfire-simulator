@@ -7,6 +7,7 @@ import math
 import statistics
 import struct
 import time
+from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -78,12 +79,19 @@ from .phase5_scene import (
 )
 from .support import burn_to_support_failure, run_collapse_reignition_scenario
 from .wood import get_log_world_position, list_log_ids
+from .char_depth_experiment import (
+    create_char_depth_dry_run_package,
+    evaluate_char_depth_dry_run_package,
+    evaluate_char_depth_lab_handoff,
+)
 from .calibration import (
     run_nist_plywood_calibration,
     write_calibration_svg,
     write_char_depth_benchmark_svg,
     write_char_depth_measurement_protocol_svg,
     write_char_depth_experiment_plan_svg,
+    write_char_depth_dry_run_svg,
+    write_char_depth_lab_handoff_svg,
     write_char_geometry_svg,
     write_gas_transport_readiness_svg,
     write_holdout_svg,
@@ -400,6 +408,22 @@ class CampfireAppExtension(omni.ext.IExt):
             calibration,
             output_dir / "char_depth_experiment_plan_report.svg",
         )
+        dry_run_directory = create_char_depth_dry_run_package(
+            "CF6O-F035-T0060-R01",
+            output_dir / "char_depth_offline_dry_run",
+        )
+        dry_run_readiness = evaluate_char_depth_dry_run_package(dry_run_directory)
+        dry_run_readiness_dict = asdict(dry_run_readiness)
+        char_depth_dry_run_report_path = write_char_depth_dry_run_svg(
+            dry_run_readiness_dict,
+            output_dir / "char_depth_dry_run_report.svg",
+        )
+        lab_handoff_readiness = evaluate_char_depth_lab_handoff()
+        lab_handoff_readiness_dict = asdict(lab_handoff_readiness)
+        char_depth_lab_handoff_report_path = write_char_depth_lab_handoff_svg(
+            lab_handoff_readiness_dict,
+            output_dir / "char_depth_lab_handoff_report.svg",
+        )
         candidates_path = output_dir / "top_candidates.csv"
         with candidates_path.open("w", newline="", encoding="utf-8") as csv_file:
             writer = csv.DictWriter(
@@ -448,6 +472,13 @@ class CampfireAppExtension(omni.ext.IExt):
             "char_depth_experiment_plan_report": str(
                 char_depth_experiment_plan_report_path
             ),
+            "char_depth_dry_run_directory": str(dry_run_directory),
+            "char_depth_dry_run_report": str(char_depth_dry_run_report_path),
+            "char_depth_dry_run_readiness": dry_run_readiness_dict,
+            "char_depth_lab_handoff_report": str(
+                char_depth_lab_handoff_report_path
+            ),
+            "char_depth_lab_handoff_readiness": lab_handoff_readiness_dict,
             "top_candidates_csv": str(candidates_path),
             "resolution": list(image_resolution),
             "calibration_wall_seconds": round(calibration_wall_seconds, 4),

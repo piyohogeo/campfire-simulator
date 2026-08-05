@@ -13,6 +13,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added Phase 6A fixed NIST plywood reference data, equivalent-coupon calibration search, USD/SVG result views, and headless validation.
 - Added the Phase 6N 24-slot matched char-depth measurement contract, strict CSV readiness gate, and SVG report.
 - Added the Phase 6O synchronized experiment execution plan, 24-run schedule, raw-data templates, external authorization gate, and SVG report.
+- Added the Phase 6P offline run-package dry run with safe blank files, exact CSV headers, non-overwrite behavior, import/authorization gates, and SVG report.
+- Added the Phase 6Q responsible-laboratory handoff contract with 9 runtime fields, 3 evidence records, 4 review fields, UTC/type checks, a non-authorizing gate, and SVG report.
 - Added Phase 6B no-refit OSB external-material holdout evaluation and a separate browser-readable residual report.
 - Added Phase 6C fixed SAMP.1/2-to-SAMP.3 plywood replicate holdout evaluation and a separate browser-readable report.
 - Added Phase 6D nominal 12.7 mm five-ply planar specimen model, mass-derived effective density, through-thickness conduction, and layer-temperature report.

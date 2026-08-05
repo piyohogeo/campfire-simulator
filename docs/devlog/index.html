@@ -35,8 +35,8 @@
       <div class="shell status-grid">
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>35 / 35 passed</strong></div>
-        <div><span>次の焦点</span><strong>承認後のdry run</strong></div>
+        <div><span>テスト</span><strong>37 / 37 passed</strong></div>
+        <div><span>次の焦点</span><strong>外部承認・設備dry run</strong></div>
       </div>
     </div>
   </header>
@@ -59,9 +59,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Synchronized experiment plan · technical and authorization gates</p>
+            <p class="section-kicker">Responsible-laboratory handoff · authority stays external</p>
             <h2>「それらしい」から、<br>誤差を示せるモデルへ。</h2>
-            <p><a href="https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=101408">NISTのコーン手順</a>と<a href="https://www.iso.org/standard/57957.html">ISO 5660-1</a>を基準に、24試験へ一意なRun IDを発行しました。初期露出面とDAQ時刻を共通原点にし、質量・温度・表面変位・断面画像の生データを同期します。技術計画は完成していますが、安全SOP・装置責任者・消火法パイロットの承認は外部責任なので、実行許可は閉じたままです。</p>
+            <p><a href="https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=101408">NISTのコーン手順</a>と<a href="https://www.iso.org/standard/57957.html">ISO 5660-1</a>を基準にした最初の空パッケージへ、責任研究室が何を引き渡すかを固定しました。実行情報9項目、承認証拠3件、研究室レビュー4項目はすべて空欄です。入力構造は検査できますが、全欄が埋まってもリポジトリ自身は試験を許可しません。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -114,6 +114,20 @@
             <figcaption><div><strong>Synchronized execution plan</strong><span>24 runs · 6 templates · technical complete · not authorized</span></div></figcaption>
           </figure>
 
+          <figure id="phase6p-dry-run" class="capture-card">
+            <a href="assets/phase6/char_depth_dry_run_report.svg" aria-label="Phase 6P オフラインrun-package dry runレポートを開く">
+              <img src="assets/phase6/char_depth_dry_run_report.svg" width="1200" height="680" alt="最初のRun IDの6ファイルと2ディレクトリ、9つの空の実行時項目、計測値なし、実行未承認、取込み不可を示すSVG図">
+            </a>
+            <figcaption><div><strong>Offline run-package dry run</strong><span>6 files + 2 directories · blank · not importable</span></div></figcaption>
+          </figure>
+
+          <figure id="phase6q-handoff" class="capture-card">
+            <a href="assets/phase6/char_depth_lab_handoff_report.svg" aria-label="Phase 6Q 責任研究室ハンドオフレポートを開く">
+              <img src="assets/phase6/char_depth_lab_handoff_report.svg" width="1200" height="680" alt="実行情報0/9、外部承認証拠0/3、責任研究室レビュー0/4、リポジトリ権限なし、実行不可を示すSVG図">
+            </a>
+            <figcaption><div><strong>Responsible-laboratory handoff</strong><span>9 runtime · 3 evidence · 4 review · no local authority</span></div></figcaption>
+          </figure>
+
           <figure class="capture-card">
             <a href="assets/phase6/replicate_holdout_report.svg" aria-label="Phase 6C 合板反復ホールドアウトレポートを開く">
               <img src="assets/phase6/replicate_holdout_report.svg" width="1200" height="680" alt="未使用の合板SAMP.3について、着火時刻と平均質量減少速度の観測・初期・SAMP.1/2選定値を並べたSVGグラフ">
@@ -150,8 +164,8 @@
           </figure>
 
           <div class="story-grid">
-            <section class="story-card"><span class="card-index">01</span><h3>原点と時計を一つにする</h3><ul><li>初期面中心・内部方向+z</li><li>後退+、外向き膨張−</li><li>DAQの露出開始をt=0</li><li>カメラoffsetをイベント記録</li></ul></section>
-            <section class="story-card warm"><span class="card-index">02</span><h3>完成と許可を分ける</h3><ul><li>24 Run ID・6テンプレート</li><li>生値・raw ID・不確かさ</li><li>技術計画はcomplete</li><li>3外部承認までnot authorized</li></ul></section>
+            <section class="story-card"><span class="card-index">01</span><h3>外部入力の所有者を分ける</h3><ul><li>実行情報9項目</li><li>承認証拠3件</li><li>研究室レビュー4項目</li><li>空欄は未知値のまま保持</li></ul></section>
+            <section class="story-card warm"><span class="card-index">02</span><h3>完全性と許可を分ける</h3><ul><li>数値とUTC時刻を検査</li><li>全入力後はreview ready</li><li>repository authorityはnone</li><li>authorizedは常にfalse</li></ul></section>
           </div>
 
           <section class="verification" aria-labelledby="phase6-verification-title">
@@ -165,6 +179,8 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>External depth</strong><small>3 / 10 match · not scored · transfer blocked</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Measurement gate</strong><small>24 scheduled · 0 complete · calibration blocked</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Execution plan</strong><small>24 runs · 6 templates · 3 approvals missing</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Offline dry run</strong><small>6 files + 2 directories · blank · import blocked</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Lab handoff</strong><small>9 + 3 + 4 slots · complete input cannot grant authority</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>
             </div>
           </section>
@@ -173,7 +189,7 @@
             <div class="facts-heading"><p class="section-kicker">Measured on RTX 3090</p><h3 id="phase6-facts-title">校正と未使用データの結果</h3></div>
             <dl class="facts-grid">
               <div><dt>Score improvement</dt><dd>3.7%</dd></div>
-              <div><dt>Search time</dt><dd>55.0 s</dd></div>
+              <div><dt>Search time</dt><dd>56.9 s</dd></div>
               <div><dt>35 kW/m² ignition</dt><dd>47.1 → 30.5 s</dd></div>
               <div><dt>70 kW/m² ignition</dt><dd>7.7 → 12.2 s</dd></div>
               <div><dt>Best absorptivity</dt><dd>1.00</dd></div>
@@ -189,6 +205,12 @@
               <div><dt>Execution schedule</dt><dd>24 unique Run IDs</dd></div>
               <div><dt>Technical templates</dt><dd>6 / 6 present</dd></div>
               <div><dt>External approvals</dt><dd>0 / 3 · not authorized</dd></div>
+              <div><dt>Dry-run structure</dt><dd>6 files + 2 directories</dd></div>
+              <div><dt>Runtime metadata</dt><dd>9 null · never zero-filled</dd></div>
+              <div><dt>Measurements / import</dt><dd>false / false</dd></div>
+              <div><dt>Handoff runtime fields</dt><dd>0 / 9 supplied</dd></div>
+              <div><dt>Evidence / lab review</dt><dd>0 / 3 · 0 / 4</dd></div>
+              <div><dt>Repository authority</dt><dd>none · execution false</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
@@ -204,8 +226,8 @@
           </section>
 
           <div class="notes-grid">
-            <section class="note caution"><p class="note-label">Known limits</p><h3>技術計画は火災試験の許可ではない</h3><p>実設備、熱電対型式、消火媒体、安全手順は責任研究室が決める外部入力です。現在は3承認とも未取得で、実測完了数も0です。リポジトリは規格や安全SOPを置換しません。</p></section>
-            <section class="note next"><p class="note-label">What comes next</p><h3>承認後に一条件だけdry run</h3><p>本番24試験の前に、時計offset、熱電対実深さ、炎・煙による視野、シャッター後の温度継続、消火による形状変化、ファイル名を非本番runで確認します。</p></section>
+            <section class="note caution"><p class="note-label">Known limits</p><h3>入力票は安全審査そのものではない</h3><p>このリポジトリが確認できるのは欄・型・証拠参照の有無だけです。SOPの妥当性、訓練、装置状態、承認者の権限は責任研究室が判断し、現在は3承認とも未取得、実測完了数も0です。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>研究室レビュー後に設備で一条件だけdry run</h3><p>追跡可能な記録参照を持つ票を受領した後、生成済みの空パッケージへ実情報を入れ、時計offset、熱電対実深さ、表面視野、シャッター後温度、消火後形状を確認します。</p></section>
           </div>
         </div>
       </article>

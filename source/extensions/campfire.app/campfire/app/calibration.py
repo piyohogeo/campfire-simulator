@@ -2098,6 +2098,124 @@ def write_char_depth_experiment_plan_svg(
     return destination
 
 
+def write_char_depth_dry_run_svg(readiness: dict, destination: Path) -> Path:
+    """Render the structurally complete but deliberately blank run package."""
+
+    destination = Path(destination).resolve()
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    runtime_missing_count = len(readiness["missing_runtime_metadata"])
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#15120f"/>
+  <style>
+    text {{ font-family: "Segoe UI", Arial, sans-serif; fill: #fff7e9; }}
+    .title {{ font-size: 30px; font-weight: 700; }}
+    .subtitle {{ font-size: 15px; fill: #d7b982; }}
+    .heading {{ font-size: 17px; font-weight: 700; }}
+    .body {{ font-size: 13px; fill: #ded2c0; }}
+    .small {{ font-size: 12px; fill: #bcae9a; }}
+    .mono {{ font-family: Consolas, monospace; font-size: 13px; }}
+  </style>
+  <text x="60" y="52" class="title">Phase 6P · Offline run-package dry run</text>
+  <text x="60" y="82" class="subtitle">{readiness["run_id"]} · directory and schema rehearsal only · contains no fire-test measurements</text>
+
+  <rect x="60" y="116" width="480" height="386" rx="10" fill="#1b211d" stroke="#4f966b"/>
+  <text x="84" y="150" class="heading">Generated package tree</text>
+  <text x="88" y="185" class="mono">runs/{readiness["run_id"]}/</text>
+  <text x="112" y="216" class="mono">├─ run_manifest.json</text>
+  <text x="112" y="247" class="mono">├─ events.csv</text>
+  <text x="112" y="278" class="mono">├─ mass_history.csv</text>
+  <text x="112" y="309" class="mono">├─ temperature_history.csv</text>
+  <text x="112" y="340" class="mono">├─ surface_history.csv</text>
+  <text x="112" y="371" class="mono">├─ section_measurement.json</text>
+  <text x="112" y="402" class="mono">├─ raw_images/</text>
+  <text x="112" y="433" class="mono">└─ processed_traces/</text>
+  <text x="84" y="475" class="small">Headers copied from the issued templates; existing run folders are never overwritten.</text>
+
+  <rect x="574" y="116" width="566" height="110" rx="9" fill="#1c2820" stroke="#4f966b"/>
+  <text x="598" y="150" class="heading">STRUCTURE PASS</text>
+  <text x="598" y="180" class="body">6 required files · 2 evidence directories · exact CSV headers</text>
+  <text x="598" y="206" class="small">missing files 0 · invalid files 0 · structural_complete = true</text>
+
+  <rect x="574" y="246" width="566" height="110" rx="9" fill="#282218" stroke="#a77a38"/>
+  <text x="598" y="280" class="heading">RUNTIME DATA INTENTIONALLY BLANK</text>
+  <text x="598" y="310" class="body">measurements = false · import eligible = false</text>
+  <text x="598" y="336" class="small">{runtime_missing_count} runtime metadata fields remain null, never zero-filled.</text>
+
+  <rect x="574" y="376" width="566" height="126" rx="9" fill="#211817" stroke="#ad5149"/>
+  <text x="598" y="410" class="heading">EXECUTION STILL NOT AUTHORIZED</text>
+  <text x="598" y="440" class="body">No operator, apparatus, calibration, clock offset, or approvals.</text>
+  <text x="598" y="466" class="small">This dry run checks filesystem and schema behavior—not a heater, igniter,</text>
+  <text x="598" y="486" class="small">sensor, shutter, quench system, or laboratory safety procedure.</text>
+
+  <rect x="60" y="532" width="1080" height="70" rx="9" fill="#1c2820" stroke="#58b889" stroke-width="2"/>
+  <text x="84" y="573" class="heading" fill="#7ed7a7">OFFLINE DRY RUN COMPLETE · safe blank package · no measurement claim</text>
+  <text x="60" y="646" class="small">Next gate is external: approved laboratory metadata must be supplied before any non-dry-run package can become eligible for import.</text>
+</svg>'''
+    destination.write_text(svg, encoding="utf-8")
+    return destination
+
+
+def write_char_depth_lab_handoff_svg(readiness: dict, destination: Path) -> Path:
+    """Render the external-input handoff without implying test authorization."""
+
+    destination = Path(destination).resolve()
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    runtime_count = readiness["required_runtime_field_count"]
+    runtime_populated = readiness["populated_runtime_field_count"]
+    evidence_count = readiness["required_external_evidence_count"]
+    evidence_populated = readiness["populated_external_evidence_count"]
+    review_count = 4
+    review_populated = review_count - len(readiness["missing_laboratory_review"])
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#15120f"/>
+  <style>
+    text {{ font-family: "Segoe UI", Arial, sans-serif; fill: #fff7e9; }}
+    .title {{ font-size: 30px; font-weight: 700; }}
+    .subtitle {{ font-size: 15px; fill: #d7b982; }}
+    .heading {{ font-size: 17px; font-weight: 700; }}
+    .body {{ font-size: 13px; fill: #ded2c0; }}
+    .small {{ font-size: 12px; fill: #bcae9a; }}
+    .mono {{ font-family: Consolas, monospace; font-size: 12px; }}
+  </style>
+  <text x="60" y="52" class="title">Phase 6Q · Responsible-laboratory handoff</text>
+  <text x="60" y="82" class="subtitle">{readiness["run_id"]} · input ownership and evidence slots · no local authorization</text>
+
+  <rect x="60" y="116" width="520" height="390" rx="10" fill="#1b211d" stroke="#4f966b"/>
+  <text x="84" y="150" class="heading">Runtime metadata · {runtime_populated} / {runtime_count} supplied</text>
+  <text x="88" y="184" class="mono">○ operator_id</text>
+  <text x="88" y="214" class="mono">○ apparatus_id</text>
+  <text x="88" y="244" class="mono">○ heat_flux_calibration_record</text>
+  <text x="88" y="274" class="mono">○ actual_heat_flux_kw_m2</text>
+  <text x="88" y="304" class="mono">○ camera_clock_offset_s</text>
+  <text x="88" y="334" class="mono">○ thermocouple_configuration</text>
+  <text x="88" y="364" class="mono">○ quench_method_approval</text>
+  <text x="88" y="394" class="mono">○ laboratory_safety_sop_approval</text>
+  <text x="88" y="424" class="mono">○ apparatus_owner_approval</text>
+  <text x="84" y="472" class="small">Blank means unknown—not zero, false, approved, or measured.</text>
+
+  <rect x="614" y="116" width="526" height="126" rx="9" fill="#282218" stroke="#a77a38"/>
+  <text x="638" y="150" class="heading">EXTERNAL EVIDENCE · {evidence_populated} / {evidence_count}</text>
+  <text x="638" y="180" class="body">Safety SOP · apparatus owner · quench-method pilot</text>
+  <text x="638" y="210" class="small">Each slot needs a record reference, organization, approver, and UTC time.</text>
+
+  <rect x="614" y="262" width="526" height="110" rx="9" fill="#282218" stroke="#a77a38"/>
+  <text x="638" y="296" class="heading">LABORATORY REVIEW · {review_populated} / {review_count}</text>
+  <text x="638" y="326" class="body">Laboratory · preparer · reviewer · reviewed-at UTC</text>
+  <text x="638" y="352" class="small">The repository validates slots; the responsible laboratory owns the review.</text>
+
+  <rect x="614" y="392" width="526" height="114" rx="9" fill="#211817" stroke="#ad5149"/>
+  <text x="638" y="426" class="heading">REPOSITORY AUTHORITY · NONE</text>
+  <text x="638" y="456" class="body">authorized_to_execute = false</text>
+  <text x="638" y="482" class="small">A completed form still cannot replace SOP, training, or apparatus approval.</text>
+
+  <rect x="60" y="536" width="1080" height="70" rx="9" fill="#1c2820" stroke="#58b889" stroke-width="2"/>
+  <text x="84" y="577" class="heading">HANDOFF TEMPLATE READY · external input incomplete · execution gate closed</text>
+  <text x="60" y="646" class="small">Next action belongs to the responsible laboratory: supply traceable references and perform its own authorization review.</text>
+</svg>'''
+    destination.write_text(svg, encoding="utf-8")
+    return destination
+
+
 def _write_comparison_svg(
     baseline: dict,
     best: dict,

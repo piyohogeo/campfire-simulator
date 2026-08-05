@@ -2,7 +2,7 @@
 
 焚き火の木材状態、剛体、炎・煙を段階的に検証する、NVIDIA Omniverse Kitベースのリアルタイム・シミュレータです。
 
-現在は **Phase 6「校正と品質」進行中** です。公称12.7 mm・5層の合板試験片で、公開されたガス・タール・チャーの3つの一次Arrhenius反応を同時に解きます。35/70 kW/m² × 60/180/300/600秒 × 3反復の24条件について、初期面基準の座標、DAQ基準時刻、質量・温度・表面変位・断面画像の生データ契約とRun IDを固定しました。技術計画は完成していますが、実測は0/24件で、実験実施には安全SOP・装置責任者・消火法パイロットの外部承認が必要です。
+現在は **Phase 6「校正と品質」進行中** です。公称12.7 mm・5層の合板試験片で、公開されたガス・タール・チャーの3つの一次Arrhenius反応を同時に解きます。35/70 kW/m² × 60/180/300/600秒 × 3反復の24条件について、初期面基準の座標、DAQ基準時刻、質量・温度・表面変位・断面画像の生データ契約とRun IDを固定しました。最初のRun IDの空パッケージと、責任研究室へ渡す入力・証拠参照票まで用意しましたが、実測は0/24件で、実験実施には安全SOP・装置責任者・消火法パイロットの外部承認が必要です。
 
 ## 必要環境
 
@@ -69,7 +69,7 @@ Phase 4検証は6本の平行密積みと4本の井桁組みを比較し、酸�
 
 Phase 5検証は中央断面を局所加熱し、支持率`0.58`でFixedJointを解除します。分割後の質量・コライダー、PhysX変位、酸素係数`0.30 → 0.82`による再燃、質量収支、崩落前後の2枚の画像を検査します。
 
-Phase 6検証は[NISTIR 7094](https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=101408) Appendix Aの35・70 kW/m²合板反復試験を固定分割します。公称12.7 mm・5層モデルで、Thurner–Mannの3経路を同じ未反応木材に対する競合一次反応として解きます。[NISTIR 4916](https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir4916.pdf)の材料値と[USDA Wood Handbook Chapter 4](https://research.fs.usda.gov/download/treesearch/62243.pdf)の範囲限定比熱を使用し、16候補をSAMP.1/2だけで評価します。炭化深さ側では、24条件の測定値ゲートに加え、24個のRun ID、6テンプレート、座標・時刻同期、生データ保持、外部承認ゲートを検査します。
+Phase 6検証は[NISTIR 7094](https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=101408) Appendix Aの35・70 kW/m²合板反復試験を固定分割します。公称12.7 mm・5層モデルで、Thurner–Mannの3経路を同じ未反応木材に対する競合一次反応として解きます。[NISTIR 4916](https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir4916.pdf)の材料値と[USDA Wood Handbook Chapter 4](https://research.fs.usda.gov/download/treesearch/62243.pdf)の範囲限定比熱を使用し、16候補をSAMP.1/2だけで評価します。炭化深さ側では、24条件の測定値ゲート、24個のRun ID、6テンプレート、座標・時刻同期、生データ保持、外部承認ゲートに加え、最初のRun ID用の空パッケージが上書きなし・計測値なし・取込み不可で生成されることを検査します。
 
 ## GUI起動
 
@@ -107,10 +107,12 @@ Phase 6検証は[NISTIR 7094](https://tsapps.nist.gov/publication/get_pdf.cfm?pu
 - Phase 6MではKasymovらの未処理カバ合板について、34.7 kW/m²・600秒の端面IR炭化深さ`13.77 ± 0.60 mm`を外部文脈として追加しました。現在の35 kW/m²未収縮相当値は`9.240 mm`ですが、熱流束・時間・100 mm角だけが一致し、厚さ、密度、樹種、接着剤、含水条件、加熱環境、深さ定義は不一致です。比較誤差は`null`、係数選定と物理厚さへの転用は無効です。
 - Phase 6Nの[測定CSVテンプレート](source/extensions/campfire.app/data/char_depth_measurement_template.csv)は24個の独立試験を予定します。初期・現在厚さ、符号付き露出面変位、光学前線、300 °C等温線、2種類の不確かさに加え、層別樹種・接着剤・各層厚・乾燥密度・乾量基準含水率・木目方向・質量履歴ファイルを全行で要求します。現在は予定24、完了0で、物理厚さ校正ゲートは閉じています。
 - Phase 6Oの[実験プロトコル](source/extensions/campfire.app/data/char_depth_experiment_protocol.json)は、初期露出面中心を原点、試験片内部を`+z`、後退を正・外向き膨張を負と定義します。[24-runスケジュール](source/extensions/campfire.app/data/char_depth_run_schedule.csv)と質量・温度・表面・イベントの生データテンプレートを配布し、300 °C前線は実測深さ間で挟める場合だけ内挿します。技術計画は完成していますが、リポジトリは火災試験を許可せず、3つの外部承認を要求します。
+- Phase 6Pは最初のRun ID `CF6O-F035-T0060-R01`について、manifest、4つの生CSV、断面JSON、2つの証拠ディレクトリを空のまま生成するファイルシステムdry runです。9つの実行時メタデータは`null`、計測値は存在せず、実行未承認・取込み不可です。完成済みまたは変更された既存runを上書きしません。
+- Phase 6Qの[責任研究室ハンドオフ票](source/extensions/campfire.app/data/char_depth_lab_handoff_template.json)は、実行情報9項目、外部承認証拠3件、研究室レビュー4項目を空欄で配布します。数値・UTC時刻・構造を検査できますが、全欄が埋まってもリポジトリ自身は試験を許可せず、`authorized_to_execute = false`を維持します。
 - 1,152セル×2本のPython更新は平均24.85 msです。5 Hzを60 Hzへ償却すると約2.07 ms/frameですが、更新フレームのスパイクは4 ms予算を超えます。
 - Phase 3ヘッドレス比較は成功しますが、Flow/USD更新を含む実行は約276秒かかります。配列化またはWarp化と、Flowアダプター更新コストの分離が必要です。
 - ヘッドレス検証ではUSD transformを同期する `fetch_results` が平均約15.46 msを占めます。PhysX `simulate` 自体は平均約0.15 msですが、60 Hz実時間更新の性能条件はこの経路では未達です。
 - raw NanoVDBを世界座標一点へ変換する局所場アダプターは未実装です。
 - Fabric interface version警告とFlow Python node登録警告が非阻害で残っています。
 
-次の作業は責任研究室で安全SOP・コーンカロリメータ使用・消火法パイロットの承認を得たうえで、最初の1条件をdry runし、時計オフセット、熱電対実深さ、表面画像の遮蔽、消火後変形を確認することです。承認や実設備なしに試験実行を仮定しません。
+次の作業は責任研究室がハンドオフ票へ追跡可能な設備情報・証拠参照・レビューを記入し、独自の安全SOP・装置使用・消火法承認を完了したうえで、生成済みの空パッケージを使って最初の1条件を設備dry runすることです。承認や実設備なしに試験実行を仮定しません。

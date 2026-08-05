@@ -284,7 +284,20 @@ if ($experimentPlan.schedule.Count -ne 24 -or $experimentReadiness.scheduled_run
 if ($experimentPlan.schedule[0].run_id -ne "CF6O-F035-T0060-R01" -or $experimentPlan.schedule[23].run_id -ne "CF6O-F070-T0600-R03") {
     throw "Phase 6 char-depth run schedule changed."
 }
-foreach ($path in @($result.image, $result.report, $result.holdout_report, $result.replicate_holdout_report, $result.layer_profile_report, $result.kinetics_report, $result.tar_residence_sensitivity_report, $result.gas_transport_readiness_report, $result.char_geometry_report, $result.char_depth_benchmark_report, $result.char_depth_measurement_protocol_report, $result.char_depth_experiment_plan_report, $measurementReadiness.template_path, $result.top_candidates_csv, $result.final_stage)) {
+$dryRun = $result.char_depth_dry_run_readiness
+if ($dryRun.run_id -ne "CF6O-F035-T0060-R01" -or -not $dryRun.structural_complete -or -not $dryRun.dry_run_package_complete -or $dryRun.contains_measurements -or $dryRun.authorized_to_execute -or $dryRun.eligible_for_measurement_import -or $dryRun.missing_files.Count -ne 0 -or $dryRun.missing_directories.Count -ne 0 -or $dryRun.invalid_files.Count -ne 0 -or $dryRun.missing_runtime_metadata.Count -ne 9) {
+    throw "Phase 6 offline char-depth dry-run gate changed."
+}
+foreach ($relativePath in @("run_manifest.json", "events.csv", "mass_history.csv", "temperature_history.csv", "surface_history.csv", "section_measurement.json", "raw_images", "processed_traces")) {
+    if (-not (Test-Path -LiteralPath (Join-Path $result.char_depth_dry_run_directory $relativePath))) {
+        throw "Phase 6 offline dry-run package entry is missing: $relativePath"
+    }
+}
+$labHandoff = $result.char_depth_lab_handoff_readiness
+if ($labHandoff.run_id -ne "CF6O-F035-T0060-R01" -or -not $labHandoff.template_contract_complete -or $labHandoff.populated_runtime_field_count -ne 0 -or $labHandoff.missing_runtime_metadata.Count -ne 9 -or $labHandoff.populated_external_evidence_count -ne 0 -or $labHandoff.missing_external_evidence.Count -ne 3 -or $labHandoff.missing_laboratory_review.Count -ne 4 -or $labHandoff.invalid_fields.Count -ne 0 -or $labHandoff.ready_for_external_authorization_review -or $labHandoff.repository_can_authorize -or $labHandoff.authorized_to_execute) {
+    throw "Phase 6 responsible-laboratory handoff gate changed."
+}
+foreach ($path in @($result.image, $result.report, $result.holdout_report, $result.replicate_holdout_report, $result.layer_profile_report, $result.kinetics_report, $result.tar_residence_sensitivity_report, $result.gas_transport_readiness_report, $result.char_geometry_report, $result.char_depth_benchmark_report, $result.char_depth_measurement_protocol_report, $result.char_depth_experiment_plan_report, $result.char_depth_dry_run_report, $result.char_depth_lab_handoff_report, $result.char_depth_dry_run_directory, $measurementReadiness.template_path, $result.top_candidates_csv, $result.final_stage)) {
     if (-not (Test-Path -LiteralPath $path)) {
         throw "Phase 6 artifact was not produced: $path"
     }

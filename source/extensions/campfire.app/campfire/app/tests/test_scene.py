@@ -1,4 +1,7 @@
+import json
 import math
+from pathlib import Path
+from tempfile import TemporaryDirectory
 
 import campfire.app
 import omni.kit.test
@@ -586,6 +589,109 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertTrue(readiness.technical_plan_complete)
         self.assertFalse(readiness.authorized_to_execute)
         self.assertEqual(len(readiness.missing_external_approvals), 3)
+
+    async def test_char_depth_offline_dry_run_is_blank_and_not_importable(self):
+        with TemporaryDirectory() as temporary_directory:
+            run_directory = campfire.app.create_char_depth_dry_run_package(
+                "CF6O-F035-T0060-R01", Path(temporary_directory)
+            )
+            readiness = campfire.app.evaluate_char_depth_dry_run_package(
+                run_directory
+            )
+            self.assertEqual(readiness.run_id, "CF6O-F035-T0060-R01")
+            self.assertTrue(readiness.structural_complete)
+            self.assertTrue(readiness.dry_run_package_complete)
+            self.assertFalse(readiness.contains_measurements)
+            self.assertFalse(readiness.authorized_to_execute)
+            self.assertFalse(readiness.eligible_for_measurement_import)
+            self.assertEqual(len(readiness.missing_runtime_metadata), 9)
+            self.assertFalse(readiness.missing_files)
+            self.assertFalse(readiness.missing_directories)
+            self.assertFalse(readiness.invalid_files)
+
+            repeated_directory = campfire.app.create_char_depth_dry_run_package(
+                "CF6O-F035-T0060-R01", Path(temporary_directory)
+            )
+            self.assertEqual(repeated_directory, run_directory)
+
+            (run_directory / "raw_images" / "unexpected_measurement.png").write_bytes(
+                b"presence alone must close the blank-package gate"
+            )
+            changed = campfire.app.evaluate_char_depth_dry_run_package(
+                run_directory
+            )
+            self.assertTrue(changed.contains_measurements)
+            self.assertFalse(changed.dry_run_package_complete)
+            self.assertFalse(changed.eligible_for_measurement_import)
+            with self.assertRaises(FileExistsError):
+                campfire.app.create_char_depth_dry_run_package(
+                    "CF6O-F035-T0060-R01", Path(temporary_directory)
+                )
+
+    async def test_lab_handoff_cannot_grant_repository_authority(self):
+        blank = campfire.app.evaluate_char_depth_lab_handoff()
+        self.assertTrue(blank.template_contract_complete)
+        self.assertEqual(blank.required_runtime_field_count, 9)
+        self.assertEqual(blank.populated_runtime_field_count, 0)
+        self.assertEqual(len(blank.missing_runtime_metadata), 9)
+        self.assertEqual(blank.required_external_evidence_count, 3)
+        self.assertEqual(blank.populated_external_evidence_count, 0)
+        self.assertEqual(len(blank.missing_external_evidence), 3)
+        self.assertEqual(len(blank.missing_laboratory_review), 4)
+        self.assertFalse(blank.ready_for_external_authorization_review)
+        self.assertFalse(blank.repository_can_authorize)
+        self.assertFalse(blank.authorized_to_execute)
+
+        handoff = campfire.app.load_char_depth_lab_handoff()
+        handoff["runtime_metadata"].update(
+            {
+                "operator_id": "SYNTHETIC-OPERATOR",
+                "apparatus_id": "SYNTHETIC-APPARATUS",
+                "heat_flux_calibration_record": "SYNTHETIC-CALIBRATION",
+                "actual_heat_flux_kw_m2": 35.0,
+                "camera_clock_offset_s": 0.0,
+                "thermocouple_configuration": "SYNTHETIC-TC-CONFIG",
+                "quench_method_approval": "SYNTHETIC-QUENCH-APPROVAL",
+                "laboratory_safety_sop_approval": "SYNTHETIC-SOP-APPROVAL",
+                "apparatus_owner_approval": "SYNTHETIC-OWNER-APPROVAL",
+            }
+        )
+        for record in handoff["external_evidence"].values():
+            record.update(
+                {
+                    "record_reference": "SYNTHETIC-REFERENCE",
+                    "responsible_organization": "SYNTHETIC-LAB",
+                    "approved_by": "SYNTHETIC-APPROVER",
+                    "approved_at_utc": "2026-08-05T00:00:00Z",
+                }
+            )
+        handoff["responsible_laboratory_review"].update(
+            {
+                "laboratory_name": "SYNTHETIC-LAB",
+                "handoff_prepared_by": "SYNTHETIC-PREPARER",
+                "handoff_reviewed_by": "SYNTHETIC-REVIEWER",
+                "reviewed_at_utc": "2026-08-05T00:00:00Z",
+            }
+        )
+        with TemporaryDirectory() as temporary_directory:
+            handoff_path = Path(temporary_directory) / "handoff.json"
+            handoff_path.write_text(json.dumps(handoff), encoding="utf-8")
+            complete = campfire.app.evaluate_char_depth_lab_handoff(handoff_path)
+            handoff["runtime_metadata"]["actual_heat_flux_kw_m2"] = -1.0
+            first_evidence = next(iter(handoff["external_evidence"].values()))
+            first_evidence["approved_at_utc"] = "2026-08-05T09:00:00+09:00"
+            handoff_path.write_text(json.dumps(handoff), encoding="utf-8")
+            invalid = campfire.app.evaluate_char_depth_lab_handoff(handoff_path)
+        self.assertTrue(complete.ready_for_external_authorization_review)
+        self.assertFalse(complete.repository_can_authorize)
+        self.assertFalse(complete.authorized_to_execute)
+        self.assertFalse(invalid.ready_for_external_authorization_review)
+        self.assertIn(
+            "runtime_metadata.actual_heat_flux_kw_m2", invalid.invalid_fields
+        )
+        self.assertTrue(
+            any(field.endswith("approved_at_utc") for field in invalid.invalid_fields)
+        )
 
     async def test_plywood_and_osb_use_distinct_sourced_thermal_profiles(self):
         reference = campfire.app.load_nist_plywood_reference()

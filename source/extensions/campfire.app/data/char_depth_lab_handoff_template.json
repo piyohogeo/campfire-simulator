@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "protocol_id": "CAMPFIRE_PHASE6O_MATCHED_CHAR_DEPTH_V1",
+  "run_id": "CF6O-F035-T0060-R01",
+  "status": "awaiting_responsible_laboratory_input",
+  "repository_can_authorize": false,
+  "runtime_metadata": {
+    "operator_id": null,
+    "apparatus_id": null,
+    "heat_flux_calibration_record": null,
+    "actual_heat_flux_kw_m2": null,
+    "camera_clock_offset_s": null,
+    "thermocouple_configuration": null,
+    "quench_method_approval": null,
+    "laboratory_safety_sop_approval": null,
+    "apparatus_owner_approval": null
+  },
+  "external_evidence": {
+    "laboratory_fire_safety_sop_approval": {
+      "record_reference": null,
+      "responsible_organization": null,
+      "approved_by": null,
+      "approved_at_utc": null
+    },
+    "cone_calorimeter_owner_approval": {
+      "record_reference": null,
+      "responsible_organization": null,
+      "approved_by": null,
+      "approved_at_utc": null
+    },
+    "quench_method_pilot_approval": {
+      "record_reference": null,
+      "responsible_organization": null,
+      "approved_by": null,
+      "approved_at_utc": null
+    }
+  },
+  "responsible_laboratory_review": {
+    "laboratory_name": null,
+    "handoff_prepared_by": null,
+    "handoff_reviewed_by": null,
+    "reviewed_at_utc": null
+  },
+  "policy": "This handoff records externally supplied identifiers and evidence references. Completing it does not let the repository authorize a fire test or replace the responsible laboratory's SOP, apparatus manual, training, or approval process."
+}
