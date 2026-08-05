@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import math
+import time
 from typing import TYPE_CHECKING
 from dataclasses import asdict, dataclass
 
@@ -263,11 +264,25 @@ class WoodThermalModel:
             if cell.dry_wood_specific_heat_j_kg_k is not None
             else p.wood_specific_heat_j_kg_k
         )
-        dry_wood_specific_heat_j_kg_k = temperature_adjusted_dry_wood_specific_heat_j_kg_k(
-            reference_specific_heat_j_kg_k,
-            cell.temperature_k,
-            cell.dry_wood_specific_heat_model,
-        )
+        if cell.dry_wood_specific_heat_model == CONSTANT_DRY_WOOD_SPECIFIC_HEAT_MODEL:
+            if (
+                not math.isfinite(reference_specific_heat_j_kg_k)
+                or reference_specific_heat_j_kg_k <= 0.0
+            ):
+                raise ValueError(
+                    "reference_specific_heat_j_kg_k must be finite and positive"
+                )
+            if not math.isfinite(cell.temperature_k) or cell.temperature_k <= 0.0:
+                raise ValueError("temperature_k must be finite and positive")
+            dry_wood_specific_heat_j_kg_k = reference_specific_heat_j_kg_k
+        else:
+            dry_wood_specific_heat_j_kg_k = (
+                temperature_adjusted_dry_wood_specific_heat_j_kg_k(
+                    reference_specific_heat_j_kg_k,
+                    cell.temperature_k,
+                    cell.dry_wood_specific_heat_model,
+                )
+            )
         return max(
             cell.dry_wood_mass_kg * dry_wood_specific_heat_j_kg_k
             + cell.moisture_mass_kg * p.water_specific_heat_j_kg_k
@@ -276,29 +291,12 @@ class WoodThermalModel:
             1.0e-9,
         )
 
-    def _update_phase(self, cell: WoodCellState) -> None:
-        mass_epsilon = self._mass_epsilon_kg
-        if cell.current_mass_kg <= mass_epsilon:
-            cell.phase = DEPLETED
-        elif cell.char_mass_kg > cell.dry_wood_mass_kg and cell.char_mass_kg > cell.ash_mass_kg:
-            cell.phase = CHAR
-        elif cell.ash_mass_kg > cell.dry_wood_mass_kg + cell.char_mass_kg:
-            cell.phase = ASH
-        elif (
-            cell.temperature_k >= self.parameters.pyrolysis_start_temperature_k
-            and cell.dry_wood_mass_kg > mass_epsilon
-        ):
-            cell.phase = PYROLYZING
-        elif cell.moisture_mass_kg > cell.dry_wood_mass_kg * 0.01:
-            cell.phase = WET_WOOD
-        else:
-            cell.phase = DRY_WOOD
-
     def step(
         self,
         dt_seconds: float,
         external_heat_flux_w_m2: float | list[float] | tuple[float, ...],
         ambient_temperature_k: float | None = None,
+        timing_ms: dict[str, float] | None = None,
     ) -> CombustionStepResult:
         """Advance one explicit SI-unit thermal/reaction step.
 
@@ -307,6 +305,8 @@ class WoodThermalModel:
         authoritative cell state or reaction accounting.
         """
 
+        timing_enabled = timing_ms is not None
+        segment_started = time.perf_counter() if timing_enabled else 0.0
         if not math.isfinite(dt_seconds) or dt_seconds <= 0.0:
             raise ValueError("dt_seconds must be finite and positive")
         scalar_heat_flux_w_m2 = None
@@ -331,6 +331,11 @@ class WoodThermalModel:
         ambient = p.ambient_temperature_k if ambient_temperature_k is None else ambient_temperature_k
         if not math.isfinite(ambient) or ambient <= 0.0:
             raise ValueError("ambient_temperature_k must be finite and positive")
+        if timing_enabled:
+            timing_ms["input_validation"] = (
+                time.perf_counter() - segment_started
+            ) * 1000.0
+            segment_started = time.perf_counter()
 
         cells = self.cells
         temperatures_k = [cell.temperature_k for cell in cells]
@@ -343,6 +348,11 @@ class WoodThermalModel:
             )
             conduction_energy_j[first] += energy_j
             conduction_energy_j[second] -= energy_j
+        if timing_enabled:
+            timing_ms["conduction"] = (
+                time.perf_counter() - segment_started
+            ) * 1000.0
+            segment_started = time.perf_counter()
 
         evaporated_total = 0.0
         pyrolysis_gas_total = 0.0
@@ -355,8 +365,10 @@ class WoodThermalModel:
         external_heat_total = 0.0
         sigma = 5.670374419e-8
 
+        heat_capacities_j_k = [0.0] * len(cells)
         for index, cell in enumerate(cells):
             heat_capacity = self._heat_capacity_j_k(cell)
+            heat_capacities_j_k[index] = heat_capacity
             area = cell.external_area_m2 * cell.surface_exposure
             heat_flux_w_m2 = (
                 scalar_heat_flux_w_m2
@@ -378,7 +390,14 @@ class WoodThermalModel:
                 external_heat_w - convective_loss_w - radiation_loss_w
             ) * dt_seconds
             cell.temperature_k += net_energy_j / heat_capacity
+        if timing_enabled:
+            timing_ms["sensible_heat"] = (
+                time.perf_counter() - segment_started
+            ) * 1000.0
+            segment_started = time.perf_counter()
 
+        for index, cell in enumerate(cells):
+            heat_capacity = heat_capacities_j_k[index]
             if (
                 cell.moisture_mass_kg > 0.0
                 and cell.temperature_k > p.evaporation_start_temperature_k
@@ -400,7 +419,13 @@ class WoodThermalModel:
                     evaporated_kg * p.water_latent_heat_j_kg / heat_capacity
                 )
                 evaporated_total += evaporated_kg
+        if timing_enabled:
+            timing_ms["evaporation"] = (
+                time.perf_counter() - segment_started
+            ) * 1000.0
+            segment_started = time.perf_counter()
 
+        for cell in cells:
             if (
                 cell.dry_wood_mass_kg > 0.0
                 and (
@@ -500,7 +525,13 @@ class WoodThermalModel:
                 secondary_tar_cracked_kg = tar_created_kg * secondary_fraction
                 secondary_tar_cracked_total += secondary_tar_cracked_kg
                 uncracked_tar_total += tar_created_kg - secondary_tar_cracked_kg
+        if timing_enabled:
+            timing_ms["pyrolysis"] = (
+                time.perf_counter() - segment_started
+            ) * 1000.0
+            segment_started = time.perf_counter()
 
+        for cell in cells:
             if (
                 cell.char_mass_kg > 0.0
                 and cell.temperature_k > p.char_oxidation_start_temperature_k
@@ -533,7 +564,15 @@ class WoodThermalModel:
                     oxidized_char_kg * p.char_oxidation_heat_j_kg / heat_capacity
                 )
                 char_gas_total += char_gas_kg
+        if timing_enabled:
+            timing_ms["char_oxidation"] = (
+                time.perf_counter() - segment_started
+            ) * 1000.0
+            segment_started = time.perf_counter()
 
+        mass_epsilon = self._mass_epsilon_kg
+        pyrolysis_start_temperature_k = p.pyrolysis_start_temperature_k
+        for cell in cells:
             cell.temperature_k = min(
                 p.max_temperature_k, max(ambient, cell.temperature_k)
             )
@@ -541,7 +580,35 @@ class WoodThermalModel:
             cell.dry_wood_mass_kg = max(0.0, cell.dry_wood_mass_kg)
             cell.char_mass_kg = max(0.0, cell.char_mass_kg)
             cell.ash_mass_kg = max(0.0, cell.ash_mass_kg)
-            self._update_phase(cell)
+            if (
+                cell.moisture_mass_kg
+                + cell.dry_wood_mass_kg
+                + cell.char_mass_kg
+                + cell.ash_mass_kg
+                <= mass_epsilon
+            ):
+                cell.phase = DEPLETED
+            elif (
+                cell.char_mass_kg > cell.dry_wood_mass_kg
+                and cell.char_mass_kg > cell.ash_mass_kg
+            ):
+                cell.phase = CHAR
+            elif cell.ash_mass_kg > cell.dry_wood_mass_kg + cell.char_mass_kg:
+                cell.phase = ASH
+            elif (
+                cell.temperature_k >= pyrolysis_start_temperature_k
+                and cell.dry_wood_mass_kg > mass_epsilon
+            ):
+                cell.phase = PYROLYZING
+            elif cell.moisture_mass_kg > cell.dry_wood_mass_kg * 0.01:
+                cell.phase = WET_WOOD
+            else:
+                cell.phase = DRY_WOOD
+        if timing_enabled:
+            timing_ms["state_finalize"] = (
+                time.perf_counter() - segment_started
+            ) * 1000.0
+            segment_started = time.perf_counter()
 
         self.elapsed_seconds += dt_seconds
         self.emitted_water_kg += evaporated_total
@@ -551,7 +618,7 @@ class WoodThermalModel:
         self.emitted_tar_kg += primary_tar_total
         self.produced_primary_char_kg += primary_char_total
         self.converted_secondary_tar_kg += secondary_tar_cracked_total
-        return CombustionStepResult(
+        result = CombustionStepResult(
             elapsed_seconds=self.elapsed_seconds,
             evaporated_water_kg=evaporated_total,
             pyrolysis_gas_kg=pyrolysis_gas_total,
@@ -571,6 +638,11 @@ class WoodThermalModel:
             uncracked_tar_kg=uncracked_tar_total,
             uncracked_tar_rate_kg_s=uncracked_tar_total / dt_seconds,
         )
+        if timing_enabled:
+            timing_ms["result_aggregation"] = (
+                time.perf_counter() - segment_started
+            ) * 1000.0
+        return result
 
     @property
     def current_mass_kg(self) -> float:

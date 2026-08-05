@@ -195,6 +195,41 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(scalar.to_dict(), per_cell.to_dict())
         self.assertEqual(scalar.metrics(), per_cell.metrics())
 
+    async def test_wood_step_internal_timing_is_opt_in_and_state_neutral(self):
+        unprofiled = campfire.app.create_cylindrical_wood_model(
+            "unprofiled",
+            radius_m=0.04,
+            length_m=0.20,
+            moisture_ratio_dry_basis=0.12,
+            axial_cells=2,
+            circumferential_cells=4,
+            radial_cells=2,
+        )
+        profiled = campfire.app.WoodThermalModel.from_dict(unprofiled.to_dict())
+        timing_ms = {}
+
+        unprofiled_result = unprofiled.step(0.2, 150_000.0)
+        profiled_result = profiled.step(0.2, 150_000.0, timing_ms=timing_ms)
+
+        self.assertEqual(profiled_result, unprofiled_result)
+        self.assertEqual(profiled.to_dict(), unprofiled.to_dict())
+        self.assertEqual(
+            set(timing_ms),
+            {
+                "input_validation",
+                "conduction",
+                "sensible_heat",
+                "evaporation",
+                "pyrolysis",
+                "char_oxidation",
+                "state_finalize",
+                "result_aggregation",
+            },
+        )
+        for elapsed_ms in timing_ms.values():
+            self.assertTrue(math.isfinite(elapsed_ms))
+            self.assertGreaterEqual(elapsed_ms, 0.0)
+
     async def test_wet_kindling_evaporates_and_ignites_after_dry_kindling(self):
         dry = campfire.app.create_cylindrical_wood_model(
             "DryKindling", 0.03, 0.35, 0.0,

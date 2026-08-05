@@ -1,0 +1,115 @@
+{
+  "boundary": {
+    "gpu_utilization_measured": false,
+    "grid_or_dt_changed": false,
+    "physics_equations_changed": false,
+    "timings_are_cpu_only": true
+  },
+  "configuration": {
+    "benchmark": "two_log_cpu_wood_model",
+    "combined_cell_count": 2304,
+    "dt_seconds": 0.2,
+    "external_heat_flux_w_m2": 150000.0,
+    "model_duration_seconds": 80.0,
+    "steps": 400,
+    "warmup_steps_excluded": 20
+  },
+  "internal_total": {
+    "after_median_mean_ms": 5.23058184210528,
+    "before_median_mean_ms": 5.77792763157892,
+    "improvement_fraction": 0.09473046814954109
+  },
+  "invariants": {
+    "dry_mass_balance_error_kg": 8.242295734817162e-13,
+    "dry_state_sha256": "fc74e76af70f7493ae890e831ec6337d7b689816aaaf4f07a8fb2e404466a4ac",
+    "ignition_seconds": {
+      "dry": 66.2000000000004,
+      "wet": null
+    },
+    "wet_mass_balance_error_kg": 4.263256414560601e-14,
+    "wet_state_sha256": "8524b1b7388704a225c40d766becbc7e9fa2f3ffe0b29b6c43fa6831ce8b8975"
+  },
+  "run_counts": {
+    "after_profiles": 3,
+    "before_profiles": 3,
+    "unprofiled_baseline": 1,
+    "unprofiled_optimized": 3
+  },
+  "schema_version": 1,
+  "segments": {
+    "char_oxidation": {
+      "after_median_mean_ms": 0.05701868421053076,
+      "after_share_fraction": 0.010901021326449805,
+      "before_median_mean_ms": 0.05743289473682464,
+      "improvement_fraction": 0.007212078168650961,
+      "label": "Char oxidation"
+    },
+    "conduction": {
+      "after_median_mean_ms": 0.7344131578947473,
+      "after_share_fraction": 0.1404075454823875,
+      "before_median_mean_ms": 0.7498097368421087,
+      "improvement_fraction": 0.020533981076593565,
+      "label": "Conduction"
+    },
+    "evaporation": {
+      "after_median_mean_ms": 0.3446218421052552,
+      "after_share_fraction": 0.065885947779482,
+      "before_median_mean_ms": 0.34986552631578566,
+      "improvement_fraction": 0.014987713324454687,
+      "label": "Evaporation"
+    },
+    "input_validation": {
+      "after_median_mean_ms": 0.0032263157894887435,
+      "after_share_fraction": 0.0006168177627042291,
+      "before_median_mean_ms": 0.0032678947368379088,
+      "improvement_fraction": 0.012723465930667656,
+      "label": "Input validation"
+    },
+    "pyrolysis": {
+      "after_median_mean_ms": 0.24197447368421318,
+      "after_share_fraction": 0.04626148313680144,
+      "before_median_mean_ms": 0.2481602631578953,
+      "improvement_fraction": 0.024926591368684706,
+      "label": "Pyrolysis"
+    },
+    "result_aggregation": {
+      "after_median_mean_ms": 0.01481684210525938,
+      "after_share_fraction": 0.0028327330596352326,
+      "before_median_mean_ms": 0.015071315789483578,
+      "improvement_fraction": 0.016884636204210116,
+      "label": "Result aggregation"
+    },
+    "sensible_heat": {
+      "after_median_mean_ms": 2.1018278947368345,
+      "after_share_fraction": 0.40183443413837505,
+      "before_median_mean_ms": 2.2586681578947347,
+      "improvement_fraction": 0.06943926783121974,
+      "label": "Sensible heat"
+    },
+    "state_finalize": {
+      "after_median_mean_ms": 1.735132631578956,
+      "after_share_fraction": 0.3317284164471796,
+      "before_median_mean_ms": 2.09857921052632,
+      "improvement_fraction": 0.17318697198768696,
+      "label": "Clamp + phase"
+    }
+  },
+  "status": "ok",
+  "unprofiled": {
+    "two_log_step_mean_ms": {
+      "after_median": 5.2922497368421055,
+      "before": 5.651616052631569,
+      "improvement_fraction": 0.06358647021361817
+    },
+    "two_log_step_p95_ms": {
+      "after_median": 8.027199999999901,
+      "before": 8.491600000000155,
+      "improvement_fraction": 0.05468934005372898
+    },
+    "wall_seconds": {
+      "after_median": 2.4060232,
+      "before": 2.5222274,
+      "improvement_fraction": 0.046072055200098085
+    }
+  }
+}

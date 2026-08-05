@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#15120f"/>
+  <style>
+    text { font-family: "Segoe UI", Arial, sans-serif; fill: #fff7e9; }
+    .title { font-size: 30px; font-weight: 700; }
+    .subtitle { font-size: 14px; fill: #d7b982; }
+    .label { font-size: 13px; font-weight: 600; }
+    .value { font-size: 12px; fill: #ded2c0; }
+    .share { font-size: 11px; fill: #82d8aa; }
+    .heading { font-size: 16px; font-weight: 700; }
+    .big { font-size: 24px; font-weight: 700; fill: #82d8aa; }
+    .small { font-size: 12px; fill: #bcae9a; }
+  </style>
+  <text x="60" y="50" class="title">Phase 6T · CPU wood step internals</text>
+  <text x="60" y="78" class="subtitle">2,304 cells · 400 steps · profile medians of 3 before + 3 after runs · CPU only</text>
+  <rect x="54" y="102" width="856" height="438" rx="10" fill="#1b211d" stroke="#4f966b"/>
+  <text x="250" y="124" class="small">BEFORE / AFTER</text>
+  <text x="76" y="154" class="label">Sensible heat</text>
+  <rect x="250" y="139" width="330.00" height="11" rx="3" fill="#d7b982"/>
+  <rect x="250" y="156" width="307.09" height="11" rx="3" fill="#58b889"/>
+  <text x="600" y="149" class="value">2.259 → 2.102 ms</text>
+  <text x="790" y="164" class="share">40.2% after</text><text x="76" y="202" class="label">Clamp + phase</text>
+  <rect x="250" y="187" width="306.61" height="11" rx="3" fill="#d7b982"/>
+  <rect x="250" y="204" width="253.51" height="11" rx="3" fill="#58b889"/>
+  <text x="600" y="197" class="value">2.099 → 1.735 ms</text>
+  <text x="790" y="212" class="share">33.2% after</text><text x="76" y="250" class="label">Conduction</text>
+  <rect x="250" y="235" width="109.55" height="11" rx="3" fill="#d7b982"/>
+  <rect x="250" y="252" width="107.30" height="11" rx="3" fill="#58b889"/>
+  <text x="600" y="245" class="value">0.750 → 0.734 ms</text>
+  <text x="790" y="260" class="share">14.0% after</text><text x="76" y="298" class="label">Evaporation</text>
+  <rect x="250" y="283" width="51.12" height="11" rx="3" fill="#d7b982"/>
+  <rect x="250" y="300" width="50.35" height="11" rx="3" fill="#58b889"/>
+  <text x="600" y="293" class="value">0.350 → 0.345 ms</text>
+  <text x="790" y="308" class="share">6.6% after</text><text x="76" y="346" class="label">Pyrolysis</text>
+  <rect x="250" y="331" width="36.26" height="11" rx="3" fill="#d7b982"/>
+  <rect x="250" y="348" width="35.35" height="11" rx="3" fill="#58b889"/>
+  <text x="600" y="341" class="value">0.248 → 0.242 ms</text>
+  <text x="790" y="356" class="share">4.6% after</text><text x="76" y="394" class="label">Char oxidation</text>
+  <rect x="250" y="379" width="8.39" height="11" rx="3" fill="#d7b982"/>
+  <rect x="250" y="396" width="8.33" height="11" rx="3" fill="#58b889"/>
+  <text x="600" y="389" class="value">0.057 → 0.057 ms</text>
+  <text x="790" y="404" class="share">1.1% after</text><text x="76" y="442" class="label">Result aggregation</text>
+  <rect x="250" y="427" width="2.20" height="11" rx="3" fill="#d7b982"/>
+  <rect x="250" y="444" width="2.16" height="11" rx="3" fill="#58b889"/>
+  <text x="600" y="437" class="value">0.015 → 0.015 ms</text>
+  <text x="790" y="452" class="share">0.3% after</text><text x="76" y="490" class="label">Input validation</text>
+  <rect x="250" y="475" width="0.48" height="11" rx="3" fill="#d7b982"/>
+  <rect x="250" y="492" width="0.47" height="11" rx="3" fill="#58b889"/>
+  <text x="600" y="485" class="value">0.003 → 0.003 ms</text>
+  <text x="790" y="500" class="share">0.1% after</text>
+  <rect x="934" y="102" width="212" height="438" rx="10" fill="#211817" stroke="#a77a38"/>
+  <text x="954" y="136" class="heading">MEASURED RESULT</text>
+  <text x="954" y="178" class="small">Profiled internal total</text>
+  <text x="954" y="207" class="big">−9.5%</text>
+  <text x="954" y="230" class="small">5.778 → 5.231 ms</text>
+  <text x="954" y="274" class="small">Unprofiled step mean</text>
+  <text x="954" y="303" class="big">−6.4%</text>
+  <text x="954" y="326" class="small">5.652 → 5.292 ms</text>
+  <text x="954" y="368" class="small">Step p95 −5.5%</text>
+  <text x="954" y="392" class="small">80 s wall −4.6%</text>
+  <text x="954" y="440" class="small">No GPU utilization claim</text>
+  <text x="954" y="464" class="small">No grid or dt change</text>
+  <text x="954" y="488" class="small">Opt-in timing dictionary</text>
+  <rect x="54" y="566" width="1092" height="64" rx="9" fill="#1c2820" stroke="#58b889" stroke-width="2"/>
+  <text x="78" y="594" class="heading">STATE IDENTICAL · dry ignition 66.2 s · wet not ignited by 80 s</text>
+  <text x="78" y="617" class="small">Dry/wet authoritative JSON SHA-256 unchanged · mass-balance error ≤ 1e−9 kg · equations unchanged.</text>
+  <text x="60" y="658" class="small">Before/after segment bars share one scale. Profile timing changes execution shape slightly; production result uses unprofiled runs.</text>
+</svg>

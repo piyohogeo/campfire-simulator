@@ -48,6 +48,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - 実行情報9項目・外部証拠3件・責任研究室レビュー4項目を空欄で引き渡し、全入力後もリポジトリによる実行許可を拒否するPhase 6Qハンドオフ契約とSVGレポート。
 - 物理式・格子・時間刻みを変えず、スカラー熱流束、熱伝導スナップショット、単一走査メトリクス、Flow入力再利用でCPU木材更新を短縮するPhase 6R性能改善、単体ベンチ、比較SVG。
 - 起動、CPU木材、集計、Flow写像、Emitter USD、薪表示USD、Kit／Flow更新、画像保存、最終出力を排他的に測り、2 runの中央値と範囲を示すPhase 6S時間内訳レポート。
+- CPU木材stepを8つの排他的区間へ分けるオプトイン計測、状態SHA-256不変条件、3 run中央値、相判定・定数比熱ホットパス改善を示すPhase 6T内部プロファイルとSVGレポート。
 - Thurner–Mannの公開A/E組をSI単位で固定したPhase 6E一次Arrhenius熱分解、48候補探索、温度–速度曲線SVG。
 
 ### Changed

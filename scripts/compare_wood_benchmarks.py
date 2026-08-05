@@ -43,6 +43,9 @@ def compare(before: dict, after: dict) -> dict:
         raise ValueError(f"Benchmark configurations differ: {changed}")
     if before["ignition_seconds"] != after["ignition_seconds"]:
         raise ValueError("Ignition behavior changed during performance comparison")
+    for field in ("dry_state_sha256", "wet_state_sha256"):
+        if field in before and field in after and before[field] != after[field]:
+            raise ValueError(f"Authoritative wood state changed: {field}")
     mass_error_limit_kg = 1.0e-9
     if any(
         abs(result[field]) > mass_error_limit_kg
