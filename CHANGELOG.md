@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6AH opt-in per-operation sensible-heat profile, three-run invariant gate, and browser-readable candidate-selection report.
 - Added an opt-in deterministic Phase 3 viewport-frame capture and ffmpeg H.264 encoding path, with a real 1280×720 burn-scenario video embedded in the browser-readable development log.
 - Added reusable compact development-log video triggers and an accessible shared playback modal with focus restoration, Escape/backdrop close behavior, and direct-file fallback.
 
@@ -71,6 +72,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
+- Split three long-running coverage scenarios into two dedicated Kit test processes after the primary group twice reached its fixed 300-second limit; all 41 checks and their coverage modes remain enabled.
+- Moved real-wood, real-flame, laboratory-equipment testing and quantitative experimental calibration out of project scope; Phase 6N–6Q artifacts remain archived design history rather than completion gates.
 - MVPのFlow結合方針を、木材状態を正とする一方向結合から開始する方針へ確定。
 - アプリの既定シーンをPhase 2へ変更し、薪の権威位置からFlow Emitterを更新する構成へ拡張。
 - アプリの既定シーンをPhase 3へ変更し、Flow入力の所有者を木材熱モデルへ移行。

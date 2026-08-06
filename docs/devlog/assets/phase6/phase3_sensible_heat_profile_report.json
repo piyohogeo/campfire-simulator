@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "phase": "phase6ah",
+  "status": "ok",
+  "run_count": 3,
+  "environment": {
+    "application": "campfire.simulator.benchmark.kit",
+    "backend": "python",
+    "debugger_free_all_runs": true,
+    "profile_mode": "per-cell sensible-heat operation timers",
+    "profile_is_for_candidate_selection_not_adoption": true,
+    "interior_cells_per_log": 792,
+    "surface_cells_per_log": 360
+  },
+  "timing": {
+    "detailed_total_median_mean_ms": 4.2752,
+    "operation_total_median_mean_ms": 3.3758999999999997,
+    "profiled_parent_sensible_heat_median_mean_ms": 4.2775,
+    "profiled_two_log_step_median_mean_ms": 7.4464,
+    "profiled_scenario_median_seconds": 11.8275,
+    "segments": {
+      "heat_capacity_evaluation": {
+        "label": "Heat capacity evaluation",
+        "median_mean_ms": 2.6504,
+        "median_p95_ms": 3.3248,
+        "inclusive_share_percent": 61.99476047904191,
+        "operation_share_percent": 78.50943452116474
+      },
+      "interior_conduction_update": {
+        "label": "Interior conduction-only update",
+        "median_mean_ms": 0.2847,
+        "median_p95_ms": 0.364,
+        "inclusive_share_percent": 6.6593375748503,
+        "operation_share_percent": 8.433306673775883
+      },
+      "surface_boundary_update": {
+        "label": "Surface boundary update",
+        "median_mean_ms": 0.4408,
+        "median_p95_ms": 0.582,
+        "inclusive_share_percent": 10.310628742514972,
+        "operation_share_percent": 13.057258805059394
+      },
+      "loop_and_timer_overhead": {
+        "label": "Loop and timer overhead",
+        "median_mean_ms": 0.8993,
+        "median_p95_ms": 1.1173,
+        "inclusive_share_percent": 21.035273203592812,
+        "operation_share_percent": null
+      }
+    }
+  },
+  "selection": {
+    "primary_candidate": "heat_capacity_evaluation",
+    "operation_order": [
+      "heat_capacity_evaluation",
+      "surface_boundary_update",
+      "interior_conduction_update"
+    ],
+    "next_trial": "specialize constant dry-wood heat-capacity evaluation without changing bounds or material APIs",
+    "next_gate": "exact outputs plus alternating unprofiled step-loop and scenario improvement"
+  },
+  "equivalence": {
+    "exact_authoritative_outputs_across_runs": true,
+    "dry_state_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+    "wet_state_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+    "metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759",
+    "ignition_seconds": {
+      "dry": 66.2,
+      "wet": 166.4
+    },
+    "flow_active_blocks_peak_observed": [
+      294
+    ],
+    "flow_peak_is_not_authoritative": true
+  },
+  "runs": [
+    "artifacts\\phase3\\phase6ah\\sensible_heat_profile_1\\summary.json",
+    "artifacts\\phase3\\phase6ah\\sensible_heat_profile_2\\summary.json",
+    "artifacts\\phase3\\phase6ah\\sensible_heat_profile_3\\summary.json"
+  ]
+}

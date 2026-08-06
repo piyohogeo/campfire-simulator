@@ -63,6 +63,9 @@ pythonTests.exclude = [
     "campfire.app.tests.test_scene.TestScene.test_parallel_arrhenius_pathways_compete_and_conserve_product_mass",
     "campfire.app.tests.test_scene.TestScene.test_temperature_dependent_heat_capacity_is_normalized_and_clamped",
     "campfire.app.tests.test_scene.TestScene.test_wet_kindling_evaporates_and_ignites_after_dry_kindling",
+    "campfire.app.tests.test_scene.TestScene.test_collapse_scenario_releases_and_reignites_with_mass_balance",
+    "campfire.app.tests.test_scene.TestScene.test_log_cabin_air_feedback_ignites_before_dense_stack",
+    "campfire.app.tests.test_scene.TestScene.test_nist_reference_is_fixed_and_higher_flux_ignites_first",
 ]
 
 
@@ -81,6 +84,37 @@ pythonTests.include = [
     "campfire.app.tests.test_scene.TestScene.test_parallel_arrhenius_pathways_compete_and_conserve_product_mass",
     "campfire.app.tests.test_scene.TestScene.test_temperature_dependent_heat_capacity_is_normalized_and_clamped",
     "campfire.app.tests.test_scene.TestScene.test_wet_kindling_evaporates_and_ignites_after_dry_kindling",
+]
+
+
+[[test]]
+name = "collapse-coverage"
+dependencies = [
+]
+
+args = [
+]
+
+# The collapse and fixed-reference scenarios remain coverage-instrumented but
+# run outside the primary group so current hosts retain margin below 300 s.
+pythonTests.include = [
+    "campfire.app.tests.test_scene.TestScene.test_collapse_scenario_releases_and_reignites_with_mass_balance",
+    "campfire.app.tests.test_scene.TestScene.test_nist_reference_is_fixed_and_higher_flux_ignites_first",
+]
+
+
+[[test]]
+name = "air-feedback-coverage"
+dependencies = [
+]
+
+args = [
+]
+
+# This 180-second coupled scenario has its own coverage process because it
+# consumed roughly half of the primary process's fixed 300-second budget.
+pythonTests.include = [
+    "campfire.app.tests.test_scene.TestScene.test_log_cabin_air_feedback_ignites_before_dense_stack",
 ]
 
 

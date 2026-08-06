@@ -3,6 +3,7 @@ param(
     [ValidateSet("python", "numpy")]
     [string]$ArrayBackend = "python",
     [switch]$ProfileWoodInternals,
+    [switch]$ProfileSensibleHeat,
     [switch]$CollectWoodStateDiagnostics,
     [ValidateSet("original", "fast")]
     [string]$PythonSurfaceBoundaryPath = "fast",
@@ -35,6 +36,15 @@ $precomputedRuntimeTopology = $RuntimeTopology -eq "precomputed"
 if ($CollectWoodStateDiagnostics.IsPresent -and $deferCellPhaseUpdates) {
     throw "Wood state diagnostics require eager cell phase updates."
 }
+if ($ProfileSensibleHeat.IsPresent -and -not $ProfileWoodInternals.IsPresent) {
+    throw "Sensible-heat timing requires -ProfileWoodInternals."
+}
+if ($ProfileSensibleHeat.IsPresent -and $ArrayBackend -ne "python") {
+    throw "Sensible-heat timing requires the Python backend."
+}
+if ($ProfileSensibleHeat.IsPresent -and -not $usePythonSurfaceBoundaryFastPath) {
+    throw "Sensible-heat timing requires the fast surface path."
+}
 
 if (-not (Test-Path -LiteralPath $kit) -or -not (Test-Path -LiteralPath $app)) {
     throw "Application is not built. Run .\repo.bat build first."
@@ -60,6 +70,7 @@ $kitArgs = @(
     "--/exts/campfire.app/sceneOutputDir=$OutputDir",
     "--/exts/campfire.app/woodArrayBackend=$ArrayBackend",
     "--/exts/campfire.app/woodInternalTiming=$($ProfileWoodInternals.IsPresent.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/woodSensibleHeatTiming=$($ProfileSensibleHeat.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/woodStateDiagnostics=$($CollectWoodStateDiagnostics.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/pythonSurfaceBoundaryFastPath=$($usePythonSurfaceBoundaryFastPath.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/pythonStateClampFastPath=$($usePythonStateClampFastPath.ToString().ToLowerInvariant())",
@@ -95,6 +106,9 @@ if ($result.scenario.wood_array_backend -ne $ArrayBackend) {
 }
 if ([bool]$result.scenario.wood_internal_timing_enabled -ne $ProfileWoodInternals.IsPresent) {
     throw "Phase 3 used an unexpected wood internal timing setting."
+}
+if ([bool]$result.scenario.wood_sensible_heat_timing_enabled -ne $ProfileSensibleHeat.IsPresent) {
+    throw "Phase 3 used an unexpected sensible-heat timing setting."
 }
 if ([bool]$result.scenario.wood_state_diagnostics_enabled -ne $CollectWoodStateDiagnostics.IsPresent) {
     throw "Phase 3 used an unexpected wood state-diagnostics setting."
@@ -242,6 +256,29 @@ if ($ProfileWoodInternals.IsPresent) {
 }
 elseif (@($result.timing.wood_model_internal_segments.PSObject.Properties).Count -ne 0) {
     throw "Phase 3 collected wood internal timings without an explicit request."
+}
+if ($ProfileSensibleHeat.IsPresent) {
+    $expectedSensibleHeatSegments = @(
+        "heat_capacity_evaluation",
+        "interior_conduction_update",
+        "surface_boundary_update",
+        "loop_and_timer_overhead"
+    )
+    foreach ($name in $expectedSensibleHeatSegments) {
+        $segment = $result.timing.wood_sensible_heat_segments.$name
+        if ($null -eq $segment -or $segment.sample_count -ne 1180) {
+            throw "Phase 3 sensible-heat segment has an unexpected sample count: $name"
+        }
+        foreach ($field in @("total_ms", "mean_ms", "p95_ms", "max_ms")) {
+            $value = [double]$segment.$field
+            if ([double]::IsNaN($value) -or [double]::IsInfinity($value) -or $value -lt 0) {
+                throw "Phase 3 sensible-heat segment has an invalid $field value: $name"
+            }
+        }
+    }
+}
+elseif (@($result.timing.wood_sensible_heat_segments.PSObject.Properties).Count -ne 0) {
+    throw "Phase 3 collected sensible-heat timings without an explicit request."
 }
 if ($result.startup.extension_to_scenario_seconds -le 0) {
     throw "Phase 3 did not report extension-to-scenario startup time."

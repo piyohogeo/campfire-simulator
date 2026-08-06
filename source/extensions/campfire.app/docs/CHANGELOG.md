@@ -4,6 +4,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
 ## [0.1.0] - 2026-08-04
+- Added opt-in per-operation sensible-heat profiling with exact-state equivalence checks and a three-run Phase 6AH candidate-selection report.
+- Moved real-wood and laboratory-equipment experiments out of project scope while retaining Phase 6N–6Q artifacts as archived contracts.
+- Split three long coverage scenarios into dedicated Kit processes without removing checks or coverage after the primary process reached its fixed timeout.
 - Added opt-in fixed-camera Phase 3 video-frame capture metadata while retaining the normal two-image validation path by default.
 - Added a compact development-log video trigger and shared modal playback convention for future progress entries.
 - Added the Phase 6AG adopted-path Python internal re-profile and current hotspot report.

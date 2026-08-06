@@ -37,7 +37,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>41 / 41 passed</strong></div>
-        <div><span>次の焦点</span><strong>Split sensible-heat cost</strong></div>
+        <div><span>次の焦点</span><strong>Specialize heat-capacity path</strong></div>
       </div>
     </div>
   </header>
@@ -55,14 +55,14 @@
       <article class="shell entry">
         <aside class="entry-meta" aria-label="エントリ情報">
           <span class="phase-number">06</span>
-          <p><time datetime="2026-08-05">2026.08.05</time></p>
+          <p><time datetime="2026-08-06">2026.08.06</time></p>
           <span class="pill current">In progress</span>
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6AG · Adopted-path profile updated</p>
-            <h2>「それらしい」から、<br>誤差を示せるモデルへ。</h2>
-            <p>Phase 6AA〜6AEの採用後構成を内部タイマー付きで3回測り直しました。内部合計はPhase 6Yから47.20%短縮し、状態確定は支配区間ではなくなりました。現在は顕熱更新が3.0032 ms、内部時間の48.89%を占めます。このprofileは候補選定専用で、次の変更も非計測end-to-endゲートを別に通します。</p>
+            <p class="section-kicker">Phase 6AH · Sensible-heat cost decomposed</p>
+            <h2>測って絞り、<br>実時間へ近づける。</h2>
+            <p>顕熱更新をセル単位の操作へ分けて3回測定し、熱容量評価が計測対象3操作の78.51%を占めることを確認しました。実木材実験は正式にスコープ外へ移し、外部承認をソフトウェア開発の阻害要因から外しました。今回のprofileは候補選定専用で、変更を採用する前には非計測end-to-endゲートを別に通します。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -105,28 +105,28 @@
             <a href="assets/phase6/char_depth_measurement_protocol_report.svg" aria-label="Phase 6N 一致条件炭化深さ測定契約を開く">
               <img src="assets/phase6/char_depth_measurement_protocol_report.svg" width="1200" height="680" alt="35と70 kW毎平方メートル、60・180・300・600秒、各3反復の24試験と、厚さ変位・二つの炭化前線・試験片識別情報・不確かさを要求する閉じたデータゲート">
             </a>
-            <figcaption><div><strong>Matched measurement contract</strong><span>24 scheduled · 0 complete · physical thickness withheld</span></div></figcaption>
+            <figcaption><div><strong>Matched measurement contract · archived</strong><span>24 designed · 0 executed · real-wood experiments out of scope</span></div></figcaption>
           </figure>
 
           <figure class="capture-card">
             <a href="assets/phase6/char_depth_experiment_plan_report.svg" aria-label="Phase 6O 同期実験実施計画を開く">
               <img src="assets/phase6/char_depth_experiment_plan_report.svg" width="1200" height="680" alt="初期露出面基準の座標、DAQ基準の露出・点火・中断・消火タイムライン、質量・温度・表面・断面の取得、技術完成と実行未承認を示すSVG図">
             </a>
-            <figcaption><div><strong>Synchronized execution plan</strong><span>24 runs · 6 templates · technical complete · not authorized</span></div></figcaption>
+            <figcaption><div><strong>Synchronized execution plan · archived</strong><span>24 runs · 6 templates · retained as design history</span></div></figcaption>
           </figure>
 
           <figure id="phase6p-dry-run" class="capture-card">
             <a href="assets/phase6/char_depth_dry_run_report.svg" aria-label="Phase 6P オフラインrun-package dry runレポートを開く">
               <img src="assets/phase6/char_depth_dry_run_report.svg" width="1200" height="680" alt="最初のRun IDの6ファイルと2ディレクトリ、9つの空の実行時項目、計測値なし、実行未承認、取込み不可を示すSVG図">
             </a>
-            <figcaption><div><strong>Offline run-package dry run</strong><span>6 files + 2 directories · blank · not importable</span></div></figcaption>
+            <figcaption><div><strong>Offline run-package dry run · archived</strong><span>6 files + 2 directories · blank · no equipment run planned</span></div></figcaption>
           </figure>
 
           <figure id="phase6q-handoff" class="capture-card">
             <a href="assets/phase6/char_depth_lab_handoff_report.svg" aria-label="Phase 6Q 責任研究室ハンドオフレポートを開く">
               <img src="assets/phase6/char_depth_lab_handoff_report.svg" width="1200" height="680" alt="実行情報0/9、外部承認証拠0/3、責任研究室レビュー0/4、リポジトリ権限なし、実行不可を示すSVG図">
             </a>
-            <figcaption><div><strong>Responsible-laboratory handoff</strong><span>9 runtime · 3 evidence · 4 review · no local authority</span></div></figcaption>
+            <figcaption><div><strong>Responsible-laboratory handoff · archived</strong><span>9 + 3 + 4 slots · no longer a project dependency</span></div></figcaption>
           </figure>
 
           <figure id="phase6r-performance" class="capture-card">
@@ -241,6 +241,19 @@
             <figcaption><div><strong>Re-measure after cumulative changes</strong><span>internal −47.20% · sensible 48.89% · exact outputs · selection only</span></div></figcaption>
           </figure>
 
+          <figure id="phase6ah-sensible-heat" class="capture-card">
+            <a href="assets/phase6/phase3_sensible_heat_profile_report.svg" aria-label="Phase 6AH 顕熱更新の操作別プロファイルを開く">
+              <img src="assets/phase6/phase3_sensible_heat_profile_report.svg" width="1200" height="680" alt="顕熱更新を熱容量評価、内部セル更新、表面境界更新、ループとタイマー負荷へ分け、熱容量評価を次候補として示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Measure before changing heat capacity</strong><span>2.6504 ms · 78.51% of measured operations · exact outputs</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase3/phase3_burn.mp4" data-video-poster="assets/phase3/frame_0650.png" data-video-title="Phase 6AH unchanged burn scenario" data-video-meta="Same authoritative Phase 3 output · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · 同一出力</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <figure class="capture-card">
             <a href="assets/phase6/replicate_holdout_report.svg" aria-label="Phase 6C 合板反復ホールドアウトレポートを開く">
               <img src="assets/phase6/replicate_holdout_report.svg" width="1200" height="680" alt="未使用の合板SAMP.3について、着火時刻と平均質量減少速度の観測・初期・SAMP.1/2選定値を並べたSVGグラフ">
@@ -290,19 +303,21 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Transport gate</strong><small>5 missing inputs · residence time withheld</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Char geometry</strong><small>5 plies · physical thickness and shrinkage null</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>External depth</strong><small>3 / 10 match · not scored · transfer blocked</small></p></div>
-              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Measurement gate</strong><small>24 scheduled · 0 complete · calibration blocked</small></p></div>
-              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Execution plan</strong><small>24 runs · 6 templates · 3 approvals missing</small></p></div>
-              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Offline dry run</strong><small>6 files + 2 directories · blank · import blocked</small></p></div>
-              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Lab handoff</strong><small>9 + 3 + 4 slots · complete input cannot grant authority</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Measurement contract</strong><small>archived · real-wood experiments out of scope</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Execution plan</strong><small>archived · not a completion gate</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Offline package</strong><small>archived · no equipment run planned</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Lab handoff</strong><small>archived · no external dependency remains</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>CPU performance</strong><small>step −14.5% · metrics −59.0% · ignition unchanged</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Time anatomy</strong><small>2 runs · 10 exclusive segments · exact sample counts</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Step internals</strong><small>8 segments · 3 + 3 profiles · state SHA-256 identical</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Array boundary</strong><small>7 paths · 3 runs · exact isolated SHA-256</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Complete-step backend</strong><small>400-step history + state + metrics exact</small></p></div>
-              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Standard tests</strong><small>35 + 4 coverage · 2 numerical · 41 / 41 passed</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Standard tests</strong><small>32 + 4 + 2 + 1 coverage · 2 numerical · 41 / 41 passed</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Debugger-free E2E</strong><small>4 runs · 0 debug extensions · exact outputs</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Python internal profile</strong><small>3 runs · 8 × 1,180 samples · exact authoritative outputs</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Sensible-heat trial</strong><small>3 + 3 profiled · 3 + 3 unprofiled · rejected</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Sensible-heat profile</strong><small>3 runs · 4 × 1,180 samples · exact outputs</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Default timing path</strong><small>off · 0 detailed segments · 10.2087 s scenario</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>
             </div>
           </section>
@@ -322,17 +337,15 @@
               <div><dt>Physical char thickness</dt><dd>null · shrinkage unresolved</dd></div>
               <div><dt>External plywood char depth</dt><dd>13.77 ± 0.60 mm</dd></div>
               <div><dt>Comparable conditions</dt><dd>3 / 10 · error null</dd></div>
-              <div><dt>Matched measurement slots</dt><dd>24 scheduled / 0 complete</dd></div>
-              <div><dt>Physical thickness gate</dt><dd>closed · all 24 required</dd></div>
-              <div><dt>Execution schedule</dt><dd>24 unique Run IDs</dd></div>
-              <div><dt>Technical templates</dt><dd>6 / 6 present</dd></div>
-              <div><dt>External approvals</dt><dd>0 / 3 · not authorized</dd></div>
-              <div><dt>Dry-run structure</dt><dd>6 files + 2 directories</dd></div>
-              <div><dt>Runtime metadata</dt><dd>9 null · never zero-filled</dd></div>
-              <div><dt>Measurements / import</dt><dd>false / false</dd></div>
-              <div><dt>Handoff runtime fields</dt><dd>0 / 9 supplied</dd></div>
-              <div><dt>Evidence / lab review</dt><dd>0 / 3 · 0 / 4</dd></div>
-              <div><dt>Repository authority</dt><dd>none · execution false</dd></div>
+              <div><dt>Experiment scope</dt><dd>real wood / equipment excluded</dd></div>
+              <div><dt>Measurement contract</dt><dd>24 slots · archived</dd></div>
+              <div><dt>Physical thickness calibration</dt><dd>not pursued</dd></div>
+              <div><dt>Execution schedule</dt><dd>24 Run IDs · archived</dd></div>
+              <div><dt>Technical templates</dt><dd>6 / 6 retained</dd></div>
+              <div><dt>External approvals</dt><dd>not required for software work</dd></div>
+              <div><dt>Dry-run structure</dt><dd>6 files + 2 directories · archived</dd></div>
+              <div><dt>Measurements / import</dt><dd>not planned</dd></div>
+              <div><dt>Lab handoff</dt><dd>archived · no dependency</dd></div>
               <div><dt>CPU wood step mean</dt><dd>6.935 → 5.932 ms</dd></div>
               <div><dt>CPU metrics mean</dt><dd>1.751 → 0.719 ms</dd></div>
               <div><dt>App wood step mean</dt><dd>43.820 → 35.386 ms</dd></div>
@@ -394,6 +407,9 @@
               <div><dt>Current sensible heat</dt><dd>3.0032 ms · 48.89%</dd></div>
               <div><dt>Current pyrolysis / conduction</dt><dd>1.0256 / 0.8524 ms</dd></div>
               <div><dt>Current state finalize</dt><dd>0.3448 ms · 5.61%</dd></div>
+              <div><dt>Heat-capacity evaluation</dt><dd>2.6504 ms · 78.51% of operations</dd></div>
+              <div><dt>Interior / surface update</dt><dd>0.2847 / 0.4408 ms</dd></div>
+              <div><dt>Standard regression</dt><dd>41 / 41 · 595.0 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
@@ -409,8 +425,8 @@
           </section>
 
           <div class="notes-grid">
-            <section class="note caution"><p class="note-label">Known limits</p><h3>profileは候補選定であって採用判定ではない</h3><p>内部タイマー付きの数値は現在の構成比を示しますが、計測なしの性能改善を保証しません。Flow peakもrun間で変動する非権威診断です。実設備検証は引き続き保留です。</p></section>
-            <section class="note next"><p class="note-label">What comes next</p><h3>顕熱3.0032 msの中身を分ける</h3><p>熱容量評価、792内部セルの伝導のみ更新、360表面セルの放射・対流・外部加熱を分離して測ります。Phase 6Zで棄却した単純なループ外移動は繰り返しません。</p></section>
+            <section class="note caution"><p class="note-label">Known limits</p><h3>profileは候補選定であって採用判定ではない</h3><p>セル単位タイマーは絶対時間を増やすため、78.51%は操作順位を示す値です。計測なしの性能改善はまだ保証しません。Flow peakも非権威診断です。実木材実験は保留ではなくスコープ外です。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>熱容量評価の重複を監査する</h3><p>定数乾燥木材比熱の検査・呼出し契約を確認し、物理境界と材料APIを保った限定試作を作ります。採否は完全同値と交互順序の非計測end-to-end改善で決めます。</p></section>
           </div>
         </div>
       </article>

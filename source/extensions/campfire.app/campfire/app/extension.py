@@ -1019,6 +1019,9 @@ class CampfireAppExtension(omni.ext.IExt):
         profile_wood_internals = settings.get_as_bool(
             f"{SETTINGS_ROOT}/woodInternalTiming"
         )
+        profile_sensible_heat = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/woodSensibleHeatTiming"
+        )
         collect_wood_state_diagnostics = settings.get_as_bool(
             f"{SETTINGS_ROOT}/woodStateDiagnostics"
         )
@@ -1051,6 +1054,12 @@ class CampfireAppExtension(omni.ext.IExt):
             raise ValueError(
                 "Wood state diagnostics are incompatible with deferred cell phases"
             )
+        if profile_sensible_heat and not profile_wood_internals:
+            raise ValueError("Sensible-heat timing requires wood internal timing")
+        if profile_sensible_heat and array_backend != PYTHON_ARRAY_BACKEND:
+            raise ValueError("Sensible-heat timing requires the Python backend")
+        if profile_sensible_heat and not python_surface_boundary_fast_path:
+            raise ValueError("Sensible-heat timing requires the fast surface path")
         flow_interface = _flowusd.acquire_flowusd_interface()
         dry_prim = stage.GetPrimAtPath(f"/World/Logs/{PHASE3_DRY_LOG_ID}")
         wet_prim = stage.GetPrimAtPath(f"/World/Logs/{PHASE3_WET_LOG_ID}")
@@ -1080,6 +1089,7 @@ class CampfireAppExtension(omni.ext.IExt):
         video_capture_times_ms = []
         step_loop_times_ms = []
         wood_internal_times_ms: dict[str, list[float]] = {}
+        sensible_heat_internal_times_ms: dict[str, list[float]] = {}
         wood_state_diagnostics = (
             {"dry": {}, "wet": {}} if collect_wood_state_diagnostics else {}
         )
@@ -1101,10 +1111,13 @@ class CampfireAppExtension(omni.ext.IExt):
                 model_started = time.perf_counter()
                 dry_internal_timing = {} if profile_wood_internals else None
                 wet_internal_timing = {} if profile_wood_internals else None
+                dry_sensible_heat_timing = {} if profile_sensible_heat else None
+                wet_sensible_heat_timing = {} if profile_sensible_heat else None
                 dry_result = dry_model.step(
                     PHASE3_MODEL_DT_SECONDS,
                     PHASE3_EXTERNAL_HEAT_FLUX_W_M2,
                     timing_ms=dry_internal_timing,
+                    sensible_heat_timing_ms=dry_sensible_heat_timing,
                     array_backend=array_backend,
                     python_surface_boundary_fast_path=(
                         python_surface_boundary_fast_path
@@ -1121,6 +1134,7 @@ class CampfireAppExtension(omni.ext.IExt):
                     PHASE3_MODEL_DT_SECONDS,
                     PHASE3_EXTERNAL_HEAT_FLUX_W_M2,
                     timing_ms=wet_internal_timing,
+                    sensible_heat_timing_ms=wet_sensible_heat_timing,
                     array_backend=array_backend,
                     python_surface_boundary_fast_path=(
                         python_surface_boundary_fast_path
@@ -1148,6 +1162,24 @@ class CampfireAppExtension(omni.ext.IExt):
                         wood_internal_times_ms.setdefault(segment, []).append(
                             dry_internal_timing[segment]
                             + wet_internal_timing[segment]
+                        )
+                if (
+                    dry_sensible_heat_timing is not None
+                    and wet_sensible_heat_timing is not None
+                ):
+                    if (
+                        dry_sensible_heat_timing.keys()
+                        != wet_sensible_heat_timing.keys()
+                    ):
+                        raise RuntimeError(
+                            "Dry and wet sensible-heat timing segments differ"
+                        )
+                    for segment in dry_sensible_heat_timing:
+                        sensible_heat_internal_times_ms.setdefault(
+                            segment, []
+                        ).append(
+                            dry_sensible_heat_timing[segment]
+                            + wet_sensible_heat_timing[segment]
                         )
                 results = {"dry": dry_result, "wet": wet_result}
 
@@ -1403,6 +1435,10 @@ class CampfireAppExtension(omni.ext.IExt):
                 segment: summarize_timing_ms(values, step_warmup_samples)
                 for segment, values in wood_internal_times_ms.items()
             }
+            sensible_heat_internal_timing = {
+                segment: summarize_timing_ms(values, step_warmup_samples)
+                for segment, values in sensible_heat_internal_times_ms.items()
+            }
 
             model_summaries = {}
             for name, model in models.items():
@@ -1461,12 +1497,24 @@ class CampfireAppExtension(omni.ext.IExt):
                         PHASE3_MODEL_DT_SECONDS * video_frame_interval_steps, 6
                     ),
                     "frames": video_frames,
-                    "capture_timing": summarize_timing_ms(video_capture_times_ms),
+                    "capture_timing": (
+                        summarize_timing_ms(video_capture_times_ms)
+                        if video_capture_times_ms
+                        else {
+                            "sample_count": 0,
+                            "warmup_samples_excluded": 0,
+                            "total_ms": 0.0,
+                            "mean_ms": 0.0,
+                            "p95_ms": 0.0,
+                            "max_ms": 0.0,
+                        }
+                    ),
                 },
                 "startup": startup_timing,
                 "scenario": {
                     "wood_array_backend": array_backend,
                     "wood_internal_timing_enabled": profile_wood_internals,
+                    "wood_sensible_heat_timing_enabled": profile_sensible_heat,
                     "wood_state_diagnostics_enabled": (
                         collect_wood_state_diagnostics
                     ),
@@ -1544,6 +1592,7 @@ class CampfireAppExtension(omni.ext.IExt):
                     ),
                     "segments": detailed_timing,
                     "wood_model_internal_segments": wood_internal_timing,
+                    "wood_sensible_heat_segments": sensible_heat_internal_timing,
                     "wood_model_internal_total_mean_ms": round(
                         sum(
                             segment["mean_ms"]

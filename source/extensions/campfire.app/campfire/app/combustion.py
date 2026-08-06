@@ -520,6 +520,7 @@ class WoodThermalModel:
         state_diagnostics: dict[str, int] | None = None,
         python_state_clamp_fast_path: bool = True,
         update_cell_phases: bool = True,
+        sensible_heat_timing_ms: dict[str, float] | None = None,
     ) -> CombustionStepResult:
         """Advance one explicit SI-unit thermal/reaction step.
 
@@ -536,6 +537,13 @@ class WoodThermalModel:
             raise ValueError("Wood state diagnostics require the Python backend")
         if state_diagnostics is not None and not update_cell_phases:
             raise ValueError("Wood state diagnostics require cell phase updates")
+        if sensible_heat_timing_ms is not None:
+            if not timing_enabled:
+                raise ValueError("Sensible-heat timing requires wood-step timing")
+            if array_backend != PYTHON_ARRAY_BACKEND:
+                raise ValueError("Sensible-heat timing requires the Python backend")
+            if not python_surface_boundary_fast_path:
+                raise ValueError("Sensible-heat timing requires the fast surface path")
         if not math.isfinite(dt_seconds) or dt_seconds <= 0.0:
             raise ValueError("dt_seconds must be finite and positive")
         scalar_heat_flux_w_m2 = None
@@ -604,37 +612,102 @@ class WoodThermalModel:
             )
         else:
             heat_capacities_j_k = [0.0] * len(cells)
-            for index, cell in enumerate(cells):
-                heat_capacity = self._heat_capacity_j_k(cell)
-                heat_capacities_j_k[index] = heat_capacity
-                area = cell.external_area_m2 * cell.surface_exposure
-                if python_surface_boundary_fast_path and area == 0.0:
-                    cell.temperature_k += conduction_energy_j[index] / heat_capacity
-                    continue
-                heat_flux_w_m2 = (
-                    scalar_heat_flux_w_m2
-                    if scalar_heat_flux_w_m2 is not None
-                    else heat_fluxes[index]
-                )
-                external_heat_w = heat_flux_w_m2 * p.radiant_absorptivity * area
-                convective_loss_w = p.convection_w_m2_k * area * (
-                    cell.temperature_k - ambient
-                )
-                radiation_loss_w = (
-                    p.emissivity
-                    * sigma
-                    * area
-                    * (cell.temperature_k**4 - ambient**4)
-                )
-                external_heat_total += external_heat_w * dt_seconds
-                net_energy_j = conduction_energy_j[index] + (
-                    external_heat_w - convective_loss_w - radiation_loss_w
-                ) * dt_seconds
-                cell.temperature_k += net_energy_j / heat_capacity
+            if sensible_heat_timing_ms is not None:
+                heat_capacity_evaluation_ms = 0.0
+                interior_conduction_update_ms = 0.0
+                surface_boundary_update_ms = 0.0
+                for index, cell in enumerate(cells):
+                    operation_started = time.perf_counter()
+                    heat_capacity = self._heat_capacity_j_k(cell)
+                    heat_capacity_evaluation_ms += (
+                        time.perf_counter() - operation_started
+                    ) * 1000.0
+                    heat_capacities_j_k[index] = heat_capacity
+                    area = cell.external_area_m2 * cell.surface_exposure
+                    if area == 0.0:
+                        operation_started = time.perf_counter()
+                        cell.temperature_k += (
+                            conduction_energy_j[index] / heat_capacity
+                        )
+                        interior_conduction_update_ms += (
+                            time.perf_counter() - operation_started
+                        ) * 1000.0
+                        continue
+                    operation_started = time.perf_counter()
+                    heat_flux_w_m2 = (
+                        scalar_heat_flux_w_m2
+                        if scalar_heat_flux_w_m2 is not None
+                        else heat_fluxes[index]
+                    )
+                    external_heat_w = heat_flux_w_m2 * p.radiant_absorptivity * area
+                    convective_loss_w = p.convection_w_m2_k * area * (
+                        cell.temperature_k - ambient
+                    )
+                    radiation_loss_w = (
+                        p.emissivity
+                        * sigma
+                        * area
+                        * (cell.temperature_k**4 - ambient**4)
+                    )
+                    external_heat_total += external_heat_w * dt_seconds
+                    net_energy_j = conduction_energy_j[index] + (
+                        external_heat_w - convective_loss_w - radiation_loss_w
+                    ) * dt_seconds
+                    cell.temperature_k += net_energy_j / heat_capacity
+                    surface_boundary_update_ms += (
+                        time.perf_counter() - operation_started
+                    ) * 1000.0
+            else:
+                for index, cell in enumerate(cells):
+                    heat_capacity = self._heat_capacity_j_k(cell)
+                    heat_capacities_j_k[index] = heat_capacity
+                    area = cell.external_area_m2 * cell.surface_exposure
+                    if python_surface_boundary_fast_path and area == 0.0:
+                        cell.temperature_k += conduction_energy_j[index] / heat_capacity
+                        continue
+                    heat_flux_w_m2 = (
+                        scalar_heat_flux_w_m2
+                        if scalar_heat_flux_w_m2 is not None
+                        else heat_fluxes[index]
+                    )
+                    external_heat_w = heat_flux_w_m2 * p.radiant_absorptivity * area
+                    convective_loss_w = p.convection_w_m2_k * area * (
+                        cell.temperature_k - ambient
+                    )
+                    radiation_loss_w = (
+                        p.emissivity
+                        * sigma
+                        * area
+                        * (cell.temperature_k**4 - ambient**4)
+                    )
+                    external_heat_total += external_heat_w * dt_seconds
+                    net_energy_j = conduction_energy_j[index] + (
+                        external_heat_w - convective_loss_w - radiation_loss_w
+                    ) * dt_seconds
+                    cell.temperature_k += net_energy_j / heat_capacity
         if timing_enabled:
-            timing_ms["sensible_heat"] = (
+            sensible_heat_elapsed_ms = (
                 time.perf_counter() - segment_started
             ) * 1000.0
+            timing_ms["sensible_heat"] = sensible_heat_elapsed_ms
+            if sensible_heat_timing_ms is not None:
+                measured_ms = (
+                    heat_capacity_evaluation_ms
+                    + interior_conduction_update_ms
+                    + surface_boundary_update_ms
+                )
+                sensible_heat_timing_ms.update(
+                    {
+                        "heat_capacity_evaluation": heat_capacity_evaluation_ms,
+                        "interior_conduction_update": (
+                            interior_conduction_update_ms
+                        ),
+                        "surface_boundary_update": surface_boundary_update_ms,
+                        "loop_and_timer_overhead": max(
+                            0.0, sensible_heat_elapsed_ms - measured_ms
+                        ),
+                    }
+                )
             segment_started = time.perf_counter()
 
         for index, cell in enumerate(cells):
