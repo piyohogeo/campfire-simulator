@@ -1767,3 +1767,17 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 可視化と再現: `run_phase6av_native_conduction.ps1`がVS2022環境、CMake/NMake build、Kit Pythonの3方式×3 run、解析を`69.9 s`で完了した。`native_conduction_boundary_report.json/.svg`へ辺数、方式別mean／p95、Phase 6AUとの差、状態同値、伝導保存誤差、未移植区間を保存する。描画は変えていないため動画はPhase 6AMの実画面MP4を再参照する。
 - 検証: Python／PowerShell構文、MSVC build、C ABI、raw/report JSON、SVG寸法を個別に検査した。標準Kit suiteはcoverage付き`41 / 41`が合格し、wet-kindling`114.4 s`、collapse`283.7 s`を含む全体を`476.5 s`で完了した。production appへnative経路は未接続である。
 - 次: `volatile_potential_kg`、`oxygen_factor`とstep／累積生成物をABIへ追加し、蒸発、一次または並列Arrhenius熱分解、二次tar変換、炭酸化を既存順序で移す。まず定数比熱・区分線形経路の完全stepを全セル履歴、step result、質量収支、着火時刻でlockstep比較し、その後Arrheniusと公開mutable stateのfallbackを別gateにする。
+
+## 79. Phase 6AW native常駐・区分線形完全step候補
+
+### 2026-08-07: 反応、相確定、step出力、累積生成物まで同じ常駐境界で一致させる
+
+- 対象境界: Phase 6AVの顕熱・伝導に、蒸発、区分線形一次熱分解、炭酸化、温度／質量clamp、相分類を既存Pythonと同じ順序で追加した。権威セル状態へ`volatile_potential_kg`と`oxygen_factor`を加え、薪ごとの経過時間、7累積生成物、9 step出力を連続配列としてnative側へ常駐させる。Python production backend、権威JSON schema、Flow、USD、描画、PhysXは変更しない。
+- 数値契約: 水分蒸発は顕熱後の余剰エネルギーと最大蒸発率で制限し、区分線形熱分解は温度係数・残存volatile potential・反応熱・char yield、炭酸化は温度係数・酸素係数・ash yield・反応熱を既存のセル順で適用する。step出力は蒸発水、熱分解ガス、charガス、外部熱、一次ガス／tar／char、二次変換量、未変換tar、累積は既存7項目の順序を固定する。区分線形モデルでは一次tarと二次変換は0である。
+- 測定方法: Phase 6AVと同じ乾燥／湿潤薪を交互に20本、計`23,040`セル・`62,400`伝導辺、`dt = 0.2 s`、`150 kW/m²`とした。乾燥薪を60秒、湿潤薪を160秒まで事前進行させた後、180 step、先頭20 step除外、3 runでPython完全step、毎step往復、native常駐の順序を回転した。これにより乾燥／湿潤の両着火と反応生成物を同じ36モデル秒窓で比較した。
+- 同値・保存gate: 最大温度差`1 × 10⁻8 K`、各セル質量差`1 × 10⁻12 kg`、相不一致`0`、各step出力差`1 × 10⁻8`、着火時刻差`0.2 s`、候補の質量収支誤差`1 × 10⁻9 kg`、伝導scratch和`1 × 10⁻9 J`以下を事前固定した。全3 runの両native方式は温度、全質量、相、累積生成物、全step出力、最終状態SHA-256、step履歴SHA-256までPython参照と完全一致した。乾燥／湿潤着火は`66.2 / 166.4 s`で一致し、最大質量収支誤差は`6.54 × 10⁻13 kg`、伝導保存誤差は`4.21 × 10⁻13 J`だった。
+- 性能結果: 3 run中央値のmean／p95はPython完全step`42.3200 / 52.8123 ms`、毎step往復`34.5211 / 42.5784 ms`、native常駐完全step`0.6649 / 0.9767 ms`だった。常駐候補はPython比p95`54.07倍`で4 ms局所gate内にあり、Phase 6AVの伝導までのp95`0.5426 ms`に対する反応・出力増分は`+0.4341 ms`だった。毎step Pythonオブジェクト往復は引き続き棄却する。
+- 判断: 定数比熱・区分線形モデルについて、状態、隣接トポロジー、反応、相、step／累積出力をnative常駐させる完全step境界を次段階へ採用する。ただしproduction backend採用ではない。並列Arrhenius一次熱分解、二次tar変換、runtime metrics、公開mutable stateのfallback、5 Hz app入出力契約をまだ含まないため、0.9767 msを完成solverや完成frameの性能値として扱わない。
+- 可視化と再現: `run_phase6aw_native_piecewise_complete.ps1`がVS2022環境、CMake/NMake build、Kit Pythonの3方式×3 run、解析を`61.2 s`で完了した。`native_piecewise_complete_step_report.json/.svg`へ方式別mean／p95、Phase 6AVとの差、着火時刻、状態・履歴同値、質量／伝導保存誤差、未実装gateを保存する。描画経路は変えていないため動画はPhase 6AMの実画面MP4を再参照する。
+- 検証: Python／PowerShell構文、MSVC build、C ABI load、raw/report JSON、SVG寸法を個別に検査した。標準Kit suiteはcoverage付き`41 / 41`が合格し、通常32件`35.0 s`、熱3件`4.3 s`、湿潤着火1件`108.0 s`、崩落1件`262.9 s`、固定参照1件`4.5 s`、通気1件`5.7 s`、数値2件`27.2 s`、runner全体`455.3 s`だった。production appへnative経路は未接続である。
+- 次: 並列Arrhenius一次経路と二次tar変換を既存順序・既存係数で同じABIへ追加し、区分線形経路を退行させずに状態、step出力、累積生成物、着火、質量収支をlockstep比較する。その後、runtime metricsと公開mutable state fallbackを含む5 Hz app契約を測定してproduction採否を判断する。

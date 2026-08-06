@@ -138,6 +138,7 @@ img { display: block; max-width: 100%; }
 .video-trigger-icon::after { content: ""; width: 0; height: 0; margin-left: 3px; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 8px solid #1a0c06; }
 
 .capture-card { margin: 64px 0 0; background: #171411; box-shadow: 0 28px 70px rgba(26, 17, 11, 0.18); }
+.capture-phase-heading { margin: 0; padding: 20px 26px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); color: var(--ember); font-size: 12px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; }
 .capture-card a { display: block; overflow: hidden; }
 .capture-card img { width: 100%; height: auto; transition: transform 500ms ease; }
 .capture-card video { display: block; width: 100%; height: auto; background: #0d0b09; }

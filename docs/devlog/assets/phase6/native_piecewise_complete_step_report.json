@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "phase": "phase6aw",
+  "status": "ok",
+  "measurement": {
+    "log_count": 20,
+    "cell_count_per_log": 1152,
+    "combined_cell_count": 23040,
+    "combined_conduction_pair_count": 62400,
+    "steps_per_run": 180,
+    "warmup_steps_excluded": 20,
+    "runs": 3,
+    "dt_seconds": 0.2,
+    "heat_flux_w_m2": 150000.0,
+    "dry_initial_elapsed_seconds": 60.00000000000031,
+    "wet_initial_elapsed_seconds": 159.99999999999946,
+    "balanced_method_order": true,
+    "scope": "piecewise complete wood step + result/cumulative products"
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "executable": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\python\\python.exe",
+    "kit_python": true,
+    "numpy": "2.3.1"
+  },
+  "native_toolchain": {
+    "abi_version": 1,
+    "msvc_version": 1939,
+    "msvc_full_version": 193933523,
+    "floating_point": "/fp:strict",
+    "dll_sha256": "bc75424ad0299a063ad4c7ffc26c3f42a30469f9aee69ef4b20b6211e99ac88d",
+    "source_sha256": "805ea7bef93da2cbf808771616ba636688205489aa0828c2971b698d31911be7"
+  },
+  "budget_ms": 4.0,
+  "method_rows": [
+    {
+      "method": "python_complete_step",
+      "label": "Python complete step",
+      "median_mean_ms": 42.320026879315265,
+      "median_p95_ms": 52.812299923971295,
+      "meets_4ms_p95": false
+    },
+    {
+      "method": "native_roundtrip_complete_step",
+      "label": "AoS ↔ native complete",
+      "median_mean_ms": 34.52112373925047,
+      "median_p95_ms": 42.5783998798579,
+      "meets_4ms_p95": false
+    },
+    {
+      "method": "native_resident_complete_step",
+      "label": "Resident native complete",
+      "median_mean_ms": 0.6649287606705911,
+      "median_p95_ms": 0.9766998700797558,
+      "meets_4ms_p95": true
+    }
+  ],
+  "boundary_cost": {
+    "median_one_time_import_ms": 15.72269992902875,
+    "median_one_time_export_ms": 22.019400028511882
+  },
+  "equivalence": {
+    "passed": true,
+    "all_exact_state_sha256_match": true,
+    "all_exact_step_history_sha256_match": true,
+    "maximum_temperature_error_k": 0.0,
+    "maximum_cell_mass_error_kg": 0.0,
+    "maximum_cumulative_error": 0.0,
+    "maximum_step_output_error": 0.0,
+    "maximum_phase_mismatch_count": 0,
+    "maximum_ignition_time_error_s": 0.0,
+    "maximum_candidate_mass_balance_error_kg": 6.536993168992922e-13,
+    "maximum_conduction_balance_error_j": 4.2058023730362493e-13
+  },
+  "ignition": {
+    "dry_seconds": 66.2000000000004,
+    "wet_seconds": 166.3999999999991,
+    "all_replicas_match_by_kind": true
+  },
+  "prior_context": {
+    "phase6av_resident_p95_ms": 0.5425999406725168,
+    "reaction_and_output_increment_p95_ms": 0.43409992940723896
+  },
+  "decision": {
+    "piecewise_complete_resident_boundary_qualified": true,
+    "per_step_aos_roundtrip_rejected": true,
+    "resident_speedup_vs_python": 54.07218895161594,
+    "production_backend_qualified": false,
+    "arrhenius_gate_pending": true,
+    "app_contract_gate_pending": true,
+    "production_model_changed": false,
+    "next_step": "add Arrhenius/secondary-tar parity, then measure the app contract"
+  },
+  "limitations": [
+    "arrhenius_pyrolysis",
+    "secondary_tar_cracking",
+    "runtime_metrics",
+    "Flow/USD/rendering/PhysX"
+  ],
+  "raw_report": "artifacts\\phase3\\phase6aw\\native_piecewise_complete_step_raw.json"
+}

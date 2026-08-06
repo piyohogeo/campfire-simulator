@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6AW resident native piecewise complete step</title>
+  <desc id="desc">Twenty burning logs compare complete Python, per-step conversion, and resident native piecewise reaction execution.</desc>
+  <style>.title{fill:#f8fafc;font:700 29px system-ui,sans-serif}.sub{fill:#cbd5e1;font:16px system-ui,sans-serif}.label{fill:#f8fafc;font:600 16px system-ui,sans-serif}.value{fill:#f8fafc;font:700 15px ui-monospace,monospace}.small{fill:#94a3b8;font:14px system-ui,sans-serif}.decision{fill:#fde68a;font:700 19px system-ui,sans-serif}</style>
+  <rect width="1200" height="680" rx="28" fill="#0f172a"/>
+  <text x="58" y="76" class="title">Keep reaction state and emitted products resident</text>
+  <text x="58" y="112" class="sub">20 logs · conduction + evaporation + piecewise pyrolysis + char oxidation · step/cumulative outputs</text>
+  <rect x="58" y="148" width="1084" height="62" rx="16" fill="#1e293b"/>
+  <text x="82" y="174" class="small">COMPLETE-STEP GATE</text>
+  <text x="82" y="198" class="label">ΔT 0 K · Δmass 0 kg · output 0 · ignition 66.2 / 166.4 s</text>
+  <line x1="411.6" y1="230" x2="411.6" y2="520" stroke="#fbbf24" stroke-width="3" stroke-dasharray="8 7"/>
+  <text x="421.6" y="228" class="value">4 ms p95 gate</text>
+  <text x="58" y="272" class="label">Python complete step</text><rect x="380" y="250" width="416.7" height="34" rx="17" fill="#fb7185"/><text x="810.7" y="273" class="value">p95 52.812 ms</text><text x="380" y="308" class="small">mean 42.320 ms</text><text x="58" y="364" class="label">AoS ↔ native complete</text><rect x="380" y="342" width="335.9" height="34" rx="17" fill="#fb7185"/><text x="729.9" y="365" class="value">p95 42.578 ms</text><text x="380" y="400" class="small">mean 34.521 ms</text><text x="58" y="456" class="label">Resident native complete</text><rect x="380" y="434" width="7.7" height="34" rx="17" fill="#22c55e"/><text x="401.7" y="457" class="value">p95 0.977 ms</text><text x="380" y="492" class="small">mean 0.665 ms</text>
+  <rect x="58" y="542" width="1084" height="82" rx="18" fill="#1e293b"/>
+  <text x="82" y="574" class="decision">Piecewise resident complete step QUALIFIES; production gate remains closed</text>
+  <text x="82" y="603" class="sub">Reaction/output increment vs Phase 6AV: +0.434 ms · Arrhenius and app-contract gates remain</text>
+  <text x="58" y="656" class="small">Production backend unchanged. Exact state/history hashes are reported separately from declared floating-point tolerances.</text>
+</svg>

@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6AW resident piecewise-complete wood-step candidate, including evaporation, pyrolysis, char oxidation, phase finalization, step outputs, cumulative products, exact ignition-history comparison, and a 4 ms performance gate.
 - Added the Phase 6AV resident immutable-conduction-topology kernel, exact 62,400-edge comparison, pairwise energy-conservation gate, and next-reaction-boundary report.
 - Added the Phase 6AU MSVC native contiguous-state boundary probe, exact 20-log Kit-Python comparison, per-step object-roundtrip rejection, and resident-SoA qualification report.
 - Added the Phase 6AT error-budgeted whole-log approximate-sleep trial, three tolerance candidates, exact-step accuracy references, moving-heat performance gates, and native-path decision report.
@@ -86,6 +87,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
+- Added visible semantic Phase 6P–6AW headings to every recent development-log progress card so milestones remain identifiable outside link metadata and captions.
 - Split the fixed-reference and full 180-second air-feedback regressions into dedicated non-coverage processes after two unchanged standard runs hit Kit's fixed 300-second coverage limit; retained collapse coverage, representative thermal/air coverage, all assertions, and all 41 tests.
 - Enabled the Phase 6AM inline homogeneous sensible heat-capacity path after a 6.15% median two-log step improvement, 4.29% scenario improvement, 3/3 improving pairs, and exact authoritative outputs; per-cell temperature and mass reads remain uncached.
 - Enabled the Phase 6AK step-local homogeneous heat-capacity path after a 13.15% median two-log step improvement, 9.95% scenario improvement, 3/3 improving pairs, and exact authoritative outputs; no coefficient is retained across steps.
