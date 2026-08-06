@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "phase": "phase6aq",
+  "status": "ok",
+  "measurement": {
+    "runtime": "Kit Python",
+    "scope": "authoritative CPU wood step only",
+    "flow_usd_render_metrics_excluded": true,
+    "active_combustion_window_model_seconds": [
+      180.0,
+      220.0
+    ],
+    "runs_per_count": 3,
+    "samples_per_run": 180,
+    "cell_count_per_log": 1152,
+    "order_balanced": true
+  },
+  "budgets": {
+    "wood_update_ms": 4.0,
+    "frame_at_30_fps_ms": 33.333333333333336
+  },
+  "scales": [
+    {
+      "log_count": 2,
+      "combined_cell_count": 2304,
+      "median_step_mean_ms": 4.9457866685568455,
+      "median_step_p95_ms": 6.251499988138676,
+      "median_ms_per_log": 2.4728933342784227,
+      "median_ms_per_1000_cells": 2.1466087971166865,
+      "wood_budget_ratio": 1.2364466671392114,
+      "meets_wood_budget": false
+    },
+    {
+      "log_count": 5,
+      "combined_cell_count": 5760,
+      "median_step_mean_ms": 13.15933667226798,
+      "median_step_p95_ms": 15.68590011447668,
+      "median_ms_per_log": 2.631867334453596,
+      "median_ms_per_1000_cells": 2.2846070611576357,
+      "wood_budget_ratio": 3.289834168066995,
+      "meets_wood_budget": false
+    },
+    {
+      "log_count": 10,
+      "combined_cell_count": 11520,
+      "median_step_mean_ms": 25.19845000287104,
+      "median_step_p95_ms": 31.17269999347627,
+      "median_ms_per_log": 2.5198450002871042,
+      "median_ms_per_1000_cells": 2.187365451638111,
+      "wood_budget_ratio": 6.29961250071776,
+      "meets_wood_budget": false
+    },
+    {
+      "log_count": 20,
+      "combined_cell_count": 23040,
+      "median_step_mean_ms": 51.88950944769507,
+      "median_step_p95_ms": 59.25039993599057,
+      "median_ms_per_log": 2.5944754723847536,
+      "median_ms_per_1000_cells": 2.2521488475562097,
+      "wood_budget_ratio": 12.972377361923767,
+      "meets_wood_budget": false
+    }
+  ],
+  "linear_fit": {
+    "intercept_ms": -0.2208677289874359,
+    "slope_ms_per_log": 2.59666361371191,
+    "r_squared": 0.9996116844819234
+  },
+  "mvp_20_log_gap": {
+    "median_step_mean_ms": 51.88950944769507,
+    "median_step_p95_ms": 59.25039993599057,
+    "required_reduction_percent": 92.29131274784545,
+    "required_speedup": 12.972377361923767,
+    "predicted_logs_at_4ms": 1.6254965436026343,
+    "minimum_spread_frames_from_mean": 13,
+    "distributed_frequency_at_60fps_hz": 4.615384615384615,
+    "average_ms_if_distributed_at_10hz": 8.648251574615845,
+    "average_ms_if_distributed_at_5hz": 4.324125787307922,
+    "required_reduction_at_10hz_percent": 53.74787648707271,
+    "required_reduction_at_5hz_percent": 7.4957529741454145
+  },
+  "equivalence": {
+    "exact_per_log_state_across_scales_and_runs": true,
+    "all_cells_slotted": true,
+    "maximum_mass_balance_error_kg": 5.826450433232822e-13,
+    "final_state_sha256": {
+      "dry": "dd14cb89cb64f4deae1574133f185990f839a4233d81f6dbc9c046eaa2447481",
+      "wet": "798123f98d4773211fc1cf3210c3585f6a71e15a83d97b179c500c7dd77515c7"
+    }
+  },
+  "decision": {
+    "twenty_simultaneous_meets_4ms": false,
+    "scaling_is_linear_enough_for_planning": true,
+    "next_step": "prototype distributed 5 Hz log updates plus inactive-log and sleeping-cell gates; retain native/GPU work as a measured contingency",
+    "native_or_gpu_decision_deferred_until_activity_gating_is_measured": true,
+    "scheduling_values_are_capacity_estimates_not_physics_validation": true
+  },
+  "raw_report": "artifacts\\phase3\\phase6aq\\wood_scaling_raw.json"
+}

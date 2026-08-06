@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6AQ adopted wood-model scaling</title>
+  <desc id="desc">Three balanced Kit Python runs measure simultaneous authoritative CPU wood updates for 2, 5, 10, and 20 logs.</desc>
+  <style>.title{font:750 34px 'Segoe UI',sans-serif;fill:#f8fafc}.kicker{font:700 16px 'Segoe UI',sans-serif;fill:#fda4af;letter-spacing:2px}.sub{font:15px 'Segoe UI',sans-serif;fill:#cbd5e1}.count{font:750 20px 'Segoe UI',sans-serif;fill:#f8fafc}.cells{font:14px 'Segoe UI',sans-serif;fill:#94a3b8}.value{font:700 15px 'Segoe UI',sans-serif;fill:#f8fafc}.small{font:13px 'Segoe UI',sans-serif;fill:#94a3b8}.decision{font:750 20px 'Segoe UI',sans-serif;fill:#fde68a}</style>
+  <rect width="1200" height="680" rx="30" fill="#111827"/>
+  <text x="58" y="56" class="kicker">PHASE 6AQ - MULTI-LOG CPU SCALING</text>
+  <text x="58" y="102" class="title">Measure the MVP gap before choosing an architecture</text>
+  <text x="58" y="136" class="sub">Kit Python · active combustion at 180–220 model s · 3 balanced runs · 1,152 cells/log</text>
+  <rect x="42" y="166" width="1116" height="390" rx="20" fill="#142033" stroke="#334155"/>
+  <line x1="400.0" y1="198" x2="400.0" y2="535" stroke="#fbbf24" stroke-width="3" stroke-dasharray="8 7"/>
+  <text x="410.0" y="194" class="value" fill="#fde68a">4 ms wood budget</text>
+  <text x="78" y="252" class="count">2 logs</text><text x="186" y="252" class="cells">2,304 cells</text><rect x="350" y="230" width="61.8" height="31" rx="15" fill="#fb7185"/><text x="423.8" y="252" class="value">4.946 ms</text><text x="78" y="334" class="count">5 logs</text><text x="186" y="334" class="cells">5,760 cells</text><rect x="350" y="312" width="164.4" height="31" rx="15" fill="#fb7185"/><text x="526.4" y="334" class="value">13.159 ms</text><text x="78" y="416" class="count">10 logs</text><text x="186" y="416" class="cells">11,520 cells</text><rect x="350" y="394" width="314.8" height="31" rx="15" fill="#fb7185"/><text x="676.8" y="416" class="value">25.198 ms</text><text x="78" y="498" class="count">20 logs</text><text x="186" y="498" class="cells">23,040 cells</text><rect x="350" y="476" width="648.1" height="31" rx="15" fill="#fb7185"/><text x="1010.1" y="498" class="value">51.890 ms</text>
+  <text x="58" y="603" class="decision">20 logs: 51.890 ms · 12.97× speedup required</text>
+  <text x="58" y="633" class="sub">Linear fit: 2.597 ms/log · R² 0.9996 · 5 Hz distributed estimate 4.324 ms/frame</text>
+  <text x="58" y="658" class="small">Flow, USD, rendering, metrics, and internal timers excluded. Scheduling estimates still require numerical stability validation.</text>
+</svg>

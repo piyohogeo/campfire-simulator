@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6AQ Kit-Python scaling benchmark for 2, 5, 10, and 20 simultaneously active logs, exact per-log state gates, 4 ms budget analysis, and a compact development-log video trigger.
 - Added the Phase 6AP two-depth re-profile of the adopted slotted-cell path, exact-output gates, current-hotspot report, and compact development-log video trigger.
 - Added and adopted Phase 6AO slotted authoritative wood-cell storage after an exact-output, alternating three-pair end-to-end gate, while retaining mutable public fields and the serialized schema.
 - Added the Phase 6AN post-inline two-depth re-profile, exact-output gates, current-hotspot report, and compact development-log video trigger.
