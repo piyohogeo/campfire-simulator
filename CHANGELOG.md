@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6AT error-budgeted whole-log approximate-sleep trial, three tolerance candidates, exact-step accuracy references, moving-heat performance gates, and native-path decision report.
 - Added the Phase 6AS app-equivalent scheduler contract trial, immutable multi-consumer output revisions, fixed latency audit, and moving-heat activity test that rejects exact dormancy as stable capacity control.
 - Added the Phase 6AR deterministic 5 Hz/12-frame wood scheduler trial, exact whole-log dormant gate, activity-ratio timing matrix, synchronous-state equivalence checks, and compact development-log video trigger.
 - Added the Phase 6AQ Kit-Python scaling benchmark for 2, 5, 10, and 20 simultaneously active logs, exact per-log state gates, 4 ms budget analysis, and a compact development-log video trigger.

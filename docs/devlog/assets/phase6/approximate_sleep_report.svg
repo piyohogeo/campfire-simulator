@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6AT bounded approximate whole-log sleep trial</title>
+  <desc id="desc">Three tolerance candidates compare physical error and moving-heat frame cost against declared budgets.</desc>
+  <style>.title{font:750 34px 'Segoe UI',sans-serif;fill:#f8fafc}.kicker{font:700 16px 'Segoe UI',sans-serif;fill:#fda4af;letter-spacing:2px}.sub{font:15px 'Segoe UI',sans-serif;fill:#cbd5e1}.rowtitle{font:750 18px 'Segoe UI',sans-serif;fill:#f8fafc}.value{font:650 14px 'Segoe UI',sans-serif;fill:#f8fafc}.small{font:13px 'Segoe UI',sans-serif;fill:#94a3b8}.decision{font:750 20px 'Segoe UI',sans-serif;fill:#fde68a}</style>
+  <rect width="1200" height="680" rx="30" fill="#111827"/>
+  <text x="58" y="56" class="kicker">PHASE 6AT - APPROXIMATE SLEEP GATE</text>
+  <text x="58" y="102" class="title">Bound the error first; reject if capacity stays short</text>
+  <text x="58" y="136" class="sub">whole-log only · 0.25 / 1 / 5 K candidates · 1 / 2 / 5 s max sleep · moving five-log heat</text>
+  <rect x="42" y="168" width="1116" height="360" rx="20" fill="#142033" stroke="#334155"/>
+  <text x="220" y="198" class="small">maximum cell-temperature error</text>
+  <text x="760" y="198" class="small">full app-contract frame p95</text>
+  <line x1="470.0" y1="210" x2="470.0" y2="495" stroke="#fbbf24" stroke-width="3" stroke-dasharray="8 7"/>
+  <line x1="926.7" y1="210" x2="926.7" y2="495" stroke="#fbbf24" stroke-width="3" stroke-dasharray="8 7"/>
+  <text x="58" y="248" class="rowtitle">Strict</text><rect x="220" y="225" width="0.0" height="32" rx="16" fill="#22c55e"/><text x="232.0" y="247" class="value">ΔT 0.000 K</text><rect x="760" y="225" width="272.7" height="32" rx="16" fill="#fb7185"/><text x="1044.7" y="247" class="value">p95 6.543 ms</text><text x="220" y="283" class="small">approx sleep 0.00% · final full steps 20/20</text><text x="58" y="340" class="rowtitle">Balanced</text><rect x="220" y="317" width="0.9" height="32" rx="16" fill="#22c55e"/><text x="232.9" y="339" class="value">ΔT 0.003 K</text><rect x="760" y="317" width="266.1" height="32" rx="16" fill="#fb7185"/><text x="1038.1" y="339" class="value">p95 6.384 ms</text><text x="220" y="375" class="small">approx sleep 0.00% · final full steps 20/20</text><text x="58" y="432" class="rowtitle">Aggressive</text><rect x="220" y="409" width="1.5" height="32" rx="16" fill="#22c55e"/><text x="233.5" y="431" class="value">ΔT 0.006 K</text><rect x="760" y="409" width="272.7" height="32" rx="16" fill="#fb7185"/><text x="1044.7" y="431" class="value">p95 6.543 ms</text><text x="220" y="467" class="small">approx sleep 0.00% · final full steps 20/20</text>
+  <text x="58" y="575" class="decision">No candidate may ship unless both error and 4 ms p95 gates pass</text>
+  <text x="58" y="608" class="sub">Moving heat is the capacity case; burning 20-log context remains 7.663 ms p95.</text>
+  <text x="58" y="640" class="small">Production state, SI equations, USD, Flow, rendering, and PhysX are unchanged by this isolated trial.</text>
+</svg>

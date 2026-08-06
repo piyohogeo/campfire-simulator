@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "phase": "phase6at",
+  "status": "ok",
+  "measurement": {
+    "runtime": "Kit Python",
+    "scope": "isolated whole-log approximate sleep rejection trial",
+    "performance_logs": 20,
+    "fixed_frame_slots": 12,
+    "performance_pattern": "rotating5",
+    "runs_per_candidate": 3,
+    "measured_frames_per_run": 1920,
+    "production_code_unchanged": true
+  },
+  "error_budgets": {
+    "maximum_cell_temperature_error_k": 1.0,
+    "maximum_surface_temperature_error_k": 0.25,
+    "maximum_total_mass_error_kg": 1e-06,
+    "maximum_flow_component_error": 0.002,
+    "maximum_support_ratio_error": 0.0001,
+    "maximum_ignition_time_error_s": 0.2,
+    "maximum_mass_balance_error_kg": 1e-09,
+    "maximum_frame_p95_ms": 4.0
+  },
+  "candidate_rows": [
+    {
+      "candidate": "strict",
+      "parameters": {
+        "name": "strict",
+        "maximum_ambient_deviation_k": 0.25,
+        "maximum_temperature_span_k": 0.1,
+        "maximum_consecutive_sleep_ticks": 5
+      },
+      "maximum_cell_temperature_error_k": 0.00014452366121986415,
+      "maximum_surface_temperature_error_k": 6.357412860324985e-05,
+      "maximum_total_mass_error_kg": 0.0,
+      "maximum_flow_component_error": 1.271482572064999e-07,
+      "maximum_support_ratio_error": 0.0,
+      "maximum_ignition_time_error_s": 0.0,
+      "all_accuracy_budgets_passed": true,
+      "median_frame_mean_ms": 4.182856405774753,
+      "median_frame_p95_ms": 6.542700110003352,
+      "median_frame_max_ms": 8.303199894726276,
+      "median_frames_over_4ms_fraction": 0.5338541666666666,
+      "median_approximate_sleep_fraction": 0.0,
+      "median_full_step_fraction": 1.0,
+      "median_full_steps_per_tick": 20.0,
+      "final_full_steps_per_tick": 20,
+      "meets_frame_p95_budget": false
+    },
+    {
+      "candidate": "balanced",
+      "parameters": {
+        "name": "balanced",
+        "maximum_ambient_deviation_k": 1.0,
+        "maximum_temperature_span_k": 0.5,
+        "maximum_consecutive_sleep_ticks": 10
+      },
+      "maximum_cell_temperature_error_k": 0.00343212489161715,
+      "maximum_surface_temperature_error_k": 0.0015122473520818858,
+      "maximum_total_mass_error_kg": 0.0,
+      "maximum_flow_component_error": 3.024494704163827e-06,
+      "maximum_support_ratio_error": 0.0,
+      "maximum_ignition_time_error_s": 0.0,
+      "all_accuracy_budgets_passed": true,
+      "median_frame_mean_ms": 4.320388386743919,
+      "median_frame_p95_ms": 6.383600179105997,
+      "median_frame_max_ms": 8.713799994438887,
+      "median_frames_over_4ms_fraction": 0.5880208333333333,
+      "median_approximate_sleep_fraction": 0.0,
+      "median_full_step_fraction": 1.0,
+      "median_full_steps_per_tick": 20.0,
+      "final_full_steps_per_tick": 20,
+      "meets_frame_p95_budget": false
+    },
+    {
+      "candidate": "aggressive",
+      "parameters": {
+        "name": "aggressive",
+        "maximum_ambient_deviation_k": 5.0,
+        "maximum_temperature_span_k": 2.0,
+        "maximum_consecutive_sleep_ticks": 25
+      },
+      "maximum_cell_temperature_error_k": 0.005956031897483172,
+      "maximum_surface_temperature_error_k": 0.0026260891251013163,
+      "maximum_total_mass_error_kg": 0.0,
+      "maximum_flow_component_error": 5.2521782502026534e-06,
+      "maximum_support_ratio_error": 0.0,
+      "maximum_ignition_time_error_s": 0.0,
+      "all_accuracy_budgets_passed": true,
+      "median_frame_mean_ms": 4.396817031253401,
+      "median_frame_p95_ms": 6.543199997395277,
+      "median_frame_max_ms": 7.871999870985746,
+      "median_frames_over_4ms_fraction": 0.596875,
+      "median_approximate_sleep_fraction": 0.0,
+      "median_full_step_fraction": 1.0,
+      "median_full_steps_per_tick": 20.0,
+      "final_full_steps_per_tick": 20,
+      "meets_frame_p95_budget": false
+    }
+  ],
+  "prior_context": {
+    "phase6as_rotating5_p95_ms": 5.494700046256185,
+    "phase6ar_burning20_p95_ms": 7.662700023502111
+  },
+  "decision": {
+    "adopt_as_production_default": false,
+    "accuracy_passing_candidates": [
+      "strict",
+      "balanced",
+      "aggressive"
+    ],
+    "accuracy_and_performance_passing_candidates": [],
+    "approximate_sleep_rejected_for_capacity": true,
+    "native_or_gpu_path_is_next": true,
+    "reason": "no whole-log tolerance candidate both preserves the declared error budget and restores the four-millisecond p95 under moving heat",
+    "next_step": "prototype a native contiguous-state wood kernel without changing the authoritative schema or SI equations"
+  },
+  "raw_report": "artifacts\\phase3\\phase6at\\approximate_sleep_raw.json"
+}

@@ -1721,3 +1721,18 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 可視化と再現: `run_phase6as_app_scheduler_contract.ps1`がKit Pythonで9 runのraw JSONを生成し、`analyze_app_scheduler_contract.py`が計測境界、反復順、状態／出力同値性、遅延、consumer整合性、活動率、frame予算を検査して`app_scheduler_contract_report.json/.svg`を生成する。描画経路は変えていないため、開発日誌の動画ボタンはPhase 6AMで取得した同じ実画面MP4を再参照する。
 - 検証: Python構文、PowerShell構文、JSON schema/status、SVG寸法、HTML表示と動画modalを個別に検査する。このPhaseではproductionアプリコード、物理式、USD、起動設定を変更していないため標準41テストとbuildは再実行せず、Phase 6AO採用後`41 / 41`とrelease build／Phase 0を現在の回帰基準とする。
 - 次: 完全同値を維持する限り厳密休眠から追加容量は得られない。次は、許容温度差・反応率・伝導残差と最大休眠時間を明示する近似休眠を誤差予算付きで試作するか、全起床20本を対象にC++／常駐GPUへ移すかを比較する。近似を試す場合は着火時刻、質量、温度場、Flow入力、支持喪失時刻の許容誤差を先に固定し、同期参照との差を測ってから採否を決める。
+
+## 76. Phase 6AT 誤差予算付き全薪近似休眠
+
+### 2026-08-06: 誤差が小さくても容量を回復しない近似を棄却する
+
+- 誤差予算: 近似休眠の採否条件を実装前に、最大セル温度差`1 K`、表面平均温度差`0.25 K`、総質量差`1 × 10⁻6 kg`、Flow fuel／temperature／smoke差`0.002`、最弱支持率差`1 × 10⁻4`、着火時刻差`0.2 s`、候補自身の質量収支誤差`1 × 10⁻9 kg`、20本移動熱源frame p95`4 ms`以下と固定した。これらは物性値や実験校正値ではなく、ソフトウェア近似を棄却するための保守的な許容差である。
+- 候補: 全薪単位だけを対象に、`strict = 周囲温度差0.25 K／内部span 0.10 K／最大1 s`、`balanced = 1.0 K／0.50 K／2 s`、`aggressive = 5.0 K／2.0 K／5 s`の3候補を定義した。熱入力が正、Arrheniusモデル、非有限温度、最初の反応閾値から10 K以内、温度差・span・連続休眠上限のいずれかを超える場合は必ずfull stepへ戻る。厳密平衡は従来どおり無期限skipでき、セル単位休眠は伝導欠落のため試さない。
+- 精度履歴: 乾燥／湿潤2本について、`2 kW/m²`を1 tick加えて3 tick休む弱加熱180 tick、`150 kW/m²`の同じ周期を使う炎加熱180 tick、`150 kW/m²`連続加熱360 tickの3履歴を、全tickを解く同期参照とlockstep比較した。酸素係数`0.45〜0.75`を30 tickごとに変え、毎tickで全セル温度、runtime metrics、Flow写像、支持率、着火を比較した。
+- 精度結果: 最大セル温度差はstrict`0.000145 K`、balanced`0.003432 K`、aggressive`0.005956 K`、最大表面平均差は`0.000064 / 0.001512 / 0.002626 K`だった。総質量差、支持率差、着火時刻差は全候補`0`、最大Flow component差はaggressiveでも`5.25 × 10⁻6`で、3候補とも事前誤差予算を満たした。
+- 性能測定: Phase 6ASと同じ20本、固定12 slot、5 Hz、移動5本の120〜150 kW/m²入力、app出力生成と3 consumer読取りを含む180 tickを各3 run、正順／逆順／回転順で測った。先頭20 tickをwarmupから除外し、各run 1,920 frameとした。USD、Flow solver、描画、PhysXは含めない。
+- 性能結果: warmup後は3候補すべてで近似休眠率`0%`、full step率`100%`、各tick最終20本full stepだった。frame mean／p95はstrict`4.1829 / 6.5427 ms`、balanced`4.3204 / 6.3836 ms`、aggressive`4.3968 / 6.5432 ms`で、4 ms超過率は`53.39% / 58.80% / 59.69%`だった。Phase 6ASの近似判定なし移動5本p95`5.4947 ms`より悪く、全セル判定走査の追加費用だけが残った。
+- 判断: 誤差予算を満たす候補は存在するが、燃焼負荷で休眠対象を作れず、4 ms p95を回復する候補は存在しない。全薪近似休眠をproduction既定にも容量策にも採用しない。閾値をさらに広げると反応前後の温度・質量・着火を近似対象に含めるため、今回の設計目標に対して探索を続けない。
+- 可視化と再現: `run_phase6at_approximate_sleep.ps1`がKit Pythonで3精度履歴と9 performance runのraw JSONを生成し、`analyze_approximate_sleep.py`が候補固定、誤差budget、反復順、近似休眠率、frame p95、Phase 6AS／6AR文脈を検査して`approximate_sleep_report.json/.svg`を生成する。描画経路は変えていないため、開発日誌の動画ボタンはPhase 6AMの実画面MP4を再参照する。
+- 検証: 正式runnerは精度比較、9 performance run、解析を`110.3 s`で完了した。Python構文、PowerShell構文、JSON schema/status、SVG寸法、HTML表示と動画modalを個別に検査する。productionアプリ、物理式、USD、起動設定は変更していないため標準41テストとbuildは再実行せず、Phase 6AO採用後`41 / 41`を現在の回帰基準とする。
+- 次: 全起床20本を前提に、権威JSON schemaとSI方程式を変えないnative contiguous-state wood kernelの最小試作へ進む。最初にPython stateとの変換境界、CPU native候補の構築可否、Kit同梱toolchain、完全同値または浮動小数誤差budgetを監査し、GPU化はその後に同じ境界で比較する。
