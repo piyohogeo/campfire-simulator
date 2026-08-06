@@ -1781,3 +1781,19 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 可視化と再現: `run_phase6aw_native_piecewise_complete.ps1`がVS2022環境、CMake/NMake build、Kit Pythonの3方式×3 run、解析を`61.2 s`で完了した。`native_piecewise_complete_step_report.json/.svg`へ方式別mean／p95、Phase 6AVとの差、着火時刻、状態・履歴同値、質量／伝導保存誤差、未実装gateを保存する。描画経路は変えていないため動画はPhase 6AMの実画面MP4を再参照する。
 - 検証: Python／PowerShell構文、MSVC build、C ABI load、raw/report JSON、SVG寸法を個別に検査した。標準Kit suiteはcoverage付き`41 / 41`が合格し、通常32件`35.0 s`、熱3件`4.3 s`、湿潤着火1件`108.0 s`、崩落1件`262.9 s`、固定参照1件`4.5 s`、通気1件`5.7 s`、数値2件`27.2 s`、runner全体`455.3 s`だった。production appへnative経路は未接続である。
 - 次: 並列Arrhenius一次経路と二次tar変換を既存順序・既存係数で同じABIへ追加し、区分線形経路を退行させずに状態、step出力、累積生成物、着火、質量収支をlockstep比較する。その後、runtime metricsと公開mutable state fallbackを含む5 Hz app契約を測定してproduction採否を判断する。
+
+## 80. Phase 6AX native常駐・並列Arrhenius完全step候補
+
+### 2026-08-07: gas・tar・char競合経路と診断的二次tar分割を常駐境界へ加える
+
+- 対象境界: Phase 6AWとは別のC ABIとして、既存Thurner–Mannのgas・tar・char 3経路を`kᵢ(T) = scale × Aᵢ exp(−Eᵢ / RT)`で評価し、合計速度で一次反応量、速度比で生成物を分配する並列一次Arrhenius経路を追加した。Di Blasi Model III由来の二次tar分割は既存どおり総揮発量、固体熱、固体質量を変えず、一次tarを二次gasと未変換tarへ分ける診断出力である。production Python、権威JSON schema、Flow、USD、描画、PhysXは変更しない。
+- 係数と順序: 気体定数`8.31446261815324 J/(mol·K)`、common scale`1.0`、既存gas／tar／charのA・E組、二次tar滞留時間`1.0 s`、適用温度`773–1073 K`を固定した。各セルでgas、tar、charの順に速度を計算し、合計速度、乾燥係数、`dt = 0.2 s`から反応率を得る。熱量制限、固体更新、一次生成物集計、二次tar分割、char酸化、clamp、相分類、累積出力の順序はPython参照と同じである。
+- 二次tar分岐の励起: `150 kW/m²`の固体加熱履歴だけでは測定窓内の反応温度が二次tar適用下限`773 K`へ届かず、二次変換量は0だった。未実行分岐を合格扱いにせず、各薪の外部表面セル1個だけを測定開始時`800 K`へ上げる診断seedを固定した。これはソフトウェア分岐coverage専用であり、物理的初期条件、実験校正、着火予測には使わない。seedにより乾燥薪の出力着火判定は`60.2 s`、湿潤薪は`166.4 s`となる。
+- 測定方法: Phase 6AWと同じ乾燥／湿潤薪を交互に20本、計`23,040`セル・`62,400`伝導辺、乾燥60秒／湿潤160秒まで事前進行、180 step、先頭20 step除外、3 runでPython完全step、毎step往復、native常駐の順序を回転した。1本の追加Python product probeでgas、tar、char、二次変換tar、未変換tarの全5出力が正量であることを解析前提にした。
+- 同値・保存結果: 全3 runの両native方式は事前gate内で、最大温度差`0 K`、セル質量差`1.39 × 10⁻17 kg`、累積出力差`2.22 × 10⁻16`、step出力差`1.04 × 10⁻15`、相不一致`0`、着火時刻差`0 s`だった。候補の最大質量収支誤差は`7.96 × 10⁻13 kg`、伝導scratch和は`1.81 × 10⁻13 J`である。MSVC `std::exp`とPython `math.exp`の最下位差により状態／履歴SHAは一致しないため、Phase 6AWの「完全一致」は再主張せず固定許容差による合格とする。
+- 反応出力: dry product probeの180 step累積は一次gas`0.126326 kg`、一次tar`0.527661 kg`、一次char`0.280138 kg`、二次変換tar`0.000267632 kg`、未変換tar`0.527393 kg`だった。一次tarは二次変換tarと未変換tarの和に一致し、二次分割は総揮発量を増減しない。
+- 性能結果: 3 run中央値のmean／p95はPython完全step`168.1158 / 210.6321 ms`、毎step往復`39.6066 / 48.2842 ms`、native常駐完全step`1.8990 / 2.2923 ms`だった。常駐候補はPython比p95`91.89倍`で4 ms局所gate内にあり、Phase 6AWの区分線形p95`0.9767 ms`に対するArrhenius・二次tar増分は`+1.3156 ms`だった。毎step Pythonオブジェクト往復は引き続き棄却する。
+- 判断: 3経路並列Arrheniusと有界二次tar出力を含むnative常駐完全step境界を次段階へ採用する。ただしproduction backend採用ではない。runtime metrics、公開mutable stateのfallback、5 Hz app入出力契約を含まず、診断seedも物理シナリオではないため、2.2923 msを完成solverや完成frameの性能値として扱わない。
+- 可視化と再現: `run_phase6ax_native_arrhenius_complete.ps1`がVS2022環境、CMake/NMake build、Kit Pythonの3方式×3 run、product probe、解析を`139.6 s`で完了した。`native_arrhenius_complete_step_report.json/.svg`へ方式別mean／p95、Phase 6AWとの差、同値誤差、着火時刻、5生成物、診断seed、未実装gateを保存する。描画経路は変えていないため動画はPhase 6AMの実画面MP4を再参照する。
+- 検証: Python／PowerShell構文、MSVC build、C ABI load、raw/report JSON、SVG寸法を個別に検査した。標準Kit suiteは40件が合格し、既存collapse coverage processだけがアサーション失敗ではなく固定`300 s`上限で未完了になった。同じ崩落試験をKitの`-f`経路、coverageなしで単独再実行すると`5.5 s`で合格した。直前Phase 6AWのcoverage付き`41 / 41`・`455.3 s`をクリーンな回帰基準として維持し、Phase 6AXでは「40 coverage + 1 isolated pass」と記録する。production appへnative経路は未接続である。
+- 次: native stepから既存runtime metricsとFlow／表示／支持判定用immutable出力を構成し、公開mutable cell操作を検出した場合のPython fallbackを明示する。その後、20本・5 Hz・固定12 slotのアプリ入出力契約へ常駐native候補を接続し、同期Python参照との状態／出力誤差、consumer revision、frame p95を測ってproduction採否を判断する。

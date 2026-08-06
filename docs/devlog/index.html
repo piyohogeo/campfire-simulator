@@ -36,8 +36,8 @@
       <div class="shell status-grid">
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>41 / 41 passed</strong></div>
-        <div><span>次の焦点</span><strong>Arrhenius + app contract</strong></div>
+        <div><span>テスト</span><strong>40 coverage + 1 isolated</strong></div>
+        <div><span>次の焦点</span><strong>Runtime metrics + app contract</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6AW · Resident piecewise complete step</p>
-            <h2>燃える反応も、<br>出力履歴も常駐へ。</h2>
-            <p>顕熱・伝導に蒸発、区分線形熱分解、炭酸化、相確定、step出力と累積生成物を追加しました。20本・23,040セルで乾燥／湿潤の両方を着火させ、温度・質量・相・全出力・状態／履歴SHAはPythonと完全一致しました。native常駐p95は0.977 msで、Python完全stepの52.812 msに対して約54倍です。次はArrheniusとアプリ入出力契約を同じ厳密さで確認します。</p>
+            <p class="section-kicker">Phase 6AX · Resident parallel Arrhenius step</p>
+            <h2>三つの反応経路も、<br>4 msの内側へ。</h2>
+            <p>gas・tar・charの並列Arrhenius反応と有界二次tar分割を常駐native完全stepへ追加しました。20本・23,040セルでnative p95は2.292 ms、Pythonの210.632 msに対して約91.9倍です。温度・相・着火時刻は一致し、指数関数境界の最大質量差は1.39e-17 kgでした。二次tarは800 Kの診断seedで分岐を明示的に通しており、物理初期条件には使いません。次はruntime metrics、mutable fallback、アプリ契約を閉じます。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -483,6 +483,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6ax-native-arrhenius-complete" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6AX</h3>
+            <a href="assets/phase6/native_arrhenius_complete_step_report.svg" aria-label="Phase 6AX native常駐・並列Arrhenius完全step候補の性能と同値性レポートを開く">
+              <img src="assets/phase6/native_arrhenius_complete_step_report.svg" width="1200" height="680" alt="20本23,040セルについてPython完全step、毎step native往復、native常駐Arrhenius完全stepのp95、4ミリ秒予算、同値誤差、二次tar生成量を示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Keep gas, tar, and char pathways resident</strong><span>p95 2.2923 ms · 91.89× · Δmass 1.39e-17 kg · bounded secondary tar exercised</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6AX unchanged burn scenario" data-video-meta="Native Arrhenius complete-step trial · production rendering unchanged · diagnostic 800 K seed is not shown · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · 視覚出力は同一</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <figure class="capture-card">
             <a href="assets/phase6/replicate_holdout_report.svg" aria-label="Phase 6C 合板反復ホールドアウトレポートを開く">
               <img src="assets/phase6/replicate_holdout_report.svg" width="1200" height="680" alt="未使用の合板SAMP.3について、着火時刻と平均質量減少速度の観測・初期・SAMP.1/2選定値を並べたSVGグラフ">
@@ -519,8 +533,8 @@
           </figure>
 
           <div class="story-grid">
-            <section class="story-card"><span class="card-index">01</span><h3>反応と出力も常駐する</h3><ul><li>蒸発・熱分解・炭酸化</li><li>step出力9項目・累積7項目</li><li>状態／履歴SHA完全一致</li><li>常駐p95 0.9767 ms</li></ul></section>
-            <section class="story-card warm"><span class="card-index">02</span><h3>乾燥／湿潤の着火まで追う</h3><ul><li>着火 66.2 / 166.4 s</li><li>質量収支 ≤ 6.54e-13 kg</li><li>Python比 54.07倍</li><li>Arrheniusは次のgate</li></ul></section>
+            <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
+            <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
           </div>
 
           <section class="verification" aria-labelledby="phase6-verification-title">
@@ -541,7 +555,7 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Step internals</strong><small>8 segments · 3 + 3 profiles · state SHA-256 identical</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Array boundary</strong><small>7 paths · 3 runs · exact isolated SHA-256</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Complete-step backend</strong><small>400-step history + state + metrics exact</small></p></div>
-              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Standard tests</strong><small>32 + 3 + 1 + 2 + 1 coverage · 2 numerical · 41 / 41 passed</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Standard tests</strong><small>40 coverage passed · collapse timeout only · isolated pass 5.5 s · prior clean 41 / 41</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Debugger-free E2E</strong><small>4 runs · 0 debug extensions · exact outputs</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Python internal profile</strong><small>3 runs · 8 × 1,180 samples · exact authoritative outputs</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Sensible-heat trial</strong><small>3 + 3 profiled · 3 + 3 unprofiled · rejected</small></p></div>
@@ -558,6 +572,7 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AU native boundary</strong><small>20 logs · 3 balanced runs · exact states · collapse isolated recheck passed</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AV native conduction</strong><small>62,400 pairs · 3 balanced runs · exact states + energy balance</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AW piecewise complete step</strong><small>3 balanced runs · dry/wet ignition · exact state + output history</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AX Arrhenius complete step</strong><small>3 pathways + bounded tar · 3 balanced runs · tolerance lockstep passed</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Default timing path</strong><small>homogeneous fast · timers off · 10.4678 s scenario</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>
             </div>
@@ -604,7 +619,7 @@
               <div><dt>Complete Python step</dt><dd>3.1313 ms/model-step</dd></div>
               <div><dt>Complete NumPy step</dt><dd>2.8228 ms · 9.9% faster</dd></div>
               <div><dt>Phase 3 output equality</dt><dd>state / CSV / ignition / Flow exact</dd></div>
-              <div><dt>Current standard suite</dt><dd>41 / 41 · 453.0 s</dd></div>
+              <div><dt>Current standard suite</dt><dd>40 coverage + collapse isolated · prior 41 / 41</dd></div>
               <div><dt>Current test processes</dt><dd>8 · fixed 300 s ceiling unchanged</dd></div>
               <div><dt>Debugger-free wood step</dt><dd>Python 11.218 / NumPy 11.472 ms</dd></div>
               <div><dt>Debugger-free scenario</dt><dd>17.532 / 17.858 s</dd></div>
@@ -739,6 +754,13 @@
               <div><dt>Dry / wet ignition</dt><dd>66.2 / 166.4 s · exact</dd></div>
               <div><dt>Phase 6AW mass balance</dt><dd>≤ 6.54 × 10⁻13 kg</dd></div>
               <div><dt>Phase 6AW equivalence</dt><dd>state + step history SHA exact</dd></div>
+              <div><dt>Resident Arrhenius complete p95</dt><dd>2.2923 ms · 91.89× vs Python</dd></div>
+              <div><dt>Python Arrhenius complete p95</dt><dd>210.6321 ms</dd></div>
+              <div><dt>Arrhenius + tar increment</dt><dd>+1.3156 ms p95 vs Phase 6AW</dd></div>
+              <div><dt>Phase 6AX maximum differences</dt><dd>ΔT 0 K · Δmass 1.39 × 10⁻17 kg</dd></div>
+              <div><dt>Secondary tar branch</dt><dd>0.000267632 kg · diagnostic 800 K seed</dd></div>
+              <div><dt>Phase 6AX mass balance</dt><dd>≤ 7.96 × 10⁻13 kg</dd></div>
+              <div><dt>Phase 6AX regression</dt><dd>40 coverage · collapse isolated 5.5 s · prior clean 41 / 41</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
@@ -754,8 +776,8 @@
           </section>
 
           <div class="notes-grid">
-            <section class="note caution"><p class="note-label">Known limits</p><h3>0.977 msは区分線形経路の値</h3><p>蒸発、区分線形熱分解、炭酸化、相、生成物出力は入りましたが、並列Arrhenius熱分解、二次tar変換、runtime metrics、公開mutable state fallback、Flow／USD／描画／PhysXは未接続です。production既定も変えていないため、完成solverや完成frameの性能値ではありません。</p></section>
-            <section class="note next"><p class="note-label">What comes next</p><h3>Arrheniusとアプリ契約を閉じる</h3><p>並列Arrhenius一次反応と二次tar変換を同じABIへ追加し、区分線形経路を保ったまま全状態・step出力・着火・質量収支をlockstep比較します。その後、runtime metrics、公開mutable state fallback、20本5 Hzのアプリ入出力境界を測定してproduction採否を判断します。</p></section>
+            <section class="note caution"><p class="note-label">Known limits</p><h3>2.292 msは完成frameの値ではない</h3><p>Arrheniusと二次tar出力は入りましたが、runtime metrics、公開mutable state fallback、5 Hzアプリ入出力、Flow／USD／描画／PhysXは未接続です。二次tarの800 K seedはソフトウェア分岐coverage専用です。production既定も変えておらず、指数関数差によりSHAは不一致です。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>アプリが読む境界を閉じる</h3><p>native状態からruntime metrics、Flow／表示／支持判定用immutable出力を構成し、公開mutable cell操作を検出した場合のPython fallbackを定義します。その後、20本・5 Hz・固定12 slotのアプリ契約で状態誤差、consumer revision、frame p95を測りproduction採否を判断します。</p></section>
           </div>
         </div>
       </article>

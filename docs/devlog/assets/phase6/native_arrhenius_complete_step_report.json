@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "phase": "phase6ax",
+  "status": "ok",
+  "measurement": {
+    "log_count": 20,
+    "cell_count_per_log": 1152,
+    "combined_cell_count": 23040,
+    "combined_conduction_pair_count": 62400,
+    "steps_per_run": 180,
+    "warmup_steps_excluded": 20,
+    "runs": 3,
+    "dt_seconds": 0.2,
+    "heat_flux_w_m2": 150000.0,
+    "dry_initial_elapsed_seconds": 60.00000000000031,
+    "wet_initial_elapsed_seconds": 159.99999999999946,
+    "balanced_method_order": true,
+    "scope": "parallel Arrhenius complete wood step + bounded secondary tar + outputs",
+    "secondary_tar_branch_seed": {
+      "temperature_k": 800.0,
+      "seeded_surface_cells_per_log": 1,
+      "purpose": "software branch coverage only; not a physical initial condition"
+    }
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "executable": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\python\\python.exe",
+    "kit_python": true,
+    "numpy": "2.3.1"
+  },
+  "native_toolchain": {
+    "abi_version": 1,
+    "msvc_version": 1939,
+    "msvc_full_version": 193933523,
+    "floating_point": "/fp:strict",
+    "dll_sha256": "b5fc2fe4e47415df6e65d42a6aa1f7a501b9ded1bca30b14b00563d4f0973b9d",
+    "source_sha256": "d91340dc088c774af01170be9659f7ebe3263993e24569e2985f4c6e5bf4cf59"
+  },
+  "budget_ms": 4.0,
+  "method_rows": [
+    {
+      "method": "python_complete_step",
+      "label": "Python complete step",
+      "median_mean_ms": 168.11584500101162,
+      "median_p95_ms": 210.63210000284016,
+      "meets_4ms_p95": false
+    },
+    {
+      "method": "native_roundtrip_complete_step",
+      "label": "AoS ↔ native complete",
+      "median_mean_ms": 39.60663937177742,
+      "median_p95_ms": 48.28420002013445,
+      "meets_4ms_p95": false
+    },
+    {
+      "method": "native_resident_complete_step",
+      "label": "Resident native complete",
+      "median_mean_ms": 1.898963755229488,
+      "median_p95_ms": 2.2923001088202,
+      "meets_4ms_p95": true
+    }
+  ],
+  "boundary_cost": {
+    "median_one_time_import_ms": 17.489999998360872,
+    "median_one_time_export_ms": 22.305799880996346
+  },
+  "equivalence": {
+    "passed": true,
+    "all_exact_state_sha256_match": false,
+    "all_exact_step_history_sha256_match": false,
+    "maximum_temperature_error_k": 0.0,
+    "maximum_cell_mass_error_kg": 1.3877787807814457e-17,
+    "maximum_cumulative_error": 2.220446049250313e-16,
+    "maximum_step_output_error": 1.0408340855860843e-15,
+    "maximum_phase_mismatch_count": 0,
+    "maximum_ignition_time_error_s": 0.0,
+    "maximum_candidate_mass_balance_error_kg": 7.958078640513122e-13,
+    "maximum_conduction_balance_error_j": 1.8052226380405045e-13
+  },
+  "ignition": {
+    "dry_seconds": 60.200000000000315,
+    "wet_seconds": 166.3999999999991,
+    "all_replicas_match_by_kind": true
+  },
+  "prior_context": {
+    "phase6aw_piecewise_resident_p95_ms": 0.9766998700797558,
+    "arrhenius_and_tar_increment_p95_ms": 1.3156002387404442
+  },
+  "decision": {
+    "arrhenius_complete_resident_boundary_qualified": true,
+    "per_step_aos_roundtrip_rejected": true,
+    "resident_speedup_vs_python": 91.8867905613145,
+    "production_backend_qualified": false,
+    "runtime_metrics_gate_pending": true,
+    "mutable_state_fallback_gate_pending": true,
+    "app_contract_gate_pending": true,
+    "production_model_changed": false,
+    "next_step": "add runtime metrics/mutable fallback, then measure the app contract"
+  },
+  "limitations": [
+    "single_path_arrhenius_pyrolysis",
+    "runtime_metrics",
+    "public_mutable_state_fallback",
+    "app_scheduler_contract",
+    "Flow/USD/rendering/PhysX"
+  ],
+  "raw_report": "artifacts\\phase3\\phase6ax\\native_arrhenius_complete_step_raw.json",
+  "kinetics": {
+    "gas_constant_j_mol_k": 8.31446261815324,
+    "parallel_common_scale": 1.0,
+    "secondary_residence_time_s": 1.0,
+    "secondary_temperature_range_k": [
+      773.0,
+      1073.0
+    ],
+    "source_pathways": [
+      "gas",
+      "tar",
+      "char"
+    ]
+  },
+  "reaction_evidence": {
+    "primary_gas_kg": 0.12632626461125418,
+    "primary_tar_kg": 0.5276610538218052,
+    "primary_char_kg": 0.2801381225338784,
+    "secondary_tar_cracked_kg": 0.00026763227157654756,
+    "uncracked_tar_kg": 0.5273934215502286
+  }
+}
