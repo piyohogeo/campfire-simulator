@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "phase": "phase6au",
+  "status": "ok",
+  "measurement": {
+    "log_count": 20,
+    "cell_count_per_log": 1152,
+    "combined_cell_count": 23040,
+    "steps_per_run": 180,
+    "warmup_steps_excluded": 20,
+    "runs": 3,
+    "dt_seconds": 0.2,
+    "heat_flux_w_m2": 150000.0,
+    "balanced_method_order": true,
+    "scope": "isolated sensible heat + clamp + phase classification",
+    "full_solver_measured": false
+  },
+  "native_toolchain": {
+    "abi_version": 1,
+    "msvc_version": 1939,
+    "msvc_full_version": 193933523,
+    "dll_sha256": "1057cac8a16680fed0a9fe2e1b8ba7190a65f5eb35c6a60e3ed4ddfcf388597f",
+    "source_sha256": "063396fd3decff9603c09a6885954deda7e79c29e43be942077a832b0bf97c55",
+    "floating_point": "/fp:strict"
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "executable": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\python\\python.exe",
+    "kit_python": true,
+    "numpy": "2.3.1",
+    "machine": "AMD64",
+    "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel"
+  },
+  "budget_ms": 4.0,
+  "method_rows": [
+    {
+      "method": "python_aos",
+      "label": "Python AoS",
+      "median_mean_ms": 47.080386873858515,
+      "median_p95_ms": 55.63870002515614,
+      "meets_4ms_p95": false
+    },
+    {
+      "method": "native_aos_roundtrip",
+      "label": "AoS ↔ native each step",
+      "median_mean_ms": 44.89996562770102,
+      "median_p95_ms": 58.94539994187653,
+      "meets_4ms_p95": false
+    },
+    {
+      "method": "native_resident_soa",
+      "label": "Resident native SoA",
+      "median_mean_ms": 0.18255750474054366,
+      "median_p95_ms": 0.2748998813331127,
+      "meets_4ms_p95": true
+    }
+  ],
+  "boundary_cost": {
+    "median_one_time_import_ms": 17.458799993619323,
+    "median_one_time_export_ms": 23.66249985061586,
+    "median_one_time_roundtrip_ms": 41.12129984423518
+  },
+  "equivalence": {
+    "passed": true,
+    "all_exact_state_sha256_match": true,
+    "maximum_temperature_error_k": 0.0,
+    "maximum_mass_error_kg": 0.0,
+    "maximum_phase_mismatch_count": 0,
+    "tolerances": {
+      "maximum_temperature_error_k": 1e-09,
+      "maximum_mass_error_kg": 1e-12,
+      "maximum_phase_mismatch_count": 0
+    }
+  },
+  "decision": {
+    "resident_native_boundary_qualified": true,
+    "per_step_aos_roundtrip_rejected": true,
+    "resident_speedup_vs_python_isolated": 202.39623151286625,
+    "full_native_solver_qualified": false,
+    "production_model_changed": false,
+    "gpu_work_deferred": true,
+    "next_step": "prototype the complete wood step on resident native state, with serialization and app outputs as explicit synchronization boundaries"
+  },
+  "limitations": [
+    "conduction",
+    "evaporation",
+    "pyrolysis",
+    "char_oxidation",
+    "runtime_metrics",
+    "Flow/USD/rendering/PhysX"
+  ],
+  "raw_report": "artifacts\\phase3\\phase6au\\native_wood_boundary_raw.json"
+}

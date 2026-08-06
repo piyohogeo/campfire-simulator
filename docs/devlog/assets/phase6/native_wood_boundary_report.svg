@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6AU native contiguous wood-state boundary</title>
+  <desc id="desc">Twenty-log isolated kernel compares Python object state, per-step conversion, and resident native structure-of-arrays execution.</desc>
+  <style>
+    .title { fill:#f8fafc;font:700 29px system-ui,sans-serif }
+    .sub { fill:#cbd5e1;font:16px system-ui,sans-serif }
+    .label { fill:#f8fafc;font:600 17px system-ui,sans-serif }
+    .value { fill:#f8fafc;font:700 15px ui-monospace,monospace }
+    .small { fill:#94a3b8;font:14px system-ui,sans-serif }
+    .decision { fill:#fde68a;font:700 19px system-ui,sans-serif }
+  </style>
+  <rect width="1200" height="680" rx="28" fill="#0f172a"/>
+  <text x="58" y="76" class="title">Keep authoritative wood state contiguous across steps</text>
+  <text x="58" y="112" class="sub">20 logs · 23,040 cells · Kit Python · MSVC /O2 /fp:strict · isolated cell-local kernel</text>
+  <rect x="58" y="148" width="1084" height="62" rx="16" fill="#1e293b"/>
+  <text x="82" y="174" class="small">EQUIVALENCE GATE</text>
+  <text x="82" y="198" class="label">ΔT 0 K · Δmass 0 kg · phase 0 · exact hash true</text>
+  <line x1="388.9" y1="230" x2="388.9" y2="520" stroke="#fbbf24" stroke-width="3" stroke-dasharray="8 7"/>
+  <text x="398.9" y="228" class="value">4 ms p95 gate</text>
+  <text x="58" y="272" class="label">Python AoS</text><rect x="360" y="250" width="402.0" height="34" rx="17" fill="#fb7185"/><text x="776.0" y="273" class="value">p95 55.639 ms</text><text x="360" y="308" class="small">mean 47.080 ms</text><text x="58" y="364" class="label">AoS ↔ native each step</text><rect x="360" y="342" width="425.9" height="34" rx="17" fill="#fb7185"/><text x="799.9" y="365" class="value">p95 58.945 ms</text><text x="360" y="400" class="small">mean 44.900 ms</text><text x="58" y="456" class="label">Resident native SoA</text><rect x="360" y="434" width="2.0" height="34" rx="17" fill="#22c55e"/><text x="376.0" y="457" class="value">p95 0.275 ms</text><text x="360" y="492" class="small">mean 0.183 ms</text>
+  <rect x="58" y="542" width="1084" height="82" rx="18" fill="#1e293b"/>
+  <text x="82" y="574" class="decision">Resident boundary QUALIFIES; per-step object roundtrip REJECTED</text>
+  <text x="82" y="603" class="sub">One-time import / export: 17.459 / 23.662 ms · full conduction/reaction solver not measured</text>
+  <text x="58" y="656" class="small">Necessary boundary evidence only. Production physics, JSON schema, Flow, USD, rendering, PhysX, and GPU path remain unchanged.</text>
+</svg>

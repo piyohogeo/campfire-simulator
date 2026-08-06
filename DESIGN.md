@@ -1736,3 +1736,19 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 可視化と再現: `run_phase6at_approximate_sleep.ps1`がKit Pythonで3精度履歴と9 performance runのraw JSONを生成し、`analyze_approximate_sleep.py`が候補固定、誤差budget、反復順、近似休眠率、frame p95、Phase 6AS／6AR文脈を検査して`approximate_sleep_report.json/.svg`を生成する。描画経路は変えていないため、開発日誌の動画ボタンはPhase 6AMの実画面MP4を再参照する。
 - 検証: 正式runnerは精度比較、9 performance run、解析を`110.3 s`で完了した。Python構文、PowerShell構文、JSON schema/status、SVG寸法、HTML表示と動画modalを個別に検査する。productionアプリ、物理式、USD、起動設定は変更していないため標準41テストとbuildは再実行せず、Phase 6AO採用後`41 / 41`を現在の回帰基準とする。
 - 次: 全起床20本を前提に、権威JSON schemaとSI方程式を変えないnative contiguous-state wood kernelの最小試作へ進む。最初にPython stateとの変換境界、CPU native候補の構築可否、Kit同梱toolchain、完全同値または浮動小数誤差budgetを監査し、GPU化はその後に同じ境界で比較する。
+
+## 77. Phase 6AU native連続状態境界
+
+### 2026-08-06: native演算を候補化し、毎stepオブジェクト往復を棄却する
+
+- 目的と境界: Phase 6UでCPU／GPU実行形状を比較したセル局所の顕熱更新、負質量clamp、温度clamp、相分類だけをC++へ同じ演算順で移した。伝導、蒸発、一次／二次熱分解、炭酸化、runtime metrics、Flow、USD、描画、PhysXは含めず、完全な木材solverやproduction性能の合格試験とは扱わない。権威JSON schema、SI式、格子、セル順序、production既定は変更していない。
+- toolchain監査: release build同梱の64-bit Kit Python `3.12.13`とNumPy `2.3.1`からC ABI DLLを`ctypes`で呼び出した。ローカルのVisual Studio 2022 Community、MSVC `_MSC_VER = 1939`、`_MSC_FULL_VER = 193933523`を使用し、CMakeのNMake generator、C++17、`/O2 /fp:strict /W4`で構築した。PATH上のCMakeはVS2022 generatorを持たないため更新せず、`VsDevCmd.bat`で監査済み環境をrunnerへ取り込んだ。
+- 状態境界: 温度、含水質量、乾燥木材質量、char質量、ash質量、外部面積、露出率、乾燥木材比熱を`float64` SoA、相を`int32`配列とした。比較対象はPython AoS、毎step `AoS → SoA → native → AoS`、一度だけimportして全stepをnative SoAへ常駐させ最後にexportする3方式である。常駐配列は将来の権威状態候補であり、このPhaseではproductionの権威木材状態を置き換えない。
+- 誤差予算: 最大セル温度差`1 × 10⁻9 K`、4質量の最大差`1 × 10⁻12 kg`、相不一致`0`を事前ゲートとした。これらは物性・校正の許容値ではなく、同じdouble演算を別実行境界へ移す試作の棄却条件である。最終状態SHA-256の完全一致も別に記録した。
+- 測定方法: Phase 3と同じ半径`0.16 m`、長さ`1.80 m`、`24 × 12 × 4 = 1,152`セルの乾燥／湿潤薪を交互に20本、計`23,040`セルとした。`dt = 0.2 s`、熱流束`150 kW/m²`、各方式180 step、先頭20 step除外、3 runで方式順を回転した。Kit Pythonからの関数呼出しを含み、常駐方式の初回import／最終exportはsteady-state kernel p95から分離して測った。
+- 同値結果: 全3 runの毎step往復／常駐方式で、Python参照に対する最大温度差`0 K`、最大質量差`0 kg`、相不一致`0`、最終状態SHA-256完全一致だった。DLLとC++ sourceのSHA-256、ABI version、MSVC versionをraw JSONへ保存した。
+- 性能結果: 3 run中央値のmean／p95はPython AoS`47.0804 / 55.6387 ms`、毎step往復`44.9000 / 58.9454 ms`、native常駐SoA`0.1826 / 0.2749 ms`だった。一度だけ行うimport／export中央値は`17.4588 / 23.6625 ms`、合計`41.1213 ms`である。常駐する孤立segmentは4 ms p95ゲートを満たすが、毎step往復はPython処理と同程度でゲートを大幅に超える。
+- 判断: native CPUで連続状態を処理する境界は、完全同値と必要な局所性能を両立できるため次の全面試作候補とする。Pythonオブジェクトを毎step権威状態として往復する案は棄却する。これにより完全なnative solverの4 ms達成、アプリ統合、GPUよりCPUが優れることが確定したわけではなく、GPU比較は同じ完全step境界が成立するまで保留する。
+- 可視化と再現: `run_phase6au_native_boundary.ps1`がVS2022環境の読込み、CMake/NMake build、Kit Pythonによる3方式の正式測定、JSON検査、SVG生成を一括実行する。正式runnerは`64.9 s`で完了した。`native_wood_boundary_report.json/.svg`に方式別mean／p95、4 ms gate、境界費用、同値性、未移植範囲を保存した。描画経路は変えていないため、開発日誌の動画ボタンはPhase 6AMの実画面MP4を再参照する。
+- 検証: Python構文、PowerShell構文、MSVC build、C ABI load、raw/report JSON schema、SVG寸法、HTML表示と動画modalを個別に検査する。標準suiteは40件が合格し、既存collapse coverage processだけがアサーション失敗ではなく固定`300 s`上限で終了した。同じ`test_collapse_scenario_releases_and_reignites_with_mass_balance`をKitの`-f`経路、coverageなしで単独再実行すると`5.3 s`で合格した。production Python／USD生成ロジック、依存関係、起動設定、描画は変更しておらず、Phase 6AO採用後のcoverage付き`41 / 41`と現行release buildを回帰基準として維持する。
+- 次: 連続状態をstep間で維持したまま、隣接伝導、蒸発、一次／二次熱分解、炭酸化、runtime metricsをnativeへ移す完全step試作へ進む。serializationとapp出力を明示的な同期境界とし、全セル履歴、質量収支、着火時刻、Flow入力、支持率、20本の5 Hz app契約p95を同期Python参照と比較してからproduction採否を判断する。
