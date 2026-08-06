@@ -37,7 +37,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>41 / 41 passed</strong></div>
-        <div><span>次の焦点</span><strong>Re-profile slotted cell path</strong></div>
+        <div><span>次の焦点</span><strong>2–20 log scaling benchmark</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6AO · Slotted authoritative cell storage</p>
-            <h2>辞書を外して、<br>状態はそのまま。</h2>
-            <p>熱容量式はすでに加算順を保った最小構成だったため、式を変えず、セルの宣言済み属性をインスタンス辞書からPythonのslotへ移す限定試作を行いました。温度と4質量は毎セル読み、公開属性の更新、JSON形状、物理式、セル順序を維持します。非計測の交互順序3組すべてで木材stepとシナリオが改善し、全6 runの権威状態・CSV・着火時刻が完全一致したため既定に採用しました。</p>
+            <p class="section-kicker">Phase 6AP · Slotted-path re-profile</p>
+            <h2>速くした後を、<br>もう一度測る。</h2>
+            <p>slotted格納を採用した構成で、木材step内部8区間と顕熱内部4区間を別々の3 runで測り直しました。全6 runの権威状態・CSV・着火時刻を完全一致させたまま、最大区間は顕熱、顕熱内では熱容量評価という順位を再確認しました。2本stepはなお4 ms予算を超えるため、次は局所最適化より先に2〜20本のスケーリングを測ります。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -345,6 +345,19 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6ap-slotted-reprofile" class="capture-card">
+            <a href="assets/phase6/phase3_slotted_reprofile_report.svg" aria-label="Phase 6AP スロット格納採用後二層再プロファイルレポートを開く">
+              <img src="assets/phase6/phase3_slotted_reprofile_report.svg" width="1200" height="680" alt="スロット式木材セル格納の採用後に、木材step内部8区間と顕熱4区間を別runで再測定し、残る熱容量評価を次の監査候補として示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Re-rank after slotted storage</strong><span>internal 5.4518 ms · sensible 37.09% · capacity 41.80% of detailed work</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6AP unchanged burn scenario" data-video-meta="Selection-only re-profile · exact authoritative Phase 3 output · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · 視覚出力は同一</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <figure class="capture-card">
             <a href="assets/phase6/replicate_holdout_report.svg" aria-label="Phase 6C 合板反復ホールドアウトレポートを開く">
               <img src="assets/phase6/replicate_holdout_report.svg" width="1200" height="680" alt="未使用の合板SAMP.3について、着火時刻と平均質量減少速度の観測・初期・SAMP.1/2選定値を並べたSVGグラフ">
@@ -382,7 +395,7 @@
 
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>採用後の順位を測り直す</h3><ul><li>内部8区間は広域タイマー3 run</li><li>顕熱4区間はセル単位タイマー3 run</li><li>各区間1,180サンプル</li><li>全6 runで権威出力完全一致</li></ul></section>
-            <section class="story-card warm"><span class="card-index">02</span><h3>次の監査対象を選ぶ</h3><ul><li>顕熱 2.4203 ms · 41.75%</li><li>熱分解 1.0612 ms · 18.31%</li><li>伝導 0.9661 ms · 16.67%</li><li>顕熱内は熱容量 46.51%</li></ul></section>
+            <section class="story-card warm"><span class="card-index">02</span><h3>次の判断を変える</h3><ul><li>顕熱 2.0221 ms · 37.09%</li><li>熱分解 1.0917 ms · 20.02%</li><li>伝導 0.9991 ms · 18.33%</li><li>次は2〜20本のスケーリング</li></ul></section>
           </div>
 
           <section class="verification" aria-labelledby="phase6-verification-title">
@@ -412,6 +425,7 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Adopted re-profile</strong><small>3 broad + 3 detailed runs · 1,180 samples · exact outputs</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Step-local heat capacity</strong><small>3 alternating pairs · public state rescanned · exact outputs · adopted</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AK re-profile</strong><small>3 broad + 3 detailed runs · 1,180 samples · exact outputs</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AP re-profile</strong><small>slotted cells · 3 broad + 3 detailed runs · exact outputs</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Default timing path</strong><small>homogeneous fast · timers off · 10.4678 s scenario</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>
             </div>
@@ -537,6 +551,12 @@
               <div><dt>Slotted-cell scenario</dt><dd>9.9799 → 9.3705 s</dd></div>
               <div><dt>Phase 6AO decision</dt><dd>adopted · 3 / 3 pairs improve</dd></div>
               <div><dt>Phase 6AO regression</dt><dd>41 / 41 · 452.4 s</dd></div>
+              <div><dt>Phase 6AP internal total</dt><dd>5.4518 ms · 3-run median</dd></div>
+              <div><dt>Slotted-path profiled step</dt><dd>5.5179 ms · 2 logs</dd></div>
+              <div><dt>Current sensible heat</dt><dd>2.0221 ms · 37.09%</dd></div>
+              <div><dt>Current pyrolysis / conduction</dt><dd>1.0917 / 0.9991 ms</dd></div>
+              <div><dt>Detailed heat capacity</dt><dd>1.5547 ms · 41.80%</dd></div>
+              <div><dt>Phase 6AP evidence</dt><dd>3 + 3 runs · selection only</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
@@ -552,8 +572,8 @@
           </section>
 
           <div class="notes-grid">
-            <section class="note caution"><p class="note-label">Known limits</p><h3>宣言済みフィールドだけの状態コンテナ</h3><p>温度・質量・係数など既存の公開属性は従来どおり更新できますが、契約外の任意属性をセルへ後付けすることはできません。JSON schemaと復元経路は同一です。Flow peakはrun間で変動する非権威GPU診断で、添付動画は同じ権威出力の実画面です。</p></section>
-            <section class="note next"><p class="note-label">What comes next</p><h3>全区間の順位を測り直す</h3><p>スロット格納は顕熱だけでなく、伝導・蒸発・熱分解・状態確定の属性参照にも影響します。採用済み構成を広域再プロファイルし、次の候補を完全同値と非計測比較へつなげます。</p></section>
+            <section class="note caution"><p class="note-label">Known limits</p><h3>2本計測だけではMVP負荷を決められない</h3><p>現在の正式な性能比較は1,152セルの薪2本です。MVPの20本へ単純比例するとは限らず、Flow peakもrun間で変動する非権威GPU診断です。添付動画は物理出力が同一であることを示す既存の実画面で、新しい燃焼変形を示すものではありません。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>2〜20本の増え方を実測する</h3><p>同じ物理式とセル密度で2・5・10・20本を同一プロセス内で測り、総セル数、木材更新時間、1本当たり時間、4 ms予算との差を記録します。その結果から更新間引き、休眠セル、C++／GPU化の優先順位を決めます。</p></section>
           </div>
         </div>
       </article>
@@ -1077,7 +1097,7 @@
           <li class="done"><span>3</span><div><strong>木材熱モデル</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>4</span><div><strong>配置と通気</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>5</span><div><strong>崩壊</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · スロット採用後の再計測</small></div></li>
+          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · 2〜20本スケーリングへ</small></div></li>
         </ol>
       </div>
     </section>

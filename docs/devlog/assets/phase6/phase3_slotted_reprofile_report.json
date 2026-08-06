@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "phase": "phase6ap",
+  "status": "ok",
+  "run_count_per_depth": 3,
+  "environment": {
+    "application": "campfire.simulator.benchmark.kit",
+    "backend": "python",
+    "debugger_free_all_runs": true,
+    "constant_heat_capacity_fast_path": true,
+    "homogeneous_heat_capacity_fast_path": true,
+    "inline_homogeneous_sensible_heat_capacity_fast_path": true,
+    "runtime_topology": "dynamic",
+    "timing_depths_kept_separate": true,
+    "slotted_wood_cell_storage": true
+  },
+  "internal_profile": {
+    "median_total_ms": 5.4517999999999995,
+    "two_log_step_median_mean_ms": 5.5179,
+    "scenario_median_seconds": 10.2559,
+    "segments": {
+      "input_validation": {
+        "label": "Input validation",
+        "median_mean_ms": 0.007,
+        "median_p95_ms": 0.0127,
+        "share_percent": 0.12839796030668774
+      },
+      "conduction": {
+        "label": "Conduction",
+        "median_mean_ms": 0.9991,
+        "median_p95_ms": 1.3048,
+        "share_percent": 18.326057448915954
+      },
+      "sensible_heat": {
+        "label": "Sensible heat",
+        "median_mean_ms": 2.0221,
+        "median_p95_ms": 2.8474,
+        "share_percent": 37.090502219450464
+      },
+      "evaporation": {
+        "label": "Evaporation",
+        "median_mean_ms": 0.6037,
+        "median_p95_ms": 0.8765,
+        "share_percent": 11.07340694816391
+      },
+      "pyrolysis": {
+        "label": "Pyrolysis",
+        "median_mean_ms": 1.0917,
+        "median_p95_ms": 2.111,
+        "share_percent": 20.02457903811585
+      },
+      "char_oxidation": {
+        "label": "Char oxidation",
+        "median_mean_ms": 0.3347,
+        "median_p95_ms": 0.7784,
+        "share_percent": 6.139256759235482
+      },
+      "state_finalize": {
+        "label": "State finalize",
+        "median_mean_ms": 0.3709,
+        "median_p95_ms": 0.5139,
+        "share_percent": 6.803257639678639
+      },
+      "result_aggregation": {
+        "label": "Result aggregation",
+        "median_mean_ms": 0.0226,
+        "median_p95_ms": 0.0395,
+        "share_percent": 0.41454198613302035
+      }
+    },
+    "order": [
+      "sensible_heat",
+      "pyrolysis",
+      "conduction",
+      "evaporation",
+      "state_finalize",
+      "char_oxidation",
+      "result_aggregation",
+      "input_validation"
+    ],
+    "phase6an_median_total_ms": 5.5109,
+    "change_since_phase6an_percent": -1.0724201128672415
+  },
+  "sensible_detail": {
+    "median_total_ms": 3.719,
+    "profiled_parent_median_mean_ms": 3.7189,
+    "segments": {
+      "heat_capacity_evaluation": {
+        "label": "Heat capacity evaluation",
+        "median_mean_ms": 1.5547,
+        "median_p95_ms": 2.1325,
+        "share_percent": 41.80424845388546
+      },
+      "interior_conduction_update": {
+        "label": "Interior conduction-only update",
+        "median_mean_ms": 0.3498,
+        "median_p95_ms": 0.4722,
+        "share_percent": 9.405754235009411
+      },
+      "surface_boundary_update": {
+        "label": "Surface boundary update",
+        "median_mean_ms": 0.5788,
+        "median_p95_ms": 0.8461,
+        "share_percent": 15.563323474052165
+      },
+      "loop_and_timer_overhead": {
+        "label": "Loop and timer overhead",
+        "median_mean_ms": 1.2357,
+        "median_p95_ms": 1.6419,
+        "share_percent": 33.22667383705297
+      }
+    },
+    "operation_order": [
+      "heat_capacity_evaluation",
+      "surface_boundary_update",
+      "interior_conduction_update"
+    ],
+    "sensible_change_since_phase6an_percent": -3.0493359543558562,
+    "heat_capacity_change_since_phase6an_percent": 2.0546146776946226
+  },
+  "selection": {
+    "broad_candidate": "sensible_heat",
+    "primary_candidate": "heat_capacity_evaluation",
+    "profile_is_for_candidate_selection_not_adoption": true,
+    "next_audit": "remaining per-cell mass reads and arithmetic",
+    "next_gate": "exact outputs plus alternating unprofiled wood-step and scenario improvement"
+  },
+  "equivalence": {
+    "exact_authoritative_outputs_all_runs": true,
+    "dry_state_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+    "wet_state_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+    "metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759",
+    "ignition_seconds": {
+      "dry": 66.2,
+      "wet": 166.4
+    },
+    "flow_active_blocks_peak_observed": [
+      299,
+      352
+    ],
+    "flow_peak_is_not_authoritative": true
+  },
+  "baselines": {
+    "phase6an": "docs\\devlog\\assets\\phase6\\phase3_inline_reprofile_report.json",
+    "phase6ao": "docs\\devlog\\assets\\phase6\\phase3_slotted_cell_report.json"
+  },
+  "runs": {
+    "internal": [
+      "artifacts\\phase3\\phase6ap\\internal_profile_1\\summary.json",
+      "artifacts\\phase3\\phase6ap\\internal_profile_2\\summary.json",
+      "artifacts\\phase3\\phase6ap\\internal_profile_3\\summary.json"
+    ],
+    "sensible": [
+      "artifacts\\phase3\\phase6ap\\sensible_profile_1\\summary.json",
+      "artifacts\\phase3\\phase6ap\\sensible_profile_2\\summary.json",
+      "artifacts\\phase3\\phase6ap\\sensible_profile_3\\summary.json"
+    ]
+  },
+  "comparison_note": "Phase 6AN and Phase 6AP are separate-launch profiles used only as context; Phase 6AO is the causal alternating adoption gate."
+}
