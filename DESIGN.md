@@ -1633,3 +1633,17 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 最終回帰: 8分割後の標準`repo.bat test`は通常32件`38.7 s`、熱3件`3.8 s`、湿潤1件`108.8 s`、coverage付き崩落1件`262.0 s`、固定参照1件`4.8 s`、通気統合1件`5.2 s`、数値2件`25.4 s`の全41件をrunner`453.0 s`で成功させた。固定上限は変更していない。
 - 可視化と再現: `run_phase6am_inline_heat_capacity_benchmark.ps1`が交互3組を取得し、`compare_phase3_inline_heat_capacity.py`が設定、完全同値、中央値、組別改善を検査して`phase3_inline_heat_capacity_report.json/.svg`を生成する。採用後の固定カメラ実画面60枚から6秒MP4を生成し、開発日誌のPhase 6AMカードから小型ボタンとmodalで再生する。描画出力は完全同一であり、動画は新しい燃焼変形を示すものではない。
 - 次: 採用済みインライン経路を含む構成を広域再プロファイルし、顕熱・熱分解・伝導の順位を更新する。詳細計測が必要な場合は別runへ分離し、次の変更も完全同値と非計測end-to-end比較で採否を決める。
+
+## 70. Phase 6AN インライン経路採用後の二層再プロファイル
+
+### 2026-08-06: 採用後の残存コストを広域と顕熱詳細で測り直す
+
+- 測定境界: debugger-free benchmarkアプリ、Python backend、採用済みsurface fast・条件付きclamp・deferred phase・compact metrics・constant-model・step-local homogeneous・inline homogeneous sensible heat-capacity fast、dynamic runtime topology、1,200 step、Flow・CSV・表示・2 captureを維持した。広域8区間を内部タイマーだけで測る3 runと、顕熱4区間をセル単位タイマーで測る別の3 runを実行し、計測深度を混ぜない。
+- 広域結果: 3 run中央値の内部合計は`5.5109 ms`、profile付き木材2本stepは`5.5788 ms`、シナリオは`9.8718 s`だった。順位は顕熱`2.0857 ms`（`37.85%`）、熱分解`1.0723 ms`（`19.46%`）、伝導`0.9845 ms`（`17.86%`）、蒸発`0.6080 ms`（`11.03%`）、状態確定`0.3974 ms`（`7.21%`）、炭酸化`0.3329 ms`（`6.04%`）だった。
+- 顕熱内訳: 詳細runの4区間中央値和と親区間中央値はともに`3.7013 ms`だった。熱容量評価`1.5234 ms`（`41.16%`）、表面境界更新`0.5619 ms`（`15.18%`）、内部セル更新`0.3426 ms`（`9.26%`）、ループ／タイマー負荷`1.2734 ms`（`34.40%`）で、熱容量評価が実処理3項目の最大だった。
+- 解釈境界: Phase 6ALの別起動profileに対して内部合計は`4.93%`、顕熱は`13.82%`、熱容量評価は`14.55%`低い。ただし別起動差を分離できないためPhase 6AMの因果的効果として扱わず、採用効果はPhase 6AMの非計測交互3組で得たstep`6.15%`・シナリオ`4.29%`短縮を正とする。詳細runのloop／timer負荷は全セル走査とセル単位`perf_counter()`を含み、採用候補にしない。
+- 同値性: 6 runすべてで乾燥／湿潤薪の権威状態SHA-256、CSV SHA-256`01aaf0c…7759`、着火`66.2 / 166.4 s`が完全一致した。Flow active block peak`294 / 347`は非権威GPU診断として候補順位に使わない。
+- 判断: 広域最大は引き続き顕熱、詳細の最大実処理は熱容量評価である。次の監査対象を、step-local共通係数を保ったまま残るセルごとの質量読取りと算術に限定する。公開セルの途中編集意味、加算順、例外、`1e-9 J/K`下限を変える集約やstep間キャッシュは禁止する。profileは候補選定だけに使い、試作の採否は完全同値と非計測交互比較で決める。
+- 可視化と再現: `run_phase6an_inline_reprofile.ps1`が広域3 runと顕熱詳細3 runを取得し、`analyze_phase3_inline_reprofile.py`が採用設定、debugger-free、二つの計測深度、区間和、完全同値、候補順位を検査して`phase3_inline_reprofile_report.json/.svg`を生成する。物理・描画出力は完全同一なので、開発日誌のPhase 6AN動画ボタンはPhase 6AMで取得した同じ実画面MP4を再参照する。
+- 検証: runnerは既知のFabric警告だけで6 runと解析を完了した。解析器のPython構文、PowerShell runnerの構文、JSON schema/status、SVG寸法、HTML表示と動画modalを個別に検査する。このPhaseではアプリコードと物理式を変更していないため標準41テストは再実行せず、直前のPhase 6AM採用後`41 / 41`を現在の回帰基準とする。
+- 次: 熱容量評価の残る4質量読取りと同一順序の積和について、公開編集意味を保てる限定境界が存在するかを監査する。成立する場合だけ試作し、元経路を残した非計測交互3組で木材stepとシナリオを比較する。
