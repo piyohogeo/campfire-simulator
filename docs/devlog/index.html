@@ -37,7 +37,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>41 / 41 passed</strong></div>
-        <div><span>次の焦点</span><strong>Distributed 5 Hz wood updates</strong></div>
+        <div><span>次の焦点</span><strong>App-level scheduler contract</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6AQ · Multi-log CPU scaling</p>
-            <h2>20本の差を、<br>数字で見極める。</h2>
-            <p>燃焼中の権威木材モデルを2・5・10・20本へ増やし、Kit PythonでCPU stepだけを3回ずつ測りました。20本同時更新は平均51.89 msで、4 ms予算には12.97倍の高速化が必要です。ただし5 Hzへ均等分散した平均は4.32 ms/画面まで下がるため、次は安全な分散更新と非活動薪・休眠セルの判定を測り、C++／GPU化の要否を決めます。</p>
+            <p class="section-kicker">Phase 6AR · Distributed 5 Hz trial</p>
+            <h2>同じ一歩を、<br>12画面へ分ける。</h2>
+            <p>20本の離散stepと入力値を変えず、固定12 frameへ分散する試作を測りました。熱入力0かつ全セルが周囲温度の薪だけを厳密に休眠させると、活動12本・休眠8本までframe p95が3.95 msに収まり、全15 runで同期参照と最終状態が完全一致しました。実アプリの入出力遅延と活動率が未測定なので、既定採用はまだ行いません。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -371,6 +371,19 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6ar-distributed-updates" class="capture-card">
+            <a href="assets/phase6/distributed_wood_update_report.svg" aria-label="Phase 6AR 固定12 frame分散更新と厳密休眠薪の活動率レポートを開く">
+              <img src="assets/phase6/distributed_wood_update_report.svg" width="1200" height="680" alt="20本中の活動薪を2、5、10、12、20本へ変え、固定12 frame分散時の平均とp95、4ミリ秒予算、同期参照との完全一致を示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Spread fixed steps; sleep only exact equilibrium</strong><span>12 active + 8 sleeping · p95 3.9522 ms · exact states · production blocked</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6AR unchanged burn scenario" data-video-meta="Isolated scheduler trial · production rendering unchanged · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · 視覚出力は同一</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <figure class="capture-card">
             <a href="assets/phase6/replicate_holdout_report.svg" aria-label="Phase 6C 合板反復ホールドアウトレポートを開く">
               <img src="assets/phase6/replicate_holdout_report.svg" width="1200" height="680" alt="未使用の合板SAMP.3について、着火時刻と平均質量減少速度の観測・初期・SAMP.1/2選定値を並べたSVGグラフ">
@@ -407,8 +420,8 @@
           </figure>
 
           <div class="story-grid">
-            <section class="story-card"><span class="card-index">01</span><h3>同じ燃焼状態で本数だけ増やす</h3><ul><li>2・5・10・20本を各3 run</li><li>1本1,152セル · 最大23,040セル</li><li>180〜220モデル秒の燃焼中区間</li><li>複製薪の最終状態は完全一致</li></ul></section>
-            <section class="story-card warm"><span class="card-index">02</span><h3>移行前に分散余地を測る</h3><ul><li>20本同時 51.8895 ms</li><li>4 msまで12.97倍必要</li><li>5 Hz分散 4.3241 ms/frame</li><li>残る7.50%を活動判定で監査</li></ul></section>
+            <section class="story-card"><span class="card-index">01</span><h3>数値stepはそのまま分散する</h3><ul><li>20本を固定12 slotへ割当て</li><li>論理tick先頭で入力snapshot</li><li>各薪は同じdt・同じstep数</li><li>全15 runで同期参照と完全一致</li></ul></section>
+            <section class="story-card warm"><span class="card-index">02</span><h3>休眠は薪全体の厳密平衡だけ</h3><ul><li>熱入力0・全セル周囲温度</li><li>公開編集・正熱入力で即起床</li><li>12活動時 p95 3.9522 ms</li><li>20活動時 p95 7.6627 ms</li></ul></section>
           </div>
 
           <section class="verification" aria-labelledby="phase6-verification-title">
@@ -440,6 +453,7 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AK re-profile</strong><small>3 broad + 3 detailed runs · 1,180 samples · exact outputs</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AP re-profile</strong><small>slotted cells · 3 broad + 3 detailed runs · exact outputs</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AQ scaling</strong><small>2 / 5 / 10 / 20 logs · 12 runs · exact per-log states</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AR scheduler trial</strong><small>5 activity ratios · 15 runs · synchronous states exact</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Default timing path</strong><small>homogeneous fast · timers off · 10.4678 s scenario</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>
             </div>
@@ -579,6 +593,14 @@
               <div><dt>10 / 5 Hz distributed</dt><dd>8.6483 / 4.3241 ms/frame</dd></div>
               <div><dt>5 Hz remaining gap</dt><dd>7.50% · activity gate next</dd></div>
               <div><dt>Scaling mass error</dt><dd>≤ 5.83 × 10⁻13 kg</dd></div>
+              <div><dt>2 / 5 active p95</dt><dd>2.8849 / 3.7903 ms</dd></div>
+              <div><dt>10 / 12 active p95</dt><dd>3.9156 / 3.9522 ms</dd></div>
+              <div><dt>20 active mean / p95</dt><dd>4.5366 / 7.6627 ms</dd></div>
+              <div><dt>Measured p95 capacity</dt><dd>12 active + 8 exact sleeping</dd></div>
+              <div><dt>12-active frames over 4 ms</dt><dd>4.12% · max 5.0888 ms</dd></div>
+              <div><dt>Distributed equivalence</dt><dd>20 / 20 states exact · 15 runs</dd></div>
+              <div><dt>Distributed mass error</dt><dd>≤ 6.82 × 10⁻13 kg</dd></div>
+              <div><dt>Phase 6AR decision</dt><dd>isolated success · production blocked</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
@@ -594,8 +616,8 @@
           </section>
 
           <div class="notes-grid">
-            <section class="note caution"><p class="note-label">Known limits</p><h3>分散値は容量見積りで、物理検証ではない</h3><p>今回の値は権威CPU木材stepだけで、Flow、USD、描画、metrics、薪配置差を含みません。5 Hz換算は処理を均等配置した平均であり、時間刻みをまとめた場合の安定性や着火時刻はまだ検証していません。添付動画は同じ権威出力の既存実画面です。</p></section>
-            <section class="note next"><p class="note-label">What comes next</p><h3>5 Hz分散と休眠条件を試す</h3><p>20本を固定順で12 frameへ分散し、各薪の経過時間を保存して決定的に更新する試作を作ります。同時に、熱入力・温度・反応率から安全に更新を休める条件を監査します。残る7.50%へ届かなければC++または常駐GPU経路を比較します。</p></section>
+            <section class="note caution"><p class="note-label">Known limits</p><h3>実アプリの遅延意味は未検証</h3><p>隔離試作では入力を先に固定できるため数値状態は完全一致しますが、実アプリでは更新結果がEmitter、表示、支持判定へ最大11 frame遅れて届きます。また12本時も約4.12%のframeが4 msを超え、hard maximum保証ではありません。セル単位休眠は隣接伝導を壊すため使っていません。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>アプリ境界の入出力時刻を決める</h3><p>20本相当のヘッドレス契約で、論理tick入力snapshot、Emitter・表示・支持判定の読取り時点、最大11 frameの出力遅延、実活動率を同時に記録します。全20本活動が必要ならC++／常駐GPUまたは結合を保つ細粒度schedulerへ進みます。</p></section>
           </div>
         </div>
       </article>
@@ -1119,7 +1141,7 @@
           <li class="done"><span>3</span><div><strong>木材熱モデル</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>4</span><div><strong>配置と通気</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>5</span><div><strong>崩壊</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · 5 Hz分散更新へ</small></div></li>
+          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · アプリ入出力契約へ</small></div></li>
         </ol>
       </div>
     </section>
