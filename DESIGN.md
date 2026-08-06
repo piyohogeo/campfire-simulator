@@ -1706,3 +1706,18 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 可視化と再現: `run_phase6ar_distributed_wood_updates.ps1`がKit Pythonで15 runのraw JSONを生成し、`analyze_distributed_wood_updates.py`が測定境界、休眠契約、run順、同期参照完全一致、活動率別mean／p95／超過率を検査して`distributed_wood_update_report.json/.svg`を生成する。描画経路は変更していないため、開発日誌のPhase 6AR動画ボタンは検証済みPhase 3実画面MP4を再参照する。
 - 検証: 正式runnerは参照生成、15 run、解析を`106.1 s`で完了した。Python構文、PowerShell構文、JSON schema/status、SVG寸法、HTML表示と動画modalを個別に検査する。このPhaseはproductionアプリコード、物理式、USD、起動設定を変更しないため、標準41テストとrelease buildは再実行しない。
 - 次: production変更の前に、実アプリ相当の20本入力／出力契約をヘッドレスに構成する。論理tick先頭の熱・酸素snapshot、最大11 frameの木材出力遅延、Emitter／表示／支持判定の読取り時点、活動率を計測し、着火順・質量保存・崩壊イベント・frame p95を同時に評価する。
+
+## 75. Phase 6AS アプリ相当の木材入出力契約
+
+### 2026-08-06: 入出力時刻を固定し、移動熱源で厳密休眠の実効活動率を測る
+
+- 契約境界: 20本、`dt = 0.2 s`、60 fps、固定12 slotを維持し、論理tick先頭で各薪の熱流束`0〜150 kW/m²`と酸素係数`0.45〜0.75`をimmutable snapshotにする。入力snapshotの構築はslot 0 frame時間に含める。各薪は`index % 12`のframeでだけ権威状態を更新し、更新後にrevision付きimmutable出力をcommitする。最大出力遅延は11 frame、60 fps換算`183.33 ms`である。
+- 出力利用: commit出力はFlow emitter用fuel／temperature／smoke、表示用表面温度／残存質量、支持判定用最弱断面支持率を一つのrevisionに束ねる。各render frameでEmitter・表示・支持判定の3 consumerが20本を読み、同じ`log index / revision / output tick`だけを観測すること、未来出力を読まないこと、tick遅れが最大1であることを検査する。厳密休眠中は数値payloadを再計算せず、経過時刻と入力revisionだけを更新する。
+- 入力パターン: `fixed5`、`fixed12`、`rotating5`を各180 tick、先頭20 tickをwarmupとして3 runずつ測った。固定条件は同じ薪へ連続加熱する。`rotating5`は5本の正熱入力を毎tick別の組へ移し、要求活動率を常に25%に保つ。酸素は30 tickごとに変え、入力適用、権威step、runtime metrics、Flow写像、支持率集約、3 consumer読取りをframe時間へ含めた。USD、Flow solver、描画、PhysXは境界外である。
+- 契約結果: 全9 run、各1,920測定frameで、全20本の最終権威状態SHA-256と全20 commit出力SHA-256が同期参照と完全一致した。最大質量収支誤差は`1.59 × 10⁻12 kg`、最大遅延11 frame、最大consumer遅れ1 tickであった。入力snapshot p95中央値は各パターン`0.0436 / 0.0473 / 0.0447 ms`で、主要負荷ではない。
+- 性能結果: 3 run中央値のframe mean／p95は、`fixed5`が`1.0952 / 2.9549 ms`、`fixed12`が`2.4180 / 3.1147 ms`、`rotating5`が`3.7136 / 5.4947 ms`だった。4 ms超過率はそれぞれ`0.10% / 0.16% / 47.55%`である。この36モデル秒の契約試験は着火前を主に扱うため、燃焼中20本の上限根拠はPhase 6ARのp95`7.6627 ms`を維持する。
+- 活動率結果: `fixed5 / fixed12`のsolver活動数は`5 / 12`を維持した。一方`rotating5`は正熱入力が常に5本でも、加熱済み薪の温度が周囲温度へ厳密一致しないため起床数が`5 → 10 → 15 → 20`と累積し、4 tick、`0.8`モデル秒で20本へ達した。その後は熱入力0の薪も伝導・放熱を解くため再休眠しない。
+- 判断: snapshot、固定slot、immutable commit、3 consumer整合性の入出力契約は成立した。しかし厳密平衡休眠は「一度も加熱されていない薪」を除外する安全ゲートであり、移動する炎を持つ焚き火の安定した容量制御にはならない。production既定への採用は見送る。セル単位休眠も隣接伝導を欠落させるため採用しない。
+- 可視化と再現: `run_phase6as_app_scheduler_contract.ps1`がKit Pythonで9 runのraw JSONを生成し、`analyze_app_scheduler_contract.py`が計測境界、反復順、状態／出力同値性、遅延、consumer整合性、活動率、frame予算を検査して`app_scheduler_contract_report.json/.svg`を生成する。描画経路は変えていないため、開発日誌の動画ボタンはPhase 6AMで取得した同じ実画面MP4を再参照する。
+- 検証: Python構文、PowerShell構文、JSON schema/status、SVG寸法、HTML表示と動画modalを個別に検査する。このPhaseではproductionアプリコード、物理式、USD、起動設定を変更していないため標準41テストとbuildは再実行せず、Phase 6AO採用後`41 / 41`とrelease build／Phase 0を現在の回帰基準とする。
+- 次: 完全同値を維持する限り厳密休眠から追加容量は得られない。次は、許容温度差・反応率・伝導残差と最大休眠時間を明示する近似休眠を誤差予算付きで試作するか、全起床20本を対象にC++／常駐GPUへ移すかを比較する。近似を試す場合は着火時刻、質量、温度場、Flow入力、支持喪失時刻の許容誤差を先に固定し、同期参照との差を測ってから採否を決める。

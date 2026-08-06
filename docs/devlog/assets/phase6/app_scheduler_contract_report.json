@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "phase": "phase6as",
+  "status": "ok",
+  "measurement": {
+    "runtime": "Kit Python",
+    "scope": "headless app-equivalent wood input/output contract",
+    "total_logs": 20,
+    "fixed_frame_slots": 12,
+    "wood_update_hz": 5.0,
+    "runs_per_pattern": 3,
+    "measured_frames_per_run": 1920,
+    "input_snapshot_in_first_frame": true,
+    "usd_flow_render_physx_excluded": true
+  },
+  "budget_ms": 4.0,
+  "pattern_rows": [
+    {
+      "pattern": "fixed5",
+      "requested_active_count": 5,
+      "median_scheduler_active_count": 5.0,
+      "final_scheduler_active_count": 5,
+      "first_all_awake_model_seconds": null,
+      "median_frame_mean_ms": 1.0951893776412664,
+      "median_frame_p95_ms": 2.9549000319093466,
+      "median_frame_max_ms": 4.182799952104688,
+      "median_frames_over_4ms_fraction": 0.0010416666666666667,
+      "median_input_snapshot_p95_ms": 0.04359986633062363,
+      "median_scheduled_update_and_output_mean_ms": 1.0680099002153536,
+      "median_consumer_read_mean_ms": 0.023378490368486382,
+      "meets_p95_budget": true
+    },
+    {
+      "pattern": "fixed12",
+      "requested_active_count": 12,
+      "median_scheduler_active_count": 12.0,
+      "final_scheduler_active_count": 12,
+      "first_all_awake_model_seconds": null,
+      "median_frame_mean_ms": 2.4180085954867536,
+      "median_frame_p95_ms": 3.114700084552169,
+      "median_frame_max_ms": 4.42809984087944,
+      "median_frames_over_4ms_fraction": 0.0015625,
+      "median_input_snapshot_p95_ms": 0.04730001091957092,
+      "median_scheduled_update_and_output_mean_ms": 2.38734744877244,
+      "median_consumer_read_mean_ms": 0.02624192869310112,
+      "meets_p95_budget": true
+    },
+    {
+      "pattern": "rotating5",
+      "requested_active_count": 5,
+      "median_scheduler_active_count": 20.0,
+      "final_scheduler_active_count": 20,
+      "first_all_awake_model_seconds": 0.8,
+      "median_frame_mean_ms": 3.7136130211971854,
+      "median_frame_p95_ms": 5.494700046256185,
+      "median_frame_max_ms": 7.190999807789922,
+      "median_frames_over_4ms_fraction": 0.47552083333333334,
+      "median_input_snapshot_p95_ms": 0.04469999112188816,
+      "median_scheduled_update_and_output_mean_ms": 3.6809329689276638,
+      "median_consumer_read_mean_ms": 0.02840020570147317,
+      "meets_p95_budget": false
+    }
+  ],
+  "contract": {
+    "snapshot_once_per_logical_tick": true,
+    "fixed_slot_assignment": "log_index % 12",
+    "maximum_allowed_output_latency_frames": 11,
+    "maximum_allowed_consumer_tick_staleness": 1,
+    "immutable_output_revision_shared_by_consumers": true,
+    "sleeping_output_reuses_unchanged_payload": true,
+    "consumer_views": [
+      "flow_emitter",
+      "visual_state",
+      "support_decision"
+    ]
+  },
+  "equivalence": {
+    "exact_reference_states_all_runs": true,
+    "exact_reference_outputs_all_runs": true,
+    "maximum_mass_balance_error_kg": 1.5916157281026244e-12
+  },
+  "decision": {
+    "adopt_as_production_default": false,
+    "input_output_contract_succeeded": true,
+    "maximum_output_latency_frames": 11,
+    "maximum_output_latency_ms_at_60fps": 183.33333333333331,
+    "exact_dormancy_is_stable_capacity_control": false,
+    "rotating_requested_active_fraction": 0.25,
+    "rotating_final_scheduler_active_fraction": 1.0,
+    "rotating_all_awake_model_seconds": 0.8,
+    "fixed12_meets_p95_budget": true,
+    "rotating5_meets_p95_budget": false,
+    "next_step": "choose and validate an explicit approximate sleep tolerance or move the all-awake path to native/GPU execution before production integration"
+  },
+  "raw_report": "artifacts\\phase3\\phase6as\\app_scheduler_contract_raw.json"
+}
