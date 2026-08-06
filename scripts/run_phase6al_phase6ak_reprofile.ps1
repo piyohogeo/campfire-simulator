@@ -25,6 +25,7 @@ $commonArguments = @{
     CellPhaseUpdates = "deferred"
     RuntimeMetrics = "compact"
     RuntimeTopology = "dynamic"
+    InlineHomogeneousSensibleHeatCapacityPath = "original"
 }
 
 for ($run = 1; $run -le $RunCount; $run++) {

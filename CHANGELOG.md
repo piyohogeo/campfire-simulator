@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6AM inline homogeneous sensible heat-capacity path, mutable-state fallback and exception tests, alternating three-pair adoption gate, browser-readable report, and a new real-run development-log video.
 - Added the Phase 6AL two-depth re-profile of the adopted Phase 6AK path, exact-output gates, current-hotspot report, and compact development-log video trigger.
 - Added the Phase 6AK step-local homogeneous heat-capacity path, public-state fallback tests, alternating three-pair adoption gate, and browser-readable report with a compact video trigger.
 - Added the Phase 6AJ two-depth adopted-path re-profile, with separate three-run broad and per-cell timing sets, exact-output gates, and a browser-readable candidate report.
@@ -76,6 +77,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
+- Split the fixed-reference and full 180-second air-feedback regressions into dedicated non-coverage processes after two unchanged standard runs hit Kit's fixed 300-second coverage limit; retained collapse coverage, representative thermal/air coverage, all assertions, and all 41 tests.
+- Enabled the Phase 6AM inline homogeneous sensible heat-capacity path after a 6.15% median two-log step improvement, 4.29% scenario improvement, 3/3 improving pairs, and exact authoritative outputs; per-cell temperature and mass reads remain uncached.
 - Enabled the Phase 6AK step-local homogeneous heat-capacity path after a 13.15% median two-log step improvement, 9.95% scenario improvement, 3/3 improving pairs, and exact authoritative outputs; no coefficient is retained across steps.
 - Split the wet-kindling coverage scenario into its own fixed-timeout process and stop it once both ignition events are observed, while retaining evaporation, ignition-order, mass-balance, finite-state, and non-negative-mass assertions; the standard suite remains 41/41 with coverage enabled.
 - Enabled the Phase 6AI constant-model heat-capacity path in the standard Python application route after a 7.00% median two-log step improvement and exact authoritative-output checks; no heat-capacity values are cached.

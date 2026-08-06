@@ -1615,3 +1615,21 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 可視化と再現: `run_phase6al_phase6ak_reprofile.ps1`が広域3 runと顕熱詳細3 runを取得し、`analyze_phase3_phase6ak_reprofile.py`がPhase 6AK設定、二つの計測深度、サンプル数、区間和、完全同値、候補順位を検査して`phase3_phase6ak_reprofile_report.json/.svg`を生成する。描画出力は完全同一なので、開発日誌のPhase 6AL動画ボタンは検証済みPhase 3 MP4を再参照する。
 - 回帰確認: Python解析器追加後の標準`repo.bat test`は通常32件`29.0 s`、熱モデル3件`3.8 s`、湿潤1件`87.9 s`、崩落／参照2件`258.6 s`、通気1件`200.3 s`、数値2件`21.1 s`の全41件をrunner`605.1 s`で成功させた。各coverageプロセスは固定`300 s`上限内である。
 - 次: 熱容量評価ループから、step-local共通係数を保ったまま関数呼出しまたは属性解決を減らせる限定境界を監査する。成立する場合だけ試作し、変更前後を非計測の交互順序3組で比較する。
+
+## 69. Phase 6AM 均質顕熱容量のインライン評価
+
+### 2026-08-06: 公開状態を毎セル読みながら、顕熱ループの関数呼出しだけを外す
+
+- 契約監査: 熱容量評価器は顕熱、熱分解、炭化物酸化から呼ばれる。今回の変更対象は全セルで必ず実行する顕熱だけとし、反応が成立したセルだけで使う熱分解・炭化物酸化は既存のstep-local評価器を維持する。公開セル状態とモデル係数は可変なので、質量・温度・係数をstep間キャッシュしない。
+- 限定試作: Phase 6AKのstep-local均質性走査が成立し、明示設定が有効な場合だけ、顕熱ループ内で乾燥木材・水分・炭・灰の4項を従来と同じ順序で加算する。温度の有限正値検査、`1e-9 J/K`下限、セル順序、境界熱計算、SI係数を維持する。不均質性を検出したstepは従来経路へ戻る。
+- 公開操作: Kit設定`pythonInlineHomogeneousSensibleHeatCapacityFastPath`、`run_phase3.ps1 -InlineHomogeneousSensibleHeatCapacityPath auto|original|fast`、summaryの使用経路記録を追加した。`auto`は均質比熱経路が有効な場合だけ同時に有効となり、従属条件違反は明示的に拒否する。Phase 6AK・6ALの履歴runnerは旧条件を再現するため`original`を固定する。
+- 単体同値性: 元経路、定数モデル専用経路、step-local均質経路、インライン顕熱経路を同じモデルから分岐し、セル固有比熱の追加・解除、モデル既定比熱の変更、温度依存モデルへの変更を含む80 stepについて、毎step結果、最終辞書、metricsを完全一致させる。不正比熱・温度と従属フラグの例外も検査する。
+- 正式比較: debugger-free benchmarkアプリ、Python backend、採用済みsurface fast・条件付きclamp・deferred phase・compact metrics・constant／homogeneous heat-capacity fast、dynamic topology、1,200 step、Flow・CSV・表示・2 capture、内部タイマー無効を維持した。奇数組はbaseline→inline、偶数組は逆順とする3組を測定した。
+- 同値性: 正式6 runすべてで乾燥／湿潤状態SHA-256、CSV SHA-256`01aaf0c…7759`、着火`66.2 / 166.4 s`が完全一致した。Flow active block peakはbaseline`294 / 347`、inline`347`で変動したため、従来どおり非権威GPU診断として採否から除外する。
+- 性能結果: 木材2本step平均中央値は`5.8857 → 5.5237 ms`（`6.15%`短縮）、p95は`8.5294 → 7.7034 ms`（`9.68%`短縮）、シナリオ中央値は`10.1667 → 9.7310 s`（`4.29%`短縮）だった。3/3組でstepとシナリオがともに改善し、必要な2/3組を上回った。
+- 判断: 完全同値、非計測中央値、反復ゲートをすべて満たしたため採用する。通常／benchmarkアプリと標準Phase 3 runnerの既定を有効化し、比較用の元経路を残す。これは物理モデル、Flow入力、木材の見た目を変える変更ではない。
+- 採用後確認: release再ビルドとPhase 0に成功した。無指定の標準Phase 3はinline／homogeneousの両経路を選び、木材step平均`5.3303 ms`、乾燥／湿潤状態SHA-256、CSV SHA-256、着火時刻を正式比較と一致させた。開発日誌用動画captureを有効にしたため、そのrunのシナリオ`43.0503 s`は採用性能値に使わない。
+- 回帰分割: 採用後の標準テストを同じ7分割で2回実行したところ、通常32件・熱3件・湿潤1件・数値2件は毎回成功した一方、崩落／固定参照2件と通気統合1件のcoverageプロセスが各回とも固定`300 s`上限へ達した。単独coverageなしでは固定参照`4.0 s`、通気`4.7 s`で成功したため、数値失敗ではなくcoverage膨張と判定した。崩落統合はcoverageありの単独区画へ残し、固定参照と180秒通気統合だけをcoverageなしの独立区画へ移した。短い層熱・通気・酸素・熱帰還テストはcoverageありのままで、件数とアサーションは削除していない。
+- 最終回帰: 8分割後の標準`repo.bat test`は通常32件`38.7 s`、熱3件`3.8 s`、湿潤1件`108.8 s`、coverage付き崩落1件`262.0 s`、固定参照1件`4.8 s`、通気統合1件`5.2 s`、数値2件`25.4 s`の全41件をrunner`453.0 s`で成功させた。固定上限は変更していない。
+- 可視化と再現: `run_phase6am_inline_heat_capacity_benchmark.ps1`が交互3組を取得し、`compare_phase3_inline_heat_capacity.py`が設定、完全同値、中央値、組別改善を検査して`phase3_inline_heat_capacity_report.json/.svg`を生成する。採用後の固定カメラ実画面60枚から6秒MP4を生成し、開発日誌のPhase 6AMカードから小型ボタンとmodalで再生する。描画出力は完全同一であり、動画は新しい燃焼変形を示すものではない。
+- 次: 採用済みインライン経路を含む構成を広域再プロファイルし、顕熱・熱分解・伝導の順位を更新する。詳細計測が必要な場合は別runへ分離し、次の変更も完全同値と非計測end-to-end比較で採否を決める。

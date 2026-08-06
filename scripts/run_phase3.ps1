@@ -8,6 +8,8 @@ param(
     [string]$ConstantHeatCapacityPath = "fast",
     [ValidateSet("auto", "original", "fast")]
     [string]$HomogeneousHeatCapacityPath = "auto",
+    [ValidateSet("auto", "original", "fast")]
+    [string]$InlineHomogeneousSensibleHeatCapacityPath = "auto",
     [switch]$CollectWoodStateDiagnostics,
     [ValidateSet("original", "fast")]
     [string]$PythonSurfaceBoundaryPath = "fast",
@@ -38,6 +40,12 @@ $useHomogeneousHeatCapacityFastPath = if ($HomogeneousHeatCapacityPath -eq "auto
 else {
     $HomogeneousHeatCapacityPath -eq "fast"
 }
+$useInlineHomogeneousSensibleHeatCapacityFastPath = if ($InlineHomogeneousSensibleHeatCapacityPath -eq "auto") {
+    $useHomogeneousHeatCapacityFastPath
+}
+else {
+    $InlineHomogeneousSensibleHeatCapacityPath -eq "fast"
+}
 $usePythonSurfaceBoundaryFastPath = $PythonSurfaceBoundaryPath -eq "fast"
 $usePythonStateClampFastPath = $PythonStateClampPath -eq "fast"
 $deferCellPhaseUpdates = $CellPhaseUpdates -eq "deferred"
@@ -58,6 +66,9 @@ if ($useConstantHeatCapacityFastPath -and $ArrayBackend -ne "python") {
 }
 if ($useHomogeneousHeatCapacityFastPath -and -not $useConstantHeatCapacityFastPath) {
     throw "Homogeneous heat-capacity fast path requires the constant-model fast path."
+}
+if ($useInlineHomogeneousSensibleHeatCapacityFastPath -and -not $useHomogeneousHeatCapacityFastPath) {
+    throw "Inline homogeneous sensible heat-capacity fast path requires the homogeneous heat-capacity fast path."
 }
 if ($ProfileSensibleHeat.IsPresent -and -not $usePythonSurfaceBoundaryFastPath) {
     throw "Sensible-heat timing requires the fast surface path."
@@ -90,6 +101,7 @@ $kitArgs = @(
     "--/exts/campfire.app/woodSensibleHeatTiming=$($ProfileSensibleHeat.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/pythonConstantHeatCapacityFastPath=$($useConstantHeatCapacityFastPath.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/pythonHomogeneousHeatCapacityFastPath=$($useHomogeneousHeatCapacityFastPath.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/pythonInlineHomogeneousSensibleHeatCapacityFastPath=$($useInlineHomogeneousSensibleHeatCapacityFastPath.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/woodStateDiagnostics=$($CollectWoodStateDiagnostics.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/pythonSurfaceBoundaryFastPath=$($usePythonSurfaceBoundaryFastPath.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/pythonStateClampFastPath=$($usePythonStateClampFastPath.ToString().ToLowerInvariant())",
@@ -134,6 +146,9 @@ if ([bool]$result.scenario.python_constant_heat_capacity_fast_path -ne $useConst
 }
 if ([bool]$result.scenario.python_homogeneous_heat_capacity_fast_path -ne $useHomogeneousHeatCapacityFastPath) {
     throw "Phase 3 used an unexpected homogeneous heat-capacity setting."
+}
+if ([bool]$result.scenario.python_inline_homogeneous_sensible_heat_capacity_fast_path -ne $useInlineHomogeneousSensibleHeatCapacityFastPath) {
+    throw "Phase 3 used an unexpected inline homogeneous sensible heat-capacity setting."
 }
 if ([bool]$result.scenario.wood_state_diagnostics_enabled -ne $CollectWoodStateDiagnostics.IsPresent) {
     throw "Phase 3 used an unexpected wood state-diagnostics setting."

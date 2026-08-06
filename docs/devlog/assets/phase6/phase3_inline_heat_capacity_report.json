@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "phase": "phase6am",
+  "status": "ok",
+  "paired_run_count": 3,
+  "environment": {
+    "application": "campfire.simulator.benchmark.kit",
+    "backend": "python",
+    "debugger_free_all_runs": true,
+    "alternating_order": true,
+    "internal_timing_disabled": true,
+    "runner_time_excluded_from_adoption": true
+  },
+  "trial": {
+    "baseline": "step-local homogeneous per-cell closure",
+    "inline": "step-local homogeneous sensible loop with inline capacity arithmetic",
+    "scope": "sensible heat only; pyrolysis and char oxidation retain evaluator",
+    "cross_step_cache": false,
+    "mass_and_temperature_reads_remain_per_cell": true,
+    "heterogeneous_fallback_unchanged": true
+  },
+  "timings": {
+    "two_log_step_mean_ms": {
+      "original_median": 5.8857,
+      "homogeneous_median": 5.5237,
+      "improvement_percent": 6.15050036529215
+    },
+    "two_log_step_p95_ms": {
+      "original_median": 8.5294,
+      "homogeneous_median": 7.7034,
+      "improvement_percent": 9.684151288484541
+    },
+    "scenario_seconds": {
+      "original_median": 10.1667,
+      "homogeneous_median": 9.731,
+      "improvement_percent": 4.2855597194763355
+    }
+  },
+  "paired_results": [
+    {
+      "pair": 1,
+      "step_improvement_percent": 3.348794535909065,
+      "scenario_improvement_percent": 1.9642558548988363
+    },
+    {
+      "pair": 2,
+      "step_improvement_percent": 13.167119928316543,
+      "scenario_improvement_percent": 10.90378047775571
+    },
+    {
+      "pair": 3,
+      "step_improvement_percent": 7.004450530640181,
+      "scenario_improvement_percent": 4.784432741230029
+    }
+  ],
+  "equivalence": {
+    "exact_authoritative_outputs_all_runs": true,
+    "dry_state_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+    "wet_state_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+    "metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759",
+    "ignition_seconds": {
+      "dry": 66.2,
+      "wet": 166.4
+    },
+    "flow_peak_baseline": [
+      294,
+      347
+    ],
+    "flow_peak_inline": [
+      347
+    ],
+    "flow_peak_is_not_authoritative": true
+  },
+  "decision": {
+    "adopt_inline_path": true,
+    "median_step_and_scenario_improved": true,
+    "pairs_improving_step_and_scenario": 3,
+    "required_improving_pairs": 2,
+    "reason": "inline loop met alternating end-to-end gates"
+  },
+  "runs": {
+    "baseline": [
+      "artifacts\\phase3\\phase6am\\formal\\pair_1_baseline\\summary.json",
+      "artifacts\\phase3\\phase6am\\formal\\pair_2_baseline\\summary.json",
+      "artifacts\\phase3\\phase6am\\formal\\pair_3_baseline\\summary.json"
+    ],
+    "inline": [
+      "artifacts\\phase3\\phase6am\\formal\\pair_1_inline\\summary.json",
+      "artifacts\\phase3\\phase6am\\formal\\pair_2_inline\\summary.json",
+      "artifacts\\phase3\\phase6am\\formal\\pair_3_inline\\summary.json"
+    ]
+  }
+}

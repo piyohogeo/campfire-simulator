@@ -582,6 +582,7 @@ class WoodThermalModel:
         sensible_heat_timing_ms: dict[str, float] | None = None,
         python_constant_heat_capacity_fast_path: bool = False,
         python_homogeneous_heat_capacity_fast_path: bool = False,
+        python_inline_homogeneous_sensible_heat_capacity_fast_path: bool = False,
     ) -> CombustionStepResult:
         """Advance one explicit SI-unit thermal/reaction step.
 
@@ -610,6 +611,14 @@ class WoodThermalModel:
             raise ValueError(
                 "Homogeneous heat-capacity fast path requires the constant-model "
                 "fast path"
+            )
+        if (
+            python_inline_homogeneous_sensible_heat_capacity_fast_path
+            and not python_homogeneous_heat_capacity_fast_path
+        ):
+            raise ValueError(
+                "Inline homogeneous sensible heat-capacity fast path requires "
+                "the homogeneous heat-capacity fast path"
             )
         if state_diagnostics is not None and not update_cell_phases:
             raise ValueError("Wood state diagnostics require cell phase updates")
@@ -672,6 +681,7 @@ class WoodThermalModel:
             ) * 1000.0
             segment_started = time.perf_counter()
 
+        inline_homogeneous_sensible_heat_capacity = False
         if python_homogeneous_heat_capacity_fast_path:
             homogeneous, common_dry_specific_heat_j_kg_k = (
                 self._homogeneous_constant_dry_wood_specific_heat_j_kg_k()
@@ -706,6 +716,9 @@ class WoodThermalModel:
                     )
 
                 heat_capacity_for_cell = homogeneous_heat_capacity_for_cell
+                inline_homogeneous_sensible_heat_capacity = (
+                    python_inline_homogeneous_sensible_heat_capacity_fast_path
+                )
 
         evaporated_total = 0.0
         pyrolysis_gas_total = 0.0
@@ -734,7 +747,25 @@ class WoodThermalModel:
                 surface_boundary_update_ms = 0.0
                 for index, cell in enumerate(cells):
                     operation_started = time.perf_counter()
-                    heat_capacity = heat_capacity_for_cell(cell)
+                    if inline_homogeneous_sensible_heat_capacity:
+                        if (
+                            not math.isfinite(cell.temperature_k)
+                            or cell.temperature_k <= 0.0
+                        ):
+                            raise ValueError(
+                                "temperature_k must be finite and positive"
+                            )
+                        heat_capacity = max(
+                            cell.dry_wood_mass_kg
+                            * common_dry_specific_heat_j_kg_k
+                            + cell.moisture_mass_kg
+                            * water_specific_heat_j_kg_k
+                            + cell.char_mass_kg * char_specific_heat_j_kg_k
+                            + cell.ash_mass_kg * ash_specific_heat_j_kg_k,
+                            1.0e-9,
+                        )
+                    else:
+                        heat_capacity = heat_capacity_for_cell(cell)
                     heat_capacity_evaluation_ms += (
                         time.perf_counter() - operation_started
                     ) * 1000.0
@@ -773,6 +804,45 @@ class WoodThermalModel:
                     surface_boundary_update_ms += (
                         time.perf_counter() - operation_started
                     ) * 1000.0
+            elif inline_homogeneous_sensible_heat_capacity:
+                for index, cell in enumerate(cells):
+                    if (
+                        not math.isfinite(cell.temperature_k)
+                        or cell.temperature_k <= 0.0
+                    ):
+                        raise ValueError("temperature_k must be finite and positive")
+                    heat_capacity = max(
+                        cell.dry_wood_mass_kg * common_dry_specific_heat_j_kg_k
+                        + cell.moisture_mass_kg * water_specific_heat_j_kg_k
+                        + cell.char_mass_kg * char_specific_heat_j_kg_k
+                        + cell.ash_mass_kg * ash_specific_heat_j_kg_k,
+                        1.0e-9,
+                    )
+                    heat_capacities_j_k[index] = heat_capacity
+                    area = cell.external_area_m2 * cell.surface_exposure
+                    if python_surface_boundary_fast_path and area == 0.0:
+                        cell.temperature_k += conduction_energy_j[index] / heat_capacity
+                        continue
+                    heat_flux_w_m2 = (
+                        scalar_heat_flux_w_m2
+                        if scalar_heat_flux_w_m2 is not None
+                        else heat_fluxes[index]
+                    )
+                    external_heat_w = heat_flux_w_m2 * p.radiant_absorptivity * area
+                    convective_loss_w = p.convection_w_m2_k * area * (
+                        cell.temperature_k - ambient
+                    )
+                    radiation_loss_w = (
+                        p.emissivity
+                        * sigma
+                        * area
+                        * (cell.temperature_k**4 - ambient**4)
+                    )
+                    external_heat_total += external_heat_w * dt_seconds
+                    net_energy_j = conduction_energy_j[index] + (
+                        external_heat_w - convective_loss_w - radiation_loss_w
+                    ) * dt_seconds
+                    cell.temperature_k += net_energy_j / heat_capacity
             else:
                 for index, cell in enumerate(cells):
                     heat_capacity = heat_capacity_for_cell(cell)

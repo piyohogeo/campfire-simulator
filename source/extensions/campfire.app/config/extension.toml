@@ -109,24 +109,40 @@ dependencies = [
 args = [
 ]
 
-# The collapse and fixed-reference scenarios remain coverage-instrumented but
-# run outside the primary group so current hosts retain margin below 300 s.
+# Keep the collapse integration scenario coverage-instrumented in its own
+# process so it retains margin below Kit's fixed 300-second limit.
 pythonTests.include = [
     "campfire.app.tests.test_scene.TestScene.test_collapse_scenario_releases_and_reignites_with_mass_balance",
-    "campfire.app.tests.test_scene.TestScene.test_nist_reference_is_fixed_and_higher_flux_ignites_first",
 ]
 
 
 [[test]]
-name = "air-feedback-coverage"
+name = "fixed-reference"
 dependencies = [
 ]
 
 args = [
 ]
 
-# This 180-second coupled scenario has its own coverage process because it
-# consumed roughly half of the primary process's fixed 300-second budget.
+pyCoverageEnabled = false
+# Coverage expands this deterministic reference simulation past Kit's fixed
+# process limit; shorter layered thermal checks retain representative coverage.
+pythonTests.include = [
+    "campfire.app.tests.test_scene.TestScene.test_nist_reference_is_fixed_and_higher_flux_ignites_first",
+]
+
+
+[[test]]
+name = "air-feedback"
+dependencies = [
+]
+
+args = [
+]
+
+pyCoverageEnabled = false
+# The full 180-second coupled scenario remains an exact behavioral regression;
+# shorter air-supply, oxygen, and heat-feedback tests stay coverage-instrumented.
 pythonTests.include = [
     "campfire.app.tests.test_scene.TestScene.test_log_cabin_air_feedback_ignites_before_dense_stack",
 ]

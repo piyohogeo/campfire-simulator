@@ -37,7 +37,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>41 / 41 passed</strong></div>
-        <div><span>次の焦点</span><strong>Audit heat-capacity loop structure</strong></div>
+        <div><span>次の焦点</span><strong>Re-profile adopted inline path</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6AL · Phase 6AK adopted-path re-profile</p>
-            <h2>速くした後こそ、<br>順位を測り直す。</h2>
-            <p>step-local均質比熱経路を含む採用済み設定を、広域3 runとセル単位詳細3 runへ分けて再測定しました。内部合計はPhase 6AJの別起動profileより8.85%、顕熱は17.99%、熱容量評価は30.26%低下しました。それでも広域最大は顕熱、実処理の最大は熱容量評価です。全6 runの権威状態・CSV・着火時刻は完全一致しました。</p>
+            <p class="section-kicker">Phase 6AM · Inline homogeneous sensible capacity</p>
+            <h2>呼出しを一つ外して、<br>物理は一つも外さない。</h2>
+            <p>均質性を毎step確認する既存経路のうち、顕熱ループだけで熱容量式を直接評価する限定経路を試しました。温度と4質量は従来どおりセルごとに読み、加算順、例外、1e-9 J/K下限、不均質時の経路、熱分解と炭化物酸化は変えていません。非計測の交互順序3組すべてで木材stepとシナリオが改善し、全6 runの権威状態・CSV・着火時刻が完全一致したため既定に採用しました。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -306,6 +306,19 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6am-inline-heat-capacity" class="capture-card">
+            <a href="assets/phase6/phase3_inline_heat_capacity_report.svg" aria-label="Phase 6AM 均質顕熱容量インライン経路の採用レポートを開く">
+              <img src="assets/phase6/phase3_inline_heat_capacity_report.svg" width="1200" height="680" alt="均質顕熱ループのセルごとの関数呼出しを外した経路が、木材stepとシナリオを短縮し、完全一致を維持して採用された結果を示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Inline the arithmetic, retain every read</strong><span>step −6.15% · scenario −4.29% · 3 / 3 pairs · exact outputs</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6AM unchanged burn scenario" data-video-meta="Performance-only change · exact authoritative Phase 3 output · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · 視覚出力は同一</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <figure class="capture-card">
             <a href="assets/phase6/replicate_holdout_report.svg" aria-label="Phase 6C 合板反復ホールドアウトレポートを開く">
               <img src="assets/phase6/replicate_holdout_report.svg" width="1200" height="680" alt="未使用の合板SAMP.3について、着火時刻と平均質量減少速度の観測・初期・SAMP.1/2選定値を並べたSVGグラフ">
@@ -419,8 +432,8 @@
               <div><dt>Complete Python step</dt><dd>3.1313 ms/model-step</dd></div>
               <div><dt>Complete NumPy step</dt><dd>2.8228 ms · 9.9% faster</dd></div>
               <div><dt>Phase 3 output equality</dt><dd>state / CSV / ignition / Flow exact</dd></div>
-              <div><dt>Current standard suite</dt><dd>41 / 41 · 605.1 s</dd></div>
-              <div><dt>Coverage process times</dt><dd>29.0 / 3.8 / 87.9 / 258.6 / 200.3 s</dd></div>
+              <div><dt>Current standard suite</dt><dd>41 / 41 · 453.0 s</dd></div>
+              <div><dt>Current test processes</dt><dd>8 · fixed 300 s ceiling unchanged</dd></div>
               <div><dt>Debugger-free wood step</dt><dd>Python 11.218 / NumPy 11.472 ms</dd></div>
               <div><dt>Debugger-free scenario</dt><dd>17.532 / 17.858 s</dd></div>
               <div><dt>Debugger-free runner</dt><dd>35.413 / 35.909 s</dd></div>
@@ -481,7 +494,13 @@
               <div><dt>Phase 6AL sensible heat</dt><dd>2.4203 ms · 41.75%</dd></div>
               <div><dt>Phase 6AL heat capacity</dt><dd>1.7829 ms · 46.51%</dd></div>
               <div><dt>Phase 6AL evidence</dt><dd>3 + 3 runs · selection only</dd></div>
-              <div><dt>Standard regression</dt><dd>41 / 41 · 605.1 s</dd></div>
+              <div><dt>Inline-capacity step</dt><dd>5.8857 → 5.5237 ms</dd></div>
+              <div><dt>Inline-capacity p95</dt><dd>8.5294 → 7.7034 ms</dd></div>
+              <div><dt>Inline-capacity scenario</dt><dd>10.1667 → 9.7310 s</dd></div>
+              <div><dt>Phase 6AM decision</dt><dd>adopted · 3 / 3 pairs improve</dd></div>
+              <div><dt>Phase 6AM regression</dt><dd>41 / 41 · 453.0 s</dd></div>
+              <div><dt>Coverage retained</dt><dd>32 + 3 + 1 wet + 1 collapse</dd></div>
+              <div><dt>Long deterministic checks</dt><dd>reference + air + 2 numerical · no coverage</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
@@ -497,8 +516,8 @@
           </section>
 
           <div class="notes-grid">
-            <section class="note caution"><p class="note-label">Known limits</p><h3>別起動差を採用効果にしない</h3><p>Phase 6AJとの絶対値差には起動ごとの変動が含まれます。Phase 6AKの採用効果は交互順序の非計測3組を正とします。詳細タイマーは顕熱を膨らませ、Flow peakは非権威診断です。</p></section>
-            <section class="note next"><p class="note-label">What comes next</p><h3>熱容量ループの構造を監査する</h3><p>step-local共通係数を維持したまま、セルごとの関数呼出しや公開質量の属性解決を減らせる境界を確認します。試作する場合も、完全同値と非計測の交互順序比較で採否を決めます。</p></section>
+            <section class="note caution"><p class="note-label">Known limits</p><h3>均質な顕熱更新だけの局所改善</h3><p>不均質セル、熱分解、炭化物酸化は従来の評価器を使います。公開質量をキャッシュせず、step間にも係数を保持しません。Flow peakはrun間で変動する非権威GPU診断です。添付動画は性能変更後の実画面ですが、物理・描画出力が同一なので薪の燃焼表現自体に新しい変化はありません。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>採用後の順位をもう一度測る</h3><p>内部タイマーだけの広域測定と、必要なら別runの詳細測定で現在の支配区間を更新します。次の候補もprofile値だけでは変更せず、完全同値と非計測の交互順序比較で採否を決めます。</p></section>
           </div>
         </div>
       </article>
@@ -1022,7 +1041,7 @@
           <li class="done"><span>3</span><div><strong>木材熱モデル</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>4</span><div><strong>配置と通気</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>5</span><div><strong>崩壊</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · 採用経路の再計測</small></div></li>
+          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · インライン採用後の再計測</small></div></li>
         </ol>
       </div>
     </section>
