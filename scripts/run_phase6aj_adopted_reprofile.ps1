@@ -19,6 +19,7 @@ $sensibleSummaries = @()
 $commonArguments = @{
     ArrayBackend = "python"
     ConstantHeatCapacityPath = "fast"
+    HomogeneousHeatCapacityPath = "original"
     PythonSurfaceBoundaryPath = "fast"
     PythonStateClampPath = "fast"
     CellPhaseUpdates = "deferred"

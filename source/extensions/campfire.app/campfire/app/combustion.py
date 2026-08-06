@@ -356,6 +356,32 @@ class WoodThermalModel:
             1.0e-9,
         )
 
+    def _homogeneous_constant_dry_wood_specific_heat_j_kg_k(
+        self,
+    ) -> tuple[bool, float]:
+        """Resolve one step-local coefficient without caching public cell state."""
+
+        default_specific_heat_j_kg_k = self.parameters.wood_specific_heat_j_kg_k
+        common_specific_heat_j_kg_k: float | None = None
+        for cell in self.cells:
+            if (
+                cell.dry_wood_specific_heat_model
+                != CONSTANT_DRY_WOOD_SPECIFIC_HEAT_MODEL
+            ):
+                return False, 0.0
+            specific_heat_j_kg_k = (
+                cell.dry_wood_specific_heat_j_kg_k
+                if cell.dry_wood_specific_heat_j_kg_k is not None
+                else default_specific_heat_j_kg_k
+            )
+            if common_specific_heat_j_kg_k is None:
+                common_specific_heat_j_kg_k = specific_heat_j_kg_k
+            elif specific_heat_j_kg_k != common_specific_heat_j_kg_k:
+                return False, 0.0
+        if common_specific_heat_j_kg_k is None:
+            return False, 0.0
+        return True, common_specific_heat_j_kg_k
+
     def _numpy_sensible_heat(
         self,
         dt_seconds: float,
@@ -555,6 +581,7 @@ class WoodThermalModel:
         update_cell_phases: bool = True,
         sensible_heat_timing_ms: dict[str, float] | None = None,
         python_constant_heat_capacity_fast_path: bool = False,
+        python_homogeneous_heat_capacity_fast_path: bool = False,
     ) -> CombustionStepResult:
         """Advance one explicit SI-unit thermal/reaction step.
 
@@ -575,6 +602,14 @@ class WoodThermalModel:
         ):
             raise ValueError(
                 "Constant heat-capacity fast path requires the Python backend"
+            )
+        if (
+            python_homogeneous_heat_capacity_fast_path
+            and not python_constant_heat_capacity_fast_path
+        ):
+            raise ValueError(
+                "Homogeneous heat-capacity fast path requires the constant-model "
+                "fast path"
             )
         if state_diagnostics is not None and not update_cell_phases:
             raise ValueError("Wood state diagnostics require cell phase updates")
@@ -636,6 +671,41 @@ class WoodThermalModel:
                 time.perf_counter() - segment_started
             ) * 1000.0
             segment_started = time.perf_counter()
+
+        if python_homogeneous_heat_capacity_fast_path:
+            homogeneous, common_dry_specific_heat_j_kg_k = (
+                self._homogeneous_constant_dry_wood_specific_heat_j_kg_k()
+            )
+            if homogeneous:
+                if (
+                    not math.isfinite(common_dry_specific_heat_j_kg_k)
+                    or common_dry_specific_heat_j_kg_k <= 0.0
+                ):
+                    raise ValueError(
+                        "reference_specific_heat_j_kg_k must be finite and positive"
+                    )
+                water_specific_heat_j_kg_k = p.water_specific_heat_j_kg_k
+                char_specific_heat_j_kg_k = p.char_specific_heat_j_kg_k
+                ash_specific_heat_j_kg_k = p.ash_specific_heat_j_kg_k
+
+                def homogeneous_heat_capacity_for_cell(
+                    cell: WoodCellState,
+                ) -> float:
+                    if (
+                        not math.isfinite(cell.temperature_k)
+                        or cell.temperature_k <= 0.0
+                    ):
+                        raise ValueError("temperature_k must be finite and positive")
+                    return max(
+                        cell.dry_wood_mass_kg
+                        * common_dry_specific_heat_j_kg_k
+                        + cell.moisture_mass_kg * water_specific_heat_j_kg_k
+                        + cell.char_mass_kg * char_specific_heat_j_kg_k
+                        + cell.ash_mass_kg * ash_specific_heat_j_kg_k,
+                        1.0e-9,
+                    )
+
+                heat_capacity_for_cell = homogeneous_heat_capacity_for_cell
 
         evaporated_total = 0.0
         pyrolysis_gas_total = 0.0

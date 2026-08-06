@@ -1025,6 +1025,9 @@ class CampfireAppExtension(omni.ext.IExt):
         python_constant_heat_capacity_fast_path = settings.get_as_bool(
             f"{SETTINGS_ROOT}/pythonConstantHeatCapacityFastPath"
         )
+        python_homogeneous_heat_capacity_fast_path = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/pythonHomogeneousHeatCapacityFastPath"
+        )
         collect_wood_state_diagnostics = settings.get_as_bool(
             f"{SETTINGS_ROOT}/woodStateDiagnostics"
         )
@@ -1067,6 +1070,14 @@ class CampfireAppExtension(omni.ext.IExt):
         ):
             raise ValueError(
                 "Constant heat-capacity fast path requires the Python backend"
+            )
+        if (
+            python_homogeneous_heat_capacity_fast_path
+            and not python_constant_heat_capacity_fast_path
+        ):
+            raise ValueError(
+                "Homogeneous heat-capacity fast path requires the constant-model "
+                "fast path"
             )
         if profile_sensible_heat and not python_surface_boundary_fast_path:
             raise ValueError("Sensible-heat timing requires the fast surface path")
@@ -1142,6 +1153,9 @@ class CampfireAppExtension(omni.ext.IExt):
                     python_constant_heat_capacity_fast_path=(
                         python_constant_heat_capacity_fast_path
                     ),
+                    python_homogeneous_heat_capacity_fast_path=(
+                        python_homogeneous_heat_capacity_fast_path
+                    ),
                 )
                 wet_result = wet_model.step(
                     PHASE3_MODEL_DT_SECONDS,
@@ -1161,6 +1175,9 @@ class CampfireAppExtension(omni.ext.IExt):
                     update_cell_phases=not defer_cell_phase_updates,
                     python_constant_heat_capacity_fast_path=(
                         python_constant_heat_capacity_fast_path
+                    ),
+                    python_homogeneous_heat_capacity_fast_path=(
+                        python_homogeneous_heat_capacity_fast_path
                     ),
                 )
                 model_step_times_ms.append(
@@ -1533,6 +1550,9 @@ class CampfireAppExtension(omni.ext.IExt):
                     "wood_sensible_heat_timing_enabled": profile_sensible_heat,
                     "python_constant_heat_capacity_fast_path": (
                         python_constant_heat_capacity_fast_path
+                    ),
+                    "python_homogeneous_heat_capacity_fast_path": (
+                        python_homogeneous_heat_capacity_fast_path
                     ),
                     "wood_state_diagnostics_enabled": (
                         collect_wood_state_diagnostics

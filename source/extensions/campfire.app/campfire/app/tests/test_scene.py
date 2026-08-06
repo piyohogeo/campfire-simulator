@@ -293,13 +293,30 @@ class TestScene(omni.kit.test.AsyncTestCase):
         fast_heat_capacity = campfire.app.WoodThermalModel.from_dict(
             original_heat_capacity.to_dict()
         )
+        homogeneous_heat_capacity = campfire.app.WoodThermalModel.from_dict(
+            original_heat_capacity.to_dict()
+        )
+        homogeneous, specific_heat_j_kg_k = (
+            homogeneous_heat_capacity._homogeneous_constant_dry_wood_specific_heat_j_kg_k()
+        )
+        self.assertTrue(homogeneous)
+        self.assertEqual(
+            specific_heat_j_kg_k,
+            homogeneous_heat_capacity.parameters.wood_specific_heat_j_kg_k,
+        )
         for step_index in range(120):
             if step_index == 20:
                 original_heat_capacity.cells[0].dry_wood_specific_heat_j_kg_k = 1214.0
                 fast_heat_capacity.cells[0].dry_wood_specific_heat_j_kg_k = 1214.0
+                homogeneous_heat_capacity.cells[
+                    0
+                ].dry_wood_specific_heat_j_kg_k = 1214.0
             elif step_index == 40:
                 original_heat_capacity.cells[0].dry_wood_specific_heat_j_kg_k = None
                 fast_heat_capacity.cells[0].dry_wood_specific_heat_j_kg_k = None
+                homogeneous_heat_capacity.cells[
+                    0
+                ].dry_wood_specific_heat_j_kg_k = None
                 original_heat_capacity.parameters = replace(
                     original_heat_capacity.parameters,
                     wood_specific_heat_j_kg_k=1600.0,
@@ -308,8 +325,16 @@ class TestScene(omni.kit.test.AsyncTestCase):
                     fast_heat_capacity.parameters,
                     wood_specific_heat_j_kg_k=1600.0,
                 )
+                homogeneous_heat_capacity.parameters = replace(
+                    homogeneous_heat_capacity.parameters,
+                    wood_specific_heat_j_kg_k=1600.0,
+                )
             elif step_index == 60:
-                for model in (original_heat_capacity, fast_heat_capacity):
+                for model in (
+                    original_heat_capacity,
+                    fast_heat_capacity,
+                    homogeneous_heat_capacity,
+                ):
                     model.cells[0].dry_wood_specific_heat_j_kg_k = 1214.0
                     model.cells[0].dry_wood_specific_heat_model = (
                         campfire.app.USDA_FPL_NORMALIZED_DRY_WOOD_SPECIFIC_HEAT_MODEL
@@ -321,12 +346,25 @@ class TestScene(omni.kit.test.AsyncTestCase):
                 heat_flux,
                 python_constant_heat_capacity_fast_path=True,
             )
+            homogeneous_result = homogeneous_heat_capacity.step(
+                0.2,
+                heat_flux,
+                python_constant_heat_capacity_fast_path=True,
+                python_homogeneous_heat_capacity_fast_path=True,
+            )
             self.assertEqual(fast_result, original_result)
+            self.assertEqual(homogeneous_result, original_result)
         self.assertEqual(
             fast_heat_capacity.to_dict(), original_heat_capacity.to_dict()
         )
         self.assertEqual(
+            homogeneous_heat_capacity.to_dict(), original_heat_capacity.to_dict()
+        )
+        self.assertEqual(
             fast_heat_capacity.metrics(), original_heat_capacity.metrics()
+        )
+        self.assertEqual(
+            homogeneous_heat_capacity.metrics(), original_heat_capacity.metrics()
         )
 
         for field_name, invalid_value, expected_message in (
@@ -352,6 +390,7 @@ class TestScene(omni.kit.test.AsyncTestCase):
                     0.2,
                     0.0,
                     python_constant_heat_capacity_fast_path=True,
+                    python_homogeneous_heat_capacity_fast_path=True,
                 )
 
         with self.assertRaisesRegex(
@@ -362,6 +401,16 @@ class TestScene(omni.kit.test.AsyncTestCase):
                 0.0,
                 array_backend=campfire.app.NUMPY_ARRAY_BACKEND,
                 python_constant_heat_capacity_fast_path=True,
+            )
+
+        with self.assertRaisesRegex(
+            ValueError,
+            "Homogeneous heat-capacity fast path requires the constant-model fast path",
+        ):
+            original_heat_capacity.step(
+                0.2,
+                0.0,
+                python_homogeneous_heat_capacity_fast_path=True,
             )
 
         original_boundary = campfire.app.create_cylindrical_wood_model(
