@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6AL two-depth re-profile of the adopted Phase 6AK path, exact-output gates, current-hotspot report, and compact development-log video trigger.
 - Added the Phase 6AK step-local homogeneous heat-capacity path, public-state fallback tests, alternating three-pair adoption gate, and browser-readable report with a compact video trigger.
 - Added the Phase 6AJ two-depth adopted-path re-profile, with separate three-run broad and per-cell timing sets, exact-output gates, and a browser-readable candidate report.
 - Added the Phase 6AI constant-model heat-capacity fast path, mutable-state and fallback tests, alternating three-pair adoption gate, and browser-readable report with a compact video trigger.

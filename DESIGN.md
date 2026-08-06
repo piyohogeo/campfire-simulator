@@ -1601,3 +1601,17 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 可視化と再現: `run_phase6ak_homogeneous_heat_capacity_benchmark.ps1`が交互3組を取得し、`compare_phase3_homogeneous_heat_capacity.py`が採用設定、完全同値、中央値、組別改善を検査して`phase3_homogeneous_heat_capacity_report.json/.svg`を生成する。描画出力は完全同一なので、開発日誌の動画ボタンは検証済みPhase 3 MP4を再参照する。
 - 最終検証: 採用後release buildは`11.23 s`、Phase 0固定キャプチャは`22.6 s`で成功した。無指定の標準Phase 3はstep-local経路を選び、木材step平均`6.0900 ms`、p95`8.6746 ms`、シナリオ`10.4678 s`で完走し、状態SHA、CSV SHA、着火`66.2 / 166.4 s`を維持した。標準`repo.bat test`は通常32件`29.1 s`、熱モデル3件`4.2 s`、湿潤1件`91.3 s`、崩落／参照2件`275.7 s`、通気1件`221.4 s`、数値2件`22.8 s`の全41件をrunner`649.4 s`で成功させた。各coverageプロセスは固定`300 s`上限内である。
 - 次: 採用済みstep-local経路を含む通常設定を広域再プロファイルし、熱容量評価がなお最大かを確認する。絶対profile値だけで変更せず、次候補も完全同値と非計測交互比較で採否を決める。
+
+## 68. Phase 6AL Phase 6AK採用後の二層再プロファイル
+
+### 2026-08-06: step-local特殊化後の順位を同じ二層構成で測り直す
+
+- 測定境界: debugger-free benchmarkアプリ、Python backend、採用済みsurface fast・条件付きclamp・deferred phase・compact metrics・constant-model heat-capacity fast・step-local homogeneous heat-capacity fast、dynamic runtime topology、1,200 step、Flow・CSV・表示・2 captureを維持した。広域8区間を内部タイマーだけで測る3 runと、顕熱4区間をセル単位タイマーで測る別の3 runを実行し、各区間はwarmup後`1,180`サンプルとした。
+- 広域結果: 3 run中央値の内部合計は`5.7968 ms`、profile付き木材2本stepは`5.8623 ms`、シナリオは`10.1781 s`だった。Phase 6AJの別起動profileに対して内部合計は`8.85%`低下した。順位は顕熱`2.4203 ms`（`41.75%`）、熱分解`1.0612 ms`（`18.31%`）、伝導`0.9661 ms`（`16.67%`）、蒸発`0.6016 ms`（`10.38%`）、状態確定`0.3884 ms`（`6.70%`）、炭酸化`0.3300 ms`（`5.69%`）だった。
+- 顕熱内訳: 詳細runの4区間中央値和は`3.8335 ms`、親区間中央値は`3.8330 ms`で、runごとの許容差内一致を検査した。熱容量評価`1.7829 ms`（`46.51%`）、表面境界更新`0.5308 ms`（`13.85%`）、内部セル更新`0.3156 ms`（`8.23%`）、ループ／タイマー負荷`1.2042 ms`（`31.41%`）だった。Phase 6AJの別起動詳細値に対し熱容量評価は`30.26%`低下したが、実処理3項目ではなお最大である。
+- 解釈境界: Phase 6AJとの絶対値差はstep-local特殊化と別起動差を分離しないため、Phase 6AKの因果的採用効果として再主張しない。Phase 6AKの効果は同じバッチで交互実行した非計測3組のstep`13.15%`・シナリオ`9.95%`短縮を正とする。詳細runのloop／timer負荷には全セル均質性走査とセル単位`perf_counter()`が含まれ、採用対象にはしない。
+- 同値性: 6 runすべてで乾燥／湿潤薪の権威状態SHA-256、CSV SHA-256`01aaf0c…7759`、着火`66.2 / 166.4 s`が完全一致した。Flow active block peak`294 / 347`は非権威GPU診断として候補順位に使わない。
+- 判断: 広域最大は引き続き顕熱であり、具体的な次の監査対象は熱容量評価ループの構造と、セルごとに繰り返す公開質量読取りである。公開セルの途中編集意味、演算順、例外、`1e-9 J/K`下限を変える集約やstep間キャッシュは禁止する。限定試作を作る場合も、profile値では採用せず、完全同値と非計測交互比較で決める。
+- 可視化と再現: `run_phase6al_phase6ak_reprofile.ps1`が広域3 runと顕熱詳細3 runを取得し、`analyze_phase3_phase6ak_reprofile.py`がPhase 6AK設定、二つの計測深度、サンプル数、区間和、完全同値、候補順位を検査して`phase3_phase6ak_reprofile_report.json/.svg`を生成する。描画出力は完全同一なので、開発日誌のPhase 6AL動画ボタンは検証済みPhase 3 MP4を再参照する。
+- 回帰確認: Python解析器追加後の標準`repo.bat test`は通常32件`29.0 s`、熱モデル3件`3.8 s`、湿潤1件`87.9 s`、崩落／参照2件`258.6 s`、通気1件`200.3 s`、数値2件`21.1 s`の全41件をrunner`605.1 s`で成功させた。各coverageプロセスは固定`300 s`上限内である。
+- 次: 熱容量評価ループから、step-local共通係数を保ったまま関数呼出しまたは属性解決を減らせる限定境界を監査する。成立する場合だけ試作し、変更前後を非計測の交互順序3組で比較する。

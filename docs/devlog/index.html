@@ -37,7 +37,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>41 / 41 passed</strong></div>
-        <div><span>次の焦点</span><strong>Re-profile adopted Phase 6AK path</strong></div>
+        <div><span>次の焦点</span><strong>Audit heat-capacity loop structure</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6AK · Step-local homogeneous heat capacity adopted</p>
-            <h2>毎step確かめ、<br>そのstepだけ共有する。</h2>
-            <p>全セルの定数比熱契約を毎step再検査し、均質な場合だけ共通係数を同じstep内で使う経路を採用しました。セル上書きや温度依存モデルがあれば既存経路へ戻り、step間には何もキャッシュしません。交互順序3組で木材stepを13.15%、シナリオを9.95%短縮し、全6 runの権威状態・CSV・着火時刻は完全一致しました。</p>
+            <p class="section-kicker">Phase 6AL · Phase 6AK adopted-path re-profile</p>
+            <h2>速くした後こそ、<br>順位を測り直す。</h2>
+            <p>step-local均質比熱経路を含む採用済み設定を、広域3 runとセル単位詳細3 runへ分けて再測定しました。内部合計はPhase 6AJの別起動profileより8.85%、顕熱は17.99%、熱容量評価は30.26%低下しました。それでも広域最大は顕熱、実処理の最大は熱容量評価です。全6 runの権威状態・CSV・着火時刻は完全一致しました。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -293,6 +293,19 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6al-phase6ak-reprofile" class="capture-card">
+            <a href="assets/phase6/phase3_phase6ak_reprofile_report.svg" aria-label="Phase 6AL Phase 6AK採用後二層再プロファイルレポートを開く">
+              <img src="assets/phase6/phase3_phase6ak_reprofile_report.svg" width="1200" height="680" alt="step-local均質比熱経路の採用後に、木材step内部8区間と顕熱4区間を別runで再測定し、熱容量評価を次の監査候補として示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Re-rank after step-local specialization</strong><span>internal −8.85% · sensible −17.99% · heat capacity −30.26% · exact outputs</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase3/phase3_burn.mp4" data-video-poster="assets/phase3/frame_0650.png" data-video-title="Phase 6AL unchanged burn scenario" data-video-meta="Exact authoritative Phase 3 output · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · 同一出力</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <figure class="capture-card">
             <a href="assets/phase6/replicate_holdout_report.svg" aria-label="Phase 6C 合板反復ホールドアウトレポートを開く">
               <img src="assets/phase6/replicate_holdout_report.svg" width="1200" height="680" alt="未使用の合板SAMP.3について、着火時刻と平均質量減少速度の観測・初期・SAMP.1/2選定値を並べたSVGグラフ">
@@ -329,8 +342,8 @@
           </figure>
 
           <div class="story-grid">
-            <section class="story-card"><span class="card-index">01</span><h3>計測器の影響を分離する</h3><ul><li>内部8区間は通常タイマー3 run</li><li>顕熱4区間はセル単位タイマー3 run</li><li>各区間1,180サンプル</li><li>絶対時間は採用効果に使わない</li></ul></section>
-            <section class="story-card warm"><span class="card-index">02</span><h3>現在の順位を更新する</h3><ul><li>顕熱 2.9514 ms · 46.41%</li><li>熱分解 1.1067 ms · 17.40%</li><li>伝導 0.9388 ms · 14.76%</li><li>顕熱内は熱容量 58.52%</li></ul></section>
+            <section class="story-card"><span class="card-index">01</span><h3>採用後の順位を測り直す</h3><ul><li>内部8区間は広域タイマー3 run</li><li>顕熱4区間はセル単位タイマー3 run</li><li>各区間1,180サンプル</li><li>全6 runで権威出力完全一致</li></ul></section>
+            <section class="story-card warm"><span class="card-index">02</span><h3>次の監査対象を選ぶ</h3><ul><li>顕熱 2.4203 ms · 41.75%</li><li>熱分解 1.0612 ms · 18.31%</li><li>伝導 0.9661 ms · 16.67%</li><li>顕熱内は熱容量 46.51%</li></ul></section>
           </div>
 
           <section class="verification" aria-labelledby="phase6-verification-title">
@@ -359,7 +372,8 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Heat-capacity path</strong><small>2 profiles + 3 alternating pairs · exact outputs · adopted</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Adopted re-profile</strong><small>3 broad + 3 detailed runs · 1,180 samples · exact outputs</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Step-local heat capacity</strong><small>3 alternating pairs · public state rescanned · exact outputs · adopted</small></p></div>
-              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Default timing path</strong><small>fast · timers off · 10.2281 s scenario</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AK re-profile</strong><small>3 broad + 3 detailed runs · 1,180 samples · exact outputs</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Default timing path</strong><small>homogeneous fast · timers off · 10.4678 s scenario</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>
             </div>
           </section>
@@ -405,8 +419,8 @@
               <div><dt>Complete Python step</dt><dd>3.1313 ms/model-step</dd></div>
               <div><dt>Complete NumPy step</dt><dd>2.8228 ms · 9.9% faster</dd></div>
               <div><dt>Phase 3 output equality</dt><dd>state / CSV / ignition / Flow exact</dd></div>
-              <div><dt>Current standard suite</dt><dd>41 / 41 · 649.4 s</dd></div>
-              <div><dt>Coverage process times</dt><dd>29.1 / 4.2 / 91.3 / 275.7 / 221.4 s</dd></div>
+              <div><dt>Current standard suite</dt><dd>41 / 41 · 605.1 s</dd></div>
+              <div><dt>Coverage process times</dt><dd>29.0 / 3.8 / 87.9 / 258.6 / 200.3 s</dd></div>
               <div><dt>Debugger-free wood step</dt><dd>Python 11.218 / NumPy 11.472 ms</dd></div>
               <div><dt>Debugger-free scenario</dt><dd>17.532 / 17.858 s</dd></div>
               <div><dt>Debugger-free runner</dt><dd>35.413 / 35.909 s</dd></div>
@@ -463,7 +477,11 @@
               <div><dt>Step-local heat capacity</dt><dd>7.0297 → 6.1056 ms</dd></div>
               <div><dt>Step-local scenario</dt><dd>11.6170 → 10.4611 s</dd></div>
               <div><dt>Phase 6AK decision</dt><dd>adopted · 3 / 3 pairs improve</dd></div>
-              <div><dt>Standard regression</dt><dd>41 / 41 · 649.4 s</dd></div>
+              <div><dt>Phase 6AL internal total</dt><dd>5.7968 ms · −8.85% vs 6AJ profile</dd></div>
+              <div><dt>Phase 6AL sensible heat</dt><dd>2.4203 ms · 41.75%</dd></div>
+              <div><dt>Phase 6AL heat capacity</dt><dd>1.7829 ms · 46.51%</dd></div>
+              <div><dt>Phase 6AL evidence</dt><dd>3 + 3 runs · selection only</dd></div>
+              <div><dt>Standard regression</dt><dd>41 / 41 · 605.1 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
@@ -479,8 +497,8 @@
           </section>
 
           <div class="notes-grid">
-            <section class="note caution"><p class="note-label">Known limits</p><h3>profileは候補順位だけを示す</h3><p>別起動間の絶対時間差はPhase 6AIの採用効果ではありません。セル単位タイマーは顕熱を膨らませます。Flow peakは非権威診断で、実木材実験はスコープ外です。stepをまたぐ熱容量キャッシュは可変状態を見落とすため禁止します。</p></section>
-            <section class="note next"><p class="note-label">What comes next</p><h3>step単位の均質条件を監査する</h3><p>モデル構築、USDロード、公開セル編集、stepの同期性を確認し、全セルが均質な定数比熱条件を満たす場合だけ使える経路が契約を壊さず成立するか判断します。試作後の採否は非計測の交互順序比較で決めます。</p></section>
+            <section class="note caution"><p class="note-label">Known limits</p><h3>別起動差を採用効果にしない</h3><p>Phase 6AJとの絶対値差には起動ごとの変動が含まれます。Phase 6AKの採用効果は交互順序の非計測3組を正とします。詳細タイマーは顕熱を膨らませ、Flow peakは非権威診断です。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>熱容量ループの構造を監査する</h3><p>step-local共通係数を維持したまま、セルごとの関数呼出しや公開質量の属性解決を減らせる境界を確認します。試作する場合も、完全同値と非計測の交互順序比較で採否を決めます。</p></section>
           </div>
         </div>
       </article>
