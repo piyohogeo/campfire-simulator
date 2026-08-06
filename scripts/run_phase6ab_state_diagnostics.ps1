@@ -16,6 +16,7 @@ $OutputDir = [System.IO.Path]::GetFullPath($OutputDir)
 & $phase3Runner `
     -OutputDir $OutputDir `
     -ArrayBackend python `
+    -ConstantHeatCapacityPath original `
     -PythonSurfaceBoundaryPath fast `
     -PythonStateClampPath original `
     -CellPhaseUpdates eager `

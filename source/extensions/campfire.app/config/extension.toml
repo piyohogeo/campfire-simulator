@@ -83,6 +83,20 @@ pythonTests.include = [
     "campfire.app.tests.test_scene.TestScene.test_layered_panel_preserves_mass_and_heats_through_five_plies",
     "campfire.app.tests.test_scene.TestScene.test_parallel_arrhenius_pathways_compete_and_conserve_product_mass",
     "campfire.app.tests.test_scene.TestScene.test_temperature_dependent_heat_capacity_is_normalized_and_clamped",
+]
+
+
+[[test]]
+name = "wet-kindling-coverage"
+dependencies = [
+]
+
+args = [
+]
+
+# Keep the long wet/dry ignition comparison under coverage without allowing
+# unrelated thermal cases to consume its fixed 300-second process budget.
+pythonTests.include = [
     "campfire.app.tests.test_scene.TestScene.test_wet_kindling_evaporates_and_ignites_after_dry_kindling",
 ]
 

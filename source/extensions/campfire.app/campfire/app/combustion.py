@@ -323,6 +323,39 @@ class WoodThermalModel:
             1.0e-9,
         )
 
+    def _constant_dry_wood_heat_capacity_j_k(
+        self, cell: WoodCellState
+    ) -> float:
+        """Evaluate constant-model heat capacity without caching mutable state."""
+
+        if (
+            cell.dry_wood_specific_heat_model
+            != CONSTANT_DRY_WOOD_SPECIFIC_HEAT_MODEL
+        ):
+            return self._heat_capacity_j_k(cell)
+        p = self.parameters
+        dry_wood_specific_heat_j_kg_k = (
+            cell.dry_wood_specific_heat_j_kg_k
+            if cell.dry_wood_specific_heat_j_kg_k is not None
+            else p.wood_specific_heat_j_kg_k
+        )
+        if (
+            not math.isfinite(dry_wood_specific_heat_j_kg_k)
+            or dry_wood_specific_heat_j_kg_k <= 0.0
+        ):
+            raise ValueError(
+                "reference_specific_heat_j_kg_k must be finite and positive"
+            )
+        if not math.isfinite(cell.temperature_k) or cell.temperature_k <= 0.0:
+            raise ValueError("temperature_k must be finite and positive")
+        return max(
+            cell.dry_wood_mass_kg * dry_wood_specific_heat_j_kg_k
+            + cell.moisture_mass_kg * p.water_specific_heat_j_kg_k
+            + cell.char_mass_kg * p.char_specific_heat_j_kg_k
+            + cell.ash_mass_kg * p.ash_specific_heat_j_kg_k,
+            1.0e-9,
+        )
+
     def _numpy_sensible_heat(
         self,
         dt_seconds: float,
@@ -521,6 +554,7 @@ class WoodThermalModel:
         python_state_clamp_fast_path: bool = True,
         update_cell_phases: bool = True,
         sensible_heat_timing_ms: dict[str, float] | None = None,
+        python_constant_heat_capacity_fast_path: bool = False,
     ) -> CombustionStepResult:
         """Advance one explicit SI-unit thermal/reaction step.
 
@@ -535,6 +569,13 @@ class WoodThermalModel:
             raise ValueError(f"Unsupported wood-step array backend: {array_backend}")
         if state_diagnostics is not None and array_backend != PYTHON_ARRAY_BACKEND:
             raise ValueError("Wood state diagnostics require the Python backend")
+        if (
+            python_constant_heat_capacity_fast_path
+            and array_backend != PYTHON_ARRAY_BACKEND
+        ):
+            raise ValueError(
+                "Constant heat-capacity fast path requires the Python backend"
+            )
         if state_diagnostics is not None and not update_cell_phases:
             raise ValueError("Wood state diagnostics require cell phase updates")
         if sensible_heat_timing_ms is not None:
@@ -575,6 +616,11 @@ class WoodThermalModel:
             segment_started = time.perf_counter()
 
         cells = self.cells
+        heat_capacity_for_cell = (
+            self._constant_dry_wood_heat_capacity_j_k
+            if python_constant_heat_capacity_fast_path
+            else self._heat_capacity_j_k
+        )
         temperatures_k = [cell.temperature_k for cell in cells]
         conduction_energy_j = [0.0] * len(cells)
         for first, second, conductance_w_k in self._conduction_pairs:
@@ -618,7 +664,7 @@ class WoodThermalModel:
                 surface_boundary_update_ms = 0.0
                 for index, cell in enumerate(cells):
                     operation_started = time.perf_counter()
-                    heat_capacity = self._heat_capacity_j_k(cell)
+                    heat_capacity = heat_capacity_for_cell(cell)
                     heat_capacity_evaluation_ms += (
                         time.perf_counter() - operation_started
                     ) * 1000.0
@@ -659,7 +705,7 @@ class WoodThermalModel:
                     ) * 1000.0
             else:
                 for index, cell in enumerate(cells):
-                    heat_capacity = self._heat_capacity_j_k(cell)
+                    heat_capacity = heat_capacity_for_cell(cell)
                     heat_capacities_j_k[index] = heat_capacity
                     area = cell.external_area_m2 * cell.surface_exposure
                     if python_surface_boundary_fast_path and area == 0.0:
@@ -807,7 +853,7 @@ class WoodThermalModel:
                         f"Unsupported pyrolysis rate model: {p.pyrolysis_rate_model}"
                     )
                 pyrolysis_temperature_k = cell.temperature_k
-                heat_capacity = self._heat_capacity_j_k(cell)
+                heat_capacity = heat_capacity_for_cell(cell)
                 energy_limited_kg = max(
                     0.0,
                     (cell.temperature_k - p.pyrolysis_start_temperature_k)
@@ -873,7 +919,7 @@ class WoodThermalModel:
                 char_gas_kg = oxidized_char_kg - ash_created_kg
                 cell.char_mass_kg -= oxidized_char_kg
                 cell.ash_mass_kg += ash_created_kg
-                heat_capacity = self._heat_capacity_j_k(cell)
+                heat_capacity = heat_capacity_for_cell(cell)
                 cell.temperature_k += (
                     oxidized_char_kg * p.char_oxidation_heat_j_kg / heat_capacity
                 )

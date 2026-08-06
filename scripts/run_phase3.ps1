@@ -4,6 +4,8 @@ param(
     [string]$ArrayBackend = "python",
     [switch]$ProfileWoodInternals,
     [switch]$ProfileSensibleHeat,
+    [ValidateSet("original", "fast")]
+    [string]$ConstantHeatCapacityPath = "fast",
     [switch]$CollectWoodStateDiagnostics,
     [ValidateSet("original", "fast")]
     [string]$PythonSurfaceBoundaryPath = "fast",
@@ -27,6 +29,7 @@ $repoRoot = Split-Path -Parent $PSScriptRoot
 $releaseRoot = Join-Path $repoRoot "_build\windows-x86_64\release"
 $kit = Join-Path $releaseRoot "kit\kit.exe"
 $app = Join-Path $releaseRoot "apps\campfire.simulator.benchmark.kit"
+$useConstantHeatCapacityFastPath = $ConstantHeatCapacityPath -eq "fast"
 $usePythonSurfaceBoundaryFastPath = $PythonSurfaceBoundaryPath -eq "fast"
 $usePythonStateClampFastPath = $PythonStateClampPath -eq "fast"
 $deferCellPhaseUpdates = $CellPhaseUpdates -eq "deferred"
@@ -41,6 +44,9 @@ if ($ProfileSensibleHeat.IsPresent -and -not $ProfileWoodInternals.IsPresent) {
 }
 if ($ProfileSensibleHeat.IsPresent -and $ArrayBackend -ne "python") {
     throw "Sensible-heat timing requires the Python backend."
+}
+if ($useConstantHeatCapacityFastPath -and $ArrayBackend -ne "python") {
+    throw "Constant heat-capacity fast path requires the Python backend."
 }
 if ($ProfileSensibleHeat.IsPresent -and -not $usePythonSurfaceBoundaryFastPath) {
     throw "Sensible-heat timing requires the fast surface path."
@@ -71,6 +77,7 @@ $kitArgs = @(
     "--/exts/campfire.app/woodArrayBackend=$ArrayBackend",
     "--/exts/campfire.app/woodInternalTiming=$($ProfileWoodInternals.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/woodSensibleHeatTiming=$($ProfileSensibleHeat.IsPresent.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/pythonConstantHeatCapacityFastPath=$($useConstantHeatCapacityFastPath.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/woodStateDiagnostics=$($CollectWoodStateDiagnostics.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/pythonSurfaceBoundaryFastPath=$($usePythonSurfaceBoundaryFastPath.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/pythonStateClampFastPath=$($usePythonStateClampFastPath.ToString().ToLowerInvariant())",
@@ -109,6 +116,9 @@ if ([bool]$result.scenario.wood_internal_timing_enabled -ne $ProfileWoodInternal
 }
 if ([bool]$result.scenario.wood_sensible_heat_timing_enabled -ne $ProfileSensibleHeat.IsPresent) {
     throw "Phase 3 used an unexpected sensible-heat timing setting."
+}
+if ([bool]$result.scenario.python_constant_heat_capacity_fast_path -ne $useConstantHeatCapacityFastPath) {
+    throw "Phase 3 used an unexpected constant heat-capacity setting."
 }
 if ([bool]$result.scenario.wood_state_diagnostics_enabled -ne $CollectWoodStateDiagnostics.IsPresent) {
     throw "Phase 3 used an unexpected wood state-diagnostics setting."

@@ -37,7 +37,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>41 / 41 passed</strong></div>
-        <div><span>次の焦点</span><strong>Specialize heat-capacity path</strong></div>
+        <div><span>次の焦点</span><strong>Audit per-step homogeneous path</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6AH · Sensible-heat cost decomposed</p>
-            <h2>測って絞り、<br>実時間へ近づける。</h2>
-            <p>顕熱更新をセル単位の操作へ分けて3回測定し、熱容量評価が計測対象3操作の78.51%を占めることを確認しました。実木材実験は正式にスコープ外へ移し、外部承認をソフトウェア開発の阻害要因から外しました。今回のprofileは候補選定専用で、変更を採用する前には非計測end-to-endゲートを別に通します。</p>
+            <p class="section-kicker">Phase 6AJ · Adopted path re-profiled at two depths</p>
+            <h2>測る深さを分け、<br>次の支配項を選ぶ。</h2>
+            <p>Phase 6AI採用後の木材stepを、広域8区間と顕熱内4区間の別々の3 runで測り直しました。セル単位タイマーによる膨張を全体順位へ混ぜずに評価した結果、顕熱が内部時間の46.41%、その中では熱容量評価が詳細時間の58.52%で、引き続き最大でした。全6 runで権威状態・CSV・着火時刻は完全一致しています。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -254,6 +254,32 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6ai-heat-capacity" class="capture-card">
+            <a href="assets/phase6/phase3_heat_capacity_report.svg" aria-label="Phase 6AI 定数モデル熱容量専用経路の採用レポートを開く">
+              <img src="assets/phase6/phase3_heat_capacity_report.svg" width="1200" height="680" alt="定数モデル熱容量専用経路が熱容量評価、非計測木材step、シナリオを短縮し、完全一致を維持して採用された結果を示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Specialize without caching mutable state</strong><span>heat capacity −7.41% · step −7.00% · scenario −5.27% · 3 / 3 pairs</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase3/phase3_burn.mp4" data-video-poster="assets/phase3/frame_0650.png" data-video-title="Phase 6AI unchanged burn scenario" data-video-meta="Exact authoritative Phase 3 output · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · 同一出力</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <figure id="phase6aj-adopted-reprofile" class="capture-card">
+            <a href="assets/phase6/phase3_adopted_reprofile_report.svg" aria-label="Phase 6AJ 採用後二層再プロファイルレポートを開く">
+              <img src="assets/phase6/phase3_adopted_reprofile_report.svg" width="1200" height="680" alt="内部タイマーだけの8区間とセル単位タイマー付き顕熱4区間を分離し、顕熱と熱容量評価を次候補として示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Separate broad timing from per-cell detail</strong><span>sensible 46.41% · heat capacity 58.52% · 3 + 3 runs · exact outputs</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase3/phase3_burn.mp4" data-video-poster="assets/phase3/frame_0650.png" data-video-title="Phase 6AJ unchanged burn scenario" data-video-meta="Exact authoritative Phase 3 output · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · 同一出力</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <figure class="capture-card">
             <a href="assets/phase6/replicate_holdout_report.svg" aria-label="Phase 6C 合板反復ホールドアウトレポートを開く">
               <img src="assets/phase6/replicate_holdout_report.svg" width="1200" height="680" alt="未使用の合板SAMP.3について、着火時刻と平均質量減少速度の観測・初期・SAMP.1/2選定値を並べたSVGグラフ">
@@ -290,8 +316,8 @@
           </figure>
 
           <div class="story-grid">
-            <section class="story-card"><span class="card-index">01</span><h3>安全性を減らさず呼出しを減らす</h3><ul><li>温度の下限・上限を維持</li><li>4質量の0下限を維持</li><li>NaN回復を完全一致</li><li>−0.0を+0.0へ正規化</li></ul></section>
-            <section class="story-card warm"><span class="card-index">02</span><h3>交互順序3組で採用</h3><ul><li>状態確定 76.69%短縮</li><li>木材step 20.40%短縮</li><li>scenario 14.14%短縮</li><li>3 / 3組で両方改善</li></ul></section>
+            <section class="story-card"><span class="card-index">01</span><h3>計測器の影響を分離する</h3><ul><li>内部8区間は通常タイマー3 run</li><li>顕熱4区間はセル単位タイマー3 run</li><li>各区間1,180サンプル</li><li>絶対時間は採用効果に使わない</li></ul></section>
+            <section class="story-card warm"><span class="card-index">02</span><h3>現在の順位を更新する</h3><ul><li>顕熱 2.9514 ms · 46.41%</li><li>熱分解 1.1067 ms · 17.40%</li><li>伝導 0.9388 ms · 14.76%</li><li>顕熱内は熱容量 58.52%</li></ul></section>
           </div>
 
           <section class="verification" aria-labelledby="phase6-verification-title">
@@ -312,12 +338,14 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Step internals</strong><small>8 segments · 3 + 3 profiles · state SHA-256 identical</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Array boundary</strong><small>7 paths · 3 runs · exact isolated SHA-256</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Complete-step backend</strong><small>400-step history + state + metrics exact</small></p></div>
-              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Standard tests</strong><small>32 + 4 + 2 + 1 coverage · 2 numerical · 41 / 41 passed</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Standard tests</strong><small>32 + 3 + 1 + 2 + 1 coverage · 2 numerical · 41 / 41 passed</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Debugger-free E2E</strong><small>4 runs · 0 debug extensions · exact outputs</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Python internal profile</strong><small>3 runs · 8 × 1,180 samples · exact authoritative outputs</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Sensible-heat trial</strong><small>3 + 3 profiled · 3 + 3 unprofiled · rejected</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Sensible-heat profile</strong><small>3 runs · 4 × 1,180 samples · exact outputs</small></p></div>
-              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Default timing path</strong><small>off · 0 detailed segments · 10.2087 s scenario</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Heat-capacity path</strong><small>2 profiles + 3 alternating pairs · exact outputs · adopted</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Adopted re-profile</strong><small>3 broad + 3 detailed runs · 1,180 samples · exact outputs</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Default timing path</strong><small>fast · timers off · 10.2281 s scenario</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>
             </div>
           </section>
@@ -363,8 +391,8 @@
               <div><dt>Complete Python step</dt><dd>3.1313 ms/model-step</dd></div>
               <div><dt>Complete NumPy step</dt><dd>2.8228 ms · 9.9% faster</dd></div>
               <div><dt>Phase 3 output equality</dt><dd>state / CSV / ignition / Flow exact</dd></div>
-              <div><dt>Current standard suite</dt><dd>41 / 41 · 489.2 s</dd></div>
-              <div><dt>Coverage process times</dt><dd>271.5 / 189.4 s</dd></div>
+              <div><dt>Current standard suite</dt><dd>41 / 41 · 512.2 s</dd></div>
+              <div><dt>Coverage process times</dt><dd>23.0 / 3.8 / 63.6 / 180.8 / 213.4 s</dd></div>
               <div><dt>Debugger-free wood step</dt><dd>Python 11.218 / NumPy 11.472 ms</dd></div>
               <div><dt>Debugger-free scenario</dt><dd>17.532 / 17.858 s</dd></div>
               <div><dt>Debugger-free runner</dt><dd>35.413 / 35.909 s</dd></div>
@@ -409,7 +437,16 @@
               <div><dt>Current state finalize</dt><dd>0.3448 ms · 5.61%</dd></div>
               <div><dt>Heat-capacity evaluation</dt><dd>2.6504 ms · 78.51% of operations</dd></div>
               <div><dt>Interior / surface update</dt><dd>0.2847 / 0.4408 ms</dd></div>
-              <div><dt>Standard regression</dt><dd>41 / 41 · 595.0 s</dd></div>
+              <div><dt>Specialized heat capacity</dt><dd>2.5936 → 2.4013 ms</dd></div>
+              <div><dt>Heat-capacity step median</dt><dd>6.0815 → 5.6559 ms</dd></div>
+              <div><dt>Heat-capacity scenario</dt><dd>10.1569 → 9.6215 s</dd></div>
+              <div><dt>Phase 6AI decision</dt><dd>adopted · 3 / 3 pairs improve</dd></div>
+              <div><dt>Adopted-path sensible</dt><dd>2.9514 ms · 46.41%</dd></div>
+              <div><dt>Adopted-path pyrolysis</dt><dd>1.1067 ms · 17.40%</dd></div>
+              <div><dt>Adopted-path conduction</dt><dd>0.9388 ms · 14.76%</dd></div>
+              <div><dt>Detailed heat capacity</dt><dd>2.5565 ms · 58.52%</dd></div>
+              <div><dt>Phase 6AJ evidence</dt><dd>3 + 3 runs · selection only</dd></div>
+              <div><dt>Standard regression</dt><dd>41 / 41 · 512.2 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
@@ -425,8 +462,8 @@
           </section>
 
           <div class="notes-grid">
-            <section class="note caution"><p class="note-label">Known limits</p><h3>profileは候補選定であって採用判定ではない</h3><p>セル単位タイマーは絶対時間を増やすため、78.51%は操作順位を示す値です。計測なしの性能改善はまだ保証しません。Flow peakも非権威診断です。実木材実験は保留ではなくスコープ外です。</p></section>
-            <section class="note next"><p class="note-label">What comes next</p><h3>熱容量評価の重複を監査する</h3><p>定数乾燥木材比熱の検査・呼出し契約を確認し、物理境界と材料APIを保った限定試作を作ります。採否は完全同値と交互順序の非計測end-to-end改善で決めます。</p></section>
+            <section class="note caution"><p class="note-label">Known limits</p><h3>profileは候補順位だけを示す</h3><p>別起動間の絶対時間差はPhase 6AIの採用効果ではありません。セル単位タイマーは顕熱を膨らませます。Flow peakは非権威診断で、実木材実験はスコープ外です。stepをまたぐ熱容量キャッシュは可変状態を見落とすため禁止します。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>step単位の均質条件を監査する</h3><p>モデル構築、USDロード、公開セル編集、stepの同期性を確認し、全セルが均質な定数比熱条件を満たす場合だけ使える経路が契約を壊さず成立するか判断します。試作後の採否は非計測の交互順序比較で決めます。</p></section>
           </div>
         </div>
       </article>

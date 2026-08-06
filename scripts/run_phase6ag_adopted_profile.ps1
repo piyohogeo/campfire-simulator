@@ -18,7 +18,7 @@ $summaries = @()
 
 for ($run = 1; $run -le $RunCount; $run++) {
     $runOutput = Join-Path $OutputDir ("adopted_profile_{0}" -f $run)
-    & $phase3Runner -OutputDir $runOutput -ArrayBackend python -ProfileWoodInternals -PythonSurfaceBoundaryPath fast -PythonStateClampPath fast -CellPhaseUpdates deferred -RuntimeMetrics compact -RuntimeTopology dynamic
+    & $phase3Runner -OutputDir $runOutput -ArrayBackend python -ConstantHeatCapacityPath original -ProfileWoodInternals -PythonSurfaceBoundaryPath fast -PythonStateClampPath fast -CellPhaseUpdates deferred -RuntimeMetrics compact -RuntimeTopology dynamic
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     $summaries += Join-Path $runOutput "summary.json"
 }

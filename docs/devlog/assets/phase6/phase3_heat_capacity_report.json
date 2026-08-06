@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "phase": "phase6ai",
+  "status": "ok",
+  "paired_run_count": 3,
+  "environment": {
+    "application": "campfire.simulator.benchmark.kit",
+    "backend": "python",
+    "debugger_free_all_runs": true,
+    "alternating_order": true,
+    "internal_timing_disabled_for_formal_runs": true,
+    "adopted_runtime_paths_held_constant": true
+  },
+  "trial": {
+    "original": "generic heat-capacity helper",
+    "fast": "constant dry-wood model specialized helper",
+    "caching": false,
+    "temperature_dependent_fallback": true,
+    "mutable_cell_overrides_reloaded_each_call": true
+  },
+  "profile": {
+    "original_mean_ms": 2.5936,
+    "fast_mean_ms": 2.4013,
+    "improvement_percent": 7.414404688463907
+  },
+  "timings": {
+    "two_log_step_mean_ms": {
+      "original_median": 6.0815,
+      "fast_median": 5.6559,
+      "improvement_percent": 6.99827345227329
+    },
+    "two_log_step_p95_ms": {
+      "original_median": 7.5188,
+      "fast_median": 7.096,
+      "improvement_percent": 5.623237750704895
+    },
+    "scenario_seconds": {
+      "original_median": 10.1569,
+      "fast_median": 9.6215,
+      "improvement_percent": 5.271293406452766
+    },
+    "runner_seconds": {
+      "original_median": 25.646,
+      "fast_median": 24.869,
+      "improvement_percent": 3.0297122358262536
+    }
+  },
+  "paired_results": [
+    {
+      "pair": 1,
+      "step_improvement_percent": 3.802927121663693,
+      "scenario_improvement_percent": 2.2426940274672664
+    },
+    {
+      "pair": 2,
+      "step_improvement_percent": 10.213833283063193,
+      "scenario_improvement_percent": 7.781739413805676
+    },
+    {
+      "pair": 3,
+      "step_improvement_percent": 7.807284387075558,
+      "scenario_improvement_percent": 6.085518219141668
+    }
+  ],
+  "equivalence": {
+    "exact_authoritative_outputs_all_runs": true,
+    "dry_state_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+    "wet_state_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+    "metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759",
+    "ignition_seconds": {
+      "dry": 66.2,
+      "wet": 166.4
+    },
+    "flow_peak_original": [
+      294
+    ],
+    "flow_peak_fast": [
+      294,
+      347
+    ],
+    "flow_peak_is_not_authoritative": true
+  },
+  "decision": {
+    "adopt_fast_path": true,
+    "median_step_and_scenario_improved": true,
+    "pairs_improving_step_and_scenario": 3,
+    "required_improving_pairs": 2,
+    "reason": "specialized evaluation improved median wood-step and scenario time in a majority of alternating pairs"
+  },
+  "runs": {
+    "original": [
+      "artifacts\\phase3\\phase6ai\\formal\\pair_1_original\\summary.json",
+      "artifacts\\phase3\\phase6ai\\formal\\pair_2_original\\summary.json",
+      "artifacts\\phase3\\phase6ai\\formal\\pair_3_original\\summary.json"
+    ],
+    "fast": [
+      "artifacts\\phase3\\phase6ai\\formal\\pair_1_fast\\summary.json",
+      "artifacts\\phase3\\phase6ai\\formal\\pair_2_fast\\summary.json",
+      "artifacts\\phase3\\phase6ai\\formal\\pair_3_fast\\summary.json"
+    ],
+    "original_profile": "artifacts\\phase3\\phase6ai\\formal\\profile_original\\summary.json",
+    "fast_profile": "artifacts\\phase3\\phase6ai\\formal\\profile_fast\\summary.json"
+  }
+}

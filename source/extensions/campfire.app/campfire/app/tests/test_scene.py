@@ -1,5 +1,6 @@
 import json
 import math
+from dataclasses import replace
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -280,6 +281,89 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(arrhenius_numpy.to_dict(), arrhenius_python.to_dict())
         self.assertEqual(arrhenius_numpy.metrics(), arrhenius_python.metrics())
 
+        original_heat_capacity = campfire.app.create_cylindrical_wood_model(
+            "original_heat_capacity",
+            radius_m=0.04,
+            length_m=0.20,
+            moisture_ratio_dry_basis=0.12,
+            axial_cells=4,
+            circumferential_cells=6,
+            radial_cells=3,
+        )
+        fast_heat_capacity = campfire.app.WoodThermalModel.from_dict(
+            original_heat_capacity.to_dict()
+        )
+        for step_index in range(120):
+            if step_index == 20:
+                original_heat_capacity.cells[0].dry_wood_specific_heat_j_kg_k = 1214.0
+                fast_heat_capacity.cells[0].dry_wood_specific_heat_j_kg_k = 1214.0
+            elif step_index == 40:
+                original_heat_capacity.cells[0].dry_wood_specific_heat_j_kg_k = None
+                fast_heat_capacity.cells[0].dry_wood_specific_heat_j_kg_k = None
+                original_heat_capacity.parameters = replace(
+                    original_heat_capacity.parameters,
+                    wood_specific_heat_j_kg_k=1600.0,
+                )
+                fast_heat_capacity.parameters = replace(
+                    fast_heat_capacity.parameters,
+                    wood_specific_heat_j_kg_k=1600.0,
+                )
+            elif step_index == 60:
+                for model in (original_heat_capacity, fast_heat_capacity):
+                    model.cells[0].dry_wood_specific_heat_j_kg_k = 1214.0
+                    model.cells[0].dry_wood_specific_heat_model = (
+                        campfire.app.USDA_FPL_NORMALIZED_DRY_WOOD_SPECIFIC_HEAT_MODEL
+                    )
+            heat_flux = 150_000.0 if step_index < 80 else 0.0
+            original_result = original_heat_capacity.step(0.2, heat_flux)
+            fast_result = fast_heat_capacity.step(
+                0.2,
+                heat_flux,
+                python_constant_heat_capacity_fast_path=True,
+            )
+            self.assertEqual(fast_result, original_result)
+        self.assertEqual(
+            fast_heat_capacity.to_dict(), original_heat_capacity.to_dict()
+        )
+        self.assertEqual(
+            fast_heat_capacity.metrics(), original_heat_capacity.metrics()
+        )
+
+        for field_name, invalid_value, expected_message in (
+            (
+                "dry_wood_specific_heat_j_kg_k",
+                math.nan,
+                "reference_specific_heat_j_kg_k must be finite and positive",
+            ),
+            ("temperature_k", 0.0, "temperature_k must be finite and positive"),
+        ):
+            invalid_model = campfire.app.create_cylindrical_wood_model(
+                f"invalid_{field_name}",
+                radius_m=0.04,
+                length_m=0.20,
+                moisture_ratio_dry_basis=0.12,
+                axial_cells=2,
+                circumferential_cells=4,
+                radial_cells=2,
+            )
+            setattr(invalid_model.cells[0], field_name, invalid_value)
+            with self.assertRaisesRegex(ValueError, expected_message):
+                invalid_model.step(
+                    0.2,
+                    0.0,
+                    python_constant_heat_capacity_fast_path=True,
+                )
+
+        with self.assertRaisesRegex(
+            ValueError, "Constant heat-capacity fast path requires the Python backend"
+        ):
+            numpy_model.step(
+                0.2,
+                0.0,
+                array_backend=campfire.app.NUMPY_ARRAY_BACKEND,
+                python_constant_heat_capacity_fast_path=True,
+            )
+
         original_boundary = campfire.app.create_cylindrical_wood_model(
             "original_surface_boundary",
             radius_m=0.04,
@@ -550,12 +634,22 @@ class TestScene(omni.kit.test.AsyncTestCase):
         dry_ignition = None
         wet_ignition = None
         for step_index in range(1, 2401):
-            dry_result = dry.step(0.1, 100_000.0)
-            wet_result = wet.step(0.1, 100_000.0)
+            dry_result = dry.step(
+                0.1,
+                100_000.0,
+                python_constant_heat_capacity_fast_path=True,
+            )
+            wet_result = wet.step(
+                0.1,
+                100_000.0,
+                python_constant_heat_capacity_fast_path=True,
+            )
             if dry_ignition is None and dry_result.pyrolysis_gas_rate_kg_s > 1.0e-6:
                 dry_ignition = step_index * 0.1
             if wet_ignition is None and wet_result.pyrolysis_gas_rate_kg_s > 1.0e-6:
                 wet_ignition = step_index * 0.1
+            if dry_ignition is not None and wet_ignition is not None:
+                break
 
         self.assertIsNotNone(dry_ignition)
         self.assertIsNotNone(wet_ignition)
