@@ -37,7 +37,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>41 / 41 passed</strong></div>
-        <div><span>次の焦点</span><strong>Complete resident native step</strong></div>
+        <div><span>次の焦点</span><strong>Resident native reactions</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6AU · Native state boundary</p>
-            <h2>速いのは演算。<br>境界は、残さない。</h2>
-            <p>20本・23,040セルの顕熱更新と状態確定をMSVC native DLLで試作しました。Pythonオブジェクトを毎step往復するとp95 58.945 msで不合格ですが、連続SoAをnative側へ常駐させると0.275 msとなり、Python参照との最終状態も完全一致しました。次は同じ常駐境界へ伝導・蒸発・熱分解・炭酸化を移し、完全な木材stepとして再判定します。</p>
+            <p class="section-kicker">Phase 6AV · Resident conduction topology</p>
+            <h2>隣接関係も、<br>状態のそばへ。</h2>
+            <p>20本・23,040セルにある62,400本の伝導辺をimmutableなnativeトポロジーへ移しました。既存Pythonと同じ温度snapshot・辺順・陽解法を保ち、最終状態は完全一致、伝導熱収支誤差は最大1.65e-13 Jでした。native常駐p95は0.543 msで4 ms以内を維持しています。次は蒸発・熱分解・炭酸化と生成物出力を同じ常駐ABIへ追加します。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -423,6 +423,19 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6av-native-conduction" class="capture-card">
+            <a href="assets/phase6/native_conduction_boundary_report.svg" aria-label="Phase 6AV native常駐伝導トポロジーの性能と同値性レポートを開く">
+              <img src="assets/phase6/native_conduction_boundary_report.svg" width="1200" height="680" alt="20本23,040セル62,400伝導辺についてPython、毎step native往復、native常駐のp95、4ミリ秒予算、状態同値、伝導熱収支を示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Keep immutable neighbor topology resident too</strong><span>62,400 pairs · p95 0.5426 ms · exact states · ΣQ error 1.65e-13 J</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6AV unchanged burn scenario" data-video-meta="Isolated native-conduction trial · production rendering unchanged · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · 視覚出力は同一</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <figure class="capture-card">
             <a href="assets/phase6/replicate_holdout_report.svg" aria-label="Phase 6C 合板反復ホールドアウトレポートを開く">
               <img src="assets/phase6/replicate_holdout_report.svg" width="1200" height="680" alt="未使用の合板SAMP.3について、着火時刻と平均質量減少速度の観測・初期・SAMP.1/2選定値を並べたSVGグラフ">
@@ -459,8 +472,8 @@
           </figure>
 
           <div class="story-grid">
-            <section class="story-card"><span class="card-index">01</span><h3>連続状態の演算は成立する</h3><ul><li>MSVC 19.39・/fp:strict</li><li>20本・23,040セル</li><li>温度・質量・相差 0</li><li>常駐SoA p95 0.2749 ms</li></ul></section>
-            <section class="story-card warm"><span class="card-index">02</span><h3>変換はstep境界に置けない</h3><ul><li>毎step往復 p95 58.9454 ms</li><li>一回のimport + export 41.1213 ms</li><li>full solverは未移植</li><li>永続化・表示時だけ同期へ</li></ul></section>
+            <section class="story-card"><span class="card-index">01</span><h3>伝導トポロジーも常駐する</h3><ul><li>3,120辺/薪・62,400辺</li><li>conductance W/K・scratch J</li><li>温度・質量・相差 0</li><li>常駐p95 0.5426 ms</li></ul></section>
+            <section class="story-card warm"><span class="card-index">02</span><h3>保存則と順序を固定する</h3><ul><li>温度snapshotから辺を評価</li><li>ΣQ誤差 ≤ 1.65e-13 J</li><li>Phase 6AU比 +0.2677 ms</li><li>反応・生成物は次のgate</li></ul></section>
           </div>
 
           <section class="verification" aria-labelledby="phase6-verification-title">
@@ -496,6 +509,7 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AS app contract</strong><small>3 patterns · 9 runs · state + committed outputs exact</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AT sleep gate</strong><small>3 tolerances · fixed error budgets · 9 performance runs · rejected</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AU native boundary</strong><small>20 logs · 3 balanced runs · exact states · collapse isolated recheck passed</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AV native conduction</strong><small>62,400 pairs · 3 balanced runs · exact states + energy balance</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Default timing path</strong><small>homogeneous fast · timers off · 10.4678 s scenario</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>
             </div>
@@ -665,6 +679,12 @@
               <div><dt>One-time import / export</dt><dd>17.4588 / 23.6625 ms</dd></div>
               <div><dt>Native equivalence</dt><dd>ΔT 0 · Δmass 0 · phase 0 · exact SHA</dd></div>
               <div><dt>Native solver coverage</dt><dd>cell-local segment only · full step next</dd></div>
+              <div><dt>Native conduction topology</dt><dd>3,120 pairs/log · 62,400 total</dd></div>
+              <div><dt>Python + conduction p95</dt><dd>70.7815 ms</dd></div>
+              <div><dt>Resident native + conduction p95</dt><dd>0.5426 ms · 130.45×</dd></div>
+              <div><dt>Conduction topology increment</dt><dd>+0.2677 ms p95 vs Phase 6AU</dd></div>
+              <div><dt>Conduction balance error</dt><dd>≤ 1.65 × 10⁻13 J</dd></div>
+              <div><dt>Phase 6AV equivalence</dt><dd>temperature / mass / phase / SHA exact</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
@@ -680,8 +700,8 @@
           </section>
 
           <div class="notes-grid">
-            <section class="note caution"><p class="note-label">Known limits</p><h3>0.275 msは完全な木材stepではない</h3><p>今回native化したのは顕熱・clamp・相分類だけです。伝導、蒸発、一次／二次熱分解、炭酸化、runtime metrics、Flow・USD・描画・PhysXは含みません。したがって4 ms達成の必要条件は確認できましたが、production性能の合格値ではありません。</p></section>
-            <section class="note next"><p class="note-label">What comes next</p><h3>完全なstepを常駐状態へ移す</h3><p>権威JSON schemaとSI方程式を維持したまま、隣接伝導と全反応をnative SoAへ段階的に移します。Pythonオブジェクトへの同期は毎stepではなく、保存・アプリ出力など明示した境界だけに限定し、全セル履歴、質量収支、着火、Flow入力を同期参照と比較してからproduction採用を判断します。</p></section>
+            <section class="note caution"><p class="note-label">Known limits</p><h3>0.543 msにも反応はまだ入っていない</h3><p>顕熱、伝導、clamp、相分類はnative常駐になりましたが、蒸発、一次／二次熱分解、炭酸化、runtime metricsと生成物累積は未移植です。現在値は完全solverの合格値ではなく、隣接依存を含む境界が4 ms内で成立した証拠です。</p></section>
+            <section class="note next"><p class="note-label">What comes next</p><h3>質量と生成物を伴う反応を移す</h3><p>含水・乾燥木材・volatile potential・char・ashと酸素係数を常駐させ、蒸発、熱分解、炭酸化を既存順序で追加します。step結果と累積生成物もABI出力へ含め、全セル履歴、質量収支、着火時刻、Flow入力が同期Python参照と一致してから完全step候補とします。</p></section>
           </div>
         </div>
       </article>

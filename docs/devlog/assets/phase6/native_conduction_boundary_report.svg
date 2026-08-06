@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6AV resident native conduction topology</title>
+  <desc id="desc">Twenty logs compare Python, per-step conversion, and resident native execution after adding immutable pairwise conduction.</desc>
+  <style>.title{fill:#f8fafc;font:700 29px system-ui,sans-serif}.sub{fill:#cbd5e1;font:16px system-ui,sans-serif}.label{fill:#f8fafc;font:600 16px system-ui,sans-serif}.value{fill:#f8fafc;font:700 15px ui-monospace,monospace}.small{fill:#94a3b8;font:14px system-ui,sans-serif}.decision{fill:#fde68a;font:700 19px system-ui,sans-serif}</style>
+  <rect width="1200" height="680" rx="28" fill="#0f172a"/>
+  <text x="58" y="76" class="title">Move immutable neighbor topology beside resident state</text>
+  <text x="58" y="112" class="sub">20 logs · 23,040 cells · 62,400 pairs · Kit Python · /fp:strict</text>
+  <rect x="58" y="148" width="1084" height="62" rx="16" fill="#1e293b"/>
+  <text x="82" y="174" class="small">STATE + CONSERVATION GATE</text>
+  <text x="82" y="198" class="label">ΔT 0 K · Δmass 0 kg · phase 0 · ΣQ error 1.65e-13 J</text>
+  <line x1="403.5" y1="230" x2="403.5" y2="520" stroke="#fbbf24" stroke-width="3" stroke-dasharray="8 7"/>
+  <text x="413.5" y="228" class="value">4 ms p95 gate</text>
+  <text x="58" y="272" class="label">Python AoS + conduction</text><rect x="380" y="250" width="416.7" height="34" rx="17" fill="#fb7185"/><text x="810.7" y="273" class="value">p95 70.782 ms</text><text x="380" y="308" class="small">mean 61.323 ms</text><text x="58" y="364" class="label">AoS ↔ native each step</text><rect x="380" y="342" width="393.2" height="34" rx="17" fill="#fb7185"/><text x="787.2" y="365" class="value">p95 66.791 ms</text><text x="380" y="400" class="small">mean 47.153 ms</text><text x="58" y="456" class="label">Resident native + conduction</text><rect x="380" y="434" width="3.2" height="34" rx="17" fill="#22c55e"/><text x="397.2" y="457" class="value">p95 0.543 ms</text><text x="380" y="492" class="small">mean 0.348 ms</text>
+  <rect x="58" y="542" width="1084" height="82" rx="18" fill="#1e293b"/>
+  <text x="82" y="574" class="decision">Resident conduction boundary QUALIFIES; full reactions remain outside</text>
+  <text x="82" y="603" class="sub">Added topology p95 vs Phase 6AU: +0.268 ms · per-step object roundtrip rejected</text>
+  <text x="58" y="656" class="small">Production state and physics remain unchanged. Next gate adds evaporation, pyrolysis, char oxidation, and emitted-product accounting.</text>
+</svg>

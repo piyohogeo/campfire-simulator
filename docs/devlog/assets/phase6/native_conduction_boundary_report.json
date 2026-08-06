@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "phase": "phase6av",
+  "status": "ok",
+  "measurement": {
+    "log_count": 20,
+    "cell_count_per_log": 1152,
+    "combined_cell_count": 23040,
+    "conduction_pairs_per_log": 3120,
+    "combined_conduction_pair_count": 62400,
+    "steps_per_run": 180,
+    "warmup_steps_excluded": 20,
+    "runs": 3,
+    "dt_seconds": 0.2,
+    "heat_flux_w_m2": 150000.0,
+    "balanced_method_order": true,
+    "scope": "immutable pair topology + conduction + sensible + finalize",
+    "full_solver_measured": false
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "executable": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\python\\python.exe",
+    "kit_python": true,
+    "numpy": "2.3.1"
+  },
+  "native_toolchain": {
+    "abi_version": 1,
+    "msvc_version": 1939,
+    "msvc_full_version": 193933523,
+    "floating_point": "/fp:strict",
+    "dll_sha256": "04d17cf88386deb551ce264329c2ebc6d0c8cf51f4c040e3e083cb7e8d9e1981",
+    "source_sha256": "f98cd39bc325c7d3ccb151f50465a2235b21a52674f306ab1aba33650113b0f6"
+  },
+  "budget_ms": 4.0,
+  "method_rows": [
+    {
+      "method": "python_aos_conduction",
+      "label": "Python AoS + conduction",
+      "median_mean_ms": 61.323022506257985,
+      "median_p95_ms": 70.78150007873774,
+      "meets_4ms_p95": false
+    },
+    {
+      "method": "native_aos_roundtrip_conduction",
+      "label": "AoS ↔ native each step",
+      "median_mean_ms": 47.1534306241665,
+      "median_p95_ms": 66.7907998431474,
+      "meets_4ms_p95": false
+    },
+    {
+      "method": "native_resident_soa_conduction",
+      "label": "Resident native + conduction",
+      "median_mean_ms": 0.34843062749132514,
+      "median_p95_ms": 0.5425999406725168,
+      "meets_4ms_p95": true
+    }
+  ],
+  "boundary_cost": {
+    "median_one_time_import_ms": 25.390899972990155,
+    "median_one_time_export_ms": 25.768099818378687
+  },
+  "equivalence": {
+    "passed": true,
+    "all_exact_state_sha256_match": true,
+    "maximum_temperature_error_k": 0.0,
+    "maximum_mass_error_kg": 0.0,
+    "maximum_phase_mismatch_count": 0,
+    "maximum_conduction_balance_error_j": 1.6464433982843474e-13
+  },
+  "prior_context": {
+    "phase6au_resident_p95_ms": 0.2748998813331127,
+    "added_topology_p95_ms": 0.2677000593394041
+  },
+  "decision": {
+    "resident_conduction_boundary_qualified": true,
+    "per_step_aos_roundtrip_rejected": true,
+    "resident_speedup_vs_python": 130.44877961285573,
+    "full_native_solver_qualified": false,
+    "production_model_changed": false,
+    "next_step": "add evaporation and reaction state/output accumulators to the resident ABI"
+  },
+  "limitations": [
+    "evaporation",
+    "pyrolysis",
+    "char_oxidation",
+    "runtime_metrics",
+    "Flow/USD/rendering/PhysX"
+  ],
+  "raw_report": "artifacts\\phase3\\phase6av\\native_conduction_boundary_raw.json"
+}

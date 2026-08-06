@@ -134,3 +134,96 @@ CAMPFIRE_API std::int32_t campfire_native_step(
   return 0;
 }
 
+CAMPFIRE_API std::int32_t campfire_native_conduction_step(
+    const std::size_t cell_count,
+    double* const temperature_k,
+    double* const moisture_mass_kg,
+    double* const dry_wood_mass_kg,
+    double* const char_mass_kg,
+    double* const ash_mass_kg,
+    const double* const external_area_m2,
+    const double* const surface_exposure,
+    const double* const dry_specific_heat_j_kg_k,
+    std::int32_t* const phase_code,
+    const std::size_t pair_count,
+    const std::uint32_t* const first_cell,
+    const std::uint32_t* const second_cell,
+    const double* const conductance_w_k,
+    double* const conduction_energy_j,
+    const double dt_seconds,
+    const double heat_flux_w_m2,
+    const double radiant_absorptivity,
+    const double convection_w_m2_k,
+    const double emissivity,
+    const double sigma_w_m2_k4,
+    const double ambient_temperature_k,
+    const double water_specific_heat_j_kg_k,
+    const double char_specific_heat_j_kg_k,
+    const double ash_specific_heat_j_kg_k,
+    const double max_temperature_k,
+    const double pyrolysis_start_temperature_k,
+    const double mass_epsilon_kg) {
+  if (temperature_k == nullptr || moisture_mass_kg == nullptr ||
+      dry_wood_mass_kg == nullptr || char_mass_kg == nullptr ||
+      ash_mass_kg == nullptr || external_area_m2 == nullptr ||
+      surface_exposure == nullptr || dry_specific_heat_j_kg_k == nullptr ||
+      phase_code == nullptr || first_cell == nullptr || second_cell == nullptr ||
+      conductance_w_k == nullptr || conduction_energy_j == nullptr ||
+      cell_count == 0 || pair_count == 0) {
+    return 1;
+  }
+
+  std::fill(conduction_energy_j, conduction_energy_j + cell_count, 0.0);
+  for (std::size_t pair_index = 0; pair_index < pair_count; ++pair_index) {
+    const std::size_t first = first_cell[pair_index];
+    const std::size_t second = second_cell[pair_index];
+    if (first >= cell_count || second >= cell_count) {
+      return 2;
+    }
+    const double energy_j = conductance_w_k[pair_index] *
+                            (temperature_k[second] - temperature_k[first]) *
+                            dt_seconds;
+    conduction_energy_j[first] += energy_j;
+    conduction_energy_j[second] -= energy_j;
+  }
+
+  const double ambient_squared = ambient_temperature_k * ambient_temperature_k;
+  const double ambient_fourth = ambient_squared * ambient_squared;
+  for (std::size_t index = 0; index < cell_count; ++index) {
+    const double moisture = std::max(0.0, moisture_mass_kg[index]);
+    const double dry_wood = std::max(0.0, dry_wood_mass_kg[index]);
+    const double char_mass = std::max(0.0, char_mass_kg[index]);
+    const double ash_mass = std::max(0.0, ash_mass_kg[index]);
+    const double heat_capacity_j_k = std::max(
+        dry_wood * dry_specific_heat_j_kg_k[index] +
+            moisture * water_specific_heat_j_kg_k +
+            char_mass * char_specific_heat_j_kg_k +
+            ash_mass * ash_specific_heat_j_kg_k,
+        1.0e-9);
+    const double area_m2 = external_area_m2[index] * surface_exposure[index];
+    const double temperature_squared = temperature_k[index] * temperature_k[index];
+    const double external_heat_w =
+        heat_flux_w_m2 * radiant_absorptivity * area_m2;
+    const double convective_loss_w = convection_w_m2_k * area_m2 *
+                                     (temperature_k[index] - ambient_temperature_k);
+    const double radiation_loss_w = emissivity * sigma_w_m2_k4 * area_m2 *
+                                    (temperature_squared * temperature_squared -
+                                     ambient_fourth);
+    const double net_energy_j = conduction_energy_j[index] +
+                                (external_heat_w - convective_loss_w -
+                                 radiation_loss_w) *
+                                    dt_seconds;
+    temperature_k[index] += net_energy_j / heat_capacity_j_k;
+    temperature_k[index] = std::min(
+        max_temperature_k,
+        std::max(ambient_temperature_k, temperature_k[index]));
+    moisture_mass_kg[index] = moisture;
+    dry_wood_mass_kg[index] = dry_wood;
+    char_mass_kg[index] = char_mass;
+    ash_mass_kg[index] = ash_mass;
+    phase_code[index] = classify_phase(
+        temperature_k[index], moisture, dry_wood, char_mass, ash_mass,
+        pyrolysis_start_temperature_k, mass_epsilon_kg);
+  }
+  return 0;
+}

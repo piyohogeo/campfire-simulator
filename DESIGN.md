@@ -1752,3 +1752,18 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 可視化と再現: `run_phase6au_native_boundary.ps1`がVS2022環境の読込み、CMake/NMake build、Kit Pythonによる3方式の正式測定、JSON検査、SVG生成を一括実行する。正式runnerは`64.9 s`で完了した。`native_wood_boundary_report.json/.svg`に方式別mean／p95、4 ms gate、境界費用、同値性、未移植範囲を保存した。描画経路は変えていないため、開発日誌の動画ボタンはPhase 6AMの実画面MP4を再参照する。
 - 検証: Python構文、PowerShell構文、MSVC build、C ABI load、raw/report JSON schema、SVG寸法、HTML表示と動画modalを個別に検査する。標準suiteは40件が合格し、既存collapse coverage processだけがアサーション失敗ではなく固定`300 s`上限で終了した。同じ`test_collapse_scenario_releases_and_reignites_with_mass_balance`をKitの`-f`経路、coverageなしで単独再実行すると`5.3 s`で合格した。production Python／USD生成ロジック、依存関係、起動設定、描画は変更しておらず、Phase 6AO採用後のcoverage付き`41 / 41`と現行release buildを回帰基準として維持する。
 - 次: 連続状態をstep間で維持したまま、隣接伝導、蒸発、一次／二次熱分解、炭酸化、runtime metricsをnativeへ移す完全step試作へ進む。serializationとapp出力を明示的な同期境界とし、全セル履歴、質量収支、着火時刻、Flow入力、支持率、20本の5 Hz app契約p95を同期Python参照と比較してからproduction採否を判断する。
+
+## 78. Phase 6AV native常駐伝導トポロジー
+
+### 2026-08-06: 隣接辺を常駐させ、陽的伝導順序と保存則を維持する
+
+- 移植単位: 完全stepで最初にセル間依存を持つ伝導をPhase 6AUのC ABIへ追加した。各薪のimmutableな`(first cell, second cell, conductance W/K)`を`uint32 / uint32 / float64`の連続配列とし、20本分をcell offset付きで連結する。step scratchはセルごとの伝導エネルギー`J`を保持し、配列とともにnative側へ常駐する。権威JSON schemaとproduction木材状態は変更しない。
+- 数値順序: step先頭の全セル温度snapshotに相当する未更新温度配列から、既存`_conduction_pairs`と同じ薪順・辺順で`Q = G × (T₂ − T₁) × dt`を求め、firstへ加算、secondから減算する。全辺処理後にセル順で伝導、表面顕熱、clamp、相分類を適用し、Pythonの陽解法で温度更新途中の値を次の辺へ混入させない。`G`は`W/K`、温度は`K`、`dt = 0.2 s`、scratchは`J`である。
+- 同値・保存gate: Phase 6AUと同じ最大温度差`1 × 10⁻9 K`、最大質量差`1 × 10⁻12 kg`、相不一致`0`に加え、各方式の最終stepで全セル伝導scratch和の絶対値`1 × 10⁻9 J`以下を固定した。これは熱損失モデルの検証値ではなく、pairwise内部伝導が系内で等量加減されるソフトウェア不変条件である。
+- 測定方法: 半径`0.16 m`、長さ`1.80 m`、1本`1,152`セル・`3,120`伝導辺の乾燥／湿潤薪を交互に20本、計`23,040`セル・`62,400`辺とした。`150 kW/m²`、180 step、先頭20 step除外、3 runでPython AoS、毎step往復、native常駐の順序を回転した。蒸発、熱分解、炭酸化、runtime metrics、Flow、USD、描画、PhysXは含めない。
+- 同値結果: 全3 runの両native方式はPython参照に対して最大温度差`0 K`、最大質量差`0 kg`、相不一致`0`、最終状態SHA-256完全一致だった。全方式を含む最大伝導scratch和誤差は`1.65 × 10⁻13 J`で事前gateを満たした。
+- 性能結果: 3 run中央値のmean／p95はPython AoS＋伝導`61.3230 / 70.7815 ms`、毎step往復`47.1534 / 66.7908 ms`、native常駐＋伝導`0.3484 / 0.5426 ms`だった。常駐経路はPython比p95`130.45倍`で4 ms gate内を維持した。Phase 6AUの伝導なし常駐p95`0.2749 ms`との差は`+0.2677 ms`で、隣接トポロジー追加後も次の反応処理へ`3.4574 ms`の局所予算が残る。ただし完全app frame予算とは扱わない。
+- 判断: immutableな隣接トポロジーとstep scratchを連続状態の隣へ常駐させる設計を、完全native step試作の次段階へ採用する。毎step Pythonオブジェクトへ往復する案は引き続き棄却する。production既定、Flow、描画は未変更であり、完全solver採用判断は保留する。
+- 可視化と再現: `run_phase6av_native_conduction.ps1`がVS2022環境、CMake/NMake build、Kit Pythonの3方式×3 run、解析を`69.9 s`で完了した。`native_conduction_boundary_report.json/.svg`へ辺数、方式別mean／p95、Phase 6AUとの差、状態同値、伝導保存誤差、未移植区間を保存する。描画は変えていないため動画はPhase 6AMの実画面MP4を再参照する。
+- 検証: Python／PowerShell構文、MSVC build、C ABI、raw/report JSON、SVG寸法を個別に検査した。標準Kit suiteはcoverage付き`41 / 41`が合格し、wet-kindling`114.4 s`、collapse`283.7 s`を含む全体を`476.5 s`で完了した。production appへnative経路は未接続である。
+- 次: `volatile_potential_kg`、`oxygen_factor`とstep／累積生成物をABIへ追加し、蒸発、一次または並列Arrhenius熱分解、二次tar変換、炭酸化を既存順序で移す。まず定数比熱・区分線形経路の完全stepを全セル履歴、step result、質量収支、着火時刻でlockstep比較し、その後Arrheniusと公開mutable stateのfallbackを別gateにする。

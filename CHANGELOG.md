@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6AV resident immutable-conduction-topology kernel, exact 62,400-edge comparison, pairwise energy-conservation gate, and next-reaction-boundary report.
 - Added the Phase 6AU MSVC native contiguous-state boundary probe, exact 20-log Kit-Python comparison, per-step object-roundtrip rejection, and resident-SoA qualification report.
 - Added the Phase 6AT error-budgeted whole-log approximate-sleep trial, three tolerance candidates, exact-step accuracy references, moving-heat performance gates, and native-path decision report.
 - Added the Phase 6AS app-equivalent scheduler contract trial, immutable multi-consumer output revisions, fixed latency audit, and moving-heat activity test that rejects exact dormancy as stable capacity control.
