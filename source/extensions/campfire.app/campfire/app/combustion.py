@@ -177,6 +177,15 @@ class FlowSourceState:
     pyrolysis_gas_rate_kg_s: float
 
 
+@dataclass(frozen=True)
+class WoodRuntimeTopology:
+    """Explicit snapshot of immutable cell relationships for hot-loop reads."""
+
+    cells: tuple[WoodCellState, ...]
+    surface_cells: tuple[WoodCellState, ...]
+    initial_dry_mass_kg: float
+
+
 class WoodThermalModel:
     """Structured cylindrical cells fixed in a rigid log's local frame."""
 
@@ -979,23 +988,55 @@ class WoodThermalModel:
     def mass_balance_error_kg(self) -> float:
         return self.accounted_mass_kg - self.initial_mass_kg
 
-    def runtime_metrics(self) -> dict:
+    def capture_runtime_topology(self) -> WoodRuntimeTopology:
+        """Capture topology only after callers finish editing public cell metadata."""
+
+        cells = tuple(self.cells)
+        return WoodRuntimeTopology(
+            cells=cells,
+            surface_cells=tuple(
+                cell for cell in cells if cell.surface_exposure > 0.0
+            ),
+            initial_dry_mass_kg=(
+                sum(
+                    cell.dry_wood_mass_kg + cell.char_mass_kg + cell.ash_mass_kg
+                    for cell in cells
+                )
+                + self.emitted_pyrolysis_gas_kg
+                + self.emitted_char_gas_kg
+            ),
+        )
+
+    def runtime_metrics(
+        self, topology: WoodRuntimeTopology | None = None
+    ) -> dict:
         """Return the aggregate fields consumed inside the Phase 3 step loop."""
 
         surface_temperature_sum = 0.0
-        surface_cell_count = 0
         moisture_mass_kg = 0.0
         dry_wood_mass_kg = 0.0
         char_mass_kg = 0.0
         ash_mass_kg = 0.0
-        for cell in self.cells:
-            if cell.surface_exposure > 0.0:
+        cells = self.cells if topology is None else topology.cells
+        if topology is None:
+            surface_cell_count = 0
+            for cell in cells:
+                if cell.surface_exposure > 0.0:
+                    surface_temperature_sum += cell.temperature_k
+                    surface_cell_count += 1
+                moisture_mass_kg += cell.moisture_mass_kg
+                dry_wood_mass_kg += cell.dry_wood_mass_kg
+                char_mass_kg += cell.char_mass_kg
+                ash_mass_kg += cell.ash_mass_kg
+        else:
+            surface_cell_count = len(topology.surface_cells)
+            for cell in topology.surface_cells:
                 surface_temperature_sum += cell.temperature_k
-                surface_cell_count += 1
-            moisture_mass_kg += cell.moisture_mass_kg
-            dry_wood_mass_kg += cell.dry_wood_mass_kg
-            char_mass_kg += cell.char_mass_kg
-            ash_mass_kg += cell.ash_mass_kg
+            for cell in cells:
+                moisture_mass_kg += cell.moisture_mass_kg
+                dry_wood_mass_kg += cell.dry_wood_mass_kg
+                char_mass_kg += cell.char_mass_kg
+                ash_mass_kg += cell.ash_mass_kg
         return {
             "surface_mean_temperature_k": (
                 surface_temperature_sum / surface_cell_count

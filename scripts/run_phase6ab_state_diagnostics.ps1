@@ -20,6 +20,7 @@ $OutputDir = [System.IO.Path]::GetFullPath($OutputDir)
     -PythonStateClampPath original `
     -CellPhaseUpdates eager `
     -RuntimeMetrics full `
+    -RuntimeTopology dynamic `
     -CollectWoodStateDiagnostics
 if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE

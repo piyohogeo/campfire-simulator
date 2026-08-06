@@ -22,11 +22,11 @@ $fastSummaries = @()
 if (-not $OriginalProfileSummary -and -not $FastProfileSummary) {
     $originalProfileOutput = Join-Path $OutputDir "profile_original"
     $fastProfileOutput = Join-Path $OutputDir "profile_fast"
-    & $phase3Runner -OutputDir $originalProfileOutput -ArrayBackend python -ProfileWoodInternals -PythonSurfaceBoundaryPath fast -PythonStateClampPath original -CellPhaseUpdates eager -RuntimeMetrics full
+    & $phase3Runner -OutputDir $originalProfileOutput -ArrayBackend python -ProfileWoodInternals -PythonSurfaceBoundaryPath fast -PythonStateClampPath original -CellPhaseUpdates eager -RuntimeMetrics full -RuntimeTopology dynamic
     if ($LASTEXITCODE -ne 0) {
         exit $LASTEXITCODE
     }
-    & $phase3Runner -OutputDir $fastProfileOutput -ArrayBackend python -ProfileWoodInternals -PythonSurfaceBoundaryPath fast -PythonStateClampPath fast -CellPhaseUpdates eager -RuntimeMetrics full
+    & $phase3Runner -OutputDir $fastProfileOutput -ArrayBackend python -ProfileWoodInternals -PythonSurfaceBoundaryPath fast -PythonStateClampPath fast -CellPhaseUpdates eager -RuntimeMetrics full -RuntimeTopology dynamic
     if ($LASTEXITCODE -ne 0) {
         exit $LASTEXITCODE
     }
@@ -41,7 +41,7 @@ for ($pair = 1; $pair -le $PairCount; $pair++) {
     $paths = if ($pair % 2 -eq 1) { @("original", "fast") } else { @("fast", "original") }
     foreach ($pathName in $paths) {
         $runOutput = Join-Path $OutputDir ("pair_{0}_{1}" -f $pair, $pathName)
-        & $phase3Runner -OutputDir $runOutput -ArrayBackend python -PythonSurfaceBoundaryPath fast -PythonStateClampPath $pathName -CellPhaseUpdates eager -RuntimeMetrics full
+        & $phase3Runner -OutputDir $runOutput -ArrayBackend python -PythonSurfaceBoundaryPath fast -PythonStateClampPath $pathName -CellPhaseUpdates eager -RuntimeMetrics full -RuntimeTopology dynamic
         if ($LASTEXITCODE -ne 0) {
             exit $LASTEXITCODE
         }

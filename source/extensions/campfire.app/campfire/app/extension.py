@@ -1034,6 +1034,17 @@ class CampfireAppExtension(omni.ext.IExt):
         compact_runtime_metrics = settings.get_as_bool(
             f"{SETTINGS_ROOT}/compactRuntimeMetrics"
         )
+        precomputed_runtime_topology = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/precomputedRuntimeTopology"
+        )
+        capture_video_frames = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/captureVideoFrames"
+        )
+        video_frame_interval_steps = settings.get_as_int(
+            f"{SETTINGS_ROOT}/videoFrameIntervalSteps"
+        )
+        if video_frame_interval_steps <= 0:
+            video_frame_interval_steps = 20
         if array_backend not in (PYTHON_ARRAY_BACKEND, NUMPY_ARRAY_BACKEND):
             raise ValueError(f"Unsupported wood-step array backend: {array_backend}")
         if collect_wood_state_diagnostics and defer_cell_phase_updates:
@@ -1046,6 +1057,14 @@ class CampfireAppExtension(omni.ext.IExt):
         dry_model = load_model_from_prim(dry_prim)
         wet_model = load_model_from_prim(wet_prim)
         models = {"dry": dry_model, "wet": wet_model}
+        runtime_topologies = (
+            {
+                name: model.capture_runtime_topology()
+                for name, model in models.items()
+            }
+            if precomputed_runtime_topology
+            else {"dry": None, "wet": None}
+        )
         ignition_seconds = {"dry": None, "wet": None}
         peak_gas_rate_kg_s = {"dry": 0.0, "wet": 0.0}
         model_step_times_ms = []
@@ -1058,6 +1077,7 @@ class CampfireAppExtension(omni.ext.IExt):
         update_times_ms = []
         active_block_query_times_ms = []
         capture_times_ms = []
+        video_capture_times_ms = []
         step_loop_times_ms = []
         wood_internal_times_ms: dict[str, list[float]] = {}
         wood_state_diagnostics = (
@@ -1065,7 +1085,11 @@ class CampfireAppExtension(omni.ext.IExt):
         )
         active_block_counts = []
         images = []
+        video_frames = []
         rows = []
+        video_frames_dir = output_dir / "video_frames"
+        if capture_video_frames:
+            video_frames_dir.mkdir(parents=True, exist_ok=True)
 
         try:
             extension_to_scenario_seconds = (
@@ -1140,8 +1164,8 @@ class CampfireAppExtension(omni.ext.IExt):
 
                 metrics_started = time.perf_counter()
                 if compact_runtime_metrics:
-                    dry_metrics = dry_model.runtime_metrics()
-                    wet_metrics = wet_model.runtime_metrics()
+                    dry_metrics = dry_model.runtime_metrics(runtime_topologies["dry"])
+                    wet_metrics = wet_model.runtime_metrics(runtime_topologies["wet"])
                 else:
                     dry_metrics = dry_model.metrics()
                     wet_metrics = wet_model.metrics()
@@ -1188,6 +1212,10 @@ class CampfireAppExtension(omni.ext.IExt):
                 update_flow = (
                     step_index % PHASE3_FLOW_UPDATE_INTERVAL_STEPS == 0
                     or step_index in PHASE3_CAPTURE_STEPS
+                    or (
+                        capture_video_frames
+                        and step_index % video_frame_interval_steps == 0
+                    )
                 )
                 if update_flow:
                     adapter_started = time.perf_counter()
@@ -1198,8 +1226,26 @@ class CampfireAppExtension(omni.ext.IExt):
                     )
                     if step_index % 10 == 0 or step_index in PHASE3_CAPTURE_STEPS:
                         wood_visual_started = time.perf_counter()
-                        apply_model_visual_state(dry_prim, dry_model, dry_metrics)
-                        apply_model_visual_state(wet_prim, wet_model, wet_metrics)
+                        apply_model_visual_state(
+                            dry_prim,
+                            dry_model,
+                            dry_metrics,
+                            initial_dry_mass_kg=(
+                                runtime_topologies["dry"].initial_dry_mass_kg
+                                if runtime_topologies["dry"] is not None
+                                else None
+                            ),
+                        )
+                        apply_model_visual_state(
+                            wet_prim,
+                            wet_model,
+                            wet_metrics,
+                            initial_dry_mass_kg=(
+                                runtime_topologies["wet"].initial_dry_mass_kg
+                                if runtime_topologies["wet"] is not None
+                                else None
+                            ),
+                        )
                         wood_visual_usd_times_ms.append(
                             (time.perf_counter() - wood_visual_started) * 1000.0
                         )
@@ -1233,6 +1279,37 @@ class CampfireAppExtension(omni.ext.IExt):
                                 "dry_flow_fuel": source.fuel,
                                 "capture_wall_seconds": round(
                                     capture_wall_seconds, 4
+                                ),
+                            }
+                        )
+                    if (
+                        capture_video_frames
+                        and step_index % video_frame_interval_steps == 0
+                    ):
+                        video_frame_index = len(video_frames) + 1
+                        video_frame_path = (
+                            video_frames_dir / f"frame_{video_frame_index:04d}.png"
+                        )
+                        video_capture_started = time.perf_counter()
+                        video_resolution = await self._capture_image(
+                            viewport, video_frame_path
+                        )
+                        video_capture_wall_seconds = (
+                            time.perf_counter() - video_capture_started
+                        )
+                        video_capture_times_ms.append(
+                            video_capture_wall_seconds * 1000.0
+                        )
+                        video_frames.append(
+                            {
+                                "index": video_frame_index,
+                                "step": step_index,
+                                "model_time_seconds": dry_result.elapsed_seconds,
+                                "path": str(video_frame_path),
+                                "resolution": list(video_resolution),
+                                "dry_flow_fuel": source.fuel,
+                                "capture_wall_seconds": round(
+                                    video_capture_wall_seconds, 4
                                 ),
                             }
                         )
@@ -1377,6 +1454,15 @@ class CampfireAppExtension(omni.ext.IExt):
                 "camera": str(CAMERA_PATH),
                 "resolution": list(CAPTURE_RESOLUTION),
                 "images": images,
+                "video_frames": {
+                    "enabled": capture_video_frames,
+                    "interval_steps": video_frame_interval_steps,
+                    "model_seconds_per_frame": round(
+                        PHASE3_MODEL_DT_SECONDS * video_frame_interval_steps, 6
+                    ),
+                    "frames": video_frames,
+                    "capture_timing": summarize_timing_ms(video_capture_times_ms),
+                },
                 "startup": startup_timing,
                 "scenario": {
                     "wood_array_backend": array_backend,
@@ -1391,6 +1477,7 @@ class CampfireAppExtension(omni.ext.IExt):
                     "python_state_clamp_fast_path": python_state_clamp_fast_path,
                     "deferred_cell_phase_updates": defer_cell_phase_updates,
                     "compact_runtime_metrics": compact_runtime_metrics,
+                    "precomputed_runtime_topology": precomputed_runtime_topology,
                     "final_phase_refresh_seconds": round(
                         final_phase_refresh_seconds, 6
                     ),

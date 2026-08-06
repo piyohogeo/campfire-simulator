@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added an opt-in deterministic Phase 3 viewport-frame capture and ffmpeg H.264 encoding path, with a real 1280×720 burn-scenario video embedded in the browser-readable development log.
+- Added reusable compact development-log video triggers and an accessible shared playback modal with focus restoration, Escape/backdrop close behavior, and direct-file fallback.
+
+- Added the Phase 6AG adopted-path internal re-profile, Phase 6Y comparison, exact-output gates, and browser-readable current hotspot report.
+
+- Added the Phase 6AF runtime-topology mutability audit, explicit opt-in snapshot trial, alternating-pair benchmark, and browser-readable rejection report.
+
 - Omniverse Kit Base Editorを基盤とするCampfire Simulatorアプリ。
 - 決定的なPhase 0固定シーン生成とUSD書き出し。
 - 固定カメラのヘッドレス画像キャプチャとJSON要約。

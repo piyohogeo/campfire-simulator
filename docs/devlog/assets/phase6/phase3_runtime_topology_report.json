@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "phase": "phase6af",
+  "status": "ok",
+  "paired_run_count": 3,
+  "environment": {
+    "application": "campfire.simulator.benchmark.kit",
+    "backend": "python",
+    "alternating_order": true,
+    "debugger_free_all_runs": true
+  },
+  "mutability_audit": {
+    "cells_and_surface_metadata_are_publicly_mutable": true,
+    "calibration_rewrites_surface_metadata_after_construction": true,
+    "unconditional_constructor_cache_rejected": true,
+    "explicit_snapshot_after_scenario_configuration": true,
+    "legacy_dynamic_api_preserved": true,
+    "snapshot_contents": [
+      "ordered cell references",
+      "ordered surface-cell references",
+      "initial dry-mass display baseline"
+    ]
+  },
+  "timings": {
+    "metrics_mean_ms": {
+      "dynamic_median": 0.332,
+      "precomputed_median": 0.2902,
+      "improvement_percent": 12.590361445783133
+    },
+    "visual_mean_ms": {
+      "dynamic_median": 0.8605,
+      "precomputed_median": 0.5588,
+      "improvement_percent": 35.06101104009298
+    },
+    "step_loop_mean_ms": {
+      "dynamic_median": 9.1705,
+      "precomputed_median": 9.2754,
+      "improvement_percent": -1.1438852843356293
+    },
+    "step_loop_p95_ms": {
+      "dynamic_median": 13.6982,
+      "precomputed_median": 13.7738,
+      "improvement_percent": -0.5518973295761463
+    },
+    "scenario_seconds": {
+      "dynamic_median": 10.9577,
+      "precomputed_median": 11.0834,
+      "improvement_percent": -1.1471385418472706
+    },
+    "runner_seconds": {
+      "dynamic_median": 28.755,
+      "precomputed_median": 28.431,
+      "improvement_percent": 1.126760563380275
+    }
+  },
+  "paired_results": [
+    {
+      "pair": 1,
+      "metrics_improvement_percent": 10.06512729425695,
+      "visual_improvement_percent": 32.69660411081322,
+      "step_loop_improvement_percent": -3.3061098779723572,
+      "scenario_improvement_percent": -3.3782943256739575
+    },
+    {
+      "pair": 2,
+      "metrics_improvement_percent": 12.590361445783133,
+      "visual_improvement_percent": 35.06101104009298,
+      "step_loop_improvement_percent": -1.1438852843356293,
+      "scenario_improvement_percent": -1.1471385418472706
+    },
+    {
+      "pair": 3,
+      "metrics_improvement_percent": 12.076852698993603,
+      "visual_improvement_percent": 36.62473296938049,
+      "step_loop_improvement_percent": -1.6243140193507075,
+      "scenario_improvement_percent": -1.7168649676472483
+    }
+  ],
+  "equivalence": {
+    "exact_authoritative_outputs_all_runs": true,
+    "dry_state_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+    "wet_state_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+    "metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759",
+    "ignition_seconds": {
+      "dry": 66.2,
+      "wet": 166.4
+    }
+  },
+  "decision": {
+    "adopt_precomputed_runtime_topology": false,
+    "all_median_gates_improved": false,
+    "pairs_improving_loop_and_scenario": 0,
+    "required_improving_pairs": 2,
+    "reason": "formal end-to-end adoption gates were not met"
+  },
+  "runs": {
+    "dynamic": [
+      "artifacts\\phase3\\phase6af\\formal\\pair_1_dynamic\\summary.json",
+      "artifacts\\phase3\\phase6af\\formal\\pair_2_dynamic\\summary.json",
+      "artifacts\\phase3\\phase6af\\formal\\pair_3_dynamic\\summary.json"
+    ],
+    "precomputed": [
+      "artifacts\\phase3\\phase6af\\formal\\pair_1_precomputed\\summary.json",
+      "artifacts\\phase3\\phase6af\\formal\\pair_2_precomputed\\summary.json",
+      "artifacts\\phase3\\phase6af\\formal\\pair_3_precomputed\\summary.json"
+    ]
+  }
+}

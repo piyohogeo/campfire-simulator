@@ -4,6 +4,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
 ## [0.1.0] - 2026-08-04
+- Added opt-in fixed-camera Phase 3 video-frame capture metadata while retaining the normal two-image validation path by default.
+- Added a compact development-log video trigger and shared modal playback convention for future progress entries.
+- Added the Phase 6AG adopted-path Python internal re-profile and current hotspot report.
 - Added deterministic Phase 0 scene generation and headless capture.
 - Added Phase 1 NVIDIA Flow scene, metrics, and readback validation.
 - Added Phase 2 dynamic rigid logs, persistent IDs, controls, emitter following, and fixed-step validation.
@@ -29,6 +32,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added the Phase 6AC conditional state-clamp path preserving every temperature/mass bound plus NaN and negative-zero behavior, with profiled and alternating-pair adoption evidence.
 - Added Phase 6AD deferred Phase 3 cell classification with an explicit final refresh, eager diagnostics guard, exact-output tests, and paired performance evidence.
 - Added Phase 6AE compact Phase 3 runtime metrics aggregation while retaining the complete public metrics API and exact final outputs.
+- Added the Phase 6AF explicit runtime-topology snapshot trial, mutability audit, exact-output checks, and conservative rejection evidence while retaining dynamic reads by default.
 - Added Phase 6B no-refit OSB external-material holdout evaluation and a separate browser-readable residual report.
 - Added Phase 6C fixed SAMP.1/2-to-SAMP.3 plywood replicate holdout evaluation and a separate browser-readable report.
 - Added Phase 6D nominal 12.7 mm five-ply planar specimen model, mass-derived effective density, through-thickness conduction, and layer-temperature report.

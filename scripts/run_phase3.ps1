@@ -11,7 +11,14 @@ param(
     [ValidateSet("eager", "deferred")]
     [string]$CellPhaseUpdates = "deferred",
     [ValidateSet("full", "compact")]
-    [string]$RuntimeMetrics = "compact"
+    [string]$RuntimeMetrics = "compact",
+    [ValidateSet("dynamic", "precomputed")]
+    [string]$RuntimeTopology = "dynamic",
+    [switch]$CaptureVideo,
+    [ValidateRange(1, 1200)]
+    [int]$VideoFrameInterval = 20,
+    [ValidateRange(1, 60)]
+    [int]$VideoFps = 10
 )
 
 $ErrorActionPreference = "Stop"
@@ -23,6 +30,7 @@ $usePythonSurfaceBoundaryFastPath = $PythonSurfaceBoundaryPath -eq "fast"
 $usePythonStateClampFastPath = $PythonStateClampPath -eq "fast"
 $deferCellPhaseUpdates = $CellPhaseUpdates -eq "deferred"
 $compactRuntimeMetrics = $RuntimeMetrics -eq "compact"
+$precomputedRuntimeTopology = $RuntimeTopology -eq "precomputed"
 
 if ($CollectWoodStateDiagnostics.IsPresent -and $deferCellPhaseUpdates) {
     throw "Wood state diagnostics require eager cell phase updates."
@@ -57,6 +65,9 @@ $kitArgs = @(
     "--/exts/campfire.app/pythonStateClampFastPath=$($usePythonStateClampFastPath.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/deferCellPhaseUpdates=$($deferCellPhaseUpdates.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/compactRuntimeMetrics=$($compactRuntimeMetrics.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/precomputedRuntimeTopology=$($precomputedRuntimeTopology.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/captureVideoFrames=$($CaptureVideo.IsPresent.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/videoFrameIntervalSteps=$VideoFrameInterval",
     "--/rtx/flow/enabled=true",
     "--/app/viewport/grid/enabled=false",
     "--/persistent/app/viewport/displayOptions=1152"
@@ -110,6 +121,9 @@ if ([bool]$result.scenario.deferred_cell_phase_updates -ne $deferCellPhaseUpdate
 if ([bool]$result.scenario.compact_runtime_metrics -ne $compactRuntimeMetrics) {
     throw "Phase 3 used an unexpected runtime-metrics setting."
 }
+if ([bool]$result.scenario.precomputed_runtime_topology -ne $precomputedRuntimeTopology) {
+    throw "Phase 3 used an unexpected runtime-topology setting."
+}
 foreach ($name in @("dry", "wet")) {
     if ($result.scenario.zero_area_cell_count.$name -ne 792) {
         throw "Phase 3 $name wood has an unexpected zero-area cell count."
@@ -158,6 +172,21 @@ if ((Get-Content -LiteralPath $result.metrics_csv | Measure-Object).Count -ne 12
 }
 if ($result.images.Count -ne 2) {
     throw "Phase 3 must produce two fixed-step captures."
+}
+$expectedVideoFrameCount = if ($CaptureVideo.IsPresent) {
+    [math]::Floor(1200 / $VideoFrameInterval)
+}
+else {
+    0
+}
+if ([bool]$result.video_frames.enabled -ne $CaptureVideo.IsPresent) {
+    throw "Phase 3 used an unexpected video-frame capture setting."
+}
+if ($result.video_frames.interval_steps -ne $VideoFrameInterval) {
+    throw "Phase 3 used an unexpected video-frame interval."
+}
+if (@($result.video_frames.frames).Count -ne $expectedVideoFrameCount) {
+    throw "Phase 3 produced an unexpected video-frame count."
 }
 
 $expectedTimingSamples = @{
@@ -238,6 +267,31 @@ foreach ($capture in $result.images) {
     finally {
         $image.Dispose()
     }
+}
+
+if ($CaptureVideo.IsPresent) {
+    $ffmpeg = Get-Command ffmpeg -ErrorAction Stop
+    $videoPath = Join-Path $OutputDir "phase3_burn.mp4"
+    $framePattern = Join-Path $OutputDir "video_frames\frame_%04d.png"
+    $encodeTimer = [System.Diagnostics.Stopwatch]::StartNew()
+    & $ffmpeg.Source -hide_banner -loglevel warning -y `
+        -framerate $VideoFps -i $framePattern `
+        -frames:v $expectedVideoFrameCount `
+        -c:v libx264 -preset medium -crf 24 -pix_fmt yuv420p `
+        -movflags +faststart -an $videoPath
+    $ffmpegExitCode = $LASTEXITCODE
+    $encodeTimer.Stop()
+    if ($ffmpegExitCode -ne 0 -or -not (Test-Path -LiteralPath $videoPath)) {
+        throw "Phase 3 video encoding failed with exit code $ffmpegExitCode."
+    }
+    $videoFile = Get-Item -LiteralPath $videoPath
+    $videoSha256 = (Get-FileHash -LiteralPath $videoPath -Algorithm SHA256).Hash.ToLowerInvariant()
+    $result.video_frames | Add-Member -NotePropertyName video_path -NotePropertyValue $videoPath -Force
+    $result.video_frames | Add-Member -NotePropertyName fps -NotePropertyValue $VideoFps -Force
+    $result.video_frames | Add-Member -NotePropertyName duration_seconds -NotePropertyValue ([math]::Round($expectedVideoFrameCount / $VideoFps, 3)) -Force
+    $result.video_frames | Add-Member -NotePropertyName encoded_bytes -NotePropertyValue $videoFile.Length -Force
+    $result.video_frames | Add-Member -NotePropertyName encoded_sha256 -NotePropertyValue $videoSha256 -Force
+    $result.video_frames | Add-Member -NotePropertyName encode_wall_seconds -NotePropertyValue ([math]::Round($encodeTimer.Elapsed.TotalSeconds, 3)) -Force
 }
 
 $runnerWallSeconds = [math]::Round($runTimer.Elapsed.TotalSeconds, 3)

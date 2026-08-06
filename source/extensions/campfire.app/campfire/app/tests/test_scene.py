@@ -381,6 +381,29 @@ class TestScene(omni.kit.test.AsyncTestCase):
                 )
             },
         )
+        topology = fast_state_clamp.capture_runtime_topology()
+        self.assertEqual(
+            fast_state_clamp.runtime_metrics(topology),
+            fast_state_clamp.runtime_metrics(),
+        )
+        self.assertEqual(
+            topology.initial_dry_mass_kg,
+            sum(
+                cell.dry_wood_mass_kg + cell.char_mass_kg + cell.ash_mass_kg
+                for cell in fast_state_clamp.cells
+            )
+            + fast_state_clamp.emitted_pyrolysis_gas_kg
+            + fast_state_clamp.emitted_char_gas_kg,
+        )
+        first_surface = topology.surface_cells[0]
+        first_surface.temperature_k += 100.0
+        first_surface.surface_exposure = 0.0
+        self.assertNotEqual(
+            fast_state_clamp.runtime_metrics(topology)[
+                "surface_mean_temperature_k"
+            ],
+            fast_state_clamp.runtime_metrics()["surface_mean_temperature_k"],
+        )
 
         eager_phases = campfire.app.create_cylindrical_wood_model(
             "eager_phases",

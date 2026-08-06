@@ -68,15 +68,24 @@ def update_flow_source(
 
 
 def apply_model_visual_state(
-    prim: Usd.Prim, model: WoodThermalModel, metrics: dict | None = None
+    prim: Usd.Prim,
+    model: WoodThermalModel,
+    metrics: dict | None = None,
+    initial_dry_mass_kg: float | None = None,
 ) -> None:
     """Expose aggregate drying/char state without changing collision geometry."""
 
     metrics = model.metrics() if metrics is None else metrics
-    initial_dry_mass = sum(
-        cell.dry_wood_mass_kg + cell.char_mass_kg + cell.ash_mass_kg
-        for cell in model.cells
-    ) + model.emitted_pyrolysis_gas_kg + model.emitted_char_gas_kg
+    initial_dry_mass = (
+        sum(
+            cell.dry_wood_mass_kg + cell.char_mass_kg + cell.ash_mass_kg
+            for cell in model.cells
+        )
+        + model.emitted_pyrolysis_gas_kg
+        + model.emitted_char_gas_kg
+        if initial_dry_mass_kg is None
+        else initial_dry_mass_kg
+    )
     char_fraction = min(
         1.0,
         (metrics["char_mass_kg"] + metrics["ash_mass_kg"])

@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "phase": "phase6ag",
+  "status": "ok",
+  "run_count": 3,
+  "environment": {
+    "application": "campfire.simulator.benchmark.kit",
+    "backend": "python",
+    "debugger_free_all_runs": true,
+    "internal_timing_opt_in": true,
+    "adopted_paths": [
+      "surface boundary",
+      "state clamp",
+      "deferred phase",
+      "compact metrics"
+    ],
+    "runtime_topology": "dynamic"
+  },
+  "timing": {
+    "phase6y_internal_total_median_mean_ms": 11.6346,
+    "current_internal_total_median_mean_ms": 6.1429,
+    "internal_total_change_percent": -47.201450844893685,
+    "current_two_log_step_median_mean_ms": 6.1928,
+    "current_scenario_median_seconds": 10.3185,
+    "segments": {
+      "input_validation": {
+        "label": "Input validation",
+        "phase6y_median_mean_ms": 0.0086,
+        "current_median_mean_ms": 0.0055,
+        "current_median_p95_ms": 0.0107,
+        "change_percent": -36.04651162790698,
+        "current_share_percent": 0.08953425906330886
+      },
+      "conduction": {
+        "label": "Conduction",
+        "phase6y_median_mean_ms": 1.0293,
+        "current_median_mean_ms": 0.8524,
+        "current_median_p95_ms": 1.08,
+        "change_percent": -17.186437384630334,
+        "current_share_percent": 13.876182259193543
+      },
+      "sensible_heat": {
+        "label": "Sensible heat",
+        "phase6y_median_mean_ms": 4.5321,
+        "current_median_mean_ms": 3.0032,
+        "current_median_p95_ms": 3.9021,
+        "change_percent": -33.734913174907874,
+        "current_share_percent": 48.888961239805305
+      },
+      "evaporation": {
+        "label": "Evaporation",
+        "phase6y_median_mean_ms": 0.6469,
+        "current_median_mean_ms": 0.5351,
+        "current_median_p95_ms": 0.7119,
+        "change_percent": -17.282423867676613,
+        "current_share_percent": 8.710869459050286
+      },
+      "pyrolysis": {
+        "label": "Pyrolysis",
+        "phase6y_median_mean_ms": 1.2511,
+        "current_median_mean_ms": 1.0256,
+        "current_median_p95_ms": 1.8393,
+        "change_percent": -18.024138757893056,
+        "current_share_percent": 16.695697471878105
+      },
+      "char_oxidation": {
+        "label": "Char oxidation",
+        "phase6y_median_mean_ms": 0.4346,
+        "current_median_mean_ms": 0.3579,
+        "current_median_p95_ms": 0.7074,
+        "change_percent": -17.648412333179934,
+        "current_share_percent": 5.826238421592407
+      },
+      "state_finalize": {
+        "label": "State finalize",
+        "phase6y_median_mean_ms": 3.7012,
+        "current_median_mean_ms": 0.3448,
+        "current_median_p95_ms": 0.4297,
+        "change_percent": -90.68410245325839,
+        "current_share_percent": 5.612984095459799
+      },
+      "result_aggregation": {
+        "label": "Result aggregation",
+        "phase6y_median_mean_ms": 0.0308,
+        "current_median_mean_ms": 0.0184,
+        "current_median_p95_ms": 0.0318,
+        "change_percent": -40.25974025974026,
+        "current_share_percent": 0.29953279395725146
+      }
+    }
+  },
+  "selection": {
+    "primary_candidate": "sensible_heat",
+    "candidate_order": [
+      "sensible_heat",
+      "pyrolysis",
+      "conduction",
+      "evaporation",
+      "char_oxidation",
+      "state_finalize",
+      "result_aggregation",
+      "input_validation"
+    ],
+    "profile_is_for_candidate_selection_not_adoption": true,
+    "next_gate": "exact outputs plus alternating unprofiled step-loop and scenario improvement"
+  },
+  "equivalence": {
+    "exact_authoritative_outputs_across_runs": true,
+    "dry_state_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+    "wet_state_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+    "metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759",
+    "ignition_seconds": {
+      "dry": 66.2,
+      "wet": 166.4
+    },
+    "flow_active_blocks_peak_observed": [
+      294,
+      347
+    ],
+    "flow_peak_is_not_authoritative": true
+  },
+  "baseline_report": "docs\\devlog\\assets\\phase6\\phase3_python_internal_report.json",
+  "runs": [
+    "artifacts\\phase3\\phase6ag\\adopted_profile_1\\summary.json",
+    "artifacts\\phase3\\phase6ag\\adopted_profile_2\\summary.json",
+    "artifacts\\phase3\\phase6ag\\adopted_profile_3\\summary.json"
+  ]
+}

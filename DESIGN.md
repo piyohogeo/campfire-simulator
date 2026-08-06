@@ -2,7 +2,7 @@
 
 ## 1. 文書情報
 
-- 文書状態: 実装中・Phase 6Z 顕熱ループ局所試作の棄却判断完了
+- 文書状態: 実装中・Phase 6AG 採用後Python内部再プロファイル完了
 - 初版日: 2026-08-04
 - 想定開発環境: Windows 11、NVIDIA RTX 3090（24 GB）、VS Code + Codex
 - 開発リポジトリ（作成済み）: `C:\Users\junic\src\campfire-simulator`
@@ -1490,3 +1490,44 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 最終検証: 採用既定値でreleaseを再ビルドした。標準`repo.bat test`はstartup`3.3 s`、coverage通常35件`232.8 s`、coverage熱モデル4件`179.3 s`、coverageなし数値2件`22.2 s`、全41件をrunner`442.6 s`で成功させた。無指定の通常Phase 3も成功し、surface fast／条件付きclamp／deferred phase／compact metricsの4既定値、完全な最終収率・質量収支、着火`66.2 / 166.4 s`を確認した。metricsは`0.3311 ms`、step loopは`9.5884 ms`、シナリオは`11.4625 s`、RTX ready待機を含むrunnerは`201.135 s`だった。
 - 可視化と再現: `run_phase6ae_runtime_metrics_benchmark.ps1`が交互順序6本を取得し、`compare_phase3_runtime_metrics.py`が設定、依存フィールド、同値性、時間、組別改善を検査して`phase3_runtime_metrics_report.json/.svg`を生成する。SVGはEdgeの1200×680描画で文字切れがないことを確認した。実設備dry runは責任研究室の外部レビュー受領まで保留する。
 - 次: compact集計にも毎セルの表面判定が残り、薪表示は10 stepごとに初期乾燥質量を再走査する。Phase 6AFでは表面セル集合、表面セル数、表示用基準質量がモデル寿命中に不変かを監査し、ロード／編集契約を壊さず静的トポロジー情報として保持できるか評価する。
+
+## 60. Phase 6AF 静的トポロジー監査と不採用ゲート
+
+### 2026-08-06: 局所短縮だけでは既定化しない
+
+- 可変性監査: `WoodCellState`と`WoodThermalModel.cells`は公開可変であり、NIST等価coupon生成はモデル構築後に`external_area_m2`、`surface_exposure`、`oxygen_factor`を書き換える。したがってコンストラクタ時の無条件キャッシュは既存の編集契約を壊すため棄却した。
+- 試作境界: `capture_runtime_topology()`を明示的なスナップショットとして追加した。取得時点の順序付き全セル参照、順序付き表面セル参照、表示用初期乾燥質量を保持する。引数なし`runtime_metrics()`と`apply_model_visual_state()`は従来どおり動的に読むため、公開APIの可変挙動は維持する。Phase 3だけがUSDからモデルを読み終えた後、設定で明示された場合にスナップショットを使う。
+- 同値性: dynamic／precomputedの予備2 runと正式6 runすべてで、乾燥薪・湿潤薪の権威状態SHA-256、CSV SHA-256`01aaf0c…7759`、着火`66.2 / 166.4 s`が完全一致した。表面温度の加算順序と4質量の加算順序は変えていない。
+- 正式測定: debugger-free benchmarkアプリ、Python backend、採用済みsurface fast・clamp fast・deferred phase・compact metrics、1,200 step、Flow・CSV・表示・2 captureを維持し、dynamic→precomputed、precomputed→dynamic、dynamic→precomputedの3組を測った。
+- 局所結果: metrics中央値は`0.3320 → 0.2902 ms`（`12.59%`短縮）、薪表示USD中央値は`0.8605 → 0.5588 ms`（`35.06%`短縮）した。
+- 全体結果: step loop中央値は`9.1705 → 9.2754 ms`（`1.14%`悪化）、p95は`13.6982 → 13.7738 ms`（`0.55%`悪化）、シナリオは`10.9577 → 11.0834 s`（`1.15%`悪化）した。3/3組すべてでstep loopとシナリオがともに悪化したため、採用条件を満たさない。
+- 判断: `precomputedRuntimeTopology`と`run_phase3.ps1 -RuntimeTopology`の既定は`dynamic`とする。試験経路は再現と契約検査のため任意選択で残すが、本番既定にはしない。runner中央値の`28.755 → 28.431 s`はモデル開始前の待機を含むため採否に使わない。
+- 最終検証: release build成功後、標準テストの初回は通常35件を`250.1 s`で成功し、熱モデル4件中3件成功後、既存wet-kindlingテスト中に180秒上限へ達した。タイムアウトや分割を変更せず同じコマンドを再実行し、startup`3.9 s`、通常35件`271.5 s`、熱モデル4件`189.4 s`、数値2件`23.5 s`、全41件をrunner`489.2 s`で成功させた。既定Phase 3は`precomputed_runtime_topology=false`、metrics`0.3213 ms`、step loop`8.7620 ms`、シナリオ`10.4715 s`で成功し、状態・CSV・着火を維持した。
+- 次: Phase 6AA〜6AEの採用後構成を内部タイマー付きで再プロファイルし、累積変更後の支配区間を更新する。候補選定と採否測定は分離し、局所短縮だけを根拠にしない。
+
+## 61. Phase 6AG 採用後Python内部再プロファイル
+
+### 2026-08-06: 累積改善後の支配区間を測り直す
+
+- 測定境界: debugger-free benchmarkアプリ、Python backend、採用済みsurface fast・条件付きclamp・deferred phase・compact metrics、不採用のruntime topologyはdynamic、1,200 step、Flow・CSV・表示・2 captureを維持した。内部タイマーを明示した3 runで、乾燥・湿潤二本を合算した8区間を各`1,180`サンプル測定した。
+- 同値性: 3 runすべてで乾燥薪・湿潤薪の権威状態SHA-256、CSV SHA-256`01aaf0c…7759`、着火`66.2 / 166.4 s`が完全一致した。Flow active block peakは`294 / 347`で変動したため、従来どおりGPU側の非権威診断として候補選定から除外した。
+- 累積結果: Phase 6Yの内部合計中央値`11.6346 ms`に対し、現在は`6.1429 ms`で`47.20%`短縮した。profile付き二本step中央値は`6.1928 ms`、シナリオ中央値は`10.3185 s`だった。profile計測値は現在の構成比を選ぶための値であり、個別変更の採用効果や非計測性能値には使わない。
+- 現在の順位: 顕熱`3.0032 ms`（`48.89%`）、熱分解`1.0256 ms`（`16.70%`）、伝導`0.8524 ms`（`13.88%`）、蒸発`0.5351 ms`（`8.71%`）、炭酸化`0.3579 ms`（`5.83%`）、状態確定`0.3448 ms`（`5.61%`）の順だった。状態確定はPhase 6Yの`3.7012 ms`から`90.68%`短縮し、支配区間ではなくなった。
+- 判断: 次の調査対象は顕熱更新だが、Phase 6Zで棄却したスカラー分岐・周囲温度4乗・係数参照の単純なループ外移動を繰り返さない。`_heat_capacity_j_k()`評価、792内部セルの伝導のみ更新、360表面セルの放射・対流・外部加熱を分けて寄与を測る。試作前の候補選定と、試作後の交互順序・非計測end-to-end採否を分離する。
+- 可視化と再現: `run_phase6ag_adopted_profile.ps1`が3 runを取得し、`compare_phase3_adopted_profile.py`が採用設定、1,180サンプル、同値性、Phase 6Yからの変化、現在順位を検査して`phase3_adopted_internal_report.json/.svg`を生成する。実設備dry runは責任研究室の外部レビュー受領まで保留する。
+- 次: 顕熱区間を熱容量評価、内部セル更新、表面境界更新へ分解して測定する。局所短縮案を作る場合も、物理式・演算順序・公開可変契約を維持し、状態・CSV・着火の完全一致と交互順序の非計測step-loop／シナリオ改善が揃った場合だけ採用する。
+
+## 62. 開発日誌用Phase 3実行動画
+
+### 2026-08-06: 標準テストへ負荷を加えず、実画面の時間変化を残す
+
+- 目的: 固定画像だけでは確認しにくい薪組みとFlow火炎の時間変化を、人間が閲覧できる開発日誌へ添付する。動画は説明用証拠であり、成功判定は従来どおり木材状態SHA-256、CSV SHA-256、着火、質量収支、Flow稼働と固定PNGを組み合わせる。
+- 実装境界: `captureVideoFrames=false`を通常／benchmarkアプリの既定とし、`run_phase3.ps1 -CaptureVideo`で明示した場合だけ固定カメラ1280×720画像を保存する。既存の確認済み`capture_viewport_to_file`を再利用し、未確認のKit録画APIは導入しない。
+- サンプリング: 1,200 step・240モデル秒を20 step間隔、すなわち4モデル秒ごとに60フレーム採取する。連番PNGをローカルffmpegのH.264、10 fps、6秒、`yuv420p`、fast-start MP4へ変換する。フレーム間引きは表示専用で、木材とFlowの更新間隔は変えない。
+- 実測: RTX 3090のdebugger-free Phase 3でrunner`58.802 s`、シナリオ`43.1824 s`、60枚の追加capture合計`33.173 s`、encode`0.379 s`、MP4`115,191 bytes`だった。追加費用は明示動画run一回だけに限定され、標準run・回帰・性能測定は0である。
+- 同値性: 乾燥／湿潤薪の着火`66.2 / 166.4 s`、CSV SHA-256`01aaf0c…7759`、乾燥状態`0dec57f3…be10`、湿潤状態`148585f8…20c9`は既存の既定Phase 3と完全一致した。Flow active block peak`347`はGPU側の非権威診断として扱う。
+- 最終検証: release buildに成功し、標準`repo.bat test`はstartup`3.4 s`、coverage通常35件`221.8 s`、coverage熱モデル4件`160.7 s`、coverageなし数値2件`20.3 s`、全41件をrunner`407.1 s`で成功させた。動画を無効にした既定設定と従来のテスト分割・上限は変更していない。
+- 掲載UI: 実画面MP4を`docs/devlog/assets/phase3/phase3_burn.mp4`へ保存し、Phase 3見出し下の小型`.video-trigger`からページ共通の`#video-modal`を開く。モーダルはposter、標準controls、ユーザー操作起点の再生、Esc／背景／閉じるボタン、再生停止、元ボタンへのfocus復帰、MP4直リンクを持つ。生成元の60 PNGは`artifacts/`だけに置き、リポジトリへ登録しない。
+- 継続ルール: 以後の開発日誌更新には同じ小型アイコンを添える。対応する視覚出力が変わった場合は固定カメラ動画を新規生成し、変わらず権威状態SHAと表示が同一なら既存MP4を再参照してバイナリ重複を避ける。動画を持たない進捗を作らず、必要なcaptureは標準テストから分離する。
+- リスク管理: 現在のMP4は`115,191 bytes`と小さいが、動画数に比例してGit容量は増える。各動画は短時間・720p・H.264を基本とし、フレーム列を登録しない。ブラウザの自動再生拒否時はcontrolsへフォールバックし、Flowの非決定的な見た目は回帰合否に使わない。
+- 次: 動画経路は必要時だけ再生成する。実装作業の次候補はPhase 6AGで選んだ顕熱区間の分解計測であり、動画capture時間を性能採否へ混ぜない。
