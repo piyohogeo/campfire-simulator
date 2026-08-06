@@ -1647,3 +1647,20 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 可視化と再現: `run_phase6an_inline_reprofile.ps1`が広域3 runと顕熱詳細3 runを取得し、`analyze_phase3_inline_reprofile.py`が採用設定、debugger-free、二つの計測深度、区間和、完全同値、候補順位を検査して`phase3_inline_reprofile_report.json/.svg`を生成する。物理・描画出力は完全同一なので、開発日誌のPhase 6AN動画ボタンはPhase 6AMで取得した同じ実画面MP4を再参照する。
 - 検証: runnerは既知のFabric警告だけで6 runと解析を完了した。解析器のPython構文、PowerShell runnerの構文、JSON schema/status、SVG寸法、HTML表示と動画modalを個別に検査する。このPhaseではアプリコードと物理式を変更していないため標準41テストは再実行せず、直前のPhase 6AM採用後`41 / 41`を現在の回帰基準とする。
 - 次: 熱容量評価の残る4質量読取りと同一順序の積和について、公開編集意味を保てる限定境界が存在するかを監査する。成立する場合だけ試作し、元経路を残した非計測交互3組で木材stepとシナリオを比較する。
+
+## 71. Phase 6AO 権威木材セルのスロット格納
+
+### 2026-08-06: 物理式を変えず、宣言済み属性の辞書参照を外す
+
+- 監査: インライン熱容量式は温度検査、乾燥木材・水分・炭・灰の4属性読取り、4乗算、3加算、`1e-9 J/K`下限であり、加算順とNaN伝播を守る限り算術を安全に削れない。一方、`WoodCellState`は通常dataclassで、熱容量だけでなく全区間の属性参照がインスタンス辞書を経由していた。ソース内に`cell.__dict__`、任意属性追加、動的削除への依存はなく、`dataclasses.asdict`によるversion 1 JSONが永続境界である。
+- 限定試作: 同じ13フィールドと`current_mass_kg`を持つ`slots=True` dataclassへ、USD JSON読込み直後の状態を完全コピーする明示経路を追加した。温度・4質量・係数・相など宣言済み公開属性は引き続き直接更新できる。物理式、SI係数、格子、step、セル順序、質量読取り回数、加算順、下限、JSON field名と値は変更しない。step間キャッシュは作らない。
+- 公開操作: Kit設定`pythonSlottedWoodCellStorage`と`run_phase3.ps1 -CellStateStorage dict|slots`、summaryの使用格納記録を追加した。通常／benchmarkアプリと標準Phase 3 runnerは`slots`を既定とし、Phase 6X〜6ANの過去性能runnerは当時の辞書格納を`dict`で明示固定した。比較用の辞書経路は残す。
+- 単体同値性: 辞書格納からスロット格納へ変換した直後の`to_dict()`完全一致、`__dict__`不在、公開比熱属性の追加・解除、モデル既定比熱の差替え、温度依存モデルへの変更を含む120 stepについて、元経路と毎step結果、最終辞書、metricsを完全一致させる。任意の契約外属性を後付けできない点は意図した格納制約である。
+- 正式比較: debugger-free benchmarkアプリ、Python backend、採用済みsurface・clamp・deferred phase・compact metrics・constant／homogeneous／inline heat-capacity、dynamic topology、1,200 step、Flow・CSV・表示・2 capture、内部タイマー無効を維持した。奇数組はdictionary→slotted、偶数組は逆順とする3組を測定した。
+- 性能結果: 木材2本step平均中央値は`5.7105 → 5.2442 ms`（`8.17%`短縮）、p95は`8.2874 → 7.4776 ms`（`9.77%`短縮）、シナリオ中央値は`9.9799 → 9.3705 s`（`6.11%`短縮）だった。3/3組でstepとシナリオがともに改善し、必要な2/3組を上回った。
+- 同値性: 正式6 runすべてで乾燥／湿潤状態SHA-256、CSV SHA-256`01aaf0c…7759`、着火`66.2 / 166.4 s`が完全一致した。Flow active block peakはdictionary`294 / 347`、slotted`305 / 347`で変動したため、非権威GPU診断として採否から除外した。
+- 判断: 完全同値、非計測中央値、反復ゲートをすべて満たしたため採用する。これは権威状態の値や公開フィールドを変えず、フィールド格納だけを固定する変更である。契約外の任意属性追加を許さない点を既知の制約として記録する。
+- 採用後確認: release buildは`10.34 s`、Phase 0固定キャプチャは`20.2 s`で成功した。無指定の標準Phase 3はスロット格納を選び、木材step平均`5.5738 ms`、p95`8.2464 ms`、シナリオ`9.8761 s`で完走し、状態SHA、CSV SHA、着火を正式比較と一致させた。
+- 最終回帰: 標準`repo.bat test`は通常32件`39.7 s`、熱3件`3.9 s`、湿潤1件`106.0 s`、coverage付き崩落1件`261.3 s`、固定参照1件`4.3 s`、通気統合1件`4.9 s`、数値2件`27.4 s`の全41件をrunner`452.4 s`で成功させた。8プロセス、coverage境界、固定`300 s`上限は変更していない。
+- 可視化と再現: `run_phase6ao_slotted_cell_benchmark.ps1`が交互3組を取得し、`compare_phase3_slotted_cells.py`が設定、完全同値、中央値、組別改善を検査して`phase3_slotted_cell_report.json/.svg`を生成する。物理・描画出力は完全同一なので、開発日誌のPhase 6AO動画ボタンはPhase 6AMで取得した同じ実画面MP4を再参照する。
+- 次: スロット格納は複数区間の属性参照へ影響するため、採用済み構成を広域再プロファイルして顕熱・熱分解・伝導などの順位を更新する。次候補もprofile値だけで変更せず、完全同値と非計測交互比較で採否を決める。

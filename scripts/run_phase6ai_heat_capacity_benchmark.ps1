@@ -18,6 +18,7 @@ $originalSummaries = @()
 $fastSummaries = @()
 $commonArguments = @{
     ArrayBackend = "python"
+    CellStateStorage = "dict"
     HomogeneousHeatCapacityPath = "original"
     PythonSurfaceBoundaryPath = "fast"
     PythonStateClampPath = "fast"

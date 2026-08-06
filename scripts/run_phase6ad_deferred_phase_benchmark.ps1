@@ -22,9 +22,9 @@ $deferredSummaries = @()
 if (-not $EagerProfileSummary -and -not $DeferredProfileSummary) {
     $eagerProfileOutput = Join-Path $OutputDir "profile_eager"
     $deferredProfileOutput = Join-Path $OutputDir "profile_deferred"
-    & $phase3Runner -OutputDir $eagerProfileOutput -ArrayBackend python -ConstantHeatCapacityPath original -ProfileWoodInternals -PythonSurfaceBoundaryPath fast -PythonStateClampPath fast -CellPhaseUpdates eager -RuntimeMetrics full -RuntimeTopology dynamic
+    & $phase3Runner -OutputDir $eagerProfileOutput -ArrayBackend python -CellStateStorage dict -ConstantHeatCapacityPath original -ProfileWoodInternals -PythonSurfaceBoundaryPath fast -PythonStateClampPath fast -CellPhaseUpdates eager -RuntimeMetrics full -RuntimeTopology dynamic
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-    & $phase3Runner -OutputDir $deferredProfileOutput -ArrayBackend python -ConstantHeatCapacityPath original -ProfileWoodInternals -PythonSurfaceBoundaryPath fast -PythonStateClampPath fast -CellPhaseUpdates deferred -RuntimeMetrics full -RuntimeTopology dynamic
+    & $phase3Runner -OutputDir $deferredProfileOutput -ArrayBackend python -CellStateStorage dict -ConstantHeatCapacityPath original -ProfileWoodInternals -PythonSurfaceBoundaryPath fast -PythonStateClampPath fast -CellPhaseUpdates deferred -RuntimeMetrics full -RuntimeTopology dynamic
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     $EagerProfileSummary = Join-Path $eagerProfileOutput "summary.json"
     $DeferredProfileSummary = Join-Path $deferredProfileOutput "summary.json"
@@ -37,7 +37,7 @@ for ($pair = 1; $pair -le $PairCount; $pair++) {
     $paths = if ($pair % 2 -eq 1) { @("eager", "deferred") } else { @("deferred", "eager") }
     foreach ($pathName in $paths) {
         $runOutput = Join-Path $OutputDir ("pair_{0}_{1}" -f $pair, $pathName)
-        & $phase3Runner -OutputDir $runOutput -ArrayBackend python -ConstantHeatCapacityPath original -PythonSurfaceBoundaryPath fast -PythonStateClampPath fast -CellPhaseUpdates $pathName -RuntimeMetrics full -RuntimeTopology dynamic
+        & $phase3Runner -OutputDir $runOutput -ArrayBackend python -CellStateStorage dict -ConstantHeatCapacityPath original -PythonSurfaceBoundaryPath fast -PythonStateClampPath fast -CellPhaseUpdates $pathName -RuntimeMetrics full -RuntimeTopology dynamic
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
         $summary = Join-Path $runOutput "summary.json"
         if ($pathName -eq "deferred") {

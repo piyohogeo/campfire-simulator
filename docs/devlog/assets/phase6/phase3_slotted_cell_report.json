@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "phase": "phase6ao",
+  "status": "ok",
+  "paired_run_count": 3,
+  "environment": {
+    "application": "campfire.simulator.benchmark.kit",
+    "backend": "python",
+    "debugger_free_all_runs": true,
+    "alternating_order": true,
+    "internal_timing_disabled": true,
+    "runner_time_excluded_from_adoption": true
+  },
+  "trial": {
+    "dictionary": "ordinary dataclass instances with per-instance dictionaries",
+    "slotted": "slotted dataclass instances with the same public fields",
+    "scope": "authoritative cell storage only; equations and update order unchanged",
+    "cross_step_cache": false,
+    "mass_and_temperature_reads_remain_per_cell": true,
+    "public_field_mutation_retained": true,
+    "serialized_schema_unchanged": true
+  },
+  "timings": {
+    "two_log_step_mean_ms": {
+      "original_median": 5.7105,
+      "homogeneous_median": 5.2442,
+      "improvement_percent": 8.16565974958409
+    },
+    "two_log_step_p95_ms": {
+      "original_median": 8.2874,
+      "homogeneous_median": 7.4776,
+      "improvement_percent": 9.771460289113595
+    },
+    "scenario_seconds": {
+      "original_median": 9.9799,
+      "homogeneous_median": 9.3705,
+      "improvement_percent": 6.106273609956019
+    }
+  },
+  "paired_results": [
+    {
+      "pair": 1,
+      "step_improvement_percent": 4.953330312641593,
+      "scenario_improvement_percent": 4.000614691117708
+    },
+    {
+      "pair": 2,
+      "step_improvement_percent": 9.35644864722879,
+      "scenario_improvement_percent": 7.435946251966459
+    },
+    {
+      "pair": 3,
+      "step_improvement_percent": 4.18788034627582,
+      "scenario_improvement_percent": 3.5155058214493153
+    }
+  ],
+  "equivalence": {
+    "exact_authoritative_outputs_all_runs": true,
+    "dry_state_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+    "wet_state_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+    "metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759",
+    "ignition_seconds": {
+      "dry": 66.2,
+      "wet": 166.4
+    },
+    "flow_peak_dictionary": [
+      294,
+      347
+    ],
+    "flow_peak_slotted": [
+      305,
+      347
+    ],
+    "flow_peak_is_not_authoritative": true
+  },
+  "decision": {
+    "adopt_slotted_storage": true,
+    "median_step_and_scenario_improved": true,
+    "pairs_improving_step_and_scenario": 3,
+    "required_improving_pairs": 2,
+    "reason": "slotted storage met alternating end-to-end gates"
+  },
+  "runs": {
+    "dictionary": [
+      "artifacts\\phase3\\phase6ao\\formal\\pair_1_dictionary\\summary.json",
+      "artifacts\\phase3\\phase6ao\\formal\\pair_2_dictionary\\summary.json",
+      "artifacts\\phase3\\phase6ao\\formal\\pair_3_dictionary\\summary.json"
+    ],
+    "slotted": [
+      "artifacts\\phase3\\phase6ao\\formal\\pair_1_slotted\\summary.json",
+      "artifacts\\phase3\\phase6ao\\formal\\pair_2_slotted\\summary.json",
+      "artifacts\\phase3\\phase6ao\\formal\\pair_3_slotted\\summary.json"
+    ]
+  }
+}

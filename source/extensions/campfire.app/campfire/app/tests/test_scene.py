@@ -299,6 +299,14 @@ class TestScene(omni.kit.test.AsyncTestCase):
         inline_heat_capacity = campfire.app.WoodThermalModel.from_dict(
             original_heat_capacity.to_dict()
         )
+        slotted_heat_capacity = campfire.app.WoodThermalModel.from_dict(
+            original_heat_capacity.to_dict()
+        )
+        slotted_heat_capacity.use_slotted_cell_storage()
+        self.assertFalse(hasattr(slotted_heat_capacity.cells[0], "__dict__"))
+        self.assertEqual(
+            slotted_heat_capacity.to_dict(), original_heat_capacity.to_dict()
+        )
         homogeneous, specific_heat_j_kg_k = (
             homogeneous_heat_capacity._homogeneous_constant_dry_wood_specific_heat_j_kg_k()
         )
@@ -315,6 +323,9 @@ class TestScene(omni.kit.test.AsyncTestCase):
                     0
                 ].dry_wood_specific_heat_j_kg_k = 1214.0
                 inline_heat_capacity.cells[0].dry_wood_specific_heat_j_kg_k = 1214.0
+                slotted_heat_capacity.cells[
+                    0
+                ].dry_wood_specific_heat_j_kg_k = 1214.0
             elif step_index == 40:
                 original_heat_capacity.cells[0].dry_wood_specific_heat_j_kg_k = None
                 fast_heat_capacity.cells[0].dry_wood_specific_heat_j_kg_k = None
@@ -322,6 +333,9 @@ class TestScene(omni.kit.test.AsyncTestCase):
                     0
                 ].dry_wood_specific_heat_j_kg_k = None
                 inline_heat_capacity.cells[0].dry_wood_specific_heat_j_kg_k = None
+                slotted_heat_capacity.cells[
+                    0
+                ].dry_wood_specific_heat_j_kg_k = None
                 original_heat_capacity.parameters = replace(
                     original_heat_capacity.parameters,
                     wood_specific_heat_j_kg_k=1600.0,
@@ -338,12 +352,17 @@ class TestScene(omni.kit.test.AsyncTestCase):
                     inline_heat_capacity.parameters,
                     wood_specific_heat_j_kg_k=1600.0,
                 )
+                slotted_heat_capacity.parameters = replace(
+                    slotted_heat_capacity.parameters,
+                    wood_specific_heat_j_kg_k=1600.0,
+                )
             elif step_index == 60:
                 for model in (
                     original_heat_capacity,
                     fast_heat_capacity,
                     homogeneous_heat_capacity,
                     inline_heat_capacity,
+                    slotted_heat_capacity,
                 ):
                     model.cells[0].dry_wood_specific_heat_j_kg_k = 1214.0
                     model.cells[0].dry_wood_specific_heat_model = (
@@ -369,9 +388,17 @@ class TestScene(omni.kit.test.AsyncTestCase):
                 python_homogeneous_heat_capacity_fast_path=True,
                 python_inline_homogeneous_sensible_heat_capacity_fast_path=True,
             )
+            slotted_result = slotted_heat_capacity.step(
+                0.2,
+                heat_flux,
+                python_constant_heat_capacity_fast_path=True,
+                python_homogeneous_heat_capacity_fast_path=True,
+                python_inline_homogeneous_sensible_heat_capacity_fast_path=True,
+            )
             self.assertEqual(fast_result, original_result)
             self.assertEqual(homogeneous_result, original_result)
             self.assertEqual(inline_result, original_result)
+            self.assertEqual(slotted_result, original_result)
         self.assertEqual(
             fast_heat_capacity.to_dict(), original_heat_capacity.to_dict()
         )
@@ -382,6 +409,9 @@ class TestScene(omni.kit.test.AsyncTestCase):
             inline_heat_capacity.to_dict(), original_heat_capacity.to_dict()
         )
         self.assertEqual(
+            slotted_heat_capacity.to_dict(), original_heat_capacity.to_dict()
+        )
+        self.assertEqual(
             fast_heat_capacity.metrics(), original_heat_capacity.metrics()
         )
         self.assertEqual(
@@ -389,6 +419,9 @@ class TestScene(omni.kit.test.AsyncTestCase):
         )
         self.assertEqual(
             inline_heat_capacity.metrics(), original_heat_capacity.metrics()
+        )
+        self.assertEqual(
+            slotted_heat_capacity.metrics(), original_heat_capacity.metrics()
         )
 
         for field_name, invalid_value, expected_message in (

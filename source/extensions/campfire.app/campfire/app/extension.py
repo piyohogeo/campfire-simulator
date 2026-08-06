@@ -1033,6 +1033,9 @@ class CampfireAppExtension(omni.ext.IExt):
                 f"{SETTINGS_ROOT}/pythonInlineHomogeneousSensibleHeatCapacityFastPath"
             )
         )
+        python_slotted_wood_cell_storage = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/pythonSlottedWoodCellStorage"
+        )
         collect_wood_state_diagnostics = settings.get_as_bool(
             f"{SETTINGS_ROOT}/woodStateDiagnostics"
         )
@@ -1100,6 +1103,9 @@ class CampfireAppExtension(omni.ext.IExt):
         dry_model = load_model_from_prim(dry_prim)
         wet_model = load_model_from_prim(wet_prim)
         models = {"dry": dry_model, "wet": wet_model}
+        if python_slotted_wood_cell_storage:
+            for model in models.values():
+                model.use_slotted_cell_storage()
         runtime_topologies = (
             {
                 name: model.capture_runtime_topology()
@@ -1575,6 +1581,9 @@ class CampfireAppExtension(omni.ext.IExt):
                     ),
                     "python_inline_homogeneous_sensible_heat_capacity_fast_path": (
                         python_inline_homogeneous_sensible_heat_capacity_fast_path
+                    ),
+                    "python_slotted_wood_cell_storage": (
+                        python_slotted_wood_cell_storage
                     ),
                     "wood_state_diagnostics_enabled": (
                         collect_wood_state_diagnostics

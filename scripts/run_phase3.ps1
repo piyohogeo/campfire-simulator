@@ -10,6 +10,8 @@ param(
     [string]$HomogeneousHeatCapacityPath = "auto",
     [ValidateSet("auto", "original", "fast")]
     [string]$InlineHomogeneousSensibleHeatCapacityPath = "auto",
+    [ValidateSet("dict", "slots")]
+    [string]$CellStateStorage = "slots",
     [switch]$CollectWoodStateDiagnostics,
     [ValidateSet("original", "fast")]
     [string]$PythonSurfaceBoundaryPath = "fast",
@@ -51,6 +53,7 @@ $usePythonStateClampFastPath = $PythonStateClampPath -eq "fast"
 $deferCellPhaseUpdates = $CellPhaseUpdates -eq "deferred"
 $compactRuntimeMetrics = $RuntimeMetrics -eq "compact"
 $precomputedRuntimeTopology = $RuntimeTopology -eq "precomputed"
+$useSlottedWoodCellStorage = $CellStateStorage -eq "slots"
 
 if ($CollectWoodStateDiagnostics.IsPresent -and $deferCellPhaseUpdates) {
     throw "Wood state diagnostics require eager cell phase updates."
@@ -102,6 +105,7 @@ $kitArgs = @(
     "--/exts/campfire.app/pythonConstantHeatCapacityFastPath=$($useConstantHeatCapacityFastPath.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/pythonHomogeneousHeatCapacityFastPath=$($useHomogeneousHeatCapacityFastPath.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/pythonInlineHomogeneousSensibleHeatCapacityFastPath=$($useInlineHomogeneousSensibleHeatCapacityFastPath.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/pythonSlottedWoodCellStorage=$($useSlottedWoodCellStorage.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/woodStateDiagnostics=$($CollectWoodStateDiagnostics.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/pythonSurfaceBoundaryFastPath=$($usePythonSurfaceBoundaryFastPath.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/pythonStateClampFastPath=$($usePythonStateClampFastPath.ToString().ToLowerInvariant())",
@@ -149,6 +153,9 @@ if ([bool]$result.scenario.python_homogeneous_heat_capacity_fast_path -ne $useHo
 }
 if ([bool]$result.scenario.python_inline_homogeneous_sensible_heat_capacity_fast_path -ne $useInlineHomogeneousSensibleHeatCapacityFastPath) {
     throw "Phase 3 used an unexpected inline homogeneous sensible heat-capacity setting."
+}
+if ([bool]$result.scenario.python_slotted_wood_cell_storage -ne $useSlottedWoodCellStorage) {
+    throw "Phase 3 used an unexpected wood-cell storage setting."
 }
 if ([bool]$result.scenario.wood_state_diagnostics_enabled -ne $CollectWoodStateDiagnostics.IsPresent) {
     throw "Phase 3 used an unexpected wood state-diagnostics setting."

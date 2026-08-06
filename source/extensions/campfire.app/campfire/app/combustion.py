@@ -107,8 +107,21 @@ class WoodModelParameters:
     max_temperature_k: float = 1600.0
 
 
+class _WoodCellStateMassMixin:
+    __slots__ = ()
+
+    @property
+    def current_mass_kg(self) -> float:
+        return (
+            self.moisture_mass_kg
+            + self.dry_wood_mass_kg
+            + self.char_mass_kg
+            + self.ash_mass_kg
+        )
+
+
 @dataclass
-class WoodCellState:
+class WoodCellState(_WoodCellStateMassMixin):
     temperature_k: float
     moisture_mass_kg: float
     dry_wood_mass_kg: float
@@ -123,14 +136,24 @@ class WoodCellState:
     dry_wood_specific_heat_j_kg_k: float | None = None
     dry_wood_specific_heat_model: str = CONSTANT_DRY_WOOD_SPECIFIC_HEAT_MODEL
 
-    @property
-    def current_mass_kg(self) -> float:
-        return (
-            self.moisture_mass_kg
-            + self.dry_wood_mass_kg
-            + self.char_mass_kg
-            + self.ash_mass_kg
-        )
+
+@dataclass(slots=True)
+class _SlottedWoodCellState(_WoodCellStateMassMixin):
+    """Trial storage with the same public fields and serialized schema."""
+
+    temperature_k: float
+    moisture_mass_kg: float
+    dry_wood_mass_kg: float
+    volatile_potential_kg: float
+    char_mass_kg: float
+    ash_mass_kg: float
+    oxygen_factor: float
+    surface_exposure: float
+    phase: str
+    volume_m3: float
+    external_area_m2: float
+    dry_wood_specific_heat_j_kg_k: float | None = None
+    dry_wood_specific_heat_model: str = CONSTANT_DRY_WOOD_SPECIFIC_HEAT_MODEL
 
 
 @dataclass(frozen=True)
@@ -226,6 +249,13 @@ class WoodThermalModel:
         )
         self._conduction_pairs = self._build_conduction_pairs()
         self._mass_epsilon_kg = max(self.initial_mass_kg * 1.0e-10, 1.0e-12)
+
+    def use_slotted_cell_storage(self) -> None:
+        """Replace cell containers without changing public state or JSON shape."""
+
+        if all(isinstance(cell, _SlottedWoodCellState) for cell in self.cells):
+            return
+        self.cells = [_SlottedWoodCellState(**asdict(cell)) for cell in self.cells]
 
     def _index(self, axial: int, circumferential: int, radial: int) -> int:
         return (
