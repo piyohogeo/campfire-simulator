@@ -36,8 +36,8 @@
       <div class="shell status-grid">
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>52 / 52 passed</strong></div>
-        <div><span>次の焦点</span><strong>default-off Point app scene</strong></div>
+        <div><span>テスト</span><strong>54 / 54 passed</strong></div>
+        <div><span>次の焦点</span><strong>normal app Point owner</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6CG · Production Point module</p>
-            <h2>Point実装を、<br>検証用コードから製品境界へ。</h2>
-            <p>7,200点を生成するnative surface producer、immutable payload、transactional sidecarをproduction moduleへ移しました。旧benchmark実装と4配列が全byte一致し、失敗・stage復旧後もrevision 124まで継続、Flow 110は1,309 active blocksへ到達しています。Sphereのproduction既定はまだ変更していません。</p>
+            <p class="section-kicker">Phase 6CH · Pre-authored Point application</p>
+            <h2>Point構造を接続前に完成させ、<br>実際の薪表面から炎と煙を出す。</h2>
+            <p>既定OFFの単一settingで、2本の薪から得た720表面点を1個のPoint Emitterへまとめました。Sphere fallback、layer、relationship、material、timeline、Flow core、live update、clean shutdownを個別に確認し、三consumerはrevision 710で一致しました。通常のproduction既定はまだSphereのままです。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -990,6 +990,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6ch-resident-point-application" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6CH</h3>
+            <a href="assets/phase6/resident_point_application_report.svg" aria-label="Phase 6CH Resident Point applicationレポートを開く">
+              <img src="assets/phase6/resident_point_application_report.svg" width="1200" height="680" alt="stage接続前に構成した単一720点Point EmitterのlifecycleとFlow実測を示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Pre-author · connect · play · publish · close</strong><span>14 gates · 720 points · revision 710 · live Point resync 0 · 382 active blocks</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_point_application.mp4" data-video-poster="assets/phase6/resident_point_application_frame.png" data-video-title="Phase 6CH pre-authored Point application scenario" data-video-meta="Flow 110.0.0 · 2 logs × 360 surface points · single Point Emitter · real Flow/RTX fire and smoke · 60 separate frames, all unique · 1280×720 · 10 fps · 6 s · capture excluded from performance measurement">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>Point薪表面の炎・煙動画</strong><small>6秒 · 実フレーム60枚 · 全て異なる</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1412,6 +1426,13 @@
               <div><dt>Phase 6CG video</dt><dd>60 real recovered Flow/RTX frames · 59 unique SHA-256 · 10 fps · 6 s</dd></div>
               <div><dt>Phase 6CG decision</dt><dd>module qualified default-off · application scene integration next</dd></div>
               <div><dt>Phase 6CG regression</dt><dd>8 processes · 52 / 52 pass · 294.3 s · collapse coverage 174.2 s</dd></div>
+              <div><dt>Phase 6CH scene</dt><dd>pre-authored before connection · 2 logs × 360 points · 1 Emitter · default OFF</dd></div>
+              <div><dt>Phase 6CH gates</dt><dd>14 / 14 · Sphere fallback · layer/relationship/material · live Point resync 0</dd></div>
+              <div><dt>Phase 6CH lifecycle</dt><dd>PLAY → STOP · revision 710 / 710 / 710 · pending 0 · clean close</dd></div>
+              <div><dt>Phase 6CH Flow</dt><dd>382 active blocks · fuel/temperature/burn/smoke readback non-empty</dd></div>
+              <div><dt>Phase 6CH video</dt><dd>60 real Flow/RTX frames · 60 unique SHA-256 · 10 fps · 6 s</dd></div>
+              <div><dt>Phase 6CH decision</dt><dd>application scene boundary qualified · normal app owner integration next</dd></div>
+              <div><dt>Phase 6CH regression</dt><dd>8 processes · 54 / 54 pass · 291.4 s · collapse coverage 171.6 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>

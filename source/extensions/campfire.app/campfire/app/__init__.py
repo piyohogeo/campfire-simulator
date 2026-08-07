@@ -173,6 +173,13 @@ from .resident_point_sidecar import (
     ResidentNativeSurfaceProducer,
     ResidentPointSidecar,
 )
+from .resident_point_scene import (
+    RESIDENT_POINT_APPLICATION_SETTING,
+    RESIDENT_POINT_EMITTER_PATH,
+    RESIDENT_POINT_SOURCE_PATH,
+    configure_resident_point_application_scene,
+    resident_point_application_enabled,
+)
 from .resident_stage_recovery import ResidentStageRecoveryOrchestrator
 from .wood import LogSpec, create_log, get_log_world_position, list_log_ids, move_log
 
@@ -236,6 +243,9 @@ __all__ = [
     "ImmutableSurfacePayload",
     "ResidentNativeSurfaceProducer",
     "ResidentPointSidecar",
+    "RESIDENT_POINT_APPLICATION_SETTING",
+    "RESIDENT_POINT_EMITTER_PATH",
+    "RESIDENT_POINT_SOURCE_PATH",
     "ResidentStageRecoveryOrchestrator",
     "ResidentUsdTransactionProfile",
     "ResidentUsdLightweightTailProfile",
@@ -249,6 +259,7 @@ __all__ = [
     "create_layered_coupon",
     "create_layered_panel_model",
     "create_cylindrical_wood_model",
+    "configure_resident_point_application_scene",
     "create_phase3_models",
     "create_phase5_model",
     "dense_stack_placements",
@@ -289,6 +300,7 @@ __all__ = [
     "heat_feedback_factor",
     "log_cabin_placements",
     "run_stack_air_comparison",
+    "resident_point_application_enabled",
     "run_collapse_reignition_scenario",
     "run_nist_plywood_calibration",
     "phase4_placements",

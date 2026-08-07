@@ -1,5 +1,7 @@
 # Changelog
 
+- Added the Phase 6CH default-off Resident Point application scene boundary: one 720-point emitter is fully authored before stage connection, the unchanged Sphere path is verified as fallback, live updates produce zero Point resyncs through revision 710, and real Flow 110 fire/smoke plus startup/timeline/clean shutdown pass the 14-gate evaluation.
+
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [0.1.0] - 2026-08-04

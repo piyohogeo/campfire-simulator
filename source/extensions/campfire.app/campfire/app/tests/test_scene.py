@@ -829,6 +829,56 @@ class TestScene(omni.kit.test.AsyncTestCase):
             stage.GetRootLayer().customLayerData["campfire:phase"], "phase3"
         )
 
+    async def test_resident_point_application_scene_is_explicit_and_pre_authored(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase3_scene(stage)
+        points = (
+            Gf.Vec3f(-0.05, 0.0, 0.4),
+            Gf.Vec3f(0.05, 0.0, 0.4),
+            Gf.Vec3f(0.0, 0.05, 0.45),
+            Gf.Vec3f(0.0, -0.05, 0.45),
+        )
+
+        result = campfire.app.configure_resident_point_application_scene(
+            stage, points
+        )
+
+        self.assertEqual(result["point_count"], 4)
+        sphere = stage.GetPrimAtPath(campfire.app.FLOW_EMITTER_PATH)
+        emitter = stage.GetPrimAtPath(campfire.app.RESIDENT_POINT_EMITTER_PATH)
+        source = stage.GetPrimAtPath(campfire.app.RESIDENT_POINT_SOURCE_PATH)
+        self.assertEqual(sphere.GetTypeName(), "FlowEmitterSphere")
+        self.assertFalse(sphere.GetAttribute("enabled").Get())
+        self.assertEqual(emitter.GetTypeName(), "FlowEmitterPoint")
+        self.assertEqual(
+            emitter.GetRelationship("pointsPrim").GetTargets(),
+            [campfire.app.RESIDENT_POINT_SOURCE_PATH],
+        )
+        for name in (
+            "pointPositions",
+            "pointFuels",
+            "pointTemperatures",
+            "pointSmokes",
+            "campfire:residentRevision",
+        ):
+            self.assertTrue(emitter.GetAttribute(name))
+        self.assertEqual(len(emitter.GetAttribute("pointPositions").Get()), 4)
+        self.assertEqual(len(UsdGeom.Points(source).GetPointsAttr().Get()), 4)
+        self.assertEqual(emitter.GetAttribute("campfire:residentRevision").Get(), 0)
+        layer_data = stage.GetRootLayer().customLayerData
+        self.assertTrue(layer_data["campfire:residentPointApplication"])
+        self.assertEqual(layer_data["campfire:residentPointEmitterCount"], 1)
+
+    async def test_phase3_default_keeps_sphere_without_point_structure(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase3_scene(stage)
+
+        sphere = stage.GetPrimAtPath(campfire.app.FLOW_EMITTER_PATH)
+        self.assertEqual(sphere.GetTypeName(), "FlowEmitterSphere")
+        self.assertTrue(sphere.GetAttribute("enabled").Get())
+        self.assertFalse(stage.GetPrimAtPath(campfire.app.RESIDENT_POINT_EMITTER_PATH))
+        self.assertFalse(stage.GetPrimAtPath(campfire.app.RESIDENT_POINT_SOURCE_PATH))
+
     async def test_resident_snapshot_adapter_commits_one_revision_to_all_consumers(self):
         stage = Usd.Stage.CreateInMemory()
         campfire.app.populate_phase3_scene(stage)
