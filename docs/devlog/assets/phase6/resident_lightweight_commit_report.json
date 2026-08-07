@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "phase": "phase6bg",
+  "status": "ok",
+  "measurement": {
+    "hardware": "NVIDIA GeForce RTX 3090 / D3D12",
+    "scenario": "Phase 3 dry/wet logs, 1200 steps, 240 model seconds",
+    "paired_run_count": 3,
+    "measured_updates_per_run": 236,
+    "production_default_enabled": false
+  },
+  "contracts": {
+    "first_publish_uses_transactional_bootstrap": true,
+    "payload_precedes_three_revision_markers": true,
+    "emitter_revision_is_final_commit_marker": true,
+    "failure_replays_last_immutable_snapshot": true,
+    "recovery_failure_faults_adapter": true,
+    "revision_and_lifecycle_preserved": true,
+    "authoritative_outputs_exact_across_runs": true,
+    "native_producer_connected": false
+  },
+  "transaction_timing_ms": {
+    "handle_cache_transaction": {
+      "run_count": 3,
+      "median_mean_ms": 2.6611,
+      "median_p95_ms": 4.422,
+      "median_max_ms": 5.7405,
+      "run_mean_ms": [
+        2.5282,
+        2.6611,
+        2.7257
+      ],
+      "run_p95_ms": [
+        4.2841,
+        4.422,
+        4.7347
+      ],
+      "run_max_ms": [
+        5.0684,
+        5.7405,
+        15.5132
+      ]
+    },
+    "lightweight_commit": {
+      "run_count": 3,
+      "median_mean_ms": 2.3131,
+      "median_p95_ms": 4.069,
+      "median_max_ms": 5.1407,
+      "run_mean_ms": [
+        2.3131,
+        2.291,
+        2.3937
+      ],
+      "run_p95_ms": [
+        4.0404,
+        4.069,
+        4.6054
+      ],
+      "run_max_ms": [
+        4.5444,
+        5.1407,
+        9.6813
+      ]
+    }
+  },
+  "paired_p95_improvement_ms": [
+    0.2437,
+    0.353,
+    0.1293
+  ],
+  "decision": {
+    "all_pairs_improved": true,
+    "every_candidate_run_below_4ms": false,
+    "qualified_for_resident_adapter": false,
+    "global_default_changed": false,
+    "native_producer_connection_unblocked": false,
+    "reason": "Steady-state publication avoids authored-old-value reads and rollback journals. The immutable previous snapshot is replayed only on the failure path.",
+    "next_gate": "Keep the mode opt-in and audit the remaining Set-dominated boundary."
+  }
+}

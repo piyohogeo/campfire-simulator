@@ -1080,6 +1080,9 @@ class CampfireAppExtension(omni.ext.IExt):
         resident_snapshot_handle_cache_enabled = settings.get_as_bool(
             f"{SETTINGS_ROOT}/residentSnapshotHandleCacheEnabled"
         )
+        resident_snapshot_lightweight_commit_enabled = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/residentSnapshotLightweightCommitEnabled"
+        )
         video_frame_interval_steps = settings.get_as_int(
             f"{SETTINGS_ROOT}/videoFrameIntervalSteps"
         )
@@ -1131,6 +1134,20 @@ class CampfireAppExtension(omni.ext.IExt):
             raise ValueError(
                 "Resident snapshot handle cache requires the resident snapshot adapter"
             )
+        if resident_snapshot_lightweight_commit_enabled and not (
+            resident_snapshot_adapter_enabled
+            and resident_snapshot_handle_cache_enabled
+        ):
+            raise ValueError(
+                "Resident snapshot lightweight commits require the adapter and handle cache"
+            )
+        if (
+            resident_snapshot_lightweight_commit_enabled
+            and resident_snapshot_timing_enabled
+        ):
+            raise ValueError(
+                "Resident snapshot lightweight commits cannot use detailed transaction timing"
+            )
         flow_interface = _flowusd.acquire_flowusd_interface()
         dry_prim = stage.GetPrimAtPath(f"/World/Logs/{PHASE3_DRY_LOG_ID}")
         wet_prim = stage.GetPrimAtPath(f"/World/Logs/{PHASE3_WET_LOG_ID}")
@@ -1178,6 +1195,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 initial_dry_mass_kg,
                 profile_transactions=resident_snapshot_timing_enabled,
                 cache_usd_handles=resident_snapshot_handle_cache_enabled,
+                lightweight_commits=resident_snapshot_lightweight_commit_enabled,
             )
             self._resident_snapshot_adapter = resident_adapter
         ignition_seconds = {"dry": None, "wet": None}
@@ -1950,6 +1968,9 @@ class CampfireAppExtension(omni.ext.IExt):
                         ),
                         "handle_cache_enabled": (
                             resident_snapshot_handle_cache_enabled
+                        ),
+                        "lightweight_commit_enabled": (
+                            resident_snapshot_lightweight_commit_enabled
                         ),
                         "producer": (
                             "python_contract_bridge"

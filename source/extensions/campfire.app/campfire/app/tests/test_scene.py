@@ -1049,6 +1049,141 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertRegex(str(thread_errors[0]), "owner thread")
         adapter.close()
 
+    async def test_resident_snapshot_lightweight_commit_recovers_last_snapshot(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase3_scene(stage)
+        log_ids = (campfire.app.PHASE3_DRY_LOG_ID, campfire.app.PHASE3_WET_LOG_ID)
+        initial_dry_mass = {log_id: 2.0 for log_id in log_ids}
+        first_rows = tuple(
+            campfire.app.ResidentPublishedRow(
+                600.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.3, 0.4, 0.2, 0.006
+            )
+            for _ in log_ids
+        )
+        second_rows = tuple(
+            campfire.app.ResidentPublishedRow(
+                760.0, 0.8, 0.7, 0.4, 0.1, 0.75, 0.6, 0.8, 1.2, 0.7, 0.02
+            )
+            for _ in log_ids
+        )
+        observer_calls = 0
+
+        def fail_second_publish_fourth_write(_write_count, _name):
+            nonlocal observer_calls
+            observer_calls += 1
+            if observer_calls == 23:
+                raise RuntimeError("injected lightweight write failure")
+
+        adapter = campfire.app.UsdResidentSnapshotAdapter(
+            stage,
+            log_ids,
+            initial_dry_mass,
+            write_observer=fail_second_publish_fourth_write,
+            cache_usd_handles=True,
+            lightweight_commits=True,
+        )
+        with self.assertRaisesRegex(ValueError, "transactional detail profiling"):
+            campfire.app.UsdResidentSnapshotAdapter(
+                stage,
+                log_ids,
+                initial_dry_mass,
+                profile_transactions=True,
+                lightweight_commits=True,
+            )
+        adapter.on_timeline_started()
+        first = campfire.app.ResidentPublishedSnapshot(1, 0, log_ids, first_rows)
+        adapter.publish(first)
+
+        emitter = stage.GetPrimAtPath(campfire.app.FLOW_EMITTER_PATH)
+
+        def usd_signature():
+            values = [
+                emitter.GetAttribute(name).Get()
+                for name in (
+                    "fuel",
+                    "temperature",
+                    "smoke",
+                    "coupleRateFuel",
+                    "coupleRateTemperature",
+                    "coupleRateSmoke",
+                    "campfire:residentRevision",
+                )
+            ]
+            for log_id in log_ids:
+                prim = stage.GetPrimAtPath(f"/World/Logs/{log_id}")
+                values.extend(
+                    [
+                        tuple(UsdGeom.Gprim(prim).GetDisplayColorAttr().Get()),
+                        prim.GetAttribute("campfire:surfaceTemperatureK").Get(),
+                        prim.GetAttribute("campfire:charFraction").Get(),
+                        prim.GetAttribute("campfire:remainingMassRatio").Get(),
+                        prim.GetAttribute("campfire:weakestSupportRatio").Get(),
+                        prim.GetAttribute("campfire:residentRevision").Get(),
+                    ]
+                )
+            return tuple(values)
+
+        committed_signature = usd_signature()
+        second = campfire.app.ResidentPublishedSnapshot(2, 1, log_ids, second_rows)
+        with self.assertRaisesRegex(RuntimeError, "injected lightweight write failure"):
+            adapter.publish(second)
+        self.assertEqual(usd_signature(), committed_signature)
+        status = adapter.status()
+        self.assertEqual(status["revision"], 1)
+        self.assertEqual(status["publish_count"], 1)
+        self.assertEqual(status["lightweight_commit_count"], 0)
+        self.assertEqual(status["lightweight_failure_count"], 1)
+        self.assertEqual(status["lightweight_recovery_count"], 1)
+        self.assertFalse(status["faulted"])
+
+        third = campfire.app.ResidentPublishedSnapshot(3, 2, log_ids, second_rows)
+        adapter.publish(third)
+        status = adapter.status()
+        self.assertEqual(status["revision"], 3)
+        self.assertEqual(status["publish_count"], 2)
+        self.assertEqual(status["lightweight_commit_count"], 1)
+        self.assertEqual(status["lightweight_recovery_count"], 1)
+        self.assertEqual(
+            emitter.GetAttribute("campfire:residentRevision").Get(), 3
+        )
+        for log_id in log_ids:
+            self.assertEqual(
+                stage.GetPrimAtPath(f"/World/Logs/{log_id}")
+                .GetAttribute("campfire:residentRevision")
+                .Get(),
+                3,
+            )
+        adapter.close()
+
+        fault_stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase3_scene(fault_stage)
+        fault_observer_calls = 0
+
+        def remove_emitter_during_second_publish(_write_count, _name):
+            nonlocal fault_observer_calls
+            fault_observer_calls += 1
+            if fault_observer_calls == 23:
+                fault_stage.RemovePrim(campfire.app.FLOW_EMITTER_PATH)
+                raise RuntimeError("injected unrecoverable write failure")
+
+        fault_adapter = campfire.app.UsdResidentSnapshotAdapter(
+            fault_stage,
+            log_ids,
+            initial_dry_mass,
+            write_observer=remove_emitter_during_second_publish,
+            cache_usd_handles=True,
+            lightweight_commits=True,
+        )
+        fault_adapter.on_timeline_started()
+        fault_adapter.publish(first)
+        with self.assertRaisesRegex(RuntimeError, "snapshot recovery failed"):
+            fault_adapter.publish(second)
+        self.assertTrue(fault_adapter.status()["faulted"])
+        self.assertEqual(fault_adapter.status()["revision"], 1)
+        with self.assertRaisesRegex(RuntimeError, "explicit reconstruction"):
+            fault_adapter.publish(third)
+        fault_adapter.close()
+
     async def test_log_cabin_has_more_air_than_dense_parallel_stack(self):
         dense = campfire.app.estimate_air_supply(
             campfire.app.dense_stack_placements()

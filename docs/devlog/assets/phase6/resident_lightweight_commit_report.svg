@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+<style>
+ .bg{fill:#0d1222} .panel{fill:#171f34} .title{fill:#f5f7ff;font:700 30px system-ui,sans-serif}
+ .sub{fill:#a9b4cc;font:16px system-ui,sans-serif} .label{fill:#edf1ff;font:600 16px system-ui,sans-serif}
+ .metric{fill:#ff8a4c;font:700 28px ui-monospace,monospace} .small{fill:#b8c2d9;font:14px system-ui,sans-serif}
+ .base{fill:#56637d} .candidate{fill:#2dc887} .gate{stroke:#ffd166;stroke-width:3;stroke-dasharray:8 7}
+ .gateText{fill:#ffd166;font:700 14px ui-monospace,monospace} .result{fill:#ffd166;font:700 20px system-ui,sans-serif}
+</style>
+<rect width="1200" height="680" class="bg"/><text x="64" y="62" class="title">Phase 6BG - Lightweight resident USD commit</text>
+<text x="64" y="92" class="sub">3 alternating real-Kit pairs · first publish transactional · failure-only immutable snapshot replay</text>
+<rect x="50" y="120" width="1100" height="142" rx="18" class="panel"/>
+<text x="80" y="158" class="label">Handle-cache transaction p95 median</text><text x="80" y="202" class="metric">4.4220 ms</text>
+<text x="540" y="158" class="label">Lightweight commit p95 median</text><text x="540" y="202" class="metric">4.0690 ms</text>
+<text x="940" y="158" class="label">4 ms gate</text><text x="940" y="202" class="result">HOLD</text>
+<text x="80" y="238" class="small">steady state: no old-value Get · no rollback journal · revision markers written last</text>
+<text x="64" y="307" class="label">Run p95 · transaction (gray) vs lightweight (green)</text><line x1="720.0" y1="318" x2="720.0" y2="532" class="gate"/><text x="728.0" y="326" class="gateText">4 ms</text>
+<text x="80" y="350" class="label">Pair 1</text><rect x="300" y="332" width="449.8" height="18" rx="9" class="base"/><rect x="300" y="359" width="424.2" height="18" rx="9" class="candidate"/><text x="764.8" y="363" class="small">4.2841 → 4.0404 ms</text><text x="80" y="412" class="label">Pair 2</text><rect x="300" y="394" width="464.3" height="18" rx="9" class="base"/><rect x="300" y="421" width="427.2" height="18" rx="9" class="candidate"/><text x="779.3" y="425" class="small">4.4220 → 4.0690 ms</text><text x="80" y="474" class="label">Pair 3</text><rect x="300" y="456" width="497.1" height="18" rx="9" class="base"/><rect x="300" y="483" width="483.6" height="18" rx="9" class="candidate"/><text x="812.1" y="487" class="small">4.7347 → 4.6054 ms</text>
+<rect x="50" y="620" width="1100" height="1" fill="#35405b"/><text x="64" y="650" class="result">LIGHTWEIGHT COMMIT: HOLD</text>
+<text x="390" y="650" class="small">immutable recovery · monotonic revision · consumer agreement · default OFF</text></svg>

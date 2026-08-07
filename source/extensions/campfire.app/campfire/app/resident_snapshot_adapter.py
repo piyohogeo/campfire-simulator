@@ -202,6 +202,7 @@ class UsdResidentSnapshotAdapter:
         write_observer: Callable[[int, str], None] | None = None,
         profile_transactions: bool = False,
         cache_usd_handles: bool = False,
+        lightweight_commits: bool = False,
     ):
         if stage is None:
             raise ValueError("A USD stage is required")
@@ -209,12 +210,17 @@ class UsdResidentSnapshotAdapter:
             raise ValueError("Initial dry mass must cover every log exactly")
         if any(value <= 0.0 for value in initial_dry_mass_kg.values()):
             raise ValueError("Initial dry masses must be positive")
+        if lightweight_commits and profile_transactions:
+            raise ValueError(
+                "Lightweight commits cannot use transactional detail profiling"
+            )
         self._stage = stage
         self._log_ids = tuple(log_ids)
         self._initial_dry_mass_kg = dict(initial_dry_mass_kg)
         self._write_observer = write_observer
         self._profile_transactions = bool(profile_transactions)
         self._cache_usd_handles = bool(cache_usd_handles)
+        self._lightweight_commits = bool(lightweight_commits)
         self._transaction_profiles: list[ResidentUsdTransactionProfile] = []
         self._cached_emitter = None
         self._cached_log_prims = ()
@@ -223,6 +229,11 @@ class UsdResidentSnapshotAdapter:
         self._prim_cache_miss_count = 0
         self._attribute_cache_hit_count = 0
         self._attribute_cache_miss_count = 0
+        self._last_committed_snapshot = None
+        self._lightweight_commit_count = 0
+        self._lightweight_failure_count = 0
+        self._lightweight_recovery_count = 0
+        self._faulted = False
         self._owner_thread_id = threading.get_ident()
         self._active = False
         self._closed = False
@@ -241,6 +252,8 @@ class UsdResidentSnapshotAdapter:
             raise RuntimeError("Resident USD adapter is closed")
         if not self._active:
             raise RuntimeError("Resident USD adapter requires an active timeline")
+        if self._faulted:
+            raise RuntimeError("Resident USD adapter requires explicit reconstruction")
         if snapshot.log_ids != self._log_ids:
             raise ValueError("Snapshot log order does not match the adapter")
         if snapshot.revision <= self._revision:
@@ -374,6 +387,136 @@ class UsdResidentSnapshotAdapter:
                 for key, attribute in self._attribute_cache.items()
                 if attribute
             }
+
+    def _set_attribute_lightweight(
+        self,
+        prim,
+        name,
+        type_name,
+        value,
+        write_index,
+        *,
+        label,
+        notify_observer,
+    ):
+        _, attribute = self._resolve_attribute(prim, name, type_name, label)
+        if not attribute.Set(value):
+            raise RuntimeError(f"Unable to publish USD attribute {prim.GetPath()}.{name}")
+        write_index += 1
+        if notify_observer and self._write_observer is not None:
+            self._write_observer(write_index, name)
+        return write_index
+
+    def _write_snapshot_lightweight(
+        self, snapshot, emitter, log_prims, *, notify_observer
+    ):
+        """Write a complete derived snapshot without reading USD old values."""
+
+        write_index = 0
+        flow_row = snapshot.rows[0]
+        flow_values = {
+            "fuel": flow_row.flow_fuel,
+            "temperature": flow_row.flow_temperature,
+            "smoke": flow_row.flow_smoke,
+            "coupleRateFuel": 2.0 if flow_row.flow_fuel > 0.0 else 0.0,
+            "coupleRateTemperature": (
+                10.0 if flow_row.flow_temperature > 0.0 else 0.0
+            ),
+            "coupleRateSmoke": 1.0 if flow_row.flow_smoke > 0.0 else 0.0,
+        }
+        for name, value in flow_values.items():
+            write_index = self._set_attribute_lightweight(
+                emitter,
+                name,
+                Sdf.ValueTypeNames.Float,
+                value,
+                write_index,
+                label=f"Emitter.{name}",
+                notify_observer=notify_observer,
+            )
+
+        revision_writes = []
+        for log_id, prim, row in zip(self._log_ids, log_prims, snapshot.rows):
+            char_fraction = min(
+                1.0,
+                (row.char_mass_kg + row.ash_mass_kg)
+                / max(self._initial_dry_mass_kg[log_id], 1.0e-12),
+            )
+            values = {
+                "campfire:surfaceTemperatureK": row.surface_mean_temperature_k,
+                "campfire:charFraction": char_fraction,
+                "campfire:remainingMassRatio": row.remaining_mass_ratio,
+                "campfire:weakestSupportRatio": row.weakest_support_ratio,
+            }
+            display_color = UsdGeom.Gprim(prim).GetDisplayColorAttr()
+            if not display_color:
+                raise RuntimeError(f"Log {log_id} has no displayColor attribute")
+            write_index = self._set_attribute_lightweight(
+                prim,
+                display_color.GetName(),
+                display_color.GetTypeName(),
+                [self._visual_color(row, self._initial_dry_mass_kg[log_id])],
+                write_index,
+                label=f"{log_id}.{display_color.GetName()}",
+                notify_observer=notify_observer,
+            )
+            for name, value in values.items():
+                write_index = self._set_attribute_lightweight(
+                    prim,
+                    name,
+                    Sdf.ValueTypeNames.Double,
+                    value,
+                    write_index,
+                    label=f"{log_id}.{name}",
+                    notify_observer=notify_observer,
+                )
+            revision_writes.append((log_id, prim))
+
+        # Revisions are commit markers: payload first, log revisions next, and the
+        # emitter revision last so a reader can reject an incomplete publication.
+        for log_id, prim in revision_writes:
+            write_index = self._set_attribute_lightweight(
+                prim,
+                "campfire:residentRevision",
+                Sdf.ValueTypeNames.Int64,
+                snapshot.revision,
+                write_index,
+                label=f"{log_id}.campfire:residentRevision",
+                notify_observer=notify_observer,
+            )
+        self._set_attribute_lightweight(
+            emitter,
+            "campfire:residentRevision",
+            Sdf.ValueTypeNames.Int64,
+            snapshot.revision,
+            write_index,
+            label="Emitter.campfire:residentRevision",
+            notify_observer=notify_observer,
+        )
+
+    def _publish_lightweight(self, snapshot, emitter, log_prims):
+        previous_snapshot = self._last_committed_snapshot
+        try:
+            self._write_snapshot_lightweight(
+                snapshot, emitter, log_prims, notify_observer=True
+            )
+        except Exception:
+            self._lightweight_failure_count += 1
+            try:
+                self._write_snapshot_lightweight(
+                    previous_snapshot, emitter, log_prims, notify_observer=False
+                )
+            except Exception as recovery_error:
+                self._faulted = True
+                raise RuntimeError(
+                    "Resident lightweight publication and snapshot recovery failed"
+                ) from recovery_error
+            self._lightweight_recovery_count += 1
+            raise
+        self._revision = snapshot.revision
+        self._publish_count += 1
+        self._lightweight_commit_count += 1
+        self._last_committed_snapshot = snapshot
 
     @staticmethod
     def _add_elapsed(profile, name, started_ns):
@@ -565,6 +708,10 @@ class UsdResidentSnapshotAdapter:
         if profile is not None:
             self._add_elapsed(profile, "prim_lookup_ms", started)
 
+        if self._lightweight_commits and self._last_committed_snapshot is not None:
+            self._publish_lightweight(snapshot, emitter, log_prims)
+            return
+
         restores = []
         try:
             started = time.perf_counter_ns() if profile is not None else 0
@@ -668,6 +815,8 @@ class UsdResidentSnapshotAdapter:
         started = time.perf_counter_ns() if profile is not None else 0
         self._revision = snapshot.revision
         self._publish_count += 1
+        if self._lightweight_commits:
+            self._last_committed_snapshot = snapshot
         if profile is not None:
             self._add_elapsed(profile, "commit_ms", started)
             self._finish_profile(profile, "committed", transaction_started)
@@ -694,6 +843,11 @@ class UsdResidentSnapshotAdapter:
             "prim_cache_miss_count": self._prim_cache_miss_count,
             "attribute_cache_hit_count": self._attribute_cache_hit_count,
             "attribute_cache_miss_count": self._attribute_cache_miss_count,
+            "lightweight_commit_enabled": self._lightweight_commits,
+            "lightweight_commit_count": self._lightweight_commit_count,
+            "lightweight_failure_count": self._lightweight_failure_count,
+            "lightweight_recovery_count": self._lightweight_recovery_count,
+            "faulted": self._faulted,
         }
 
     def close(self):
@@ -705,5 +859,6 @@ class UsdResidentSnapshotAdapter:
         self._attribute_cache.clear()
         self._cached_emitter = None
         self._cached_log_prims = ()
+        self._last_committed_snapshot = None
         self._closed = True
         return True

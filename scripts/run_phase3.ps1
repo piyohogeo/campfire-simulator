@@ -30,7 +30,8 @@ param(
     [int]$VideoFps = 10,
     [switch]$ResidentSnapshotAdapter,
     [switch]$ResidentSnapshotTiming,
-    [switch]$ResidentSnapshotHandleCache
+    [switch]$ResidentSnapshotHandleCache,
+    [switch]$ResidentSnapshotLightweightCommit
 )
 
 $ErrorActionPreference = "Stop"
@@ -85,6 +86,14 @@ if ($ResidentSnapshotTiming.IsPresent -and -not $ResidentSnapshotAdapter.IsPrese
 if ($ResidentSnapshotHandleCache.IsPresent -and -not $ResidentSnapshotAdapter.IsPresent) {
     throw "Resident snapshot handle cache requires -ResidentSnapshotAdapter."
 }
+if ($ResidentSnapshotLightweightCommit.IsPresent -and -not (
+    $ResidentSnapshotAdapter.IsPresent -and $ResidentSnapshotHandleCache.IsPresent
+)) {
+    throw "Resident snapshot lightweight commit requires the adapter and handle cache."
+}
+if ($ResidentSnapshotLightweightCommit.IsPresent -and $ResidentSnapshotTiming.IsPresent) {
+    throw "Resident snapshot lightweight commit cannot use detailed transaction timing."
+}
 
 if (-not (Test-Path -LiteralPath $kit) -or -not (Test-Path -LiteralPath $app)) {
     throw "Application is not built. Run .\repo.bat build first."
@@ -126,6 +135,7 @@ $kitArgs = @(
     "--/exts/campfire.app/residentSnapshotAdapterEnabled=$($ResidentSnapshotAdapter.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentSnapshotTimingEnabled=$($ResidentSnapshotTiming.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentSnapshotHandleCacheEnabled=$($ResidentSnapshotHandleCache.IsPresent.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/residentSnapshotLightweightCommitEnabled=$($ResidentSnapshotLightweightCommit.IsPresent.ToString().ToLowerInvariant())",
     "--/rtx/flow/enabled=true",
     "--/app/viewport/grid/enabled=false",
     "--/persistent/app/viewport/displayOptions=1152"
@@ -207,6 +217,9 @@ if ([bool]$residentAdapter.transaction_timing_enabled -ne $ResidentSnapshotTimin
 if ([bool]$residentAdapter.handle_cache_enabled -ne $ResidentSnapshotHandleCache.IsPresent) {
     throw "Phase 3 used an unexpected resident snapshot handle-cache setting."
 }
+if ([bool]$residentAdapter.lightweight_commit_enabled -ne $ResidentSnapshotLightweightCommit.IsPresent) {
+    throw "Phase 3 used an unexpected resident snapshot lightweight-commit setting."
+}
 if ([bool]$residentAdapter.native_producer_connected) {
     throw "Phase 3 incorrectly reported a native producer connection."
 }
@@ -260,6 +273,15 @@ if ($ResidentSnapshotAdapter.IsPresent) {
             $residentAdapter.status_after_timeline_stop.attribute_cache_miss_count -ne 19 -or
             $residentAdapter.status_after_timeline_stop.attribute_cache_hit_count -ne 4541) {
             throw "Resident snapshot handle cache did not reach its expected steady state."
+        }
+    }
+    if ($ResidentSnapshotLightweightCommit.IsPresent) {
+        if (-not [bool]$residentAdapter.status_after_timeline_stop.lightweight_commit_enabled -or
+            [bool]$residentAdapter.status_after_timeline_stop.faulted -or
+            $residentAdapter.status_after_timeline_stop.lightweight_commit_count -ne 239 -or
+            $residentAdapter.status_after_timeline_stop.lightweight_failure_count -ne 0 -or
+            $residentAdapter.status_after_timeline_stop.lightweight_recovery_count -ne 0) {
+            throw "Resident snapshot lightweight commit did not preserve its expected lifecycle."
         }
     }
 }
