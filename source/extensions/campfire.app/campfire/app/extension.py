@@ -1083,6 +1083,9 @@ class CampfireAppExtension(omni.ext.IExt):
         resident_snapshot_lightweight_commit_enabled = settings.get_as_bool(
             f"{SETTINGS_ROOT}/residentSnapshotLightweightCommitEnabled"
         )
+        resident_snapshot_skip_unchanged_enabled = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/residentSnapshotSkipUnchangedEnabled"
+        )
         video_frame_interval_steps = settings.get_as_int(
             f"{SETTINGS_ROOT}/videoFrameIntervalSteps"
         )
@@ -1148,6 +1151,13 @@ class CampfireAppExtension(omni.ext.IExt):
             raise ValueError(
                 "Resident snapshot lightweight commits cannot use detailed transaction timing"
             )
+        if (
+            resident_snapshot_skip_unchanged_enabled
+            and not resident_snapshot_lightweight_commit_enabled
+        ):
+            raise ValueError(
+                "Resident snapshot unchanged-value skipping requires lightweight commits"
+            )
         flow_interface = _flowusd.acquire_flowusd_interface()
         dry_prim = stage.GetPrimAtPath(f"/World/Logs/{PHASE3_DRY_LOG_ID}")
         wet_prim = stage.GetPrimAtPath(f"/World/Logs/{PHASE3_WET_LOG_ID}")
@@ -1196,6 +1206,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 profile_transactions=resident_snapshot_timing_enabled,
                 cache_usd_handles=resident_snapshot_handle_cache_enabled,
                 lightweight_commits=resident_snapshot_lightweight_commit_enabled,
+                skip_unchanged_derived=resident_snapshot_skip_unchanged_enabled,
             )
             self._resident_snapshot_adapter = resident_adapter
         ignition_seconds = {"dry": None, "wet": None}
@@ -1971,6 +1982,9 @@ class CampfireAppExtension(omni.ext.IExt):
                         ),
                         "lightweight_commit_enabled": (
                             resident_snapshot_lightweight_commit_enabled
+                        ),
+                        "skip_unchanged_derived_enabled": (
+                            resident_snapshot_skip_unchanged_enabled
                         ),
                         "producer": (
                             "python_contract_bridge"

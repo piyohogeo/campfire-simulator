@@ -203,6 +203,7 @@ class UsdResidentSnapshotAdapter:
         profile_transactions: bool = False,
         cache_usd_handles: bool = False,
         lightweight_commits: bool = False,
+        skip_unchanged_derived: bool = False,
     ):
         if stage is None:
             raise ValueError("A USD stage is required")
@@ -214,6 +215,10 @@ class UsdResidentSnapshotAdapter:
             raise ValueError(
                 "Lightweight commits cannot use transactional detail profiling"
             )
+        if skip_unchanged_derived and not lightweight_commits:
+            raise ValueError(
+                "Skipping unchanged derived values requires lightweight commits"
+            )
         self._stage = stage
         self._log_ids = tuple(log_ids)
         self._initial_dry_mass_kg = dict(initial_dry_mass_kg)
@@ -221,6 +226,7 @@ class UsdResidentSnapshotAdapter:
         self._profile_transactions = bool(profile_transactions)
         self._cache_usd_handles = bool(cache_usd_handles)
         self._lightweight_commits = bool(lightweight_commits)
+        self._skip_unchanged_derived = bool(skip_unchanged_derived)
         self._transaction_profiles: list[ResidentUsdTransactionProfile] = []
         self._cached_emitter = None
         self._cached_log_prims = ()
@@ -233,6 +239,8 @@ class UsdResidentSnapshotAdapter:
         self._lightweight_commit_count = 0
         self._lightweight_failure_count = 0
         self._lightweight_recovery_count = 0
+        self._lightweight_write_count = 0
+        self._skipped_unchanged_write_count = 0
         self._faulted = False
         self._owner_thread_id = threading.get_ident()
         self._active = False
@@ -402,73 +410,138 @@ class UsdResidentSnapshotAdapter:
         _, attribute = self._resolve_attribute(prim, name, type_name, label)
         if not attribute.Set(value):
             raise RuntimeError(f"Unable to publish USD attribute {prim.GetPath()}.{name}")
+        self._lightweight_write_count += 1
         write_index += 1
         if notify_observer and self._write_observer is not None:
             self._write_observer(write_index, name)
         return write_index
 
+    def _set_derived_attribute_lightweight(
+        self,
+        prim,
+        name,
+        type_name,
+        value,
+        previous_value,
+        write_index,
+        *,
+        label,
+        notify_observer,
+        skip_unchanged,
+    ):
+        if skip_unchanged and self._usd_values_equal(value, previous_value):
+            self._skipped_unchanged_write_count += 1
+            return write_index
+        return self._set_attribute_lightweight(
+            prim,
+            name,
+            type_name,
+            value,
+            write_index,
+            label=label,
+            notify_observer=notify_observer,
+        )
+
+    @staticmethod
+    def _flow_payload(row):
+        return {
+            "fuel": row.flow_fuel,
+            "temperature": row.flow_temperature,
+            "smoke": row.flow_smoke,
+            "coupleRateFuel": 2.0 if row.flow_fuel > 0.0 else 0.0,
+            "coupleRateTemperature": 10.0 if row.flow_temperature > 0.0 else 0.0,
+            "coupleRateSmoke": 1.0 if row.flow_smoke > 0.0 else 0.0,
+        }
+
+    def _log_payload(self, log_id, row):
+        char_fraction = min(
+            1.0,
+            (row.char_mass_kg + row.ash_mass_kg)
+            / max(self._initial_dry_mass_kg[log_id], 1.0e-12),
+        )
+        return {
+            "campfire:surfaceTemperatureK": row.surface_mean_temperature_k,
+            "campfire:charFraction": char_fraction,
+            "campfire:remainingMassRatio": row.remaining_mass_ratio,
+            "campfire:weakestSupportRatio": row.weakest_support_ratio,
+        }
+
     def _write_snapshot_lightweight(
-        self, snapshot, emitter, log_prims, *, notify_observer
+        self, snapshot, emitter, log_prims, *, notify_observer, skip_unchanged=False
     ):
         """Write a complete derived snapshot without reading USD old values."""
 
         write_index = 0
-        flow_row = snapshot.rows[0]
-        flow_values = {
-            "fuel": flow_row.flow_fuel,
-            "temperature": flow_row.flow_temperature,
-            "smoke": flow_row.flow_smoke,
-            "coupleRateFuel": 2.0 if flow_row.flow_fuel > 0.0 else 0.0,
-            "coupleRateTemperature": (
-                10.0 if flow_row.flow_temperature > 0.0 else 0.0
-            ),
-            "coupleRateSmoke": 1.0 if flow_row.flow_smoke > 0.0 else 0.0,
-        }
+        previous_snapshot = self._last_committed_snapshot if skip_unchanged else None
+        flow_values = self._flow_payload(snapshot.rows[0])
+        previous_flow_values = (
+            self._flow_payload(previous_snapshot.rows[0])
+            if previous_snapshot is not None
+            else {}
+        )
         for name, value in flow_values.items():
-            write_index = self._set_attribute_lightweight(
+            write_index = self._set_derived_attribute_lightweight(
                 emitter,
                 name,
                 Sdf.ValueTypeNames.Float,
                 value,
+                previous_flow_values.get(name),
                 write_index,
                 label=f"Emitter.{name}",
                 notify_observer=notify_observer,
+                skip_unchanged=skip_unchanged,
             )
 
         revision_writes = []
-        for log_id, prim, row in zip(self._log_ids, log_prims, snapshot.rows):
-            char_fraction = min(
-                1.0,
-                (row.char_mass_kg + row.ash_mass_kg)
-                / max(self._initial_dry_mass_kg[log_id], 1.0e-12),
+        for row_index, (log_id, prim, row) in enumerate(
+            zip(self._log_ids, log_prims, snapshot.rows)
+        ):
+            values = self._log_payload(log_id, row)
+            previous_row = (
+                previous_snapshot.rows[row_index]
+                if previous_snapshot is not None
+                else None
             )
-            values = {
-                "campfire:surfaceTemperatureK": row.surface_mean_temperature_k,
-                "campfire:charFraction": char_fraction,
-                "campfire:remainingMassRatio": row.remaining_mass_ratio,
-                "campfire:weakestSupportRatio": row.weakest_support_ratio,
-            }
+            previous_values = (
+                self._log_payload(log_id, previous_row)
+                if previous_row is not None
+                else {}
+            )
             display_color = UsdGeom.Gprim(prim).GetDisplayColorAttr()
             if not display_color:
                 raise RuntimeError(f"Log {log_id} has no displayColor attribute")
-            write_index = self._set_attribute_lightweight(
+            color = [self._visual_color(row, self._initial_dry_mass_kg[log_id])]
+            previous_color = (
+                [
+                    self._visual_color(
+                        previous_row, self._initial_dry_mass_kg[log_id]
+                    )
+                ]
+                if previous_row is not None
+                else None
+            )
+            write_index = self._set_derived_attribute_lightweight(
                 prim,
                 display_color.GetName(),
                 display_color.GetTypeName(),
-                [self._visual_color(row, self._initial_dry_mass_kg[log_id])],
+                color,
+                previous_color,
                 write_index,
                 label=f"{log_id}.{display_color.GetName()}",
                 notify_observer=notify_observer,
+                skip_unchanged=skip_unchanged,
             )
             for name, value in values.items():
-                write_index = self._set_attribute_lightweight(
+                write_index = self._set_derived_attribute_lightweight(
                     prim,
                     name,
                     Sdf.ValueTypeNames.Double,
                     value,
+                    previous_values.get(name),
                     write_index,
                     label=f"{log_id}.{name}",
                     notify_observer=notify_observer,
+                    skip_unchanged=skip_unchanged,
                 )
             revision_writes.append((log_id, prim))
 
@@ -498,13 +571,21 @@ class UsdResidentSnapshotAdapter:
         previous_snapshot = self._last_committed_snapshot
         try:
             self._write_snapshot_lightweight(
-                snapshot, emitter, log_prims, notify_observer=True
+                snapshot,
+                emitter,
+                log_prims,
+                notify_observer=True,
+                skip_unchanged=self._skip_unchanged_derived,
             )
         except Exception:
             self._lightweight_failure_count += 1
             try:
                 self._write_snapshot_lightweight(
-                    previous_snapshot, emitter, log_prims, notify_observer=False
+                    previous_snapshot,
+                    emitter,
+                    log_prims,
+                    notify_observer=False,
+                    skip_unchanged=False,
                 )
             except Exception as recovery_error:
                 self._faulted = True
@@ -847,6 +928,9 @@ class UsdResidentSnapshotAdapter:
             "lightweight_commit_count": self._lightweight_commit_count,
             "lightweight_failure_count": self._lightweight_failure_count,
             "lightweight_recovery_count": self._lightweight_recovery_count,
+            "skip_unchanged_derived_enabled": self._skip_unchanged_derived,
+            "lightweight_write_count": self._lightweight_write_count,
+            "skipped_unchanged_write_count": self._skipped_unchanged_write_count,
             "faulted": self._faulted,
         }
 

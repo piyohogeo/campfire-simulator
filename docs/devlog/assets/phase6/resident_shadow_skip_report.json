@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "phase": "phase6bh",
+  "status": "ok",
+  "measurement": {
+    "hardware": "NVIDIA GeForce RTX 3090 / D3D12",
+    "scenario": "Phase 3 dry/wet logs, 1200 steps, 240 model seconds",
+    "paired_run_count": 3,
+    "measured_updates_per_run": 236,
+    "production_default_enabled": false
+  },
+  "contracts": {
+    "derived_usd_attributes_are_exclusively_adapter_owned": true,
+    "three_revision_writes_are_never_skipped": true,
+    "failure_recovery_replays_all_19_attributes": true,
+    "external_direct_usd_edits_supported": false,
+    "revision_and_lifecycle_preserved": true,
+    "authoritative_outputs_exact_across_runs": true,
+    "native_producer_connected": false
+  },
+  "steady_state_writes_per_run": {
+    "classified": 4541,
+    "median_written": 2657,
+    "median_skipped": 1884,
+    "median_skipped_per_commit": 7.8828,
+    "median_skip_percent": 41.4887,
+    "run_written": [
+      2657,
+      2657,
+      2657
+    ],
+    "run_skipped": [
+      1884,
+      1884,
+      1884
+    ]
+  },
+  "transaction_timing_ms": {
+    "lightweight_commit": {
+      "run_count": 3,
+      "median_mean_ms": 2.2823,
+      "median_p95_ms": 3.9938,
+      "median_max_ms": 5.3063,
+      "run_mean_ms": [
+        2.2823,
+        2.2618,
+        2.3959
+      ],
+      "run_p95_ms": [
+        3.9703,
+        3.9938,
+        4.0283
+      ],
+      "run_max_ms": [
+        4.6396,
+        5.3063,
+        5.7052
+      ]
+    },
+    "shadow_skip": {
+      "run_count": 3,
+      "median_mean_ms": 2.175,
+      "median_p95_ms": 3.7954,
+      "median_max_ms": 4.7908,
+      "run_mean_ms": [
+        2.2817,
+        2.1724,
+        2.175
+      ],
+      "run_p95_ms": [
+        3.8539,
+        3.5587,
+        3.7954
+      ],
+      "run_max_ms": [
+        4.2368,
+        4.7908,
+        5.5759
+      ]
+    }
+  },
+  "paired_p95_improvement_ms": [
+    0.1164,
+    0.4351,
+    0.2329
+  ],
+  "decision": {
+    "all_pairs_improved": true,
+    "every_candidate_run_below_4ms": true,
+    "qualified_for_resident_adapter": true,
+    "global_default_changed": false,
+    "native_producer_connection_unblocked": true,
+    "reason": "Only adapter-owned derived payloads equal to the last immutable snapshot are skipped. All revision markers and failure-path full replay remain mandatory.",
+    "next_gate": "Connect the resident native producer to the existing immutable snapshot schema."
+  }
+}

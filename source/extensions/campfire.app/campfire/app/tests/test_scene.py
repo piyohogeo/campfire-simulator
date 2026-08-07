@@ -1184,6 +1184,74 @@ class TestScene(omni.kit.test.AsyncTestCase):
             fault_adapter.publish(third)
         fault_adapter.close()
 
+    async def test_resident_snapshot_skips_only_unchanged_derived_payloads(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase3_scene(stage)
+        log_ids = (campfire.app.PHASE3_DRY_LOG_ID, campfire.app.PHASE3_WET_LOG_ID)
+        initial_dry_mass = {log_id: 2.0 for log_id in log_ids}
+        rows = tuple(
+            campfire.app.ResidentPublishedRow(
+                600.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.3, 0.4, 0.2, 0.006
+            )
+            for _ in log_ids
+        )
+        observer_calls = 0
+
+        def count_writes(_write_count, _name):
+            nonlocal observer_calls
+            observer_calls += 1
+
+        with self.assertRaisesRegex(ValueError, "requires lightweight commits"):
+            campfire.app.UsdResidentSnapshotAdapter(
+                stage,
+                log_ids,
+                initial_dry_mass,
+                skip_unchanged_derived=True,
+            )
+        adapter = campfire.app.UsdResidentSnapshotAdapter(
+            stage,
+            log_ids,
+            initial_dry_mass,
+            write_observer=count_writes,
+            cache_usd_handles=True,
+            lightweight_commits=True,
+            skip_unchanged_derived=True,
+        )
+        adapter.on_timeline_started()
+        adapter.publish(campfire.app.ResidentPublishedSnapshot(1, 0, log_ids, rows))
+        adapter.publish(campfire.app.ResidentPublishedSnapshot(2, 1, log_ids, rows))
+        status = adapter.status()
+        self.assertEqual(status["lightweight_write_count"], 3)
+        self.assertEqual(status["skipped_unchanged_write_count"], 16)
+        self.assertEqual(observer_calls, 22)
+
+        changed_rows = (
+            campfire.app.ResidentPublishedRow(
+                601.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.3, 0.4, 0.2, 0.006
+            ),
+            rows[1],
+        )
+        adapter.publish(
+            campfire.app.ResidentPublishedSnapshot(3, 2, log_ids, changed_rows)
+        )
+        status = adapter.status()
+        self.assertEqual(status["lightweight_write_count"], 8)
+        self.assertEqual(status["skipped_unchanged_write_count"], 30)
+        self.assertEqual(observer_calls, 27)
+        self.assertEqual(status["revision"], 3)
+        emitter = stage.GetPrimAtPath(campfire.app.FLOW_EMITTER_PATH)
+        self.assertEqual(
+            emitter.GetAttribute("campfire:residentRevision").Get(), 3
+        )
+        for log_id in log_ids:
+            self.assertEqual(
+                stage.GetPrimAtPath(f"/World/Logs/{log_id}")
+                .GetAttribute("campfire:residentRevision")
+                .Get(),
+                3,
+            )
+        adapter.close()
+
     async def test_log_cabin_has_more_air_than_dense_parallel_stack(self):
         dense = campfire.app.estimate_air_supply(
             campfire.app.dense_stack_placements()

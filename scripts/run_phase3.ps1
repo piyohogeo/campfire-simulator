@@ -31,7 +31,8 @@ param(
     [switch]$ResidentSnapshotAdapter,
     [switch]$ResidentSnapshotTiming,
     [switch]$ResidentSnapshotHandleCache,
-    [switch]$ResidentSnapshotLightweightCommit
+    [switch]$ResidentSnapshotLightweightCommit,
+    [switch]$ResidentSnapshotSkipUnchanged
 )
 
 $ErrorActionPreference = "Stop"
@@ -94,6 +95,9 @@ if ($ResidentSnapshotLightweightCommit.IsPresent -and -not (
 if ($ResidentSnapshotLightweightCommit.IsPresent -and $ResidentSnapshotTiming.IsPresent) {
     throw "Resident snapshot lightweight commit cannot use detailed transaction timing."
 }
+if ($ResidentSnapshotSkipUnchanged.IsPresent -and -not $ResidentSnapshotLightweightCommit.IsPresent) {
+    throw "Resident snapshot unchanged-value skipping requires lightweight commit."
+}
 
 if (-not (Test-Path -LiteralPath $kit) -or -not (Test-Path -LiteralPath $app)) {
     throw "Application is not built. Run .\repo.bat build first."
@@ -136,6 +140,7 @@ $kitArgs = @(
     "--/exts/campfire.app/residentSnapshotTimingEnabled=$($ResidentSnapshotTiming.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentSnapshotHandleCacheEnabled=$($ResidentSnapshotHandleCache.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentSnapshotLightweightCommitEnabled=$($ResidentSnapshotLightweightCommit.IsPresent.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/residentSnapshotSkipUnchangedEnabled=$($ResidentSnapshotSkipUnchanged.IsPresent.ToString().ToLowerInvariant())",
     "--/rtx/flow/enabled=true",
     "--/app/viewport/grid/enabled=false",
     "--/persistent/app/viewport/displayOptions=1152"
@@ -220,6 +225,9 @@ if ([bool]$residentAdapter.handle_cache_enabled -ne $ResidentSnapshotHandleCache
 if ([bool]$residentAdapter.lightweight_commit_enabled -ne $ResidentSnapshotLightweightCommit.IsPresent) {
     throw "Phase 3 used an unexpected resident snapshot lightweight-commit setting."
 }
+if ([bool]$residentAdapter.skip_unchanged_derived_enabled -ne $ResidentSnapshotSkipUnchanged.IsPresent) {
+    throw "Phase 3 used an unexpected resident snapshot unchanged-value setting."
+}
 if ([bool]$residentAdapter.native_producer_connected) {
     throw "Phase 3 incorrectly reported a native producer connection."
 }
@@ -266,12 +274,18 @@ if ($ResidentSnapshotAdapter.IsPresent) {
         throw "Resident snapshot transaction profile appeared without an explicit request."
     }
     if ($ResidentSnapshotHandleCache.IsPresent) {
+        $expectedAttributeCacheHits = if ($ResidentSnapshotSkipUnchanged.IsPresent) {
+            $residentAdapter.status_after_timeline_stop.lightweight_write_count
+        }
+        else {
+            4541
+        }
         if (-not [bool]$residentAdapter.status_after_timeline_stop.handle_cache_enabled -or
             $residentAdapter.status_after_timeline_stop.cached_attribute_count -ne 19 -or
             $residentAdapter.status_after_timeline_stop.prim_cache_miss_count -ne 1 -or
             $residentAdapter.status_after_timeline_stop.prim_cache_hit_count -ne 239 -or
             $residentAdapter.status_after_timeline_stop.attribute_cache_miss_count -ne 19 -or
-            $residentAdapter.status_after_timeline_stop.attribute_cache_hit_count -ne 4541) {
+            $residentAdapter.status_after_timeline_stop.attribute_cache_hit_count -ne $expectedAttributeCacheHits) {
             throw "Resident snapshot handle cache did not reach its expected steady state."
         }
     }
@@ -282,6 +296,14 @@ if ($ResidentSnapshotAdapter.IsPresent) {
             $residentAdapter.status_after_timeline_stop.lightweight_failure_count -ne 0 -or
             $residentAdapter.status_after_timeline_stop.lightweight_recovery_count -ne 0) {
             throw "Resident snapshot lightweight commit did not preserve its expected lifecycle."
+        }
+    }
+    if ($ResidentSnapshotSkipUnchanged.IsPresent) {
+        $lightweightStatus = $residentAdapter.status_after_timeline_stop
+        if (-not [bool]$lightweightStatus.skip_unchanged_derived_enabled -or
+            $lightweightStatus.skipped_unchanged_write_count -le 0 -or
+            ($lightweightStatus.lightweight_write_count + $lightweightStatus.skipped_unchanged_write_count) -ne (239 * 19)) {
+            throw "Resident snapshot unchanged-value skipping did not cover every steady-state attribute."
         }
     }
 }
