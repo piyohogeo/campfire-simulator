@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+<title id="title">Phase 6CB Flow 110 Point Emitter qualification</title>
+<desc id="desc">A fresh preset-independent stage qualifies sixteen and seven thousand two hundred Point samples through core simulation, active blocks, NanoVDB fields, and viewport fire and smoke.</desc>
+<style>.bg{fill:#08121f} .panel{fill:#111f31;stroke:#29415f;stroke-width:1.5} .title{fill:#f7fafc;font:700 30px system-ui,sans-serif} .sub{fill:#9fb3c8;font:15px system-ui,sans-serif} .head{fill:#7dd3fc;font:700 17px system-ui,sans-serif} .body{fill:#cbd5e1;font:14px system-ui,sans-serif} .ok{fill:#86efac;font:700 19px system-ui,sans-serif} .metric{fill:#f8fafc;font:700 23px system-ui,sans-serif} .warn{fill:#fbbf24;font:700 14px system-ui,sans-serif}</style>
+<rect width="1200" height="680" class="bg"/>
+<text x="58" y="56" class="title">Phase 6CB · Point Emitter core simulation on Flow 110</text>
+<text x="58" y="84" class="sub">Fresh offline stage · no Native PointCloud preset · production remains unchanged</text>
+<rect x="48" y="116" width="1104" height="146" rx="16" class="panel"/>
+<text x="72" y="154" class="head">The public USD route is qualified end to end</text>
+<text x="72" y="193" class="body">FlowEmitterPoint + UsdGeomPoints → FlowSimulate → FlowOffscreen → FlowRender → RTX viewport</text>
+<text x="72" y="230" class="ok">17 / 17 gates × 3 configurations · active blocks and NanoVDB fields nonzero · fire/smoke image changed</text>
+<rect x="48" y="290" width="350" height="238" rx="16" class="panel"/>
+<text x="72" y="329" class="head">16 points · 1 emitter</text>
+<text x="72" y="374" class="metric">56 active blocks</text>
+<text x="72" y="409" class="body">total publish p95 1.2621 ms</text>
+<text x="72" y="438" class="body">Flow/render update p95 10.4068 ms</text>
+<text x="72" y="467" class="body">150 notices / 150 publications</text>
+<text x="72" y="496" class="body">preset sublayers 0 · live resync 0</text>
+<rect x="425" y="290" width="350" height="238" rx="16" class="panel"/>
+<text x="449" y="329" class="head">7,200 points · 1 emitter</text>
+<text x="449" y="374" class="metric">901 active blocks</text>
+<text x="449" y="409" class="body">source / Vt / Set p95</text>
+<text x="449" y="438" class="body">22.2409 / 1.3261 / 0.3317 ms</text>
+<text x="449" y="467" class="body">Flow/render update p95 7.5267 ms</text>
+<text x="449" y="496" class="body">payload 172,808 B · preferred layout</text>
+<rect x="802" y="290" width="350" height="238" rx="16" class="panel"/>
+<text x="826" y="329" class="head">7,200 points · 4 emitters</text>
+<text x="826" y="374" class="metric">923 active blocks</text>
+<text x="826" y="409" class="body">source / Vt / Set p95</text>
+<text x="826" y="438" class="body">27.4073 / 1.6168 / 0.4227 ms</text>
+<text x="826" y="467" class="body">Flow/render update p95 7.4977 ms</text>
+<text x="826" y="496" class="body">payload 172,832 B · no measured advantage</text>
+<text x="58" y="576" class="warn">Decision: Flow 110 upgrade research is not triggered. Keep production Sphere; next isolate Resident surface-array generation before any adoption.</text>
+<text x="58" y="612" class="body">Layer, pointsPrim relationship, Points material binding, timeline events, viewport capture, array equality, revision, and no-live-resync are separate gates.</text>
+<text x="58" y="642" class="body">The 7,200-point tail is Python source generation, not UsdAttribute.Set: single-emitter Set p95 0.3317 ms.</text>
+</svg>

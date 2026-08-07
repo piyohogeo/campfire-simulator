@@ -1,0 +1,264 @@
+{
+  "schema_version": 1,
+  "phase": "phase6cb",
+  "status": "ok",
+  "flow_version": "110.0.0",
+  "scope": {
+    "default_off": true,
+    "native_pointcloud_preset_used": false,
+    "production_dependency_changed": false,
+    "production_scene_changed": false,
+    "live_prim_delete_or_redefine": false,
+    "post_connection_updates": [
+      "pointPositions",
+      "pointFuels",
+      "pointTemperatures",
+      "pointSmokes",
+      "campfire:residentRevision"
+    ]
+  },
+  "qualified_boundaries": [
+    "layer",
+    "pointsPrim relationship",
+    "UsdGeomPoints material binding",
+    "timeline PLAY and terminal event",
+    "viewport camera, capture, fire/smoke image change",
+    "Flow core active blocks",
+    "NanoVDB temperature/fuel/burn/smoke/velocity readback",
+    "fuel/temperature/smoke sums",
+    "consumer revision",
+    "no live structural resync"
+  ],
+  "configurations": {
+    "small-single": {
+      "point_count": 16,
+      "emitter_count": 1,
+      "publication_count": 150,
+      "gate_count": 17,
+      "active_blocks_peak": 56,
+      "readback_word_counts": {
+        "temperature": 716320,
+        "fuel": 716320,
+        "burn": 716320,
+        "smoke": 716320,
+        "velocity": 750120,
+        "divergence": 0
+      },
+      "notice_count": 150,
+      "payload_bytes": 392,
+      "timing": {
+        "source_generation": {
+          "samples": 120,
+          "mean_ms": 0.0846,
+          "p95_ms": 0.1435,
+          "maximum_ms": 0.1814
+        },
+        "python_cpp_boundary": {
+          "samples": 120,
+          "mean_ms": 0.0658,
+          "p95_ms": 0.1103,
+          "maximum_ms": 0.4704
+        },
+        "usd_attribute_set": {
+          "samples": 120,
+          "mean_ms": 0.1327,
+          "p95_ms": 0.2112,
+          "maximum_ms": 0.2743
+        },
+        "change_block_exit": {
+          "samples": 120,
+          "mean_ms": 0.5041,
+          "p95_ms": 0.9077,
+          "maximum_ms": 1.5391
+        },
+        "total": {
+          "samples": 120,
+          "mean_ms": 0.8025,
+          "p95_ms": 1.2621,
+          "maximum_ms": 2.1675
+        }
+      },
+      "flow_render_update": {
+        "samples": 120,
+        "mean_ms": 8.4933,
+        "p95_ms": 10.4068,
+        "maximum_ms": 11.9968
+      },
+      "channel_sums": {
+        "fuels": 13.079999923706055,
+        "temperatures": 32.63999938964844,
+        "smokes": 1.2799999713897705
+      },
+      "expected_channel_sums": {
+        "fuels": 13.08,
+        "temperatures": 32.64,
+        "smokes": 1.28
+      },
+      "revision": [
+        150
+      ],
+      "timeline_events": [
+        "PLAY",
+        "STOP"
+      ],
+      "final_capture_sha256": "baa4a859a681cd86c2ce731f2905e8464df01361620677f1dbe7dc45dc0b6436"
+    },
+    "target-single": {
+      "point_count": 7200,
+      "emitter_count": 1,
+      "publication_count": 150,
+      "gate_count": 17,
+      "active_blocks_peak": 901,
+      "readback_word_counts": {
+        "temperature": 8428480,
+        "fuel": 8428480,
+        "burn": 8428480,
+        "smoke": 8428480,
+        "velocity": 4141896,
+        "divergence": 0
+      },
+      "notice_count": 150,
+      "payload_bytes": 172808,
+      "timing": {
+        "source_generation": {
+          "samples": 120,
+          "mean_ms": 18.92,
+          "p95_ms": 22.2409,
+          "maximum_ms": 101.7213
+        },
+        "python_cpp_boundary": {
+          "samples": 120,
+          "mean_ms": 1.0116,
+          "p95_ms": 1.3261,
+          "maximum_ms": 1.8266
+        },
+        "usd_attribute_set": {
+          "samples": 120,
+          "mean_ms": 0.2018,
+          "p95_ms": 0.3317,
+          "maximum_ms": 0.5797
+        },
+        "change_block_exit": {
+          "samples": 120,
+          "mean_ms": 0.5707,
+          "p95_ms": 0.9859,
+          "maximum_ms": 1.5639
+        },
+        "total": {
+          "samples": 120,
+          "mean_ms": 20.7299,
+          "p95_ms": 23.8944,
+          "maximum_ms": 103.1798
+        }
+      },
+      "flow_render_update": {
+        "samples": 120,
+        "mean_ms": 5.2139,
+        "p95_ms": 7.5267,
+        "maximum_ms": 9.3362
+      },
+      "channel_sums": {
+        "fuels": 5885.999965667725,
+        "temperatures": 14687.999725341797,
+        "smokes": 575.9999871253967
+      },
+      "expected_channel_sums": {
+        "fuels": 5886.0,
+        "temperatures": 14688.0,
+        "smokes": 576.0
+      },
+      "revision": [
+        150
+      ],
+      "timeline_events": [
+        "PLAY",
+        "STOP"
+      ],
+      "final_capture_sha256": "147f947136b3534ed420e95c7c3a9f45319bc7a2c64fa790b7257f17485fa662"
+    },
+    "target-few": {
+      "point_count": 7200,
+      "emitter_count": 4,
+      "publication_count": 150,
+      "gate_count": 17,
+      "active_blocks_peak": 923,
+      "readback_word_counts": {
+        "temperature": 9681024,
+        "fuel": 9681024,
+        "burn": 9681024,
+        "smoke": 9681024,
+        "velocity": 4545672,
+        "divergence": 0
+      },
+      "notice_count": 150,
+      "payload_bytes": 172832,
+      "timing": {
+        "source_generation": {
+          "samples": 120,
+          "mean_ms": 19.7781,
+          "p95_ms": 27.4073,
+          "maximum_ms": 98.3444
+        },
+        "python_cpp_boundary": {
+          "samples": 120,
+          "mean_ms": 1.137,
+          "p95_ms": 1.6168,
+          "maximum_ms": 1.9528
+        },
+        "usd_attribute_set": {
+          "samples": 120,
+          "mean_ms": 0.2845,
+          "p95_ms": 0.4227,
+          "maximum_ms": 0.5422
+        },
+        "change_block_exit": {
+          "samples": 120,
+          "mean_ms": 0.6626,
+          "p95_ms": 0.964,
+          "maximum_ms": 1.2152
+        },
+        "total": {
+          "samples": 120,
+          "mean_ms": 21.885,
+          "p95_ms": 29.6119,
+          "maximum_ms": 100.1067
+        }
+      },
+      "flow_render_update": {
+        "samples": 120,
+        "mean_ms": 5.6878,
+        "p95_ms": 7.4977,
+        "maximum_ms": 9.6072
+      },
+      "channel_sums": {
+        "fuels": 5885.999965667725,
+        "temperatures": 14687.999725341797,
+        "smokes": 575.9999871253967
+      },
+      "expected_channel_sums": {
+        "fuels": 5886.0,
+        "temperatures": 14688.0,
+        "smokes": 576.0
+      },
+      "revision": [
+        150,
+        150,
+        150,
+        150
+      ],
+      "timeline_events": [
+        "PLAY",
+        "STOP"
+      ],
+      "final_capture_sha256": "3672fd956f9e7c8240eb188596c73782950816601a2a1d728560f867f61cc2f4"
+    }
+  },
+  "decision": {
+    "flow_110_public_point_route": "qualified",
+    "preferred_layout": "one Point emitter",
+    "few_emitter_layout": "qualified but not preferred",
+    "production_adoption": "deferred",
+    "newer_flow_investigation": "not triggered",
+    "reason": "Flow 110 completes core simulation and rendering. At 7,200 points, one emitter has total publish p95 23.8944 ms versus 29.6119 ms for four; Python source generation dominates and must be replaced by a Resident-native surface producer before production adoption is evaluated."
+  }
+}

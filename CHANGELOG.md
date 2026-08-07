@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6CB default-off, preset-independent Flow 110 Point Emitter qualification, proving a fresh pre-connected stage with individual layer, relationship, material, timeline, viewport, core simulation, sparse-field, array-equivalence, revision, notice, and no-live-resync gates from 16 through 7,200 points.
 - Added the Phase 6CA production-but-unactivated `ResidentApplicationSession` owner with explicit states, owner-thread enforcement, downstream immutable-snapshot pending/retry, fail-closed normal shutdown, explicit forced discard, pure lifecycle coverage, and real Kit/native failure-recovery gates.
 - Added the Phase 6BZ isolated owner-thread Resident checkpoint session, qualifying a non-terminal clone-stage save barrier, failure-safe continuation, and exact uninterrupted-versus-restored next-revision equivalence while deferring production UI and automatic persistence.
 - Added the Phase 6BY isolated Resident checkpoint package spike with a versioned two-entry manifest/USDA format, atomic replacement, corruption and revision-consistency rejection, exact model-state validation, and revision-continuous Kit/MSVC restore while leaving production auto-resume disabled.
