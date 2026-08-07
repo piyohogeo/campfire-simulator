@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6BM default-off real-Flow `Sdf.ChangeBlock` resident publication candidate, revision-gated notice telemetry, same-block immutable rollback coverage, balanced native-producer measurements, and a browser-readable qualification report.
 - Added the Phase 6BL local-Kit `Sdf.ChangeBlock` contract prototype, proving 19-to-1 USD notice coalescing, revision-consistent publication, explicit same-block snapshot replay, and a revision-gated in-memory timing reduction while leaving production unchanged.
 - Added Phase 6BK default-off lightweight USD tail profiling, correlating 236 commits per run with Flow/render load without adding USD reads; real-Kit results attribute a median 83.0% of p95 publication time to `UsdAttribute.Set` while preserving exact authoritative outputs.
 - Added the Phase 6BJ default-off production resident-native Phase 3 lifecycle path, connecting 1,200 native wood steps through immutable snapshots to the existing USD adapter with exact authoritative outputs; functional gates pass while USD tail-performance adoption remains deferred.

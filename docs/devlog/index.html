@@ -36,8 +36,8 @@
       <div class="shell status-grid">
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>46 / 46 passed</strong></div>
-        <div><span>次の焦点</span><strong>実Flowでの通知集約候補</strong></div>
+        <div><span>テスト</span><strong>47 / 47 passed</strong></div>
+        <div><span>次の焦点</span><strong>通知追跡なしの採用監査</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6BL · USD notice boundary prototype</p>
-            <h2>19回の通知を、<br>一貫した1回へ。</h2>
-            <p>ローカルKitのin-memory USD stageで、現行adapterと同じ16 payload＋3 revisionを観測しました。通常は19回のObjectsChanged通知が発生しますが、Sdf.ChangeBlockでは1回に集約され、callbackは3 consumerの最終revisionを同時に確認できました。ただし例外は自動rollbackになりません。発行失敗をblock内で捕捉し、同じblock内で旧immutable snapshotを再発行してから例外を戻すことで、通知1回・旧revision一致・最終値完全復元を達成しました。試作p95中央値は0.3697から0.1111 msへ下がりましたが、実Flow stageではないためproduction採用は保留します。</p>
+            <p class="section-kicker">Phase 6BM · Real Flow ChangeBlock candidate</p>
+            <h2>実Flowでも、1 revisionを<br>1通知で届けられた。</h2>
+            <p>Resident native producerと実Flow stageを使い、通常lightweight発行とSdf.ChangeBlock候補を3組・順序反転で比較しました。revision-gated listener付きcontrolは各run 2,657通知のうち239だけを受理しましたが、候補は239通知をすべて受理し、拒否は0でした。USD発行p95中央値は3.4279から1.5542 msへ下がり、全runで4 ms未満です。revision-last直後の失敗でも旧immutable snapshotを同じblock内で復元し、consumerには旧revisionの1通知だけが見えます。既存lifecycle、rollback、revision、schemaを維持したまま候補をqualifiedとし、production既定はまだOFFです。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -752,6 +752,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6bm-resident-change-block" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6BM</h3>
+            <a href="assets/phase6/resident_change_block_report.svg" aria-label="Phase 6BM 実Flow resident通知集約候補の通知数、p95、同値性レポートを開く">
+              <img src="assets/phase6/resident_change_block_report.svg" width="1200" height="680" alt="実Flowで通知を2657回から239回へ集約し、USD発行p95を全run 4 ms未満へ下げたSVG図">
+            </a>
+            <figcaption>
+              <div><strong>One revision · one notice · real Flow</strong><span>2,657 → 239 notices · p95 median 3.4279 → 1.5542 ms · exact outputs · default OFF</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6BM burn scenario (rendering unchanged, reused)" data-video-meta="Real Flow resident publication boundary changed only USD notice delivery; authoritative wood state and rendering remain exact · baseline Phase 6AM viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · 同値の既存実画面を再掲</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1065,6 +1079,12 @@
               <div><dt>Phase 6BL rollback</dt><dd>same-block replay exact · old revision visible · exception preserved</dd></div>
               <div><dt>Phase 6BL decision</dt><dd>9 / 9 prototype gates · production still OFF</dd></div>
               <div><dt>Phase 6BL regression</dt><dd>8 processes · 46 / 46 pass · collapse coverage 187.4 s</dd></div>
+              <div><dt>Phase 6BM notices</dt><dd>2,657 → 239 per run · accepted 239 · rejected 0</dd></div>
+              <div><dt>Phase 6BM control p95</dt><dd>3.4279 / 3.0567 / 3.8562 ms</dd></div>
+              <div><dt>Phase 6BM ChangeBlock p95</dt><dd>1.3492 / 1.5542 / 1.8859 ms · all below 4 ms</dd></div>
+              <div><dt>Phase 6BM equivalence</dt><dd>state SHA / CSV / ignition / final USD exact · Flow active</dd></div>
+              <div><dt>Phase 6BM rollback</dt><dd>revision-last failure · one old-revision notice · exact replay</dd></div>
+              <div><dt>Phase 6BM regression</dt><dd>8 processes · 47 / 47 pass · 305.8 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>

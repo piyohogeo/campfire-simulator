@@ -34,6 +34,8 @@ param(
     [switch]$ResidentSnapshotLightweightCommit,
     [switch]$ResidentSnapshotSkipUnchanged,
     [switch]$ResidentSnapshotLightweightTailTiming,
+    [switch]$ResidentSnapshotLightweightNoticeCoalescing,
+    [switch]$ResidentSnapshotLightweightNoticeTracking,
     [switch]$ResidentNativeBackend,
     [string]$ResidentNativeLibraryPath = ""
 )
@@ -104,6 +106,14 @@ if ($ResidentSnapshotSkipUnchanged.IsPresent -and -not $ResidentSnapshotLightwei
 if ($ResidentSnapshotLightweightTailTiming.IsPresent -and -not $ResidentSnapshotLightweightCommit.IsPresent) {
     throw "Resident snapshot lightweight tail timing requires lightweight commit."
 }
+if ($ResidentSnapshotLightweightNoticeCoalescing.IsPresent -and -not $ResidentSnapshotLightweightCommit.IsPresent) {
+    throw "Resident snapshot lightweight notice coalescing requires lightweight commit."
+}
+if ($ResidentSnapshotLightweightNoticeTracking.IsPresent -and -not (
+    $ResidentSnapshotLightweightCommit.IsPresent -and $ResidentSnapshotHandleCache.IsPresent
+)) {
+    throw "Resident snapshot lightweight notice tracking requires lightweight commit and handle cache."
+}
 if ($ResidentNativeBackend.IsPresent -and -not $ResidentSnapshotAdapter.IsPresent) {
     throw "Resident native backend requires the resident snapshot adapter."
 }
@@ -161,6 +171,8 @@ $kitArgs = @(
     "--/exts/campfire.app/residentSnapshotLightweightCommitEnabled=$($ResidentSnapshotLightweightCommit.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentSnapshotSkipUnchangedEnabled=$($ResidentSnapshotSkipUnchanged.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentSnapshotLightweightTailTimingEnabled=$($ResidentSnapshotLightweightTailTiming.IsPresent.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/residentSnapshotLightweightNoticeCoalescingEnabled=$($ResidentSnapshotLightweightNoticeCoalescing.IsPresent.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/residentSnapshotLightweightNoticeTrackingEnabled=$($ResidentSnapshotLightweightNoticeTracking.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentNativeBackendEnabled=$($ResidentNativeBackend.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentNativeLibraryPath=$ResidentNativeLibraryPath",
     "--/rtx/flow/enabled=true",
@@ -253,6 +265,12 @@ if ([bool]$residentAdapter.skip_unchanged_derived_enabled -ne $ResidentSnapshotS
 if ([bool]$residentAdapter.lightweight_tail_timing_enabled -ne $ResidentSnapshotLightweightTailTiming.IsPresent) {
     throw "Phase 3 used an unexpected resident snapshot lightweight tail timing setting."
 }
+if ([bool]$residentAdapter.lightweight_notice_coalescing_enabled -ne $ResidentSnapshotLightweightNoticeCoalescing.IsPresent) {
+    throw "Phase 3 used an unexpected resident snapshot lightweight notice-coalescing setting."
+}
+if ([bool]$residentAdapter.lightweight_notice_tracking_enabled -ne $ResidentSnapshotLightweightNoticeTracking.IsPresent) {
+    throw "Phase 3 used an unexpected resident snapshot lightweight notice-tracking setting."
+}
 if ([bool]$residentAdapter.native_producer_connected -ne $ResidentNativeBackend.IsPresent) {
     throw "Phase 3 reported an unexpected native producer connection."
 }
@@ -339,6 +357,23 @@ if ($ResidentSnapshotAdapter.IsPresent) {
             $residentAdapter.status_after_timeline_stop.lightweight_failure_count -ne 0 -or
             $residentAdapter.status_after_timeline_stop.lightweight_recovery_count -ne 0) {
             throw "Resident snapshot lightweight commit did not preserve its expected lifecycle."
+        }
+        if ([bool]$residentAdapter.status_after_timeline_stop.lightweight_notice_coalescing_enabled -ne $ResidentSnapshotLightweightNoticeCoalescing.IsPresent) {
+            throw "Resident snapshot lightweight commit used an unexpected notice-coalescing mode."
+        }
+        if ([bool]$residentAdapter.status_after_timeline_stop.lightweight_notice_tracking_enabled -ne $ResidentSnapshotLightweightNoticeTracking.IsPresent) {
+            throw "Resident snapshot lightweight commit used an unexpected notice-tracking mode."
+        }
+        if ($ResidentSnapshotLightweightNoticeTracking.IsPresent) {
+            $noticeStatus = $residentAdapter.status_after_timeline_stop
+            if ($noticeStatus.lightweight_notice_publication_count -ne 239 -or
+                $noticeStatus.lightweight_notice_accepted_revision_count -ne 239 -or
+                $noticeStatus.lightweight_notice_count -ne (
+                    $noticeStatus.lightweight_notice_accepted_revision_count +
+                    $noticeStatus.lightweight_notice_rejected_count
+                )) {
+                throw "Resident snapshot notice tracking did not observe one accepted revision per publication."
+            }
         }
     }
     if ($ResidentSnapshotSkipUnchanged.IsPresent) {

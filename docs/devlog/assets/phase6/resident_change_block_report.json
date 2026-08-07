@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "phase": "phase6bm",
+  "status": "qualified",
+  "measurement": {
+    "pairs": 3,
+    "balanced_order": true,
+    "steps_per_run": 1200,
+    "published_revisions_per_run": 240,
+    "tracked_lightweight_publications_per_run": 239,
+    "revision_gated_notice_tracking": true,
+    "production_default_enabled": false
+  },
+  "equivalence": {
+    "all_pairs_exact": true
+  },
+  "performance": {
+    "control_p95_ms": [
+      3.4279,
+      3.0567,
+      3.8562
+    ],
+    "change_block_p95_ms": [
+      1.3492,
+      1.5542,
+      1.8859
+    ],
+    "median_control_p95_ms": 3.4279,
+    "median_change_block_p95_ms": 1.5542,
+    "median_p95_reduction_ms": 1.8737000000000001,
+    "all_change_block_runs_below_4ms": true
+  },
+  "notice_contract": {
+    "control_notice_count": [
+      2657,
+      2657,
+      2657
+    ],
+    "change_block_notice_count": [
+      239,
+      239,
+      239
+    ],
+    "change_block_accepted_revision_count": [
+      239,
+      239,
+      239
+    ],
+    "change_block_rejected_notice_count": [
+      0,
+      0,
+      0
+    ],
+    "exactly_one_notice_per_publication": true
+  },
+  "flow": {
+    "control_active_blocks_peak": [
+      171,
+      168,
+      174
+    ],
+    "change_block_active_blocks_peak": [
+      174,
+      167,
+      175
+    ],
+    "active_in_all_runs": true
+  },
+  "failure_contract": {
+    "revision_last_failure_replayed_inside_same_block": true,
+    "one_old_revision_notice": true,
+    "verified_by": "Kit test_scene revision-last failure injection"
+  },
+  "pairs": [
+    {
+      "pair": 1,
+      "order": [
+        "control",
+        "change_block"
+      ],
+      "equivalence": {
+        "dry_authoritative_sha256": true,
+        "wet_authoritative_sha256": true,
+        "metrics_csv_sha256": true,
+        "ignition": true,
+        "final_usd_state": true
+      },
+      "control": {
+        "usd_p95_ms": 3.4279,
+        "notice_count": 2657,
+        "accepted_revision_count": 239,
+        "rejected_notice_count": 2418,
+        "write_count": 2657,
+        "flow_active_blocks_peak": 171
+      },
+      "change_block": {
+        "usd_p95_ms": 1.3492,
+        "notice_count": 239,
+        "accepted_revision_count": 239,
+        "rejected_notice_count": 0,
+        "write_count": 2657,
+        "flow_active_blocks_peak": 174
+      }
+    },
+    {
+      "pair": 2,
+      "order": [
+        "change_block",
+        "control"
+      ],
+      "equivalence": {
+        "dry_authoritative_sha256": true,
+        "wet_authoritative_sha256": true,
+        "metrics_csv_sha256": true,
+        "ignition": true,
+        "final_usd_state": true
+      },
+      "control": {
+        "usd_p95_ms": 3.0567,
+        "notice_count": 2657,
+        "accepted_revision_count": 239,
+        "rejected_notice_count": 2418,
+        "write_count": 2657,
+        "flow_active_blocks_peak": 168
+      },
+      "change_block": {
+        "usd_p95_ms": 1.5542,
+        "notice_count": 239,
+        "accepted_revision_count": 239,
+        "rejected_notice_count": 0,
+        "write_count": 2657,
+        "flow_active_blocks_peak": 167
+      }
+    },
+    {
+      "pair": 3,
+      "order": [
+        "control",
+        "change_block"
+      ],
+      "equivalence": {
+        "dry_authoritative_sha256": true,
+        "wet_authoritative_sha256": true,
+        "metrics_csv_sha256": true,
+        "ignition": true,
+        "final_usd_state": true
+      },
+      "control": {
+        "usd_p95_ms": 3.8562,
+        "notice_count": 2657,
+        "accepted_revision_count": 239,
+        "rejected_notice_count": 2418,
+        "write_count": 2657,
+        "flow_active_blocks_peak": 174
+      },
+      "change_block": {
+        "usd_p95_ms": 1.8859,
+        "notice_count": 239,
+        "accepted_revision_count": 239,
+        "rejected_notice_count": 0,
+        "write_count": 2657,
+        "flow_active_blocks_peak": 175
+      }
+    }
+  ],
+  "decision": {
+    "candidate_qualified": true,
+    "production_default_enabled": false,
+    "contracts_preserved": [
+      "immutable previous snapshot replay",
+      "revision-last publication",
+      "monotonic lifecycle revision",
+      "fault-on-recovery-failure",
+      "resident snapshot schema"
+    ]
+  }
+}

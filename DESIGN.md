@@ -1989,3 +1989,16 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 判断: 9契約gateを満たしたため、既存属性だけを更新するlightweight経路での通知集約試作はqualifiedとする。production採用は未資格、既定OFF、rollback、revision-last、snapshot schema、外部直接編集非対応は維持する。次は現行Phase 3 adapterへ既定OFFの候補を追加し、実`ObjectsChanged`通知数、payload失敗／revision後失敗のsame-block replay、3 consumer revision、Flow活動、権威出力、USD p95 4 ms gateを順序反転runで検証する。
 - 再現: `run_phase6bl_usd_change_block.ps1`がKit Pythonで`analyze_usd_change_block.py`を実行し、契約9 gate、通知数、5 run timingを`usd_change_block_report.json/.svg`へ保存する。描画・燃焼条件は変えていないため開発日誌動画はPhase 6AMの検証済み実画面を再利用する。
 - 回帰確認: `repo.bat test`は全8プロセス、46 / 46件に成功した。内訳は通常37、thermal coverage 3、wet-kindling coverage 1、collapse coverage 1、fixed-reference 1、air-feedback 1、numerical 2であり、productionコードを変更していない本試作が既存挙動を変えていないことを確認した。
+
+## 96. Phase 6BM 実Flow resident発行の通知集約候補
+
+### 2026-08-07: 既存lightweight rollbackを同一`Sdf.ChangeBlock`へ収め、実Flowで4 ms gateを再判定する
+
+- 実装境界: `UsdResidentSnapshotAdapter`へ既定OFFの`coalesce_lightweight_notices`を追加した。初回の完全transactionは変更せず、2回目以降の既存lightweight発行だけを`Sdf.ChangeBlock`で囲む。`_publish_lightweight`内のimmutable previous snapshot replay、revision-last、単調revision、owner thread、recovery失敗時fault停止、`ResidentPublishedSnapshot` schemaは変更していない。`ChangeBlock`をtransactionとは見なさず、既存replayがblock内で完了してから元例外が外へ出る構造である。
+- 観測経路: 追加USD readをproductionへ戻さないため、revision-gated `ObjectsChanged`追跡は別の既定OFF設定とした。handle cache済みの薪2本＋Emitter revision属性だけをcallbackで読み、前回受理revisionより新しい3 consumer一致値だけを受理する。controlと候補の両方で同じlistenerを有効にし、追跡負荷込みの公平な比較にした。
+- 失敗契約: Kit testで初回snapshotをcommit後、通常の候補commitが1通知だけで新revision`2`を見せることを確認した。続いて19番目のrevision-last書込み直後に失敗を注入し、同じblock内で旧19値を再発行した。callbackは旧revision`2`の1通知だけを観測し、USD signatureは失敗前と完全一致、adapter revision／publish countは進まず、元例外は保持された。trackingにはこのrollback通知を拒否させ、recovery countだけを1増やした。
+- 実測条件: RTX 3090実機、release Kit、Resident native producer、1,200 native step、240 snapshot revision、lightweight＋handle cache＋unchanged skipを維持した。controlと`ChangeBlock`を順序反転3 pairで実行し、各runの239 lightweight publicationをrevision-gated listener付きで測った。Flow active block peakはcontrol`171 / 168 / 174`、候補`174 / 167 / 175`で全run活動した。
+- 通知結果: controlは各run`2,657`通知で、受理239・拒否2,418だった。通知数は実USD write数と一致した。候補は各run`239`通知、受理239・拒否0、publication当たり最小／最大とも1だった。したがってpayload途中状態をconsumerへ見せず、1 revisionを1通知として配送する契約を実Flow stageで満たした。
+- 性能結果: resident USD発行p95はcontrol`3.4279 / 3.0567 / 3.8562 ms`、候補`1.3492 / 1.5542 / 1.8859 ms`、中央値`3.4279 → 1.5542 ms`、差`1.8737 ms`だった。候補3 runすべてが4 ms未満である。木材権威状態SHA-256、metrics CSV SHA-256、乾燥／湿潤着火時刻、最終USDは全pair完全一致した。
+- 判断: Phase 6BM候補は通知、rollback、revision、同値性、Flow活動、4 ms性能gateを満たしたためqualifiedとする。ただし全Resident経路と本候補のproduction既定値は引き続きOFFとし、明示設定なしの既存動作は変えない。次は追跡listenerを外した本来のconsumer構成でもtailを再確認し、既存lightweight使用時に通知集約を標準化するかを判断する。共有SoA案はこのUSD発行改善とは独立した将来候補のままである。
+- 再現と回帰: `run_phase6bm_resident_change_block.ps1`がnative DLLをbuildし、6回のPhase 3と`analyze_resident_change_block.py`を実行して`resident_change_block_report.json/.svg`を生成する。release buildは`6.3 s`、最終Phase 0固定確認は`19.9 s`、標準Kit suiteは全8 process・`47 / 47`件を`305.8 s`で合格した。描画・燃焼条件は変えていないため開発日誌動画はPhase 6AMの検証済み実画面を再利用する。

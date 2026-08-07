@@ -7,7 +7,7 @@ import time
 from dataclasses import dataclass
 from typing import Callable
 
-from pxr import Gf, Sdf, Usd, UsdGeom
+from pxr import Gf, Sdf, Tf, Usd, UsdGeom
 
 from .flow_scene import FLOW_EMITTER_PATH
 from .resident_snapshot import (
@@ -104,6 +104,8 @@ class UsdResidentSnapshotAdapter:
         lightweight_commits: bool = False,
         skip_unchanged_derived: bool = False,
         profile_lightweight_tails: bool = False,
+        coalesce_lightweight_notices: bool = False,
+        track_lightweight_notices: bool = False,
     ):
         if stage is None:
             raise ValueError("A USD stage is required")
@@ -123,6 +125,16 @@ class UsdResidentSnapshotAdapter:
             raise ValueError(
                 "Lightweight tail profiling requires lightweight commits"
             )
+        if coalesce_lightweight_notices and not lightweight_commits:
+            raise ValueError(
+                "Lightweight notice coalescing requires lightweight commits"
+            )
+        if track_lightweight_notices and not (
+            lightweight_commits and cache_usd_handles
+        ):
+            raise ValueError(
+                "Lightweight notice tracking requires lightweight commits and handle cache"
+            )
         self._stage = stage
         self._log_ids = tuple(log_ids)
         self._initial_dry_mass_kg = dict(initial_dry_mass_kg)
@@ -132,6 +144,8 @@ class UsdResidentSnapshotAdapter:
         self._lightweight_commits = bool(lightweight_commits)
         self._skip_unchanged_derived = bool(skip_unchanged_derived)
         self._profile_lightweight_tails = bool(profile_lightweight_tails)
+        self._coalesce_lightweight_notices = bool(coalesce_lightweight_notices)
+        self._track_lightweight_notices = bool(track_lightweight_notices)
         self._transaction_profiles: list[ResidentUsdTransactionProfile] = []
         self._lightweight_tail_profiles: list[
             ResidentUsdLightweightTailProfile
@@ -149,6 +163,13 @@ class UsdResidentSnapshotAdapter:
         self._lightweight_recovery_count = 0
         self._lightweight_write_count = 0
         self._skipped_unchanged_write_count = 0
+        self._lightweight_notice_listener = None
+        self._lightweight_notice_active = False
+        self._lightweight_notice_count = 0
+        self._lightweight_notice_accepted_revision_count = 0
+        self._lightweight_notice_rejected_count = 0
+        self._lightweight_notice_publication_counts = []
+        self._lightweight_notice_last_accepted_revision = 0
         self._faulted = False
         self._owner_thread_id = threading.get_ident()
         self._active = False
@@ -182,6 +203,15 @@ class UsdResidentSnapshotAdapter:
         if not self._active:
             self._active = True
             self._start_count += 1
+            if (
+                self._track_lightweight_notices
+                and self._lightweight_notice_listener is None
+            ):
+                self._lightweight_notice_listener = Tf.Notice.Register(
+                    Usd.Notice.ObjectsChanged,
+                    self._observe_lightweight_notice,
+                    self._stage,
+                )
 
     def on_timeline_stopped(self):
         self._require_owner()
@@ -190,6 +220,29 @@ class UsdResidentSnapshotAdapter:
         if self._active:
             self._active = False
             self._stop_count += 1
+
+    def _observe_lightweight_notice(self, _notice, _sender):
+        if not self._lightweight_notice_active:
+            return
+        self._lightweight_notice_count += 1
+        revision_attributes = tuple(
+            self._attribute_cache.get(f"{log_id}.campfire:residentRevision")
+            for log_id in self._log_ids
+        ) + (
+            self._attribute_cache.get("Emitter.campfire:residentRevision"),
+        )
+        if not all(revision_attributes):
+            self._lightweight_notice_rejected_count += 1
+            return
+        revisions = tuple(int(attribute.Get()) for attribute in revision_attributes)
+        if (
+            len(set(revisions)) == 1
+            and revisions[0] > self._lightweight_notice_last_accepted_revision
+        ):
+            self._lightweight_notice_accepted_revision_count += 1
+            self._lightweight_notice_last_accepted_revision = revisions[0]
+        else:
+            self._lightweight_notice_rejected_count += 1
 
     @staticmethod
     def _visual_color(row, initial_dry_mass_kg):
@@ -876,13 +929,38 @@ class UsdResidentSnapshotAdapter:
             self._add_elapsed(lightweight_profile, "prim_lookup_ms", started)
 
         if self._lightweight_commits and self._last_committed_snapshot is not None:
-            self._publish_lightweight(
-                snapshot,
-                emitter,
-                log_prims,
-                profile=lightweight_profile,
-                transaction_started_ns=lightweight_transaction_started,
-            )
+            notice_count_before = self._lightweight_notice_count
+            if self._track_lightweight_notices:
+                self._lightweight_notice_last_accepted_revision = self._revision
+                self._lightweight_notice_active = True
+            try:
+                if self._coalesce_lightweight_notices:
+                    # ChangeBlock only delays/coalesces USD notices; it is not a
+                    # transaction. _publish_lightweight keeps the existing
+                    # immutable-snapshot replay inside this same block before an
+                    # original publication exception is allowed to escape.
+                    with Sdf.ChangeBlock():
+                        self._publish_lightweight(
+                            snapshot,
+                            emitter,
+                            log_prims,
+                            profile=lightweight_profile,
+                            transaction_started_ns=lightweight_transaction_started,
+                        )
+                else:
+                    self._publish_lightweight(
+                        snapshot,
+                        emitter,
+                        log_prims,
+                        profile=lightweight_profile,
+                        transaction_started_ns=lightweight_transaction_started,
+                    )
+            finally:
+                if self._track_lightweight_notices:
+                    self._lightweight_notice_active = False
+                    self._lightweight_notice_publication_counts.append(
+                        self._lightweight_notice_count - notice_count_before
+                    )
             return
 
         restores = []
@@ -1025,6 +1103,30 @@ class UsdResidentSnapshotAdapter:
             "attribute_cache_hit_count": self._attribute_cache_hit_count,
             "attribute_cache_miss_count": self._attribute_cache_miss_count,
             "lightweight_commit_enabled": self._lightweight_commits,
+            "lightweight_notice_coalescing_enabled": (
+                self._coalesce_lightweight_notices
+            ),
+            "lightweight_notice_tracking_enabled": self._track_lightweight_notices,
+            "lightweight_notice_count": self._lightweight_notice_count,
+            "lightweight_notice_accepted_revision_count": (
+                self._lightweight_notice_accepted_revision_count
+            ),
+            "lightweight_notice_rejected_count": (
+                self._lightweight_notice_rejected_count
+            ),
+            "lightweight_notice_publication_count": len(
+                self._lightweight_notice_publication_counts
+            ),
+            "lightweight_notices_per_publication_minimum": (
+                min(self._lightweight_notice_publication_counts)
+                if self._lightweight_notice_publication_counts
+                else 0
+            ),
+            "lightweight_notices_per_publication_maximum": (
+                max(self._lightweight_notice_publication_counts)
+                if self._lightweight_notice_publication_counts
+                else 0
+            ),
             "lightweight_commit_count": self._lightweight_commit_count,
             "lightweight_failure_count": self._lightweight_failure_count,
             "lightweight_recovery_count": self._lightweight_recovery_count,
@@ -1040,6 +1142,9 @@ class UsdResidentSnapshotAdapter:
             return False
         if self._active:
             self.on_timeline_stopped()
+        if self._lightweight_notice_listener is not None:
+            self._lightweight_notice_listener.Revoke()
+            self._lightweight_notice_listener = None
         self._attribute_cache.clear()
         self._cached_emitter = None
         self._cached_log_prims = ()

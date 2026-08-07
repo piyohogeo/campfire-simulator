@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6BM real-Flow resident ChangeBlock candidate</title>
+  <desc id="desc">Balanced real-Kit runs compare plain lightweight USD notices with Sdf ChangeBlock notice coalescing.</desc>
+  <rect width="1200" height="680" rx="32" fill="#111820"/>
+  <text x="70" y="76" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="24" font-weight="700">PHASE 6BM · REAL FLOW CHANGE BLOCK CANDIDATE</text>
+  <text x="70" y="126" fill="#fff" font-family="Segoe UI, sans-serif" font-size="37" font-weight="700">One accepted notice per resident revision</text>
+  <rect x="70" y="170" width="1060" height="112" rx="20" fill="#192734" stroke="#315269"/>
+  <text x="105" y="214" fill="#8fbcd4" font-family="Consolas, monospace" font-size="18">control notices  2657 / 2657 / 2657</text>
+  <text x="105" y="250" fill="#65c18c" font-family="Consolas, monospace" font-size="18">ChangeBlock      239 / 239 / 239 · 239 accepted · 0 rejected</text>
+  <rect x="70" y="322" width="1060" height="172" rx="20" fill="#182128"/>
+  <text x="105" y="367" fill="#fff" font-family="Segoe UI, sans-serif" font-size="23" font-weight="700">Resident USD publication p95 · revision-gated listener enabled</text>
+  <text x="105" y="412" fill="#a8beca" font-family="Consolas, monospace" font-size="18">control     3.4279 / 3.0567 / 3.8562 ms</text>
+  <text x="105" y="452" fill="#f4b860" font-family="Consolas, monospace" font-size="18">ChangeBlock 1.3492 / 1.5542 / 1.8859 ms</text>
+  <rect x="70" y="535" width="1060" height="90" rx="20" fill="#173526" stroke="#65c18c"/>
+  <text x="105" y="580" fill="#65c18c" font-family="Segoe UI, sans-serif" font-size="23" font-weight="700">QUALIFIED · exact state / CSV / ignition / final USD · Flow active</text>
+  <text x="105" y="607" fill="#d7e1e8" font-family="Segoe UI, sans-serif" font-size="16">default OFF · same-block immutable replay · revision-last and fault lifecycle retained</text>
+</svg>

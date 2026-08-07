@@ -8,7 +8,7 @@ from tempfile import TemporaryDirectory
 
 import campfire.app
 import omni.kit.test
-from pxr import Gf, Usd, UsdGeom, UsdPhysics
+from pxr import Gf, Tf, Usd, UsdGeom, UsdPhysics
 
 
 class TestScene(omni.kit.test.AsyncTestCase):
@@ -1196,6 +1196,129 @@ class TestScene(omni.kit.test.AsyncTestCase):
         with self.assertRaisesRegex(RuntimeError, "explicit reconstruction"):
             fault_adapter.publish(third)
         fault_adapter.close()
+
+    async def test_resident_snapshot_change_block_coalesces_commit_and_recovery(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase3_scene(stage)
+        log_ids = (campfire.app.PHASE3_DRY_LOG_ID, campfire.app.PHASE3_WET_LOG_ID)
+        rows = tuple(
+            campfire.app.ResidentPublishedRow(
+                720.0, 0.9, 0.8, 0.2, 0.05, 0.85, 0.7, 0.6, 0.9, 0.4, 0.012
+            )
+            for _ in log_ids
+        )
+        observer_calls = 0
+        fail_on_call = None
+
+        def fail_selected_write(_write_count, _name):
+            nonlocal observer_calls
+            observer_calls += 1
+            if observer_calls == fail_on_call:
+                raise RuntimeError("injected revision-last publication failure")
+
+        with self.assertRaisesRegex(ValueError, "requires lightweight commits"):
+            campfire.app.UsdResidentSnapshotAdapter(
+                stage,
+                log_ids,
+                {log_id: 2.0 for log_id in log_ids},
+                coalesce_lightweight_notices=True,
+            )
+        with self.assertRaisesRegex(ValueError, "requires lightweight commits and handle cache"):
+            campfire.app.UsdResidentSnapshotAdapter(
+                stage,
+                log_ids,
+                {log_id: 2.0 for log_id in log_ids},
+                lightweight_commits=True,
+                track_lightweight_notices=True,
+            )
+
+        adapter = campfire.app.UsdResidentSnapshotAdapter(
+            stage,
+            log_ids,
+            {log_id: 2.0 for log_id in log_ids},
+            write_observer=fail_selected_write,
+            cache_usd_handles=True,
+            lightweight_commits=True,
+            coalesce_lightweight_notices=True,
+            track_lightweight_notices=True,
+        )
+        adapter.on_timeline_started()
+        adapter.publish(campfire.app.ResidentPublishedSnapshot(1, 0, log_ids, rows))
+
+        emitter = stage.GetPrimAtPath(campfire.app.FLOW_EMITTER_PATH)
+
+        def revisions():
+            return tuple(
+                [
+                    stage.GetPrimAtPath(f"/World/Logs/{log_id}")
+                    .GetAttribute("campfire:residentRevision")
+                    .Get()
+                    for log_id in log_ids
+                ]
+                + [emitter.GetAttribute("campfire:residentRevision").Get()]
+            )
+
+        def usd_signature():
+            values = [
+                emitter.GetAttribute(name).Get()
+                for name in (
+                    "fuel",
+                    "temperature",
+                    "smoke",
+                    "coupleRateFuel",
+                    "coupleRateTemperature",
+                    "coupleRateSmoke",
+                    "campfire:residentRevision",
+                )
+            ]
+            for log_id in log_ids:
+                prim = stage.GetPrimAtPath(f"/World/Logs/{log_id}")
+                values.extend(
+                    [
+                        tuple(UsdGeom.Gprim(prim).GetDisplayColorAttr().Get()),
+                        prim.GetAttribute("campfire:surfaceTemperatureK").Get(),
+                        prim.GetAttribute("campfire:charFraction").Get(),
+                        prim.GetAttribute("campfire:remainingMassRatio").Get(),
+                        prim.GetAttribute("campfire:weakestSupportRatio").Get(),
+                        prim.GetAttribute("campfire:residentRevision").Get(),
+                    ]
+                )
+            return tuple(values)
+
+        observed_revisions = []
+
+        def observe_change(_notice, _sender):
+            observed_revisions.append(revisions())
+
+        listener = Tf.Notice.Register(Usd.Notice.ObjectsChanged, observe_change, stage)
+        adapter.publish(campfire.app.ResidentPublishedSnapshot(2, 1, log_ids, rows))
+        self.assertEqual(observed_revisions, [(2, 2, 2)])
+        committed_signature = usd_signature()
+
+        observed_revisions.clear()
+        fail_on_call = observer_calls + 19
+        with self.assertRaisesRegex(
+            RuntimeError, "injected revision-last publication failure"
+        ):
+            adapter.publish(campfire.app.ResidentPublishedSnapshot(3, 2, log_ids, rows))
+        self.assertEqual(observed_revisions, [(2, 2, 2)])
+        self.assertEqual(usd_signature(), committed_signature)
+        status = adapter.status()
+        self.assertTrue(status["lightweight_notice_coalescing_enabled"])
+        self.assertEqual(status["revision"], 2)
+        self.assertEqual(status["publish_count"], 2)
+        self.assertEqual(status["lightweight_failure_count"], 1)
+        self.assertEqual(status["lightweight_recovery_count"], 1)
+        self.assertTrue(status["lightweight_notice_tracking_enabled"])
+        self.assertEqual(status["lightweight_notice_count"], 2)
+        self.assertEqual(status["lightweight_notice_accepted_revision_count"], 1)
+        self.assertEqual(status["lightweight_notice_rejected_count"], 1)
+        self.assertEqual(status["lightweight_notice_publication_count"], 2)
+        self.assertEqual(status["lightweight_notices_per_publication_minimum"], 1)
+        self.assertEqual(status["lightweight_notices_per_publication_maximum"], 1)
+        listener.Revoke()
+        adapter.on_timeline_stopped()
+        adapter.close()
 
     async def test_resident_snapshot_skips_only_unchanged_derived_payloads(self):
         stage = Usd.Stage.CreateInMemory()

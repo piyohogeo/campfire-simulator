@@ -1091,6 +1091,12 @@ class CampfireAppExtension(omni.ext.IExt):
         resident_snapshot_lightweight_tail_timing_enabled = settings.get_as_bool(
             f"{SETTINGS_ROOT}/residentSnapshotLightweightTailTimingEnabled"
         )
+        resident_snapshot_lightweight_notice_coalescing_enabled = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/residentSnapshotLightweightNoticeCoalescingEnabled"
+        )
+        resident_snapshot_lightweight_notice_tracking_enabled = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/residentSnapshotLightweightNoticeTrackingEnabled"
+        )
         resident_native_backend_enabled = settings.get_as_bool(
             f"{SETTINGS_ROOT}/residentNativeBackendEnabled"
         )
@@ -1176,6 +1182,20 @@ class CampfireAppExtension(omni.ext.IExt):
             raise ValueError(
                 "Resident snapshot lightweight tail timing requires lightweight commits"
             )
+        if (
+            resident_snapshot_lightweight_notice_coalescing_enabled
+            and not resident_snapshot_lightweight_commit_enabled
+        ):
+            raise ValueError(
+                "Resident snapshot lightweight notice coalescing requires lightweight commits"
+            )
+        if resident_snapshot_lightweight_notice_tracking_enabled and not (
+            resident_snapshot_lightweight_commit_enabled
+            and resident_snapshot_handle_cache_enabled
+        ):
+            raise ValueError(
+                "Resident snapshot lightweight notice tracking requires lightweight commits and handle cache"
+            )
         if resident_native_backend_enabled and not resident_snapshot_adapter_enabled:
             raise ValueError(
                 "Resident native backend requires the resident snapshot adapter"
@@ -1252,6 +1272,12 @@ class CampfireAppExtension(omni.ext.IExt):
                 skip_unchanged_derived=resident_snapshot_skip_unchanged_enabled,
                 profile_lightweight_tails=(
                     resident_snapshot_lightweight_tail_timing_enabled
+                ),
+                coalesce_lightweight_notices=(
+                    resident_snapshot_lightweight_notice_coalescing_enabled
+                ),
+                track_lightweight_notices=(
+                    resident_snapshot_lightweight_notice_tracking_enabled
                 ),
             )
             self._resident_snapshot_adapter = resident_adapter
@@ -2196,6 +2222,12 @@ class CampfireAppExtension(omni.ext.IExt):
                         ),
                         "lightweight_tail_timing_enabled": (
                             resident_snapshot_lightweight_tail_timing_enabled
+                        ),
+                        "lightweight_notice_coalescing_enabled": (
+                            resident_snapshot_lightweight_notice_coalescing_enabled
+                        ),
+                        "lightweight_notice_tracking_enabled": (
+                            resident_snapshot_lightweight_notice_tracking_enabled
                         ),
                         "producer": (
                             "resident_native_backend"
