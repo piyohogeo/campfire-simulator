@@ -1050,6 +1050,128 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertRegex(str(thread_errors[0]), "owner thread")
         adapter.close()
 
+    async def test_resident_application_session_owns_pending_retry_and_close(self):
+        class Snapshot:
+            def __init__(self, revision, tick):
+                self.revision = revision
+                self.tick = tick
+
+        class Step:
+            def __init__(self, revision, tick):
+                self.snapshot = Snapshot(revision, tick)
+
+        class Backend:
+            def __init__(self):
+                self.revision = 0
+                self.tick = -1
+                self.closed = False
+
+            def step(self, *, tick):
+                if self.closed:
+                    raise RuntimeError("closed backend")
+                self.revision += 1
+                self.tick = tick
+                return Step(self.revision, tick)
+
+            def status(self):
+                return {
+                    "active": not self.closed,
+                    "revision": self.revision,
+                    "tick": self.tick,
+                }
+
+            def close(self):
+                already_closed = self.closed
+                self.closed = True
+                return {"already_closed": already_closed, **self.status()}
+
+        class Adapter:
+            def __init__(self):
+                self.active = False
+                self.closed = False
+                self.revision = 0
+                self.fail_revision = None
+
+            def on_timeline_started(self):
+                self.active = True
+
+            def on_timeline_stopped(self):
+                self.active = False
+
+            def publish(self, snapshot):
+                if snapshot.revision == self.fail_revision:
+                    self.fail_revision = None
+                    raise RuntimeError("injected publication failure")
+                self.revision = snapshot.revision
+
+            def status(self):
+                return {
+                    "active": self.active,
+                    "revision": self.revision,
+                    "closed": self.closed,
+                }
+
+            def close(self):
+                self.active = False
+                already_closed = self.closed
+                self.closed = True
+                return not already_closed
+
+        backend = Backend()
+        adapter = Adapter()
+        session = campfire.app.ResidentApplicationSession(backend, adapter)
+        self.assertEqual(session.status()["state"], "ready")
+        with self.assertRaisesRegex(RuntimeError, "state running"):
+            session.step(tick=1)
+
+        session.start()
+        first = session.step(tick=1)
+        self.assertEqual(first.snapshot.revision, 1)
+        adapter.fail_revision = 2
+        with self.assertRaisesRegex(RuntimeError, "injected publication failure"):
+            session.step(tick=2)
+        failed = session.status()
+        self.assertEqual(failed["pending_revision"], 2)
+        self.assertEqual(failed["backend"]["revision"], 2)
+        self.assertEqual(failed["adapter"]["revision"], 1)
+        with self.assertRaisesRegex(RuntimeError, "pending snapshot retry"):
+            session.step(tick=3)
+        with self.assertRaisesRegex(RuntimeError, "refuses to close"):
+            session.close()
+
+        self.assertTrue(session.stop())
+        self.assertFalse(session.stop())
+        session.start()
+        retried = session.retry_pending()
+        self.assertEqual(retried.snapshot.revision, 2)
+        third = session.step(tick=3)
+        self.assertEqual(third.snapshot.revision, 3)
+        status = session.status()
+        self.assertIsNone(status["pending_revision"])
+        self.assertEqual(status["step_count"], 3)
+        self.assertEqual(status["publish_count"], 3)
+        self.assertEqual(status["publish_failure_count"], 1)
+        self.assertEqual(status["retry_count"], 1)
+
+        thread_errors = []
+
+        def read_status_from_other_thread():
+            try:
+                session.status()
+            except Exception as error:
+                thread_errors.append(error)
+
+        worker = threading.Thread(target=read_status_from_other_thread)
+        worker.start()
+        worker.join()
+        self.assertEqual(len(thread_errors), 1)
+        self.assertRegex(str(thread_errors[0]), "owner thread")
+
+        closed = session.close()
+        self.assertFalse(closed["already_closed"])
+        self.assertFalse(closed["pending_discarded"])
+        self.assertTrue(session.close()["already_closed"])
+
     async def test_resident_snapshot_adapter_resumes_only_matching_consumer_revision(self):
         stage = Usd.Stage.CreateInMemory()
         campfire.app.populate_phase3_scene(stage)

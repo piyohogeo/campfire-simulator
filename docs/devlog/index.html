@@ -36,8 +36,8 @@
       <div class="shell status-grid">
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>48 / 48 passed</strong></div>
-        <div><span>次の焦点</span><strong>persistent Resident session owner</strong></div>
+        <div><span>テスト</span><strong>49 / 49 passed</strong></div>
+        <div><span>次の焦点</span><strong>default-off frame scheduler接続</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6BZ · Explicit Resident save barrier</p>
-            <h2>保存しても走り続け、<br>失敗しても同じrevisionから続ける。</h2>
-            <p>backend・adapter・stageを1 owner threadで束ねる隔離controllerを試作しました。save中だけ発行を止め、SoAをexportしてlive stageの匿名cloneへ既存Wood JSONを書き、atomic package化後に必ず再開します。実Kit/MSVCの12 gateはすべて合格し、保存失敗後の連続revision 3とrevision 2 checkpointから再開したrevision 3は完全同値でした。対話アプリにはpersistent session ownerがまだないためproduction接続、自動保存、自動resumeは保留しています。</p>
+            <p class="section-kicker">Phase 6CA · Persistent Resident session owner</p>
+            <h2>未発行revisionを、<br>次のtickで追い越さない。</h2>
+            <p>backendとUSD adapterを1 owner threadで束ねるproduction moduleを追加しました。USD発行失敗後はnative側で進んだimmutable snapshotをpendingとして保持し、同じsnapshotのretryが成功するまで新しいtickと通常closeを拒否します。実Kit/MSVCの15 gateはすべて合格し、revision 1へrollbackしたconsumerをstop/restart後にrevision 2へ揃え、revision 3へ連続しました。moduleは未activationで、既存Phase 3 validation、設定、物理式、schema、Flowは変更していません。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -892,6 +892,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6ca-resident-application-session" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6CA</h3>
+            <a href="assets/phase6/resident_application_session_report.svg" aria-label="Phase 6CA persistent Resident session ownerレポートを開く">
+              <img src="assets/phase6/resident_application_session_report.svg" width="1200" height="680" alt="USD発行失敗後のpending revision保持、stepとclose拒否、stop/restart、同一snapshot retry、revision 3継続まで15 gateが合格したSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Own, retain, retry, then continue</strong><span>15 / 15 gates · pending rev 2 · step/close blocked · 3 consumers recover · next rev 3</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6CA burn scenario (production activation unchanged, reused)" data-video-meta="The session-owner module is not activated and changed no production scheduler, burn physics, emitter, JSON schema, Flow configuration, USD publication contract, rollback policy, immutable snapshot schema, or defaults · baseline Phase 6AM real viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · production同値の既存実画面</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1269,6 +1283,12 @@
               <div><dt>Phase 6BZ equivalence</dt><dd>continuous rev 3 = restored rev 3 · exact result and immutable snapshot</dd></div>
               <div><dt>Phase 6BZ decision</dt><dd>isolated boundary qualified · persistent app owner and UI deferred</dd></div>
               <div><dt>Phase 6BZ regression</dt><dd>8 processes · 48 / 48 pass · 308.5 s · collapse coverage 184.2 s</dd></div>
+              <div><dt>Phase 6CA owner gates</dt><dd>15 / 15 pass · production module · activation/defaults unchanged</dd></div>
+              <div><dt>Phase 6CA pending recovery</dt><dd>backend rev 2 · USD/adapter rev 1 · retained retry · consumers rev 2</dd></div>
+              <div><dt>Phase 6CA continuation</dt><dd>new step and normal close blocked while pending · next revision 3</dd></div>
+              <div><dt>Phase 6CA close policy</dt><dd>clean idempotent · pending discard requires explicit flag and result</dd></div>
+              <div><dt>Phase 6CA decision</dt><dd>owner contract qualified · scheduler/stage/UI activation deferred</dd></div>
+              <div><dt>Phase 6CA regression</dt><dd>8 processes · 49 / 49 pass · 300.5 s · collapse coverage 177.9 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>

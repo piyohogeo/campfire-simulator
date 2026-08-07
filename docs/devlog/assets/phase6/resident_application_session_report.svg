@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+<title id="title">Phase 6CA persistent Resident session owner</title>
+<desc id="desc">A production default-off owner blocks new steps after downstream failure, retains the immutable snapshot, retries it, and then continues revision order.</desc>
+<style>.bg{fill:#08121f} .panel{fill:#111f31;stroke:#29415f;stroke-width:1.5} .title{fill:#f7fafc;font:700 30px system-ui,sans-serif} .subtitle{fill:#9fb3c8;font:15px system-ui,sans-serif} .head{fill:#7dd3fc;font:700 16px system-ui,sans-serif} .body{fill:#cbd5e1;font:14px system-ui,sans-serif} .ok{fill:#86efac;font:700 19px system-ui,sans-serif} .arrow{fill:#38bdf8;font:700 23px system-ui,sans-serif} .warn{fill:#fbbf24;font:700 14px system-ui,sans-serif}</style>
+<rect width="1200" height="680" class="bg"/>
+<text x="62" y="58" class="title">Phase 6CA · Persistent Resident session owner</text>
+<text x="62" y="87" class="subtitle">Production module, default OFF · existing Phase 3 validation path unchanged</text>
+<rect x="50" y="120" width="1100" height="214" rx="16" class="panel"/>
+<text x="72" y="158" class="head">Downstream failure stays owned until the same immutable snapshot commits</text>
+<text x="84" y="214" class="body">rev 1 commit</text><text x="202" y="214" class="arrow">→</text>
+<text x="242" y="194" class="body">backend rev 2</text><text x="242" y="219" class="body">USD failure</text><text x="366" y="214" class="arrow">→</text>
+<text x="406" y="194" class="body">pending rev 2</text><text x="406" y="219" class="body">block step/close</text><text x="548" y="214" class="arrow">→</text>
+<text x="588" y="194" class="body">stop / restart</text><text x="588" y="219" class="body">retry rev 2</text><text x="728" y="214" class="arrow">→</text>
+<text x="768" y="194" class="body">3 consumers</text><text x="768" y="219" class="body">revision 2</text><text x="900" y="214" class="arrow">→</text>
+<text x="940" y="194" class="body">next step</text><text x="940" y="219" class="body">revision 3</text>
+<text x="72" y="296" class="ok">15 / 15 owner-contract gates passed</text>
+<rect x="50" y="362" width="530" height="220" rx="16" class="panel"/>
+<text x="72" y="402" class="head">One owner, explicit states</text>
+<text x="72" y="446" class="body">ready → running ↔ stopped → closed</text>
+<text x="72" y="480" class="body">✓ backend + adapter calls restricted to the owner thread</text>
+<text x="72" y="514" class="body">✓ new tick rejected while a snapshot is pending</text>
+<text x="72" y="548" class="body">✓ counters expose steps, failures, retries, starts, stops</text>
+<rect x="608" y="362" width="542" height="220" rx="16" class="panel"/>
+<text x="630" y="402" class="head">Close policy</text>
+<text x="630" y="446" class="body">✓ normal close refuses an unpublished native revision</text>
+<text x="630" y="480" class="body">✓ explicit discard_pending is visible in close result</text>
+<text x="630" y="514" class="body">✓ clean close is idempotent after revision 3 commit</text>
+<text x="630" y="548" class="warn">Frame scheduler, stage replacement, save UI, and activation are deferred.</text>
+<text x="62" y="630" class="body">Physics, Wood JSON, immutable snapshot, rollback, Flow, existing validation metrics, and app defaults remain unchanged</text>
+</svg>
