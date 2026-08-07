@@ -155,10 +155,14 @@ from .support import (
 )
 from .performance import summarize_timing_ms
 from .resident_snapshot_adapter import (
-    ResidentPublishedRow,
-    ResidentPublishedSnapshot,
     ResidentUsdTransactionProfile,
     UsdResidentSnapshotAdapter,
+)
+from .resident_snapshot import (
+    RESIDENT_PUBLISHED_FIELD_NAMES,
+    ResidentNativeSnapshotProducer,
+    ResidentPublishedRow,
+    ResidentPublishedSnapshot,
     published_row_from_python_model,
 )
 from .wood import LogSpec, create_log, get_log_world_position, list_log_ids, move_log
@@ -215,6 +219,8 @@ __all__ = [
     "WoodThermalModel",
     "ResidentPublishedRow",
     "ResidentPublishedSnapshot",
+    "ResidentNativeSnapshotProducer",
+    "RESIDENT_PUBLISHED_FIELD_NAMES",
     "ResidentUsdTransactionProfile",
     "UsdResidentSnapshotAdapter",
     "published_row_from_python_model",

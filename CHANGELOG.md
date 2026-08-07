@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6BI direct resident-native output connection to the existing immutable `ResidentPublishedSnapshot` schema, with exact field-order, copy, revision, failure-isolation, lifecycle, and 4 ms performance gates while keeping production disabled.
 - Added the Phase 6BH default-off immutable-shadow USD Set-skip candidate, retaining mandatory revision writes and full failure replay while passing the 4 ms gate in all three paired real-Kit runs.
 - Added the Phase 6BG default-off lightweight resident USD commit trial with transactional bootstrap, revision-last publication, failure-only immutable snapshot replay, fail-closed recovery, and three paired real-Kit measurements.
 - Added the Phase 6BF opt-in USD prim/attribute handle-cache trial, preserving actual authored old-value reads and transactional rollback while recording a repeatable but insufficient p95 improvement from 4.4762 ms to 4.1751 ms.

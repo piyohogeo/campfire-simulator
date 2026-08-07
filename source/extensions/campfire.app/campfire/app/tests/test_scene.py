@@ -1,6 +1,7 @@
 import json
 import math
 import threading
+from array import array
 from dataclasses import replace
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -2112,3 +2113,56 @@ class TestScene(omni.kit.test.AsyncTestCase):
         metadata = stage.GetRootLayer().customLayerData
         self.assertEqual(metadata["campfire:phase"], "phase6")
         self.assertAlmostEqual(metadata["campfire:improvementFraction"], 0.5)
+
+    async def test_native_snapshot_producer_freezes_contiguous_rows(self):
+        log_ids = ("log_00", "log_01")
+        values = array(
+            "d",
+            (
+                820.0,
+                1.0,
+                8.0,
+                1.5,
+                0.1,
+                0.72,
+                0.64,
+                0.4,
+                0.7,
+                0.2,
+                0.008,
+                430.0,
+                3.0,
+                9.0,
+                0.4,
+                0.05,
+                0.88,
+                0.82,
+                0.0,
+                0.0,
+                0.1,
+                0.0,
+            ),
+        )
+        producer = campfire.app.ResidentNativeSnapshotProducer(log_ids)
+        snapshot = producer.build(revision=7, tick=6, values=values)
+
+        self.assertIsInstance(snapshot, campfire.app.ResidentPublishedSnapshot)
+        self.assertEqual(snapshot.revision, 7)
+        self.assertEqual(snapshot.tick, 6)
+        self.assertEqual(snapshot.log_ids, log_ids)
+        self.assertEqual(
+            producer.field_names, campfire.app.RESIDENT_PUBLISHED_FIELD_NAMES
+        )
+        self.assertEqual(snapshot.rows[0].surface_mean_temperature_k, 820.0)
+        self.assertEqual(snapshot.rows[1].pyrolysis_gas_rate_kg_s, 0.0)
+
+        values[0] = 999.0
+        self.assertEqual(snapshot.rows[0].surface_mean_temperature_k, 820.0)
+        with self.assertRaisesRegex(ValueError, "expected 22"):
+            producer.build(revision=8, tick=7, values=array("d", values[:-1]))
+        with self.assertRaisesRegex(ValueError, "64-bit"):
+            producer.build(revision=8, tick=7, values=array("f", [0.0] * 22))
+        invalid = array("d", values)
+        invalid[0] = math.nan
+        with self.assertRaisesRegex(ValueError, "finite"):
+            producer.build(revision=8, tick=7, values=invalid)

@@ -36,8 +36,8 @@
       <div class="shell status-grid">
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>43 / 43 passed</strong></div>
-        <div><span>次の焦点</span><strong>Resident native producer接続</strong></div>
+        <div><span>テスト</span><strong>46 / 46 passed</strong></div>
+        <div><span>次の焦点</span><strong>Opt-in native lifecycle統合</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6BH · Immutable-shadow Set skipping</p>
-            <h2>同じ派生値は書かない。<br>3 runすべて4 msを切る。</h2>
-            <p>軽量commitの直前immutable snapshotをshadowとして、adapterが専有する16 payloadのうち同じ値だけ`Set()`を省略しました。3 revisionと失敗時の全19属性replayは必ず残します。毎run 4,541属性中1,884件、41.49%を省略し、p95は3.8539／3.5587／3.7954 msでした。3組すべて改善かつ全候補run 4 ms未満のgateに合格したため、次は同じsnapshot schemaへResident native producerを接続します。</p>
+            <p class="section-kicker">Phase 6BI · Resident native snapshot connection</p>
+            <h2>Nativeの220値を、<br>既存snapshotへ直接つなぐ。</h2>
+            <p>目標は、Resident C++が生成した20本×11値をPython木材objectへ戻さず、既存のimmutable <code>ResidentPublishedSnapshot</code>へ接続することでした。公開schemaをUSD非依存moduleへ分離し、連続64-bit bufferを一度だけfrozen rowへcopyします。3 runのcopy誤差は0、総native更新＋凍結p95は1.9620／1.7420／1.7902 ms、標準Kit suiteは46／46件合格しました。変換失敗でも直前commitとresident stateを保持します。残る問題はproduction extensionがまだPython bridgeを使う点で、次は既定OFFのbackend lifecycle switch内から同じUSD adapterへ流します。描画条件は変わらず、USD発行ボトルネックとは別の改善です。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -637,6 +637,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6bi-native-snapshot-connection" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6BI</h3>
+            <a href="assets/phase6/native_snapshot_connection_report.svg" aria-label="Phase 6BI Resident native出力から既存immutable snapshot schemaへの直接接続レポートを開く">
+              <img src="assets/phase6/native_snapshot_connection_report.svg" width="1200" height="680" alt="20本分のnative連続11値をPython木材object走査なしでResidentPublishedSnapshotへ凍結し、全3 runが4ミリ秒未満であることを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Native contiguous output → existing immutable schema</strong><span>copy error 0 · update + freeze p95 median 1.7902 ms · production default OFF</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6BI baseline burn scenario (reused)" data-video-meta="Native snapshot schema connection changes no production rendering or burn conditions · baseline Phase 6AM viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · 既存実画面を再掲</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <figure id="phase6bb-native-lifecycle" class="capture-card">
             <h3 class="capture-phase-heading">Phase 6BB</h3>
             <a href="assets/phase6/native_backend_lifecycle_report.svg" aria-label="Phase 6BB Resident backend lifecycleのexport性能、rollback、再構築、shutdown契約レポートを開く">
@@ -974,6 +988,11 @@
               <div><dt>Phase 6BH paired improvement</dt><dd>0.1164 / 0.4351 / 0.2329 ms · 3 / 3</dd></div>
               <div><dt>Phase 6BH decision</dt><dd>qualified · default still OFF · native producer unblocked</dd></div>
               <div><dt>Phase 6BH regression</dt><dd>44 / 45 coverage · collapse timeout · 45 / 45 no-coverage pass</dd></div>
+              <div><dt>Phase 6BI native + freeze p95</dt><dd>1.9620 / 1.7420 / 1.7902 ms · all below 4 ms</dd></div>
+              <div><dt>Phase 6BI schema freeze p95</dt><dd>0.1421 / 0.1456 / 0.1375 ms · copy error 0</dd></div>
+              <div><dt>Phase 6BI connection</dt><dd>native 20 × 11 → immutable schema · no Python model scan</dd></div>
+              <div><dt>Phase 6BI ownership</dt><dd>resident revision · adapter commit/rollback · defaults unchanged</dd></div>
+              <div><dt>Phase 6BI regression</dt><dd>46 / 46 pass · 327.8 s · collapse coverage 191.3 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>

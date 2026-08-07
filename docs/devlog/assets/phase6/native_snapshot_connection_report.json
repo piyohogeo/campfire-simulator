@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "phase": "phase6bi",
+  "status": "qualified",
+  "source_raw": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6bi\\native_snapshot_connection_raw.json",
+  "runtime": {
+    "python": "3.12.13",
+    "executable": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\python\\python.exe",
+    "kit_python": true,
+    "numpy": "2.3.1"
+  },
+  "native_toolchain": {
+    "abi_version": 1,
+    "msvc_version": 1939,
+    "msvc_full_version": 193933523,
+    "floating_point": "/fp:strict",
+    "dll_sha256": "25464cc79e1513e4512307507d458f8f7806ef068c3034f2855a753a0e9a7cf9",
+    "source_sha256": "460da7d66d43c6e49c258541b7298aaabec336fe4cc0cc0e13c0bd18dd2862cb"
+  },
+  "measurement": {
+    "log_count": 20,
+    "cells_per_log": 1152,
+    "cycles_per_run": 60,
+    "warmup_cycles_excluded": 10,
+    "runs": 3,
+    "published_fields_per_log": 11
+  },
+  "contract": {
+    "source": "resident_native_contiguous_output",
+    "destination": "ResidentPublishedSnapshot",
+    "field_names": [
+      "surface_mean_temperature_k",
+      "moisture_mass_kg",
+      "dry_wood_mass_kg",
+      "char_mass_kg",
+      "ash_mass_kg",
+      "remaining_mass_ratio",
+      "weakest_support_ratio",
+      "flow_fuel",
+      "flow_temperature",
+      "flow_smoke",
+      "pyrolysis_gas_rate_kg_s"
+    ],
+    "python_model_scan_per_snapshot": false,
+    "buffer_copy_at_immutable_boundary": true,
+    "producer_owns_revision_state": false,
+    "resident_scheduler_owns_revision": true,
+    "usd_adapter_remains_commit_authority": true,
+    "lifecycle_and_rollback_unchanged": true,
+    "production_default_enabled": false
+  },
+  "budget_ms": {
+    "native_update_and_schema_freeze": 4.0,
+    "schema_freeze": 1.0
+  },
+  "timing": {
+    "native_update_and_schema_freeze_p95_ms": [
+      1.962,
+      1.742,
+      1.7902
+    ],
+    "schema_freeze_p95_ms": [
+      0.1421,
+      0.1456,
+      0.1375
+    ],
+    "native_step_and_aggregate_p95_ms": [
+      1.7802,
+      1.561,
+      1.6017
+    ],
+    "median_update_p95_ms": 1.7902,
+    "median_freeze_p95_ms": 0.1421,
+    "median_native_p95_ms": 1.6017,
+    "all_update_runs_below_budget": true,
+    "all_freeze_runs_below_budget": true
+  },
+  "equivalence": {
+    "maximum_temperature_error_k": 0.0,
+    "maximum_cell_mass_error_kg": 8.673617379884035e-18,
+    "phase_mismatch_count": 0,
+    "maximum_published_output_error": 1.942890293094024e-16,
+    "passed": true
+  },
+  "connection": {
+    "maximum_schema_copy_error": 0.0,
+    "all_gates_passed": true,
+    "gate_names": [
+      "field_order_exact",
+      "log_ids_exact",
+      "row_type_exact",
+      "snapshot_type_exact",
+      "strictly_monotonic_revisions",
+      "exact_ticks",
+      "immutable_after_native_mutation",
+      "failed_conversion_rejected",
+      "failed_conversion_preserved_commit",
+      "shutdown_exported_all_logs"
+    ]
+  },
+  "decision": {
+    "native_snapshot_connection_qualified": true,
+    "python_contract_bridge_replaced_in_production": false,
+    "production_default_changed": false,
+    "usd_publication_bottleneck_changed": false,
+    "next_step": "Integrate the qualified producer behind an opt-in resident backend lifecycle switch, then run the unchanged USD adapter and rollback gates."
+  }
+}

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6BI resident native snapshot connection</title>
+  <desc id="desc">Native contiguous publication values are frozen directly into the existing immutable ResidentPublishedSnapshot schema.</desc>
+  <rect width="1200" height="680" rx="32" fill="#111820"/>
+  <text x="70" y="78" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="24" font-weight="700">PHASE 6BI · NATIVE SNAPSHOT CONNECTION</text>
+  <text x="70" y="130" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="38" font-weight="700">Resident SoA output → immutable schema</text>
+  <rect x="70" y="175" width="1060" height="118" rx="20" fill="#192734" stroke="#315269"/>
+  <text x="105" y="218" fill="#8fbcd4" font-family="Consolas, monospace" font-size="19">C++ double[logs × 11]</text>
+  <text x="405" y="218" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="26">→</text>
+  <text x="460" y="218" fill="#8fbcd4" font-family="Consolas, monospace" font-size="19">ResidentNativeSnapshotProducer</text>
+  <text x="825" y="218" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="26">→</text>
+  <text x="875" y="218" fill="#8fbcd4" font-family="Consolas, monospace" font-size="19">Snapshot</text>
+  <text x="105" y="262" fill="#d7e1e8" font-family="Segoe UI, sans-serif" font-size="18">No Python wood-object scan · one immutable copy · adapter remains commit authority</text>
+  <rect x="70" y="330" width="510" height="184" rx="20" fill="#182128"/>
+  <text x="105" y="375" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="24" font-weight="700">20-log update + freeze p95</text>
+  <text x="105" y="420" fill="#f4b860" font-family="Consolas, monospace" font-size="23">1.9620 / 1.7420 / 1.7902 ms</text>
+  <text x="105" y="462" fill="#a8beca" font-family="Segoe UI, sans-serif" font-size="18">median 1.7902 ms · budget &lt; 4 ms</text>
+  <rect x="620" y="330" width="510" height="184" rx="20" fill="#182128"/>
+  <text x="655" y="375" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="24" font-weight="700">Schema freeze p95</text>
+  <text x="655" y="420" fill="#f4b860" font-family="Consolas, monospace" font-size="23">0.1421 / 0.1456 / 0.1375 ms</text>
+  <text x="655" y="462" fill="#a8beca" font-family="Segoe UI, sans-serif" font-size="18">median 0.1421 ms · exact copy</text>
+  <rect x="70" y="554" width="1060" height="72" rx="20" fill="#17382d" stroke="#42b883"/>
+  <text x="105" y="600" fill="#8ff0bd" font-family="Segoe UI, sans-serif" font-size="27" font-weight="700">QUALIFIED</text>
+  <text x="310" y="600" fill="#d7e1e8" font-family="Segoe UI, sans-serif" font-size="18">revision/lifecycle/rollback unchanged · production default OFF · USD cost unchanged</text>
+</svg>
