@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "phase": "phase6bz",
+  "status": "ok",
+  "scope": {
+    "production_code_changed": false,
+    "production_default_changed": false,
+    "automatic_save_enabled": false,
+    "automatic_resume_enabled": false
+  },
+  "session": {
+    "ownership": "one owner thread; backend + adapter + stage",
+    "save_barrier": [
+      "stop adapter publication",
+      "export resident SoA to Python mirror",
+      "clone live stage",
+      "save existing model JSON to clone",
+      "atomic checkpoint replace",
+      "resume adapter publication"
+    ],
+    "successful_saves": 2,
+    "failed_saves": 1,
+    "pause_count": 3,
+    "resume_count": 3,
+    "checkpoint_bytes": 12004,
+    "save_export_ms": [
+      2.0541000048979186,
+      2.1951999951852486
+    ],
+    "continuous_revision": 3,
+    "resumed_revision": 3
+  },
+  "diagnostics": {
+    "owner_thread_error": [
+      "RuntimeError: Resident checkpoint session must run on its owner thread"
+    ],
+    "first_close_export_count": 4,
+    "resumed_close_export_count": 1
+  },
+  "gates": {
+    "live_stage_isolated_from_save": true,
+    "save_is_non_terminal": true,
+    "save_revision_stable": true,
+    "owner_thread_enforced": true,
+    "failed_save_rejected": true,
+    "failed_save_preserved_previous": true,
+    "failed_save_session_resumed": true,
+    "continuous_session_reaches_revision_3": true,
+    "resume_seed_exact": true,
+    "resumed_step_matches_continuous": true,
+    "close_is_idempotent": true,
+    "closed_save_rejected": true
+  },
+  "decision": {
+    "session_owner_feasibility": "qualified",
+    "production_adoption": "deferred",
+    "reason": "The current application has no persistent interactive Resident session owner or user save policy."
+  }
+}

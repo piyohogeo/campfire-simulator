@@ -37,7 +37,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>48 / 48 passed</strong></div>
-        <div><span>次の焦点</span><strong>明示save / resume方針</strong></div>
+        <div><span>次の焦点</span><strong>persistent Resident session owner</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6BY · Resident checkpoint package</p>
-            <h2>安全な保存境界を、<br>revisionを途切れさせず再開する。</h2>
-            <p>version付きmanifestと既存Wood JSONを含むUSDAを、2-entry checkpointへ一度だけ保存する試作です。実Kit/MSVC経路で9契約gateが合格し、中断保存は前の正常ファイルを保持、payload改ざんとconsumer revision不一致は読込を拒否、正常resumeはrevision 3から4へ連続しました。自動保存・自動resumeはまだ有効にせず、production既定、物理式、JSON schema、USD発行、rollback、immutable snapshotは維持しています。</p>
+            <p class="section-kicker">Phase 6BZ · Explicit Resident save barrier</p>
+            <h2>保存しても走り続け、<br>失敗しても同じrevisionから続ける。</h2>
+            <p>backend・adapter・stageを1 owner threadで束ねる隔離controllerを試作しました。save中だけ発行を止め、SoAをexportしてlive stageの匿名cloneへ既存Wood JSONを書き、atomic package化後に必ず再開します。実Kit/MSVCの12 gateはすべて合格し、保存失敗後の連続revision 3とrevision 2 checkpointから再開したrevision 3は完全同値でした。対話アプリにはpersistent session ownerがまだないためproduction接続、自動保存、自動resumeは保留しています。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -878,6 +878,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6bz-resident-checkpoint-session" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6BZ</h3>
+            <a href="assets/phase6/resident_checkpoint_session_report.svg" aria-label="Phase 6BZ explicit Resident save barrierレポートを開く">
+              <img src="assets/phase6/resident_checkpoint_session_report.svg" width="1200" height="680" alt="owner threadで発行停止、SoA export、stage clone、atomic save、再開を行い12 gateが合格したSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Pause, clone, save, resume, and continue</strong><span>12 / 12 gates · live stage unchanged · failed save resumes · continuous rev 3 = restored rev 3</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6BZ burn scenario (production behavior unchanged, reused)" data-video-meta="The isolated checkpoint-session controller changed no production runtime, burn physics, emitter, JSON schema, Flow configuration, USD publication, rollback policy, immutable snapshot schema, or defaults · baseline Phase 6AM real viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · production同値の既存実画面</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1249,6 +1263,12 @@
               <div><dt>Phase 6BY revision continuity</dt><dd>saved 3 · 3 consumers verified · explicit resume · next revision 4</dd></div>
               <div><dt>Phase 6BY decision</dt><dd>format qualified · production adoption and automatic resume deferred</dd></div>
               <div><dt>Phase 6BY regression</dt><dd>8 processes · 48 / 48 pass · 302.0 s · collapse coverage 178.5 s</dd></div>
+              <div><dt>Phase 6BZ session gates</dt><dd>12 / 12 pass · owner thread · non-terminal save · failure continuation</dd></div>
+              <div><dt>Phase 6BZ save barrier</dt><dd>2 success + 1 injected failure · pause/resume 3 / 3 · live stage unchanged</dd></div>
+              <div><dt>Phase 6BZ SoA export</dt><dd>2.0541 / 2.1952 ms · revision unchanged by save</dd></div>
+              <div><dt>Phase 6BZ equivalence</dt><dd>continuous rev 3 = restored rev 3 · exact result and immutable snapshot</dd></div>
+              <div><dt>Phase 6BZ decision</dt><dd>isolated boundary qualified · persistent app owner and UI deferred</dd></div>
+              <div><dt>Phase 6BZ regression</dt><dd>8 processes · 48 / 48 pass · 308.5 s · collapse coverage 184.2 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
