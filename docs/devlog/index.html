@@ -36,8 +36,8 @@
       <div class="shell status-grid">
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>49 / 49 passed</strong></div>
-        <div><span>次の焦点</span><strong>surface viewのsession所有</strong></div>
+        <div><span>テスト</span><strong>51 / 51 passed</strong></div>
+        <div><span>次の焦点</span><strong>Point production採用判断</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6CE · Replacement-stage recovery</p>
-            <h2>stageが替わっても、<br>pending値は捨てない。</h2>
-            <p>Kitのstageを明示的にclose・attachし、旧consumerが書込み前に停止したrevision 3を、新stage上のprimary adapterとPoint sidecarへそのまま引き継ぎました。同一payloadのretry後はrevision 124まで継続し、Flow 110も1,269 active blocksへ回復しています。production経路はまだ有効化していません。</p>
+            <p class="section-kicker">Phase 6CF · Scheduler-driven stage recovery</p>
+            <h2>stage復旧を、<br>安全な一つの手順に。</h2>
+            <p>実Kit lifecycle eventを受けてsession停止、close、更新drain、attach、consumer再構築、pending retryを行うowner-thread orchestratorを追加しました。consumer factoryが一度失敗してもpending revision 3を失わず、再試行後はrevision 124まで継続し、Flow 110も1,258 active blocksへ回復しています。production経路はまだ有効化していません。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -962,6 +962,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6cf-resident-stage-orchestrator" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6CF</h3>
+            <a href="assets/phase6/resident_stage_orchestrator_report.svg" aria-label="Phase 6CF scheduler-driven stage recoveryレポートを開く">
+              <img src="assets/phase6/resident_stage_orchestrator_report.svg" width="1200" height="680" alt="実Kit stage lifecycle event、8 update drain、consumer factory失敗後のpending保持と同一payload retryを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Observe · drain · rebuild · exact retry</strong><span>19 / 19 · pending 3保持 · final revision 124 · 1,258 active blocks</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_stage_orchestrator.mp4" data-video-poster="assets/phase6/resident_stage_orchestrator_frame.png" data-video-title="Phase 6CF scheduler-recovered Flow scenario" data-video-meta="Flow 110.0.0 · capture after real lifecycle events and injected factory-failure retry · 60 separate real Flow/RTX frames, 56 unique · 1280×720 · 10 fps · 6 s · capture excluded from performance measurement">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>復旧後の連続動画</strong><small>6秒 · 実フレーム60枚 · 56枚が異なる</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1370,6 +1384,13 @@
               <div><dt>Phase 6CE video</dt><dd>60 real post-recovery Flow/RTX frames · 60 unique SHA-256 · 10 fps · 6 s</dd></div>
               <div><dt>Phase 6CE decision</dt><dd>explicit replacement recovery qualified default-off · scheduler orchestration next</dd></div>
               <div><dt>Phase 6CE regression</dt><dd>8 processes · 50 / 50 pass · 291.6 s · collapse coverage 172.2 s</dd></div>
+              <div><dt>Phase 6CF gates</dt><dd>19 / 19 · ordered Kit lifecycle · 4 + 4 update drains · live resync 0</dd></div>
+              <div><dt>Phase 6CF factory failure</dt><dd>session stopped · pending 3 retained · old consumers open · replacement count 0</dd></div>
+              <div><dt>Phase 6CF recovery</dt><dd>same stage + seed 2 · exact payload retry · all consumers 3 · next revision 4</dd></div>
+              <div><dt>Phase 6CF continuation</dt><dd>final revision 124 · active blocks 1,258 · pending discard 0</dd></div>
+              <div><dt>Phase 6CF video</dt><dd>60 real post-recovery Flow/RTX frames · 56 unique SHA-256 · 10 fps · 6 s</dd></div>
+              <div><dt>Phase 6CF decision</dt><dd>scheduler recovery qualified default-off · production activation deferred</dd></div>
+              <div><dt>Phase 6CF regression</dt><dd>8 processes · 51 / 51 pass · 308.4 s · collapse coverage 181.9 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>

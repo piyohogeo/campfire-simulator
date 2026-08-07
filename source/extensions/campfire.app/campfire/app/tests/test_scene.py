@@ -1344,6 +1344,126 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(replacement_sidecar.layout, "moving")
         session.close()
 
+    async def test_resident_stage_recovery_retries_factory_without_losing_pending(self):
+        class Session:
+            def __init__(self):
+                self.state = "running"
+                self.pending_revision = 3
+                self.revision = 2
+                self.replace_count = 0
+                self.retry_count = 0
+
+            def status(self):
+                return {
+                    "state": self.state,
+                    "pending_revision": self.pending_revision,
+                    "adapter": {"revision": self.revision},
+                }
+
+            def stop(self):
+                self.state = "stopped"
+
+            def start(self):
+                self.state = "running"
+
+            def replace_consumers(self, adapter, *, sidecar=None):
+                self.asserted_pair = (adapter, sidecar)
+                self.replace_count += 1
+                return {
+                    "revision": self.revision,
+                    "pending_revision": self.pending_revision,
+                    "consumer_replace_count": self.replace_count,
+                }
+
+            def retry_pending(self):
+                self.retry_count += 1
+                self.revision = self.pending_revision
+                self.pending_revision = None
+
+        class Timeline:
+            def __init__(self):
+                self.stop_count = 0
+
+            def stop(self):
+                self.stop_count += 1
+
+        class Context:
+            def __init__(self):
+                self.stage = "original"
+                self.orchestrator = None
+
+            async def close_stage_async(self):
+                self.orchestrator.observe_stage_event("closing")
+                self.orchestrator.observe_stage_event("closed")
+                self.stage = None
+                return True, ""
+
+            async def attach_stage_async(self, stage):
+                self.orchestrator.observe_stage_event("opening")
+                self.stage = stage
+                self.orchestrator.observe_stage_event("opened")
+                return True, ""
+
+            def get_stage(self):
+                return self.stage
+
+        session = Session()
+        timeline = Timeline()
+        context = Context()
+        factory_calls = []
+        fail_factory = {"value": True}
+
+        def factory(stage, revision):
+            factory_calls.append((stage, revision))
+            if fail_factory["value"]:
+                raise RuntimeError("injected factory failure")
+            return "replacement adapter", "replacement sidecar"
+
+        drain_count = {"value": 0}
+
+        async def next_update():
+            drain_count["value"] += 1
+
+        orchestrator = campfire.app.ResidentStageRecoveryOrchestrator(
+            session,
+            context,
+            timeline,
+            factory,
+            next_update,
+            drain_updates=4,
+        )
+        context.orchestrator = orchestrator
+        replacement_stage = object()
+        with self.assertRaisesRegex(RuntimeError, "injected factory failure"):
+            await orchestrator.replace_stage(replacement_stage)
+        failed = orchestrator.status()
+        self.assertEqual(failed["state"], "faulted")
+        self.assertEqual(failed["observed_events"], ("closing", "closed", "opening", "opened"))
+        self.assertEqual(session.state, "stopped")
+        self.assertEqual(session.pending_revision, 3)
+        self.assertEqual(session.replace_count, 0)
+        self.assertEqual(timeline.stop_count, 1)
+        self.assertEqual(drain_count["value"], 8)
+
+        fail_factory["value"] = False
+        recovered = orchestrator.retry_recovery()
+        self.assertTrue(recovered["pending_retried"])
+        self.assertEqual(recovered["pending_revision"], 3)
+        self.assertEqual(recovered["session_state"], "running")
+        self.assertEqual(session.revision, 3)
+        self.assertIsNone(session.pending_revision)
+        self.assertEqual(session.replace_count, 1)
+        self.assertEqual(session.retry_count, 1)
+        self.assertEqual(factory_calls, [(replacement_stage, 2)] * 2)
+        status = orchestrator.status()
+        self.assertEqual(status["state"], "running")
+        self.assertEqual(status["attempt_count"], 1)
+        self.assertEqual(status["success_count"], 1)
+        self.assertEqual(status["failure_count"], 1)
+        self.assertEqual(status["recovery_retry_count"], 1)
+        with self.assertRaisesRegex(RuntimeError, "no retryable attached stage"):
+            orchestrator.retry_recovery()
+
     async def test_resident_snapshot_adapter_resumes_only_matching_consumer_revision(self):
         stage = Usd.Stage.CreateInMemory()
         campfire.app.populate_phase3_scene(stage)

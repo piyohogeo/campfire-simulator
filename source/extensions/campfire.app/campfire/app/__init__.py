@@ -168,6 +168,7 @@ from .resident_snapshot import (
 )
 from .resident_native_backend import ResidentNativeBackend, ResidentNativeStep
 from .resident_application_session import ResidentApplicationSession
+from .resident_stage_recovery import ResidentStageRecoveryOrchestrator
 from .wood import LogSpec, create_log, get_log_world_position, list_log_ids, move_log
 
 __all__ = [
@@ -227,6 +228,7 @@ __all__ = [
     "ResidentNativeBackend",
     "ResidentNativeStep",
     "ResidentApplicationSession",
+    "ResidentStageRecoveryOrchestrator",
     "ResidentUsdTransactionProfile",
     "ResidentUsdLightweightTailProfile",
     "UsdResidentSnapshotAdapter",
