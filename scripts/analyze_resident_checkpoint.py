@@ -1,0 +1,68 @@
+"""Validate and visualize the Phase 6BY Resident checkpoint report."""
+
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+
+
+def _svg(report):
+    package = report["package"]
+    gates = report["gates"]
+    passed = sum(bool(value) for value in gates.values())
+    total = len(gates)
+    package_kib = package["bytes"] / 1024.0
+    stage_kib = package["stage_uncompressed_bytes"] / 1024.0
+    ratio = package["bytes"] / package["stage_uncompressed_bytes"]
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+<title id="title">Phase 6BY Resident checkpoint package</title>
+<desc id="desc">A versioned two-entry checkpoint package preserves revision continuity and rejects interrupted, tampered, and revision-inconsistent saves.</desc>
+<style>.bg{{fill:#08121f}} .panel{{fill:#111f31;stroke:#29415f;stroke-width:1.5}} .title{{fill:#f7fafc;font:700 30px system-ui,sans-serif}} .subtitle{{fill:#9fb3c8;font:15px system-ui,sans-serif}} .head{{fill:#7dd3fc;font:700 16px system-ui,sans-serif}} .body{{fill:#cbd5e1;font:14px system-ui,sans-serif}} .ok{{fill:#86efac;font:700 19px system-ui,sans-serif}} .arrow{{fill:#38bdf8;font:700 24px system-ui,sans-serif}} .warn{{fill:#fbbf24;font:700 14px system-ui,sans-serif}}</style>
+<rect width="1200" height="680" class="bg"/>
+<text x="62" y="58" class="title">Phase 6BY · Resident checkpoint package</text>
+<text x="62" y="87" class="subtitle">Isolated Kit spike · versioned manifest + USDA payload · production auto-resume remains off</text>
+<rect x="50" y="120" width="1100" height="214" rx="16" class="panel"/>
+<text x="72" y="158" class="head">Atomic persistence and revision-continuous restore</text>
+<text x="88" y="218" class="body">rev 3 snapshot</text><text x="216" y="218" class="arrow">→</text>
+<text x="258" y="198" class="body">temporary ZIP</text><text x="258" y="223" class="body">fsync + replace</text><text x="390" y="218" class="arrow">→</text>
+<text x="432" y="198" class="body">manifest hash</text><text x="432" y="223" class="body">model hashes</text><text x="570" y="218" class="arrow">→</text>
+<text x="612" y="198" class="body">3 consumers</text><text x="612" y="223" class="body">all revision 3</text><text x="744" y="218" class="arrow">→</text>
+<text x="786" y="198" class="body">explicit resume</text><text x="786" y="223" class="body">tick/revision 3</text><text x="930" y="218" class="arrow">→</text>
+<text x="972" y="198" class="body">next commit</text><text x="972" y="223" class="body">revision 4</text>
+<text x="72" y="296" class="ok">{passed} / {total} checkpoint gates passed</text>
+<rect x="50" y="362" width="530" height="220" rx="16" class="panel"/>
+<text x="72" y="402" class="head">Package contract</text>
+<text x="72" y="446" class="body">2 canonical entries: manifest.json + stage.usda</text>
+<text x="72" y="480" class="body">{package_kib:.1f} KiB package / {stage_kib:.1f} KiB USDA ({ratio:.1%})</text>
+<text x="72" y="514" class="body">log order, model state hashes, scheduler, ABI recorded</text>
+<text x="72" y="548" class="body">existing Wood JSON is stored once inside the USDA payload</text>
+<rect x="608" y="362" width="542" height="220" rx="16" class="panel"/>
+<text x="630" y="402" class="head">Fail-closed gates</text>
+<text x="630" y="446" class="body">✓ interrupted candidate cannot replace last good package</text>
+<text x="630" y="480" class="body">✓ stage-byte tampering fails SHA-256 validation</text>
+<text x="630" y="514" class="body">✓ manifest/stage consumer revision mismatch is rejected</text>
+<text x="630" y="548" class="warn">Integrity only: SHA-256 is not an authenticity signature.</text>
+<text x="62" y="630" class="body">Decision: format feasibility qualified · product save policy and UI deferred · physics, USD publication, and production defaults unchanged</text>
+</svg>'''
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--raw", required=True, type=Path)
+    parser.add_argument("--report", required=True, type=Path)
+    parser.add_argument("--svg", required=True, type=Path)
+    args = parser.parse_args()
+    report = json.loads(args.raw.read_text(encoding="utf-8"))
+    if report.get("status") != "ok":
+        raise ValueError(f"Phase 6BY raw report failed: {report}")
+    if not all(report["gates"].values()):
+        raise ValueError("Phase 6BY checkpoint gate failed")
+    args.report.parent.mkdir(parents=True, exist_ok=True)
+    args.svg.parent.mkdir(parents=True, exist_ok=True)
+    args.report.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    args.svg.write_text(_svg(report), encoding="utf-8")
+
+
+if __name__ == "__main__":
+    main()

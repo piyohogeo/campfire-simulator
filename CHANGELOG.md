@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6BY isolated Resident checkpoint package spike with a versioned two-entry manifest/USDA format, atomic replacement, corruption and revision-consistency rejection, exact model-state validation, and revision-continuous Kit/MSVC restore while leaving production auto-resume disabled.
 - Added the Phase 6BX default-off Resident lifecycle recovery gate, explicit same-stage revision/tick resume seeds, three-consumer resume validation, native rollback, downstream immutable-snapshot replay/retry, idempotent shutdown, and revision-continuous restart coverage.
 - Added the Phase 6BW post-ChangeBlock shared-SoA adoption re-evaluation, rerunning all 16 proxy/ABI/lifecycle gates and deferring production adoption because the current 1,200-step Resident hot path already performs zero numeric re-imports.
 - Added the Phase 6BV four-configuration emitter availability matrix, safely measuring one and twenty Point emitters at 7,200 points, retaining the qualified two-log Sphere reference, and refusing an end-to-end ranking while Point and NanoVDB consumers remain unavailable.

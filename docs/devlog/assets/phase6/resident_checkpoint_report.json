@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "phase": "phase6by",
+  "status": "ok",
+  "scope": {
+    "production_code_changed": false,
+    "production_default_changed": false,
+    "existing_wood_json_schema_changed": false,
+    "automatic_resume_enabled": false
+  },
+  "package": {
+    "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6by\\resident_checkpoint.campfire-checkpoint",
+    "bytes": 12230,
+    "stage_uncompressed_bytes": 939401,
+    "entries": [
+      "manifest.json",
+      "stage.usda"
+    ],
+    "revision": 3,
+    "tick": 3,
+    "log_count": 2,
+    "tampered_stage_rejection": "Checkpoint stage byte count mismatch"
+  },
+  "gates": {
+    "canonical_two_entry_package": true,
+    "stage_hash_validated": true,
+    "model_hashes_exact": true,
+    "consumer_revisions_exact": true,
+    "interrupted_write_rejected": true,
+    "interrupted_write_preserved_checkpoint": true,
+    "tampered_stage_rejected": true,
+    "wrong_revision_rejected": true,
+    "resume_revision_continuous": true
+  },
+  "decision": {
+    "format_feasibility": "qualified",
+    "production_adoption": "deferred",
+    "reason": "Checkpoint persistence is proven, but product save/resume policy and UI are not defined."
+  }
+}
