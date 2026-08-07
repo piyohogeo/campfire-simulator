@@ -50,16 +50,24 @@ New-Item -ItemType Directory -Path (Split-Path -Parent $Output) -Force | Out-Nul
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 $report = Get-Content -LiteralPath $Output -Raw | ConvertFrom-Json
-if ($report.status -ne "ok" -or -not $report.flow.consumer_qualified) {
-    throw "Phase 6BT NanoVDB consumer qualification failed: $Output"
+if ($report.status -ne "ok" -or $report.phase -ne "phase6bt") {
+    throw "Phase 6BT report failed: $Output"
 }
 if ($report.revision.published -ne $report.revision.attached_consumer) {
     throw "Phase 6BT consumer revision mismatch."
 }
 
-Write-Host (
-    "Phase 6BT active blocks peak={0}, update p95={1} ms: {2}" -f
-    $report.flow.active_blocks_peak,
-    $report.flow.kit_flow_render_update.p95_ms,
-    $Output
-)
+if ($report.flow.consumer_qualified) {
+    Write-Host (
+        "Phase 6BT qualified: active blocks peak={0}, update p95={1} ms: {2}" -f
+        $report.flow.active_blocks_peak,
+        $report.flow.kit_flow_render_update.p95_ms,
+        $Output
+    )
+} else {
+    Write-Host (
+        "Phase 6BT completed safely but consumer remains unqualified: active blocks peak={0}: {1}" -f
+        $report.flow.active_blocks_peak,
+        $Output
+    )
+}

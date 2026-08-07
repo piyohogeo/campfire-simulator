@@ -131,6 +131,7 @@ async def _run():
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
     }
     output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    exit_code = 1
     try:
         for _ in range(5):
             await app.next_update_async()
@@ -358,7 +359,7 @@ async def _run():
         carb.log_info(
             f"[phase6bt] blocks={max(active_blocks)} report={output}"
         )
-        app.post_uncancellable_quit(0 if max(active_blocks) > 0 else 2)
+        exit_code = 0
     except asyncio.CancelledError:
         raise
     except Exception as error:
@@ -366,12 +367,12 @@ async def _run():
         report["error"] = f"{type(error).__name__}: {error}"
         output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
         carb.log_error(f"[phase6bt] failed: {type(error).__name__}: {error}")
-        app.post_uncancellable_quit(1)
     finally:
         if flow_interface is not None:
             if persistent_context_initialized:
                 flow_interface.release_persistent_voxelize_context()
             _flowusd.release_flowusd_interface(flow_interface)
+        app.post_uncancellable_quit(exit_code)
 
 
 asyncio.ensure_future(_run())

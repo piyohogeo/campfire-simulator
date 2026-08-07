@@ -111,3 +111,9 @@ live stageのPrim削除・再定義はPhase 6BPでnative crashしたため行わ
 この試験の各process最初のvoxelize callはCUDA／Flow初期化を含み`36.8–41.1 s`だったため、Phase 6BQのsteady-state producer性能と混ぜない。直接配列のNumPy→Vt、offline Set、USDA保存、stage open値も静的な接続診断であり、高頻度発行性能ではない。`.nvdb`保存自体は`1.51–2.58 ms`だったが、ディスク経路は動的production候補にしない。
 
 結論は「buffer意味論は確認、公開NanoVDB consumerは未qualified」である。USDに値が保存されrevisionが一致しても、Flow取込み、rasterization、solver、描画、fuel／temperature／smoke同値性の成功を意味しない。固定版の正式サンプルまたは公開APIでconsumer接続条件を追加確認できない限りNanoVDB比較の下流値を埋めず、Sphere production経路を維持する。共有SoA案もUSD発行やNanoVDB consumer不在を解決しない。再現は`run_phase6bs_flow_nanovdb_buffer_probe.ps1`と`run_phase6bt_flow_nanovdb_consumer.ps1`で、どちらも既定OFF、production変更なしである。標準Kit suiteは全8 process・47 / 47件を328.1秒で合格し、collapse coverageも189.3秒で完了した。
+
+## Phase 6BU 公開native consumer APIの可用性ゲート
+
+固定buildで実際に取得した`omni.flowusd._flowusd.IFlowUsd`を列挙すると、公開メンバーは19個だった。内訳はpoint／velocity pointからのvoxelize、persistent voxelize context、Flow readback、grid値／block数の照会、serialized NanoVDBから`omni.volume.GridData`を作る`buffer_to_volume()`、および`save_nanovdb(uint32[], path)`である。名前とruntime docstringの両方を監査したが、外部NanoVDB bufferをFlow Emitter consumerへattach、ingest、inject、set、submit、uploadする公開メンバーは0個だった。`buffer_to_volume()`はCPU側のvolume表現への変換、`save_nanovdb()`はファイル保存であり、どちらもconsumer注入境界ではない。
+
+したがって、固定版の公開native APIもPhase 6BTの5候補をqualifiedにはしない。private ABI、未確認のFabric property、live stage再定義へ進まず、NanoVDBの下流比較は「利用可能性未成立」で停止する。これは性能負けではなく接続資格不足である。比較表ではproducer生成時間、payload量、静的USD境界までは実測値を残し、`omni.flowusd`取込み、Flow raster／solver／render、出力同値性は未計測のままにする。production Sphere経路と全契約は維持する。再現は`run_phase6bu_flow_native_consumer_api_audit.ps1`で、Phase 6BT runnerも安全な未qualified結果を正常な診断として返す。20 frame／warmup 1の最小否定smokeは46.3秒で正常終了し、revision `1`一致、active block peak `0`を報告した。標準Kit suiteは全8 process・47 / 47件を323.4秒で合格し、collapse coverageも188.6秒で完了した。

@@ -2049,3 +2049,13 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 静的境界: 4 float配列はUSDA`4,634,548 B`、単一RGBA8配列は`1,168,567 B`、asset属性stageは`13,458 B`、保存`.nvdb`は`11,560 B`だった。各process初回producerはFlow/CUDA初期化込み`36.8–41.1 s`なのでsteady-state性能値ではない。asset保存`1.5098 ms`、UsdVol用保存`2.5808 ms`もディスク経由の静的診断でありproduction候補ではない。
 - 判断: production Sphere Emitter、物理式、JSON schema、既定値、lifecycle、rollback、revision、immutable snapshotを維持し、Point／NanoVDBを採用しない。固定版の正式サンプルまたは公開APIで追加条件を確認できるまで、NanoVDBのingest、raster、solver/render、同値性を推定値で埋めない。共有SoA案はこのconsumer未接続やUSD発行ボトルネックを解決しない。
 - 再現と回帰: `run_phase6bs_flow_nanovdb_buffer_probe.ps1`が5 bufferの型／hash／grid metadataを記録し、`run_phase6bt_flow_nanovdb_consumer.ps1`がencoding、container、sourceを切り替える。いずれも既定OFFでproductionコードと正規sceneを変更しない。標準Kit suiteは全8 process・`47 / 47`件を`328.1 s`で合格し、collapse coverageも`189.3 s`で完了した。開発日誌動画は描画変更がないためPhase 6AMの検証済み実画面を再利用する。
+
+## 101. Phase 6BU 固定Flow公開native consumer API監査
+
+### 2026-08-07: producer／readback／保存APIとconsumer注入APIを区別する
+
+- 実行時列挙: build済みFlow 110.0.0から`omni.flowusd._flowusd.IFlowUsd`を取得し、underscoreで始まらない公開メンバー19個を列挙した。point／velocity point voxelize、persistent context、active／max block照会、grid値照会、NanoVDB readback、`buffer_to_volume`、`save_nanovdb`は存在した。一方、attach／consume／emitter／import／ingest／inject／set／submit／uploadに該当する公開メンバーは0個だった。
+- API意味: runtime docstring上、`buffer_to_volume(uint32[])`はserialized NanoVDBから`omni.volume.GridData`を返す変換、`save_nanovdb(uint32[], str)`はファイル保存である。どちらも外部bufferを実行中のFlow Emitter consumerへ渡す関数ではない。`get_latest_nanovdb_readback()`もFlowから外へのreadbackであり逆方向である。
+- 判断: Phase 6BTの5つの完成stage試行に加えて公開native interfaceにも注入境界がないため、固定版NanoVDB consumerは「性能未達」ではなく「公開接続資格なし」と判定する。private ABI、未確認Fabric操作、既知のnative crashを伴うlive stage再定義は採用可否確認の範囲外とする。NanoVDB比較ではproducer生成、payload、静的USD保存までを実測値として残し、取込み、raster、solver／render、出力同値性を推定しない。
+- 継続方針: production Sphere Emitter、物理式、JSON schema、既定値、lifecycle、rollback、revision-last、immutable snapshotを変更しない。公開サンプルまたは固定版で検証可能なconsumer境界が追加で見つかった場合だけNanoVDB下流比較を再開する。共有SoA案もこの接続不足やUSD発行コストを解決しない。
+- 再現: `run_phase6bu_flow_native_consumer_api_audit.ps1`がheadless Kitで公開メンバーと主要docstringをJSONへ保存し、consumer-write候補が現れた場合は明示的に失敗して判断の再監査を要求する。Phase 6BT benchmarkは結果JSON確定後にpersistent contextを解放してから終了し、runnerは未qualifiedを試験失敗と混同せず、安全完走、revision一致、資格状態を報告する。20 frame／warmup 1の最小否定smokeは`46.3 s`で正常終了し、revision `1`一致、active block peak `0`だった。標準Kit suiteは全8 process・`47 / 47`件を`323.4 s`で合格し、collapse coverageも`188.6 s`で完了した。productionコードと正規sceneは変更していない。

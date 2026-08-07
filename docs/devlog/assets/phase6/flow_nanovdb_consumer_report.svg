@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
-  <title id="title">Phase 6BR to 6BT fixed Flow NanoVDB consumer boundary</title>
-  <desc id="desc">The five native buffers map to red, green, blue, alpha float grids and one packed RGBA8 grid. Five public USD consumer arrangements preserved revision one but all reported zero active Flow blocks, so the consumer remains unqualified.</desc>
+  <title id="title">Phase 6BR to 6BU fixed Flow NanoVDB consumer boundary</title>
+  <desc id="desc">The five native buffers map to red, green, blue, alpha float grids and one packed RGBA8 grid. Five public USD arrangements reported zero active Flow blocks, and all 19 public native interface members contain no consumer-write API.</desc>
   <rect width="1200" height="680" rx="32" fill="#111820"/>
-  <text x="70" y="68" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">PHASE 6BR–6BT · FIXED FLOW 110.0.0 · DEFAULT OFF</text>
+  <text x="70" y="68" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">PHASE 6BR–6BU · FIXED FLOW 110.0.0 · DEFAULT OFF</text>
   <text x="70" y="116" fill="#fff" font-family="Segoe UI, sans-serif" font-size="35" font-weight="700">Producer mapped; consumer still unqualified</text>
   <text x="70" y="150" fill="#a8beca" font-family="Segoe UI, sans-serif" font-size="17">RTX 3090 · complete stage before attach · no live structural mutation · production unchanged</text>
 
@@ -22,10 +22,10 @@
   <text x="605" y="408" fill="#d7e1e8" font-family="Segoe UI, sans-serif" font-size="16">.nvdb through volumePrim / UsdVol</text><text x="1060" y="408" text-anchor="end" fill="#f28b82" font-family="Consolas, monospace" font-size="16">0 blocks</text>
   <text x="605" y="452" fill="#d7e1e8" font-family="Segoe UI, sans-serif" font-size="16">.nvdb through schema assetPath</text><text x="1060" y="452" text-anchor="end" fill="#f28b82" font-family="Consolas, monospace" font-size="16">0 blocks</text>
   <line x1="605" y1="478" x2="1095" y2="478" stroke="#506678"/>
-  <text x="605" y="502" fill="#65c18c" font-family="Segoe UI, sans-serif" font-size="15">USD payload persisted · stage reopened</text>
-  <text x="605" y="526" fill="#65c18c" font-family="Segoe UI, sans-serif" font-size="15">Consumer revision</text><text x="1060" y="526" text-anchor="end" fill="#65c18c" font-family="Consolas, monospace" font-size="16">PASS · rev 1</text>
+  <text x="605" y="502" fill="#65c18c" font-family="Segoe UI, sans-serif" font-size="15">USD persisted · revision 1 preserved</text>
+  <text x="605" y="526" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="15">Public IFlowUsd API</text><text x="1060" y="526" text-anchor="end" fill="#f4b860" font-family="Consolas, monospace" font-size="16">19 members · 0 injectors</text>
 
   <rect x="70" y="575" width="1060" height="62" rx="18" fill="#3a2d18" stroke="#f4b860"/>
   <text x="100" y="601" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="17" font-weight="700">NO ADOPTION · no public arrangement produced a qualified Flow consumer.</text>
-  <text x="100" y="624" fill="#d7e1e8" font-family="Segoe UI, sans-serif" font-size="14">Do not infer ingest, rasterization, solver, rendering, or output equivalence from successful USD authoring.</text>
+  <text x="100" y="624" fill="#d7e1e8" font-family="Segoe UI, sans-serif" font-size="14">No private ABI fallback: keep ingest, rasterization, solver, rendering, and equivalence explicitly unmeasured.</text>
 </svg>
