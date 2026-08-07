@@ -1854,3 +1854,15 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 可視化と再現: `run_phase6bb_native_lifecycle.ps1`がMSVC native build、3 lifecycle run、解析を`30.3 s`で完了した。`native_backend_lifecycle_report.json/.svg`へexport p95、shutdown境界、9 gate、次のproduction gateを保存する。描画は変えていないため開発日誌動画はPhase 6AM実画面を「再利用」と明記して参照する。
 - 検証: Python／PowerShell構文、MSVC build、正式raw/report JSON生成、SVG XMLを確認した。最終状態の標準Kit suiteは全8 process・`41 / 41`が合格し、runnerは`481.5 s`、最長のcollapse coverageは固定300秒上限内の`294.6 s`で完了した。ブラウザではPhase 6BBカード、39個のPhase見出し、横overflowなし、1200 px SVG表示、再利用caption、MP4 `readyState = 4`・`duration = 6 s`、Escape終了後のfocus復帰を確認した。
 - 次: production既定を変えないopt-in Kit application adapterを追加し、timeline開始／停止、extension shutdown、例外時のmain-thread rollback、既存Flow emitter／表示／支持属性への同一revision発行を実機で測る。
+
+## 85. Phase 6BC opt-in Kit resident snapshot adapter
+
+### 2026-08-07: 実Flow／USD consumerへ同一revisionをtransactionalに発行する
+
+- 対象境界: `ResidentPublishedSnapshot`は薪ID順と、表面温度、4質量、残存質量率、最弱支持率、Flow fuel／temperature／smoke、熱分解ガス速度の11値をimmutableに束ねる。Phase 3では既存Python権威モデルから明示bridgeでこのschemaを作り、`UsdResidentSnapshotAdapter`がFlow sphere emitter、乾燥／湿潤薪の表示・診断属性へ同じrevisionを発行する。native producerはまだ接続せず、両Kit appの既定値は`false`のままとした。
+- lifecycleと安全境界: adapter生成threadをownerとし、timeline start前、stop後、close後、別thread、非単調revisionを拒否する。各USD属性は既存propertyの有無、authored value、旧値を記録し、途中例外時は逆順で全変更を復元する。extension shutdownはidempotent closeを通り、Phase 3 runnerは1 start、240 publish、1 stop、停止後inactiveを検査する。
+- consumer契約: 最終revision `1200`をEmitter、`Log_00`、`Log_01`が同時に保持した。Flow属性に加え、表示色、既存`charFraction`、表面温度、残存質量率、最弱支持率を発行した。最終summaryへ各consumerのrevisionと数値を保存し、3者のrevision一致をrunnerで必須にした。
+- 同値性: 現行既定経路とopt-in経路を同じPhase 3 dry／wet 1,200 stepで実行し、乾燥・湿潤の権威状態SHA-256、`wood_metrics.csv` SHA-256、着火`66.2 / 166.4 s`を完全一致させた。両runともFlow active block peakは非権威診断値`294`で、Flowが実際に活動した。
+- 実機性能: RTX 3090／D3D12で4 warmup updateを除く236 updateを測り、transactional統合USD発行はmean／p95／max `3.2964 / 5.2825 / 6.3241 ms`だった。旧経路は異なるcadenceでEmitter p95 `1.4954 ms`、表示 p95 `2.1139 ms`。Kit Flow/render update p95はopt-in `7.4114 ms`、baseline `7.4593 ms`、runner wallは`29.590 / 29.954 s`だった。単一比較だけからend-to-end高速化は主張しない。
+- 判断: lifecycle、rollback、main-thread所有、実Flow／USD発行、同一revision、権威出力同値性は次段階へ採用する。一方、統合発行p95は木材側で使ってきた局所4 ms目安を超え、native producerも未接続なのでproduction backendと既定有効化は不合格とする。次はtransactional属性保存・発行頻度・USD書込み集合を監査して4 ms未満を目指し、その後にResident native producerを同じschemaへ接続する。
+- 再現と回帰: `run_phase6bc_resident_snapshot_adapter.ps1`がbaselineとopt-inを連続実行し、`analyze_resident_snapshot_adapter.py`がlifecycle、revision、同値性、Flow活動、timingを検査して`resident_snapshot_adapter_report.json/.svg`を生成する。release build、Phase 0固定キャプチャ、標準Kit suite全8 process・`43 / 43`が合格し、runnerは`423.1 s`、最長のcollapse coverageは固定300秒上限内の`218.9 s`だった。描画の意味は変えていないため、開発日誌動画はPhase 6AM実画面を「再利用」と明記して参照する。

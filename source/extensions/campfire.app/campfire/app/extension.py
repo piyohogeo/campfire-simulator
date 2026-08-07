@@ -86,6 +86,11 @@ from .phase5_scene import (
 )
 from .support import burn_to_support_failure, run_collapse_reignition_scenario
 from .performance import summarize_timing_ms
+from .resident_snapshot_adapter import (
+    ResidentPublishedSnapshot,
+    UsdResidentSnapshotAdapter,
+    published_row_from_python_model,
+)
 from .wood import get_log_world_position, list_log_ids
 from .char_depth_experiment import (
     create_char_depth_dry_run_package,
@@ -153,6 +158,7 @@ class CampfireAppExtension(omni.ext.IExt):
         extension_manager = omni.kit.app.get_app().get_extension_manager()
         self._extension_path = Path(extension_manager.get_extension_path(ext_id)).resolve()
         self._control_window = None
+        self._resident_snapshot_adapter = None
         self._startup_task = asyncio.ensure_future(self._initialize())
         carb.log_info("[campfire.app] Extension startup")
 
@@ -160,6 +166,14 @@ class CampfireAppExtension(omni.ext.IExt):
         if self._startup_task and not self._startup_task.done():
             self._startup_task.cancel()
         self._startup_task = None
+        if self._resident_snapshot_adapter is not None:
+            try:
+                self._resident_snapshot_adapter.close()
+            except Exception as exc:
+                carb.log_error(
+                    f"[campfire.app] Resident snapshot adapter shutdown failed: {exc}"
+                )
+            self._resident_snapshot_adapter = None
         if self._control_window is not None:
             self._control_window.destroy()
             self._control_window = None
@@ -1057,6 +1071,9 @@ class CampfireAppExtension(omni.ext.IExt):
         capture_video_frames = settings.get_as_bool(
             f"{SETTINGS_ROOT}/captureVideoFrames"
         )
+        resident_snapshot_adapter_enabled = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/residentSnapshotAdapterEnabled"
+        )
         video_frame_interval_steps = settings.get_as_int(
             f"{SETTINGS_ROOT}/videoFrameIntervalSteps"
         )
@@ -1114,6 +1131,33 @@ class CampfireAppExtension(omni.ext.IExt):
             if precomputed_runtime_topology
             else {"dry": None, "wet": None}
         )
+        resident_adapter = None
+        resident_timeline = None
+        resident_timeline_was_playing = False
+        resident_timeline_previous_time = 0.0
+        resident_adapter_stopped = False
+        resident_adapter_status = None
+        resident_final_usd_state = None
+        if resident_snapshot_adapter_enabled:
+            resident_timeline = omni.timeline.get_timeline_interface()
+            resident_timeline_was_playing = bool(resident_timeline.is_playing())
+            resident_timeline_previous_time = float(
+                resident_timeline.get_current_time()
+            )
+            log_ids = (PHASE3_DRY_LOG_ID, PHASE3_WET_LOG_ID)
+            initial_dry_mass_kg = {
+                log_id: sum(
+                    cell.dry_wood_mass_kg + cell.char_mass_kg + cell.ash_mass_kg
+                    for cell in model.cells
+                )
+                + model.emitted_pyrolysis_gas_kg
+                + model.emitted_char_gas_kg
+                for log_id, model in zip(log_ids, (dry_model, wet_model))
+            }
+            resident_adapter = UsdResidentSnapshotAdapter(
+                stage, log_ids, initial_dry_mass_kg
+            )
+            self._resident_snapshot_adapter = resident_adapter
         ignition_seconds = {"dry": None, "wet": None}
         peak_gas_rate_kg_s = {"dry": 0.0, "wet": 0.0}
         model_step_times_ms = []
@@ -1123,6 +1167,7 @@ class CampfireAppExtension(omni.ext.IExt):
         flow_adapter_times_ms = []
         flow_emitter_usd_times_ms = []
         wood_visual_usd_times_ms = []
+        resident_snapshot_usd_times_ms = []
         update_times_ms = []
         active_block_query_times_ms = []
         capture_times_ms = []
@@ -1142,6 +1187,11 @@ class CampfireAppExtension(omni.ext.IExt):
             video_frames_dir.mkdir(parents=True, exist_ok=True)
 
         try:
+            if resident_adapter is not None:
+                resident_timeline.stop()
+                resident_timeline.set_current_time(0.0)
+                resident_timeline.play()
+                resident_adapter.on_timeline_started()
             extension_to_scenario_seconds = (
                 time.perf_counter() - self._extension_start_perf
             )
@@ -1309,36 +1359,62 @@ class CampfireAppExtension(omni.ext.IExt):
                 )
                 if update_flow:
                     adapter_started = time.perf_counter()
-                    flow_emitter_started = time.perf_counter()
-                    update_flow_source(stage, PHASE3_DRY_LOG_ID, source)
-                    flow_emitter_usd_times_ms.append(
-                        (time.perf_counter() - flow_emitter_started) * 1000.0
-                    )
-                    if step_index % 10 == 0 or step_index in PHASE3_CAPTURE_STEPS:
-                        wood_visual_started = time.perf_counter()
-                        apply_model_visual_state(
-                            dry_prim,
-                            dry_model,
-                            dry_metrics,
-                            initial_dry_mass_kg=(
-                                runtime_topologies["dry"].initial_dry_mass_kg
-                                if runtime_topologies["dry"] is not None
-                                else None
-                            ),
-                        )
-                        apply_model_visual_state(
-                            wet_prim,
+                    if resident_adapter is not None:
+                        wet_source = flow_source_from_model(
                             wet_model,
-                            wet_metrics,
-                            initial_dry_mass_kg=(
-                                runtime_topologies["wet"].initial_dry_mass_kg
-                                if runtime_topologies["wet"] is not None
-                                else None
+                            wet_result,
+                            surface_temperature_k=wet_metrics[
+                                "surface_mean_temperature_k"
+                            ],
+                        )
+                        snapshot = ResidentPublishedSnapshot(
+                            revision=step_index,
+                            tick=step_index,
+                            log_ids=(PHASE3_DRY_LOG_ID, PHASE3_WET_LOG_ID),
+                            rows=(
+                                published_row_from_python_model(
+                                    dry_model, dry_metrics, source
+                                ),
+                                published_row_from_python_model(
+                                    wet_model, wet_metrics, wet_source
+                                ),
                             ),
                         )
-                        wood_visual_usd_times_ms.append(
-                            (time.perf_counter() - wood_visual_started) * 1000.0
+                        resident_adapter.publish(snapshot)
+                        resident_snapshot_usd_times_ms.append(
+                            (time.perf_counter() - adapter_started) * 1000.0
                         )
+                    else:
+                        flow_emitter_started = time.perf_counter()
+                        update_flow_source(stage, PHASE3_DRY_LOG_ID, source)
+                        flow_emitter_usd_times_ms.append(
+                            (time.perf_counter() - flow_emitter_started) * 1000.0
+                        )
+                        if step_index % 10 == 0 or step_index in PHASE3_CAPTURE_STEPS:
+                            wood_visual_started = time.perf_counter()
+                            apply_model_visual_state(
+                                dry_prim,
+                                dry_model,
+                                dry_metrics,
+                                initial_dry_mass_kg=(
+                                    runtime_topologies["dry"].initial_dry_mass_kg
+                                    if runtime_topologies["dry"] is not None
+                                    else None
+                                ),
+                            )
+                            apply_model_visual_state(
+                                wet_prim,
+                                wet_model,
+                                wet_metrics,
+                                initial_dry_mass_kg=(
+                                    runtime_topologies["wet"].initial_dry_mass_kg
+                                    if runtime_topologies["wet"] is not None
+                                    else None
+                                ),
+                            )
+                            wood_visual_usd_times_ms.append(
+                                (time.perf_counter() - wood_visual_started) * 1000.0
+                            )
                     flow_adapter_times_ms.append(
                         (time.perf_counter() - adapter_started) * 1000.0
                     )
@@ -1405,6 +1481,55 @@ class CampfireAppExtension(omni.ext.IExt):
                         )
                 step_loop_times_ms.append(
                     (time.perf_counter() - step_loop_started) * 1000.0
+                )
+
+            if resident_adapter is not None:
+                resident_adapter.on_timeline_stopped()
+                resident_timeline.pause()
+                resident_adapter_stopped = True
+                resident_adapter_status = resident_adapter.status()
+                emitter = stage.GetPrimAtPath(FLOW_EMITTER_PATH)
+                resident_final_usd_state = {
+                    "emitter": {
+                        "revision": emitter.GetAttribute(
+                            "campfire:residentRevision"
+                        ).Get(),
+                        "fuel": emitter.GetAttribute("fuel").Get(),
+                        "temperature": emitter.GetAttribute("temperature").Get(),
+                        "smoke": emitter.GetAttribute("smoke").Get(),
+                    },
+                    "logs": {
+                        log_id: {
+                            "revision": prim.GetAttribute(
+                                "campfire:residentRevision"
+                            ).Get(),
+                            "surface_temperature_k": prim.GetAttribute(
+                                "campfire:surfaceTemperatureK"
+                            ).Get(),
+                            "char_fraction": prim.GetAttribute(
+                                "campfire:charFraction"
+                            ).Get(),
+                            "remaining_mass_ratio": prim.GetAttribute(
+                                "campfire:remainingMassRatio"
+                            ).Get(),
+                            "weakest_support_ratio": prim.GetAttribute(
+                                "campfire:weakestSupportRatio"
+                            ).Get(),
+                        }
+                        for log_id, prim in (
+                            (PHASE3_DRY_LOG_ID, dry_prim),
+                            (PHASE3_WET_LOG_ID, wet_prim),
+                        )
+                    },
+                }
+                revisions = [resident_final_usd_state["emitter"]["revision"]]
+                revisions.extend(
+                    state["revision"]
+                    for state in resident_final_usd_state["logs"].values()
+                )
+                resident_final_usd_state["revision_consistent"] = (
+                    len(set(revisions)) == 1
+                    and revisions[0] == resident_adapter_status["revision"]
                 )
 
             phase_refresh_started = time.perf_counter()
@@ -1475,11 +1600,26 @@ class CampfireAppExtension(omni.ext.IExt):
                 "csv_row_build": summarize_timing_ms(
                     row_build_times_ms, step_warmup_samples
                 ),
-                "flow_emitter_usd": summarize_timing_ms(
-                    flow_emitter_usd_times_ms, flow_warmup_samples
+                "flow_emitter_usd": (
+                    summarize_timing_ms(
+                        flow_emitter_usd_times_ms, flow_warmup_samples
+                    )
+                    if flow_emitter_usd_times_ms
+                    else None
                 ),
-                "wood_visual_usd": summarize_timing_ms(
-                    wood_visual_usd_times_ms, visual_warmup_samples
+                "wood_visual_usd": (
+                    summarize_timing_ms(
+                        wood_visual_usd_times_ms, visual_warmup_samples
+                    )
+                    if wood_visual_usd_times_ms
+                    else None
+                ),
+                "resident_snapshot_usd": (
+                    summarize_timing_ms(
+                        resident_snapshot_usd_times_ms, flow_warmup_samples
+                    )
+                    if resident_snapshot_usd_times_ms
+                    else None
                 ),
                 "kit_flow_render_update": summarize_timing_ms(
                     update_times_ms, flow_warmup_samples
@@ -1596,6 +1736,17 @@ class CampfireAppExtension(omni.ext.IExt):
                     "deferred_cell_phase_updates": defer_cell_phase_updates,
                     "compact_runtime_metrics": compact_runtime_metrics,
                     "precomputed_runtime_topology": precomputed_runtime_topology,
+                    "resident_snapshot_adapter": {
+                        "enabled": resident_snapshot_adapter_enabled,
+                        "producer": (
+                            "python_contract_bridge"
+                            if resident_snapshot_adapter_enabled
+                            else "disabled"
+                        ),
+                        "native_producer_connected": False,
+                        "status_after_timeline_stop": resident_adapter_status,
+                        "final_usd_state": resident_final_usd_state,
+                    },
                     "final_phase_refresh_seconds": round(
                         final_phase_refresh_seconds, 6
                     ),
@@ -1688,7 +1839,21 @@ class CampfireAppExtension(omni.ext.IExt):
                 f"modelMeanMs={summary['timing']['two_log_model_step_mean_ms']}"
             )
         finally:
-            _flowusd.release_flowusd_interface(flow_interface)
+            try:
+                if resident_adapter is not None:
+                    if not resident_adapter_stopped:
+                        resident_adapter.on_timeline_stopped()
+                    resident_adapter.close()
+                    self._resident_snapshot_adapter = None
+                if resident_timeline is not None:
+                    resident_timeline.pause()
+                    resident_timeline.set_current_time(
+                        resident_timeline_previous_time
+                    )
+                    if resident_timeline_was_playing:
+                        resident_timeline.play()
+            finally:
+                _flowusd.release_flowusd_interface(flow_interface)
 
     @staticmethod
     def _write_summary(output_dir: Path, summary: dict) -> None:

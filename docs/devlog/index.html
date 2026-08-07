@@ -36,8 +36,8 @@
       <div class="shell status-grid">
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>41 / 41 passed</strong></div>
-        <div><span>次の焦点</span><strong>Opt-in Kit lifecycle adapter</strong></div>
+        <div><span>テスト</span><strong>43 / 43 passed</strong></div>
+        <div><span>次の焦点</span><strong>Transactional USD publish cost</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6BB · Resident backend lifecycle</p>
-            <h2>編集前に最新化し、<br>成功した候補だけ入れ替える。</h2>
-            <p>Resident進行後の単一薪をPython権威modelへ1.1643 ms p95でexportし、既存JSON schemaの完全往復を確認しました。編集開始後にnative revisionが進んだ場合はimport前に拒否し、管理編集またはnative stepの注入失敗ではResident配列とrevisionを開始前へ戻します。構造変更は全薪を最新化して別candidateを構築・検証後にswapし、shutdownは20本をexportしてから閉じます。全9 gateが3 runで合格しましたが、Kit main-threadと実Flow/USDは未接続なので本番backendはまだ有効化しません。</p>
+            <p class="section-kicker">Phase 6BC · Opt-in Kit resident snapshot adapter</p>
+            <h2>同じrevisionを、<br>炎・表示・支持へまとめて渡す。</h2>
+            <p>既定OFFのKit adapterを実Flow／USDへ接続し、owner thread、timeline開始・停止、extension shutdown、途中例外のtransactional rollbackを閉じました。240回の発行すべてでEmitter・乾燥薪・湿潤薪が同じ最終revision 1200を観測し、権威状態SHA、CSV SHA、着火66.2／166.4秒は既定経路と完全一致しました。RTX 3090で統合発行p95は5.2825 msとなり局所4 ms目安を超えたため、機能契約だけを採用し、native producer接続と既定有効化は保留します。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -539,6 +539,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6bc-resident-snapshot-adapter" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6BC</h3>
+            <a href="assets/phase6/resident_snapshot_adapter_report.svg" aria-label="Phase 6BC opt-in Kit resident snapshot adapter timing and lifecycle report">
+              <img src="assets/phase6/resident_snapshot_adapter_report.svg" width="1200" height="680" alt="Integrated transactional USD publish p95 against the 4 millisecond local gate, plus revision, lifecycle, authority, and ignition checks">
+            </a>
+            <figcaption>
+              <div><strong>Publish one revision to real Flow and USD consumers</strong><span>p95 5.2825 ms · 240 publishes · exact authority SHA · default remains OFF</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6BC baseline burn scenario (reused)" data-video-meta="Opt-in adapter changes publication lifecycle, not rendering semantics · baseline Phase 6AM viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>Run video</strong><small>6 s · verified real viewport reuse</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <figure id="phase6bb-native-lifecycle" class="capture-card">
             <h3 class="capture-phase-heading">Phase 6BB</h3>
             <a href="assets/phase6/native_backend_lifecycle_report.svg" aria-label="Phase 6BB Resident backend lifecycleのexport性能、rollback、再構築、shutdown契約レポートを開く">
@@ -632,6 +646,7 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AY immutable output publish</strong><small>11 values/log · 3 balanced runs · mutation detected · full scan rejected</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AZ revision ownership</strong><small>20 revisions · one-log exact import · structural rebuild · unmarked writes unsupported</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6BA native scheduler</strong><small>5 Hz / 12 frames · 3 consumers · 60 revisions · tolerance lockstep passed</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6BC Kit adapter</strong><small>owner thread · transactional rollback · 240 shared revisions · default OFF</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6BB backend lifecycle</strong><small>fresh export · conflict reject · transactional rollback · rebuild · shutdown</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Default timing path</strong><small>homogeneous fast · timers off · 10.4678 s scenario</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>
@@ -679,7 +694,7 @@
               <div><dt>Complete Python step</dt><dd>3.1313 ms/model-step</dd></div>
               <div><dt>Complete NumPy step</dt><dd>2.8228 ms · 9.9% faster</dd></div>
               <div><dt>Phase 3 output equality</dt><dd>state / CSV / ignition / Flow exact</dd></div>
-              <div><dt>Current standard suite</dt><dd>40 coverage + collapse isolated · prior 41 / 41</dd></div>
+              <div><dt>Current standard suite</dt><dd>8 processes · 43 / 43 passed</dd></div>
               <div><dt>Current test processes</dt><dd>8 · fixed 300 s ceiling unchanged</dd></div>
               <div><dt>Debugger-free wood step</dt><dd>Python 11.218 / NumPy 11.472 ms</dd></div>
               <div><dt>Debugger-free scenario</dt><dd>17.532 / 17.858 s</dd></div>
@@ -841,6 +856,10 @@
               <div><dt>Shutdown all-log export</dt><dd>17.7040 ms · explicit close boundary</dd></div>
               <div><dt>Phase 6BB lifecycle gates</dt><dd>9 / 9 × 3 runs · production disabled</dd></div>
               <div><dt>Phase 6BB regression</dt><dd>41 / 41 pass · runner 481.5 s · collapse coverage 294.6 s</dd></div>
+              <div><dt>Phase 6BC integrated USD publish</dt><dd>mean 3.2964 ms · p95 5.2825 ms · local 4 ms hold</dd></div>
+              <div><dt>Phase 6BC consumer revisions</dt><dd>Emitter + dry + wet = 1200 · 240 publishes · 0 mismatch</dd></div>
+              <div><dt>Phase 6BC authority outputs</dt><dd>dry SHA + wet SHA + CSV SHA exact · ignition 66.2 / 166.4 s</dd></div>
+              <div><dt>Phase 6BC regression</dt><dd>43 / 43 pass · runner 423.1 s · collapse 218.9 s · default OFF</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
@@ -1381,7 +1400,7 @@
           <li class="done"><span>3</span><div><strong>木材熱モデル</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>4</span><div><strong>配置と通気</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>5</span><div><strong>崩壊</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · native連続状態kernelへ</small></div></li>
+          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · transactional USD発行の局所予算へ</small></div></li>
         </ol>
       </div>
     </section>
@@ -1393,7 +1412,7 @@
         <strong>Campfire Simulator</strong>
         <p>Build the fire. Keep the evidence.</p>
       </div>
-      <p>Last updated <time datetime="2026-08-06">2026.08.06</time></p>
+      <p>Last updated <time datetime="2026-08-07">2026.08.07</time></p>
     </div>
   </footer>
 

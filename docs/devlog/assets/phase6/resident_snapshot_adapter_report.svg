@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+<style>
+ .bg{fill:#0d1222} .panel{fill:#171f34} .title{fill:#f5f7ff;font:700 30px system-ui,sans-serif}
+ .sub{fill:#a9b4cc;font:16px system-ui,sans-serif} .label{fill:#edf1ff;font:600 17px system-ui,sans-serif}
+ .value{fill:#fff;font:700 17px ui-monospace,monospace} .small{fill:#b8c2d9;font:14px system-ui,sans-serif}
+ .bar{fill:#ff8a4c} .legacy{fill:#52617f} .gate{stroke:#ffd166;stroke-width:3;stroke-dasharray:8 7}
+ .gateText{fill:#ffd166;font:700 14px ui-monospace,monospace} .pass{fill:#1f9d68}
+ .tag{fill:#fff;font:700 11px system-ui,sans-serif} .decision{fill:#ffd166;font:700 19px system-ui,sans-serif}
+</style>
+<rect width="1200" height="680" class="bg"/><text x="70" y="68" class="title">Phase 6BC - Opt-in Kit resident snapshot adapter</text>
+<text x="70" y="98" class="sub">Real Flow/USD publish - one immutable revision for emitter, visuals, and support diagnostics - default OFF</text>
+<rect x="55" y="126" width="1090" height="240" rx="18" class="panel"/>
+<text x="80" y="167" class="label">Integrated transactional USD publish p95</text>
+<rect x="300" y="188" width="554.66" height="40" rx="20" class="bar"/><text x="874.66" y="214" class="value">5.2825 ms</text>
+<line x1="720.00" y1="176" x2="720.00" y2="244" class="gate"/><text x="728.00" y="185" class="gateText">4 ms local gate</text>
+<text x="300" y="260" class="small">mean 3.2964 ms - 236 measured updates after 4 warmup updates</text>
+<text x="80" y="301" class="label">Legacy segments (different cadence)</text><rect x="430" y="281" width="157.02" height="18" rx="9" class="legacy"/><text x="602.02" y="295" class="small">emitter p95 1.4954 ms</text>
+<rect x="430" y="314" width="221.96" height="18" rx="9" class="legacy"/><text x="666.96" y="328" class="small">visual p95 2.1139 ms</text>
+<g transform="translate(0 0)"><rect x="72" y="423" width="116" height="27" rx="13" class="pass"/><text x="130" y="442" text-anchor="middle" class="tag">REVISION</text><text x="212" y="442" class="small">Emitter + dry log + wet log = 1200</text></g><g transform="translate(0 43)"><rect x="72" y="423" width="116" height="27" rx="13" class="pass"/><text x="130" y="442" text-anchor="middle" class="tag">LIFECYCLE</text><text x="212" y="442" class="small">1 start / 240 publishes / 1 stop / inactive</text></g><g transform="translate(0 86)"><rect x="72" y="423" width="116" height="27" rx="13" class="pass"/><text x="130" y="442" text-anchor="middle" class="tag">AUTHORITY</text><text x="212" y="442" class="small">dry SHA + wet SHA + metrics CSV are exact</text></g><g transform="translate(0 129)"><rect x="72" y="423" width="116" height="27" rx="13" class="pass"/><text x="130" y="442" text-anchor="middle" class="tag">IGNITION</text><text x="212" y="442" class="small">66.2 s dry / 166.4 s wet / 100.2 s delay</text></g>
+<rect x="55" y="625" width="1090" height="1" fill="#35405b"/><text x="70" y="654" class="decision">FUNCTION PASS - PERFORMANCE HOLD - DEFAULT OFF</text>
+<text x="610" y="654" class="small">next: reduce transactional publish cost, then connect native producer</text>
+</svg>

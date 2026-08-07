@@ -154,6 +154,12 @@ from .support import (
     segment_mass_kg,
 )
 from .performance import summarize_timing_ms
+from .resident_snapshot_adapter import (
+    ResidentPublishedRow,
+    ResidentPublishedSnapshot,
+    UsdResidentSnapshotAdapter,
+    published_row_from_python_model,
+)
 from .wood import LogSpec, create_log, get_log_world_position, list_log_ids, move_log
 
 __all__ = [
@@ -206,6 +212,10 @@ __all__ = [
     "WoodModelParameters",
     "WoodRuntimeTopology",
     "WoodThermalModel",
+    "ResidentPublishedRow",
+    "ResidentPublishedSnapshot",
+    "UsdResidentSnapshotAdapter",
+    "published_row_from_python_model",
     "summarize_timing_ms",
     "add_scenario_log",
     "apply_phase6_calibration",

@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "phase": "phase6bc",
+  "status": "ok",
+  "measurement": {
+    "hardware": "NVIDIA GeForce RTX 3090 / D3D12",
+    "scenario": "Phase 3 dry/wet logs, 1200 steps, 240 model seconds",
+    "adapter_updates": 240,
+    "warmup_updates_excluded": 4,
+    "default_enabled": false
+  },
+  "lifecycle_gates": {
+    "inactive_after_stop": true,
+    "one_start_and_stop": true,
+    "all_updates_published": true,
+    "final_revision_consistent": true
+  },
+  "exact_output_gates": {
+    "dry_authoritative_state": true,
+    "wet_authoritative_state": true,
+    "metrics_csv": true,
+    "ignition_times": true
+  },
+  "final_usd_state": {
+    "emitter": {
+      "revision": 1200,
+      "fuel": 1.0,
+      "temperature": 1.7921440601348877,
+      "smoke": 0.2652326822280884
+    },
+    "logs": {
+      "Log_00": {
+        "revision": 1200,
+        "surface_temperature_k": 1189.222022005943,
+        "char_fraction": 0.08957335319191391,
+        "remaining_mass_ratio": 0.6527584332662805,
+        "weakest_support_ratio": 0.5975330244846859
+      },
+      "Log_01": {
+        "revision": 1200,
+        "surface_temperature_k": 549.5348096893963,
+        "char_fraction": 0.0059479009102331145,
+        "remaining_mass_ratio": 0.8140355484954356,
+        "weakest_support_ratio": 1.0
+      }
+    },
+    "revision_consistent": true
+  },
+  "timing_ms": {
+    "adapter_snapshot_usd": {
+      "sample_count": 236,
+      "warmup_samples_excluded": 4,
+      "total_ms": 777.9495,
+      "mean_ms": 3.2964,
+      "p95_ms": 5.2825,
+      "max_ms": 6.3241
+    },
+    "legacy_emitter_usd": {
+      "sample_count": 236,
+      "warmup_samples_excluded": 4,
+      "total_ms": 238.571,
+      "mean_ms": 1.0109,
+      "p95_ms": 1.4954,
+      "max_ms": 2.4925
+    },
+    "legacy_visual_usd": {
+      "sample_count": 118,
+      "warmup_samples_excluded": 2,
+      "total_ms": 130.8849,
+      "mean_ms": 1.1092,
+      "p95_ms": 2.1139,
+      "max_ms": 3.653
+    },
+    "adapter_flow_render_update": {
+      "sample_count": 236,
+      "warmup_samples_excluded": 4,
+      "total_ms": 1315.4177,
+      "mean_ms": 5.5738,
+      "p95_ms": 7.4114,
+      "max_ms": 13.0846
+    },
+    "baseline_flow_render_update": {
+      "sample_count": 236,
+      "warmup_samples_excluded": 4,
+      "total_ms": 1347.2356,
+      "mean_ms": 5.7086,
+      "p95_ms": 7.4593,
+      "max_ms": 14.6543
+    },
+    "adapter_runner_wall_seconds": 29.59,
+    "baseline_runner_wall_seconds": 29.954
+  },
+  "scenario_results": {
+    "dry_ignition_seconds": 66.2,
+    "wet_ignition_seconds": 166.4,
+    "wet_delay_seconds": 100.2,
+    "adapter_active_blocks_peak": 294,
+    "baseline_active_blocks_peak": 294
+  },
+  "decision": {
+    "functional_lifecycle_qualified": true,
+    "within_4ms_local_budget": false,
+    "production_native_backend_qualified": false,
+    "keep_default_disabled": true,
+    "reason": "Native producer is not connected and integrated USD publish p95 exceeds the 4 ms local budget.",
+    "next_gate": "reduce transactional USD publish cost below the local budget, then connect the resident native producer without changing authority schema"
+  }
+}

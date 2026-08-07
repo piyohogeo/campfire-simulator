@@ -1,5 +1,6 @@
 import json
 import math
+import threading
 from dataclasses import replace
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -826,6 +827,140 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(
             stage.GetRootLayer().customLayerData["campfire:phase"], "phase3"
         )
+
+    async def test_resident_snapshot_adapter_commits_one_revision_to_all_consumers(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase3_scene(stage)
+        log_ids = (campfire.app.PHASE3_DRY_LOG_ID, campfire.app.PHASE3_WET_LOG_ID)
+        initial_dry_mass = {
+            log_id: sum(
+                cell.dry_wood_mass_kg + cell.char_mass_kg + cell.ash_mass_kg
+                for cell in campfire.app.load_model_from_prim(
+                    stage.GetPrimAtPath(f"/World/Logs/{log_id}")
+                ).cells
+            )
+            for log_id in log_ids
+        }
+        rows = (
+            campfire.app.ResidentPublishedRow(
+                820.0, 1.0, 8.0, 1.5, 0.1, 0.72, 0.64, 0.4, 0.7, 0.2, 0.008
+            ),
+            campfire.app.ResidentPublishedRow(
+                430.0, 3.0, 9.0, 0.4, 0.05, 0.88, 0.82, 0.0, 0.0, 0.1, 0.0
+            ),
+        )
+        rounded = campfire.app.ResidentPublishedRow(
+            600.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            1.0 + 5.0e-16,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+        )
+        self.assertEqual(rounded.remaining_mass_ratio, 1.0)
+        snapshot = campfire.app.ResidentPublishedSnapshot(1, 0, log_ids, rows)
+        adapter = campfire.app.UsdResidentSnapshotAdapter(
+            stage, log_ids, initial_dry_mass
+        )
+        with self.assertRaisesRegex(RuntimeError, "active timeline"):
+            adapter.publish(snapshot)
+        adapter.on_timeline_started()
+        adapter.publish(snapshot)
+
+        emitter = stage.GetPrimAtPath(campfire.app.FLOW_EMITTER_PATH)
+        self.assertAlmostEqual(emitter.GetAttribute("fuel").Get(), 0.4)
+        self.assertAlmostEqual(emitter.GetAttribute("temperature").Get(), 0.7)
+        self.assertEqual(
+            emitter.GetAttribute("campfire:residentRevision").Get(), 1
+        )
+        for log_id, row in zip(log_ids, rows):
+            prim = stage.GetPrimAtPath(f"/World/Logs/{log_id}")
+            self.assertEqual(prim.GetAttribute("campfire:residentRevision").Get(), 1)
+            self.assertAlmostEqual(
+                prim.GetAttribute("campfire:surfaceTemperatureK").Get(),
+                row.surface_mean_temperature_k,
+            )
+            self.assertAlmostEqual(
+                prim.GetAttribute("campfire:charFraction").Get(),
+                min(
+                    1.0,
+                    (row.char_mass_kg + row.ash_mass_kg)
+                    / initial_dry_mass[log_id],
+                ),
+            )
+            self.assertAlmostEqual(
+                prim.GetAttribute("campfire:remainingMassRatio").Get(),
+                row.remaining_mass_ratio,
+            )
+            self.assertAlmostEqual(
+                prim.GetAttribute("campfire:weakestSupportRatio").Get(),
+                row.weakest_support_ratio,
+            )
+        with self.assertRaisesRegex(RuntimeError, "increase monotonically"):
+            adapter.publish(snapshot)
+        status = adapter.status()
+        self.assertEqual(status["revision"], 1)
+        self.assertEqual(status["publish_count"], 1)
+        self.assertEqual(status["start_count"], 1)
+        adapter.on_timeline_stopped()
+        self.assertTrue(adapter.close())
+        self.assertFalse(adapter.close())
+
+    async def test_resident_snapshot_adapter_rolls_back_and_rejects_other_threads(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase3_scene(stage)
+        log_ids = (campfire.app.PHASE3_DRY_LOG_ID, campfire.app.PHASE3_WET_LOG_ID)
+        initial_dry_mass = {
+            log_id: 1.0
+            for log_id in log_ids
+        }
+        rows = tuple(
+            campfire.app.ResidentPublishedRow(
+                600.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.3, 0.4, 0.2, 0.006
+            )
+            for _ in log_ids
+        )
+        snapshot = campfire.app.ResidentPublishedSnapshot(1, 0, log_ids, rows)
+
+        def fail_fourth_write(write_count, _name):
+            if write_count == 4:
+                raise RuntimeError("injected USD write failure")
+
+        adapter = campfire.app.UsdResidentSnapshotAdapter(
+            stage,
+            log_ids,
+            initial_dry_mass,
+            write_observer=fail_fourth_write,
+        )
+        adapter.on_timeline_started()
+        emitter = stage.GetPrimAtPath(campfire.app.FLOW_EMITTER_PATH)
+        original_fuel = emitter.GetAttribute("fuel").Get()
+        with self.assertRaisesRegex(RuntimeError, "injected USD write failure"):
+            adapter.publish(snapshot)
+        self.assertEqual(emitter.GetAttribute("fuel").Get(), original_fuel)
+        self.assertFalse(emitter.GetAttribute("campfire:residentRevision"))
+        self.assertEqual(adapter.status()["revision"], 0)
+        self.assertEqual(adapter.status()["publish_count"], 0)
+
+        thread_errors = []
+
+        def read_status_from_other_thread():
+            try:
+                adapter.status()
+            except Exception as exc:
+                thread_errors.append(exc)
+
+        worker = threading.Thread(target=read_status_from_other_thread)
+        worker.start()
+        worker.join()
+        self.assertEqual(len(thread_errors), 1)
+        self.assertRegex(str(thread_errors[0]), "owner thread")
+        adapter.close()
 
     async def test_log_cabin_has_more_air_than_dense_parallel_stack(self):
         dense = campfire.app.estimate_air_supply(

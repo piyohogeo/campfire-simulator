@@ -27,7 +27,8 @@ param(
     [ValidateRange(1, 1200)]
     [int]$VideoFrameInterval = 20,
     [ValidateRange(1, 60)]
-    [int]$VideoFps = 10
+    [int]$VideoFps = 10,
+    [switch]$ResidentSnapshotAdapter
 )
 
 $ErrorActionPreference = "Stop"
@@ -114,6 +115,7 @@ $kitArgs = @(
     "--/exts/campfire.app/precomputedRuntimeTopology=$($precomputedRuntimeTopology.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/captureVideoFrames=$($CaptureVideo.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/videoFrameIntervalSteps=$VideoFrameInterval",
+    "--/exts/campfire.app/residentSnapshotAdapterEnabled=$($ResidentSnapshotAdapter.IsPresent.ToString().ToLowerInvariant())",
     "--/rtx/flow/enabled=true",
     "--/app/viewport/grid/enabled=false",
     "--/persistent/app/viewport/displayOptions=1152"
@@ -184,6 +186,42 @@ if ([bool]$result.scenario.compact_runtime_metrics -ne $compactRuntimeMetrics) {
 }
 if ([bool]$result.scenario.precomputed_runtime_topology -ne $precomputedRuntimeTopology) {
     throw "Phase 3 used an unexpected runtime-topology setting."
+}
+$residentAdapter = $result.scenario.resident_snapshot_adapter
+if ([bool]$residentAdapter.enabled -ne $ResidentSnapshotAdapter.IsPresent) {
+    throw "Phase 3 used an unexpected resident snapshot-adapter setting."
+}
+if ([bool]$residentAdapter.native_producer_connected) {
+    throw "Phase 3 incorrectly reported a native producer connection."
+}
+if ($ResidentSnapshotAdapter.IsPresent) {
+    if ($residentAdapter.producer -ne "python_contract_bridge") {
+        throw "Phase 3 used an unexpected resident snapshot producer."
+    }
+    if ([bool]$residentAdapter.status_after_timeline_stop.active) {
+        throw "Resident snapshot adapter remained active after timeline stop."
+    }
+    if ($residentAdapter.status_after_timeline_stop.publish_count -le 0) {
+        throw "Resident snapshot adapter published no revisions."
+    }
+    if ($residentAdapter.status_after_timeline_stop.revision -ne 1200 -or
+        $residentAdapter.status_after_timeline_stop.publish_count -ne 240 -or
+        $residentAdapter.status_after_timeline_stop.start_count -ne 1 -or
+        $residentAdapter.status_after_timeline_stop.stop_count -ne 1) {
+        throw "Resident snapshot adapter reported an unexpected lifecycle."
+    }
+    if (-not [bool]$residentAdapter.final_usd_state.revision_consistent) {
+        throw "Resident snapshot consumers did not observe one final revision."
+    }
+    foreach ($consumer in @(
+        $residentAdapter.final_usd_state.emitter,
+        $residentAdapter.final_usd_state.logs.Log_00,
+        $residentAdapter.final_usd_state.logs.Log_01
+    )) {
+        if ($consumer.revision -ne 1200) {
+            throw "Resident snapshot consumer has an unexpected final revision."
+        }
+    }
 }
 foreach ($name in @("dry", "wet")) {
     if ($result.scenario.zero_area_cell_count.$name -ne 792) {
@@ -256,11 +294,23 @@ $expectedTimingSamples = @{
     wood_metrics = 1180
     flow_source_mapping = 1180
     csv_row_build = 1180
-    flow_emitter_usd = 236
-    wood_visual_usd = 118
     kit_flow_render_update = 236
     active_block_query = 236
     viewport_capture = 2
+}
+if ($ResidentSnapshotAdapter.IsPresent) {
+    $expectedTimingSamples.resident_snapshot_usd = 236
+    if ($null -ne $result.timing.segments.flow_emitter_usd -or
+        $null -ne $result.timing.segments.wood_visual_usd) {
+        throw "Resident snapshot mode unexpectedly measured legacy USD segments."
+    }
+}
+else {
+    $expectedTimingSamples.flow_emitter_usd = 236
+    $expectedTimingSamples.wood_visual_usd = 118
+    if ($null -ne $result.timing.segments.resident_snapshot_usd) {
+        throw "Legacy Phase 3 unexpectedly measured the resident snapshot segment."
+    }
 }
 foreach ($name in $expectedTimingSamples.Keys) {
     $segment = $result.timing.segments.$name
