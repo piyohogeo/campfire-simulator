@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+<title id="title">Shared SoA and Python proxy research spike</title>
+<desc id="desc">Zero-copy, lifecycle, rollback, serialization, and timing results for an isolated future candidate.</desc>
+<style>
+.bg{fill:#08121f} .panel{fill:#111f31;stroke:#29415f;stroke-width:1.5} .title{fill:#f7fafc;font:700 30px system-ui,sans-serif} .subtitle{fill:#9fb3c8;font:15px system-ui,sans-serif} .label{fill:#dce7f2;font:14px system-ui,sans-serif} .value{fill:#f7fafc;font:700 14px ui-monospace,monospace} .head{fill:#7dd3fc;font:700 16px system-ui,sans-serif} .body{fill:#b9c8d8;font:14px system-ui,sans-serif} .ok{fill:#86efac;font:700 17px system-ui,sans-serif} .warn{fill:#fbbf24;font:700 15px system-ui,sans-serif}
+</style>
+<rect width="1200" height="680" class="bg"/>
+<text x="66" y="58" class="title">Future study · Shared SoA + Python proxy</text>
+<text x="66" y="87" class="subtitle">Isolated headless spike · 23,040 cells · production and USD paths unchanged</text>
+<rect x="52" y="118" width="746" height="332" rx="16" class="panel"/>
+<text x="72" y="154" class="head">Measured p95 boundary cost</text>
+<text x="72" y="218" class="label">Proxy scalar transaction</text><rect x="330" y="199" width="0.22" height="24" rx="7" fill="#68d391"/><text x="342.22" y="218" class="value">0.0014 ms p95</text><text x="72" y="276" class="label">Proxy 32-field edit lease</text><rect x="330" y="257" width="17.48" height="24" rx="7" fill="#4fd1c5"/><text x="359.48" y="276" class="value">0.1127 ms p95</text><text x="72" y="334" class="label">Legacy export + edit + import</text><rect x="330" y="315" width="213.18" height="24" rx="7" fill="#f6ad55"/><text x="555.18" y="334" class="value">1.3748 ms p95</text><text x="72" y="392" class="label">Prototype step + rollback copy</text><rect x="330" y="373" width="350.00" height="24" rx="7" fill="#63b3ed"/><text x="692.00" y="392" class="value">2.2572 ms p95</text>
+<rect x="822" y="118" width="326" height="332" rx="16" class="panel"/>
+<text x="846" y="154" class="head">Contract gates</text>
+<text x="846" y="195" class="ok">16 / 16 passed</text>
+<text x="846" y="237" class="body">✓ same NumPy pointer after C++</text>
+<text x="846" y="267" class="body">✓ no numeric dirty import</text>
+<text x="846" y="297" class="body">✓ busy write rejected</text>
+<text x="846" y="327" class="body">✓ edit / step rollback exact</text>
+<text x="846" y="357" class="body">✓ stale proxy rejected on swap</text>
+<text x="846" y="397" class="warn">Read-only buffers are not revocable</text>
+<rect x="52" y="474" width="1096" height="154" rx="16" class="panel"/>
+<text x="72" y="510" class="head">Decision</text>
+<text x="72" y="546" class="body">Technically feasible when writable arrays stay private and all writes use a proxy or edit lease.</text>
+<text x="72" y="576" class="body">JSON p95: direct SoA 16.029 ms · dataclass 12.204 ms. Scalar proxy access adds lifecycle overhead.</text>
+<text x="72" y="606" class="warn">Defer adoption: this does not reduce transactional USD publication cost.</text>
+</svg>

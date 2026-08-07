@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6BC · Opt-in Kit resident snapshot adapter</p>
-            <h2>同じrevisionを、<br>炎・表示・支持へまとめて渡す。</h2>
-            <p>既定OFFのKit adapterを実Flow／USDへ接続し、owner thread、timeline開始・停止、extension shutdown、途中例外のtransactional rollbackを閉じました。240回の発行すべてでEmitter・乾燥薪・湿潤薪が同じ最終revision 1200を観測し、権威状態SHA、CSV SHA、着火66.2／166.4秒は既定経路と完全一致しました。RTX 3090で統合発行p95は5.2825 msとなり局所4 ms目安を超えたため、機能契約だけを採用し、native producer接続と既定有効化は保留します。</p>
+            <p class="section-kicker">Phase 6BC-S · Shared SoA proxy research spike</p>
+            <h2>書込みの見落としをなくせるか、<br>本線を変えずに確かめる。</h2>
+            <p>NumPy所有のprivate連続SoAをC++とゼロコピー共有し、<code>cell.temperature_k</code>形式のPython proxy、edit lease、generation失効、step中の書込み拒否、rollback、既存JSON完全一致をproduction外で試しました。20本・23,040セル、3独立runで16／16ゲートが合格し、numeric importは0回、32フィールド編集p95は0.1127 msでした。一方、scalar proxyはdataclassより約7〜12倍遅く、素朴なSoA JSON化も遅いため条件付き成立です。USD発行p95 5.2825 msには作用しないので、現行のUSD内訳計測と4 ms未満化を最優先のまま維持します。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -553,6 +553,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6bc-s-shared-soa-proxy" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6BC-S</h3>
+            <a href="assets/phase6/shared_soa_proxy_report.svg" aria-label="Phase 6BC-S 共有SoAとPython proxyの実現性、契約、性能レポートを開く">
+              <img src="assets/phase6/shared_soa_proxy_report.svg" width="1200" height="680" alt="20本23,040セルの共有SoA試作について、proxy編集、従来export・import、rollback付きnative stepのp95、16契約gate、buffer寿命制約、採用保留判断を示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Share numeric authority, keep raw writes private</strong><span>16 / 16 gates · import 0 · 32-field edit p95 0.1127 ms · adoption deferred</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6BC-S baseline burn scenario (reused)" data-video-meta="Shared-SoA research spike changes no production rendering or USD publication · baseline Phase 6AM viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · 既存実画面を再掲</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <figure id="phase6bb-native-lifecycle" class="capture-card">
             <h3 class="capture-phase-heading">Phase 6BB</h3>
             <a href="assets/phase6/native_backend_lifecycle_report.svg" aria-label="Phase 6BB Resident backend lifecycleのexport性能、rollback、再構築、shutdown契約レポートを開く">
@@ -860,6 +874,11 @@
               <div><dt>Phase 6BC consumer revisions</dt><dd>Emitter + dry + wet = 1200 · 240 publishes · 0 mismatch</dd></div>
               <div><dt>Phase 6BC authority outputs</dt><dd>dry SHA + wet SHA + CSV SHA exact · ignition 66.2 / 166.4 s</dd></div>
               <div><dt>Phase 6BC regression</dt><dd>43 / 43 pass · runner 423.1 s · collapse 218.9 s · default OFF</dd></div>
+              <div><dt>Phase 6BC-S shared SoA gates</dt><dd>16 / 16 × 3 runs · pointer stable · import 0</dd></div>
+              <div><dt>Phase 6BC-S proxy edit p95</dt><dd>scalar 0.0014 ms · 32 fields 0.1127 ms</dd></div>
+              <div><dt>Phase 6BC-S serialization p95</dt><dd>naive SoA 16.0286 ms · dataclass 12.2039 ms</dd></div>
+              <div><dt>Phase 6BC-S decision</dt><dd>qualified feasibility · adoption deferred · USD unchanged</dd></div>
+              <div><dt>Phase 6BC-S regression</dt><dd>42 / 43 complete · collapse coverage timeout · isolated 5.8 s pass</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
