@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+<style>
+ .bg{fill:#0d1222} .panel{fill:#171f34} .title{fill:#f5f7ff;font:700 30px system-ui,sans-serif}
+ .sub{fill:#a9b4cc;font:16px system-ui,sans-serif} .label{fill:#edf1ff;font:600 17px system-ui,sans-serif}
+ .metric{fill:#ff8a4c;font:700 28px ui-monospace,monospace} .small{fill:#b8c2d9;font:14px system-ui,sans-serif}
+ .value{fill:#fff;font:700 14px ui-monospace,monospace} .bar{fill:#4f9cf9} .hold{fill:#ffd166;font:700 18px system-ui,sans-serif}
+</style>
+<rect width="1200" height="680" class="bg"/><text x="64" y="62" class="title">Phase 6BE - Redundant USD Set audit</text>
+<text x="64" y="92" class="sub">3 real-Kit runs · 708 transactions · 13,452 writes · post-Set value audit opt-in/default OFF</text>
+<rect x="50" y="120" width="1100" height="116" rx="18" class="panel"/>
+<text x="80" y="157" class="label">Unchanged writes</text><text x="80" y="201" class="metric">7.8178 / 19 per transaction</text>
+<text x="600" y="157" class="label">Measured Set time on unchanged values</text><text x="600" y="201" class="metric">0.1366 ms mean</text>
+<text x="64" y="265" class="label">Highest unchanged frequency by attribute</text><text x="76" y="295" class="small">W.weakestSupportRatio</text><rect x="310" y="278" width="410.0" height="24" rx="12" class="bar"/><text x="736.0" y="295" class="value">100.0%</text><text x="76" y="337" class="small">E.coupleRateTemperature</text><rect x="310" y="320" width="410.0" height="24" rx="12" class="bar"/><text x="736.0" y="337" class="value">100.0%</text><text x="76" y="379" class="small">E.coupleRateFuel</text><rect x="310" y="362" width="408.3" height="24" rx="12" class="bar"/><text x="734.3" y="379" class="value">99.6%</text><text x="76" y="421" class="small">E.coupleRateSmoke</text><rect x="310" y="404" width="408.3" height="24" rx="12" class="bar"/><text x="734.3" y="421" class="value">99.6%</text><text x="76" y="463" class="small">E.fuel</text><rect x="310" y="446" width="383.9" height="24" rx="12" class="bar"/><text x="709.9" y="463" class="value">93.6%</text><text x="76" y="505" class="small">W.primvars:displayColor</text><rect x="310" y="488" width="281.4" height="24" rx="12" class="bar"/><text x="607.4" y="505" class="value">68.6%</text><text x="76" y="547" class="small">W.charFraction</text><rect x="310" y="530" width="281.4" height="24" rx="12" class="bar"/><text x="607.4" y="547" class="value">68.6%</text><text x="76" y="589" class="small">D.weakestSupportRatio</text><rect x="310" y="572" width="159.8" height="24" rx="12" class="bar"/><text x="485.8" y="589" class="value">39.0%</text>
+<rect x="840" y="278" width="300" height="258" rx="16" class="panel"/>
+<text x="870" y="318" class="label">Safety boundary</text><text x="870" y="356" class="small">read actual authored old value</text>
+<text x="870" y="387" class="small">skip journal + Set only if exact</text><text x="870" y="418" class="small">always Set 3 revision attributes</text>
+<text x="870" y="449" class="small">rollback touched attributes only</text><text x="870" y="480" class="small">external edit test required</text>
+<text x="870" y="518" class="hold">NO-OP ONLY: DEFERRED</text>
+<rect x="50" y="620" width="1100" height="1" fill="#35405b"/><text x="64" y="650" class="small">next: opt-in prim / attribute handle cache · retain actual old-value rollback · alternating 3-pair p95 gate</text></svg>

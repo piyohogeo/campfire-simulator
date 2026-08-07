@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6BE opt-in redundant USD Set audit with USD-stored-value classification, per-attribute changed/unchanged counts and Set timings, three-run exact-output gates, and evidence that no-op skipping alone is insufficient for the 4 ms transaction target.
 - Added Phase 6BD opt-in transactional USD profiling, separating snapshot construction from adapter publication and measuring prim lookup, payload preparation, attribute lookup, rollback-journal capture, `UsdAttribute.Set`, commit, and unattributed overhead across three paired real-Kit runs; production publication behavior remains unchanged.
 - Added the isolated Phase 6BC-S shared NumPy/C++ SoA authority research spike with generation-checked Python cell proxies, edit leases, fail-fast step exclusion, exact rollback/schema gates, ABI validation, and three-run performance evidence; production and USD publication remain unchanged.
 - Added the Phase 6BC default-off Kit resident snapshot adapter with owner-thread lifecycle enforcement, transactional USD rollback, one-revision Flow/visual/support publication, exact baseline-output gates, and real RTX 3090 timing evidence.

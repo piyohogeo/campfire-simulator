@@ -172,16 +172,22 @@ class ResidentUsdTransactionProfile:
     old_value_capture_ms: float
     journal_append_ms: float
     attribute_set_ms: float
+    value_audit_ms: float
     write_observer_ms: float
     commit_ms: float
     rollback_ms: float
     unattributed_ms: float
     write_count: int
+    changed_write_count: int
+    unchanged_write_count: int
     existing_property_count: int
     created_property_count: int
     authored_old_value_count: int
     group_ms: tuple[tuple[str, float], ...]
     attribute_ms: tuple[tuple[str, float], ...]
+    attribute_set_detail_ms: tuple[tuple[str, float], ...]
+    group_write_disposition: tuple[tuple[str, int, int], ...]
+    attribute_write_disposition: tuple[tuple[str, str], ...]
 
 
 class UsdResidentSnapshotAdapter:
@@ -315,6 +321,31 @@ class UsdResidentSnapshotAdapter:
     def _add_elapsed(profile, name, started_ns):
         profile[name] += (time.perf_counter_ns() - started_ns) / 1_000_000.0
 
+    @classmethod
+    def _usd_values_equal(cls, previous_value, stored_value):
+        if previous_value is stored_value:
+            return True
+        if previous_value is None or stored_value is None:
+            return False
+        if isinstance(previous_value, (str, bytes)) or isinstance(
+            stored_value, (str, bytes)
+        ):
+            return previous_value == stored_value
+        try:
+            previous_length = len(previous_value)
+            stored_length = len(stored_value)
+        except TypeError:
+            try:
+                return bool(previous_value == stored_value)
+            except (TypeError, ValueError):
+                return False
+        if previous_length != stored_length:
+            return False
+        return all(
+            cls._usd_values_equal(previous_item, stored_item)
+            for previous_item, stored_item in zip(previous_value, stored_value)
+        )
+
     def _set_attribute_profiled(
         self, prim, name, type_name, value, restores, profile, group, label
     ):
@@ -353,8 +384,24 @@ class UsdResidentSnapshotAdapter:
         started = time.perf_counter_ns()
         if not attribute.Set(value):
             raise RuntimeError(f"Unable to publish USD attribute {prim.GetPath()}.{name}")
-        self._add_elapsed(profile, "attribute_set_ms", started)
+        set_elapsed_ms = (time.perf_counter_ns() - started) / 1_000_000.0
+        profile["attribute_set_ms"] += set_elapsed_ms
+        profile["attribute_set_detail_ms"][label] = set_elapsed_ms
         profile["write_count"] += 1
+
+        started = time.perf_counter_ns()
+        stored_value = attribute.Get()
+        unchanged = authored_value_existed and self._usd_values_equal(
+            previous_value, stored_value
+        )
+        self._add_elapsed(profile, "value_audit_ms", started)
+        disposition = "unchanged" if unchanged else "changed"
+        profile[f"{disposition}_write_count"] += 1
+        group_disposition = profile["group_write_disposition"].setdefault(
+            group, {"changed": 0, "unchanged": 0}
+        )
+        group_disposition[disposition] += 1
+        profile["attribute_write_disposition"][label] = disposition
         if self._write_observer is not None:
             started = time.perf_counter_ns()
             self._write_observer(len(restores), name)
@@ -373,15 +420,21 @@ class UsdResidentSnapshotAdapter:
             "old_value_capture_ms": 0.0,
             "journal_append_ms": 0.0,
             "attribute_set_ms": 0.0,
+            "value_audit_ms": 0.0,
             "write_observer_ms": 0.0,
             "commit_ms": 0.0,
             "rollback_ms": 0.0,
             "write_count": 0,
+            "changed_write_count": 0,
+            "unchanged_write_count": 0,
             "existing_property_count": 0,
             "created_property_count": 0,
             "authored_old_value_count": 0,
             "group_ms": {},
             "attribute_ms": {},
+            "attribute_set_detail_ms": {},
+            "group_write_disposition": {},
+            "attribute_write_disposition": {},
         }
 
     def _finish_profile(self, profile, status, transaction_started_ns):
@@ -396,6 +449,7 @@ class UsdResidentSnapshotAdapter:
                 "old_value_capture_ms",
                 "journal_append_ms",
                 "attribute_set_ms",
+                "value_audit_ms",
                 "write_observer_ms",
                 "commit_ms",
                 "rollback_ms",
@@ -412,16 +466,33 @@ class UsdResidentSnapshotAdapter:
                 old_value_capture_ms=profile["old_value_capture_ms"],
                 journal_append_ms=profile["journal_append_ms"],
                 attribute_set_ms=profile["attribute_set_ms"],
+                value_audit_ms=profile["value_audit_ms"],
                 write_observer_ms=profile["write_observer_ms"],
                 commit_ms=profile["commit_ms"],
                 rollback_ms=profile["rollback_ms"],
                 unattributed_ms=max(0.0, total_ms - attributed_ms),
                 write_count=profile["write_count"],
+                changed_write_count=profile["changed_write_count"],
+                unchanged_write_count=profile["unchanged_write_count"],
                 existing_property_count=profile["existing_property_count"],
                 created_property_count=profile["created_property_count"],
                 authored_old_value_count=profile["authored_old_value_count"],
                 group_ms=tuple(sorted(profile["group_ms"].items())),
                 attribute_ms=tuple(sorted(profile["attribute_ms"].items())),
+                attribute_set_detail_ms=tuple(
+                    sorted(profile["attribute_set_detail_ms"].items())
+                ),
+                group_write_disposition=tuple(
+                    sorted(
+                        (name, counts["changed"], counts["unchanged"])
+                        for name, counts in profile[
+                            "group_write_disposition"
+                        ].items()
+                    )
+                ),
+                attribute_write_disposition=tuple(
+                    sorted(profile["attribute_write_disposition"].items())
+                ),
             )
         )
 

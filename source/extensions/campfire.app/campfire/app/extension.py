@@ -1609,6 +1609,7 @@ class CampfireAppExtension(omni.ext.IExt):
                     "old_value_capture_ms",
                     "journal_append_ms",
                     "attribute_set_ms",
+                    "value_audit_ms",
                     "write_observer_ms",
                     "commit_ms",
                     "rollback_ms",
@@ -1624,6 +1625,33 @@ class CampfireAppExtension(omni.ext.IExt):
                 measured_profiles = resident_transaction_profiles[
                     profile_warmup_samples:
                 ]
+                group_dispositions = [
+                    {
+                        name: (changed, unchanged)
+                        for name, changed, unchanged in profile.group_write_disposition
+                    }
+                    for profile in measured_profiles
+                ]
+                attribute_dispositions = [
+                    dict(profile.attribute_write_disposition)
+                    for profile in measured_profiles
+                ]
+                attribute_set_disposition = {}
+                for name in attribute_names:
+                    attribute_set_disposition[name] = {}
+                    for disposition_name in ("changed", "unchanged"):
+                        disposition_values = [
+                            dict(profile.attribute_set_detail_ms)[name]
+                            for profile, disposition in zip(
+                                measured_profiles, attribute_dispositions
+                            )
+                            if disposition[name] == disposition_name
+                        ]
+                        attribute_set_disposition[name][disposition_name] = (
+                            summarize_timing_ms(disposition_values, 0)
+                            if disposition_values
+                            else None
+                        )
                 resident_transaction_profile = {
                     "sample_count": len(measured_profiles),
                     "warmup_samples_excluded": profile_warmup_samples,
@@ -1664,6 +1692,17 @@ class CampfireAppExtension(omni.ext.IExt):
                         )
                         for name in attribute_names
                     },
+                    "attribute_set": {
+                        name: summarize_timing_ms(
+                            [
+                                dict(profile.attribute_set_detail_ms)[name]
+                                for profile in resident_transaction_profiles
+                            ],
+                            profile_warmup_samples,
+                        )
+                        for name in attribute_names
+                    },
+                    "attribute_set_disposition": attribute_set_disposition,
                     "counts": {
                         name: {
                             "minimum": min(getattr(profile, name) for profile in measured_profiles),
@@ -1671,10 +1710,48 @@ class CampfireAppExtension(omni.ext.IExt):
                         }
                         for name in (
                             "write_count",
+                            "changed_write_count",
+                            "unchanged_write_count",
                             "existing_property_count",
                             "created_property_count",
                             "authored_old_value_count",
                         )
+                    },
+                    "write_disposition": {
+                        "changed": sum(
+                            profile.changed_write_count
+                            for profile in measured_profiles
+                        ),
+                        "unchanged": sum(
+                            profile.unchanged_write_count
+                            for profile in measured_profiles
+                        ),
+                        "groups": {
+                            name: {
+                                "changed": sum(
+                                    disposition[name][0]
+                                    for disposition in group_dispositions
+                                ),
+                                "unchanged": sum(
+                                    disposition[name][1]
+                                    for disposition in group_dispositions
+                                ),
+                            }
+                            for name in group_dispositions[0]
+                        },
+                        "attributes": {
+                            name: {
+                                "changed": sum(
+                                    disposition[name] == "changed"
+                                    for disposition in attribute_dispositions
+                                ),
+                                "unchanged": sum(
+                                    disposition[name] == "unchanged"
+                                    for disposition in attribute_dispositions
+                                ),
+                            }
+                            for name in attribute_dispositions[0]
+                        },
                     },
                 }
             startup_known_seconds = sum(self._startup_timing.values())

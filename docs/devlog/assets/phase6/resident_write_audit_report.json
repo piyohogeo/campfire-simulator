@@ -1,0 +1,434 @@
+{
+  "schema_version": 1,
+  "phase": "phase6be",
+  "status": "ok",
+  "measurement": {
+    "hardware": "NVIDIA GeForce RTX 3090 / D3D12",
+    "scenario": "Phase 3 dry/wet logs, 1200 steps, 240 model seconds",
+    "run_count": 3,
+    "measured_transactions": 708,
+    "writes_per_transaction": 19,
+    "audited_writes": 13452,
+    "audit_default_enabled": false
+  },
+  "contracts": {
+    "all_transactions_committed": true,
+    "revision_and_lifecycle_preserved": true,
+    "authoritative_outputs_exact_across_runs": true,
+    "native_producer_connected": false
+  },
+  "write_summary": {
+    "changed": 7917,
+    "unchanged": 5535,
+    "unchanged_rate": 0.411463,
+    "unchanged_writes_per_transaction": 7.8178,
+    "measured_unchanged_set_ms_per_transaction": 0.1366
+  },
+  "groups": {
+    "diagnostic_payload": {
+      "changed": 3777,
+      "unchanged": 1887,
+      "unchanged_rate": 0.333157
+    },
+    "emitter_payload": {
+      "changed": 1272,
+      "unchanged": 2976,
+      "unchanged_rate": 0.700565
+    },
+    "revision": {
+      "changed": 2124,
+      "unchanged": 0,
+      "unchanged_rate": 0.0
+    },
+    "visual_payload": {
+      "changed": 744,
+      "unchanged": 672,
+      "unchanged_rate": 0.474576
+    }
+  },
+  "attributes": [
+    {
+      "name": "Log_01.campfire:weakestSupportRatio",
+      "changed": 0,
+      "unchanged": 708,
+      "unchanged_rate": 1.0,
+      "changed_set_timing_ms": null,
+      "unchanged_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 708,
+        "total_ms": 7.2666,
+        "weighted_mean_ms": 0.0103,
+        "median_run_p95_ms": 0.0194,
+        "maximum_ms": 0.0741
+      }
+    },
+    {
+      "name": "Emitter.coupleRateTemperature",
+      "changed": 0,
+      "unchanged": 708,
+      "unchanged_rate": 1.0,
+      "changed_set_timing_ms": null,
+      "unchanged_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 708,
+        "total_ms": 5.8823,
+        "weighted_mean_ms": 0.0083,
+        "median_run_p95_ms": 0.0144,
+        "maximum_ms": 0.0653
+      }
+    },
+    {
+      "name": "Emitter.coupleRateFuel",
+      "changed": 3,
+      "unchanged": 705,
+      "unchanged_rate": 0.995763,
+      "changed_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 3,
+        "total_ms": 0.5029,
+        "weighted_mean_ms": 0.1676,
+        "median_run_p95_ms": 0.142,
+        "maximum_ms": 0.2317
+      },
+      "unchanged_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 705,
+        "total_ms": 7.2908,
+        "weighted_mean_ms": 0.0103,
+        "median_run_p95_ms": 0.0182,
+        "maximum_ms": 0.0498
+      }
+    },
+    {
+      "name": "Emitter.coupleRateSmoke",
+      "changed": 3,
+      "unchanged": 705,
+      "unchanged_rate": 0.995763,
+      "changed_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 3,
+        "total_ms": 0.5001,
+        "weighted_mean_ms": 0.1667,
+        "median_run_p95_ms": 0.1442,
+        "maximum_ms": 0.2286
+      },
+      "unchanged_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 705,
+        "total_ms": 5.4344,
+        "weighted_mean_ms": 0.0077,
+        "median_run_p95_ms": 0.0136,
+        "maximum_ms": 0.0722
+      }
+    },
+    {
+      "name": "Emitter.fuel",
+      "changed": 45,
+      "unchanged": 663,
+      "unchanged_rate": 0.936441,
+      "changed_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 45,
+        "total_ms": 24.0897,
+        "weighted_mean_ms": 0.5353,
+        "median_run_p95_ms": 0.8617,
+        "maximum_ms": 0.9341
+      },
+      "unchanged_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 663,
+        "total_ms": 34.5399,
+        "weighted_mean_ms": 0.0521,
+        "median_run_p95_ms": 0.0709,
+        "maximum_ms": 0.1868
+      }
+    },
+    {
+      "name": "Log_01.primvars:displayColor",
+      "changed": 222,
+      "unchanged": 486,
+      "unchanged_rate": 0.686441,
+      "changed_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 222,
+        "total_ms": 33.3583,
+        "weighted_mean_ms": 0.1503,
+        "median_run_p95_ms": 0.2744,
+        "maximum_ms": 0.3761
+      },
+      "unchanged_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 486,
+        "total_ms": 12.2879,
+        "weighted_mean_ms": 0.0253,
+        "median_run_p95_ms": 0.0415,
+        "maximum_ms": 0.087
+      }
+    },
+    {
+      "name": "Log_01.campfire:charFraction",
+      "changed": 222,
+      "unchanged": 486,
+      "unchanged_rate": 0.686441,
+      "changed_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 222,
+        "total_ms": 27.9766,
+        "weighted_mean_ms": 0.126,
+        "median_run_p95_ms": 0.2336,
+        "maximum_ms": 0.2755
+      },
+      "unchanged_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 486,
+        "total_ms": 5.1031,
+        "weighted_mean_ms": 0.0105,
+        "median_run_p95_ms": 0.0204,
+        "maximum_ms": 0.0795
+      }
+    },
+    {
+      "name": "Log_00.campfire:weakestSupportRatio",
+      "changed": 432,
+      "unchanged": 276,
+      "unchanged_rate": 0.389831,
+      "changed_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 432,
+        "total_ms": 57.0084,
+        "weighted_mean_ms": 0.132,
+        "median_run_p95_ms": 0.2366,
+        "maximum_ms": 0.4419
+      },
+      "unchanged_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 276,
+        "total_ms": 2.862,
+        "weighted_mean_ms": 0.0104,
+        "median_run_p95_ms": 0.0192,
+        "maximum_ms": 0.0585
+      }
+    },
+    {
+      "name": "Emitter.smoke",
+      "changed": 513,
+      "unchanged": 195,
+      "unchanged_rate": 0.275424,
+      "changed_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 513,
+        "total_ms": 83.181,
+        "weighted_mean_ms": 0.1621,
+        "median_run_p95_ms": 0.2587,
+        "maximum_ms": 0.4029
+      },
+      "unchanged_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 195,
+        "total_ms": 2.8771,
+        "weighted_mean_ms": 0.0148,
+        "median_run_p95_ms": 0.0247,
+        "maximum_ms": 0.0555
+      }
+    },
+    {
+      "name": "Log_00.primvars:displayColor",
+      "changed": 522,
+      "unchanged": 186,
+      "unchanged_rate": 0.262712,
+      "changed_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 522,
+        "total_ms": 99.1602,
+        "weighted_mean_ms": 0.19,
+        "median_run_p95_ms": 0.2973,
+        "maximum_ms": 0.5108
+      },
+      "unchanged_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 186,
+        "total_ms": 8.7997,
+        "weighted_mean_ms": 0.0473,
+        "median_run_p95_ms": 0.0717,
+        "maximum_ms": 0.1338
+      }
+    },
+    {
+      "name": "Log_00.campfire:charFraction",
+      "changed": 522,
+      "unchanged": 186,
+      "unchanged_rate": 0.262712,
+      "changed_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 522,
+        "total_ms": 73.4126,
+        "weighted_mean_ms": 0.1406,
+        "median_run_p95_ms": 0.252,
+        "maximum_ms": 0.4456
+      },
+      "unchanged_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 186,
+        "total_ms": 2.0418,
+        "weighted_mean_ms": 0.011,
+        "median_run_p95_ms": 0.0191,
+        "maximum_ms": 0.0347
+      }
+    },
+    {
+      "name": "Log_01.campfire:surfaceTemperatureK",
+      "changed": 543,
+      "unchanged": 165,
+      "unchanged_rate": 0.233051,
+      "changed_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 543,
+        "total_ms": 83.1999,
+        "weighted_mean_ms": 0.1532,
+        "median_run_p95_ms": 0.2829,
+        "maximum_ms": 0.4745
+      },
+      "unchanged_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 165,
+        "total_ms": 1.7104,
+        "weighted_mean_ms": 0.0104,
+        "median_run_p95_ms": 0.0175,
+        "maximum_ms": 0.0221
+      }
+    },
+    {
+      "name": "Log_01.campfire:remainingMassRatio",
+      "changed": 660,
+      "unchanged": 48,
+      "unchanged_rate": 0.067797,
+      "changed_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 660,
+        "total_ms": 95.1373,
+        "weighted_mean_ms": 0.1441,
+        "median_run_p95_ms": 0.2607,
+        "maximum_ms": 0.5806
+      },
+      "unchanged_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 48,
+        "total_ms": 0.4284,
+        "weighted_mean_ms": 0.0089,
+        "median_run_p95_ms": 0.0151,
+        "maximum_ms": 0.0216
+      }
+    },
+    {
+      "name": "Log_00.campfire:remainingMassRatio",
+      "changed": 690,
+      "unchanged": 18,
+      "unchanged_rate": 0.025424,
+      "changed_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 690,
+        "total_ms": 94.141,
+        "weighted_mean_ms": 0.1364,
+        "median_run_p95_ms": 0.2481,
+        "maximum_ms": 0.3889
+      },
+      "unchanged_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 18,
+        "total_ms": 0.1586,
+        "weighted_mean_ms": 0.0088,
+        "median_run_p95_ms": 0.0143,
+        "maximum_ms": 0.0152
+      }
+    },
+    {
+      "name": "Emitter.campfire:residentRevision",
+      "changed": 708,
+      "unchanged": 0,
+      "unchanged_rate": 0.0,
+      "changed_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 708,
+        "total_ms": 117.6371,
+        "weighted_mean_ms": 0.1662,
+        "median_run_p95_ms": 0.2902,
+        "maximum_ms": 0.5343
+      },
+      "unchanged_set_timing_ms": null
+    },
+    {
+      "name": "Emitter.temperature",
+      "changed": 708,
+      "unchanged": 0,
+      "unchanged_rate": 0.0,
+      "changed_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 708,
+        "total_ms": 305.0005,
+        "weighted_mean_ms": 0.4308,
+        "median_run_p95_ms": 0.6222,
+        "maximum_ms": 0.9569
+      },
+      "unchanged_set_timing_ms": null
+    },
+    {
+      "name": "Log_00.campfire:residentRevision",
+      "changed": 708,
+      "unchanged": 0,
+      "unchanged_rate": 0.0,
+      "changed_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 708,
+        "total_ms": 97.8211,
+        "weighted_mean_ms": 0.1382,
+        "median_run_p95_ms": 0.2539,
+        "maximum_ms": 0.4018
+      },
+      "unchanged_set_timing_ms": null
+    },
+    {
+      "name": "Log_00.campfire:surfaceTemperatureK",
+      "changed": 708,
+      "unchanged": 0,
+      "unchanged_rate": 0.0,
+      "changed_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 708,
+        "total_ms": 113.0158,
+        "weighted_mean_ms": 0.1596,
+        "median_run_p95_ms": 0.2854,
+        "maximum_ms": 0.5067
+      },
+      "unchanged_set_timing_ms": null
+    },
+    {
+      "name": "Log_01.campfire:residentRevision",
+      "changed": 708,
+      "unchanged": 0,
+      "unchanged_rate": 0.0,
+      "changed_set_timing_ms": {
+        "run_count": 3,
+        "sample_count": 708,
+        "total_ms": 100.0623,
+        "weighted_mean_ms": 0.1413,
+        "median_run_p95_ms": 0.2597,
+        "maximum_ms": 0.7186
+      },
+      "unchanged_set_timing_ms": null
+    }
+  ],
+  "decision": {
+    "optimization_adopted": false,
+    "no_op_only_candidate_deferred": true,
+    "revision_writes_remain_mandatory": [
+      "Emitter.campfire:residentRevision",
+      "Log_00.campfire:residentRevision",
+      "Log_01.campfire:residentRevision"
+    ],
+    "candidate_rule": "After reading the current authored value for rollback, omit journal and Set only when the USD-typed value is exactly unchanged; always publish revision.",
+    "consumer_event_semantics_require_audit": true,
+    "p95_below_4ms_claimed": false,
+    "reason": "Although unchanged values account for many writes, their measured Set time is too small to close the current p95 gap by itself; skipping them also needs a consumer event-semantics contract.",
+    "next_gate": "Prototype prim and attribute handle caching behind an opt-in flag while retaining actual old-value capture and rollback; combine exact no-op skipping only if needed."
+  }
+}

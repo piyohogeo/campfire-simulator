@@ -904,8 +904,6 @@ class TestScene(omni.kit.test.AsyncTestCase):
                 prim.GetAttribute("campfire:weakestSupportRatio").Get(),
                 row.weakest_support_ratio,
             )
-        with self.assertRaisesRegex(RuntimeError, "increase monotonically"):
-            adapter.publish(snapshot)
         status = adapter.status()
         self.assertEqual(status["revision"], 1)
         self.assertEqual(status["publish_count"], 1)
@@ -926,8 +924,35 @@ class TestScene(omni.kit.test.AsyncTestCase):
             {"emitter_payload", "visual_payload", "diagnostic_payload", "revision"},
         )
         self.assertEqual(len(profile.attribute_ms), 19)
+        self.assertEqual(
+            profile.changed_write_count + profile.unchanged_write_count,
+            19,
+        )
         self.assertGreater(profile.total_ms, 0.0)
         self.assertGreaterEqual(profile.unattributed_ms, 0.0)
+        repeated_snapshot = campfire.app.ResidentPublishedSnapshot(
+            2, 0, log_ids, rows
+        )
+        adapter.publish(repeated_snapshot)
+        repeated_profile = adapter.transaction_profiles()[1]
+        self.assertEqual(repeated_profile.changed_write_count, 3)
+        self.assertEqual(repeated_profile.unchanged_write_count, 16)
+        self.assertEqual(
+            dict(repeated_profile.attribute_write_disposition)[
+                "Emitter.campfire:residentRevision"
+            ],
+            "changed",
+        )
+        self.assertEqual(
+            dict(repeated_profile.attribute_write_disposition)["Emitter.temperature"],
+            "unchanged",
+        )
+        with self.assertRaisesRegex(RuntimeError, "increase monotonically"):
+            adapter.publish(snapshot)
+        status = adapter.status()
+        self.assertEqual(status["revision"], 2)
+        self.assertEqual(status["publish_count"], 2)
+        self.assertEqual(status["transaction_profile_count"], 2)
         adapter.on_timeline_stopped()
         self.assertTrue(adapter.close())
         self.assertFalse(adapter.close())
@@ -972,6 +997,10 @@ class TestScene(omni.kit.test.AsyncTestCase):
         failed_profile = adapter.transaction_profiles()[0]
         self.assertEqual(failed_profile.status, "rolled_back")
         self.assertEqual(failed_profile.write_count, 4)
+        self.assertEqual(
+            failed_profile.changed_write_count + failed_profile.unchanged_write_count,
+            4,
+        )
         self.assertGreater(failed_profile.rollback_ms, 0.0)
 
         thread_errors = []
