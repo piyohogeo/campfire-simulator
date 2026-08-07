@@ -525,4 +525,9 @@ async def _run(arguments):
         app.post_uncancellable_quit(exit_code)
 
 
-asyncio.ensure_future(_run(_settings()))
+def main():
+    asyncio.ensure_future(_run(_settings()))
+
+
+if __name__ == "__main__":
+    main()

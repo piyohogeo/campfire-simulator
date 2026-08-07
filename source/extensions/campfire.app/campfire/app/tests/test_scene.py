@@ -1172,6 +1172,133 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertFalse(closed["pending_discarded"])
         self.assertTrue(session.close()["already_closed"])
 
+    async def test_resident_application_session_retries_sidecar_with_snapshot(self):
+        class Payload:
+            def __init__(self, revision):
+                self.revision = revision
+
+        class Snapshot:
+            def __init__(self, revision, tick):
+                self.revision = revision
+                self.tick = tick
+
+        class Step:
+            def __init__(self, revision, tick):
+                self.snapshot = Snapshot(revision, tick)
+
+        class Backend:
+            def __init__(self):
+                self.revision = 0
+                self.closed = False
+
+            def step(self, *, tick):
+                self.revision += 1
+                return Step(self.revision, tick)
+
+            def status(self):
+                return {"revision": self.revision, "active": not self.closed}
+
+            def close(self):
+                self.closed = True
+                return {"revision": self.revision, "active": False}
+
+        class Adapter:
+            def __init__(self):
+                self.revision = 0
+                self.fail_revision = None
+
+            def on_timeline_started(self):
+                pass
+
+            def on_timeline_stopped(self):
+                pass
+
+            def publish(self, snapshot):
+                if snapshot.revision == self.fail_revision:
+                    self.fail_revision = None
+                    raise RuntimeError("injected primary failure")
+                self.revision = snapshot.revision
+
+            def status(self):
+                return {"revision": self.revision}
+
+            def close(self):
+                return True
+
+        class Sidecar:
+            def __init__(self):
+                self.revision = 0
+                self.fail_revision = None
+                self.prepared = []
+                self.published = []
+                self.rollback_count = 0
+                self.layout = None
+
+            def prepare(self, snapshot):
+                payload = Payload(snapshot.revision)
+                self.prepared.append(payload)
+                return payload
+
+            def publish(self, payload):
+                self.published.append(payload)
+                if payload.revision == self.fail_revision:
+                    self.fail_revision = None
+                    raise RuntimeError("injected sidecar failure")
+                self.revision = payload.revision
+
+            def rollback_last_commit(self, revision):
+                self.assert_revision = revision
+                self.revision = revision - 1
+                self.rollback_count += 1
+
+            def status(self):
+                return {"revision": self.revision}
+
+            def replace_layout(self, layout):
+                self.layout = layout
+                return layout
+
+            def close(self):
+                return True
+
+        backend = Backend()
+        adapter = Adapter()
+        sidecar = Sidecar()
+        session = campfire.app.ResidentApplicationSession(
+            backend, adapter, sidecar=sidecar
+        )
+        session.start()
+        session.step(tick=1)
+        with self.assertRaisesRegex(RuntimeError, "ready or stopped"):
+            session.replace_sidecar_layout("moving")
+
+        sidecar.fail_revision = 2
+        with self.assertRaisesRegex(RuntimeError, "injected sidecar failure"):
+            session.step(tick=2)
+        self.assertEqual(adapter.revision, 1)
+        self.assertEqual(sidecar.revision, 1)
+        pending_payload = sidecar.prepared[-1]
+        session.retry_pending()
+        self.assertIs(sidecar.published[-1], pending_payload)
+        self.assertEqual(adapter.revision, 2)
+        self.assertEqual(sidecar.revision, 2)
+
+        adapter.fail_revision = 3
+        with self.assertRaisesRegex(RuntimeError, "injected primary failure"):
+            session.step(tick=3)
+        self.assertEqual(adapter.revision, 2)
+        self.assertEqual(sidecar.revision, 2)
+        self.assertEqual(sidecar.rollback_count, 1)
+        self.assertEqual(session.status()["pending_sidecar_revision"], 3)
+        session.retry_pending()
+        self.assertEqual(adapter.revision, 3)
+        self.assertEqual(sidecar.revision, 3)
+        self.assertIsNone(session.status()["pending_sidecar_revision"])
+        session.stop()
+        self.assertEqual(session.replace_sidecar_layout("moving"), "moving")
+        self.assertEqual(sidecar.layout, "moving")
+        session.close()
+
     async def test_resident_snapshot_adapter_resumes_only_matching_consumer_revision(self):
         stage = Usd.Stage.CreateInMemory()
         campfire.app.populate_phase3_scene(stage)
