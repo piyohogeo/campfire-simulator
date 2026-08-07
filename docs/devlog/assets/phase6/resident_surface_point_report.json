@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "phase": "phase6cc",
+  "status": "ok",
+  "timestamp_utc": "2026-08-07T20:36:13.924803+00:00",
+  "scope": {
+    "default_off": true,
+    "production_runtime_path_changed": false,
+    "native_library_change": "additive uncalled C ABI exports",
+    "production_sphere_changed": false,
+    "flow_version": "110.0.0",
+    "log_count": 20,
+    "cells_per_log": 1152,
+    "surface_points_per_log": 360,
+    "point_count": 7200,
+    "emitter_count": 1
+  },
+  "contract": {
+    "authority": "ResidentNativeBackend private contiguous SoA",
+    "layout": "native float32 positions built once",
+    "dynamic_channels": [
+      "pointFuels",
+      "pointTemperatures",
+      "pointSmokes"
+    ],
+    "revision": "existing immutable ResidentPublishedSnapshot revision",
+    "post_connection_mutation": "pre-existing array attributes and revision only",
+    "point_temperature_mapping": "clamp((cell_temperature_k - ambient_k) / 500, 0, 2)",
+    "point_fuel_smoke_mapping": "per-log existing published flow_fuel and flow_smoke replicated to its 360 surface cells"
+  },
+  "equivalence": {
+    "layout_max_abs_error_m": 0.0,
+    "channel_max_abs_error": 0.0,
+    "final_counts": {
+      "positions": 7200,
+      "fuels": 7200,
+      "temperatures": 7200,
+      "smokes": 7200
+    },
+    "final_revision": 150,
+    "native_buffer_pointers_stable": true,
+    "live_resync_paths": [],
+    "notice_count": 150
+  },
+  "flow": {
+    "active_blocks_peak": 845,
+    "readback_words": {
+      "temperature": 7777152,
+      "fuel": 7777152,
+      "burn": 7777152,
+      "smoke": 7777152,
+      "velocity": 3849480,
+      "divergence": 0
+    },
+    "before": {
+      "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6cc\\resident_surface_point_raw.before.png",
+      "bytes": 655538,
+      "sha256": "a84ba68e9d14de1ee3906590967e33497fec9e0dececb4ba10e6ec471b58199a"
+    },
+    "mid": {
+      "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6cc\\resident_surface_point_raw.mid.png",
+      "bytes": 1236833,
+      "sha256": "cb02fda187fc6aa1f8386cb173f8435507546ea92c103585cf38421716e84ec2"
+    },
+    "final": {
+      "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6cc\\resident_surface_point_raw.final.png",
+      "bytes": 1232889,
+      "sha256": "4ec8b810fc4d0d5dba83d45bca057537a867321e6f737f7b462c2c07046761a8"
+    }
+  },
+  "measurement": {
+    "frames": 120,
+    "warmup": 30,
+    "static_python_gf_layout_once_ms": 12.0255,
+    "static_native_layout": {
+      "samples": 120,
+      "mean_ms": 0.13607583333333334,
+      "p95_ms": 0.1469,
+      "maximum_ms": 0.2036
+    },
+    "resident_step_and_snapshot": {
+      "samples": 120,
+      "mean_ms": 1.9021525,
+      "p95_ms": 2.9702,
+      "maximum_ms": 4.6597
+    },
+    "legacy_python_gf_source": {
+      "samples": 120,
+      "mean_ms": 16.22909333333333,
+      "p95_ms": 21.4433,
+      "maximum_ms": 93.3039
+    },
+    "native_dynamic_channels": {
+      "samples": 120,
+      "mean_ms": 0.07413833333333333,
+      "p95_ms": 0.1395,
+      "maximum_ms": 0.2009
+    },
+    "numpy_to_vt_dynamic_copy": {
+      "samples": 120,
+      "mean_ms": 0.08071666666666667,
+      "p95_ms": 0.126,
+      "maximum_ms": 0.251
+    },
+    "usd_attribute_set": {
+      "samples": 120,
+      "mean_ms": 0.15771083333333333,
+      "p95_ms": 0.2257,
+      "maximum_ms": 0.3946
+    },
+    "change_block_exit": {
+      "samples": 120,
+      "mean_ms": 0.495865,
+      "p95_ms": 0.6946,
+      "maximum_ms": 1.2378
+    },
+    "dynamic_publication_total": {
+      "samples": 120,
+      "mean_ms": 0.7554766666666667,
+      "p95_ms": 1.0581,
+      "maximum_ms": 1.5813
+    },
+    "flow_render_update": {
+      "samples": 120,
+      "mean_ms": 5.282400833333333,
+      "p95_ms": 6.8501,
+      "maximum_ms": 10.2376
+    },
+    "initial_full_payload_bytes": 172808,
+    "steady_dynamic_payload_bytes": 86408,
+    "initial_attribute_updates": 5,
+    "steady_attribute_updates": 4
+  },
+  "gates": {
+    "native_layout_matches_phase6cb": true,
+    "surface_count_exact_7200": true,
+    "native_channels_match_resident_reference": true,
+    "resident_revision_is_publication_revision": true,
+    "preallocated_float32_buffers_stable": true,
+    "vt_boundary_owns_copy": true,
+    "static_position_published_once": true,
+    "only_existing_attributes_updated": true,
+    "one_notice_per_publication": true,
+    "flow_core_active": true,
+    "flow_fields_nonempty": true,
+    "viewport_fire_smoke_changed": true,
+    "production_defaults_unchanged": true
+  },
+  "decision": {
+    "native_dynamic_source_speedup_p95": 153.71541218637992,
+    "single_emitter_retained": true,
+    "production_adoption": "deferred",
+    "next_boundary": "default-off scheduler ownership and moving-log layout invalidation"
+  }
+}

@@ -37,7 +37,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>49 / 49 passed</strong></div>
-        <div><span>次の焦点</span><strong>Resident surface配列producer</strong></div>
+        <div><span>次の焦点</span><strong>surface viewのsession所有</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6CB · Point Emitter core qualification</p>
-            <h2>7,200点をひとつに束ね、<br>Flow 110で最後まで燃やす。</h2>
-            <p>同梱Native PointCloud presetを使わず、FlowSimulate、FlowOffscreen、FlowRender、FlowEmitterPoint、UsdGeomPointsを接続前に完成させた最小stageを作りました。16点から20本×360点＝7,200点へ拡張し、active block、NanoVDB field、実viewportの炎・煙までFlow 110.0.0で成立しました。production Sphereと依存版は変更せず、単一Emitterを次候補として維持します。</p>
+            <p class="section-kicker">Phase 6CC · Resident-native Point source</p>
+            <h2>7,200点を、<br>Python objectから組み直さない。</h2>
+            <p>Resident SoAをC++から直接読み、静的位置と動的fuel・temperature・smokeを事前確保した連続配列へ構成しました。dynamic生成p95は0.1395 ms、Vt copyからUSD通知完了まで1.0581 msです。既存immutable snapshotのrevisionを使い、単一Point EmitterでFlow 110のactive blockと炎・煙を再確認しました。production経路はまだ有効化していません。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -920,6 +920,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6cc-resident-surface-point" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6CC</h3>
+            <a href="assets/phase6/resident_surface_point_report.svg" aria-label="Phase 6CC Resident native surface Pointレポートを開く">
+              <img src="assets/phase6/resident_surface_point_report.svg" width="1200" height="680" alt="Resident SoAから7200点の動的channelを生成し、Vtコピー、USD発行、Flow処理へ渡す各p95を示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Resident SoA · native arrays · one Point Emitter</strong><span>13 / 13 · 7,200 points · 845 active blocks · dynamic source p95 0.1395 ms</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_surface_point.mp4" data-video-poster="assets/phase6/resident_surface_point_frame.png" data-video-title="Phase 6CC Resident-native 7,200-point scenario" data-video-meta="Flow 110.0.0 · Resident SoA channels · before, revision 75, revision 150 real RTX captures · 1280×720 · 10 fps · 6 s">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · Resident配列から炎・煙へ</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1309,6 +1323,12 @@
               <div><dt>Phase 6CB render</dt><dd>temperature/fuel/burn/smoke/velocity readback nonempty · viewport changed</dd></div>
               <div><dt>Phase 6CB decision</dt><dd>Flow 110 route qualified · one Emitter preferred · production adoption deferred</dd></div>
               <div><dt>Phase 6CB regression</dt><dd>8 processes · 49 / 49 pass · 313.3 s · collapse coverage 184.6 s</dd></div>
+              <div><dt>Phase 6CC gates</dt><dd>13 / 13 · 150 revisions/notices · live resync 0 · active blocks 845</dd></div>
+              <div><dt>Phase 6CC source p95</dt><dd>Python/Gf 21.4433 → native dynamic 0.1395 ms · 153.7× boundary ratio</dd></div>
+              <div><dt>Phase 6CC publish p95</dt><dd>Vt 0.1260 · Set 0.2257 · exit 0.6946 · total 1.0581 ms</dd></div>
+              <div><dt>Phase 6CC steady payload</dt><dd>86,408 B · 3 channel arrays + immutable snapshot revision</dd></div>
+              <div><dt>Phase 6CC decision</dt><dd>one Point Emitter retained · session ownership and layout invalidation pending</dd></div>
+              <div><dt>Phase 6CC regression</dt><dd>8 processes · 49 / 49 pass · 303.7 s · collapse coverage 180.3 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
