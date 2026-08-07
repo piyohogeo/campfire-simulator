@@ -865,7 +865,10 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(rounded.remaining_mass_ratio, 1.0)
         snapshot = campfire.app.ResidentPublishedSnapshot(1, 0, log_ids, rows)
         adapter = campfire.app.UsdResidentSnapshotAdapter(
-            stage, log_ids, initial_dry_mass
+            stage,
+            log_ids,
+            initial_dry_mass,
+            profile_transactions=True,
         )
         with self.assertRaisesRegex(RuntimeError, "active timeline"):
             adapter.publish(snapshot)
@@ -907,6 +910,24 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(status["revision"], 1)
         self.assertEqual(status["publish_count"], 1)
         self.assertEqual(status["start_count"], 1)
+        self.assertTrue(status["transaction_profiling_enabled"])
+        self.assertEqual(status["transaction_profile_count"], 1)
+        profile = adapter.transaction_profiles()[0]
+        self.assertIsInstance(profile, campfire.app.ResidentUsdTransactionProfile)
+        self.assertEqual(profile.status, "committed")
+        self.assertEqual(profile.write_count, 19)
+        self.assertEqual(
+            profile.existing_property_count + profile.created_property_count,
+            19,
+        )
+        self.assertLessEqual(profile.authored_old_value_count, 19)
+        self.assertEqual(
+            {name for name, _elapsed_ms in profile.group_ms},
+            {"emitter_payload", "visual_payload", "diagnostic_payload", "revision"},
+        )
+        self.assertEqual(len(profile.attribute_ms), 19)
+        self.assertGreater(profile.total_ms, 0.0)
+        self.assertGreaterEqual(profile.unattributed_ms, 0.0)
         adapter.on_timeline_stopped()
         self.assertTrue(adapter.close())
         self.assertFalse(adapter.close())
@@ -936,6 +957,7 @@ class TestScene(omni.kit.test.AsyncTestCase):
             log_ids,
             initial_dry_mass,
             write_observer=fail_fourth_write,
+            profile_transactions=True,
         )
         adapter.on_timeline_started()
         emitter = stage.GetPrimAtPath(campfire.app.FLOW_EMITTER_PATH)
@@ -946,6 +968,11 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertFalse(emitter.GetAttribute("campfire:residentRevision"))
         self.assertEqual(adapter.status()["revision"], 0)
         self.assertEqual(adapter.status()["publish_count"], 0)
+        self.assertEqual(adapter.status()["transaction_profile_count"], 1)
+        failed_profile = adapter.transaction_profiles()[0]
+        self.assertEqual(failed_profile.status, "rolled_back")
+        self.assertEqual(failed_profile.write_count, 4)
+        self.assertGreater(failed_profile.rollback_ms, 0.0)
 
         thread_errors = []
 

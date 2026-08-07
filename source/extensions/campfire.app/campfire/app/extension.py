@@ -1074,6 +1074,9 @@ class CampfireAppExtension(omni.ext.IExt):
         resident_snapshot_adapter_enabled = settings.get_as_bool(
             f"{SETTINGS_ROOT}/residentSnapshotAdapterEnabled"
         )
+        resident_snapshot_timing_enabled = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/residentSnapshotTimingEnabled"
+        )
         video_frame_interval_steps = settings.get_as_int(
             f"{SETTINGS_ROOT}/videoFrameIntervalSteps"
         )
@@ -1114,6 +1117,10 @@ class CampfireAppExtension(omni.ext.IExt):
             )
         if profile_sensible_heat and not python_surface_boundary_fast_path:
             raise ValueError("Sensible-heat timing requires the fast surface path")
+        if resident_snapshot_timing_enabled and not resident_snapshot_adapter_enabled:
+            raise ValueError(
+                "Resident snapshot timing requires the resident snapshot adapter"
+            )
         flow_interface = _flowusd.acquire_flowusd_interface()
         dry_prim = stage.GetPrimAtPath(f"/World/Logs/{PHASE3_DRY_LOG_ID}")
         wet_prim = stage.GetPrimAtPath(f"/World/Logs/{PHASE3_WET_LOG_ID}")
@@ -1138,6 +1145,7 @@ class CampfireAppExtension(omni.ext.IExt):
         resident_adapter_stopped = False
         resident_adapter_status = None
         resident_final_usd_state = None
+        resident_transaction_profiles = ()
         if resident_snapshot_adapter_enabled:
             resident_timeline = omni.timeline.get_timeline_interface()
             resident_timeline_was_playing = bool(resident_timeline.is_playing())
@@ -1155,7 +1163,10 @@ class CampfireAppExtension(omni.ext.IExt):
                 for log_id, model in zip(log_ids, (dry_model, wet_model))
             }
             resident_adapter = UsdResidentSnapshotAdapter(
-                stage, log_ids, initial_dry_mass_kg
+                stage,
+                log_ids,
+                initial_dry_mass_kg,
+                profile_transactions=resident_snapshot_timing_enabled,
             )
             self._resident_snapshot_adapter = resident_adapter
         ignition_seconds = {"dry": None, "wet": None}
@@ -1168,6 +1179,8 @@ class CampfireAppExtension(omni.ext.IExt):
         flow_emitter_usd_times_ms = []
         wood_visual_usd_times_ms = []
         resident_snapshot_usd_times_ms = []
+        resident_snapshot_build_times_ms = []
+        resident_snapshot_transaction_times_ms = []
         update_times_ms = []
         active_block_query_times_ms = []
         capture_times_ms = []
@@ -1360,6 +1373,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 if update_flow:
                     adapter_started = time.perf_counter()
                     if resident_adapter is not None:
+                        snapshot_build_started = time.perf_counter()
                         wet_source = flow_source_from_model(
                             wet_model,
                             wet_result,
@@ -1380,7 +1394,14 @@ class CampfireAppExtension(omni.ext.IExt):
                                 ),
                             ),
                         )
+                        resident_snapshot_build_times_ms.append(
+                            (time.perf_counter() - snapshot_build_started) * 1000.0
+                        )
+                        transaction_started = time.perf_counter()
                         resident_adapter.publish(snapshot)
+                        resident_snapshot_transaction_times_ms.append(
+                            (time.perf_counter() - transaction_started) * 1000.0
+                        )
                         resident_snapshot_usd_times_ms.append(
                             (time.perf_counter() - adapter_started) * 1000.0
                         )
@@ -1488,6 +1509,9 @@ class CampfireAppExtension(omni.ext.IExt):
                 resident_timeline.pause()
                 resident_adapter_stopped = True
                 resident_adapter_status = resident_adapter.status()
+                resident_transaction_profiles = (
+                    resident_adapter.transaction_profiles()
+                )
                 emitter = stage.GetPrimAtPath(FLOW_EMITTER_PATH)
                 resident_final_usd_state = {
                     "emitter": {
@@ -1573,6 +1597,86 @@ class CampfireAppExtension(omni.ext.IExt):
             step_warmup_samples = 20
             flow_warmup_samples = 4
             visual_warmup_samples = 2
+            resident_transaction_profile = None
+            if resident_transaction_profiles:
+                profile_warmup_samples = flow_warmup_samples
+                operation_fields = (
+                    "total_ms",
+                    "validation_ms",
+                    "prim_lookup_ms",
+                    "payload_preparation_ms",
+                    "attribute_lookup_ms",
+                    "old_value_capture_ms",
+                    "journal_append_ms",
+                    "attribute_set_ms",
+                    "write_observer_ms",
+                    "commit_ms",
+                    "rollback_ms",
+                    "unattributed_ms",
+                )
+                group_names = tuple(
+                    name for name, _value in resident_transaction_profiles[0].group_ms
+                )
+                attribute_names = tuple(
+                    name
+                    for name, _value in resident_transaction_profiles[0].attribute_ms
+                )
+                measured_profiles = resident_transaction_profiles[
+                    profile_warmup_samples:
+                ]
+                resident_transaction_profile = {
+                    "sample_count": len(measured_profiles),
+                    "warmup_samples_excluded": profile_warmup_samples,
+                    "status_counts": {
+                        status: sum(
+                            profile.status == status
+                            for profile in resident_transaction_profiles
+                        )
+                        for status in ("committed", "rolled_back")
+                    },
+                    "operations": {
+                        name: summarize_timing_ms(
+                            [
+                                getattr(profile, name)
+                                for profile in resident_transaction_profiles
+                            ],
+                            profile_warmup_samples,
+                        )
+                        for name in operation_fields
+                    },
+                    "groups": {
+                        name: summarize_timing_ms(
+                            [
+                                dict(profile.group_ms)[name]
+                                for profile in resident_transaction_profiles
+                            ],
+                            profile_warmup_samples,
+                        )
+                        for name in group_names
+                    },
+                    "attributes": {
+                        name: summarize_timing_ms(
+                            [
+                                dict(profile.attribute_ms)[name]
+                                for profile in resident_transaction_profiles
+                            ],
+                            profile_warmup_samples,
+                        )
+                        for name in attribute_names
+                    },
+                    "counts": {
+                        name: {
+                            "minimum": min(getattr(profile, name) for profile in measured_profiles),
+                            "maximum": max(getattr(profile, name) for profile in measured_profiles),
+                        }
+                        for name in (
+                            "write_count",
+                            "existing_property_count",
+                            "created_property_count",
+                            "authored_old_value_count",
+                        )
+                    },
+                }
             startup_known_seconds = sum(self._startup_timing.values())
             startup_timing = {
                 **self._startup_timing,
@@ -1619,6 +1723,21 @@ class CampfireAppExtension(omni.ext.IExt):
                         resident_snapshot_usd_times_ms, flow_warmup_samples
                     )
                     if resident_snapshot_usd_times_ms
+                    else None
+                ),
+                "resident_snapshot_build": (
+                    summarize_timing_ms(
+                        resident_snapshot_build_times_ms, flow_warmup_samples
+                    )
+                    if resident_snapshot_build_times_ms
+                    else None
+                ),
+                "resident_snapshot_transaction": (
+                    summarize_timing_ms(
+                        resident_snapshot_transaction_times_ms,
+                        flow_warmup_samples,
+                    )
+                    if resident_snapshot_transaction_times_ms
                     else None
                 ),
                 "kit_flow_render_update": summarize_timing_ms(
@@ -1738,6 +1857,9 @@ class CampfireAppExtension(omni.ext.IExt):
                     "precomputed_runtime_topology": precomputed_runtime_topology,
                     "resident_snapshot_adapter": {
                         "enabled": resident_snapshot_adapter_enabled,
+                        "transaction_timing_enabled": (
+                            resident_snapshot_timing_enabled
+                        ),
                         "producer": (
                             "python_contract_bridge"
                             if resident_snapshot_adapter_enabled
@@ -1746,6 +1868,7 @@ class CampfireAppExtension(omni.ext.IExt):
                         "native_producer_connected": False,
                         "status_after_timeline_stop": resident_adapter_status,
                         "final_usd_state": resident_final_usd_state,
+                        "transaction_profile": resident_transaction_profile,
                     },
                     "final_phase_refresh_seconds": round(
                         final_phase_refresh_seconds, 6

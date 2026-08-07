@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import math
 import threading
+import time
 from dataclasses import dataclass
 from typing import Callable
 
@@ -158,6 +159,31 @@ class _AttributeRestore:
             self.attribute.Clear()
 
 
+@dataclass(frozen=True)
+class ResidentUsdTransactionProfile:
+    """Opt-in timings for one transactional USD publication."""
+
+    status: str
+    total_ms: float
+    validation_ms: float
+    prim_lookup_ms: float
+    payload_preparation_ms: float
+    attribute_lookup_ms: float
+    old_value_capture_ms: float
+    journal_append_ms: float
+    attribute_set_ms: float
+    write_observer_ms: float
+    commit_ms: float
+    rollback_ms: float
+    unattributed_ms: float
+    write_count: int
+    existing_property_count: int
+    created_property_count: int
+    authored_old_value_count: int
+    group_ms: tuple[tuple[str, float], ...]
+    attribute_ms: tuple[tuple[str, float], ...]
+
+
 class UsdResidentSnapshotAdapter:
     """Publish one immutable revision to Flow, visual, and support consumers."""
 
@@ -168,6 +194,7 @@ class UsdResidentSnapshotAdapter:
         initial_dry_mass_kg: dict[str, float],
         *,
         write_observer: Callable[[int, str], None] | None = None,
+        profile_transactions: bool = False,
     ):
         if stage is None:
             raise ValueError("A USD stage is required")
@@ -179,6 +206,8 @@ class UsdResidentSnapshotAdapter:
         self._log_ids = tuple(log_ids)
         self._initial_dry_mass_kg = dict(initial_dry_mass_kg)
         self._write_observer = write_observer
+        self._profile_transactions = bool(profile_transactions)
+        self._transaction_profiles: list[ResidentUsdTransactionProfile] = []
         self._owner_thread_id = threading.get_ident()
         self._active = False
         self._closed = False
@@ -237,7 +266,30 @@ class UsdResidentSnapshotAdapter:
             0.35 * heat_fraction
         )
 
-    def _set_attribute(self, prim, name, type_name, value, restores):
+    def _set_attribute(
+        self,
+        prim,
+        name,
+        type_name,
+        value,
+        restores,
+        *,
+        profile=None,
+        group="payload",
+        label=None,
+    ):
+        if profile is not None:
+            self._set_attribute_profiled(
+                prim,
+                name,
+                type_name,
+                value,
+                restores,
+                profile,
+                group,
+                label or name,
+            )
+            return
         property_existed = bool(prim.GetProperty(name))
         attribute = prim.GetAttribute(name)
         if not attribute:
@@ -259,8 +311,128 @@ class UsdResidentSnapshotAdapter:
         if self._write_observer is not None:
             self._write_observer(len(restores), name)
 
+    @staticmethod
+    def _add_elapsed(profile, name, started_ns):
+        profile[name] += (time.perf_counter_ns() - started_ns) / 1_000_000.0
+
+    def _set_attribute_profiled(
+        self, prim, name, type_name, value, restores, profile, group, label
+    ):
+        operation_started = time.perf_counter_ns()
+        started = time.perf_counter_ns()
+        property_existed = bool(prim.GetProperty(name))
+        attribute = prim.GetAttribute(name)
+        if not attribute:
+            attribute = prim.CreateAttribute(name, type_name)
+        self._add_elapsed(profile, "attribute_lookup_ms", started)
+        if property_existed:
+            profile["existing_property_count"] += 1
+        else:
+            profile["created_property_count"] += 1
+
+        started = time.perf_counter_ns()
+        authored_value_existed = attribute.HasAuthoredValueOpinion()
+        previous_value = attribute.Get() if authored_value_existed else None
+        self._add_elapsed(profile, "old_value_capture_ms", started)
+        if authored_value_existed:
+            profile["authored_old_value_count"] += 1
+
+        started = time.perf_counter_ns()
+        restores.append(
+            _AttributeRestore(
+                prim,
+                name,
+                attribute,
+                property_existed,
+                authored_value_existed,
+                previous_value,
+            )
+        )
+        self._add_elapsed(profile, "journal_append_ms", started)
+
+        started = time.perf_counter_ns()
+        if not attribute.Set(value):
+            raise RuntimeError(f"Unable to publish USD attribute {prim.GetPath()}.{name}")
+        self._add_elapsed(profile, "attribute_set_ms", started)
+        profile["write_count"] += 1
+        if self._write_observer is not None:
+            started = time.perf_counter_ns()
+            self._write_observer(len(restores), name)
+            self._add_elapsed(profile, "write_observer_ms", started)
+        operation_ms = (time.perf_counter_ns() - operation_started) / 1_000_000.0
+        profile["group_ms"][group] = profile["group_ms"].get(group, 0.0) + operation_ms
+        profile["attribute_ms"][label] = operation_ms
+
+    @staticmethod
+    def _new_profile():
+        return {
+            "validation_ms": 0.0,
+            "prim_lookup_ms": 0.0,
+            "payload_preparation_ms": 0.0,
+            "attribute_lookup_ms": 0.0,
+            "old_value_capture_ms": 0.0,
+            "journal_append_ms": 0.0,
+            "attribute_set_ms": 0.0,
+            "write_observer_ms": 0.0,
+            "commit_ms": 0.0,
+            "rollback_ms": 0.0,
+            "write_count": 0,
+            "existing_property_count": 0,
+            "created_property_count": 0,
+            "authored_old_value_count": 0,
+            "group_ms": {},
+            "attribute_ms": {},
+        }
+
+    def _finish_profile(self, profile, status, transaction_started_ns):
+        total_ms = (time.perf_counter_ns() - transaction_started_ns) / 1_000_000.0
+        attributed_ms = sum(
+            profile[name]
+            for name in (
+                "validation_ms",
+                "prim_lookup_ms",
+                "payload_preparation_ms",
+                "attribute_lookup_ms",
+                "old_value_capture_ms",
+                "journal_append_ms",
+                "attribute_set_ms",
+                "write_observer_ms",
+                "commit_ms",
+                "rollback_ms",
+            )
+        )
+        self._transaction_profiles.append(
+            ResidentUsdTransactionProfile(
+                status=status,
+                total_ms=total_ms,
+                validation_ms=profile["validation_ms"],
+                prim_lookup_ms=profile["prim_lookup_ms"],
+                payload_preparation_ms=profile["payload_preparation_ms"],
+                attribute_lookup_ms=profile["attribute_lookup_ms"],
+                old_value_capture_ms=profile["old_value_capture_ms"],
+                journal_append_ms=profile["journal_append_ms"],
+                attribute_set_ms=profile["attribute_set_ms"],
+                write_observer_ms=profile["write_observer_ms"],
+                commit_ms=profile["commit_ms"],
+                rollback_ms=profile["rollback_ms"],
+                unattributed_ms=max(0.0, total_ms - attributed_ms),
+                write_count=profile["write_count"],
+                existing_property_count=profile["existing_property_count"],
+                created_property_count=profile["created_property_count"],
+                authored_old_value_count=profile["authored_old_value_count"],
+                group_ms=tuple(sorted(profile["group_ms"].items())),
+                attribute_ms=tuple(sorted(profile["attribute_ms"].items())),
+            )
+        )
+
     def publish(self, snapshot: ResidentPublishedSnapshot):
+        profile = self._new_profile() if self._profile_transactions else None
+        transaction_started = time.perf_counter_ns() if profile is not None else 0
+        started = time.perf_counter_ns() if profile is not None else 0
         self._require_publishable(snapshot)
+        if profile is not None:
+            self._add_elapsed(profile, "validation_ms", started)
+            started = time.perf_counter_ns()
         emitter = self._stage.GetPrimAtPath(FLOW_EMITTER_PATH)
         if not emitter:
             raise RuntimeError("Flow emitter prim is unavailable")
@@ -270,9 +442,12 @@ class UsdResidentSnapshotAdapter:
         ]
         if not all(log_prims):
             raise RuntimeError("One or more wood log prims are unavailable")
+        if profile is not None:
+            self._add_elapsed(profile, "prim_lookup_ms", started)
 
         restores = []
         try:
+            started = time.perf_counter_ns() if profile is not None else 0
             flow_row = snapshot.rows[0]
             flow_values = {
                 "fuel": flow_row.flow_fuel,
@@ -284,9 +459,18 @@ class UsdResidentSnapshotAdapter:
                 ),
                 "coupleRateSmoke": 1.0 if flow_row.flow_smoke > 0.0 else 0.0,
             }
+            if profile is not None:
+                self._add_elapsed(profile, "payload_preparation_ms", started)
             for name, value in flow_values.items():
                 self._set_attribute(
-                    emitter, name, Sdf.ValueTypeNames.Float, value, restores
+                    emitter,
+                    name,
+                    Sdf.ValueTypeNames.Float,
+                    value,
+                    restores,
+                    profile=profile,
+                    group="emitter_payload",
+                    label=f"Emitter.{name}",
                 )
             self._set_attribute(
                 emitter,
@@ -294,34 +478,53 @@ class UsdResidentSnapshotAdapter:
                 Sdf.ValueTypeNames.Int64,
                 snapshot.revision,
                 restores,
+                profile=profile,
+                group="revision",
+                label="Emitter.campfire:residentRevision",
             )
 
             for log_id, prim, row in zip(self._log_ids, log_prims, snapshot.rows):
+                started = time.perf_counter_ns() if profile is not None else 0
                 char_fraction = min(
                     1.0,
                     (row.char_mass_kg + row.ash_mass_kg)
                     / max(self._initial_dry_mass_kg[log_id], 1.0e-12),
                 )
                 color = self._visual_color(row, self._initial_dry_mass_kg[log_id])
-                display_color = UsdGeom.Gprim(prim).GetDisplayColorAttr()
-                if not display_color:
-                    raise RuntimeError(f"Log {log_id} has no displayColor attribute")
-                self._set_attribute(
-                    prim,
-                    display_color.GetName(),
-                    display_color.GetTypeName(),
-                    [color],
-                    restores,
-                )
                 values = {
                     "campfire:surfaceTemperatureK": row.surface_mean_temperature_k,
                     "campfire:charFraction": char_fraction,
                     "campfire:remainingMassRatio": row.remaining_mass_ratio,
                     "campfire:weakestSupportRatio": row.weakest_support_ratio,
                 }
+                if profile is not None:
+                    self._add_elapsed(profile, "payload_preparation_ms", started)
+                    started = time.perf_counter_ns()
+                display_color = UsdGeom.Gprim(prim).GetDisplayColorAttr()
+                if not display_color:
+                    raise RuntimeError(f"Log {log_id} has no displayColor attribute")
+                if profile is not None:
+                    self._add_elapsed(profile, "attribute_lookup_ms", started)
+                self._set_attribute(
+                    prim,
+                    display_color.GetName(),
+                    display_color.GetTypeName(),
+                    [color],
+                    restores,
+                    profile=profile,
+                    group="visual_payload",
+                    label=f"{log_id}.{display_color.GetName()}",
+                )
                 for name, value in values.items():
                     self._set_attribute(
-                        prim, name, Sdf.ValueTypeNames.Double, value, restores
+                        prim,
+                        name,
+                        Sdf.ValueTypeNames.Double,
+                        value,
+                        restores,
+                        profile=profile,
+                        group="diagnostic_payload",
+                        label=f"{log_id}.{name}",
                     )
                 self._set_attribute(
                     prim,
@@ -329,13 +532,28 @@ class UsdResidentSnapshotAdapter:
                     Sdf.ValueTypeNames.Int64,
                     snapshot.revision,
                     restores,
+                    profile=profile,
+                    group="revision",
+                    label=f"{log_id}.campfire:residentRevision",
                 )
         except Exception:
+            started = time.perf_counter_ns() if profile is not None else 0
             for restore in reversed(restores):
                 restore.rollback()
+            if profile is not None:
+                self._add_elapsed(profile, "rollback_ms", started)
+                self._finish_profile(profile, "rolled_back", transaction_started)
             raise
+        started = time.perf_counter_ns() if profile is not None else 0
         self._revision = snapshot.revision
         self._publish_count += 1
+        if profile is not None:
+            self._add_elapsed(profile, "commit_ms", started)
+            self._finish_profile(profile, "committed", transaction_started)
+
+    def transaction_profiles(self):
+        self._require_owner()
+        return tuple(self._transaction_profiles)
 
     def status(self):
         self._require_owner()
@@ -347,6 +565,8 @@ class UsdResidentSnapshotAdapter:
             "start_count": self._start_count,
             "stop_count": self._stop_count,
             "owner_thread_id": self._owner_thread_id,
+            "transaction_profiling_enabled": self._profile_transactions,
+            "transaction_profile_count": len(self._transaction_profiles),
         }
 
     def close(self):

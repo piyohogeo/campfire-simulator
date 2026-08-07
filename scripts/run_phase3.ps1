@@ -28,7 +28,8 @@ param(
     [int]$VideoFrameInterval = 20,
     [ValidateRange(1, 60)]
     [int]$VideoFps = 10,
-    [switch]$ResidentSnapshotAdapter
+    [switch]$ResidentSnapshotAdapter,
+    [switch]$ResidentSnapshotTiming
 )
 
 $ErrorActionPreference = "Stop"
@@ -77,6 +78,9 @@ if ($useInlineHomogeneousSensibleHeatCapacityFastPath -and -not $useHomogeneousH
 if ($ProfileSensibleHeat.IsPresent -and -not $usePythonSurfaceBoundaryFastPath) {
     throw "Sensible-heat timing requires the fast surface path."
 }
+if ($ResidentSnapshotTiming.IsPresent -and -not $ResidentSnapshotAdapter.IsPresent) {
+    throw "Resident snapshot timing requires -ResidentSnapshotAdapter."
+}
 
 if (-not (Test-Path -LiteralPath $kit) -or -not (Test-Path -LiteralPath $app)) {
     throw "Application is not built. Run .\repo.bat build first."
@@ -116,6 +120,7 @@ $kitArgs = @(
     "--/exts/campfire.app/captureVideoFrames=$($CaptureVideo.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/videoFrameIntervalSteps=$VideoFrameInterval",
     "--/exts/campfire.app/residentSnapshotAdapterEnabled=$($ResidentSnapshotAdapter.IsPresent.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/residentSnapshotTimingEnabled=$($ResidentSnapshotTiming.IsPresent.ToString().ToLowerInvariant())",
     "--/rtx/flow/enabled=true",
     "--/app/viewport/grid/enabled=false",
     "--/persistent/app/viewport/displayOptions=1152"
@@ -191,6 +196,9 @@ $residentAdapter = $result.scenario.resident_snapshot_adapter
 if ([bool]$residentAdapter.enabled -ne $ResidentSnapshotAdapter.IsPresent) {
     throw "Phase 3 used an unexpected resident snapshot-adapter setting."
 }
+if ([bool]$residentAdapter.transaction_timing_enabled -ne $ResidentSnapshotTiming.IsPresent) {
+    throw "Phase 3 used an unexpected resident snapshot-timing setting."
+}
 if ([bool]$residentAdapter.native_producer_connected) {
     throw "Phase 3 incorrectly reported a native producer connection."
 }
@@ -221,6 +229,20 @@ if ($ResidentSnapshotAdapter.IsPresent) {
         if ($consumer.revision -ne 1200) {
             throw "Resident snapshot consumer has an unexpected final revision."
         }
+    }
+    if ($ResidentSnapshotTiming.IsPresent) {
+        if ($residentAdapter.transaction_profile.sample_count -ne 236 -or
+            $residentAdapter.transaction_profile.status_counts.committed -ne 240 -or
+            $residentAdapter.transaction_profile.status_counts.rolled_back -ne 0) {
+            throw "Resident snapshot transaction profile is incomplete."
+        }
+        if ($residentAdapter.transaction_profile.counts.write_count.minimum -ne 19 -or
+            $residentAdapter.transaction_profile.counts.write_count.maximum -ne 19) {
+            throw "Resident snapshot transaction profile has an unexpected write count."
+        }
+    }
+    elseif ($null -ne $residentAdapter.transaction_profile) {
+        throw "Resident snapshot transaction profile appeared without an explicit request."
     }
 }
 foreach ($name in @("dry", "wet")) {

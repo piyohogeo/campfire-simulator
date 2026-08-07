@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+<style>
+ .bg{fill:#0d1222} .panel{fill:#171f34} .title{fill:#f5f7ff;font:700 30px system-ui,sans-serif}
+ .sub{fill:#a9b4cc;font:16px system-ui,sans-serif} .label{fill:#edf1ff;font:600 17px system-ui,sans-serif}
+ .value{fill:#fff;font:700 14px ui-monospace,monospace} .small{fill:#b8c2d9;font:14px system-ui,sans-serif}
+ .metric{fill:#ff8a4c;font:700 28px ui-monospace,monospace} .bar{fill:#4f9cf9}
+ .gate{fill:#ffd166;font:700 18px system-ui,sans-serif} .ok{fill:#2dc887}
+</style>
+<rect width="1200" height="680" class="bg"/><text x="64" y="62" class="title">Phase 6BD - Transactional USD cost profile</text>
+<text x="64" y="92" class="sub">3 paired real-Kit runs · detail timing opt-in/default OFF · 19 writes per immutable revision</text>
+<rect x="50" y="120" width="1100" height="148" rx="18" class="panel"/>
+<text x="80" y="158" class="label">Previous “snapshot USD” boundary</text><text x="80" y="201" class="metric">5.3326 ms p95</text>
+<text x="430" y="158" class="label">Snapshot construction</text><text x="430" y="201" class="metric">0.9094 ms p95</text>
+<text x="760" y="158" class="label">Adapter transaction</text><text x="760" y="201" class="metric">4.5441 ms p95</text>
+<text x="80" y="240" class="small">The historical boundary included construction. The 4 ms gate now applies to the isolated adapter transaction.</text>
+<text x="64" y="302" class="label">Profiled operation mean (instrumented runs)</text><text x="84" y="334" class="small">attribute set</text><rect x="292" y="316" width="330.0" height="25" rx="12" class="bar"/><text x="638.0" y="334" class="value">2.0738 ms</text><text x="84" y="380" class="small">attribute lookup</text><rect x="292" y="362" width="44.1" height="25" rx="12" class="bar"/><text x="352.1" y="380" class="value">0.2769 ms</text><text x="84" y="426" class="small">old value capture</text><rect x="292" y="408" width="41.0" height="25" rx="12" class="bar"/><text x="349.0" y="426" class="value">0.2576 ms</text><text x="84" y="472" class="small">unattributed</text><rect x="292" y="454" width="28.8" height="25" rx="12" class="bar"/><text x="336.8" y="472" class="value">0.1808 ms</text><text x="84" y="518" class="small">prim lookup</text><rect x="292" y="500" width="16.2" height="25" rx="12" class="bar"/><text x="324.2" y="518" class="value">0.1018 ms</text><text x="84" y="564" class="small">payload preparation</text><rect x="292" y="546" width="10.6" height="25" rx="12" class="bar"/><text x="318.6" y="564" class="value">0.0666 ms</text>
+<rect x="790" y="316" width="330" height="226" rx="16" class="panel"/>
+<text x="820" y="355" class="label">Contracts held</text><text x="820" y="391" class="small">240 commits / 0 rollback</text>
+<text x="820" y="423" class="small">revision 1200 on all consumers</text><text x="820" y="455" class="small">authority hashes + CSV exact</text>
+<text x="820" y="487" class="small">native producer still disconnected</text><text x="820" y="522" class="gate">4 ms transaction gate: HOLD</text>
+<rect x="50" y="620" width="1100" height="1" fill="#35405b"/><text x="64" y="650" class="ok">MEASUREMENT COMPLETE</text>
+<text x="330" y="650" class="small">next: optimize the measured dominant component without weakening rollback</text></svg>

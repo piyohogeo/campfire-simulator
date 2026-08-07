@@ -157,6 +157,7 @@ from .performance import summarize_timing_ms
 from .resident_snapshot_adapter import (
     ResidentPublishedRow,
     ResidentPublishedSnapshot,
+    ResidentUsdTransactionProfile,
     UsdResidentSnapshotAdapter,
     published_row_from_python_model,
 )
@@ -214,6 +215,7 @@ __all__ = [
     "WoodThermalModel",
     "ResidentPublishedRow",
     "ResidentPublishedSnapshot",
+    "ResidentUsdTransactionProfile",
     "UsdResidentSnapshotAdapter",
     "published_row_from_python_model",
     "summarize_timing_ms",
