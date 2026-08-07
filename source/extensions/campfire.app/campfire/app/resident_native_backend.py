@@ -65,6 +65,8 @@ class ResidentNativeBackend:
         *,
         dt_seconds: float,
         heat_flux_w_m2: float,
+        initial_revision: int = 0,
+        initial_tick: int = -1,
     ):
         self._np = _require_numpy()
         self._models = tuple(models)
@@ -74,6 +76,22 @@ class ResidentNativeBackend:
             raise ValueError("Resident native dt must be positive and finite")
         if not math.isfinite(heat_flux_w_m2) or heat_flux_w_m2 < 0.0:
             raise ValueError("Resident native heat flux must be finite and non-negative")
+        if (
+            isinstance(initial_revision, bool)
+            or not isinstance(initial_revision, int)
+            or initial_revision < 0
+        ):
+            raise ValueError("Resident native initial revision must be a non-negative integer")
+        if (
+            isinstance(initial_tick, bool)
+            or not isinstance(initial_tick, int)
+            or initial_tick < -1
+        ):
+            raise ValueError("Resident native initial tick must be an integer at least -1")
+        if (initial_revision == 0) != (initial_tick == -1):
+            raise ValueError(
+                "Resident native resume requires revision and tick together"
+            )
         self._dt_seconds = float(dt_seconds)
         self._heat_flux_w_m2 = float(heat_flux_w_m2)
         self._validate_models()
@@ -123,8 +141,10 @@ class ResidentNativeBackend:
         self._snapshot_producer = ResidentNativeSnapshotProducer(
             tuple(model.spec.log_id for model in self._models)
         )
-        self._revision = 0
-        self._tick = -1
+        self._initial_revision = initial_revision
+        self._initial_tick = initial_tick
+        self._revision = initial_revision
+        self._tick = initial_tick
         self._step_count = 0
         self._export_count = 0
         self._closed = False
@@ -451,6 +471,8 @@ class ResidentNativeBackend:
     def status(self):
         return {
             "active": not self._closed,
+            "initial_revision": self._initial_revision,
+            "initial_tick": self._initial_tick,
             "revision": self._revision,
             "tick": self._tick,
             "step_count": self._step_count,

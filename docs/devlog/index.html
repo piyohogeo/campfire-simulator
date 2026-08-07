@@ -36,8 +36,8 @@
       <div class="shell status-grid">
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>47 / 47 passed</strong></div>
-        <div><span>次の焦点</span><strong>Resident lifecycleの失敗・再開gate</strong></div>
+        <div><span>テスト</span><strong>48 / 48 passed</strong></div>
+        <div><span>次の焦点</span><strong>Resident checkpoint形式の設計</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6BW · Shared SoA adoption re-evaluation</p>
-            <h2>共有はできる。<br>でも今は、共有する理由がない。</h2>
-            <p>共有SoA＋Python proxy試作を、USD 4 ms gateとnative producer接続を終えた現状で再評価しました。16契約gateは再合格し、数値dirty importも0回です。しかし現行Resident自体が開始時1回import、1,200 step中0回、終了時1回exportなので、proxyが削減する定常処理はありません。実行中cell編集が必要になるまでは、既存のprivate SoA、immutable snapshot、shutdown exportを維持します。USD、Flow、物理式、JSON、rollback、revision、既定値は変更していません。</p>
+            <p class="section-kicker">Phase 6BX · Resident lifecycle recovery</p>
+            <h2>失敗しても戻る。<br>閉じても、revisionを戻さない。</h2>
+            <p>native step失敗、USD revision-last失敗、再送、shutdown export、同一stage再開を一続きのKitシナリオにしました。14契約gateはすべて合格し、失敗時は配列または旧immutable snapshotへ正確に戻り、再開時は保存済み3 consumer revisionと明示seedが一致する場合だけ3→4へ進みます。自動resume UIはまだ追加せず、production既定、物理式、JSON schema、Flow、rollback、immutable snapshotは維持しています。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -850,6 +850,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6bx-resident-lifecycle-recovery" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6BX</h3>
+            <a href="assets/phase6/resident_lifecycle_recovery_report.svg" aria-label="Phase 6BX Resident失敗・shutdown・restart recoveryレポートを開く">
+              <img src="assets/phase6/resident_lifecycle_recovery_report.svg" width="1200" height="680" alt="revision 1からnative失敗rollback、USD失敗replay、revision 3 retry、shutdown、同一stage resume、revision 4 commitまで14 gateが合格したSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Fail, replay, retry, close, and resume</strong><span>14 / 14 gates · exact native rollback · immutable USD replay · revision 3 → 4</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6BX burn scenario (production behavior unchanged, reused)" data-video-meta="The default-off lifecycle recovery gate changed no burn physics, emitter, JSON schema, Flow configuration, rollback policy, immutable snapshot schema, or production defaults · baseline Phase 6AM real viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · production同値の既存実画面</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1211,6 +1225,11 @@
               <div><dt>Phase 6BW serialization p95</dt><dd>naive SoA 12.3924 ms · dataclass 8.0176 ms</dd></div>
               <div><dt>Phase 6BW decision</dt><dd>adoption deferred · reopen for concrete mid-run edit requirement</dd></div>
               <div><dt>Phase 6BW regression</dt><dd>8 processes · 47 / 47 pass · 317.7 s · collapse coverage 186.6 s</dd></div>
+              <div><dt>Phase 6BX lifecycle gates</dt><dd>14 / 14 pass · native failure · USD failure · shutdown · restart</dd></div>
+              <div><dt>Phase 6BX downstream recovery</dt><dd>backend rev 3 retained · USD/adapter rev 2 replay · rev 3 retry exact</dd></div>
+              <div><dt>Phase 6BX restart</dt><dd>explicit backend/adapter seed 3 · 3 consumers checked · next revision 4</dd></div>
+              <div><dt>Phase 6BX shutdown export</dt><dd>2.1001 ms first · 2.1221 ms resumed · one export/session</dd></div>
+              <div><dt>Phase 6BX regression</dt><dd>8 processes · 48 / 48 pass · 288.8 s · collapse coverage 170.2 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>

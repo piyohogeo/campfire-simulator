@@ -106,6 +106,7 @@ class UsdResidentSnapshotAdapter:
         profile_lightweight_tails: bool = False,
         coalesce_lightweight_notices: bool = False,
         track_lightweight_notices: bool = False,
+        initial_revision: int = 0,
     ):
         if stage is None:
             raise ValueError("A USD stage is required")
@@ -113,6 +114,12 @@ class UsdResidentSnapshotAdapter:
             raise ValueError("Initial dry mass must cover every log exactly")
         if any(value <= 0.0 for value in initial_dry_mass_kg.values()):
             raise ValueError("Initial dry masses must be positive")
+        if (
+            isinstance(initial_revision, bool)
+            or not isinstance(initial_revision, int)
+            or initial_revision < 0
+        ):
+            raise ValueError("Resident USD initial revision must be a non-negative integer")
         if lightweight_commits and profile_transactions:
             raise ValueError(
                 "Lightweight commits cannot use transactional detail profiling"
@@ -172,12 +179,36 @@ class UsdResidentSnapshotAdapter:
         self._lightweight_notice_last_accepted_revision = 0
         self._faulted = False
         self._owner_thread_id = threading.get_ident()
+        self._initial_revision = initial_revision
         self._active = False
         self._closed = False
-        self._revision = 0
+        self._revision = initial_revision
         self._publish_count = 0
         self._start_count = 0
         self._stop_count = 0
+        if initial_revision:
+            self._require_consumer_revision(initial_revision)
+
+    def _require_consumer_revision(self, expected_revision):
+        emitter = self._stage.GetPrimAtPath(FLOW_EMITTER_PATH)
+        log_prims = tuple(
+            self._stage.GetPrimAtPath(f"/World/Logs/{log_id}")
+            for log_id in self._log_ids
+        )
+        if not emitter or not all(log_prims):
+            raise ValueError("Resident USD resume consumers are unavailable")
+        attributes = tuple(
+            prim.GetAttribute("campfire:residentRevision")
+            for prim in (*log_prims, emitter)
+        )
+        revisions = tuple(
+            attribute.Get() if attribute and attribute.HasAuthoredValueOpinion() else None
+            for attribute in attributes
+        )
+        if revisions != (expected_revision,) * len(revisions):
+            raise ValueError(
+                "Resident USD resume requires matching consumer revisions"
+            )
 
     def _require_owner(self):
         if threading.get_ident() != self._owner_thread_id:
@@ -1089,6 +1120,7 @@ class UsdResidentSnapshotAdapter:
             "publish_count": self._publish_count,
             "start_count": self._start_count,
             "stop_count": self._stop_count,
+            "initial_revision": self._initial_revision,
             "owner_thread_id": self._owner_thread_id,
             "transaction_profiling_enabled": self._profile_transactions,
             "transaction_profile_count": len(self._transaction_profiles),

@@ -8,7 +8,7 @@ from tempfile import TemporaryDirectory
 
 import campfire.app
 import omni.kit.test
-from pxr import Gf, Tf, Usd, UsdGeom, UsdPhysics
+from pxr import Gf, Sdf, Tf, Usd, UsdGeom, UsdPhysics
 
 
 class TestScene(omni.kit.test.AsyncTestCase):
@@ -1049,6 +1049,57 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(len(thread_errors), 1)
         self.assertRegex(str(thread_errors[0]), "owner thread")
         adapter.close()
+
+    async def test_resident_snapshot_adapter_resumes_only_matching_consumer_revision(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase3_scene(stage)
+        log_ids = (campfire.app.PHASE3_DRY_LOG_ID, campfire.app.PHASE3_WET_LOG_ID)
+        initial_dry_mass = {log_id: 1.0 for log_id in log_ids}
+        consumers = [
+            stage.GetPrimAtPath(f"/World/Logs/{log_id}") for log_id in log_ids
+        ] + [stage.GetPrimAtPath(campfire.app.FLOW_EMITTER_PATH)]
+        for prim in consumers:
+            prim.CreateAttribute(
+                "campfire:residentRevision", Sdf.ValueTypeNames.Int64
+            ).Set(5)
+
+        adapter = campfire.app.UsdResidentSnapshotAdapter(
+            stage,
+            log_ids,
+            initial_dry_mass,
+            cache_usd_handles=True,
+            lightweight_commits=True,
+            initial_revision=5,
+        )
+        self.assertEqual(adapter.status()["initial_revision"], 5)
+        self.assertEqual(adapter.status()["revision"], 5)
+        rows = tuple(
+            campfire.app.ResidentPublishedRow(
+                600.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.3, 0.4, 0.2, 0.006
+            )
+            for _ in log_ids
+        )
+        adapter.on_timeline_started()
+        adapter.publish(campfire.app.ResidentPublishedSnapshot(6, 6, log_ids, rows))
+        self.assertEqual(adapter.status()["revision"], 6)
+        self.assertEqual(adapter.status()["publish_count"], 1)
+        adapter.close()
+
+        consumers[0].GetAttribute("campfire:residentRevision").Set(4)
+        with self.assertRaisesRegex(ValueError, "matching consumer revisions"):
+            campfire.app.UsdResidentSnapshotAdapter(
+                stage,
+                log_ids,
+                initial_dry_mass,
+                initial_revision=5,
+            )
+        with self.assertRaisesRegex(ValueError, "non-negative integer"):
+            campfire.app.UsdResidentSnapshotAdapter(
+                stage,
+                log_ids,
+                initial_dry_mass,
+                initial_revision=True,
+            )
 
     async def test_resident_snapshot_lightweight_commit_recovers_last_snapshot(self):
         stage = Usd.Stage.CreateInMemory()

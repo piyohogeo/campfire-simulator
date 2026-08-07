@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "phase": "phase6bx",
+  "status": "ok",
+  "scope": {
+    "production_default_changed": false,
+    "physics_changed": false,
+    "json_schema_changed": false
+  },
+  "sequence": [
+    "revision 1 commit",
+    "native step failure and exact rollback",
+    "revision 2 retry commit",
+    "revision 3 downstream failure and old snapshot replay",
+    "revision 3 publication retry",
+    "shutdown export and idempotent close",
+    "same-stage resume from revision/tick 3",
+    "revision 4 commit"
+  ],
+  "gates": {
+    "native_failure_rejected": true,
+    "native_failure_rollback_exact": true,
+    "native_failure_preserved_usd": true,
+    "downstream_failure_rejected": true,
+    "downstream_replay_exact": true,
+    "downstream_kept_adapter_revision": true,
+    "downstream_kept_native_snapshot": true,
+    "downstream_retry_committed": true,
+    "adapter_close_idempotent": true,
+    "shutdown_export_once": true,
+    "restart_import_exact": true,
+    "restart_revision_continuous": true,
+    "inconsistent_resume_rejected": true,
+    "resumed_shutdown_export_once": true
+  },
+  "status_detail": {
+    "first_shutdown": {
+      "active": false,
+      "initial_revision": 0,
+      "initial_tick": -1,
+      "revision": 3,
+      "tick": 3,
+      "step_count": 3,
+      "export_count": 1,
+      "log_count": 2,
+      "cells_per_log": 1152,
+      "library_path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6bx\\native-build\\campfire_wood_native.dll",
+      "abi_version": 1,
+      "msvc_version": 1939,
+      "msvc_full_version": 193933523,
+      "already_closed": false,
+      "export_ms": 2.1000999986426905
+    },
+    "resumed_initial": {
+      "backend_revision": 3,
+      "backend_tick": 3,
+      "adapter_revision": 3
+    },
+    "resumed_shutdown": {
+      "active": false,
+      "initial_revision": 3,
+      "initial_tick": 3,
+      "revision": 4,
+      "tick": 4,
+      "step_count": 1,
+      "export_count": 1,
+      "log_count": 2,
+      "cells_per_log": 1152,
+      "library_path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6bx\\native-build\\campfire_wood_native.dll",
+      "abi_version": 1,
+      "msvc_version": 1939,
+      "msvc_full_version": 193933523,
+      "already_closed": false,
+      "export_ms": 2.1221000024524983
+    },
+    "final_consumer_revisions_before_negative_probe": [
+      4,
+      4,
+      4
+    ]
+  }
+}
