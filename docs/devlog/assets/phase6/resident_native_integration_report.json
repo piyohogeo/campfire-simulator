@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "phase": "phase6bj",
+  "status": "performance_deferred",
+  "measurement": {
+    "pairs": 3,
+    "steps_per_run": 1200,
+    "published_revisions_per_run": 240,
+    "log_count": 2,
+    "cells_per_log": 1152,
+    "balanced_order": true
+  },
+  "contract": {
+    "authority_during_native_run": "resident_contiguous_soa",
+    "snapshot_schema": "ResidentPublishedSnapshot",
+    "usd_adapter": "UsdResidentSnapshotAdapter",
+    "revision_owner": "resident scheduler",
+    "shutdown": "single export then existing serialization",
+    "production_default_enabled": false,
+    "python_bridge_retained": true,
+    "unmanaged_python_edits_supported": false
+  },
+  "timing": {
+    "baseline_model_step_p95_ms": [
+      7.445,
+      5.8492,
+      7.3995
+    ],
+    "native_model_step_p95_ms": [
+      0.4267,
+      0.4875,
+      0.6442
+    ],
+    "native_usd_transaction_p95_ms": [
+      2.9818,
+      3.5052,
+      5.4819
+    ],
+    "native_integrated_publish_p95_ms": [
+      2.9844,
+      3.5087,
+      5.4856
+    ],
+    "median_baseline_model_p95_ms": 7.3995,
+    "median_native_model_p95_ms": 0.4875,
+    "median_native_usd_p95_ms": 3.5052,
+    "median_native_integrated_p95_ms": 3.5087,
+    "all_native_model_runs_below_4ms": true,
+    "all_native_usd_runs_below_4ms": false,
+    "all_native_integrated_runs_below_4ms": false,
+    "confirmation_native_usd_p95_ms": [
+      3.1797
+    ]
+  },
+  "equivalence": {
+    "all_pairs_within_contract": true,
+    "dry_ignition_seconds": 66.2,
+    "wet_ignition_seconds": 166.4,
+    "authoritative_sha256_exact": true,
+    "metrics_csv_sha256_exact": true,
+    "final_usd_consumer_tolerance": 1e-12,
+    "maximum_final_usd_consumer_error": 2.220446049250313e-16
+  },
+  "pairs": [
+    {
+      "pair": 1,
+      "order": [
+        "baseline",
+        "native"
+      ],
+      "equivalence": {
+        "dry_authoritative_sha256": true,
+        "wet_authoritative_sha256": true,
+        "metrics_csv_sha256": true,
+        "ignition": true,
+        "final_usd_consumers_within_tolerance": true
+      },
+      "maximum_final_usd_consumer_error": 2.220446049250313e-16,
+      "baseline": {
+        "model_step_p95_ms": 7.445,
+        "snapshot_build_p95_ms": 0.7826,
+        "usd_transaction_p95_ms": 2.6711,
+        "integrated_publish_p95_ms": 3.284,
+        "runner_wall_seconds": 25.989
+      },
+      "native": {
+        "model_step_p95_ms": 0.4267,
+        "snapshot_build_p95_ms": 0.0004,
+        "usd_transaction_p95_ms": 2.9818,
+        "integrated_publish_p95_ms": 2.9844,
+        "shutdown_export_ms": 2.609699999993609,
+        "runner_wall_seconds": 21.221
+      }
+    },
+    {
+      "pair": 2,
+      "order": [
+        "native",
+        "baseline"
+      ],
+      "equivalence": {
+        "dry_authoritative_sha256": true,
+        "wet_authoritative_sha256": true,
+        "metrics_csv_sha256": true,
+        "ignition": true,
+        "final_usd_consumers_within_tolerance": true
+      },
+      "maximum_final_usd_consumer_error": 2.220446049250313e-16,
+      "baseline": {
+        "model_step_p95_ms": 5.8492,
+        "snapshot_build_p95_ms": 0.6129,
+        "usd_transaction_p95_ms": 2.1529,
+        "integrated_publish_p95_ms": 2.7996,
+        "runner_wall_seconds": 24.281
+      },
+      "native": {
+        "model_step_p95_ms": 0.4875,
+        "snapshot_build_p95_ms": 0.0005,
+        "usd_transaction_p95_ms": 3.5052,
+        "integrated_publish_p95_ms": 3.5087,
+        "shutdown_export_ms": 2.4902000000111,
+        "runner_wall_seconds": 19.86
+      }
+    },
+    {
+      "pair": 3,
+      "order": [
+        "baseline",
+        "native"
+      ],
+      "equivalence": {
+        "dry_authoritative_sha256": true,
+        "wet_authoritative_sha256": true,
+        "metrics_csv_sha256": true,
+        "ignition": true,
+        "final_usd_consumers_within_tolerance": true
+      },
+      "maximum_final_usd_consumer_error": 2.220446049250313e-16,
+      "baseline": {
+        "model_step_p95_ms": 7.3995,
+        "snapshot_build_p95_ms": 0.8228,
+        "usd_transaction_p95_ms": 3.0151,
+        "integrated_publish_p95_ms": 3.8409,
+        "runner_wall_seconds": 25.171
+      },
+      "native": {
+        "model_step_p95_ms": 0.6442,
+        "snapshot_build_p95_ms": 0.0007,
+        "usd_transaction_p95_ms": 5.4819,
+        "integrated_publish_p95_ms": 5.4856,
+        "shutdown_export_ms": 3.108200000042416,
+        "runner_wall_seconds": 19.751
+      }
+    }
+  ],
+  "decision": {
+    "functional_contract_qualified": true,
+    "performance_qualified": false,
+    "resident_native_phase3_integration_qualified": false,
+    "production_default_changed": false,
+    "next_step": "Stabilize the unchanged USD adapter tail under repeated Flow load, then exercise injected native/downstream failures and restart recovery."
+  }
+}

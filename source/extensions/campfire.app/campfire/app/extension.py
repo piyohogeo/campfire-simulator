@@ -65,6 +65,7 @@ from .phase3_scene import (
     update_flow_source,
 )
 from .combustion import (
+    FlowSourceState,
     NUMPY_ARRAY_BACKEND,
     PYTHON_ARRAY_BACKEND,
     flow_source_from_model,
@@ -91,6 +92,7 @@ from .resident_snapshot_adapter import (
     UsdResidentSnapshotAdapter,
     published_row_from_python_model,
 )
+from .resident_native_backend import ResidentNativeBackend
 from .wood import get_log_world_position, list_log_ids
 from .char_depth_experiment import (
     create_char_depth_dry_run_package,
@@ -1086,6 +1088,12 @@ class CampfireAppExtension(omni.ext.IExt):
         resident_snapshot_skip_unchanged_enabled = settings.get_as_bool(
             f"{SETTINGS_ROOT}/residentSnapshotSkipUnchangedEnabled"
         )
+        resident_native_backend_enabled = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/residentNativeBackendEnabled"
+        )
+        resident_native_library_path = settings.get_as_string(
+            f"{SETTINGS_ROOT}/residentNativeLibraryPath"
+        )
         video_frame_interval_steps = settings.get_as_int(
             f"{SETTINGS_ROOT}/videoFrameIntervalSteps"
         )
@@ -1158,6 +1166,20 @@ class CampfireAppExtension(omni.ext.IExt):
             raise ValueError(
                 "Resident snapshot unchanged-value skipping requires lightweight commits"
             )
+        if resident_native_backend_enabled and not resident_snapshot_adapter_enabled:
+            raise ValueError(
+                "Resident native backend requires the resident snapshot adapter"
+            )
+        if resident_native_backend_enabled and not resident_native_library_path:
+            raise ValueError("Resident native backend requires an explicit library path")
+        if resident_native_backend_enabled and (
+            profile_wood_internals
+            or profile_sensible_heat
+            or collect_wood_state_diagnostics
+        ):
+            raise ValueError(
+                "Resident native backend does not support Python wood instrumentation"
+            )
         flow_interface = _flowusd.acquire_flowusd_interface()
         dry_prim = stage.GetPrimAtPath(f"/World/Logs/{PHASE3_DRY_LOG_ID}")
         wet_prim = stage.GetPrimAtPath(f"/World/Logs/{PHASE3_WET_LOG_ID}")
@@ -1175,6 +1197,16 @@ class CampfireAppExtension(omni.ext.IExt):
             if precomputed_runtime_topology
             else {"dry": None, "wet": None}
         )
+        resident_native_backend = None
+        resident_native_backend_status = None
+        resident_native_export_ms = 0.0
+        if resident_native_backend_enabled:
+            resident_native_backend = ResidentNativeBackend(
+                (dry_model, wet_model),
+                resident_native_library_path,
+                dt_seconds=PHASE3_MODEL_DT_SECONDS,
+                heat_flux_w_m2=PHASE3_EXTERNAL_HEAT_FLUX_W_M2,
+            )
         resident_adapter = None
         resident_timeline = None
         resident_timeline_was_playing = False
@@ -1256,58 +1288,63 @@ class CampfireAppExtension(omni.ext.IExt):
                 wet_internal_timing = {} if profile_wood_internals else None
                 dry_sensible_heat_timing = {} if profile_sensible_heat else None
                 wet_sensible_heat_timing = {} if profile_sensible_heat else None
-                dry_result = dry_model.step(
-                    PHASE3_MODEL_DT_SECONDS,
-                    PHASE3_EXTERNAL_HEAT_FLUX_W_M2,
-                    timing_ms=dry_internal_timing,
-                    sensible_heat_timing_ms=dry_sensible_heat_timing,
-                    array_backend=array_backend,
-                    python_surface_boundary_fast_path=(
-                        python_surface_boundary_fast_path
-                    ),
-                    state_diagnostics=(
-                        wood_state_diagnostics["dry"]
-                        if collect_wood_state_diagnostics
-                        else None
-                    ),
-                    python_state_clamp_fast_path=python_state_clamp_fast_path,
-                    update_cell_phases=not defer_cell_phase_updates,
-                    python_constant_heat_capacity_fast_path=(
-                        python_constant_heat_capacity_fast_path
-                    ),
-                    python_homogeneous_heat_capacity_fast_path=(
-                        python_homogeneous_heat_capacity_fast_path
-                    ),
-                    python_inline_homogeneous_sensible_heat_capacity_fast_path=(
-                        python_inline_homogeneous_sensible_heat_capacity_fast_path
-                    ),
-                )
-                wet_result = wet_model.step(
-                    PHASE3_MODEL_DT_SECONDS,
-                    PHASE3_EXTERNAL_HEAT_FLUX_W_M2,
-                    timing_ms=wet_internal_timing,
-                    sensible_heat_timing_ms=wet_sensible_heat_timing,
-                    array_backend=array_backend,
-                    python_surface_boundary_fast_path=(
-                        python_surface_boundary_fast_path
-                    ),
-                    state_diagnostics=(
-                        wood_state_diagnostics["wet"]
-                        if collect_wood_state_diagnostics
-                        else None
-                    ),
-                    python_state_clamp_fast_path=python_state_clamp_fast_path,
-                    update_cell_phases=not defer_cell_phase_updates,
-                    python_constant_heat_capacity_fast_path=(
-                        python_constant_heat_capacity_fast_path
-                    ),
-                    python_homogeneous_heat_capacity_fast_path=(
-                        python_homogeneous_heat_capacity_fast_path
-                    ),
-                    python_inline_homogeneous_sensible_heat_capacity_fast_path=(
-                        python_inline_homogeneous_sensible_heat_capacity_fast_path
-                    ),
-                )
+                native_step = None
+                if resident_native_backend is not None:
+                    native_step = resident_native_backend.step(tick=step_index)
+                    dry_result, wet_result = native_step.results
+                else:
+                    dry_result = dry_model.step(
+                        PHASE3_MODEL_DT_SECONDS,
+                        PHASE3_EXTERNAL_HEAT_FLUX_W_M2,
+                        timing_ms=dry_internal_timing,
+                        sensible_heat_timing_ms=dry_sensible_heat_timing,
+                        array_backend=array_backend,
+                        python_surface_boundary_fast_path=(
+                            python_surface_boundary_fast_path
+                        ),
+                        state_diagnostics=(
+                            wood_state_diagnostics["dry"]
+                            if collect_wood_state_diagnostics
+                            else None
+                        ),
+                        python_state_clamp_fast_path=python_state_clamp_fast_path,
+                        update_cell_phases=not defer_cell_phase_updates,
+                        python_constant_heat_capacity_fast_path=(
+                            python_constant_heat_capacity_fast_path
+                        ),
+                        python_homogeneous_heat_capacity_fast_path=(
+                            python_homogeneous_heat_capacity_fast_path
+                        ),
+                        python_inline_homogeneous_sensible_heat_capacity_fast_path=(
+                            python_inline_homogeneous_sensible_heat_capacity_fast_path
+                        ),
+                    )
+                    wet_result = wet_model.step(
+                        PHASE3_MODEL_DT_SECONDS,
+                        PHASE3_EXTERNAL_HEAT_FLUX_W_M2,
+                        timing_ms=wet_internal_timing,
+                        sensible_heat_timing_ms=wet_sensible_heat_timing,
+                        array_backend=array_backend,
+                        python_surface_boundary_fast_path=(
+                            python_surface_boundary_fast_path
+                        ),
+                        state_diagnostics=(
+                            wood_state_diagnostics["wet"]
+                            if collect_wood_state_diagnostics
+                            else None
+                        ),
+                        python_state_clamp_fast_path=python_state_clamp_fast_path,
+                        update_cell_phases=not defer_cell_phase_updates,
+                        python_constant_heat_capacity_fast_path=(
+                            python_constant_heat_capacity_fast_path
+                        ),
+                        python_homogeneous_heat_capacity_fast_path=(
+                            python_homogeneous_heat_capacity_fast_path
+                        ),
+                        python_inline_homogeneous_sensible_heat_capacity_fast_path=(
+                            python_inline_homogeneous_sensible_heat_capacity_fast_path
+                        ),
+                    )
                 model_step_times_ms.append(
                     (time.perf_counter() - model_started) * 1000.0
                 )
@@ -1356,7 +1393,23 @@ class CampfireAppExtension(omni.ext.IExt):
                         ignition_seconds[name] = result.elapsed_seconds
 
                 metrics_started = time.perf_counter()
-                if compact_runtime_metrics:
+                if native_step is not None:
+                    dry_published, wet_published = native_step.snapshot.rows
+                    dry_metrics = {
+                        "surface_mean_temperature_k": dry_published.surface_mean_temperature_k,
+                        "moisture_mass_kg": dry_published.moisture_mass_kg,
+                        "dry_wood_mass_kg": dry_published.dry_wood_mass_kg,
+                        "char_mass_kg": dry_published.char_mass_kg,
+                        "ash_mass_kg": dry_published.ash_mass_kg,
+                    }
+                    wet_metrics = {
+                        "surface_mean_temperature_k": wet_published.surface_mean_temperature_k,
+                        "moisture_mass_kg": wet_published.moisture_mass_kg,
+                        "dry_wood_mass_kg": wet_published.dry_wood_mass_kg,
+                        "char_mass_kg": wet_published.char_mass_kg,
+                        "ash_mass_kg": wet_published.ash_mass_kg,
+                    }
+                elif compact_runtime_metrics:
                     dry_metrics = dry_model.runtime_metrics(runtime_topologies["dry"])
                     wet_metrics = wet_model.runtime_metrics(runtime_topologies["wet"])
                 else:
@@ -1366,11 +1419,23 @@ class CampfireAppExtension(omni.ext.IExt):
                     (time.perf_counter() - metrics_started) * 1000.0
                 )
                 source_mapping_started = time.perf_counter()
-                source = flow_source_from_model(
-                    dry_model,
-                    dry_result,
-                    surface_temperature_k=dry_metrics["surface_mean_temperature_k"],
-                )
+                if native_step is not None:
+                    source = FlowSourceState(
+                        fuel=dry_published.flow_fuel,
+                        temperature=dry_published.flow_temperature,
+                        smoke=dry_published.flow_smoke,
+                        pyrolysis_gas_rate_kg_s=(
+                            dry_published.pyrolysis_gas_rate_kg_s
+                        ),
+                    )
+                else:
+                    source = flow_source_from_model(
+                        dry_model,
+                        dry_result,
+                        surface_temperature_k=dry_metrics[
+                            "surface_mean_temperature_k"
+                        ],
+                    )
                 source_mapping_times_ms.append(
                     (time.perf_counter() - source_mapping_started) * 1000.0
                 )
@@ -1414,26 +1479,29 @@ class CampfireAppExtension(omni.ext.IExt):
                     adapter_started = time.perf_counter()
                     if resident_adapter is not None:
                         snapshot_build_started = time.perf_counter()
-                        wet_source = flow_source_from_model(
-                            wet_model,
-                            wet_result,
-                            surface_temperature_k=wet_metrics[
-                                "surface_mean_temperature_k"
-                            ],
-                        )
-                        snapshot = ResidentPublishedSnapshot(
-                            revision=step_index,
-                            tick=step_index,
-                            log_ids=(PHASE3_DRY_LOG_ID, PHASE3_WET_LOG_ID),
-                            rows=(
-                                published_row_from_python_model(
-                                    dry_model, dry_metrics, source
+                        if native_step is not None:
+                            snapshot = native_step.snapshot
+                        else:
+                            wet_source = flow_source_from_model(
+                                wet_model,
+                                wet_result,
+                                surface_temperature_k=wet_metrics[
+                                    "surface_mean_temperature_k"
+                                ],
+                            )
+                            snapshot = ResidentPublishedSnapshot(
+                                revision=step_index,
+                                tick=step_index,
+                                log_ids=(PHASE3_DRY_LOG_ID, PHASE3_WET_LOG_ID),
+                                rows=(
+                                    published_row_from_python_model(
+                                        dry_model, dry_metrics, source
+                                    ),
+                                    published_row_from_python_model(
+                                        wet_model, wet_metrics, wet_source
+                                    ),
                                 ),
-                                published_row_from_python_model(
-                                    wet_model, wet_metrics, wet_source
-                                ),
-                            ),
-                        )
+                            )
                         resident_snapshot_build_times_ms.append(
                             (time.perf_counter() - snapshot_build_started) * 1000.0
                         )
@@ -1543,6 +1611,10 @@ class CampfireAppExtension(omni.ext.IExt):
                 step_loop_times_ms.append(
                     (time.perf_counter() - step_loop_started) * 1000.0
                 )
+
+            if resident_native_backend is not None:
+                resident_native_backend_status = resident_native_backend.close()
+                resident_native_export_ms = resident_native_backend_status["export_ms"]
 
             if resident_adapter is not None:
                 resident_adapter.on_timeline_stopped()
@@ -1987,11 +2059,23 @@ class CampfireAppExtension(omni.ext.IExt):
                             resident_snapshot_skip_unchanged_enabled
                         ),
                         "producer": (
-                            "python_contract_bridge"
+                            "resident_native_backend"
+                            if resident_native_backend_enabled
+                            else "python_contract_bridge"
                             if resident_snapshot_adapter_enabled
                             else "disabled"
                         ),
-                        "native_producer_connected": False,
+                        "native_producer_connected": resident_native_backend_enabled,
+                        "native_backend": {
+                            "enabled": resident_native_backend_enabled,
+                            "library_path": (
+                                resident_native_library_path
+                                if resident_native_backend_enabled
+                                else ""
+                            ),
+                            "status_after_close": resident_native_backend_status,
+                            "shutdown_export_ms": resident_native_export_ms,
+                        },
                         "status_after_timeline_stop": resident_adapter_status,
                         "final_usd_state": resident_final_usd_state,
                         "transaction_profile": resident_transaction_profile,
@@ -2089,6 +2173,8 @@ class CampfireAppExtension(omni.ext.IExt):
             )
         finally:
             try:
+                if resident_native_backend is not None:
+                    resident_native_backend.close()
                 if resident_adapter is not None:
                     if not resident_adapter_stopped:
                         resident_adapter.on_timeline_stopped()

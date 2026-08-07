@@ -165,6 +165,7 @@ from .resident_snapshot import (
     ResidentPublishedSnapshot,
     published_row_from_python_model,
 )
+from .resident_native_backend import ResidentNativeBackend, ResidentNativeStep
 from .wood import LogSpec, create_log, get_log_world_position, list_log_ids, move_log
 
 __all__ = [
@@ -221,6 +222,8 @@ __all__ = [
     "ResidentPublishedSnapshot",
     "ResidentNativeSnapshotProducer",
     "RESIDENT_PUBLISHED_FIELD_NAMES",
+    "ResidentNativeBackend",
+    "ResidentNativeStep",
     "ResidentUsdTransactionProfile",
     "UsdResidentSnapshotAdapter",
     "published_row_from_python_model",

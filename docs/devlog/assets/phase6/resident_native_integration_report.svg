@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6BJ resident native Phase 3 integration</title>
+  <desc id="desc">Three paired real-Kit runs connect resident native wood steps through immutable snapshots to the existing USD adapter with exact outputs.</desc>
+  <rect width="1200" height="680" rx="32" fill="#111820"/>
+  <text x="70" y="76" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="24" font-weight="700">PHASE 6BJ · OPT-IN NATIVE LIFECYCLE</text>
+  <text x="70" y="126" fill="#fff" font-family="Segoe UI, sans-serif" font-size="37" font-weight="700">Resident step → snapshot → unchanged USD adapter</text>
+  <rect x="70" y="170" width="1060" height="105" rx="20" fill="#192734" stroke="#315269"/>
+  <text x="105" y="214" fill="#8fbcd4" font-family="Consolas, monospace" font-size="19">Resident SoA</text><text x="270" y="214" fill="#f4b860" font-size="24">→</text><text x="315" y="214" fill="#8fbcd4" font-family="Consolas, monospace" font-size="19">ResidentPublishedSnapshot</text><text x="650" y="214" fill="#f4b860" font-size="24">→</text><text x="695" y="214" fill="#8fbcd4" font-family="Consolas, monospace" font-size="19">UsdResidentSnapshotAdapter</text>
+  <text x="105" y="250" fill="#d7e1e8" font-family="Segoe UI, sans-serif" font-size="17">1,200 revisions · 240 USD commits · one shutdown export · defaults remain OFF</text>
+  <rect x="70" y="315" width="510" height="182" rx="20" fill="#182128"/>
+  <text x="105" y="360" fill="#fff" font-family="Segoe UI, sans-serif" font-size="23" font-weight="700">Two-log model step p95</text>
+  <text x="105" y="401" fill="#a8beca" font-family="Consolas, monospace" font-size="19">Python  7.4450 / 5.8492 / 7.3995 ms</text>
+  <text x="105" y="440" fill="#f4b860" font-family="Consolas, monospace" font-size="19">Native  0.4267 / 0.4875 / 0.6442 ms</text>
+  <rect x="620" y="315" width="510" height="182" rx="20" fill="#182128"/>
+  <text x="655" y="360" fill="#fff" font-family="Segoe UI, sans-serif" font-size="23" font-weight="700">Native USD transaction p95</text>
+  <text x="655" y="410" fill="#f4b860" font-family="Consolas, monospace" font-size="20">2.9818 / 3.5052 / 5.4819 ms</text>
+  <text x="655" y="446" fill="#a8beca" font-family="Segoe UI, sans-serif" font-size="17">same adapter · 2 / 3 primary runs &lt; 4 ms</text>
+  <text x="655" y="474" fill="#a8beca" font-family="Segoe UI, sans-serif" font-size="16">confirmation: 3.1797 ms</text>
+  <rect x="70" y="540" width="1060" height="86" rx="20" fill="#3a2d18" stroke="#f4b860"/>
+  <text x="105" y="592" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">FUNCTIONAL PASS · PERFORMANCE DEFERRED</text>
+  <text x="600" y="580" fill="#d7e1e8" font-family="Segoe UI, sans-serif" font-size="16">state SHA · CSV · ignition exact in 3 / 3</text>
+  <text x="600" y="607" fill="#d7e1e8" font-family="Segoe UI, sans-serif" font-size="16">USD error ≤ 1e-12 · default OFF</text>
+</svg>

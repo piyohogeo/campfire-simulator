@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6BJ default-off production resident-native Phase 3 lifecycle path, connecting 1,200 native wood steps through immutable snapshots to the existing USD adapter with exact authoritative outputs; functional gates pass while USD tail-performance adoption remains deferred.
 - Added the Phase 6BI direct resident-native output connection to the existing immutable `ResidentPublishedSnapshot` schema, with exact field-order, copy, revision, failure-isolation, lifecycle, and 4 ms performance gates while keeping production disabled.
 - Added the Phase 6BH default-off immutable-shadow USD Set-skip candidate, retaining mandatory revision writes and full failure replay while passing the 4 ms gate in all three paired real-Kit runs.
 - Added the Phase 6BG default-off lightweight resident USD commit trial with transactional bootstrap, revision-last publication, failure-only immutable snapshot replay, fail-closed recovery, and three paired real-Kit measurements.

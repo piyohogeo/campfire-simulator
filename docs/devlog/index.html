@@ -37,7 +37,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>46 / 46 passed</strong></div>
-        <div><span>次の焦点</span><strong>Opt-in native lifecycle統合</strong></div>
+        <div><span>次の焦点</span><strong>USD tail安定性の再監査</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6BI · Resident native snapshot connection</p>
-            <h2>Nativeの220値を、<br>既存snapshotへ直接つなぐ。</h2>
-            <p>目標は、Resident C++が生成した20本×11値をPython木材objectへ戻さず、既存のimmutable <code>ResidentPublishedSnapshot</code>へ接続することでした。公開schemaをUSD非依存moduleへ分離し、連続64-bit bufferを一度だけfrozen rowへcopyします。3 runのcopy誤差は0、総native更新＋凍結p95は1.9620／1.7420／1.7902 ms、標準Kit suiteは46／46件合格しました。変換失敗でも直前commitとresident stateを保持します。残る問題はproduction extensionがまだPython bridgeを使う点で、次は既定OFFのbackend lifecycle switch内から同じUSD adapterへ流します。描画条件は変わらず、USD発行ボトルネックとは別の改善です。</p>
+            <p class="section-kicker">Phase 6BJ · Opt-in native lifecycle integration</p>
+            <h2>Native木材は速くなった。<br>USDのtailは、まだ揺れる。</h2>
+            <p>目標は、Resident C++の1,200 stepを既存のimmutable snapshot、USD adapter、終了時serializationまで通すことでした。乾燥／湿潤の権威SHA、metrics CSV、着火66.2／166.4秒はPython経路と3 pairすべて完全一致し、木材step p95中央値は7.3995から0.4875 msへ下がりました。一方、同じUSD adapterのp95は2.9818／3.5052／5.4819 msで、正式runの1本が4 msを超えました。直後の確認runは3.1797 msへ戻りましたが、失敗値を置き換えず性能採用を保留します。production既定はOFFのまま、次はFlow/render負荷とUSD通知・属性groupのtail相関を測ります。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -651,6 +651,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6bj-resident-native-integration" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6BJ</h3>
+            <a href="assets/phase6/resident_native_integration_report.svg" aria-label="Phase 6BJ Resident native Phase 3統合の機能合格とUSD tail性能保留レポートを開く">
+              <img src="assets/phase6/resident_native_integration_report.svg" width="1200" height="680" alt="Resident SoAからimmutable snapshotと既存USD adapterへの接続、木材step高速化、3回中1回のUSD 4ミリ秒超過を示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Functional pass · performance deferred</strong><span>state/CSV/ignition exact · model p95 median 0.4875 ms · USD p95 2.9818 / 3.5052 / 5.4819 ms</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6BJ burn scenario (rendering unchanged, reused)" data-video-meta="Resident native lifecycle preserves authoritative burn output and production rendering remains default-off · baseline Phase 6AM viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · 同値の既存実画面を再掲</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <figure id="phase6bb-native-lifecycle" class="capture-card">
             <h3 class="capture-phase-heading">Phase 6BB</h3>
             <a href="assets/phase6/native_backend_lifecycle_report.svg" aria-label="Phase 6BB Resident backend lifecycleのexport性能、rollback、再構築、shutdown契約レポートを開く">
@@ -993,6 +1007,13 @@
               <div><dt>Phase 6BI connection</dt><dd>native 20 × 11 → immutable schema · no Python model scan</dd></div>
               <div><dt>Phase 6BI ownership</dt><dd>resident revision · adapter commit/rollback · defaults unchanged</dd></div>
               <div><dt>Phase 6BI regression</dt><dd>46 / 46 pass · 327.8 s · collapse coverage 191.3 s</dd></div>
+              <div><dt>Phase 6BJ Python model p95</dt><dd>7.4450 / 5.8492 / 7.3995 ms</dd></div>
+              <div><dt>Phase 6BJ native model p95</dt><dd>0.4267 / 0.4875 / 0.6442 ms · all below 4 ms</dd></div>
+              <div><dt>Phase 6BJ native USD p95</dt><dd>2.9818 / 3.5052 / 5.4819 ms · 2 / 3 below 4 ms</dd></div>
+              <div><dt>Phase 6BJ confirmation</dt><dd>3.1797 ms USD p95 · formal failure retained</dd></div>
+              <div><dt>Phase 6BJ equivalence</dt><dd>state SHA / CSV / ignition exact · USD max Δ 2.22e−16</dd></div>
+              <div><dt>Phase 6BJ lifecycle</dt><dd>1200 step · 240 publish · 1 shutdown export · default OFF</dd></div>
+              <div><dt>Phase 6BJ regression</dt><dd>46 / 46 pass · 327.7 s · collapse coverage 191.2 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>

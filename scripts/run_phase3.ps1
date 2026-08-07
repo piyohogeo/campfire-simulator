@@ -32,7 +32,9 @@ param(
     [switch]$ResidentSnapshotTiming,
     [switch]$ResidentSnapshotHandleCache,
     [switch]$ResidentSnapshotLightweightCommit,
-    [switch]$ResidentSnapshotSkipUnchanged
+    [switch]$ResidentSnapshotSkipUnchanged,
+    [switch]$ResidentNativeBackend,
+    [string]$ResidentNativeLibraryPath = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -98,6 +100,19 @@ if ($ResidentSnapshotLightweightCommit.IsPresent -and $ResidentSnapshotTiming.Is
 if ($ResidentSnapshotSkipUnchanged.IsPresent -and -not $ResidentSnapshotLightweightCommit.IsPresent) {
     throw "Resident snapshot unchanged-value skipping requires lightweight commit."
 }
+if ($ResidentNativeBackend.IsPresent -and -not $ResidentSnapshotAdapter.IsPresent) {
+    throw "Resident native backend requires the resident snapshot adapter."
+}
+if ($ResidentNativeBackend.IsPresent -and -not (Test-Path -LiteralPath $ResidentNativeLibraryPath)) {
+    throw "Resident native backend library was not found: $ResidentNativeLibraryPath"
+}
+if ($ResidentNativeBackend.IsPresent -and (
+    $ProfileWoodInternals.IsPresent -or
+    $ProfileSensibleHeat.IsPresent -or
+    $CollectWoodStateDiagnostics.IsPresent
+)) {
+    throw "Resident native backend cannot use Python wood instrumentation."
+}
 
 if (-not (Test-Path -LiteralPath $kit) -or -not (Test-Path -LiteralPath $app)) {
     throw "Application is not built. Run .\repo.bat build first."
@@ -141,6 +156,8 @@ $kitArgs = @(
     "--/exts/campfire.app/residentSnapshotHandleCacheEnabled=$($ResidentSnapshotHandleCache.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentSnapshotLightweightCommitEnabled=$($ResidentSnapshotLightweightCommit.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentSnapshotSkipUnchangedEnabled=$($ResidentSnapshotSkipUnchanged.IsPresent.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/residentNativeBackendEnabled=$($ResidentNativeBackend.IsPresent.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/residentNativeLibraryPath=$ResidentNativeLibraryPath",
     "--/rtx/flow/enabled=true",
     "--/app/viewport/grid/enabled=false",
     "--/persistent/app/viewport/displayOptions=1152"
@@ -228,12 +245,30 @@ if ([bool]$residentAdapter.lightweight_commit_enabled -ne $ResidentSnapshotLight
 if ([bool]$residentAdapter.skip_unchanged_derived_enabled -ne $ResidentSnapshotSkipUnchanged.IsPresent) {
     throw "Phase 3 used an unexpected resident snapshot unchanged-value setting."
 }
-if ([bool]$residentAdapter.native_producer_connected) {
-    throw "Phase 3 incorrectly reported a native producer connection."
+if ([bool]$residentAdapter.native_producer_connected -ne $ResidentNativeBackend.IsPresent) {
+    throw "Phase 3 reported an unexpected native producer connection."
 }
 if ($ResidentSnapshotAdapter.IsPresent) {
-    if ($residentAdapter.producer -ne "python_contract_bridge") {
+    $expectedProducer = if ($ResidentNativeBackend.IsPresent) {
+        "resident_native_backend"
+    }
+    else {
+        "python_contract_bridge"
+    }
+    if ($residentAdapter.producer -ne $expectedProducer) {
         throw "Phase 3 used an unexpected resident snapshot producer."
+    }
+    if ([bool]$residentAdapter.native_backend.enabled -ne $ResidentNativeBackend.IsPresent) {
+        throw "Phase 3 used an unexpected resident native backend setting."
+    }
+    if ($ResidentNativeBackend.IsPresent) {
+        if ([bool]$residentAdapter.native_backend.status_after_close.active -or
+            [bool]$residentAdapter.native_backend.status_after_close.already_closed -or
+            $residentAdapter.native_backend.status_after_close.revision -ne 1200 -or
+            $residentAdapter.native_backend.status_after_close.step_count -ne 1200 -or
+            $residentAdapter.native_backend.status_after_close.export_count -ne 1) {
+            throw "Resident native backend reported an unexpected lifecycle."
+        }
     }
     if ([bool]$residentAdapter.status_after_timeline_stop.active) {
         throw "Resident snapshot adapter remained active after timeline stop."
