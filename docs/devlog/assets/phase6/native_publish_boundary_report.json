@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "phase": "phase6ay",
+  "status": "qualified",
+  "source_raw": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6ay\\native_publish_boundary_raw.json",
+  "runtime": {
+    "python": "3.12.13",
+    "executable": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\python\\python.exe",
+    "kit_python": true,
+    "numpy": "2.3.1"
+  },
+  "native_toolchain": {
+    "abi_version": 1,
+    "msvc_version": 1939,
+    "msvc_full_version": 193933523,
+    "floating_point": "/fp:strict",
+    "dll_sha256": "b1c182561dc4c3bb3d51a8eea66d900620a8bcc81b65b84e056a83324321bc20",
+    "source_sha256": "71f85425c7807efdae549b6f46abb078cd2fa860ae766d9c69b6d2ed1a5e6b7a"
+  },
+  "measurement": {
+    "log_count": 20,
+    "cell_count_per_log": 1152,
+    "combined_cell_count": 23040,
+    "iterations_per_method": 300,
+    "runs": 3,
+    "balanced_method_order": true,
+    "dt_seconds": 0.2,
+    "heat_flux_w_m2": 150000.0,
+    "output_field_count_per_log": 11
+  },
+  "contract": {
+    "output_fields": [
+      "surface_mean_temperature_k",
+      "moisture_mass_kg",
+      "dry_wood_mass_kg",
+      "char_mass_kg",
+      "ash_mass_kg",
+      "remaining_mass_ratio",
+      "weakest_support_ratio",
+      "flow_fuel",
+      "flow_temperature",
+      "flow_smoke",
+      "pyrolysis_gas_rate_kg_s"
+    ],
+    "guard_fields": [
+      "temperature_k",
+      "moisture_mass_kg",
+      "dry_wood_mass_kg",
+      "volatile_potential_kg",
+      "char_mass_kg",
+      "ash_mass_kg",
+      "oxygen_factor",
+      "surface_exposure",
+      "phase",
+      "volume_m3",
+      "external_area_m2",
+      "dry_wood_specific_heat_j_kg_k",
+      "dry_wood_specific_heat_model"
+    ],
+    "reference_fuel_rate_kg_s": 0.02,
+    "char_strength_factor": 0.12,
+    "immutable_copy_required_before_app_consumption": true
+  },
+  "budget_ms": 4.0,
+  "method_rows": [
+    {
+      "method": "python_object_publish",
+      "label": "Python object publish",
+      "median_mean_ms": 6.018805011020352,
+      "median_p95_ms": 7.4777000118047,
+      "meets_4ms_p95": false
+    },
+    {
+      "method": "native_resident_publish",
+      "label": "Native resident publish",
+      "median_mean_ms": 0.06424499209970236,
+      "median_p95_ms": 0.09829993359744549,
+      "meets_4ms_p95": true
+    },
+    {
+      "method": "public_mutable_guard_scan",
+      "label": "Full public-state guard scan",
+      "median_mean_ms": 29.84082433783139,
+      "median_p95_ms": 34.830200020223856,
+      "meets_4ms_p95": false
+    }
+  ],
+  "equivalence": {
+    "tolerance": 1e-12,
+    "maximum_absolute_error": 1.1102230246251565e-16,
+    "field_maximum_absolute_errors": {
+      "surface_mean_temperature_k": 0.0,
+      "moisture_mass_kg": 0.0,
+      "dry_wood_mass_kg": 0.0,
+      "char_mass_kg": 0.0,
+      "ash_mass_kg": 0.0,
+      "remaining_mass_ratio": 1.1102230246251565e-16,
+      "weakest_support_ratio": 1.1102230246251565e-16,
+      "flow_fuel": 0.0,
+      "flow_temperature": 0.0,
+      "flow_smoke": 0.0,
+      "pyrolysis_gas_rate_kg_s": 0.0
+    },
+    "passed": true
+  },
+  "mutation_probe": {
+    "injected_delta_k": 1.0,
+    "detected": true,
+    "detection": {
+      "cell_index": 0,
+      "field": "temperature_k",
+      "expected": 796.7368064250485,
+      "actual": 797.7368064250485
+    },
+    "restored_after_probe": true
+  },
+  "decision": {
+    "resident_publish_boundary_qualified": true,
+    "native_speedup_vs_python": 76.07024479209844,
+    "transparent_full_scan_fallback_qualified": false,
+    "production_backend_qualified": false,
+    "scheduler_integration_pending": true,
+    "next_step": "add an explicit revision/dirty boundary, then integrate the immutable published snapshot into the 5 Hz app scheduler"
+  },
+  "limitations": [
+    "automatic_guard_fallback",
+    "revision_or_dirty_api",
+    "5_hz_scheduler_integration",
+    "Flow/USD/rendering/PhysX"
+  ],
+  "production_model_changed": false
+}

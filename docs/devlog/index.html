@@ -37,7 +37,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>40 coverage + 1 isolated</strong></div>
-        <div><span>次の焦点</span><strong>Runtime metrics + app contract</strong></div>
+        <div><span>次の焦点</span><strong>Revision/dirty ownership + scheduler</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6AX · Resident parallel Arrhenius step</p>
-            <h2>三つの反応経路も、<br>4 msの内側へ。</h2>
-            <p>gas・tar・charの並列Arrhenius反応と有界二次tar分割を常駐native完全stepへ追加しました。20本・23,040セルでnative p95は2.292 ms、Pythonの210.632 msに対して約91.9倍です。温度・相・着火時刻は一致し、指数関数境界の最大質量差は1.39e-17 kgでした。二次tarは800 Kの診断seedで分岐を明示的に通しており、物理初期条件には使いません。次はruntime metrics、mutable fallback、アプリ契約を閉じます。</p>
+            <p class="section-kicker">Phase 6AY · Resident immutable output publish</p>
+            <h2>アプリが読む値も、<br>常駐状態から直接。</h2>
+            <p>表面温度、4種の質量、残存率、支持率、Flow用3値、熱分解ガス率の計11値を、20本のnative常駐状態から0.0983 ms p95で発行できました。Python集約の7.4777 msに対して約76.1倍で、最大差は1.11e-16です。一方、公開セルの全13項目を毎tick走査して外部変更を透過的に探す方式は34.8302 msで棄却しました。次は明示的なrevision／dirty所有権を作り、5 Hz schedulerへimmutable snapshotとして接続します。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -497,6 +497,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6ay-native-publish-boundary" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6AY</h3>
+            <a href="assets/phase6/native_publish_boundary_report.svg" aria-label="Phase 6AY native常駐・アプリ出力発行境界の性能、同値性、公開状態guardレポートを開く">
+              <img src="assets/phase6/native_publish_boundary_report.svg" width="1200" height="680" alt="20本23,040セルについてPython object発行、native常駐発行、公開状態全走査のp95、4ミリ秒予算、11出力の最大差、変更注入検出を示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Publish immutable app values from resident SoA</strong><span>p95 0.0983 ms · 76.07× · max error 1.11e-16 · full guard rejected</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6AY baseline burn scenario (reused)" data-video-meta="Native output-publication trial · production rendering unchanged · baseline Phase 6AM viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · 既存実画面を再掲</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <figure class="capture-card">
             <a href="assets/phase6/replicate_holdout_report.svg" aria-label="Phase 6C 合板反復ホールドアウトレポートを開く">
               <img src="assets/phase6/replicate_holdout_report.svg" width="1200" height="680" alt="未使用の合板SAMP.3について、着火時刻と平均質量減少速度の観測・初期・SAMP.1/2選定値を並べたSVGグラフ">
@@ -573,6 +587,7 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AV native conduction</strong><small>62,400 pairs · 3 balanced runs · exact states + energy balance</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AW piecewise complete step</strong><small>3 balanced runs · dry/wet ignition · exact state + output history</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AX Arrhenius complete step</strong><small>3 pathways + bounded tar · 3 balanced runs · tolerance lockstep passed</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AY immutable output publish</strong><small>11 values/log · 3 balanced runs · mutation detected · full scan rejected</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Default timing path</strong><small>homogeneous fast · timers off · 10.4678 s scenario</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>
             </div>
@@ -761,6 +776,11 @@
               <div><dt>Secondary tar branch</dt><dd>0.000267632 kg · diagnostic 800 K seed</dd></div>
               <div><dt>Phase 6AX mass balance</dt><dd>≤ 7.96 × 10⁻13 kg</dd></div>
               <div><dt>Phase 6AX regression</dt><dd>40 coverage · collapse isolated 5.5 s · prior clean 41 / 41</dd></div>
+              <div><dt>Resident app-output publish p95</dt><dd>0.0983 ms · 76.07× vs Python</dd></div>
+              <div><dt>Python app-output publish p95</dt><dd>7.4777 ms</dd></div>
+              <div><dt>Public mutable guard scan p95</dt><dd>34.8302 ms · 13 fields · rejected</dd></div>
+              <div><dt>Phase 6AY maximum output difference</dt><dd>1.11 × 10⁻16 · 11 values/log</dd></div>
+              <div><dt>Phase 6AY regression</dt><dd>40 coverage · collapse isolated 5.8 s · prior clean 41 / 41</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>

@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6AY resident native publication boundary for 11 immutable app/Flow/support outputs per log, exact Python-contract comparison, and a measured rejection of full public-state scanning as an automatic fallback.
 - Added the Phase 6AX resident three-pathway Arrhenius complete-step candidate, bounded secondary-tar branch coverage, tolerance-based lockstep evidence, and a 4 ms performance report.
 - Added the Phase 6AW resident piecewise-complete wood-step candidate, including evaporation, pyrolysis, char oxidation, phase finalization, step outputs, cumulative products, exact ignition-history comparison, and a 4 ms performance gate.
 - Added the Phase 6AV resident immutable-conduction-topology kernel, exact 62,400-edge comparison, pairwise energy-conservation gate, and next-reaction-boundary report.

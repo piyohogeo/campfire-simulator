@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6AY native resident output publication</title>
+  <desc id="desc">Twenty logs compare Python publication, native resident aggregation, and a full public mutable state scan.</desc>
+  <style>.title{fill:#f8fafc;font:700 29px system-ui,sans-serif}.sub{fill:#cbd5e1;font:16px system-ui,sans-serif}.label{fill:#f8fafc;font:600 16px system-ui,sans-serif}.value{fill:#f8fafc;font:700 15px ui-monospace,monospace}.small{fill:#94a3b8;font:14px system-ui,sans-serif}.decision{fill:#fde68a;font:700 19px system-ui,sans-serif}</style>
+  <rect width="1200" height="680" rx="28" fill="#0f172a"/>
+  <text x="58" y="76" class="title">Publish app outputs without leaving resident SoA</text>
+  <text x="58" y="112" class="sub">20 logs · 11 immutable values/log · runtime metrics + Flow source + support ratio</text>
+  <rect x="58" y="148" width="1084" height="62" rx="16" fill="#1e293b"/>
+  <text x="82" y="174" class="small">PUBLICATION CONTRACT</text>
+  <text x="82" y="198" class="label">max error 1.11e-16 · injected +1 K mutation detected · production unchanged</text>
+  <line x1="440.0" y1="230" x2="440.0" y2="520" stroke="#fbbf24" stroke-width="3" stroke-dasharray="8 7"/>
+  <text x="450.0" y="228" class="value">4 ms p95 gate</text>
+  <text x="58" y="272" class="label">Python object publish</text><rect x="390" y="250" width="93.4" height="34" rx="17" fill="#fb7185"/><text x="497.4" y="273" class="value">p95 7.478 ms</text><text x="390" y="308" class="small">mean 6.019 ms</text><text x="58" y="364" class="label">Native resident publish</text><rect x="390" y="342" width="1.2" height="34" rx="17" fill="#22c55e"/><text x="405.2" y="365" class="value">p95 0.098 ms</text><text x="390" y="400" class="small">mean 0.064 ms</text><text x="58" y="456" class="label">Full public-state guard scan</text><rect x="390" y="434" width="435.2" height="34" rx="17" fill="#fb7185"/><text x="839.2" y="457" class="value">p95 34.830 ms</text><text x="390" y="492" class="small">mean 29.841 ms</text>
+  <rect x="58" y="542" width="1084" height="82" rx="18" fill="#1e293b"/>
+  <text x="82" y="574" class="decision">Resident publication QUALIFIES; full transparent guard is too costly</text>
+  <text x="82" y="603" class="sub">Next: explicit revision/dirty ownership, then immutable snapshots in the 5 Hz scheduler</text>
+  <text x="58" y="656" class="small">Headless architecture trial only. Flow, USD, rendering, PhysX, and production backend are unchanged.</text>
+</svg>

@@ -1797,3 +1797,17 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 可視化と再現: `run_phase6ax_native_arrhenius_complete.ps1`がVS2022環境、CMake/NMake build、Kit Pythonの3方式×3 run、product probe、解析を`139.6 s`で完了した。`native_arrhenius_complete_step_report.json/.svg`へ方式別mean／p95、Phase 6AWとの差、同値誤差、着火時刻、5生成物、診断seed、未実装gateを保存する。描画経路は変えていないため動画はPhase 6AMの実画面MP4を再参照する。
 - 検証: Python／PowerShell構文、MSVC build、C ABI load、raw/report JSON、SVG寸法を個別に検査した。標準Kit suiteは40件が合格し、既存collapse coverage processだけがアサーション失敗ではなく固定`300 s`上限で未完了になった。同じ崩落試験をKitの`-f`経路、coverageなしで単独再実行すると`5.5 s`で合格した。直前Phase 6AWのcoverage付き`41 / 41`・`455.3 s`をクリーンな回帰基準として維持し、Phase 6AXでは「40 coverage + 1 isolated pass」と記録する。production appへnative経路は未接続である。
 - 次: native stepから既存runtime metricsとFlow／表示／支持判定用immutable出力を構成し、公開mutable cell操作を検出した場合のPython fallbackを明示する。その後、20本・5 Hz・固定12 slotのアプリ入出力契約へ常駐native候補を接続し、同期Python参照との状態／出力誤差、consumer revision、frame p95を測ってproduction採否を判断する。
+
+## 81. Phase 6AY native常駐・アプリ出力発行境界
+
+### 2026-08-07: 権威SoAから表示・Flow・支持判定のimmutable値を直接構成する
+
+- 対象境界: Phase 6AXの常駐配列を読み、薪ごとに表面平均温度、水分・乾燥木材・char・ash質量、残存質量率、最弱支持率、Flow fuel／temperature／smoke、熱分解ガス率の`11`値を連続出力へ発行するC ABIを追加した。Flow写像は既存どおり基準燃料率`0.02 kg/s`、温度基準`ambient`、温度幅`500 K`、fuel係数`0.25`、char gas係数`5 s/kg`を使う。支持率は24軸断面の端部を除き、`dry + 0.12 × char`を初期断面乾燥質量で割る既存Phase 5契約を維持する。
+- immutable契約: native出力はPythonオブジェクトへ書き戻す権威状態ではなく、5 Hz tick終了時に一度だけコピーして複数consumerへ渡す読み取り専用snapshotの候補である。production Python、公開セルAPI、JSON schema、Flow、USD、描画、PhysXは変更していない。Phase 6AXの`800 K`診断seedを持つ乾燥／湿潤テンプレートを使うが、本測定は物理性能や可視状態を主張せず、集約境界だけを評価する。
+- 測定方法: 乾燥／湿潤薪を交互に20本、計`23,040`セルとし、各モデルを一度Pythonで進行した静止状態から、Python object集約、native常駐集約、数値・相名・材料上書きを含む公開状態13項目の全セルguard走査を各`300`回、方式順を回転した3 runで測定した。11値すべてをPython `runtime_metrics`、`flow_source_from_model`、Phase 5支持率計算と比較し、許容差を`1 × 10⁻12`に固定した。
+- 同値・変更検出: 最大絶対差は残存率／支持率の浮動小数点末尾`1.11 × 10⁻16`で合格し、他9項目は差`0`だった。公開セル0の温度へ`+1 K`を注入する試験は`temperature_k`、期待値、実値を特定して検出し、測定前に復元した。これは検出可能性の証拠であり、自動fallback実装ではない。
+- 性能結果: 3 run中央値のmean／p95はPython object発行`6.0188 / 7.4777 ms`、native常駐発行`0.06424 / 0.09830 ms`、公開状態13項目の全走査`29.8408 / 34.8302 ms`だった。native発行はPython比p95`76.07倍`で4 ms局所gate内にある。一方、毎tick無条件の全走査は予算を約8.7倍超えるため、透過的な変更検出とPython fallbackの前置きとしては棄却する。
+- 判断: native常駐状態からimmutableアプリ出力を作る境界は次段階へ採用する。公開mutable cell互換性は、全セル比較ではなく明示的なrevision／dirty所有権で境界を作り、そのrevisionが変化したときだけPython状態を再取込みする設計を次に試す。この所有権契約と5 Hz scheduler、consumer revision、frame p95が未検証なので、production backend採用は引き続き保留する。
+- 可視化と再現: `run_phase6ay_native_publish.ps1`がVS2022環境、CMake/NMake build、Kit Pythonの3方式×3 run、同値／変更注入gate、解析を`45.1 s`で完了した。`native_publish_boundary_report.json/.svg`へ11出力、方式別mean／p95、最大差、変更検出、採否を保存する。描画経路は変えていないため動画はPhase 6AMの実画面MP4を再参照し、captionで再利用を明示する。
+- 検証: Python構文、MSVC build、C ABI load、正式raw/report JSON生成とSVG生成を確認した。標準Kit suiteは40件が合格し、既存collapse coverage processだけがアサーション失敗ではなく固定`300 s`上限で未完了となり、runner全体は`581.9 s`だった。同じ崩落試験をKitの`-f`経路、coverageなしで単独再実行するとprocess `5.8 s`で合格した。ブラウザではPhase 6AYカード、36個のPhase見出し、横overflowなし、再利用caption、MP4 `readyState = 4`・`duration = 6 s`、Escape終了後のfocus復帰を確認した。production appへnative経路は未接続である。
+- 次: 公開セル書込みにrevisionを付ける明示的dirty boundaryをAPI互換性試験付きで設計し、常駐状態の再取込み条件を固定する。その後、20本・5 Hz・固定12 slotのschedulerへ完全native stepとimmutable発行を接続し、同期Python参照との状態／出力、consumer revision、更新frame p95を測る。
