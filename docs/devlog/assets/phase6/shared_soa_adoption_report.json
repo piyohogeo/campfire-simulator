@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "phase": "phase6bw",
+  "status": "adoption_deferred",
+  "scope": {
+    "production_code_changed": false,
+    "production_defaults_changed": false,
+    "physics_changed": false,
+    "json_schema_changed": false,
+    "usd_publication_changed": false
+  },
+  "evidence": {
+    "current_resident": {
+      "authority_during_run": "resident_contiguous_soa",
+      "steps_per_run": 1200,
+      "snapshot_publications_per_run": 240,
+      "initial_imports_per_run": 1,
+      "hot_path_reimports_per_run": 0,
+      "shutdown_exports_per_run": 1,
+      "shutdown_export_ms": [
+        2.609699999993609,
+        2.4902000000111,
+        3.108200000042416
+      ],
+      "shutdown_export_median_ms": 2.609699999993609,
+      "native_step_p95_median_ms": 0.4875,
+      "change_block_usd_p95_median_ms": 1.5008,
+      "unmanaged_python_edits_supported": false
+    },
+    "shared_proxy": {
+      "cell_count": 23040,
+      "contract_gates_passed": 16,
+      "contract_gate_count": 16,
+      "numeric_dirty_imports": 0,
+      "dataclass_scalar_read_p95_ms": 0.000100000761449337,
+      "proxy_scalar_read_p95_ms": 0.0013999997463542968,
+      "dataclass_scalar_write_p95_ms": 0.000200001522898674,
+      "proxy_scalar_write_p95_ms": 0.0011000010999850929,
+      "proxy_batch_edit_p95_ms": 0.08949999755714089,
+      "direct_soa_json_p95_ms": 12.39239999995334,
+      "dataclass_json_p95_ms": 8.017599997401703,
+      "buffer_lifetime_revocable": false,
+      "full_dataclass_compatibility": false
+    }
+  },
+  "decision": {
+    "production_adoption": "deferred",
+    "reason": "The current resident lifecycle already performs zero numeric re-imports during its 1,200-step hot path. A proxy would primarily add a new mid-run editing feature, while increasing API, locking, stale-reference, buffer-lifetime, and serialization complexity.",
+    "usd_bottleneck_effect": "none",
+    "reopen_when": [
+      "a supported mid-run per-cell Python edit workflow is required",
+      "measured edit/re-import cost is material in an application workload",
+      "writable arrays remain private behind fail-fast edit leases",
+      "a bulk serializer meets or beats the current canonical serializer",
+      "full resident rollback, restart, snapshot, and consumer-revision gates pass"
+    ],
+    "next_work": "Harden the existing default-off resident native lifecycle with native failure, downstream publication failure, shutdown, and restart recovery gates."
+  }
+}

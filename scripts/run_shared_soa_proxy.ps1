@@ -7,7 +7,8 @@ param(
     [int]$BoundarySamples = 25,
     [ValidateRange(1, 7)]
     [int]$RunCount = 3,
-    [string]$OutputDir = ""
+    [string]$OutputDir = "",
+    [string]$SvgPath = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -41,7 +42,10 @@ $OutputDir = [System.IO.Path]::GetFullPath($OutputDir)
 $buildDir = Join-Path $OutputDir "native-build"
 $rawReport = Join-Path $OutputDir "shared_soa_proxy_raw.json"
 $report = Join-Path $OutputDir "shared_soa_proxy_report.json"
-$svg = Join-Path $repositoryRoot "docs\devlog\assets\phase6\shared_soa_proxy_report.svg"
+if (-not $SvgPath) {
+    $SvgPath = Join-Path $repositoryRoot "docs\devlog\assets\phase6\shared_soa_proxy_report.svg"
+}
+$svg = [System.IO.Path]::GetFullPath($SvgPath)
 New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
 & cmake.exe -S $nativeSource -B $buildDir -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

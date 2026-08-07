@@ -37,7 +37,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>47 / 47 passed</strong></div>
-        <div><span>次の焦点</span><strong>現行Sphere経路の継続</strong></div>
+        <div><span>次の焦点</span><strong>Resident lifecycleの失敗・再開gate</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6BV · Emitter transport availability matrix</p>
-            <h2>比較は完了。<br>採用できるのはまだSphereだけ。</h2>
-            <p>20本・7,200表面点で単一Pointと薪ごと20 Pointをoffline完成stageから安全に測りました。両方とも1通知、USD値、revisionは一致しましたが、固定Native PointCloud consumerはactive block 0でした。NanoVDBもproducerだけでp95 5.7224 ms・約10.90 MB/update、公開注入APIはありません。したがって未接続構成のframe時間をFlow性能として順位付けせず、実Flowまで確認済みの現行Sphere productionを維持します。物理式、JSON、rollback、revision、immutable snapshot、既定値は変更していません。</p>
+            <p class="section-kicker">Phase 6BW · Shared SoA adoption re-evaluation</p>
+            <h2>共有はできる。<br>でも今は、共有する理由がない。</h2>
+            <p>共有SoA＋Python proxy試作を、USD 4 ms gateとnative producer接続を終えた現状で再評価しました。16契約gateは再合格し、数値dirty importも0回です。しかし現行Resident自体が開始時1回import、1,200 step中0回、終了時1回exportなので、proxyが削減する定常処理はありません。実行中cell編集が必要になるまでは、既存のprivate SoA、immutable snapshot、shutdown exportを維持します。USD、Flow、物理式、JSON、rollback、revision、既定値は変更していません。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -836,6 +836,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6bw-shared-soa-adoption" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6BW</h3>
+            <a href="assets/phase6/shared_soa_adoption_report.svg" aria-label="Phase 6BW 共有SoAとPython proxyの採用再評価レポートを開く">
+              <img src="assets/phase6/shared_soa_adoption_report.svg" width="1200" height="680" alt="現行Residentの1,200 step中の再取込みが0回で、共有proxyは実行中編集要件が生じるまで採用保留であることを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Technically feasible · no current hot-path benefit</strong><span>16 / 16 gates · 0 re-imports · adoption deferred · lifecycle hardening next</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6BW burn scenario (production unchanged, reused)" data-video-meta="The shared-SoA adoption re-evaluation changed no production wood state, emitter, physics, JSON schema, rollback, revision, or defaults · baseline Phase 6AM real viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · production同値の既存実画面</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1191,6 +1205,12 @@
               <div><dt>Phase 6BV NanoVDB</dt><dd>producer p95 5.7224 ms · 10.90 MB/update · no public injector</dd></div>
               <div><dt>Phase 6BV decision</dt><dd>no end-to-end ranking · keep production Sphere · contracts/defaults unchanged</dd></div>
               <div><dt>Phase 6BV regression</dt><dd>8 processes · 47 / 47 pass · 337.5 s · collapse coverage 200.3 s</dd></div>
+              <div><dt>Phase 6BW current lifecycle</dt><dd>1 import · 1,200 steps · 0 re-import · 240 snapshots · 1 shutdown export</dd></div>
+              <div><dt>Phase 6BW proxy gates</dt><dd>16 / 16 pass · 23,040 cells · numeric dirty import 0</dd></div>
+              <div><dt>Phase 6BW proxy read / write p95</dt><dd>0.0014 / 0.0011 ms · 32 fields 0.0895 ms</dd></div>
+              <div><dt>Phase 6BW serialization p95</dt><dd>naive SoA 12.3924 ms · dataclass 8.0176 ms</dd></div>
+              <div><dt>Phase 6BW decision</dt><dd>adoption deferred · reopen for concrete mid-run edit requirement</dd></div>
+              <div><dt>Phase 6BW regression</dt><dd>8 processes · 47 / 47 pass · 317.7 s · collapse coverage 186.6 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>

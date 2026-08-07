@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+<title id="title">Phase 6BW shared SoA adoption re-evaluation</title>
+<desc id="desc">The existing resident lifecycle already has no hot-path re-import, while a shared proxy adds compatibility and lifetime complexity. Adoption remains deferred.</desc>
+<style>
+.bg{fill:#08121f} .panel{fill:#111f31;stroke:#29415f;stroke-width:1.5} .title{fill:#f7fafc;font:700 30px system-ui,sans-serif} .subtitle{fill:#9fb3c8;font:15px system-ui,sans-serif} .head{fill:#7dd3fc;font:700 16px system-ui,sans-serif} .label{fill:#dce7f2;font:14px system-ui,sans-serif} .value{fill:#f7fafc;font:700 13px ui-monospace,monospace} .body{fill:#b9c8d8;font:14px system-ui,sans-serif} .ok{fill:#86efac;font:700 17px system-ui,sans-serif} .warn{fill:#fbbf24;font:700 15px system-ui,sans-serif}
+</style>
+<rect width="1200" height="680" class="bg"/>
+<text x="64" y="58" class="title">Phase 6BW · Shared SoA adoption re-evaluation</text>
+<text x="64" y="87" class="subtitle">Post-ChangeBlock evidence · production code and defaults unchanged</text>
+<rect x="50" y="118" width="710" height="344" rx="16" class="panel"/>
+<text x="70" y="154" class="head">Measured boundaries</text>
+<text x="70" y="221" class="label">Dataclass scalar write</text><rect x="304" y="203" width="2.00" height="23" rx="6" fill="#64748b"/><text x="318.00" y="221" class="value">0.0002 ms p95</text><text x="70" y="279" class="label">Proxy scalar write</text><rect x="304" y="261" width="2.00" height="23" rx="6" fill="#38bdf8"/><text x="318.00" y="279" class="value">0.0011 ms p95</text><text x="70" y="337" class="label">Proxy 32-field edit</text><rect x="304" y="319" width="11.18" height="23" rx="6" fill="#2dd4bf"/><text x="327.18" y="337" class="value">0.0895 ms p95</text><text x="70" y="395" class="label">Current shutdown export</text><rect x="304" y="377" width="326.00" height="23" rx="6" fill="#f59e0b"/><text x="642.00" y="395" class="value">2.6097 ms p95</text>
+<rect x="784" y="118" width="366" height="344" rx="16" class="panel"/>
+<text x="808" y="154" class="head">Current 1,200-step lifecycle</text>
+<text x="808" y="197" class="ok">0 hot-path re-imports</text>
+<text x="808" y="237" class="body">1 initial object → SoA import</text>
+<text x="808" y="267" class="body">1,200 native steps on resident SoA</text>
+<text x="808" y="297" class="body">240 immutable snapshot publications</text>
+<text x="808" y="327" class="body">1 shutdown export for serialization</text>
+<text x="808" y="367" class="warn">Mid-run Python edits are unsupported</text>
+<text x="808" y="397" class="body">Proxy value appears only if that feature is required.</text>
+<rect x="50" y="486" width="1100" height="142" rx="16" class="panel"/>
+<text x="70" y="522" class="head">Decision</text>
+<text x="70" y="558" class="body">Keep the current private resident SoA + immutable snapshot lifecycle. It already avoids numeric re-import in the hot path.</text>
+<text x="70" y="588" class="body">Reopen proxy adoption only for a concrete mid-run edit requirement, with a bulk serializer and revocable edit leases.</text>
+<text x="70" y="614" class="warn">Deferred, not rejected: shared SoA does not reduce USD publication, Flow ingestion, or rasterization cost.</text>
+</svg>
