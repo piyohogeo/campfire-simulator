@@ -1811,3 +1811,17 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 可視化と再現: `run_phase6ay_native_publish.ps1`がVS2022環境、CMake/NMake build、Kit Pythonの3方式×3 run、同値／変更注入gate、解析を`45.1 s`で完了した。`native_publish_boundary_report.json/.svg`へ11出力、方式別mean／p95、最大差、変更検出、採否を保存する。描画経路は変えていないため動画はPhase 6AMの実画面MP4を再参照し、captionで再利用を明示する。
 - 検証: Python構文、MSVC build、C ABI load、正式raw/report JSON生成とSVG生成を確認した。標準Kit suiteは40件が合格し、既存collapse coverage processだけがアサーション失敗ではなく固定`300 s`上限で未完了となり、runner全体は`581.9 s`だった。同じ崩落試験をKitの`-f`経路、coverageなしで単独再実行するとprocess `5.8 s`で合格した。ブラウザではPhase 6AYカード、36個のPhase見出し、横overflowなし、再利用caption、MP4 `readyState = 4`・`duration = 6 s`、Escape終了後のfocus復帰を確認した。production appへnative経路は未接続である。
 - 次: 公開セル書込みにrevisionを付ける明示的dirty boundaryをAPI互換性試験付きで設計し、常駐状態の再取込み条件を固定する。その後、20本・5 Hz・固定12 slotのschedulerへ完全native stepとimmutable発行を接続し、同期Python参照との状態／出力、consumer revision、更新frame p95を測る。
+
+## 82. Phase 6AZ 明示的revision／dirty所有権境界
+
+### 2026-08-07: 全セル比較をやめ、変更された薪だけを再取込みする
+
+- 目的と契約: Phase 6AYで`34.8302 ms p95`だった公開13項目の全セル走査を、薪ごとの整数revisionとimport済みrevisionの比較へ置き換えるheadless試作を追加した。管理下のセル編集は対象薪のrevisionを進め、温度・5質量・酸素・露出・外部面積・比熱上書き・相の11項目はその薪だけをResident SoAへ再取込みする。体積または比熱モデル名の変更は伝導／材料契約へ影響するため、軽量同期せずresident backend再構築を要求する。
+- 公開API境界: 既存Pythonモードの公開セル代入とJSON schemaは変更しない。Nativeモードでは管理編集APIまたは明示的`mark_dirty`を必須とし、印のない直接代入を自動検出できるとは主張しない。温度へ`+1 K`を直接代入してdirty印を付けないprobeはrevision確認で検出されなかった。この制約を隠して透過互換と扱わず、production backend有効化前に編集経路の所有権を閉じる必要がある。
+- 正しさprobe: 薪7・セル42の温度を管理APIで`+1 K`変更するとrevision `1`となり、dirty分類は薪7だけを返した。1本再取込み後の温度、全質量、酸素、面積、比熱、相を20本全抽出参照と比較し、最大浮動小数点差`0`、相不一致`0`だった。同じセルの体積を`1.001倍`にするprobeはrevision `2`となり、薪7をrebuild-requiredへ分類した後に復元した。
+- 測定方法: Phase 6AYと同じ乾燥／湿潤Arrhenius薪を交互に20本、計`23,040`セルとし、20薪のclean revision確認、1薪の温度を`±0.001 K`交互に変更してdirty再取込み、20薪全取込みを各`300`回、方式順を回転した3 runでKit Pythonから測定した。これは同期境界の費用であり、native完全step、出力発行、Flow、描画は含まない。
+- 性能結果: 3 run中央値のmean／p95はclean revision確認`0.002168 / 0.002200 ms`、1薪dirty再取込み`1.39898 / 1.73990 ms`、20薪全取込み`17.3716 / 21.4179 ms`だった。前2方式は4 ms局所gate内、全取込みはgate外で、dirty 1本に対してp95`12.31倍`遅い。したがってrevision確認と局所再取込みを次段階へ採用し、毎tick全取込みは棄却する。
+- 判断: 明示的所有権境界は全セルguardを置き換える性能を持つが、production採用ではない。未管理の直接書込み、同一tick内の編集競合、rebuild時のconsumer停止、native step後のPython view鮮度、serialization時の強制exportをまだ閉じていない。次段階では5 Hz／固定12 slot schedulerに接続し、tick入力snapshot、dirty import、native step、immutable output、consumer revisionの順序を固定する。
+- 可視化と再現: `run_phase6az_revision_boundary.ps1`がKit Pythonの3方式×3 run、状態／構造／未管理書込みprobe、解析を`35.0 s`で完了した。`resident_revision_boundary_report.json/.svg`へ方式別mean／p95、完全一致、rebuild分類、未管理書込み制約を保存する。描画経路は変えていないため開発日誌動画はPhase 6AM実画面を「再利用」と明記して参照する。
+- 検証: Python／PowerShell構文、正式raw/report JSON生成、SVG XMLを確認した。標準Kit suiteは40件が合格し、既存collapse coverage processだけがアサーション失敗ではなく固定`300 s`上限で未完了となり、runner全体は`557.4 s`だった。同じ崩落試験をKitの`-f`経路、coverageなしで単独再実行するとprocess `5.5 s`で合格した。ブラウザではPhase 6AZカード、37個のPhase見出し、横overflowなし、再利用caption、MP4 `readyState = 4`・`duration = 6 s`、Escape終了後のfocus復帰を確認した。productionコード、公開セル、JSON schema、Flow、USD、描画、PhysXは変更していない。
+- 次: 20本・5 Hz・固定12 slotのheadless schedulerへ、入力snapshot → revision分類 → 必要なdirty import → native完全step → 11値immutable発行 → 3 consumer同一revision読取りを接続する。同期Python参照との状態／出力誤差、更新frame p95、consumer revision不一致、構造dirty時の安全停止を測ってproduction採否を判断する。

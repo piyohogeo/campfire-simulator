@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6AZ explicit revision and dirty ownership</title>
+  <desc id="desc">Twenty logs compare a clean revision check, one dirty log import, and a full twenty-log import.</desc>
+  <style>.title{fill:#f8fafc;font:700 29px system-ui,sans-serif}.sub{fill:#cbd5e1;font:16px system-ui,sans-serif}.label{fill:#f8fafc;font:600 16px system-ui,sans-serif}.value{fill:#f8fafc;font:700 15px ui-monospace,monospace}.small{fill:#94a3b8;font:14px system-ui,sans-serif}.decision{fill:#fde68a;font:700 19px system-ui,sans-serif}</style>
+  <rect width="1200" height="680" rx="28" fill="#0f172a"/>
+  <text x="58" y="76" class="title">Check ownership metadata, not every public cell</text>
+  <text x="58" y="112" class="sub">20 logs · explicit revision/dirty marks · one-log state import · structural rebuild classification</text>
+  <rect x="58" y="148" width="1084" height="62" rx="16" fill="#1e293b"/>
+  <text x="82" y="174" class="small">OWNERSHIP CONTRACT</text>
+  <text x="82" y="198" class="label">one dirty log exact: Δ 0 · volume edit → rebuild · unmarked direct write intentionally unsupported</text>
+  <line x1="471.3" y1="230" x2="471.3" y2="520" stroke="#fbbf24" stroke-width="3" stroke-dasharray="8 7"/>
+  <text x="481.3" y="228" class="value">4 ms p95 gate</text>
+  <text x="58" y="272" class="label">20-log revision check</text><rect x="390" y="250" width="0.0" height="34" rx="17" fill="#22c55e"/><text x="404.0" y="273" class="value">p95 0.002 ms</text><text x="390" y="308" class="small">mean 0.002 ms</text><text x="58" y="364" class="label">One dirty log import</text><rect x="390" y="342" width="35.4" height="34" rx="17" fill="#22c55e"/><text x="439.4" y="365" class="value">p95 1.740 ms</text><text x="390" y="400" class="small">mean 1.399 ms</text><text x="58" y="456" class="label">Full 20-log import</text><rect x="390" y="434" width="435.2" height="34" rx="17" fill="#fb7185"/><text x="839.2" y="457" class="value">p95 21.418 ms</text><text x="390" y="492" class="small">mean 17.372 ms</text>
+  <rect x="58" y="542" width="1084" height="82" rx="18" fill="#1e293b"/>
+  <text x="82" y="574" class="decision">Revision check + one-log import QUALIFY; every-tick full import rejected</text>
+  <text x="82" y="603" class="sub">Next: 5 Hz / 12-slot scheduler integration and immutable consumer-revision audit</text>
+  <text x="58" y="656" class="small">Architecture trial only. Existing public writes still work in Python mode; native mode requires an explicit managed edit or dirty mark.</text>
+</svg>

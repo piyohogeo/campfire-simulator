@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "phase": "phase6az",
+  "status": "qualified",
+  "source_raw": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6az\\resident_revision_boundary_raw.json",
+  "runtime": {
+    "python": "3.12.13",
+    "executable": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\python\\python.exe",
+    "kit_python": true,
+    "numpy": "2.3.1"
+  },
+  "source_sha256": "3b024970a7c4cbae87eb4772fcaa3458029f50bc7d9a1f9c3752b471e358c6b8",
+  "measurement": {
+    "log_count": 20,
+    "cells_per_log": 1152,
+    "combined_cell_count": 23040,
+    "iterations_per_method": 300,
+    "runs": 3,
+    "balanced_method_order": true
+  },
+  "contract": {
+    "state_import_fields": [
+      "temperature_k",
+      "moisture_mass_kg",
+      "dry_wood_mass_kg",
+      "volatile_potential_kg",
+      "char_mass_kg",
+      "ash_mass_kg",
+      "oxygen_factor",
+      "surface_exposure",
+      "external_area_m2",
+      "dry_wood_specific_heat_j_kg_k",
+      "phase"
+    ],
+    "rebuild_fields": [
+      "volume_m3",
+      "dry_wood_specific_heat_model"
+    ],
+    "explicit_mark_required": true,
+    "unmarked_public_write_is_supported_in_native_mode": false,
+    "production_public_fields_or_schema_changed": false
+  },
+  "proof": {
+    "state_mutation": {
+      "log_index": 7,
+      "cell_index": 42,
+      "field": "temperature_k",
+      "delta_k": 1.0,
+      "revision": 1,
+      "dirty_before_sync": [
+        7
+      ],
+      "rebuild_before_sync": [],
+      "imported_logs": [
+        7
+      ],
+      "rebuild_required": [],
+      "array_equivalence": {
+        "maximum_absolute_float_error": 0.0,
+        "phase_mismatch_count": 0,
+        "passed": true
+      }
+    },
+    "structural_mutation": {
+      "field": "volume_m3",
+      "scale": 1.001,
+      "revision": 2,
+      "rebuild_required_logs": [
+        7
+      ],
+      "restored_after_probe": true
+    },
+    "unmarked_legacy_mutation": {
+      "field": "temperature_k",
+      "delta_k": 1.0,
+      "detected_by_revision_check": false,
+      "restored_after_probe": true
+    }
+  },
+  "budget_ms": 4.0,
+  "method_rows": [
+    {
+      "method": "clean_revision_check",
+      "label": "20-log revision check",
+      "median_mean_ms": 0.002168004090587298,
+      "median_p95_ms": 0.002200016751885414,
+      "meets_4ms_p95": true
+    },
+    {
+      "method": "one_log_dirty_sync",
+      "label": "One dirty log import",
+      "median_mean_ms": 1.3989773361633222,
+      "median_p95_ms": 1.7398998606950045,
+      "meets_4ms_p95": true
+    },
+    {
+      "method": "full_twenty_log_import",
+      "label": "Full 20-log import",
+      "median_mean_ms": 17.37156666194399,
+      "median_p95_ms": 21.41789998859167,
+      "meets_4ms_p95": false
+    }
+  ],
+  "decision": {
+    "explicit_revision_check_qualified": true,
+    "one_log_dirty_import_qualified": true,
+    "full_import_each_tick_rejected": true,
+    "unmarked_legacy_write_compatible": false,
+    "production_backend_qualified": false,
+    "scheduler_integration_pending": true,
+    "full_import_slowdown_vs_one_dirty": 12.309846372443683,
+    "next_step": "integrate the explicit ownership boundary with the 5 Hz / 12-slot scheduler and verify immutable consumer revisions"
+  },
+  "limitations": [
+    "production_cell_setter_instrumentation",
+    "native_step_execution",
+    "immutable_output_publication",
+    "5_hz_scheduler_integration",
+    "consumer_revision_fanout",
+    "Flow/USD/rendering/PhysX"
+  ],
+  "production_model_changed": false
+}
