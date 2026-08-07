@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6BB resident backend lifecycle trial covering fresh Python-view export, revision-conflict rejection, transactional edit/native rollback, structural candidate rebuild, exact serialization, and idempotent shutdown export.
 - Added the Phase 6BA headless native 5 Hz / 12-frame scheduler contract, immutable three-consumer revision fan-out, Python-reference tolerance gates, and structural-dirty safe stop.
 - Added the Phase 6AZ explicit resident revision/dirty ownership trial, exact one-log state import, structural rebuild classification, and a documented rejection of unmarked direct writes in native mode.
 - Added the Phase 6AY resident native publication boundary for 11 immutable app/Flow/support outputs per log, exact Python-contract comparison, and a measured rejection of full public-state scanning as an automatic fallback.

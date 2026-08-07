@@ -36,8 +36,8 @@
       <div class="shell status-grid">
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>40 coverage + 1 isolated</strong></div>
-        <div><span>次の焦点</span><strong>Resident export + backend lifecycle</strong></div>
+        <div><span>テスト</span><strong>41 / 41 passed</strong></div>
+        <div><span>次の焦点</span><strong>Opt-in Kit lifecycle adapter</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6BA · Native 5 Hz scheduler contract</p>
-            <h2>12 frameに一度、<br>同じ結果を全consumerへ。</h2>
-            <p>20本のNative Arrhenius完全step、11値発行、immutable commitを5 Hz更新frameへまとめ、2.3534 ms p95で4 ms内に収めました。残る11 frameは同じsnapshotをFlow・表示・支持判定が読み、2,160読取り/runでrevision不一致0です。Python参照との差は温度0 K、質量8.67e-18 kgでした。構造dirtyはNative実行前に停止します。ただしResident進行後のPython view鮮度とserialization exportは未解決なので、本番backendはまだ有効化しません。</p>
+            <p class="section-kicker">Phase 6BB · Resident backend lifecycle</p>
+            <h2>編集前に最新化し、<br>成功した候補だけ入れ替える。</h2>
+            <p>Resident進行後の単一薪をPython権威modelへ1.1643 ms p95でexportし、既存JSON schemaの完全往復を確認しました。編集開始後にnative revisionが進んだ場合はimport前に拒否し、管理編集またはnative stepの注入失敗ではResident配列とrevisionを開始前へ戻します。構造変更は全薪を最新化して別candidateを構築・検証後にswapし、shutdownは20本をexportしてから閉じます。全9 gateが3 runで合格しましたが、Kit main-threadと実Flow/USDは未接続なので本番backendはまだ有効化しません。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -539,6 +539,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6bb-native-lifecycle" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6BB</h3>
+            <a href="assets/phase6/native_backend_lifecycle_report.svg" aria-label="Phase 6BB Resident backend lifecycleのexport性能、rollback、再構築、shutdown契約レポートを開く">
+              <img src="assets/phase6/native_backend_lifecycle_report.svg" width="1200" height="680" alt="単一薪exportのp95と4ミリ秒予算、serialization、競合拒否、rollback、構造再構築、shutdownの合格状態を示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Export fresh, validate candidate, then swap</strong><span>one log p95 1.1643 ms · 9/9 gates · shutdown export 17.7040 ms · production gate closed</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6BB baseline burn scenario (reused)" data-video-meta="Headless resident lifecycle trial · production rendering unchanged · baseline Phase 6AM viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · 既存実画面を再掲</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <figure class="capture-card">
             <a href="assets/phase6/replicate_holdout_report.svg" aria-label="Phase 6C 合板反復ホールドアウトレポートを開く">
               <img src="assets/phase6/replicate_holdout_report.svg" width="1200" height="680" alt="未使用の合板SAMP.3について、着火時刻と平均質量減少速度の観測・初期・SAMP.1/2選定値を並べたSVGグラフ">
@@ -618,6 +632,7 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AY immutable output publish</strong><small>11 values/log · 3 balanced runs · mutation detected · full scan rejected</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AZ revision ownership</strong><small>20 revisions · one-log exact import · structural rebuild · unmarked writes unsupported</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6BA native scheduler</strong><small>5 Hz / 12 frames · 3 consumers · 60 revisions · tolerance lockstep passed</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6BB backend lifecycle</strong><small>fresh export · conflict reject · transactional rollback · rebuild · shutdown</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Default timing path</strong><small>homogeneous fast · timers off · 10.4678 s scenario</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>
             </div>
@@ -822,6 +837,10 @@
               <div><dt>Consumer revisions</dt><dd>2,160 reads/run · 0 mismatches · staleness 0</dd></div>
               <div><dt>Phase 6BA maximum differences</dt><dd>ΔT 0 K · Δmass 8.67 × 10⁻18 kg</dd></div>
               <div><dt>Phase 6BA regression</dt><dd>41 / 41 pass · runner 395.6 s · collapse coverage 220.0 s</dd></div>
+              <div><dt>Resident one-log export p95</dt><dd>1.1643 ms · 3 runs × 25 samples</dd></div>
+              <div><dt>Shutdown all-log export</dt><dd>17.7040 ms · explicit close boundary</dd></div>
+              <div><dt>Phase 6BB lifecycle gates</dt><dd>9 / 9 × 3 runs · production disabled</dd></div>
+              <div><dt>Phase 6BB regression</dt><dd>41 / 41 pass · runner 481.5 s · collapse coverage 294.6 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>

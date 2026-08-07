@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+<style>
+  .bg{fill:#0d1222} .panel{fill:#171f34} .title{fill:#f5f7ff;font:700 30px system-ui,sans-serif}
+  .sub{fill:#a9b4cc;font:16px system-ui,sans-serif} .label{fill:#edf1ff;font:600 17px system-ui,sans-serif}
+  .value{fill:#fff;font:700 17px ui-monospace,monospace} .small{fill:#b8c2d9;font:14px system-ui,sans-serif}
+  .bar{fill:#23c483} .gate{stroke:#ffd166;stroke-width:3;stroke-dasharray:8 7} .gateText{fill:#ffd166;font:700 14px ui-monospace,monospace}
+  .pass{fill:#1f9d68} .tag{fill:white;font:700 11px system-ui,sans-serif} .decision{fill:#ffd166;font:700 19px system-ui,sans-serif}
+</style>
+<rect width="1200" height="680" class="bg"/><text x="70" y="68" class="title">Phase 6BB · Resident backend lifecycle contract</text>
+<text x="70" y="98" class="sub">20 logs · fresh export before edit/serialization · revision conflict · transactional rollback · rebuild · shutdown</text>
+<rect x="55" y="126" width="1090" height="240" rx="18" class="panel"/>
+<text x="80" y="169" class="label">Single-log resident → Python export</text>
+<rect x="350" y="196" width="145.54" height="42" rx="21" class="bar"/>
+<text x="515.54" y="223" class="value">p95 1.164 ms</text>
+<text x="350" y="263" class="small">median mean 0.872 ms · 25 samples/run · three independent runs</text>
+<line x1="850.00" y1="180" x2="850.00" y2="292" class="gate"/><text x="858.00" y="190" class="gateText">4 ms local gate</text>
+<text x="80" y="326" class="label">Shutdown all-log export</text><text x="350" y="326" class="value">17.704 ms</text>
+<text x="570" y="326" class="small">explicit shutdown boundary · not charged to a render frame</text>
+<g transform="translate(0 0)"><rect x="70" y="430" width="112" height="26" rx="13" class="pass"/><text x="126" y="448" text-anchor="middle" class="tag">SERIALIZE</text><text x="205" y="448" class="small">exact WoodThermalModel round trip</text></g><g transform="translate(0 42)"><rect x="70" y="430" width="112" height="26" rx="13" class="pass"/><text x="126" y="448" text-anchor="middle" class="tag">CONFLICT</text><text x="205" y="448" class="small">stale edit rejected before import</text></g><g transform="translate(0 84)"><rect x="70" y="430" width="112" height="26" rx="13" class="pass"/><text x="126" y="448" text-anchor="middle" class="tag">ROLLBACK</text><text x="205" y="448" class="small">managed edit + post-native failure restored</text></g><g transform="translate(0 126)"><rect x="70" y="430" width="112" height="26" rx="13" class="pass"/><text x="126" y="448" text-anchor="middle" class="tag">REBUILD</text><text x="205" y="448" class="small">structural candidate validated before swap</text></g><g transform="translate(0 168)"><rect x="70" y="430" width="112" height="26" rx="13" class="pass"/><text x="126" y="448" text-anchor="middle" class="tag">SHUTDOWN</text><text x="205" y="448" class="small">20 logs exported; close idempotent</text></g>
+<rect x="55" y="638" width="1090" height="1" fill="#35405b"/><text x="70" y="664" class="decision">HEADLESS LIFECYCLE QUALIFIES; production gate remains closed</text>
+<text x="770" y="664" class="small">next: opt-in Kit adapter + real Flow/USD publish</text>
+</svg>

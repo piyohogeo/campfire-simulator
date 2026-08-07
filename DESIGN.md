@@ -1840,3 +1840,17 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 可視化と再現: `run_phase6ba_native_scheduler.ps1`がVS2022環境、CMake/NMake build、Python同期参照、Native 3 run、dirty／構造probe、解析を`26.7 s`で完了した。`native_scheduler_contract_report.json/.svg`へ4区間のmean／p95、状態・出力誤差、consumer revision、構造dirty停止、未解決gateを保存する。描画は変えていないため動画はPhase 6AM実画面を「再利用」と明記して参照する。
 - 検証: Python／PowerShell構文、MSVC build、C ABI load、正式raw/report JSON生成、SVG XMLを確認した。標準Kit suiteは全8 process・`41 / 41`が合格し、runnerは`395.6 s`、最長のcollapse coverageは`220.0 s`で完了した。ブラウザではPhase 6BAカード、38個のPhase見出し、横overflowなし、1200 px SVG表示、再利用caption、MP4 `readyState = 4`・`duration = 6 s`、Escape終了後のfocus復帰を確認した。productionコード、公開schema、Flow、USD、描画、PhysXは変更していない。
 - 次: Resident進行後の単一薪をserialization／編集用Python viewへ安全にexportする境界、edit中のrevision競合、構造dirty時のbackend再構築、例外rollback、shutdown時の全状態exportをheadless lifecycle試験で閉じる。その後、明示opt-inのKit application adapterへ接続して実Flow／USD属性と更新frame p95を測る。
+
+## 84. Phase 6BB Resident backend lifecycle契約
+
+### 2026-08-07: exportしてから編集し、候補を検証してから入れ替える
+
+- 対象境界: Phase 6BAで外部所有したResident SoAと既存`WoodThermalModel.to_dict()/from_dict()`をつなぎ、backend生成後の単一薪export、serialization、revision token付き編集、構造変更のcandidate再構築、例外rollback、shutdown全exportをheadlessで試作した。新しい未確認native APIは追加せず、既存のC ABI、連続配列、Python権威schemaを再利用した。production app、Flow、USD、描画、PhysXは変更していない。
+- export契約: Resident進行後に編集またはserializeする薪は、対象sliceの温度、5質量、酸素、面積、露出率、比熱、相、経過時間、累積7値をPython modelへ明示exportしてから扱う。3独立run×25回の単一薪exportは中央値mean／p95 `0.8716 / 1.1643 ms`で4 ms局所gate内だった。serializationは既存JSON schemaを`allow_nan = false`で生成し、`from_dict()`後の正規payloadと完全一致した。
+- 編集競合とrollback: 編集開始時にResident revisionを捕捉し、開始後にnative stepが進んだstale sessionはimport前に拒否した。管理温度編集は対象薪だけをResident配列へ完全一致で戻した。編集途中の注入例外とnative kernel実行後・publish前の注入例外では、配列、経過時間、累積値、step／publish buffer、revisionのSHA-256が開始前と一致するまで復元した。
+- 構造変更: 体積変更は軽量importへ流さず、全薪をfresh Python viewへexportした後に別candidate model／配列／伝導topologyを構築し、セル数、分類、全薪の伝導pair同一性を検証してから参照をswapした。今回は同一セル数・共通grid/topologyの構造編集だけを扱い、薪ごとの異種topologyはswap前に拒否する。セル数変更、実行中consumerの停止、Kit main-thread上のswapは未検証である。
+- shutdown: 20本すべてをPython modelへexportして既存schemaへserializeしてからclosed状態へ移し、二重shutdownは副作用なし、close後stepは拒否した。一括export中央値は`17.7040 ms`だが、これは明示shutdown境界であり4 ms描画frame gateへ課さない。自動保存を毎frame行えるという主張ではない。
+- 判断: fresh export、revision競合拒否、commit-or-restore、candidate-before-swap、export-before-closeのheadless lifecycle契約を次段階へ採用する。全9 gateは3 runすべてで合格した。ただしこれは試験用Python wrapperでありproduction backend採用ではない。次は明示opt-inのKit adapterで生成／破棄とmain-thread所有権を閉じ、実Flow／USD属性発行と更新frame p95を測る。
+- 可視化と再現: `run_phase6bb_native_lifecycle.ps1`がMSVC native build、3 lifecycle run、解析を`30.3 s`で完了した。`native_backend_lifecycle_report.json/.svg`へexport p95、shutdown境界、9 gate、次のproduction gateを保存する。描画は変えていないため開発日誌動画はPhase 6AM実画面を「再利用」と明記して参照する。
+- 検証: Python／PowerShell構文、MSVC build、正式raw/report JSON生成、SVG XMLを確認した。最終状態の標準Kit suiteは全8 process・`41 / 41`が合格し、runnerは`481.5 s`、最長のcollapse coverageは固定300秒上限内の`294.6 s`で完了した。ブラウザではPhase 6BBカード、39個のPhase見出し、横overflowなし、1200 px SVG表示、再利用caption、MP4 `readyState = 4`・`duration = 6 s`、Escape終了後のfocus復帰を確認した。
+- 次: production既定を変えないopt-in Kit application adapterを追加し、timeline開始／停止、extension shutdown、例外時のmain-thread rollback、既存Flow emitter／表示／支持属性への同一revision発行を実機で測る。

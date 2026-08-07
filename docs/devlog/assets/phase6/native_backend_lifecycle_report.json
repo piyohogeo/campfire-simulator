@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "phase": "phase6bb",
+  "status": "ok",
+  "measurement": {
+    "log_count": 20,
+    "cells_per_log": 1152,
+    "initial_native_steps": 8,
+    "single_export_samples": 25,
+    "runs": 3
+  },
+  "budget_ms": 4.0,
+  "median_of_runs": {
+    "single_log_export_mean_ms": 0.8715800009667873,
+    "single_log_export_p95_ms": 1.16429990157485,
+    "shutdown_all_log_export_ms": 17.703999998047948
+  },
+  "per_run": {
+    "single_log_export_mean_ms": [
+      0.9653360024094582,
+      0.849563991650939,
+      0.8715800009667873
+    ],
+    "single_log_export_p95_ms": [
+      1.16429990157485,
+      1.0084998793900013,
+      1.1930998880416155
+    ],
+    "shutdown_all_log_export_ms": [
+      16.86370000243187,
+      19.004900008440018,
+      17.703999998047948
+    ]
+  },
+  "gates": {
+    "serialization_round_trip_exact": true,
+    "stale_edit_conflict_detected": true,
+    "state_import_exact": true,
+    "managed_edit_failure_rolled_back": true,
+    "structural_candidate_rebuilt": true,
+    "post_native_failure_rolled_back": true,
+    "shutdown_exported_all_logs": true,
+    "shutdown_idempotent": true,
+    "use_after_close_rejected": true
+  },
+  "contract": {
+    "edit_order": [
+      "export_fresh_python_view",
+      "capture_resident_revision",
+      "reject_stale_revision",
+      "validate_candidate",
+      "commit_or_restore"
+    ],
+    "structural_order": [
+      "export_all_logs",
+      "build_candidate_backend",
+      "require_homogeneous_log_topology",
+      "validate_candidate",
+      "atomic_reference_swap"
+    ],
+    "shutdown_order": [
+      "export_all_logs",
+      "serialize",
+      "close"
+    ],
+    "production_backend_changed": false
+  },
+  "decision": {
+    "headless_lifecycle_qualified": true,
+    "production_backend_qualified": false,
+    "single_log_export_within_4ms": true,
+    "shutdown_export_is_frame_gated": false,
+    "next_gate": "opt-in Kit adapter lifecycle and real Flow/USD publish"
+  }
+}
