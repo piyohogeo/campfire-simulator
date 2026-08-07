@@ -869,6 +869,7 @@ class TestScene(omni.kit.test.AsyncTestCase):
             log_ids,
             initial_dry_mass,
             profile_transactions=True,
+            cache_usd_handles=True,
         )
         with self.assertRaisesRegex(RuntimeError, "active timeline"):
             adapter.publish(snapshot)
@@ -947,14 +948,34 @@ class TestScene(omni.kit.test.AsyncTestCase):
             dict(repeated_profile.attribute_write_disposition)["Emitter.temperature"],
             "unchanged",
         )
+        log_00 = stage.GetPrimAtPath(f"/World/Logs/{log_ids[0]}")
+        self.assertTrue(log_00.RemoveProperty("campfire:surfaceTemperatureK"))
+        recreated_snapshot = campfire.app.ResidentPublishedSnapshot(
+            3, 0, log_ids, rows
+        )
+        adapter.publish(recreated_snapshot)
+        self.assertAlmostEqual(
+            log_00.GetAttribute("campfire:surfaceTemperatureK").Get(),
+            rows[0].surface_mean_temperature_k,
+        )
+        recreated_profile = adapter.transaction_profiles()[2]
+        self.assertEqual(recreated_profile.changed_write_count, 4)
+        self.assertEqual(recreated_profile.unchanged_write_count, 15)
         with self.assertRaisesRegex(RuntimeError, "increase monotonically"):
             adapter.publish(snapshot)
         status = adapter.status()
-        self.assertEqual(status["revision"], 2)
-        self.assertEqual(status["publish_count"], 2)
-        self.assertEqual(status["transaction_profile_count"], 2)
+        self.assertEqual(status["revision"], 3)
+        self.assertEqual(status["publish_count"], 3)
+        self.assertEqual(status["transaction_profile_count"], 3)
+        self.assertTrue(status["handle_cache_enabled"])
+        self.assertEqual(status["cached_attribute_count"], 19)
+        self.assertEqual(status["prim_cache_miss_count"], 1)
+        self.assertEqual(status["prim_cache_hit_count"], 2)
+        self.assertEqual(status["attribute_cache_miss_count"], 20)
+        self.assertEqual(status["attribute_cache_hit_count"], 37)
         adapter.on_timeline_stopped()
         self.assertTrue(adapter.close())
+        self.assertEqual(adapter.status()["cached_attribute_count"], 0)
         self.assertFalse(adapter.close())
 
     async def test_resident_snapshot_adapter_rolls_back_and_rejects_other_threads(self):
@@ -983,6 +1004,7 @@ class TestScene(omni.kit.test.AsyncTestCase):
             initial_dry_mass,
             write_observer=fail_fourth_write,
             profile_transactions=True,
+            cache_usd_handles=True,
         )
         adapter.on_timeline_started()
         emitter = stage.GetPrimAtPath(campfire.app.FLOW_EMITTER_PATH)
@@ -1002,6 +1024,15 @@ class TestScene(omni.kit.test.AsyncTestCase):
             4,
         )
         self.assertGreater(failed_profile.rollback_ms, 0.0)
+        self.assertAlmostEqual(emitter.GetAttribute("fuel").Get(), original_fuel)
+        emitter.GetAttribute("fuel").Set(0.125)
+        with self.assertRaisesRegex(RuntimeError, "injected USD write failure"):
+            adapter.publish(snapshot)
+        self.assertAlmostEqual(emitter.GetAttribute("fuel").Get(), 0.125)
+        self.assertEqual(adapter.status()["revision"], 0)
+        self.assertEqual(adapter.status()["publish_count"], 0)
+        self.assertEqual(adapter.status()["prim_cache_hit_count"], 1)
+        self.assertEqual(adapter.status()["attribute_cache_hit_count"], 4)
 
         thread_errors = []
 

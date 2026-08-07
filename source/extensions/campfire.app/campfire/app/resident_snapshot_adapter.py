@@ -201,6 +201,7 @@ class UsdResidentSnapshotAdapter:
         *,
         write_observer: Callable[[int, str], None] | None = None,
         profile_transactions: bool = False,
+        cache_usd_handles: bool = False,
     ):
         if stage is None:
             raise ValueError("A USD stage is required")
@@ -213,7 +214,15 @@ class UsdResidentSnapshotAdapter:
         self._initial_dry_mass_kg = dict(initial_dry_mass_kg)
         self._write_observer = write_observer
         self._profile_transactions = bool(profile_transactions)
+        self._cache_usd_handles = bool(cache_usd_handles)
         self._transaction_profiles: list[ResidentUsdTransactionProfile] = []
+        self._cached_emitter = None
+        self._cached_log_prims = ()
+        self._attribute_cache = {}
+        self._prim_cache_hit_count = 0
+        self._prim_cache_miss_count = 0
+        self._attribute_cache_hit_count = 0
+        self._attribute_cache_miss_count = 0
         self._owner_thread_id = threading.get_ident()
         self._active = False
         self._closed = False
@@ -284,6 +293,7 @@ class UsdResidentSnapshotAdapter:
         group="payload",
         label=None,
     ):
+        attribute_label = label or name
         if profile is not None:
             self._set_attribute_profiled(
                 prim,
@@ -293,13 +303,12 @@ class UsdResidentSnapshotAdapter:
                 restores,
                 profile,
                 group,
-                label or name,
+                attribute_label,
             )
             return
-        property_existed = bool(prim.GetProperty(name))
-        attribute = prim.GetAttribute(name)
-        if not attribute:
-            attribute = prim.CreateAttribute(name, type_name)
+        property_existed, attribute = self._resolve_attribute(
+            prim, name, type_name, attribute_label
+        )
         authored_value_existed = attribute.HasAuthoredValueOpinion()
         previous_value = attribute.Get() if authored_value_existed else None
         restores.append(
@@ -316,6 +325,55 @@ class UsdResidentSnapshotAdapter:
             raise RuntimeError(f"Unable to publish USD attribute {prim.GetPath()}.{name}")
         if self._write_observer is not None:
             self._write_observer(len(restores), name)
+
+    def _resolve_attribute(self, prim, name, type_name, cache_key):
+        if self._cache_usd_handles:
+            attribute = self._attribute_cache.get(cache_key)
+            if attribute:
+                self._attribute_cache_hit_count += 1
+                return True, attribute
+            self._attribute_cache.pop(cache_key, None)
+            self._attribute_cache_miss_count += 1
+        property_existed = bool(prim.GetProperty(name))
+        attribute = prim.GetAttribute(name)
+        if not attribute:
+            attribute = prim.CreateAttribute(name, type_name)
+        if self._cache_usd_handles:
+            self._attribute_cache[cache_key] = attribute
+        return property_existed, attribute
+
+    def _resolve_publish_prims(self):
+        if (
+            self._cache_usd_handles
+            and self._cached_emitter
+            and len(self._cached_log_prims) == len(self._log_ids)
+            and all(self._cached_log_prims)
+        ):
+            self._prim_cache_hit_count += 1
+            return self._cached_emitter, self._cached_log_prims
+        if self._cache_usd_handles:
+            self._prim_cache_miss_count += 1
+        emitter = self._stage.GetPrimAtPath(FLOW_EMITTER_PATH)
+        if not emitter:
+            raise RuntimeError("Flow emitter prim is unavailable")
+        log_prims = tuple(
+            self._stage.GetPrimAtPath(f"/World/Logs/{log_id}")
+            for log_id in self._log_ids
+        )
+        if not all(log_prims):
+            raise RuntimeError("One or more wood log prims are unavailable")
+        if self._cache_usd_handles:
+            self._cached_emitter = emitter
+            self._cached_log_prims = log_prims
+        return emitter, log_prims
+
+    def _prune_invalid_attribute_handles(self):
+        if self._cache_usd_handles:
+            self._attribute_cache = {
+                key: attribute
+                for key, attribute in self._attribute_cache.items()
+                if attribute
+            }
 
     @staticmethod
     def _add_elapsed(profile, name, started_ns):
@@ -351,10 +409,9 @@ class UsdResidentSnapshotAdapter:
     ):
         operation_started = time.perf_counter_ns()
         started = time.perf_counter_ns()
-        property_existed = bool(prim.GetProperty(name))
-        attribute = prim.GetAttribute(name)
-        if not attribute:
-            attribute = prim.CreateAttribute(name, type_name)
+        property_existed, attribute = self._resolve_attribute(
+            prim, name, type_name, label
+        )
         self._add_elapsed(profile, "attribute_lookup_ms", started)
         if property_existed:
             profile["existing_property_count"] += 1
@@ -504,15 +561,7 @@ class UsdResidentSnapshotAdapter:
         if profile is not None:
             self._add_elapsed(profile, "validation_ms", started)
             started = time.perf_counter_ns()
-        emitter = self._stage.GetPrimAtPath(FLOW_EMITTER_PATH)
-        if not emitter:
-            raise RuntimeError("Flow emitter prim is unavailable")
-        log_prims = [
-            self._stage.GetPrimAtPath(f"/World/Logs/{log_id}")
-            for log_id in self._log_ids
-        ]
-        if not all(log_prims):
-            raise RuntimeError("One or more wood log prims are unavailable")
+        emitter, log_prims = self._resolve_publish_prims()
         if profile is not None:
             self._add_elapsed(profile, "prim_lookup_ms", started)
 
@@ -611,6 +660,7 @@ class UsdResidentSnapshotAdapter:
             started = time.perf_counter_ns() if profile is not None else 0
             for restore in reversed(restores):
                 restore.rollback()
+            self._prune_invalid_attribute_handles()
             if profile is not None:
                 self._add_elapsed(profile, "rollback_ms", started)
                 self._finish_profile(profile, "rolled_back", transaction_started)
@@ -638,6 +688,12 @@ class UsdResidentSnapshotAdapter:
             "owner_thread_id": self._owner_thread_id,
             "transaction_profiling_enabled": self._profile_transactions,
             "transaction_profile_count": len(self._transaction_profiles),
+            "handle_cache_enabled": self._cache_usd_handles,
+            "cached_attribute_count": len(self._attribute_cache),
+            "prim_cache_hit_count": self._prim_cache_hit_count,
+            "prim_cache_miss_count": self._prim_cache_miss_count,
+            "attribute_cache_hit_count": self._attribute_cache_hit_count,
+            "attribute_cache_miss_count": self._attribute_cache_miss_count,
         }
 
     def close(self):
@@ -646,5 +702,8 @@ class UsdResidentSnapshotAdapter:
             return False
         if self._active:
             self.on_timeline_stopped()
+        self._attribute_cache.clear()
+        self._cached_emitter = None
+        self._cached_log_prims = ()
         self._closed = True
         return True

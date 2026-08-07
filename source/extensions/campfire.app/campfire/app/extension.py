@@ -1077,6 +1077,9 @@ class CampfireAppExtension(omni.ext.IExt):
         resident_snapshot_timing_enabled = settings.get_as_bool(
             f"{SETTINGS_ROOT}/residentSnapshotTimingEnabled"
         )
+        resident_snapshot_handle_cache_enabled = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/residentSnapshotHandleCacheEnabled"
+        )
         video_frame_interval_steps = settings.get_as_int(
             f"{SETTINGS_ROOT}/videoFrameIntervalSteps"
         )
@@ -1120,6 +1123,13 @@ class CampfireAppExtension(omni.ext.IExt):
         if resident_snapshot_timing_enabled and not resident_snapshot_adapter_enabled:
             raise ValueError(
                 "Resident snapshot timing requires the resident snapshot adapter"
+            )
+        if (
+            resident_snapshot_handle_cache_enabled
+            and not resident_snapshot_adapter_enabled
+        ):
+            raise ValueError(
+                "Resident snapshot handle cache requires the resident snapshot adapter"
             )
         flow_interface = _flowusd.acquire_flowusd_interface()
         dry_prim = stage.GetPrimAtPath(f"/World/Logs/{PHASE3_DRY_LOG_ID}")
@@ -1167,6 +1177,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 log_ids,
                 initial_dry_mass_kg,
                 profile_transactions=resident_snapshot_timing_enabled,
+                cache_usd_handles=resident_snapshot_handle_cache_enabled,
             )
             self._resident_snapshot_adapter = resident_adapter
         ignition_seconds = {"dry": None, "wet": None}
@@ -1936,6 +1947,9 @@ class CampfireAppExtension(omni.ext.IExt):
                         "enabled": resident_snapshot_adapter_enabled,
                         "transaction_timing_enabled": (
                             resident_snapshot_timing_enabled
+                        ),
+                        "handle_cache_enabled": (
+                            resident_snapshot_handle_cache_enabled
                         ),
                         "producer": (
                             "python_contract_bridge"

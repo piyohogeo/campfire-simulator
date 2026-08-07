@@ -37,7 +37,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>43 / 43 passed</strong></div>
-        <div><span>次の焦点</span><strong>USD handle cache candidate</strong></div>
+        <div><span>次の焦点</span><strong>次のUSD boundary最適化</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6BE · Redundant USD Set audit</p>
-            <h2>同じ値を何度書いているか、<br>回数と実費を分けて測る。</h2>
-            <p>3 run・708 transaction・13,452属性書込みをUSD保存後の型付き値で監査すると、同値Setは5,535回、41.15%、1 transactionあたり7.8178回でした。ただし同値SetはUSD側ですでに軽く、実費は平均0.1366 ms／transactionです。4 ms目標との差0.5441 msを単独で埋める根拠にはならないため、no-op省略だけの採用は保留しました。rollback、revision、immutable snapshot、権威出力は維持し、次はprim／attribute handle cacheを試します。</p>
+            <p class="section-kicker">Phase 6BF · USD handle-cache trial</p>
+            <h2>探索を再利用すると速くなる。<br>ただし、まだ4 msには届かない。</h2>
+            <p>実USDの旧値取得とrollback journalを残し、Prim／Attributeハンドルだけを再利用する候補をbaselineと交互に3組測りました。transaction p95中央値は4.4762→4.1751 msへ改善し、3組すべてで候補が速くなりました。しかし候補runは4.1492／4.1751／4.4883 msで、全run 4 ms未満という採用条件には未達です。production既定はOFF、native producer接続も保留し、次の計測済みUSD境界を最適化します。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -595,6 +595,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6bf-resident-handle-cache" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6BF</h3>
+            <a href="assets/phase6/resident_handle_cache_report.svg" aria-label="Phase 6BF USDハンドルキャッシュの交互3組実測と4ミリ秒判定レポートを開く">
+              <img src="assets/phase6/resident_handle_cache_report.svg" width="1200" height="680" alt="baselineとUSDハンドルキャッシュ候補のtransaction p95を3組比較し、全組改善したが全候補4ミリ秒未満には未達であることを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Repeatable improvement, qualification still closed</strong><span>p95 median 4.4762 → 4.1751 ms · 3 / 3 pairs improved · default OFF</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6BF baseline burn scenario (reused)" data-video-meta="Handle-cache trial changes no rendering or snapshot semantics · baseline Phase 6AM viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · 既存実画面を再掲</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <figure id="phase6bb-native-lifecycle" class="capture-card">
             <h3 class="capture-phase-heading">Phase 6BB</h3>
             <a href="assets/phase6/native_backend_lifecycle_report.svg" aria-label="Phase 6BB Resident backend lifecycleのexport性能、rollback、再構築、shutdown契約レポートを開く">
@@ -918,6 +932,10 @@
               <div><dt>Phase 6BE unchanged Set cost</dt><dd>0.1366 ms mean per transaction · no-op-only deferred</dd></div>
               <div><dt>Phase 6BE revision writes</dt><dd>3 × 708 changed · mandatory</dd></div>
               <div><dt>Phase 6BE regression</dt><dd>43 / 43 pass · 469.6 s · collapse coverage 269.4 s</dd></div>
+              <div><dt>Phase 6BF baseline transaction p95</dt><dd>4.4762 ms median · 3 runs × 236 samples</dd></div>
+              <div><dt>Phase 6BF handle-cache p95</dt><dd>4.1751 ms median · 3 / 3 pairs improved</dd></div>
+              <div><dt>Phase 6BF qualification</dt><dd>0 / 3 candidate runs below 4 ms · default OFF</dd></div>
+              <div><dt>Phase 6BF regression</dt><dd>43 / 43 pass · 439.2 s · collapse coverage 261.3 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>

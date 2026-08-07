@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "phase": "phase6bf",
+  "status": "ok",
+  "measurement": {
+    "hardware": "NVIDIA GeForce RTX 3090 / D3D12",
+    "scenario": "Phase 3 dry/wet logs, 1200 steps, 240 model seconds",
+    "paired_run_count": 3,
+    "measured_updates_per_run": 236,
+    "cache_default_enabled": false
+  },
+  "contracts": {
+    "all_transactions_committed": true,
+    "revision_and_lifecycle_preserved": true,
+    "authoritative_outputs_exact_across_runs": true,
+    "actual_old_value_rollback_preserved": true,
+    "invalid_property_handle_recreated": true,
+    "native_producer_connected": false
+  },
+  "transaction_timing_ms": {
+    "baseline": {
+      "run_count": 3,
+      "median_mean_ms": 2.7128,
+      "median_p95_ms": 4.4762,
+      "median_max_ms": 5.8161,
+      "run_mean_ms": [
+        2.7128,
+        2.6019,
+        2.7687
+      ],
+      "run_p95_ms": [
+        4.4762,
+        4.1883,
+        4.4998
+      ],
+      "run_max_ms": [
+        6.0094,
+        5.8161,
+        5.671
+      ]
+    },
+    "handle_cache": {
+      "run_count": 3,
+      "median_mean_ms": 2.4074,
+      "median_p95_ms": 4.1751,
+      "median_max_ms": 5.1998,
+      "run_mean_ms": [
+        2.3107,
+        2.4074,
+        2.6154
+      ],
+      "run_p95_ms": [
+        4.1492,
+        4.1751,
+        4.4883
+      ],
+      "run_max_ms": [
+        5.1998,
+        4.7004,
+        5.3458
+      ]
+    }
+  },
+  "paired_p95_improvement_ms": [
+    0.327,
+    0.0132,
+    0.0115
+  ],
+  "decision": {
+    "all_pairs_improved": true,
+    "every_candidate_run_below_4ms": false,
+    "qualified_for_resident_adapter": false,
+    "global_default_changed": false,
+    "native_producer_connection_unblocked": false,
+    "reason": "The candidate caches only valid prim and attribute handles. It still reads the actual authored old value on every touched attribute and retains transactional rollback.",
+    "next_gate": "Retain the candidate as opt-in and optimize the next measured USD boundary."
+  }
+}

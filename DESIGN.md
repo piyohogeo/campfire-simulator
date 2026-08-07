@@ -1902,3 +1902,14 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 費用評価: 同値書込みが多くても、USD側の同値`Set()`は変更時よりすでに軽かった。同値Setに実際に費やした時間の合計は1 transaction平均`0.1366 ms`で、Phase 6BDの4 ms目標との差`0.5441 ms p95`を単独で埋める根拠にならない。journal追加の一部を含めても余裕は小さく、changed Setの支配コストには作用しない。
 - 判断: no-op省略だけのproduction採用は保留する。将来併用する場合も、実USD authored旧値を読んだ後、USD型で完全同値の場合だけjournalとSetを省略し、3 revisionは必ず発行する。値変更通知に依存するconsumerがないことも別途確認する。次はPhase 6BDでmean `0.3787 ms`を占めたprim／attribute lookupを、実旧値取得とrollbackを残したopt-in handle cacheで試作し、通常経路との交互3 pairでp95 4 ms未満を判定する。
 - 再現と回帰: `run_phase6be_resident_write_audit.ps1`が詳細監査を3 run実行し、`analyze_resident_write_audit.py`が全書込み分類、lifecycle、revision、権威同値、Flow活動を検査して`resident_write_audit_report.json/.svg`を生成する。release buildは成功し、標準Kit suiteはcoverage込み全8 process・`43 / 43`件が`469.6 s`で合格、collapse coverageは`269.4 s`だった。視覚出力を変更していないため、開発日誌動画はPhase 6AM実画面を再利用する。
+
+## 89. Phase 6BF USD Prim／Attribute handle cache試作
+
+### 2026-08-07: 探索だけを再利用し、transaction契約を維持したまま4 msを再判定する
+
+- 試作境界: `UsdResidentSnapshotAdapter`へ既定OFFの`residentSnapshotHandleCacheEnabled`を追加し、Emitter／薪Primと19属性のUSDハンドルだけを再利用する。各publishでは引き続き実際の`HasAuthoredValueOpinion()`と`Get()`を実行し、実USD旧値をrollback journalへ保存してから`Set()`する。immutable snapshot、単調revision、3 consumer同一revision、owner thread、timeline start／stop、例外rollbackは変更しない。
+- 寿命と無効化: cacheはadapter instanceと同じ寿命に限定し、close時に破棄する。キャッシュ済みpropertyが外部で削除され無効になった場合は再探索・再作成する。単体試験では削除した`surfaceTemperatureK`を次publishで復元し、注入失敗前に外部変更したfuel値`0.125`を、古いshadowではなくその場で取得した旧値へrollbackできることを確認した。
+- 実機比較: RTX 3090／D3D12でbaselineと候補を順序反転した3 pair、各236 measured transactionで測定した。baseline run別p95は`4.4762 / 4.1883 / 4.4998 ms`、候補は`4.1492 / 4.1751 / 4.4883 ms`で、pair改善幅は`0.3270 / 0.0132 / 0.0115 ms`だった。run別p95中央値は`4.4762 → 4.1751 ms`、mean中央値は`2.7128 → 2.4074 ms`で、3 pairすべて改善した。
+- 契約結果: 全6 runで240 commit、0 rollback、最終revision `1200`、Emitter／乾燥薪／湿潤薪のconsumer revision、権威状態SHA、metrics CSV、着火`66.2 / 166.4 s`が完全一致し、Flowも活動した。候補runはPrim cache miss／hit `1 / 239`、Attribute cache miss／hit `19 / 4541`で、期待した再利用経路を通った。native producerはまだ接続していない。
+- 判断: 改善は再現したが、候補3 runはいずれも4 ms未満ではなく、最大は`4.4883 ms`だった。「全pair改善かつ全候補run p95 4 ms未満」の採用gateに不合格なので、production既定はOFFのまま、native producer接続もまだ進めない。handle cache単独を完成策とはせずopt-in候補として保持し、次は実旧値取得、rollback保存、発行頻度、書込み属性集合のうち契約を弱めず削減できる次の計測済み境界を試す。
+- 再現と回帰: `run_phase6bf_resident_handle_cache.ps1`が交互3 pairを実行し、`analyze_resident_handle_cache.py`がlifecycle、revision、同値性、Flow活動、cache hit／miss、pair別p95を検査して`resident_handle_cache_report.json/.svg`を生成する。release build、Phase 0、対象Kit adapter試験、標準suite全8 process・`43 / 43`件が合格し、標準runnerは`439.2 s`、最長collapse coverageは`261.3 s`だった。ブラウザではPhase 6BF見出し、1200×680 SVG、横overflowなし、動画modal、MP4 `readyState = 4`・`duration = 6 s`、focus復帰、console error 0を確認した。描画と発行内容は変えていないため、動画はPhase 6AMの検証済み実画面を「再利用」と明記する。
