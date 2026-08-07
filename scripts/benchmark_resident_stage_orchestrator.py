@@ -52,7 +52,7 @@ def _settings():
     }
 
 
-async def _run(arguments):
+async def _run(arguments, *, phase="phase6cf"):
     app = omni.kit.app.get_app()
     context = omni.usd.get_context()
     timeline = omni.timeline.get_timeline_interface()
@@ -112,6 +112,31 @@ async def _run(arguments):
         )
         session.start()
         first = session.step(tick=1)
+        extracted_module_equivalence = None
+        production_point_types_used = None
+        if phase == "phase6cg":
+            legacy_producer = surface.NativeSurfaceProducer(backend)
+            legacy_producer.build_layout()
+            legacy_producer.build_channels()
+            production_producer = old_sidecar._producer
+            extracted_module_equivalence = all(
+                legacy.tobytes(order="C") == production.tobytes(order="C")
+                for legacy, production in (
+                    (legacy_producer.positions, production_producer.positions),
+                    (legacy_producer.fuels, production_producer.fuels),
+                    (legacy_producer.temperatures, production_producer.temperatures),
+                    (legacy_producer.smokes, production_producer.smokes),
+                )
+            )
+            production_point_types_used = (
+                isinstance(old_sidecar, campfire.app.ResidentPointSidecar)
+                and isinstance(
+                    production_producer, campfire.app.ResidentNativeSurfaceProducer
+                )
+                and isinstance(
+                    old_sidecar._last_snapshot, campfire.app.ImmutableSurfacePayload
+                )
+            )
         moved_origins = old_sidecar._producer.origins.copy()
         moved_origins[0, 0] += 0.03
         moved_layout = {
@@ -346,9 +371,18 @@ async def _run(arguments):
             "clean_close_discards_nothing": not close_result["pending_discarded"],
             "production_activation_unchanged": True,
         }
+        if phase == "phase6cg":
+            gates.update(
+                {
+                    "production_point_module_types_used": production_point_types_used,
+                    "extracted_module_arrays_match_benchmark": (
+                        extracted_module_equivalence
+                    ),
+                }
+            )
         report = {
             "schema_version": 1,
-            "phase": "phase6cf",
+            "phase": phase,
             "status": "ok" if all(gates.values()) else "failed",
             "scope": {
                 "default_off": True,
@@ -357,6 +391,7 @@ async def _run(arguments):
                 "emitter_count": 1,
                 "production_activation_changed": False,
                 "canonical_scene_changed": False,
+                "production_point_module": phase == "phase6cg",
             },
             "contract": {
                 "trigger": "owner-thread scheduler receives Kit stage lifecycle events",
@@ -381,6 +416,13 @@ async def _run(arguments):
                 "replacement_revisions": replacement_revisions,
                 "relevant_resyncs_after_recovery": sorted(set(relevant_resyncs)),
             },
+            "module": {
+                "sidecar": "campfire.app.ResidentPointSidecar",
+                "producer": "campfire.app.ResidentNativeSurfaceProducer",
+                "payload": "campfire.app.ImmutableSurfacePayload",
+                "production_types_used": production_point_types_used,
+                "legacy_array_bytes_equal": extracted_module_equivalence,
+            },
             "flow": {
                 "active_blocks_peak": max(active_blocks, default=0),
                 "readback_words": readback,
@@ -392,7 +434,7 @@ async def _run(arguments):
         output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
         if not all(gates.values()):
             failed = [name for name, value in gates.items() if not value]
-            raise RuntimeError(f"Phase 6CF gates failed: {failed}")
+            raise RuntimeError(f"{phase.upper()} gates failed: {failed}")
         exit_code = 0
     except asyncio.CancelledError:
         raise
@@ -402,7 +444,7 @@ async def _run(arguments):
                 json.dumps(
                     {
                         "schema_version": 1,
-                        "phase": "phase6cf",
+                        "phase": phase,
                         "status": "error",
                         "error": f"{type(error).__name__}: {error}",
                         "traceback": traceback.format_exc(),
@@ -412,7 +454,7 @@ async def _run(arguments):
                 + "\n",
                 encoding="utf-8",
             )
-        carb.log_error(f"[phase6cf] {type(error).__name__}: {error}")
+        carb.log_error(f"[{phase}] {type(error).__name__}: {error}")
     finally:
         if replacement_listener is not None:
             replacement_listener.Revoke()

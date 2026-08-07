@@ -1464,6 +1464,33 @@ class TestScene(omni.kit.test.AsyncTestCase):
         with self.assertRaisesRegex(RuntimeError, "no retryable attached stage"):
             orchestrator.retry_recovery()
 
+    async def test_resident_surface_payload_is_immutable_and_byte_exact(self):
+        payload = campfire.app.ImmutableSurfacePayload(
+            revision=4,
+            tick=7,
+            layout_revision=2,
+            point_count=2,
+            positions=bytes(range(24)),
+            fuels=bytes(range(8)),
+            temperatures=bytes(range(8, 16)),
+            smokes=bytes(range(16, 24)),
+        )
+        duplicate = replace(payload)
+        self.assertEqual(payload, duplicate)
+        self.assertEqual(payload.digest(), duplicate.digest())
+        with self.assertRaises((AttributeError, TypeError)):
+            payload.revision = 5
+        with self.assertRaisesRegex(ValueError, "position byte count"):
+            replace(payload, positions=b"short")
+        with self.assertRaisesRegex(ValueError, "channel byte count"):
+            replace(payload, fuels=b"short")
+        with self.assertRaisesRegex(ValueError, "revisions and tick"):
+            replace(payload, layout_revision=0)
+        with self.assertRaisesRegex(ValueError, "metadata must use integers"):
+            replace(payload, revision=True)
+        with self.assertRaisesRegex(TypeError, "immutable bytes"):
+            replace(payload, smokes=bytearray(payload.smokes))
+
     async def test_resident_snapshot_adapter_resumes_only_matching_consumer_revision(self):
         stage = Usd.Stage.CreateInMemory()
         campfire.app.populate_phase3_scene(stage)

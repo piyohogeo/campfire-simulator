@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import asyncio
-import dataclasses
-import hashlib
 import importlib.util
 import json
 import math
@@ -18,7 +16,7 @@ import omni.kit.viewport.utility
 import omni.timeline
 import omni.usd
 from omni.flowusd import _flowusd
-from pxr import Gf, Sdf, Tf, Usd, UsdGeom, Vt
+from pxr import Gf, Sdf, Tf, Usd, UsdGeom
 
 import campfire.app
 
@@ -51,40 +49,11 @@ def _settings():
     }
 
 
-@dataclasses.dataclass(frozen=True)
-class ImmutableSurfacePayload:
-    revision: int
-    tick: int
-    layout_revision: int
-    point_count: int
-    positions: bytes
-    fuels: bytes
-    temperatures: bytes
-    smokes: bytes
-
-    def __post_init__(self):
-        if self.revision <= 0 or self.tick < 0 or self.layout_revision <= 0:
-            raise ValueError("Surface payload revisions and tick are invalid")
-        if self.point_count <= 0:
-            raise ValueError("Surface payload must contain points")
-        if len(self.positions) != self.point_count * 12:
-            raise ValueError("Surface position byte count is invalid")
-        if any(
-            len(value) != self.point_count * 4
-            for value in (self.fuels, self.temperatures, self.smokes)
-        ):
-            raise ValueError("Surface channel byte count is invalid")
-
-    def digest(self):
-        digest = hashlib.sha256()
-        digest.update(str((self.revision, self.tick, self.layout_revision)).encode("ascii"))
-        for value in (self.positions, self.fuels, self.temperatures, self.smokes):
-            digest.update(value)
-        return digest.hexdigest()
+ImmutableSurfacePayload = campfire.app.ImmutableSurfacePayload
 
 
-class ResidentPointSidecar:
-    """Prepare immutable native arrays and transactionally publish one Point consumer."""
+class ResidentPointSidecar(campfire.app.ResidentPointSidecar):
+    """Supply the fixed Phase 6CD layout to the production sidecar module."""
 
     def __init__(
         self,
@@ -97,192 +66,21 @@ class ResidentPointSidecar:
         initial_revision=0,
         initial_layout=None,
     ):
-        self._backend = backend
-        self._stage = stage
-        self._stage_provider = stage_provider
-        self._emitter_path = emitter_path
-        self._write_observer = write_observer
-        self._producer = surface.NativeSurfaceProducer(backend)
-        self._producer.build_layout()
-        self._layout_revision = 1
-        if initial_layout is not None:
-            layout_revision = int(initial_layout["revision"])
-            origins = self._producer.np.asarray(
-                initial_layout["origins"], dtype=self._producer.np.float64
-            )
-            axes = self._producer.np.asarray(
-                initial_layout["axes"], dtype=self._producer.np.uint32
-            )
-            if (
-                layout_revision <= 0
-                or origins.shape != self._producer.origins.shape
-                or axes.shape != self._producer.axes.shape
-            ):
-                raise ValueError("Initial Point layout is incompatible")
-            self._producer.origins[:] = origins
-            self._producer.axes[:] = axes
-            self._producer.build_layout()
-            self._layout_revision = layout_revision
-        self._positions = self._producer.positions.tobytes(order="C")
-        self._revision = int(initial_revision)
-        if self._revision < 0:
-            raise ValueError("Initial Point revision must be non-negative")
-        self._committed_layout_revision = (
-            self._layout_revision if self._revision else 0
+        if initial_layout is None:
+            origins, axes = surface._origins_and_axes(backend._np)
+        else:
+            origins = axes = None
+        super().__init__(
+            backend,
+            stage,
+            emitter_path,
+            stage_provider,
+            origins,
+            axes,
+            write_observer,
+            initial_revision=initial_revision,
+            initial_layout=initial_layout,
         )
-        self._last_snapshot = None
-        self._last_undo = None
-        self._prepare_count = 0
-        self._publish_count = 0
-        self._rollback_count = 0
-        self._failure_count = 0
-        self._layout_replace_count = 0
-        self._closed = False
-        self.attempt_payload_ids = []
-        self.attempt_payload_digests = []
-        self.published_payload_ids = []
-        self.published_payload_digests = []
-        emitter = stage.GetPrimAtPath(emitter_path)
-        self._attributes = {
-            "positions": emitter.GetAttribute("pointPositions"),
-            "fuels": emitter.GetAttribute("pointFuels"),
-            "temperatures": emitter.GetAttribute("pointTemperatures"),
-            "smokes": emitter.GetAttribute("pointSmokes"),
-            "revision": emitter.GetAttribute("campfire:residentRevision"),
-        }
-        if not all(self._attributes.values()):
-            raise RuntimeError("Point sidecar requires pre-authored attributes")
-        stored_revision = self._attributes["revision"].Get()
-        if self._revision and stored_revision != self._revision:
-            raise ValueError("Initial Point consumer revision does not match")
-
-    def prepare(self, snapshot):
-        if self._closed:
-            raise RuntimeError("Point sidecar is closed")
-        if snapshot.revision != self._backend.revision:
-            raise RuntimeError("Point sidecar requires current Resident revision")
-        self._producer.build_channels()
-        payload = ImmutableSurfacePayload(
-            revision=snapshot.revision,
-            tick=snapshot.tick,
-            layout_revision=self._layout_revision,
-            point_count=surface.POINT_COUNT,
-            positions=self._positions,
-            fuels=self._producer.fuels.tobytes(order="C"),
-            temperatures=self._producer.temperatures.tobytes(order="C"),
-            smokes=self._producer.smokes.tobytes(order="C"),
-        )
-        self._prepare_count += 1
-        return payload
-
-    def _converted(self, payload):
-        np = self._producer.np
-        converted = {
-            "fuels": Vt.FloatArray.FromNumpy(np.frombuffer(payload.fuels, dtype=np.float32)),
-            "temperatures": Vt.FloatArray.FromNumpy(np.frombuffer(payload.temperatures, dtype=np.float32)),
-            "smokes": Vt.FloatArray.FromNumpy(np.frombuffer(payload.smokes, dtype=np.float32)),
-        }
-        if payload.layout_revision != self._committed_layout_revision:
-            converted["positions"] = Vt.Vec3fArray.FromNumpy(
-                np.frombuffer(payload.positions, dtype=np.float32).reshape((-1, 3))
-            )
-        return converted
-
-    def publish(self, payload):
-        if self._closed:
-            raise RuntimeError("Point sidecar is closed")
-        self.attempt_payload_ids.append(id(payload))
-        self.attempt_payload_digests.append(payload.digest())
-        if self._stage_provider() is not self._stage:
-            self._failure_count += 1
-            raise RuntimeError("Point sidecar rejected replaced stage")
-        if payload.revision <= self._revision:
-            raise RuntimeError("Point sidecar revision must increase monotonically")
-        converted = self._converted(payload)
-        previous = {name: attribute.Get() for name, attribute in self._attributes.items()}
-        previous_state = (
-            self._revision,
-            self._committed_layout_revision,
-            self._last_snapshot,
-            previous,
-        )
-        write_index = 0
-        block = Sdf.ChangeBlock()
-        block.__enter__()
-        try:
-            for name in ("positions", "fuels", "temperatures", "smokes"):
-                if name not in converted:
-                    continue
-                if not self._attributes[name].Set(converted[name]):
-                    raise RuntimeError(f"Point sidecar {name} Set failed")
-                if self._write_observer is not None:
-                    self._write_observer(write_index, name, payload)
-                write_index += 1
-            if not self._attributes["revision"].Set(payload.revision):
-                raise RuntimeError("Point sidecar revision Set failed")
-            if self._write_observer is not None:
-                self._write_observer(write_index, "revision", payload)
-        except BaseException:
-            for name, value in previous.items():
-                self._attributes[name].Set(value)
-            block.__exit__(*sys.exc_info())
-            self._failure_count += 1
-            raise
-        block.__exit__(None, None, None)
-        self._last_undo = previous_state
-        self._revision = payload.revision
-        self._committed_layout_revision = payload.layout_revision
-        self._last_snapshot = payload
-        self._publish_count += 1
-        self.published_payload_ids.append(id(payload))
-        self.published_payload_digests.append(payload.digest())
-
-    def rollback_last_commit(self, revision):
-        if self._last_undo is None or self._revision != revision:
-            raise RuntimeError("Point sidecar has no matching commit to roll back")
-        previous_revision, previous_layout, previous_snapshot, previous_values = self._last_undo
-        with Sdf.ChangeBlock():
-            for name, value in previous_values.items():
-                self._attributes[name].Set(value)
-        self._revision = previous_revision
-        self._committed_layout_revision = previous_layout
-        self._last_snapshot = previous_snapshot
-        self._last_undo = None
-        self._rollback_count += 1
-
-    def replace_layout(self, layout):
-        revision = int(layout["revision"])
-        origins = self._producer.np.asarray(layout["origins"], dtype=self._producer.np.float64)
-        axes = self._producer.np.asarray(layout["axes"], dtype=self._producer.np.uint32)
-        if revision <= self._layout_revision:
-            raise ValueError("Point layout revision must increase")
-        if origins.shape != self._producer.origins.shape or axes.shape != self._producer.axes.shape:
-            raise ValueError("Point layout shape changed structurally")
-        self._producer.origins[:] = origins
-        self._producer.axes[:] = axes
-        self._producer.build_layout()
-        self._positions = self._producer.positions.tobytes(order="C")
-        self._layout_revision = revision
-        self._layout_replace_count += 1
-        return revision
-
-    def status(self):
-        return {
-            "revision": self._revision,
-            "layout_revision": self._layout_revision,
-            "committed_layout_revision": self._committed_layout_revision,
-            "prepare_count": self._prepare_count,
-            "publish_count": self._publish_count,
-            "rollback_count": self._rollback_count,
-            "failure_count": self._failure_count,
-            "layout_replace_count": self._layout_replace_count,
-            "closed": self._closed,
-        }
-
-    def close(self):
-        already_closed = self._closed
-        self._closed = True
-        return not already_closed
 
 
 def _augment_stage(path, log_ids):
