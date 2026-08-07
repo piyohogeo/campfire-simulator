@@ -2002,3 +2002,16 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 性能結果: resident USD発行p95はcontrol`3.4279 / 3.0567 / 3.8562 ms`、候補`1.3492 / 1.5542 / 1.8859 ms`、中央値`3.4279 → 1.5542 ms`、差`1.8737 ms`だった。候補3 runすべてが4 ms未満である。木材権威状態SHA-256、metrics CSV SHA-256、乾燥／湿潤着火時刻、最終USDは全pair完全一致した。
 - 判断: Phase 6BM候補は通知、rollback、revision、同値性、Flow活動、4 ms性能gateを満たしたためqualifiedとする。ただし全Resident経路と本候補のproduction既定値は引き続きOFFとし、明示設定なしの既存動作は変えない。次は追跡listenerを外した本来のconsumer構成でもtailを再確認し、既存lightweight使用時に通知集約を標準化するかを判断する。共有SoA案はこのUSD発行改善とは独立した将来候補のままである。
 - 再現と回帰: `run_phase6bm_resident_change_block.ps1`がnative DLLをbuildし、6回のPhase 3と`analyze_resident_change_block.py`を実行して`resident_change_block_report.json/.svg`を生成する。release buildは`6.3 s`、最終Phase 0固定確認は`19.9 s`、標準Kit suiteは全8 process・`47 / 47`件を`305.8 s`で合格した。描画・燃焼条件は変えていないため開発日誌動画はPhase 6AMの検証済み実画面を再利用する。
+
+## 97. Phase 6BN 通知追跡なしの採用監査
+
+### 2026-08-07: 計測listenerを外して再測定し、lightweight経路だけへ標準化する
+
+- 監査目的: Phase 6BMの大幅な差にrevision-gated Python listenerの`Get`負荷が含まれるため、通知追跡を完全にOFFにした実運用相当構成で`Sdf.ChangeBlock`自身の効果を再測定した。Phase 6BMで確認済みの1 revision／1通知、revision-last失敗時の旧snapshot replay、旧revisionだけの通知契約を採用前提として参照し、同じ契約試験を性能runへ重複させていない。
+- 実測条件: release Kit、RTX 3090、Resident native producer、1,200 step、240 snapshot revision、handle cache、lightweight、unchanged skipを維持した。controlと`ChangeBlock`を順序反転3 pairで実行し、両方でnotice telemetryがOFF、記録notice countが0であることをゲートした。Flow active block peakはcontrol`175 / 183 / 185`、候補`169 / 184 / 172`で全run活動した。
+- 性能結果: resident USD発行p95はcontrol`2.6382 / 3.2660 / 4.0405 ms`、候補`1.5008 / 1.7418 / 1.2580 ms`だった。pair差は`1.1374 / 1.5242 / 2.7825 ms`で全pair改善し、中央値は`3.2660 → 1.5008 ms`、差`1.7652 ms`、候補は全run 4 ms未満だった。計測listenerを外しても改善は消えず、controlの1 runだけが4 msを超えた一方、候補最大は`1.7418 ms`に収まった。
+- 同値性: 3 pairすべてで乾燥／湿潤木材の権威状態SHA-256、metrics CSV SHA-256、着火時刻、最終USD、3 consumer revisionが完全一致した。Flow活動も全runで維持し、tracking無効時にadapterのnotice telemetryが発行経路へUSD readを追加していないことを確認した。
+- 採用境界: アプリ全体のResident snapshot adapter、handle cache、lightweight publication、Resident native producerは引き続き既定OFFである。利用者がlightweight publicationを明示的に有効化した場合だけ、`residentSnapshotLightweightNoticeCoalescingEnabled`の既定要求値を有効として`ChangeBlock`を標準適用する。lightweightがOFFなら要求値は休眠し、完全transaction経路へ影響しない。runnerには`-ResidentSnapshotDisableLightweightNoticeCoalescing`を残し、安全な明示OFFとA/B比較を可能にした。
+- 過去再現: Phase 6BG／6BH／6BJ／6BKのrunnerには明示OFFを追加し、当時の非集約lightweight測定を再現できるようにした。Phase 6BM／6BNのcontrolも明示OFF、候補は明示ONとし、標準値変更後も比較条件が変わらない。採用後smokeではlightweight指定だけで集約`True`、tracking`False`、revision`1200`、Flow peak`176`、USD p95`1.4760 ms`を確認した。明示OFF smokeも集約`False`、tracking`False`、revision`1200`、Flow peak`175`、USD p95`2.4384 ms`で完走し、escape hatchが実際に非集約経路を選ぶことを確認した。
+- 判断: Phase 6BMの通知／失敗契約とPhase 6BNのtrackless性能／同値性を合わせ、Resident lightweight経路内での通知集約標準化を採用する。rollback、revision-last、immutable snapshot、lifecycle、fault停止、snapshot schemaは変更しない。共有SoA案はUSDボトルネックの解決策ではないが、未管理Python直接書込みとimport削減という独立目的について、次に採用価値を再評価できる段階へ進んだ。
+- 再現と回帰: `run_phase6bn_change_block_adoption.ps1`がnative DLLをbuildし、trackless 6 runと`analyze_change_block_adoption.py`から`change_block_adoption_report.json/.svg`を生成する。採用設定後のrelease buildは`6.2 s`、Phase 0固定確認は`20.8 s`、標準Kit suiteは全8 process・`47 / 47`件を`333.5 s`で合格した。描画条件は変えていないため開発日誌動画はPhase 6AMの検証済み実画面を再利用する。

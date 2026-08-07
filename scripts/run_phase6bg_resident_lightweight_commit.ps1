@@ -32,6 +32,7 @@ for ($run = 1; $run -le $RunCount; $run++) {
         ResidentSnapshotAdapter = $true
         ResidentSnapshotHandleCache = $true
         ResidentSnapshotLightweightCommit = $true
+        ResidentSnapshotDisableLightweightNoticeCoalescing = $true
     }
     if (($run % 2) -eq 1) {
         & $phase3Runner @baselineArgs

@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "phase": "phase6bn",
+  "status": "adoption_qualified",
+  "measurement": {
+    "pairs": 3,
+    "balanced_order": true,
+    "steps_per_run": 1200,
+    "published_revisions_per_run": 240,
+    "notice_tracking_enabled": false,
+    "resident_native_producer": true,
+    "production_default_enabled": false
+  },
+  "prior_contract": {
+    "phase6bm_status": "qualified",
+    "one_notice_per_publication": true,
+    "revision_last_failure_replay": true
+  },
+  "equivalence": {
+    "all_pairs_exact": true
+  },
+  "performance": {
+    "control_p95_ms": [
+      2.6382,
+      3.266,
+      4.0405
+    ],
+    "change_block_p95_ms": [
+      1.5008,
+      1.7418,
+      1.258
+    ],
+    "pair_reduction_ms": [
+      1.1374,
+      1.5242,
+      2.7824999999999998
+    ],
+    "median_control_p95_ms": 3.266,
+    "median_change_block_p95_ms": 1.5008,
+    "median_p95_reduction_ms": 1.7652,
+    "all_pairs_improved": true,
+    "all_change_block_runs_below_4ms": true
+  },
+  "flow": {
+    "active_in_all_runs": true,
+    "control_active_blocks_peak": [
+      175,
+      183,
+      185
+    ],
+    "change_block_active_blocks_peak": [
+      169,
+      184,
+      172
+    ]
+  },
+  "pairs": [
+    {
+      "pair": 1,
+      "order": [
+        "control",
+        "change_block"
+      ],
+      "equivalence": {
+        "dry_authoritative_sha256": true,
+        "wet_authoritative_sha256": true,
+        "metrics_csv_sha256": true,
+        "ignition": true,
+        "final_usd_state": true
+      },
+      "control": {
+        "usd_p95_ms": 2.6382,
+        "flow_render_p95_ms": 14.6179,
+        "flow_active_blocks_peak": 175
+      },
+      "change_block": {
+        "usd_p95_ms": 1.5008,
+        "flow_render_p95_ms": 10.0807,
+        "flow_active_blocks_peak": 169
+      }
+    },
+    {
+      "pair": 2,
+      "order": [
+        "change_block",
+        "control"
+      ],
+      "equivalence": {
+        "dry_authoritative_sha256": true,
+        "wet_authoritative_sha256": true,
+        "metrics_csv_sha256": true,
+        "ignition": true,
+        "final_usd_state": true
+      },
+      "control": {
+        "usd_p95_ms": 3.266,
+        "flow_render_p95_ms": 14.276,
+        "flow_active_blocks_peak": 183
+      },
+      "change_block": {
+        "usd_p95_ms": 1.7418,
+        "flow_render_p95_ms": 14.8487,
+        "flow_active_blocks_peak": 184
+      }
+    },
+    {
+      "pair": 3,
+      "order": [
+        "control",
+        "change_block"
+      ],
+      "equivalence": {
+        "dry_authoritative_sha256": true,
+        "wet_authoritative_sha256": true,
+        "metrics_csv_sha256": true,
+        "ignition": true,
+        "final_usd_state": true
+      },
+      "control": {
+        "usd_p95_ms": 4.0405,
+        "flow_render_p95_ms": 7.7008,
+        "flow_active_blocks_peak": 185
+      },
+      "change_block": {
+        "usd_p95_ms": 1.258,
+        "flow_render_p95_ms": 15.129,
+        "flow_active_blocks_peak": 172
+      }
+    }
+  ],
+  "decision": {
+    "standardize_for_lightweight_path": true,
+    "keep_global_production_default_off": true,
+    "retain_explicit_disable_escape_hatch": true,
+    "reason": "Notice and failure contracts are qualified by Phase 6BM; trackless real-Flow runs must improve every pair and remain below 4 ms."
+  }
+}

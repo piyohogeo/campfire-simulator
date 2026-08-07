@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6BN trackless real-Flow adoption audit, balanced native-producer comparison, exact-output gates, explicit historical-runner opt-outs, and a browser-readable adoption report.
 - Added the Phase 6BM default-off real-Flow `Sdf.ChangeBlock` resident publication candidate, revision-gated notice telemetry, same-block immutable rollback coverage, balanced native-producer measurements, and a browser-readable qualification report.
 - Added the Phase 6BL local-Kit `Sdf.ChangeBlock` contract prototype, proving 19-to-1 USD notice coalescing, revision-consistent publication, explicit same-block snapshot replay, and a revision-gated in-memory timing reduction while leaving production unchanged.
 - Added Phase 6BK default-off lightweight USD tail profiling, correlating 236 commits per run with Flow/render load without adding USD reads; real-Kit results attribute a median 83.0% of p95 publication time to `UsdAttribute.Set` while preserving exact authoritative outputs.
@@ -104,6 +105,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
+- Standardized `Sdf.ChangeBlock` notice coalescing whenever the otherwise opt-in resident lightweight publication path is enabled, while keeping the global resident path off by default and retaining an explicit disable escape hatch.
 - Added visible semantic Phase 6P–6AW headings to every recent development-log progress card so milestones remain identifiable outside link metadata and captions.
 - Split the fixed-reference and full 180-second air-feedback regressions into dedicated non-coverage processes after two unchanged standard runs hit Kit's fixed 300-second coverage limit; retained collapse coverage, representative thermal/air coverage, all assertions, and all 41 tests.
 - Enabled the Phase 6AM inline homogeneous sensible heat-capacity path after a 6.15% median two-log step improvement, 4.29% scenario improvement, 3/3 improving pairs, and exact authoritative outputs; per-cell temperature and mass reads remain uncached.

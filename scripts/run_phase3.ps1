@@ -35,6 +35,7 @@ param(
     [switch]$ResidentSnapshotSkipUnchanged,
     [switch]$ResidentSnapshotLightweightTailTiming,
     [switch]$ResidentSnapshotLightweightNoticeCoalescing,
+    [switch]$ResidentSnapshotDisableLightweightNoticeCoalescing,
     [switch]$ResidentSnapshotLightweightNoticeTracking,
     [switch]$ResidentNativeBackend,
     [string]$ResidentNativeLibraryPath = ""
@@ -64,6 +65,13 @@ $deferCellPhaseUpdates = $CellPhaseUpdates -eq "deferred"
 $compactRuntimeMetrics = $RuntimeMetrics -eq "compact"
 $precomputedRuntimeTopology = $RuntimeTopology -eq "precomputed"
 $useSlottedWoodCellStorage = $CellStateStorage -eq "slots"
+$useResidentSnapshotLightweightNoticeCoalescing = (
+    $ResidentSnapshotLightweightCommit.IsPresent -and
+    -not $ResidentSnapshotDisableLightweightNoticeCoalescing.IsPresent
+)
+if ($ResidentSnapshotLightweightNoticeCoalescing.IsPresent) {
+    $useResidentSnapshotLightweightNoticeCoalescing = $true
+}
 
 if ($CollectWoodStateDiagnostics.IsPresent -and $deferCellPhaseUpdates) {
     throw "Wood state diagnostics require eager cell phase updates."
@@ -108,6 +116,12 @@ if ($ResidentSnapshotLightweightTailTiming.IsPresent -and -not $ResidentSnapshot
 }
 if ($ResidentSnapshotLightweightNoticeCoalescing.IsPresent -and -not $ResidentSnapshotLightweightCommit.IsPresent) {
     throw "Resident snapshot lightweight notice coalescing requires lightweight commit."
+}
+if ($ResidentSnapshotDisableLightweightNoticeCoalescing.IsPresent -and -not $ResidentSnapshotLightweightCommit.IsPresent) {
+    throw "Disabling resident snapshot lightweight notice coalescing requires lightweight commit."
+}
+if ($ResidentSnapshotLightweightNoticeCoalescing.IsPresent -and $ResidentSnapshotDisableLightweightNoticeCoalescing.IsPresent) {
+    throw "Resident snapshot lightweight notice coalescing cannot be both enabled and disabled."
 }
 if ($ResidentSnapshotLightweightNoticeTracking.IsPresent -and -not (
     $ResidentSnapshotLightweightCommit.IsPresent -and $ResidentSnapshotHandleCache.IsPresent
@@ -171,7 +185,7 @@ $kitArgs = @(
     "--/exts/campfire.app/residentSnapshotLightweightCommitEnabled=$($ResidentSnapshotLightweightCommit.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentSnapshotSkipUnchangedEnabled=$($ResidentSnapshotSkipUnchanged.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentSnapshotLightweightTailTimingEnabled=$($ResidentSnapshotLightweightTailTiming.IsPresent.ToString().ToLowerInvariant())",
-    "--/exts/campfire.app/residentSnapshotLightweightNoticeCoalescingEnabled=$($ResidentSnapshotLightweightNoticeCoalescing.IsPresent.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/residentSnapshotLightweightNoticeCoalescingEnabled=$($useResidentSnapshotLightweightNoticeCoalescing.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentSnapshotLightweightNoticeTrackingEnabled=$($ResidentSnapshotLightweightNoticeTracking.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentNativeBackendEnabled=$($ResidentNativeBackend.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentNativeLibraryPath=$ResidentNativeLibraryPath",
@@ -265,7 +279,7 @@ if ([bool]$residentAdapter.skip_unchanged_derived_enabled -ne $ResidentSnapshotS
 if ([bool]$residentAdapter.lightweight_tail_timing_enabled -ne $ResidentSnapshotLightweightTailTiming.IsPresent) {
     throw "Phase 3 used an unexpected resident snapshot lightweight tail timing setting."
 }
-if ([bool]$residentAdapter.lightweight_notice_coalescing_enabled -ne $ResidentSnapshotLightweightNoticeCoalescing.IsPresent) {
+if ([bool]$residentAdapter.lightweight_notice_coalescing_enabled -ne $useResidentSnapshotLightweightNoticeCoalescing) {
     throw "Phase 3 used an unexpected resident snapshot lightweight notice-coalescing setting."
 }
 if ([bool]$residentAdapter.lightweight_notice_tracking_enabled -ne $ResidentSnapshotLightweightNoticeTracking.IsPresent) {
@@ -358,7 +372,7 @@ if ($ResidentSnapshotAdapter.IsPresent) {
             $residentAdapter.status_after_timeline_stop.lightweight_recovery_count -ne 0) {
             throw "Resident snapshot lightweight commit did not preserve its expected lifecycle."
         }
-        if ([bool]$residentAdapter.status_after_timeline_stop.lightweight_notice_coalescing_enabled -ne $ResidentSnapshotLightweightNoticeCoalescing.IsPresent) {
+        if ([bool]$residentAdapter.status_after_timeline_stop.lightweight_notice_coalescing_enabled -ne $useResidentSnapshotLightweightNoticeCoalescing) {
             throw "Resident snapshot lightweight commit used an unexpected notice-coalescing mode."
         }
         if ([bool]$residentAdapter.status_after_timeline_stop.lightweight_notice_tracking_enabled -ne $ResidentSnapshotLightweightNoticeTracking.IsPresent) {

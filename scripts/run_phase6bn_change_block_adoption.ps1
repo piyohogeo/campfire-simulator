@@ -8,7 +8,7 @@ $ErrorActionPreference = "Stop"
 $repositoryRoot = Split-Path -Parent $PSScriptRoot
 $nativeSource = Join-Path $repositoryRoot "native\phase6au"
 $phase3Runner = Join-Path $PSScriptRoot "run_phase3.ps1"
-$analyzer = Join-Path $PSScriptRoot "analyze_resident_native_integration.py"
+$analyzer = Join-Path $PSScriptRoot "analyze_change_block_adoption.py"
 $kitPython = Join-Path $repositoryRoot "_build\windows-x86_64\release\kit\python\python.exe"
 $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
 
@@ -30,7 +30,7 @@ if (-not $developerPath) { throw "Visual Studio developer PATH was not returned.
 $env:PATH = $developerPath.Substring($developerPath.IndexOf("=") + 1)
 if (-not (Get-Command cl.exe -ErrorAction SilentlyContinue)) { throw "cl.exe is unavailable." }
 
-if (-not $OutputDir) { $OutputDir = Join-Path $repositoryRoot "artifacts\phase3\phase6bj-repro" }
+if (-not $OutputDir) { $OutputDir = Join-Path $repositoryRoot "artifacts\phase3\phase6bn-repro" }
 $OutputDir = [System.IO.Path]::GetFullPath($OutputDir)
 $buildDir = Join-Path $OutputDir "native-build"
 New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
@@ -41,14 +41,7 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 $nativeDll = Join-Path $buildDir "campfire_wood_native.dll"
 if (-not (Test-Path -LiteralPath $nativeDll)) { throw "Native DLL was not produced." }
 
-$baselineArguments = @{
-    ResidentSnapshotAdapter = $true
-    ResidentSnapshotHandleCache = $true
-    ResidentSnapshotLightweightCommit = $true
-    ResidentSnapshotDisableLightweightNoticeCoalescing = $true
-    ResidentSnapshotSkipUnchanged = $true
-}
-$nativeArguments = @{
+$controlArguments = @{
     ResidentSnapshotAdapter = $true
     ResidentSnapshotHandleCache = $true
     ResidentSnapshotLightweightCommit = $true
@@ -57,19 +50,26 @@ $nativeArguments = @{
     ResidentNativeBackend = $true
     ResidentNativeLibraryPath = $nativeDll
 }
+$candidateArguments = @{}
+foreach ($entry in $controlArguments.GetEnumerator()) {
+    $candidateArguments[$entry.Key] = $entry.Value
+}
+$candidateArguments.Remove("ResidentSnapshotDisableLightweightNoticeCoalescing")
+$candidateArguments["ResidentSnapshotLightweightNoticeCoalescing"] = $true
+
 for ($index = 1; $index -le $RunCount; $index++) {
-    $baselineDir = Join-Path $OutputDir ("baseline-{0:D2}" -f $index)
-    $nativeDir = Join-Path $OutputDir ("native-{0:D2}" -f $index)
+    $controlDir = Join-Path $OutputDir ("control-{0:D2}" -f $index)
+    $candidateDir = Join-Path $OutputDir ("change-block-{0:D2}" -f $index)
     if ($index % 2 -eq 1) {
-        & $phase3Runner -OutputDir $baselineDir @baselineArguments
+        & $phase3Runner -OutputDir $controlDir @controlArguments
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-        & $phase3Runner -OutputDir $nativeDir @nativeArguments
+        & $phase3Runner -OutputDir $candidateDir @candidateArguments
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     }
     else {
-        & $phase3Runner -OutputDir $nativeDir @nativeArguments
+        & $phase3Runner -OutputDir $candidateDir @candidateArguments
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-        & $phase3Runner -OutputDir $baselineDir @baselineArguments
+        & $phase3Runner -OutputDir $controlDir @controlArguments
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     }
 }

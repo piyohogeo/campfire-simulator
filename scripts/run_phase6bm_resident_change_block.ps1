@@ -45,6 +45,7 @@ $commonArguments = @{
     ResidentSnapshotAdapter = $true
     ResidentSnapshotHandleCache = $true
     ResidentSnapshotLightweightCommit = $true
+    ResidentSnapshotDisableLightweightNoticeCoalescing = $true
     ResidentSnapshotSkipUnchanged = $true
     ResidentSnapshotLightweightNoticeTracking = $true
     ResidentNativeBackend = $true
@@ -54,6 +55,7 @@ $candidateArguments = @{}
 foreach ($entry in $commonArguments.GetEnumerator()) {
     $candidateArguments[$entry.Key] = $entry.Value
 }
+$candidateArguments.Remove("ResidentSnapshotDisableLightweightNoticeCoalescing")
 $candidateArguments["ResidentSnapshotLightweightNoticeCoalescing"] = $true
 
 for ($index = 1; $index -le $RunCount; $index++) {

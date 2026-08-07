@@ -1091,8 +1091,12 @@ class CampfireAppExtension(omni.ext.IExt):
         resident_snapshot_lightweight_tail_timing_enabled = settings.get_as_bool(
             f"{SETTINGS_ROOT}/residentSnapshotLightweightTailTimingEnabled"
         )
-        resident_snapshot_lightweight_notice_coalescing_enabled = settings.get_as_bool(
+        resident_snapshot_lightweight_notice_coalescing_requested = settings.get_as_bool(
             f"{SETTINGS_ROOT}/residentSnapshotLightweightNoticeCoalescingEnabled"
+        )
+        resident_snapshot_lightweight_notice_coalescing_enabled = (
+            resident_snapshot_lightweight_commit_enabled
+            and resident_snapshot_lightweight_notice_coalescing_requested
         )
         resident_snapshot_lightweight_notice_tracking_enabled = settings.get_as_bool(
             f"{SETTINGS_ROOT}/residentSnapshotLightweightNoticeTrackingEnabled"
@@ -1181,13 +1185,6 @@ class CampfireAppExtension(omni.ext.IExt):
         ):
             raise ValueError(
                 "Resident snapshot lightweight tail timing requires lightweight commits"
-            )
-        if (
-            resident_snapshot_lightweight_notice_coalescing_enabled
-            and not resident_snapshot_lightweight_commit_enabled
-        ):
-            raise ValueError(
-                "Resident snapshot lightweight notice coalescing requires lightweight commits"
             )
         if resident_snapshot_lightweight_notice_tracking_enabled and not (
             resident_snapshot_lightweight_commit_enabled

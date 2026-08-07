@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6BN trackless ChangeBlock adoption audit</title>
+  <desc id="desc">Real Flow and resident native producer compare ChangeBlock with control after notice telemetry is removed.</desc>
+  <rect width="1200" height="680" rx="32" fill="#111820"/>
+  <text x="70" y="76" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="24" font-weight="700">PHASE 6BN · TRACKLESS ADOPTION AUDIT</text>
+  <text x="70" y="126" fill="#fff" font-family="Segoe UI, sans-serif" font-size="37" font-weight="700">Measure the boundary without the measuring listener</text>
+  <rect x="70" y="170" width="1060" height="112" rx="20" fill="#192734" stroke="#315269"/>
+  <text x="105" y="214" fill="#a8beca" font-family="Consolas, monospace" font-size="18">control p95     2.6382 / 3.2660 / 4.0405 ms</text>
+  <text x="105" y="250" fill="#f4b860" font-family="Consolas, monospace" font-size="18">ChangeBlock p95 1.5008 / 1.7418 / 1.2580 ms</text>
+  <rect x="70" y="322" width="1060" height="172" rx="20" fill="#182128"/>
+  <text x="105" y="367" fill="#fff" font-family="Segoe UI, sans-serif" font-size="23" font-weight="700">Paired reduction · exact authoritative outputs</text>
+  <text x="105" y="412" fill="#65c18c" font-family="Consolas, monospace" font-size="19">Δ p95  1.1374 / 1.5242 / 2.7825 ms</text>
+  <text x="105" y="452" fill="#d7e1e8" font-family="Segoe UI, sans-serif" font-size="17">Phase 6BM: one notice / revision · revision-last failure replays one old revision</text>
+  <rect x="70" y="535" width="1060" height="90" rx="20" fill="#173526" stroke="#65c18c"/>
+  <text x="105" y="580" fill="#65c18c" font-family="Segoe UI, sans-serif" font-size="23" font-weight="700">ADOPTION QUALIFIED · every pair faster · all p95 below 4 ms</text>
+  <text x="105" y="607" fill="#d7e1e8" font-family="Segoe UI, sans-serif" font-size="16">global default stays OFF · retain explicit disable escape hatch</text>
+</svg>

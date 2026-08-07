@@ -27,12 +27,14 @@ for ($run = 1; $run -le $RunCount; $run++) {
         ResidentSnapshotAdapter = $true
         ResidentSnapshotHandleCache = $true
         ResidentSnapshotLightweightCommit = $true
+        ResidentSnapshotDisableLightweightNoticeCoalescing = $true
     }
     $candidateArgs = @{
         OutputDir = $candidateDir
         ResidentSnapshotAdapter = $true
         ResidentSnapshotHandleCache = $true
         ResidentSnapshotLightweightCommit = $true
+        ResidentSnapshotDisableLightweightNoticeCoalescing = $true
         ResidentSnapshotSkipUnchanged = $true
     }
     if (($run % 2) -eq 1) {
