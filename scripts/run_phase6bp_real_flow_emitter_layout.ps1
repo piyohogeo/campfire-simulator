@@ -67,14 +67,23 @@ if ($Layout -ne "sphere" -and (
 )) {
     throw "Phase 6BP Point USD equivalence failed."
 }
-if ($report.flow.active_blocks_peak -le 0) {
+if ($Layout -eq "sphere" -and $report.flow.active_blocks_peak -le 0) {
     throw "Phase 6BP produced no active Flow blocks."
 }
 
-Write-Host (
-    "Phase 6BP {0}, logs={1}, blocks={2}, update p95={3} ms" -f
-    $Layout,
-    $LogCount,
-    $report.flow.active_blocks_peak,
-    $report.timing.kit_flow_render_update.p95_ms
-)
+if ($report.flow.active_blocks_peak -gt 0) {
+    Write-Host (
+        "Phase 6BP qualified {0}, logs={1}, blocks={2}, update p95={3} ms" -f
+        $Layout,
+        $LogCount,
+        $report.flow.active_blocks_peak,
+        $report.timing.kit_flow_render_update.p95_ms
+    )
+} else {
+    Write-Host (
+        "Phase 6BP completed safely but {0} remains unqualified, logs={1}, blocks=0: {2}" -f
+        $Layout,
+        $LogCount,
+        $Output
+    )
+}

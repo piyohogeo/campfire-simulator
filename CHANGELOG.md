@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6BV four-configuration emitter availability matrix, safely measuring one and twenty Point emitters at 7,200 points, retaining the qualified two-log Sphere reference, and refusing an end-to-end ranking while Point and NanoVDB consumers remain unavailable.
 - Added the Phase 6BU fixed-Flow native API availability audit, confirming 19 public `IFlowUsd` members but no external NanoVDB consumer-write boundary, and made the Phase 6BT runner release its persistent context before exit and report safe unqualified outcomes without treating them as execution failures.
 - Added the Phase 6BR–6BT fixed-Flow NanoVDB buffer/consumer probes, identifying four float channels plus packed RGBA8 and safely rejecting five unqualified public USD consumer arrangements without changing production.
 - Added the Phase 6BP/BQ default-off fixed-Flow runtime probes, rejecting unsafe live PointCloud structural mutation, recording the native binding contract, and measuring persistent point-to-NanoVDB generation from 360 to 7,200 points without changing production.

@@ -142,48 +142,66 @@ def _configure_point_cloud_stage(stage):
     return root_path
 
 
-def _define_point_emitters(stage, root_path, layout, per_log_points, all_points):
+def _define_point_emitters(
+    stage,
+    root_path,
+    layout,
+    per_log_points,
+    all_points,
+    *,
+    author=True,
+    seed_metrics=(),
+):
     original_path = root_path.AppendChild("flowEmitterPoint")
-    if layout != "point-single":
-        raise RuntimeError(
-            "Point-per-log is deferred until the non-structural bundled-preset "
-            "path is qualified"
-        )
     point_sets = (all_points,) if layout == "point-single" else per_log_points
     emitters = []
     for index, points in enumerate(point_sets):
         path = (
             original_path
-            if layout == "point-single"
+            if layout == "point-single" or index == 0
             else root_path.AppendChild(f"flowEmitterPoint{index:02d}")
         )
         prim = stage.GetPrimAtPath(path)
+        if author and not prim:
+            prim = stage.DefinePrim(path, "FlowEmitterPoint")
         if not prim or prim.GetTypeName() != "FlowEmitterPoint":
             raise RuntimeError(f"Bundled Point emitter unavailable: {path}")
-        source_path = Sdf.Path("/PointCloud/SourcePoints")
-        source = UsdGeom.Points.Define(stage, source_path)
-        source_positions = Vt.Vec3fArray.FromNumpy(points * np.float32(100.0))
-        source.GetPointsAttr().Set(source_positions)
-        source.GetWidthsAttr().Set(Vt.FloatArray([1.0] * len(points)))
-        source_colors = np.empty((len(points), 3), dtype=np.float32)
-        source_colors[:, 0] = np.float32(2.0)
-        source_colors[:, 1] = np.float32(0.8)
-        source_colors[:, 2] = np.float32(0.2)
-        color_attribute = source.GetPrim().CreateAttribute(
-            "primvars:displayColor", Sdf.ValueTypeNames.Color3fArray
-        )
-        color_attribute.SetMetadata("interpolation", "vertex")
-        color_attribute.Set(Vt.Vec3fArray.FromNumpy(source_colors))
-        relationship = prim.GetRelationship("pointsPrim")
-        if not relationship:
-            relationship = prim.CreateRelationship("pointsPrim")
-        relationship.SetTargets([source_path])
-        position_started = time.perf_counter_ns()
-        positions = Vt.Vec3fArray.FromNumpy(points)
-        position_boundary_ms = (time.perf_counter_ns() - position_started) / 1_000_000.0
-        position_set_started = time.perf_counter_ns()
-        position_attribute = _set(prim, "pointPositions", positions)
-        position_set_ms = (time.perf_counter_ns() - position_set_started) / 1_000_000.0
+        if author:
+            source_path = Sdf.Path(
+                "/PointCloud/SourcePoints"
+                if layout == "point-single"
+                else f"/PointCloud/SourcePoints{index:02d}"
+            )
+            source = UsdGeom.Points.Define(stage, source_path)
+            source_positions = Vt.Vec3fArray.FromNumpy(points * np.float32(100.0))
+            source.GetPointsAttr().Set(source_positions)
+            source.GetWidthsAttr().Set(Vt.FloatArray([1.0] * len(points)))
+            source_colors = np.empty((len(points), 3), dtype=np.float32)
+            source_colors[:, 0] = np.float32(2.0)
+            source_colors[:, 1] = np.float32(0.8)
+            source_colors[:, 2] = np.float32(0.2)
+            color_attribute = source.GetPrim().CreateAttribute(
+                "primvars:displayColor", Sdf.ValueTypeNames.Color3fArray
+            )
+            color_attribute.SetMetadata("interpolation", "vertex")
+            color_attribute.Set(Vt.Vec3fArray.FromNumpy(source_colors))
+            relationship = prim.GetRelationship("pointsPrim")
+            if not relationship:
+                relationship = prim.CreateRelationship("pointsPrim")
+            relationship.SetTargets([source_path])
+            position_started = time.perf_counter_ns()
+            positions = Vt.Vec3fArray.FromNumpy(points)
+            position_boundary_ms = (
+                time.perf_counter_ns() - position_started
+            ) / 1_000_000.0
+            position_set_started = time.perf_counter_ns()
+            position_attribute = _set(prim, "pointPositions", positions)
+            position_set_ms = (
+                time.perf_counter_ns() - position_set_started
+            ) / 1_000_000.0
+        else:
+            position_attribute = prim.GetAttribute("pointPositions")
+            position_boundary_ms, position_set_ms = seed_metrics[index]
         emitters.append(
             {
                 "prim": prim,
@@ -330,6 +348,7 @@ async def _run(arguments):
     timeline = omni.timeline.get_timeline_interface()
     flow_interface = None
     listener = None
+    exit_code = 1
     try:
         for _ in range(5):
             await app.next_update_async()
@@ -340,11 +359,16 @@ async def _run(arguments):
             time.perf_counter_ns() - position_source_started
         ) / 1_000_000.0
         if arguments.layout == "sphere":
-            await context.new_stage_async()
+            sphere_scene = output_path.with_suffix(".scene.usda")
+            sphere_scene.unlink(missing_ok=True)
+            offline_stage = Usd.Stage.CreateNew(str(sphere_scene))
+            populate_flow_scene(offline_stage)
+            offline_stage.GetRootLayer().Save()
+            offline_stage = None
+            await context.open_stage_async(str(sphere_scene))
             stage = context.get_stage()
-            populate_flow_scene(stage)
             emitters = _sphere_handles(stage)
-            scene_source = "campfire Phase 1 FlowEmitterSphere scene"
+            scene_source = str(sphere_scene)
         else:
             flow_extension_path = Path(omni.flowusd.__file__).resolve().parents[2]
             point_preset = (
@@ -357,12 +381,19 @@ async def _run(arguments):
             offline_stage = Usd.Stage.CreateNew(str(point_scene))
             offline_stage.GetRootLayer().subLayerPaths = [point_preset.as_posix()]
             offline_root_path = _configure_point_cloud_stage(offline_stage)
-            _define_point_emitters(
+            offline_emitters = _define_point_emitters(
                 offline_stage,
                 offline_root_path,
                 arguments.layout,
                 per_log_points,
                 all_points,
+            )
+            seed_metrics = tuple(
+                (
+                    emitter["position_boundary_ms"],
+                    emitter["position_set_ms"],
+                )
+                for emitter in offline_emitters
             )
             offline_stage.GetRootLayer().Save()
             offline_stage = None
@@ -375,6 +406,8 @@ async def _run(arguments):
                 arguments.layout,
                 per_log_points,
                 all_points,
+                author=False,
+                seed_metrics=seed_metrics,
             )
             scene_source = str(point_scene)
 
@@ -649,7 +682,7 @@ async def _run(arguments):
             f"[phase6bp] {arguments.layout} logs={arguments.log_count} "
             f"blocks={max(active_blocks)} report={output_path}"
         )
-        app.post_uncancellable_quit(0)
+        exit_code = 0
     except asyncio.CancelledError:
         raise
     except Exception as error:
@@ -667,12 +700,12 @@ async def _run(arguments):
             encoding="utf-8",
         )
         carb.log_error(f"[phase6bp] failed: {type(error).__name__}: {error}")
-        app.post_uncancellable_quit(1)
     finally:
         if listener is not None:
             listener.Revoke()
         if flow_interface is not None:
             _flowusd.release_flowusd_interface(flow_interface)
+        app.post_uncancellable_quit(exit_code)
 
 
 arguments = _parse_arguments()

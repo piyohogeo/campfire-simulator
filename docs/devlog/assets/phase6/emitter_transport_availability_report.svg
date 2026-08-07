@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6BV emitter transport availability matrix</title>
+  <desc id="desc">The current two-log Sphere route is the only configuration with qualified Flow activity. At the twenty-log target, one Point emitter and twenty Point emitters preserve USD values and revisions but have no active Flow consumer. Native NanoVDB generation is over five milliseconds p95 and also has no public consumer injection boundary.</desc>
+  <rect width="1200" height="680" rx="32" fill="#111820"/>
+  <text x="70" y="68" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">PHASE 6BV · 20 LOGS / 7,200 SURFACE POINTS · DEFAULT OFF</text>
+  <text x="70" y="116" fill="#fff" font-family="Segoe UI, sans-serif" font-size="35" font-weight="700">Only the current Sphere route reaches qualified Flow</text>
+  <text x="70" y="150" fill="#a8beca" font-family="Segoe UI, sans-serif" font-size="17">Set count, payload size, producer cost, and consumer availability remain separate axes</text>
+
+  <text x="80" y="199" fill="#8fbcd4" font-family="Segoe UI, sans-serif" font-size="15" font-weight="700">CONFIGURATION</text>
+  <text x="380" y="199" fill="#8fbcd4" font-family="Segoe UI, sans-serif" font-size="15" font-weight="700">MEASURED PUBLICATION / PRODUCER</text>
+  <text x="875" y="199" fill="#8fbcd4" font-family="Segoe UI, sans-serif" font-size="15" font-weight="700">FLOW CONSUMER</text>
+
+  <rect x="70" y="220" width="1060" height="82" rx="16" fill="#173126" stroke="#3d8a61"/>
+  <text x="95" y="251" fill="#fff" font-family="Segoe UI, sans-serif" font-size="19" font-weight="700">Current Sphere · 1 Emitter</text>
+  <text x="95" y="278" fill="#a8beca" font-family="Segoe UI, sans-serif" font-size="14">production reference · 2 logs · 19 attributes</text>
+  <text x="380" y="251" fill="#d7e1e8" font-family="Consolas, monospace" font-size="17">USD p95 median 1.5008 ms</text>
+  <text x="380" y="278" fill="#a8beca" font-family="Segoe UI, sans-serif" font-size="14">not an equal-payload 20-log result</text>
+  <text x="875" y="251" fill="#65c18c" font-family="Segoe UI, sans-serif" font-size="18" font-weight="700">QUALIFIED</text>
+  <text x="875" y="278" fill="#d7e1e8" font-family="Consolas, monospace" font-size="15">169–184 active blocks</text>
+
+  <rect x="70" y="314" width="1060" height="82" rx="16" fill="#192734" stroke="#315269"/>
+  <text x="95" y="345" fill="#fff" font-family="Segoe UI, sans-serif" font-size="19" font-weight="700">One Point Emitter</text>
+  <text x="95" y="372" fill="#a8beca" font-family="Segoe UI, sans-serif" font-size="14">20 logs · 7,200 points · 4 updates · 86,408 B</text>
+  <text x="380" y="345" fill="#d7e1e8" font-family="Consolas, monospace" font-size="17">Set p95 0.3035 · exit 1.0603 ms</text>
+  <text x="380" y="372" fill="#65c18c" font-family="Segoe UI, sans-serif" font-size="14">1 notice · revision 150 · USD channels exact</text>
+  <text x="875" y="345" fill="#f28b82" font-family="Segoe UI, sans-serif" font-size="18" font-weight="700">UNQUALIFIED</text>
+  <text x="875" y="372" fill="#d7e1e8" font-family="Consolas, monospace" font-size="15">0 active blocks</text>
+
+  <rect x="70" y="408" width="1060" height="82" rx="16" fill="#192734" stroke="#315269"/>
+  <text x="95" y="439" fill="#fff" font-family="Segoe UI, sans-serif" font-size="19" font-weight="700">Point Emitter per log</text>
+  <text x="95" y="466" fill="#a8beca" font-family="Segoe UI, sans-serif" font-size="14">20 × 360 points · 80 updates · 86,560 B</text>
+  <text x="380" y="439" fill="#d7e1e8" font-family="Consolas, monospace" font-size="17">Set p95 1.5954 · exit 2.5769 ms</text>
+  <text x="380" y="466" fill="#65c18c" font-family="Segoe UI, sans-serif" font-size="14">1 notice · all revisions 150 · USD channels exact</text>
+  <text x="875" y="439" fill="#f28b82" font-family="Segoe UI, sans-serif" font-size="18" font-weight="700">UNQUALIFIED</text>
+  <text x="875" y="466" fill="#d7e1e8" font-family="Consolas, monospace" font-size="15">0 active blocks</text>
+
+  <rect x="70" y="502" width="1060" height="82" rx="16" fill="#2e271b" stroke="#806530"/>
+  <text x="95" y="533" fill="#fff" font-family="Segoe UI, sans-serif" font-size="19" font-weight="700">Native NanoVDB producer</text>
+  <text x="95" y="560" fill="#a8beca" font-family="Segoe UI, sans-serif" font-size="14">20 logs · 5 buffers · 10.90 MB/update</text>
+  <text x="380" y="533" fill="#d7e1e8" font-family="Consolas, monospace" font-size="17">producer p95 5.7224 ms</text>
+  <text x="380" y="560" fill="#a8beca" font-family="Segoe UI, sans-serif" font-size="14">USD dynamic publish not measured</text>
+  <text x="875" y="533" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="18" font-weight="700">NO PUBLIC INJECTOR</text>
+  <text x="875" y="560" fill="#d7e1e8" font-family="Consolas, monospace" font-size="15">19 APIs audited</text>
+
+  <rect x="70" y="612" width="1060" height="42" rx="14" fill="#3a2d18" stroke="#f4b860"/>
+  <text x="95" y="638" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="16" font-weight="700">NO END-TO-END RANKING · keep Sphere; qualify a supported consumer before Point/NanoVDB adoption.</text>
+</svg>

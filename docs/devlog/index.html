@@ -37,7 +37,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>47 / 47 passed</strong></div>
-        <div><span>次の焦点</span><strong>利用可能構成の上限比較</strong></div>
+        <div><span>次の焦点</span><strong>現行Sphere経路の継続</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6BR–6BU · Fixed-Flow NanoVDB consumer boundary</p>
-            <h2>5本の意味は判明。<br>consumerはまだ未接続。</h2>
-            <p>固定Flow 110.0.0の5 bufferを実測でR/G/B/alphaの4 float gridとpacked RGBA8に識別しました。完成stageで5つの公開USD候補を試してもFlow active blockは全て0でした。さらに実行時の公開IFlowUsd 19メンバーを列挙し、外部NanoVDBをconsumerへ注入するAPIが0件であることを確認しました。これは性能未達ではなく公開接続資格なしです。private ABIへ進まず、取込み、raster、solver、描画、出力同値性は未計測のままにします。Sphere productionと既存契約は変更していません。</p>
+            <p class="section-kicker">Phase 6BV · Emitter transport availability matrix</p>
+            <h2>比較は完了。<br>採用できるのはまだSphereだけ。</h2>
+            <p>20本・7,200表面点で単一Pointと薪ごと20 Pointをoffline完成stageから安全に測りました。両方とも1通知、USD値、revisionは一致しましたが、固定Native PointCloud consumerはactive block 0でした。NanoVDBもproducerだけでp95 5.7224 ms・約10.90 MB/update、公開注入APIはありません。したがって未接続構成のframe時間をFlow性能として順位付けせず、実Flowまで確認済みの現行Sphere productionを維持します。物理式、JSON、rollback、revision、immutable snapshot、既定値は変更していません。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -822,6 +822,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6bv-emitter-availability" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6BV</h3>
+            <a href="assets/phase6/emitter_transport_availability_report.svg" aria-label="Phase 6BV Sphere、単一Point、薪ごとPoint、NanoVDBの可用性比較レポートを開く">
+              <img src="assets/phase6/emitter_transport_availability_report.svg" width="1200" height="680" alt="現行SphereだけがFlow qualifiedで、単一Pointと20 Pointはactive block 0、NanoVDBは公開injectorなしであることを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Four configurations · one qualified Flow path</strong><span>20 logs · 7,200 Point samples · NanoVDB 10.90 MB/update · no false end-to-end ranking</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6BV burn scenario (production Sphere unchanged, reused)" data-video-meta="The default-off availability matrix changed no production emitter, authoritative wood state, physics, JSON schema, rollback, revision, or defaults · Point and NanoVDB consumers remain unqualified · baseline Phase 6AM real viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · production Sphereの既存実画面</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1170,6 +1184,13 @@
               <div><dt>Phase 6BU runner smoke</dt><dd>46.3 s · revision 1 matched · active blocks 0 · safe unqualified exit</dd></div>
               <div><dt>Phase 6BU regression</dt><dd>8 processes · 47 / 47 pass · 323.4 s · collapse coverage 188.6 s</dd></div>
               <div><dt>Phase 6BU decision</dt><dd>availability stop · no private ABI or live structural mutation · production unchanged</dd></div>
+              <div><dt>Phase 6BV target</dt><dd>20 logs · 1,152 cells/log · 360 surface points/log · 7,200 points</dd></div>
+              <div><dt>Phase 6BV 1 Point</dt><dd>4 updates · 86,408 B · Set p95 0.3035 ms · exit p95 1.0603 ms</dd></div>
+              <div><dt>Phase 6BV 20 Point</dt><dd>80 updates · 86,560 B · Set p95 1.5954 ms · exit p95 2.5769 ms</dd></div>
+              <div><dt>Phase 6BV Point contract</dt><dd>1 notice/update · USD channels exact · revisions 150 · active blocks 0</dd></div>
+              <div><dt>Phase 6BV NanoVDB</dt><dd>producer p95 5.7224 ms · 10.90 MB/update · no public injector</dd></div>
+              <div><dt>Phase 6BV decision</dt><dd>no end-to-end ranking · keep production Sphere · contracts/defaults unchanged</dd></div>
+              <div><dt>Phase 6BV regression</dt><dd>8 processes · 47 / 47 pass · 337.5 s · collapse coverage 200.3 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>

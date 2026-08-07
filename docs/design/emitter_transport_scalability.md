@@ -117,3 +117,20 @@ live stageのPrim削除・再定義はPhase 6BPでnative crashしたため行わ
 固定buildで実際に取得した`omni.flowusd._flowusd.IFlowUsd`を列挙すると、公開メンバーは19個だった。内訳はpoint／velocity pointからのvoxelize、persistent voxelize context、Flow readback、grid値／block数の照会、serialized NanoVDBから`omni.volume.GridData`を作る`buffer_to_volume()`、および`save_nanovdb(uint32[], path)`である。名前とruntime docstringの両方を監査したが、外部NanoVDB bufferをFlow Emitter consumerへattach、ingest、inject、set、submit、uploadする公開メンバーは0個だった。`buffer_to_volume()`はCPU側のvolume表現への変換、`save_nanovdb()`はファイル保存であり、どちらもconsumer注入境界ではない。
 
 したがって、固定版の公開native APIもPhase 6BTの5候補をqualifiedにはしない。private ABI、未確認のFabric property、live stage再定義へ進まず、NanoVDBの下流比較は「利用可能性未成立」で停止する。これは性能負けではなく接続資格不足である。比較表ではproducer生成時間、payload量、静的USD境界までは実測値を残し、`omni.flowusd`取込み、Flow raster／solver／render、出力同値性は未計測のままにする。production Sphere経路と全契約は維持する。再現は`run_phase6bu_flow_native_consumer_api_audit.ps1`で、Phase 6BT runnerも安全な未qualified結果を正常な診断として返す。20 frame／warmup 1の最小否定smokeは46.3秒で正常終了し、revision `1`一致、active block peak `0`を報告した。標準Kit suiteは全8 process・47 / 47件を323.4秒で合格し、collapse coverageも188.6秒で完了した。
+
+## Phase 6BV 4構成の可用性マトリクス
+
+20本・各1,152セル・表面360点/本、合計7,200点について、同じ数値として比較できる境界だけを並べた。現行Sphereの実Flow参照はPhase 6BNの2本production scenarioであり、20本等payloadではない。Phase 6BVの独立Sphere spikeも7属性のsynthetic publicationで、viewport駆動がなくactive block 0だったためproduction基準へ置き換えない。
+
+| 構成 | 規模 | 更新／bytes | source mean / p95 | Python/C++ mean / p95 | Set mean / p95 | ChangeBlock exit mean / p95 | Flow資格 |
+|---|---:|---:|---:|---:|---:|---:|---|
+| 現行Sphere production参照 | 2本、1 Emitter | 19属性 | 境界内 | 境界内 | 境界内 | USD publication p95中央値 1.5008 ms | qualified、active peak 169–184 |
+| 全薪1 Point | 20本、7,200点 | 4 / 86,408 B | 0.0730 / 0.1453 ms | 0.1248 / 0.2135 ms | 0.1799 / 0.3035 ms | 0.6405 / 1.0603 ms | 未qualified、0 block |
+| 薪ごとPoint | 20本、20×360点 | 80 / 86,560 B | 0.0624 / 0.1085 ms | 0.2652 / 0.4476 ms | 0.8685 / 1.5954 ms | 1.5406 / 2.5769 ms | 未qualified、0 block |
+| native NanoVDB producer | 20本、7,200点 | 入力172,800 B、出力10,896,000 B | 0.0563 / 0.0825 ms | contiguous 0.0046 / 0.0062 ms | producer複合 4.3039 / 5.7224 ms | USD動的発行なし | 公開injectorなし |
+
+Point 2構成はいずれもofflineでEmitter／Points／payload／revisionを完成させてからstageへ接続し、live構造変更を行わなかった。120測定＋30 warmupで1 publication 1通知、fuel／temperature／smokeの点数と合計、consumer revision `150`が一致した。20 Pointはbytesが単一Pointより152 B多いだけだが、Set p95は`5.26×`、ChangeBlock exit p95は`2.43×`だった。したがってconsumerが将来qualifiedになった場合のUSD形状は、まず単一または少数Pointを優先する。
+
+PointのKit update p95は単一`18.8142 ms`、20個`19.9260 ms`、最大`169.4402 / 214.5757 ms`、whole-process RSS peak deltaは`1.662 / 1.704 GB`だった。ただし両方ともactive block 0であり、これを`omni.flowusd`取込み、raster、solver、render、Emitter固有memoryとして解釈しない。`Sdf.ChangeBlock`は80更新でも通知を1回にまとめたが、Set回数、配列copy、producer、Flow consumer不在は解決しない。
+
+結論としてend-to-end順位は付けない。実Flowまでqualifiedなのは2本scaleの現行Sphereだけで、20本targetのPoint／NanoVDBはavailability gateを通過していない。production経路、物理式、JSON schema、既定値、rollback、revision、immutable snapshotを維持する。次の推奨実験は、固定版で正式にサポートされたPoint core-simulation presetまたはNanoVDB consumer注入境界が見つかった場合に限り、viewport駆動の完成stageで同じ20本matrixを再開することである。それまでは追加のinactive frame測定やprivate ABI探索を行わない。標準Kit suiteは全8 process・47 / 47件を337.5秒で合格し、collapse coverageも200.3秒で完了した。
