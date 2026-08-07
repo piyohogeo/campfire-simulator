@@ -37,7 +37,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>46 / 46 passed</strong></div>
-        <div><span>次の焦点</span><strong>USD通知集約APIの実挙動</strong></div>
+        <div><span>次の焦点</span><strong>実Flowでの通知集約候補</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6BK · Lightweight USD tail trace</p>
-            <h2>遅いのは、Flowではなく<br>USD Setの内側だった。</h2>
-            <p>旧値取得を戻さず、lightweight commitのvalidation、handle探索、値準備、UsdAttribute.Set、revision commitを236 sampleずつ3 runで追跡しました。Set合計はprofile p95の中央値83.0%を占め、外側USD transactionとの相関は0.9880でした。書込み数だけの相関0.4532に対し、Set 1回あたりの遅延も0.6136で連動しており、属性数だけでなくUSD authoring／通知境界そのものが揺れています。同tickのFlow/renderとは全runで負相関となり、Phase 6BJで一度見えた同時悪化は再現しませんでした。production既定、rollback、revision-lastは変えず、次は通知集約APIの実挙動を小さなstageで確認します。</p>
+            <p class="section-kicker">Phase 6BL · USD notice boundary prototype</p>
+            <h2>19回の通知を、<br>一貫した1回へ。</h2>
+            <p>ローカルKitのin-memory USD stageで、現行adapterと同じ16 payload＋3 revisionを観測しました。通常は19回のObjectsChanged通知が発生しますが、Sdf.ChangeBlockでは1回に集約され、callbackは3 consumerの最終revisionを同時に確認できました。ただし例外は自動rollbackになりません。発行失敗をblock内で捕捉し、同じblock内で旧immutable snapshotを再発行してから例外を戻すことで、通知1回・旧revision一致・最終値完全復元を達成しました。試作p95中央値は0.3697から0.1111 msへ下がりましたが、実Flow stageではないためproduction採用は保留します。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -738,6 +738,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6bl-usd-change-block" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6BL</h3>
+            <a href="assets/phase6/usd_change_block_report.svg" aria-label="Phase 6BL Sdf ChangeBlockの通知集約、revision-last、明示rollback契約レポートを開く">
+              <img src="assets/phase6/usd_change_block_report.svg" width="1200" height="680" alt="19回のUSD通知を1回へ集約し、通常発行と同じblock内rollbackで一貫したrevisionだけが見えることを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>One notice · one consistent revision</strong><span>19 → 1 notice · 9 / 9 gates · p95 median 0.3697 → 0.1111 ms · production OFF</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6BL burn scenario (rendering unchanged, reused)" data-video-meta="In-memory USD notice-boundary prototype changes no production rendering or authoritative snapshot values · baseline Phase 6AM viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · 同値の既存実画面を再掲</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1045,6 +1059,12 @@
               <div><dt>Phase 6BK profiler overhead</dt><dd>+0.1974 ms median p95 · no extra USD Get</dd></div>
               <div><dt>Phase 6BK equivalence</dt><dd>state SHA / CSV / ignition / final USD exact</dd></div>
               <div><dt>Phase 6BK regression</dt><dd>46 / 46 pass · 336.3 s · collapse coverage 197.3 s</dd></div>
+              <div><dt>Phase 6BL notice count</dt><dd>19 → 1 per commit · 3 revisions consistent</dd></div>
+              <div><dt>Phase 6BL plain p95</dt><dd>0.3457 / 0.3335 / 0.4269 / 0.3697 / 0.4087 ms</dd></div>
+              <div><dt>Phase 6BL ChangeBlock p95</dt><dd>0.1087 / 0.1249 / 0.1111 / 0.1143 / 0.1105 ms</dd></div>
+              <div><dt>Phase 6BL rollback</dt><dd>same-block replay exact · old revision visible · exception preserved</dd></div>
+              <div><dt>Phase 6BL decision</dt><dd>9 / 9 prototype gates · production still OFF</dd></div>
+              <div><dt>Phase 6BL regression</dt><dd>8 processes · 46 / 46 pass · collapse coverage 187.4 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>

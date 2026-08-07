@@ -1976,3 +1976,16 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - Flowとの関係: 同tickのFlow/render update対USD transaction相関は全run負で、中央値`-0.4309`だった。active block数は`0.2878–0.4719`、中央値`0.3731`に留まり、Phase 6BJ run 3の同時悪化を一般的な因果として再現しなかった。したがって現時点の主因はnative producerでもFlowの同frame負荷でもなく、`UsdAttribute.Set`内部のauthoring／通知境界と評価する。ただし通知処理そのものの直接計測ではないため、推論として扱う。
 - 判断と次: production既定、lifecycle、rollback、revision、snapshot schemaは変更しない。次はローカルKit SDKで`Sdf.ChangeBlock`等の通知集約APIと`Usd.Notice.ObjectsChanged`の実挙動を小さなin-memory stageで確認し、payload-first／revision-lastの可視性、例外時rollback、外部consumer通知数を満たす場合だけ、実Phase 3の既定OFF候補を作る。属性groupを省略する案はconsumer契約を変えるため先に採らない。
 - 再現と回帰: `run_phase6bk_usd_tail_correlation.ps1`がMSVC native buildと順序反転3 pairを実行し、`analyze_usd_tail_correlation.py`が同値性、観測オーバーヘッド、操作／group／Flow相関、slowest sampleを`usd_tail_correlation_report.json/.svg`へ保存する。release buildは`6.8 s`、Phase 0は`22 s`、標準Kit suite全8 process・`46 / 46`件は`336.3 s`、collapse coverageは`197.3 s`で合格した。描画条件は変えていないため動画はPhase 6AMの検証済み実画面を再利用する。
+
+## 95. Phase 6BL USD通知集約APIの実挙動
+
+### 2026-08-07: `Sdf.ChangeBlock`の通知、revision-last、例外rollback契約をローカルKitで確認する
+
+- API確認: build済み`omni.usd.libs-1.0.3`を使い、`Usd.Stage.CreateInMemory()`上に現行adapterと同じ16 payload属性、薪2本＋Emitterの3 revision、合計19既存属性を作った。`Tf.Notice.Register(Usd.Notice.ObjectsChanged, ..., stage)`で通知を直接観測し、property作成やxform op作成はblock外のbootstrapで完了させた。production extensionとadapterは変更していない。
+- 通常発行: payload-first、薪revision、Emitter revision-lastの19 `Set`を通常実行すると19通知が同期発火し、そのうち18通知では3 consumer revisionがまだ新revisionに揃っていなかった。既存のrevision gateで途中通知を拒否できるが、各`Set`の通知費用は発生する。同じ19 `Set`を`Sdf.ChangeBlock`で囲むと終了時の1通知へ集約され、callbackは19 changed pathと3 consumerすべての新revisionを同時に観測した。
+- 例外意味論: `ChangeBlock`内から例外を外へ出すだけではrollbackされず、block終了時に1通知が発火して新payload／revisionが残った。したがってPython context managerをtransactionそのものとして扱ってはならない。安全な候補構造は、block内で発行例外を捕捉し、事前に保持したimmutable previous snapshotを同じblock内で全再発行し、block終了後に元例外を再送出する方式である。
+- rollback確認: revision-lastまで新snapshotを書いた後に失敗を注入し、同じblock内で旧19値を再発行した。終了時通知は1回、changed pathは19、callbackが見た3 revisionはすべて旧値`4`、最終payload／revisionは事前snapshotと完全一致し、元例外も再送出用に保持できた。通知は発生するがconsumerは旧revisionの一貫した状態だけを見る。回復自体が失敗した場合は現行同様fault停止が必要である。
+- 反復試作: revision-gated Python `ObjectsChanged` consumer付き、各mode 20 warmup＋400 commit、順序反転5 runで測った。通常p95は`0.3457 / 0.3335 / 0.4269 / 0.3697 / 0.4087 ms`、ChangeBlockは`0.1087 / 0.1249 / 0.1111 / 0.1143 / 0.1105 ms`、中央値は`0.3697 → 0.1111 ms`、差は`0.2586 ms`だった。各runで通常通知`7,980`、block通知`420`、受理revisionは両方`420`である。これはin-memory stageとPython listenerの試作値であり、実Flow／Hydra／USD stageの性能資格には使わない。
+- 判断: 9契約gateを満たしたため、既存属性だけを更新するlightweight経路での通知集約試作はqualifiedとする。production採用は未資格、既定OFF、rollback、revision-last、snapshot schema、外部直接編集非対応は維持する。次は現行Phase 3 adapterへ既定OFFの候補を追加し、実`ObjectsChanged`通知数、payload失敗／revision後失敗のsame-block replay、3 consumer revision、Flow活動、権威出力、USD p95 4 ms gateを順序反転runで検証する。
+- 再現: `run_phase6bl_usd_change_block.ps1`がKit Pythonで`analyze_usd_change_block.py`を実行し、契約9 gate、通知数、5 run timingを`usd_change_block_report.json/.svg`へ保存する。描画・燃焼条件は変えていないため開発日誌動画はPhase 6AMの検証済み実画面を再利用する。
+- 回帰確認: `repo.bat test`は全8プロセス、46 / 46件に成功した。内訳は通常37、thermal coverage 3、wet-kindling coverage 1、collapse coverage 1、fixed-reference 1、air-feedback 1、numerical 2であり、productionコードを変更していない本試作が既存挙動を変えていないことを確認した。

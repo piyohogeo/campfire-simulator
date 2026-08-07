@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6BL Sdf ChangeBlock contract</title>
+  <desc id="desc">Local Kit USD prototype verifies notice coalescing, revision-last visibility, and same-block rollback.</desc>
+  <rect width="1200" height="680" rx="32" fill="#111820"/>
+  <text x="70" y="76" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="24" font-weight="700">PHASE 6BL · USD NOTICE BOUNDARY PROTOTYPE</text>
+  <text x="70" y="126" fill="#fff" font-family="Segoe UI, sans-serif" font-size="37" font-weight="700">19 Set notices → one revision-consistent notice</text>
+  <rect x="70" y="170" width="1060" height="105" rx="20" fill="#192734" stroke="#315269"/>
+  <text x="105" y="214" fill="#8fbcd4" font-family="Consolas, monospace" font-size="18">payload first → log revisions → emitter revision last → notify</text>
+  <text x="105" y="250" fill="#d7e1e8" font-family="Segoe UI, sans-serif" font-size="17">existing attributes only · exception is not rollback · replay old snapshot inside the same block</text>
+  <rect x="70" y="315" width="510" height="182" rx="20" fill="#182128"/>
+  <text x="105" y="360" fill="#fff" font-family="Segoe UI, sans-serif" font-size="23" font-weight="700">Revision-gated consumer p95</text>
+  <text x="105" y="405" fill="#a8beca" font-family="Consolas, monospace" font-size="18">plain  0.3457 / 0.3335 / 0.4269 / 0.3697 / 0.4087 ms</text>
+  <text x="105" y="445" fill="#f4b860" font-family="Consolas, monospace" font-size="18">block  0.1087 / 0.1249 / 0.1111 / 0.1143 / 0.1105 ms</text>
+  <rect x="620" y="315" width="510" height="182" rx="20" fill="#182128"/>
+  <text x="655" y="360" fill="#fff" font-family="Segoe UI, sans-serif" font-size="23" font-weight="700">Observed contract</text>
+  <text x="655" y="405" fill="#65c18c" font-family="Segoe UI, sans-serif" font-size="18">normal commit  1 notice · revision consistent</text>
+  <text x="655" y="441" fill="#65c18c" font-family="Segoe UI, sans-serif" font-size="18">rollback       1 notice · previous revision</text>
+  <text x="655" y="477" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="18">exception alone persists partial/new state</text>
+  <rect x="70" y="540" width="1060" height="86" rx="20" fill="#3a2d18" stroke="#f4b860"/>
+  <text x="105" y="592" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">PROTOTYPE QUALIFIED · PRODUCTION STILL OFF</text>
+  <text x="760" y="580" fill="#d7e1e8" font-family="Segoe UI, sans-serif" font-size="16">9 / 9 contract gates</text>
+  <text x="760" y="607" fill="#d7e1e8" font-family="Segoe UI, sans-serif" font-size="16">real Flow / failure run remains</text>
+</svg>

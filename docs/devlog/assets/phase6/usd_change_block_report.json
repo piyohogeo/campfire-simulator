@@ -1,0 +1,262 @@
+{
+  "schema_version": 1,
+  "phase": "phase6bl",
+  "status": "prototype_qualified",
+  "environment": {
+    "usd_package": "omni.usd.libs-1.0.3",
+    "stage": "Usd.Stage.CreateInMemory",
+    "existing_attributes_only": true,
+    "production_adapter_changed": false
+  },
+  "contract": {
+    "field_count": 19,
+    "payload_count": 16,
+    "revision_count": 3,
+    "plain": {
+      "notice_count": 19,
+      "final_revisions": [
+        2,
+        2,
+        2
+      ],
+      "last_notice_revisions": [
+        2,
+        2,
+        2
+      ],
+      "intermediate_notice_count": 18
+    },
+    "change_block": {
+      "notice_count": 1,
+      "changed_path_count": 19,
+      "notice_revisions": [
+        3,
+        3,
+        3
+      ],
+      "final_revisions": [
+        3,
+        3,
+        3
+      ]
+    },
+    "exception_without_rollback": {
+      "notice_count": 1,
+      "state_changed": true,
+      "final_revisions": [
+        4,
+        4,
+        4
+      ]
+    },
+    "same_block_rollback": {
+      "notice_count": 1,
+      "changed_path_count": 19,
+      "notice_revisions": [
+        4,
+        4,
+        4
+      ],
+      "final_state_exact": true,
+      "failure_preserved_for_reraise": true
+    },
+    "gates": {
+      "plain_notice_per_set": true,
+      "plain_exposes_precommit_notices": true,
+      "change_block_one_notice": true,
+      "change_block_revision_consistent": true,
+      "exception_is_not_rollback": true,
+      "same_block_rollback_one_notice": true,
+      "same_block_rollback_exact": true,
+      "same_block_rollback_revision_consistent": true,
+      "failure_can_be_reraised": true
+    }
+  },
+  "measurement": {
+    "run_count": 5,
+    "iterations_per_mode_run": 400,
+    "warmup_iterations": 20,
+    "balanced_order": true,
+    "listener": "revision-gated ObjectsChanged consumer",
+    "plain_p95_ms": [
+      0.3457,
+      0.3335,
+      0.4269,
+      0.3697,
+      0.4087
+    ],
+    "change_block_p95_ms": [
+      0.1087,
+      0.1249,
+      0.1111,
+      0.1143,
+      0.1105
+    ],
+    "median_plain_p95_ms": 0.3697,
+    "median_change_block_p95_ms": 0.1111,
+    "median_p95_reduction_ms": 0.25859999999999994,
+    "runs": [
+      {
+        "run": 1,
+        "order": [
+          "plain",
+          "change_block"
+        ],
+        "plain": {
+          "run": 1,
+          "mode": "plain",
+          "notice_count": 7980,
+          "accepted_revision_count": 420,
+          "timing": {
+            "sample_count": 400,
+            "mean_ms": 0.29602425,
+            "p95_ms": 0.3457,
+            "maximum_ms": 1.0893
+          }
+        },
+        "change_block": {
+          "run": 1,
+          "mode": "change_block",
+          "notice_count": 420,
+          "accepted_revision_count": 420,
+          "timing": {
+            "sample_count": 400,
+            "mean_ms": 0.09980375000000001,
+            "p95_ms": 0.1087,
+            "maximum_ms": 0.3119
+          }
+        }
+      },
+      {
+        "run": 2,
+        "order": [
+          "change_block",
+          "plain"
+        ],
+        "change_block": {
+          "run": 2,
+          "mode": "change_block",
+          "notice_count": 420,
+          "accepted_revision_count": 420,
+          "timing": {
+            "sample_count": 400,
+            "mean_ms": 0.10252175,
+            "p95_ms": 0.1249,
+            "maximum_ms": 0.6027
+          }
+        },
+        "plain": {
+          "run": 2,
+          "mode": "plain",
+          "notice_count": 7980,
+          "accepted_revision_count": 420,
+          "timing": {
+            "sample_count": 400,
+            "mean_ms": 0.29266275,
+            "p95_ms": 0.3335,
+            "maximum_ms": 0.5897
+          }
+        }
+      },
+      {
+        "run": 3,
+        "order": [
+          "plain",
+          "change_block"
+        ],
+        "plain": {
+          "run": 3,
+          "mode": "plain",
+          "notice_count": 7980,
+          "accepted_revision_count": 420,
+          "timing": {
+            "sample_count": 400,
+            "mean_ms": 0.29803225,
+            "p95_ms": 0.4269,
+            "maximum_ms": 0.7799
+          }
+        },
+        "change_block": {
+          "run": 3,
+          "mode": "change_block",
+          "notice_count": 420,
+          "accepted_revision_count": 420,
+          "timing": {
+            "sample_count": 400,
+            "mean_ms": 0.10022249999999999,
+            "p95_ms": 0.1111,
+            "maximum_ms": 0.37
+          }
+        }
+      },
+      {
+        "run": 4,
+        "order": [
+          "change_block",
+          "plain"
+        ],
+        "change_block": {
+          "run": 4,
+          "mode": "change_block",
+          "notice_count": 420,
+          "accepted_revision_count": 420,
+          "timing": {
+            "sample_count": 400,
+            "mean_ms": 0.10147075,
+            "p95_ms": 0.1143,
+            "maximum_ms": 0.3656
+          }
+        },
+        "plain": {
+          "run": 4,
+          "mode": "plain",
+          "notice_count": 7980,
+          "accepted_revision_count": 420,
+          "timing": {
+            "sample_count": 400,
+            "mean_ms": 0.295777,
+            "p95_ms": 0.3697,
+            "maximum_ms": 0.8961
+          }
+        }
+      },
+      {
+        "run": 5,
+        "order": [
+          "plain",
+          "change_block"
+        ],
+        "plain": {
+          "run": 5,
+          "mode": "plain",
+          "notice_count": 7980,
+          "accepted_revision_count": 420,
+          "timing": {
+            "sample_count": 400,
+            "mean_ms": 0.29839675,
+            "p95_ms": 0.4087,
+            "maximum_ms": 0.7433
+          }
+        },
+        "change_block": {
+          "run": 5,
+          "mode": "change_block",
+          "notice_count": 420,
+          "accepted_revision_count": 420,
+          "timing": {
+            "sample_count": 400,
+            "mean_ms": 0.100756,
+            "p95_ms": 0.1105,
+            "maximum_ms": 0.3032
+          }
+        }
+      }
+    ]
+  },
+  "decision": {
+    "prototype_contract_qualified": true,
+    "production_qualified": false,
+    "required_structure": "Catch publication failure inside the ChangeBlock, replay the previous immutable snapshot inside the same block, exit the block, then reraise.",
+    "next_step": "Add a default-off real Phase 3 ChangeBlock candidate and verify notice counts, failure replay, revision-last consumers, and p95 below 4 ms."
+  }
+}
