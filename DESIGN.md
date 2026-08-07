@@ -2015,3 +2015,15 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 過去再現: Phase 6BG／6BH／6BJ／6BKのrunnerには明示OFFを追加し、当時の非集約lightweight測定を再現できるようにした。Phase 6BM／6BNのcontrolも明示OFF、候補は明示ONとし、標準値変更後も比較条件が変わらない。採用後smokeではlightweight指定だけで集約`True`、tracking`False`、revision`1200`、Flow peak`176`、USD p95`1.4760 ms`を確認した。明示OFF smokeも集約`False`、tracking`False`、revision`1200`、Flow peak`175`、USD p95`2.4384 ms`で完走し、escape hatchが実際に非集約経路を選ぶことを確認した。
 - 判断: Phase 6BMの通知／失敗契約とPhase 6BNのtrackless性能／同値性を合わせ、Resident lightweight経路内での通知集約標準化を採用する。rollback、revision-last、immutable snapshot、lifecycle、fault停止、snapshot schemaは変更しない。共有SoA案はUSDボトルネックの解決策ではないが、未管理Python直接書込みとimport削減という独立目的について、次に採用価値を再評価できる段階へ進んだ。
 - 再現と回帰: `run_phase6bn_change_block_adoption.ps1`がnative DLLをbuildし、trackless 6 runと`analyze_change_block_adoption.py`から`change_block_adoption_report.json/.svg`を生成する。採用設定後のrelease buildは`6.2 s`、Phase 0固定確認は`20.8 s`、標準Kit suiteは全8 process・`47 / 47`件を`333.5 s`で合格した。描画条件は変えていないため開発日誌動画はPhase 6AMの検証済み実画面を再利用する。
+
+## 98. Phase 6BO 将来Emitter転送の容量監査
+
+### 2026-08-07: Set回数と配列payload量を分離し、実Flow比較の前提を固定する
+
+- 設計懸念: 現在のSphere Emitter 1個と19属性snapshot最適化は継続するが、Point／NanoVDBでは通知数を減らしても大配列生成、Python/C++変換、USD authoring、`omni.flowusd`取込み、Flowラスタライズが残る。表面点ごとのEmitter Primは不採用とし、Pointは全薪1 Primまたは薪ごと最大20 Primへ配列を集約する。
+- 固定SDK確認: Flow 110.0.0の`FlowEmitterPoint`に`pointPositions`、`pointFuels`、`pointTemperatures`、`pointSmokes`、`FlowEmitterNanoVdb`にチャンネル別`uint[]`を確認した。同梱C++ `OgnFlowVoxelizePoints`は`IFlowUsd::voxelizePoints`後のreadbackを4つのOmniGraph配列へ要素コピーする。公開Python APIはcommand登録まで、C++ headerとFabric直接境界はbuild成果物で確認できず、採用可能とは扱わない。
+- 規模: 24×12×4 = 1,152セルのうち表面候補は1本360点、20本7,200点である。360 / 1,800 / 3,600 / 7,200点を、全4配列更新と位置固定後の動的3配列更新に分けた。後者は12 bytes/点、前者は24 bytes/点である。
+- USD-only実測: 7,200点・動的3配列のp95は、Point 1 Primでsource`0.0079 ms`、NumPy→Vt`0.0385 ms`、USD Set`0.0277 ms`、block exit/notice`0.0178 ms`、発行`0.0474 ms`、全体`0.1079 ms`だった。Point 20 Primではそれぞれ`0.0100 / 0.0859 / 0.3346 / 0.0920 / 0.4408 / 0.5471 ms`だった。1 PrimはSet数4のままでもNumPy→Vt p95が360点`0.0051 ms`から7,200点`0.0385 ms`へ増えた。NumPy→Vtは元配列変更が反映されずzero-copyではなかった。
+- 契約: 全構成でChangeBlockは1更新1通知、全Emitter revision一致、fuel・temperature・smokeの点数／合計値一致を確認した。productionコード、物理式、JSON schema、既定値、rollback、revision、immutable snapshotは変更していない。in-memory USD値はFlow込み性能ではなく転送下限としてのみ扱う。
+- 判断: Point／NanoVDBのproduction採用は保留する。次は既定OFFの実Flow matrixでSphere、Point 1 Prim、Point最大20 Prim、NanoVDB 1／少数を比較し、source生成、境界copy、USD、notice、flowusd取込み、raster、solver/render、bytes、CPU/GPU memory、出力同値性、consumer revisionを可能な公開境界ごとに測る。公開timerがない区間は推定せず未計測と明記する。詳細は`docs/design/emitter_transport_scalability.md`と`emitter_transport_scalability_report.json`に残す。
+- 再現と回帰: `run_phase6bo_emitter_transport_scalability.ps1`はKit同梱Python／NumPy／USDを使い、production appを起動せず120計測＋20 warmupのJSON／SVGを生成する。標準Kit suiteは全8 process・`47 / 47`件を`320.0 s`で合格した。開発日誌はローカルHTTPとEdge描画で見出し、全4点、7,200点ラベル、SVG、video trigger、共通modalを確認した。

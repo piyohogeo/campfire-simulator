@@ -37,7 +37,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>47 / 47 passed</strong></div>
-        <div><span>次の焦点</span><strong>共有SoA案の採否再評価</strong></div>
+        <div><span>次の焦点</span><strong>Emitter実Flow容量比較</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6BN · Trackless adoption audit</p>
-            <h2>計測を外しても速い。<br>だからlightweightへ採用する。</h2>
-            <p>Phase 6BMのrevision-gated listenerを完全に外し、Resident native producerと実Flowで3組・順序反転を再測定しました。USD発行p95はcontrol 2.6382 / 3.2660 / 4.0405 msから、ChangeBlock 1.5008 / 1.7418 / 1.2580 msへ下がり、全pair改善・候補全run 4 ms未満です。権威状態、CSV、着火、最終USD、Flow活動も一致しました。アプリ全体のResident経路は既定OFFのまま、lightweightを明示利用した場合だけ通知集約を標準ONにし、明示OFFの逃げ道と過去Phaseの再現条件を残しました。</p>
+            <p class="section-kicker">Phase 6BO · Emitter transport scalability</p>
+            <h2>Setが少なくても、<br>配列は軽くならない。</h2>
+            <p>現在のSphere Emitter・19属性最適化を維持したまま、将来のPoint／NanoVDB経路を固定Flow 110.0.0で監査しました。1本360表面点、20本7,200点を基準に、Point 1 Primと薪ごと最大20 PrimをUSD-onlyで測定。1 Primでは動的3配列のSet数は4のままですが、NumPy→Vt p95は360点0.0051 msから7,200点0.0385 msへ増えました。ChangeBlockは全caseを1通知へ集約しても、配列生成・copy・Flow取込み・ラスタライズは消しません。NanoVDBを含む実Flow比較は次の既定OFF実験へ分離し、production、物理式、JSON、既定値は変更していません。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -780,6 +780,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6bo-emitter-transport-scalability" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6BO</h3>
+            <a href="assets/phase6/emitter_transport_scalability_report.svg" aria-label="Phase 6BO Point EmitterのSet回数と配列payload量を分離したスケーラビリティレポートを開く">
+              <img src="assets/phase6/emitter_transport_scalability_report.svg" width="1200" height="680" alt="360点から7200点までのPoint Emitter USD発行p95を、1 Primと薪ごと最大20 Primで比較し、Flow計測が未完であることを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Constant Set count · growing payload</strong><span>7,200 points · 1 Prim 4 Set / 86,408 B · 20 Prim 80 Set / 86,560 B · USD-only</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6BO burn scenario (production unchanged, reused)" data-video-meta="The transport spike runs in an in-memory USD stage and changes no production emitter, wood physics, Flow rendering, JSON schema, or defaults · baseline Phase 6AM real viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · production同値の既存実画面</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1105,6 +1119,13 @@
               <div><dt>Phase 6BN adoption smoke</dt><dd>ON p95 1.4760 ms · explicit OFF p95 2.4384 ms · revision 1200</dd></div>
               <div><dt>Phase 6BN scope</dt><dd>lightweight standard ON · global Resident path OFF · explicit disable retained</dd></div>
               <div><dt>Phase 6BN regression</dt><dd>8 processes · 47 / 47 pass · 333.5 s</dd></div>
+              <div><dt>Phase 6BO target</dt><dd>20 logs · 1,152 cells/log · 360 surface candidates/log · 7,200 points</dd></div>
+              <div><dt>Phase 6BO 1 Point Prim</dt><dd>dynamic 4 Set · 86,408 B · publish p95 0.0474 ms · frame p95 0.1079 ms</dd></div>
+              <div><dt>Phase 6BO 20 Point Prims</dt><dd>dynamic 80 Set · 86,560 B · publish p95 0.4408 ms · frame p95 0.5471 ms</dd></div>
+              <div><dt>Phase 6BO copy scaling</dt><dd>NumPy→Vt p95 0.0051 → 0.0385 ms · 360 → 7,200 points · not zero-copy</dd></div>
+              <div><dt>Phase 6BO notice contract</dt><dd>1 ObjectsChanged/update · all emitter revisions consistent</dd></div>
+              <div><dt>Phase 6BO scope</dt><dd>USD-only · Flow ingest/raster/solver/render and NanoVDB generation pending</dd></div>
+              <div><dt>Phase 6BO regression</dt><dd>8 processes · 47 / 47 pass · 320.0 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>

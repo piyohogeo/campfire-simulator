@@ -1,0 +1,1842 @@
+{
+  "schema_version": 1,
+  "phase": "phase6bo",
+  "status": "usd_transport_probe_complete_flow_probe_pending",
+  "default_off": true,
+  "production_code_changed": false,
+  "environment": {
+    "usd_package": "omni.usd.libs-1.0.3+698af100.wx64.r.cp312",
+    "numpy_version": "2.3.1",
+    "stage": "Usd.Stage.CreateInMemory",
+    "flow_version": "omni.flowusd 110.0.0",
+    "iterations": 120,
+    "warmup_iterations": 20
+  },
+  "target_scale": {
+    "log_count": 20,
+    "cells_per_log": 1152,
+    "grid": [
+      24,
+      12,
+      4
+    ],
+    "surface_candidates_per_log": 360,
+    "surface_candidate_derivation": "24*12 + 2*4*12 - 2*12",
+    "surface_candidate_count": 7200,
+    "point_counts_measured": [
+      360,
+      1800,
+      3600,
+      7200
+    ]
+  },
+  "schema_capability_audit": {
+    "point_emitter": {
+      "verified": true,
+      "source": "omni.usd.schema.flow 110.0.0 generatedSchema.usda and omni.flowusd PointCloud/Native.usda",
+      "one_prim_arrays": [
+        "pointPositions",
+        "pointFuels",
+        "pointTemperatures",
+        "pointSmokes"
+      ],
+      "prim_per_surface_point_rejected": true
+    },
+    "nano_vdb_emitter": {
+      "verified": true,
+      "source": "omni.usd.schema.flow 110.0.0 generatedSchema.usda",
+      "word_array_channels": [
+        "nanoVdbFuels",
+        "nanoVdbTemperatures",
+        "nanoVdbSmokes"
+      ],
+      "channel_generation_measured": false
+    },
+    "flow_voxelize_points_omnigraph": {
+      "verified": true,
+      "implementation": "bundled C++ OgnFlowVoxelizePoints",
+      "input_memory_type": "CPU",
+      "output_channels": [
+        "redNanoVdb",
+        "greenNanoVdb",
+        "blueNanoVdb",
+        "alphaNanoVdb"
+      ],
+      "observed_readback_behavior": "mapVoxelizePointsOutputReadback followed by resize and an element-by-element copy into four OmniGraph uint arrays"
+    },
+    "public_native_boundary": {
+      "python_api": [
+        "PublicExtension",
+        "register_all_flow_commands"
+      ],
+      "bundled_cpp_uses": "omni::flowusd::IFlowUsd::voxelizePoints",
+      "public_header_shipped_in_build": false,
+      "fabric_direct_dynamic_emitter_api_verified": false,
+      "adoption_assumed": false
+    },
+    "numpy_to_vt": {
+      "source_after_mutation": 9.0,
+      "vt_after_source_mutation": 1.0,
+      "observed_zero_copy": false
+    }
+  },
+  "current_sphere_control": {
+    "layout": "current_sphere_resident_snapshot",
+    "log_count": 2,
+    "emitter_count": 1,
+    "payload_attribute_count": 16,
+    "revision_attribute_count": 3,
+    "attribute_update_count_per_frame": 19,
+    "logical_transfer_bytes_per_frame": 136,
+    "timings": {
+      "source_generation_ms": {
+        "sample_count": 120,
+        "mean_ms": 0.0027216666666666665,
+        "p95_ms": 0.0033,
+        "maximum_ms": 0.035
+      },
+      "python_cpp_boundary_ms": {
+        "sample_count": 120,
+        "mean_ms": 0.03881416666666667,
+        "p95_ms": 0.0702,
+        "maximum_ms": 0.1988
+      },
+      "usd_attribute_set_ms": {
+        "sample_count": 120,
+        "mean_ms": 0.070835,
+        "p95_ms": 0.0926,
+        "maximum_ms": 0.1741
+      },
+      "change_block_exit_and_notice_ms": {
+        "sample_count": 120,
+        "mean_ms": 0.025081666666666665,
+        "p95_ms": 0.0356,
+        "maximum_ms": 0.1501
+      },
+      "publication_total_ms": {
+        "sample_count": 120,
+        "mean_ms": 0.09591666666666666,
+        "p95_ms": 0.1445,
+        "maximum_ms": 0.2451
+      },
+      "update_frame_total_ms": {
+        "sample_count": 120,
+        "mean_ms": 0.13984833333333332,
+        "p95_ms": 0.2131,
+        "maximum_ms": 0.3331
+      }
+    },
+    "objects_changed": {
+      "count_total": 140,
+      "count_per_frame": 1,
+      "callback_cpu_ms": {
+        "sample_count": 120,
+        "mean_ms": 0.01082,
+        "p95_ms": 0.0121,
+        "maximum_ms": 0.1315
+      },
+      "revision_consistent_for_every_notice": true
+    },
+    "scope_note": "The current 19 attributes cover one Sphere emitter plus two log visual/diagnostic snapshots; this is a control, not an equal-payload 20-log Point comparison."
+  },
+  "point_measurements": [
+    {
+      "layout": "one_point_emitter",
+      "point_count": 360,
+      "emitter_count": 1,
+      "points_per_emitter": [
+        360
+      ],
+      "update_mode": "all_arrays",
+      "attribute_update_count_per_frame": 5,
+      "array_attribute_update_count_per_frame": 4,
+      "revision_update_count_per_frame": 1,
+      "logical_array_transfer_bytes_per_frame": 8640,
+      "logical_revision_bytes_per_frame": 8,
+      "logical_transfer_bytes_per_frame": 8648,
+      "timings": {
+        "source_generation_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.03484416666666667,
+          "p95_ms": 0.0367,
+          "maximum_ms": 0.0637
+        },
+        "python_cpp_boundary_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.009490833333333334,
+          "p95_ms": 0.0107,
+          "maximum_ms": 0.046
+        },
+        "usd_attribute_set_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.023581666666666667,
+          "p95_ms": 0.0285,
+          "maximum_ms": 0.0415
+        },
+        "change_block_exit_and_notice_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.012640833333333332,
+          "p95_ms": 0.0181,
+          "maximum_ms": 0.025
+        },
+        "publication_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.036222500000000005,
+          "p95_ms": 0.046700000000000005,
+          "maximum_ms": 0.0665
+        },
+        "update_frame_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.08323083333333334,
+          "p95_ms": 0.0968,
+          "maximum_ms": 0.1531
+        }
+      },
+      "objects_changed": {
+        "count_total": 140,
+        "count_per_frame": 1,
+        "callback_cpu_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.004798333333333333,
+          "p95_ms": 0.0064,
+          "maximum_ms": 0.0087
+        },
+        "revision_consistent_for_every_notice": true
+      },
+      "memory": {
+        "working_set_baseline_bytes": 105156608,
+        "working_set_peak_bytes": 105332736,
+        "working_set_peak_delta_bytes": 176128,
+        "scope": "whole process; native USD allocations are not isolated"
+      },
+      "equivalence": {
+        "point_count_exact": true,
+        "position_count_exact": true,
+        "fuel_sum_close": true,
+        "temperature_sum_close": true,
+        "smoke_sum_close": true,
+        "consumer_revisions": [
+          141
+        ],
+        "consumer_revision_consistent": true,
+        "positions_updated_this_frame": true
+      }
+    },
+    {
+      "layout": "one_point_emitter",
+      "point_count": 360,
+      "emitter_count": 1,
+      "points_per_emitter": [
+        360
+      ],
+      "update_mode": "dynamic_channels_only",
+      "attribute_update_count_per_frame": 4,
+      "array_attribute_update_count_per_frame": 3,
+      "revision_update_count_per_frame": 1,
+      "logical_array_transfer_bytes_per_frame": 4320,
+      "logical_revision_bytes_per_frame": 8,
+      "logical_transfer_bytes_per_frame": 4328,
+      "timings": {
+        "source_generation_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.0038333333333333336,
+          "p95_ms": 0.0039,
+          "maximum_ms": 0.0048
+        },
+        "python_cpp_boundary_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.004765,
+          "p95_ms": 0.0051,
+          "maximum_ms": 0.0093
+        },
+        "usd_attribute_set_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.017034166666666666,
+          "p95_ms": 0.0176,
+          "maximum_ms": 0.0211
+        },
+        "change_block_exit_and_notice_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.0104975,
+          "p95_ms": 0.0109,
+          "maximum_ms": 0.0117
+        },
+        "publication_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.027531666666666666,
+          "p95_ms": 0.0285,
+          "maximum_ms": 0.0315
+        },
+        "update_frame_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.03818833333333334,
+          "p95_ms": 0.0399,
+          "maximum_ms": 0.0431
+        }
+      },
+      "objects_changed": {
+        "count_total": 140,
+        "count_per_frame": 1,
+        "callback_cpu_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.0041041666666666666,
+          "p95_ms": 0.0044,
+          "maximum_ms": 0.0047
+        },
+        "revision_consistent_for_every_notice": true
+      },
+      "memory": {
+        "working_set_baseline_bytes": 105660416,
+        "working_set_peak_bytes": 105668608,
+        "working_set_peak_delta_bytes": 8192,
+        "scope": "whole process; native USD allocations are not isolated"
+      },
+      "equivalence": {
+        "point_count_exact": true,
+        "position_count_exact": true,
+        "fuel_sum_close": true,
+        "temperature_sum_close": true,
+        "smoke_sum_close": true,
+        "consumer_revisions": [
+          141
+        ],
+        "consumer_revision_consistent": true,
+        "positions_updated_this_frame": false
+      }
+    },
+    {
+      "layout": "one_point_emitter",
+      "point_count": 1800,
+      "emitter_count": 1,
+      "points_per_emitter": [
+        1800
+      ],
+      "update_mode": "all_arrays",
+      "attribute_update_count_per_frame": 5,
+      "array_attribute_update_count_per_frame": 4,
+      "revision_update_count_per_frame": 1,
+      "logical_array_transfer_bytes_per_frame": 43200,
+      "logical_revision_bytes_per_frame": 8,
+      "logical_transfer_bytes_per_frame": 43208,
+      "timings": {
+        "source_generation_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.15267583333333334,
+          "p95_ms": 0.1606,
+          "maximum_ms": 0.3514
+        },
+        "python_cpp_boundary_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.02688166666666667,
+          "p95_ms": 0.0313,
+          "maximum_ms": 0.0958
+        },
+        "usd_attribute_set_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.028113333333333334,
+          "p95_ms": 0.0395,
+          "maximum_ms": 0.2097
+        },
+        "change_block_exit_and_notice_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.014773333333333333,
+          "p95_ms": 0.0258,
+          "maximum_ms": 0.1419
+        },
+        "publication_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.04288666666666666,
+          "p95_ms": 0.0653,
+          "maximum_ms": 0.3516
+        },
+        "update_frame_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.22566,
+          "p95_ms": 0.2658,
+          "maximum_ms": 0.6375
+        }
+      },
+      "objects_changed": {
+        "count_total": 140,
+        "count_per_frame": 1,
+        "callback_cpu_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.005421666666666667,
+          "p95_ms": 0.0089,
+          "maximum_ms": 0.0383
+        },
+        "revision_consistent_for_every_notice": true
+      },
+      "memory": {
+        "working_set_baseline_bytes": 105684992,
+        "working_set_peak_bytes": 105984000,
+        "working_set_peak_delta_bytes": 299008,
+        "scope": "whole process; native USD allocations are not isolated"
+      },
+      "equivalence": {
+        "point_count_exact": true,
+        "position_count_exact": true,
+        "fuel_sum_close": true,
+        "temperature_sum_close": true,
+        "smoke_sum_close": true,
+        "consumer_revisions": [
+          141
+        ],
+        "consumer_revision_consistent": true,
+        "positions_updated_this_frame": true
+      }
+    },
+    {
+      "layout": "one_point_emitter",
+      "point_count": 1800,
+      "emitter_count": 1,
+      "points_per_emitter": [
+        1800
+      ],
+      "update_mode": "dynamic_channels_only",
+      "attribute_update_count_per_frame": 4,
+      "array_attribute_update_count_per_frame": 3,
+      "revision_update_count_per_frame": 1,
+      "logical_array_transfer_bytes_per_frame": 21600,
+      "logical_revision_bytes_per_frame": 8,
+      "logical_transfer_bytes_per_frame": 21608,
+      "timings": {
+        "source_generation_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.004378333333333333,
+          "p95_ms": 0.0056,
+          "maximum_ms": 0.0064
+        },
+        "python_cpp_boundary_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.010854166666666666,
+          "p95_ms": 0.0119,
+          "maximum_ms": 0.0145
+        },
+        "usd_attribute_set_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.017881666666666667,
+          "p95_ms": 0.0208,
+          "maximum_ms": 0.022
+        },
+        "change_block_exit_and_notice_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.010884166666666667,
+          "p95_ms": 0.0136,
+          "maximum_ms": 0.0179
+        },
+        "publication_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.028765833333333334,
+          "p95_ms": 0.0339,
+          "maximum_ms": 0.0387
+        },
+        "update_frame_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.046141666666666664,
+          "p95_ms": 0.0537,
+          "maximum_ms": 0.0598
+        }
+      },
+      "objects_changed": {
+        "count_total": 140,
+        "count_per_frame": 1,
+        "callback_cpu_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.004063333333333333,
+          "p95_ms": 0.0047,
+          "maximum_ms": 0.0063
+        },
+        "revision_consistent_for_every_notice": true
+      },
+      "memory": {
+        "working_set_baseline_bytes": 106266624,
+        "working_set_peak_bytes": 106270720,
+        "working_set_peak_delta_bytes": 4096,
+        "scope": "whole process; native USD allocations are not isolated"
+      },
+      "equivalence": {
+        "point_count_exact": true,
+        "position_count_exact": true,
+        "fuel_sum_close": true,
+        "temperature_sum_close": true,
+        "smoke_sum_close": true,
+        "consumer_revisions": [
+          141
+        ],
+        "consumer_revision_consistent": true,
+        "positions_updated_this_frame": false
+      }
+    },
+    {
+      "layout": "point_emitter_per_log",
+      "point_count": 1800,
+      "emitter_count": 5,
+      "points_per_emitter": [
+        360,
+        360,
+        360,
+        360,
+        360
+      ],
+      "update_mode": "all_arrays",
+      "attribute_update_count_per_frame": 25,
+      "array_attribute_update_count_per_frame": 20,
+      "revision_update_count_per_frame": 5,
+      "logical_array_transfer_bytes_per_frame": 43200,
+      "logical_revision_bytes_per_frame": 40,
+      "logical_transfer_bytes_per_frame": 43240,
+      "timings": {
+        "source_generation_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.15434916666666665,
+          "p95_ms": 0.1699,
+          "maximum_ms": 0.2385
+        },
+        "python_cpp_boundary_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.04068333333333333,
+          "p95_ms": 0.0483,
+          "maximum_ms": 0.1104
+        },
+        "usd_attribute_set_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.1040975,
+          "p95_ms": 0.1228,
+          "maximum_ms": 0.1653
+        },
+        "change_block_exit_and_notice_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.02906,
+          "p95_ms": 0.0451,
+          "maximum_ms": 0.0711
+        },
+        "publication_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.13315749999999998,
+          "p95_ms": 0.1706,
+          "maximum_ms": 0.2364
+        },
+        "update_frame_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.33166666666666667,
+          "p95_ms": 0.4069,
+          "maximum_ms": 0.5023
+        }
+      },
+      "objects_changed": {
+        "count_total": 140,
+        "count_per_frame": 1,
+        "callback_cpu_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.014401666666666667,
+          "p95_ms": 0.0206,
+          "maximum_ms": 0.0268
+        },
+        "revision_consistent_for_every_notice": true
+      },
+      "memory": {
+        "working_set_baseline_bytes": 106295296,
+        "working_set_peak_bytes": 106426368,
+        "working_set_peak_delta_bytes": 131072,
+        "scope": "whole process; native USD allocations are not isolated"
+      },
+      "equivalence": {
+        "point_count_exact": true,
+        "position_count_exact": true,
+        "fuel_sum_close": true,
+        "temperature_sum_close": true,
+        "smoke_sum_close": true,
+        "consumer_revisions": [
+          141,
+          141,
+          141,
+          141,
+          141
+        ],
+        "consumer_revision_consistent": true,
+        "positions_updated_this_frame": true
+      }
+    },
+    {
+      "layout": "point_emitter_per_log",
+      "point_count": 1800,
+      "emitter_count": 5,
+      "points_per_emitter": [
+        360,
+        360,
+        360,
+        360,
+        360
+      ],
+      "update_mode": "dynamic_channels_only",
+      "attribute_update_count_per_frame": 20,
+      "array_attribute_update_count_per_frame": 15,
+      "revision_update_count_per_frame": 5,
+      "logical_array_transfer_bytes_per_frame": 21600,
+      "logical_revision_bytes_per_frame": 40,
+      "logical_transfer_bytes_per_frame": 21640,
+      "timings": {
+        "source_generation_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.005094166666666666,
+          "p95_ms": 0.0072,
+          "maximum_ms": 0.0251
+        },
+        "python_cpp_boundary_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.020754166666666667,
+          "p95_ms": 0.0249,
+          "maximum_ms": 0.0622
+        },
+        "usd_attribute_set_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.08511,
+          "p95_ms": 0.0921,
+          "maximum_ms": 0.3574
+        },
+        "change_block_exit_and_notice_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.02624083333333333,
+          "p95_ms": 0.0344,
+          "maximum_ms": 0.089
+        },
+        "publication_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.11135083333333333,
+          "p95_ms": 0.1262,
+          "maximum_ms": 0.4464
+        },
+        "update_frame_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.13972833333333332,
+          "p95_ms": 0.1633,
+          "maximum_ms": 0.4904
+        }
+      },
+      "objects_changed": {
+        "count_total": 140,
+        "count_per_frame": 1,
+        "callback_cpu_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.0135925,
+          "p95_ms": 0.0164,
+          "maximum_ms": 0.0404
+        },
+        "revision_consistent_for_every_notice": true
+      },
+      "memory": {
+        "working_set_baseline_bytes": 106459136,
+        "working_set_peak_bytes": 106459136,
+        "working_set_peak_delta_bytes": 0,
+        "scope": "whole process; native USD allocations are not isolated"
+      },
+      "equivalence": {
+        "point_count_exact": true,
+        "position_count_exact": true,
+        "fuel_sum_close": true,
+        "temperature_sum_close": true,
+        "smoke_sum_close": true,
+        "consumer_revisions": [
+          141,
+          141,
+          141,
+          141,
+          141
+        ],
+        "consumer_revision_consistent": true,
+        "positions_updated_this_frame": false
+      }
+    },
+    {
+      "layout": "one_point_emitter",
+      "point_count": 3600,
+      "emitter_count": 1,
+      "points_per_emitter": [
+        3600
+      ],
+      "update_mode": "all_arrays",
+      "attribute_update_count_per_frame": 5,
+      "array_attribute_update_count_per_frame": 4,
+      "revision_update_count_per_frame": 1,
+      "logical_array_transfer_bytes_per_frame": 86400,
+      "logical_revision_bytes_per_frame": 8,
+      "logical_transfer_bytes_per_frame": 86408,
+      "timings": {
+        "source_generation_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.3042741666666667,
+          "p95_ms": 0.3272,
+          "maximum_ms": 0.6794
+        },
+        "python_cpp_boundary_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.050305833333333334,
+          "p95_ms": 0.0574,
+          "maximum_ms": 0.3058
+        },
+        "usd_attribute_set_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.032399166666666666,
+          "p95_ms": 0.0442,
+          "maximum_ms": 0.3186
+        },
+        "change_block_exit_and_notice_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.016718333333333335,
+          "p95_ms": 0.0296,
+          "maximum_ms": 0.1708
+        },
+        "publication_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.0491175,
+          "p95_ms": 0.07780000000000001,
+          "maximum_ms": 0.4894
+        },
+        "update_frame_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.40739416666666667,
+          "p95_ms": 0.4675,
+          "maximum_ms": 1.5225
+        }
+      },
+      "objects_changed": {
+        "count_total": 140,
+        "count_per_frame": 1,
+        "callback_cpu_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.0064075,
+          "p95_ms": 0.01,
+          "maximum_ms": 0.072
+        },
+        "revision_consistent_for_every_notice": true
+      },
+      "memory": {
+        "working_set_baseline_bytes": 106594304,
+        "working_set_peak_bytes": 107311104,
+        "working_set_peak_delta_bytes": 716800,
+        "scope": "whole process; native USD allocations are not isolated"
+      },
+      "equivalence": {
+        "point_count_exact": true,
+        "position_count_exact": true,
+        "fuel_sum_close": true,
+        "temperature_sum_close": true,
+        "smoke_sum_close": true,
+        "consumer_revisions": [
+          141
+        ],
+        "consumer_revision_consistent": true,
+        "positions_updated_this_frame": true
+      }
+    },
+    {
+      "layout": "one_point_emitter",
+      "point_count": 3600,
+      "emitter_count": 1,
+      "points_per_emitter": [
+        3600
+      ],
+      "update_mode": "dynamic_channels_only",
+      "attribute_update_count_per_frame": 4,
+      "array_attribute_update_count_per_frame": 3,
+      "revision_update_count_per_frame": 1,
+      "logical_array_transfer_bytes_per_frame": 43200,
+      "logical_revision_bytes_per_frame": 8,
+      "logical_transfer_bytes_per_frame": 43208,
+      "timings": {
+        "source_generation_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.005150833333333333,
+          "p95_ms": 0.0085,
+          "maximum_ms": 0.0224
+        },
+        "python_cpp_boundary_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.019488333333333333,
+          "p95_ms": 0.0224,
+          "maximum_ms": 0.0613
+        },
+        "usd_attribute_set_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.020985833333333332,
+          "p95_ms": 0.0285,
+          "maximum_ms": 0.0928
+        },
+        "change_block_exit_and_notice_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.013215000000000001,
+          "p95_ms": 0.0226,
+          "maximum_ms": 0.0677
+        },
+        "publication_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.03420083333333333,
+          "p95_ms": 0.0498,
+          "maximum_ms": 0.16049999999999998
+        },
+        "update_frame_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.061515,
+          "p95_ms": 0.0913,
+          "maximum_ms": 0.1979
+        }
+      },
+      "objects_changed": {
+        "count_total": 140,
+        "count_per_frame": 1,
+        "callback_cpu_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.005013333333333333,
+          "p95_ms": 0.0086,
+          "maximum_ms": 0.0213
+        },
+        "revision_consistent_for_every_notice": true
+      },
+      "memory": {
+        "working_set_baseline_bytes": 107556864,
+        "working_set_peak_bytes": 107556864,
+        "working_set_peak_delta_bytes": 0,
+        "scope": "whole process; native USD allocations are not isolated"
+      },
+      "equivalence": {
+        "point_count_exact": true,
+        "position_count_exact": true,
+        "fuel_sum_close": true,
+        "temperature_sum_close": true,
+        "smoke_sum_close": true,
+        "consumer_revisions": [
+          141
+        ],
+        "consumer_revision_consistent": true,
+        "positions_updated_this_frame": false
+      }
+    },
+    {
+      "layout": "point_emitter_per_log",
+      "point_count": 3600,
+      "emitter_count": 10,
+      "points_per_emitter": [
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360
+      ],
+      "update_mode": "all_arrays",
+      "attribute_update_count_per_frame": 50,
+      "array_attribute_update_count_per_frame": 40,
+      "revision_update_count_per_frame": 10,
+      "logical_array_transfer_bytes_per_frame": 86400,
+      "logical_revision_bytes_per_frame": 80,
+      "logical_transfer_bytes_per_frame": 86480,
+      "timings": {
+        "source_generation_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.30593833333333337,
+          "p95_ms": 0.3835,
+          "maximum_ms": 0.569
+        },
+        "python_cpp_boundary_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.07765416666666666,
+          "p95_ms": 0.0942,
+          "maximum_ms": 0.149
+        },
+        "usd_attribute_set_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.21078583333333334,
+          "p95_ms": 0.2513,
+          "maximum_ms": 0.3464
+        },
+        "change_block_exit_and_notice_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.04895583333333333,
+          "p95_ms": 0.0784,
+          "maximum_ms": 0.1399
+        },
+        "publication_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.25974166666666665,
+          "p95_ms": 0.3379,
+          "maximum_ms": 0.48629999999999995
+        },
+        "update_frame_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.6475983333333333,
+          "p95_ms": 0.8228,
+          "maximum_ms": 1.035
+        }
+      },
+      "objects_changed": {
+        "count_total": 140,
+        "count_per_frame": 1,
+        "callback_cpu_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.026463333333333335,
+          "p95_ms": 0.035,
+          "maximum_ms": 0.0625
+        },
+        "revision_consistent_for_every_notice": true
+      },
+      "memory": {
+        "working_set_baseline_bytes": 107601920,
+        "working_set_peak_bytes": 107614208,
+        "working_set_peak_delta_bytes": 12288,
+        "scope": "whole process; native USD allocations are not isolated"
+      },
+      "equivalence": {
+        "point_count_exact": true,
+        "position_count_exact": true,
+        "fuel_sum_close": true,
+        "temperature_sum_close": true,
+        "smoke_sum_close": true,
+        "consumer_revisions": [
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141
+        ],
+        "consumer_revision_consistent": true,
+        "positions_updated_this_frame": true
+      }
+    },
+    {
+      "layout": "point_emitter_per_log",
+      "point_count": 3600,
+      "emitter_count": 10,
+      "points_per_emitter": [
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360
+      ],
+      "update_mode": "dynamic_channels_only",
+      "attribute_update_count_per_frame": 40,
+      "array_attribute_update_count_per_frame": 30,
+      "revision_update_count_per_frame": 10,
+      "logical_array_transfer_bytes_per_frame": 43200,
+      "logical_revision_bytes_per_frame": 80,
+      "logical_transfer_bytes_per_frame": 43280,
+      "timings": {
+        "source_generation_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.007570833333333333,
+          "p95_ms": 0.0228,
+          "maximum_ms": 0.036
+        },
+        "python_cpp_boundary_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.047095,
+          "p95_ms": 0.1111,
+          "maximum_ms": 0.1434
+        },
+        "usd_attribute_set_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.18950166666666668,
+          "p95_ms": 0.4393,
+          "maximum_ms": 0.6021
+        },
+        "change_block_exit_and_notice_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.0523825,
+          "p95_ms": 0.1331,
+          "maximum_ms": 0.1792
+        },
+        "publication_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.24188416666666665,
+          "p95_ms": 0.5476,
+          "maximum_ms": 0.7813
+        },
+        "update_frame_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.30028499999999997,
+          "p95_ms": 0.6972,
+          "maximum_ms": 0.9236
+        }
+      },
+      "objects_changed": {
+        "count_total": 140,
+        "count_per_frame": 1,
+        "callback_cpu_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.02913083333333333,
+          "p95_ms": 0.0668,
+          "maximum_ms": 0.0935
+        },
+        "revision_consistent_for_every_notice": true
+      },
+      "memory": {
+        "working_set_baseline_bytes": 107732992,
+        "working_set_peak_bytes": 107732992,
+        "working_set_peak_delta_bytes": 0,
+        "scope": "whole process; native USD allocations are not isolated"
+      },
+      "equivalence": {
+        "point_count_exact": true,
+        "position_count_exact": true,
+        "fuel_sum_close": true,
+        "temperature_sum_close": true,
+        "smoke_sum_close": true,
+        "consumer_revisions": [
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141
+        ],
+        "consumer_revision_consistent": true,
+        "positions_updated_this_frame": false
+      }
+    },
+    {
+      "layout": "one_point_emitter",
+      "point_count": 7200,
+      "emitter_count": 1,
+      "points_per_emitter": [
+        7200
+      ],
+      "update_mode": "all_arrays",
+      "attribute_update_count_per_frame": 5,
+      "array_attribute_update_count_per_frame": 4,
+      "revision_update_count_per_frame": 1,
+      "logical_array_transfer_bytes_per_frame": 172800,
+      "logical_revision_bytes_per_frame": 8,
+      "logical_transfer_bytes_per_frame": 172808,
+      "timings": {
+        "source_generation_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.6030866666666667,
+          "p95_ms": 0.6922,
+          "maximum_ms": 0.9973
+        },
+        "python_cpp_boundary_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.09296,
+          "p95_ms": 0.1202,
+          "maximum_ms": 0.1562
+        },
+        "usd_attribute_set_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.04199833333333333,
+          "p95_ms": 0.0974,
+          "maximum_ms": 0.1225
+        },
+        "change_block_exit_and_notice_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.02081,
+          "p95_ms": 0.0565,
+          "maximum_ms": 0.1783
+        },
+        "publication_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.06280833333333333,
+          "p95_ms": 0.1513,
+          "maximum_ms": 0.30079999999999996
+        },
+        "update_frame_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.763655,
+          "p95_ms": 0.9816,
+          "maximum_ms": 1.3247
+        }
+      },
+      "objects_changed": {
+        "count_total": 140,
+        "count_per_frame": 1,
+        "callback_cpu_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.007345,
+          "p95_ms": 0.0169,
+          "maximum_ms": 0.0691
+        },
+        "revision_consistent_for_every_notice": true
+      },
+      "memory": {
+        "working_set_baseline_bytes": 107741184,
+        "working_set_peak_bytes": 108179456,
+        "working_set_peak_delta_bytes": 438272,
+        "scope": "whole process; native USD allocations are not isolated"
+      },
+      "equivalence": {
+        "point_count_exact": true,
+        "position_count_exact": true,
+        "fuel_sum_close": true,
+        "temperature_sum_close": true,
+        "smoke_sum_close": true,
+        "consumer_revisions": [
+          141
+        ],
+        "consumer_revision_consistent": true,
+        "positions_updated_this_frame": true
+      }
+    },
+    {
+      "layout": "one_point_emitter",
+      "point_count": 7200,
+      "emitter_count": 1,
+      "points_per_emitter": [
+        7200
+      ],
+      "update_mode": "dynamic_channels_only",
+      "attribute_update_count_per_frame": 4,
+      "array_attribute_update_count_per_frame": 3,
+      "revision_update_count_per_frame": 1,
+      "logical_array_transfer_bytes_per_frame": 86400,
+      "logical_revision_bytes_per_frame": 8,
+      "logical_transfer_bytes_per_frame": 86408,
+      "timings": {
+        "source_generation_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.005815,
+          "p95_ms": 0.0079,
+          "maximum_ms": 0.0396
+        },
+        "python_cpp_boundary_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.03495333333333333,
+          "p95_ms": 0.0385,
+          "maximum_ms": 0.1361
+        },
+        "usd_attribute_set_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.02211,
+          "p95_ms": 0.0277,
+          "maximum_ms": 0.0875
+        },
+        "change_block_exit_and_notice_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.012800833333333334,
+          "p95_ms": 0.0178,
+          "maximum_ms": 0.0495
+        },
+        "publication_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.034910833333333335,
+          "p95_ms": 0.0474,
+          "maximum_ms": 0.137
+        },
+        "update_frame_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.07842833333333334,
+          "p95_ms": 0.1079,
+          "maximum_ms": 0.3084
+        }
+      },
+      "objects_changed": {
+        "count_total": 140,
+        "count_per_frame": 1,
+        "callback_cpu_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.004823333333333333,
+          "p95_ms": 0.007,
+          "maximum_ms": 0.0235
+        },
+        "revision_consistent_for_every_notice": true
+      },
+      "memory": {
+        "working_set_baseline_bytes": 108498944,
+        "working_set_peak_bytes": 108498944,
+        "working_set_peak_delta_bytes": 0,
+        "scope": "whole process; native USD allocations are not isolated"
+      },
+      "equivalence": {
+        "point_count_exact": true,
+        "position_count_exact": true,
+        "fuel_sum_close": true,
+        "temperature_sum_close": true,
+        "smoke_sum_close": true,
+        "consumer_revisions": [
+          141
+        ],
+        "consumer_revision_consistent": true,
+        "positions_updated_this_frame": false
+      }
+    },
+    {
+      "layout": "point_emitter_per_log",
+      "point_count": 7200,
+      "emitter_count": 20,
+      "points_per_emitter": [
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360
+      ],
+      "update_mode": "all_arrays",
+      "attribute_update_count_per_frame": 100,
+      "array_attribute_update_count_per_frame": 80,
+      "revision_update_count_per_frame": 20,
+      "logical_array_transfer_bytes_per_frame": 172800,
+      "logical_revision_bytes_per_frame": 160,
+      "logical_transfer_bytes_per_frame": 172960,
+      "timings": {
+        "source_generation_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.599425,
+          "p95_ms": 0.7005,
+          "maximum_ms": 0.8297
+        },
+        "python_cpp_boundary_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.15185833333333332,
+          "p95_ms": 0.1789,
+          "maximum_ms": 0.2029
+        },
+        "usd_attribute_set_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.41165916666666663,
+          "p95_ms": 0.5031,
+          "maximum_ms": 0.5899
+        },
+        "change_block_exit_and_notice_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.08553083333333333,
+          "p95_ms": 0.1237,
+          "maximum_ms": 0.1693
+        },
+        "publication_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.49718999999999997,
+          "p95_ms": 0.6075,
+          "maximum_ms": 0.732
+        },
+        "update_frame_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 1.2537716666666665,
+          "p95_ms": 1.4477,
+          "maximum_ms": 1.6211
+        }
+      },
+      "objects_changed": {
+        "count_total": 140,
+        "count_per_frame": 1,
+        "callback_cpu_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.04807333333333333,
+          "p95_ms": 0.0594,
+          "maximum_ms": 0.0697
+        },
+        "revision_consistent_for_every_notice": true
+      },
+      "memory": {
+        "working_set_baseline_bytes": 108519424,
+        "working_set_peak_bytes": 108548096,
+        "working_set_peak_delta_bytes": 28672,
+        "scope": "whole process; native USD allocations are not isolated"
+      },
+      "equivalence": {
+        "point_count_exact": true,
+        "position_count_exact": true,
+        "fuel_sum_close": true,
+        "temperature_sum_close": true,
+        "smoke_sum_close": true,
+        "consumer_revisions": [
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141
+        ],
+        "consumer_revision_consistent": true,
+        "positions_updated_this_frame": true
+      }
+    },
+    {
+      "layout": "point_emitter_per_log",
+      "point_count": 7200,
+      "emitter_count": 20,
+      "points_per_emitter": [
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360
+      ],
+      "update_mode": "dynamic_channels_only",
+      "attribute_update_count_per_frame": 80,
+      "array_attribute_update_count_per_frame": 60,
+      "revision_update_count_per_frame": 20,
+      "logical_array_transfer_bytes_per_frame": 86400,
+      "logical_revision_bytes_per_frame": 160,
+      "logical_transfer_bytes_per_frame": 86560,
+      "timings": {
+        "source_generation_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.0060325,
+          "p95_ms": 0.01,
+          "maximum_ms": 0.017
+        },
+        "python_cpp_boundary_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.07703499999999999,
+          "p95_ms": 0.0859,
+          "maximum_ms": 0.1194
+        },
+        "usd_attribute_set_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.3146058333333333,
+          "p95_ms": 0.3346,
+          "maximum_ms": 0.3653
+        },
+        "change_block_exit_and_notice_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.07449,
+          "p95_ms": 0.092,
+          "maximum_ms": 0.1364
+        },
+        "publication_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.3890958333333333,
+          "p95_ms": 0.44079999999999997,
+          "maximum_ms": 0.47309999999999997
+        },
+        "update_frame_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.47493583333333333,
+          "p95_ms": 0.5471,
+          "maximum_ms": 0.5758
+        }
+      },
+      "objects_changed": {
+        "count_total": 140,
+        "count_per_frame": 1,
+        "callback_cpu_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.04506333333333334,
+          "p95_ms": 0.0509,
+          "maximum_ms": 0.0926
+        },
+        "revision_consistent_for_every_notice": true
+      },
+      "memory": {
+        "working_set_baseline_bytes": 108642304,
+        "working_set_peak_bytes": 108646400,
+        "working_set_peak_delta_bytes": 4096,
+        "scope": "whole process; native USD allocations are not isolated"
+      },
+      "equivalence": {
+        "point_count_exact": true,
+        "position_count_exact": true,
+        "fuel_sum_close": true,
+        "temperature_sum_close": true,
+        "smoke_sum_close": true,
+        "consumer_revisions": [
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141
+        ],
+        "consumer_revision_consistent": true,
+        "positions_updated_this_frame": false
+      }
+    }
+  ],
+  "target_point_measurements": [
+    {
+      "layout": "one_point_emitter",
+      "point_count": 7200,
+      "emitter_count": 1,
+      "points_per_emitter": [
+        7200
+      ],
+      "update_mode": "all_arrays",
+      "attribute_update_count_per_frame": 5,
+      "array_attribute_update_count_per_frame": 4,
+      "revision_update_count_per_frame": 1,
+      "logical_array_transfer_bytes_per_frame": 172800,
+      "logical_revision_bytes_per_frame": 8,
+      "logical_transfer_bytes_per_frame": 172808,
+      "timings": {
+        "source_generation_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.6030866666666667,
+          "p95_ms": 0.6922,
+          "maximum_ms": 0.9973
+        },
+        "python_cpp_boundary_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.09296,
+          "p95_ms": 0.1202,
+          "maximum_ms": 0.1562
+        },
+        "usd_attribute_set_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.04199833333333333,
+          "p95_ms": 0.0974,
+          "maximum_ms": 0.1225
+        },
+        "change_block_exit_and_notice_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.02081,
+          "p95_ms": 0.0565,
+          "maximum_ms": 0.1783
+        },
+        "publication_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.06280833333333333,
+          "p95_ms": 0.1513,
+          "maximum_ms": 0.30079999999999996
+        },
+        "update_frame_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.763655,
+          "p95_ms": 0.9816,
+          "maximum_ms": 1.3247
+        }
+      },
+      "objects_changed": {
+        "count_total": 140,
+        "count_per_frame": 1,
+        "callback_cpu_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.007345,
+          "p95_ms": 0.0169,
+          "maximum_ms": 0.0691
+        },
+        "revision_consistent_for_every_notice": true
+      },
+      "memory": {
+        "working_set_baseline_bytes": 107741184,
+        "working_set_peak_bytes": 108179456,
+        "working_set_peak_delta_bytes": 438272,
+        "scope": "whole process; native USD allocations are not isolated"
+      },
+      "equivalence": {
+        "point_count_exact": true,
+        "position_count_exact": true,
+        "fuel_sum_close": true,
+        "temperature_sum_close": true,
+        "smoke_sum_close": true,
+        "consumer_revisions": [
+          141
+        ],
+        "consumer_revision_consistent": true,
+        "positions_updated_this_frame": true
+      }
+    },
+    {
+      "layout": "one_point_emitter",
+      "point_count": 7200,
+      "emitter_count": 1,
+      "points_per_emitter": [
+        7200
+      ],
+      "update_mode": "dynamic_channels_only",
+      "attribute_update_count_per_frame": 4,
+      "array_attribute_update_count_per_frame": 3,
+      "revision_update_count_per_frame": 1,
+      "logical_array_transfer_bytes_per_frame": 86400,
+      "logical_revision_bytes_per_frame": 8,
+      "logical_transfer_bytes_per_frame": 86408,
+      "timings": {
+        "source_generation_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.005815,
+          "p95_ms": 0.0079,
+          "maximum_ms": 0.0396
+        },
+        "python_cpp_boundary_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.03495333333333333,
+          "p95_ms": 0.0385,
+          "maximum_ms": 0.1361
+        },
+        "usd_attribute_set_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.02211,
+          "p95_ms": 0.0277,
+          "maximum_ms": 0.0875
+        },
+        "change_block_exit_and_notice_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.012800833333333334,
+          "p95_ms": 0.0178,
+          "maximum_ms": 0.0495
+        },
+        "publication_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.034910833333333335,
+          "p95_ms": 0.0474,
+          "maximum_ms": 0.137
+        },
+        "update_frame_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.07842833333333334,
+          "p95_ms": 0.1079,
+          "maximum_ms": 0.3084
+        }
+      },
+      "objects_changed": {
+        "count_total": 140,
+        "count_per_frame": 1,
+        "callback_cpu_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.004823333333333333,
+          "p95_ms": 0.007,
+          "maximum_ms": 0.0235
+        },
+        "revision_consistent_for_every_notice": true
+      },
+      "memory": {
+        "working_set_baseline_bytes": 108498944,
+        "working_set_peak_bytes": 108498944,
+        "working_set_peak_delta_bytes": 0,
+        "scope": "whole process; native USD allocations are not isolated"
+      },
+      "equivalence": {
+        "point_count_exact": true,
+        "position_count_exact": true,
+        "fuel_sum_close": true,
+        "temperature_sum_close": true,
+        "smoke_sum_close": true,
+        "consumer_revisions": [
+          141
+        ],
+        "consumer_revision_consistent": true,
+        "positions_updated_this_frame": false
+      }
+    },
+    {
+      "layout": "point_emitter_per_log",
+      "point_count": 7200,
+      "emitter_count": 20,
+      "points_per_emitter": [
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360
+      ],
+      "update_mode": "all_arrays",
+      "attribute_update_count_per_frame": 100,
+      "array_attribute_update_count_per_frame": 80,
+      "revision_update_count_per_frame": 20,
+      "logical_array_transfer_bytes_per_frame": 172800,
+      "logical_revision_bytes_per_frame": 160,
+      "logical_transfer_bytes_per_frame": 172960,
+      "timings": {
+        "source_generation_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.599425,
+          "p95_ms": 0.7005,
+          "maximum_ms": 0.8297
+        },
+        "python_cpp_boundary_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.15185833333333332,
+          "p95_ms": 0.1789,
+          "maximum_ms": 0.2029
+        },
+        "usd_attribute_set_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.41165916666666663,
+          "p95_ms": 0.5031,
+          "maximum_ms": 0.5899
+        },
+        "change_block_exit_and_notice_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.08553083333333333,
+          "p95_ms": 0.1237,
+          "maximum_ms": 0.1693
+        },
+        "publication_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.49718999999999997,
+          "p95_ms": 0.6075,
+          "maximum_ms": 0.732
+        },
+        "update_frame_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 1.2537716666666665,
+          "p95_ms": 1.4477,
+          "maximum_ms": 1.6211
+        }
+      },
+      "objects_changed": {
+        "count_total": 140,
+        "count_per_frame": 1,
+        "callback_cpu_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.04807333333333333,
+          "p95_ms": 0.0594,
+          "maximum_ms": 0.0697
+        },
+        "revision_consistent_for_every_notice": true
+      },
+      "memory": {
+        "working_set_baseline_bytes": 108519424,
+        "working_set_peak_bytes": 108548096,
+        "working_set_peak_delta_bytes": 28672,
+        "scope": "whole process; native USD allocations are not isolated"
+      },
+      "equivalence": {
+        "point_count_exact": true,
+        "position_count_exact": true,
+        "fuel_sum_close": true,
+        "temperature_sum_close": true,
+        "smoke_sum_close": true,
+        "consumer_revisions": [
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141
+        ],
+        "consumer_revision_consistent": true,
+        "positions_updated_this_frame": true
+      }
+    },
+    {
+      "layout": "point_emitter_per_log",
+      "point_count": 7200,
+      "emitter_count": 20,
+      "points_per_emitter": [
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360,
+        360
+      ],
+      "update_mode": "dynamic_channels_only",
+      "attribute_update_count_per_frame": 80,
+      "array_attribute_update_count_per_frame": 60,
+      "revision_update_count_per_frame": 20,
+      "logical_array_transfer_bytes_per_frame": 86400,
+      "logical_revision_bytes_per_frame": 160,
+      "logical_transfer_bytes_per_frame": 86560,
+      "timings": {
+        "source_generation_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.0060325,
+          "p95_ms": 0.01,
+          "maximum_ms": 0.017
+        },
+        "python_cpp_boundary_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.07703499999999999,
+          "p95_ms": 0.0859,
+          "maximum_ms": 0.1194
+        },
+        "usd_attribute_set_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.3146058333333333,
+          "p95_ms": 0.3346,
+          "maximum_ms": 0.3653
+        },
+        "change_block_exit_and_notice_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.07449,
+          "p95_ms": 0.092,
+          "maximum_ms": 0.1364
+        },
+        "publication_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.3890958333333333,
+          "p95_ms": 0.44079999999999997,
+          "maximum_ms": 0.47309999999999997
+        },
+        "update_frame_total_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.47493583333333333,
+          "p95_ms": 0.5471,
+          "maximum_ms": 0.5758
+        }
+      },
+      "objects_changed": {
+        "count_total": 140,
+        "count_per_frame": 1,
+        "callback_cpu_ms": {
+          "sample_count": 120,
+          "mean_ms": 0.04506333333333334,
+          "p95_ms": 0.0509,
+          "maximum_ms": 0.0926
+        },
+        "revision_consistent_for_every_notice": true
+      },
+      "memory": {
+        "working_set_baseline_bytes": 108642304,
+        "working_set_peak_bytes": 108646400,
+        "working_set_peak_delta_bytes": 4096,
+        "scope": "whole process; native USD allocations are not isolated"
+      },
+      "equivalence": {
+        "point_count_exact": true,
+        "position_count_exact": true,
+        "fuel_sum_close": true,
+        "temperature_sum_close": true,
+        "smoke_sum_close": true,
+        "consumer_revisions": [
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141,
+          141
+        ],
+        "consumer_revision_consistent": true,
+        "positions_updated_this_frame": false
+      }
+    }
+  ],
+  "unmeasured_boundaries": {
+    "source_or_nanovdb_generation": "Point measured; NanoVDB pending real OmniGraph run",
+    "omni_flowusd_ingestion": "not exposed by the in-memory USD probe",
+    "flow_emitter_or_rasterization": "pending real Flow instrumentation",
+    "flow_solver_or_render": "pending real Flow instrumentation",
+    "gpu_memory": "pending real Flow instrumentation"
+  },
+  "decision": {
+    "production_emitter_changed": false,
+    "physics_changed": false,
+    "json_schema_changed": false,
+    "defaults_changed": false,
+    "usd_set_count_and_payload_bytes_are_separate_axes": true,
+    "change_block_scope": "Coalesces USD notices only; it does not remove source generation, NumPy/Vt copying, USD authoring, omni.flowusd ingestion, or Flow rasterization.",
+    "next_experiment": "Run a default-off real-Kit/Flow matrix for Sphere, one Point emitter, up to 20 per-log Point emitters, and one/few NanoVDB emitters. Use OgnFlowVoxelizePoints only as a measured candidate, retain the fixed Flow version, and mark ingest/raster stages unavailable rather than inferring them when no public timer exists."
+  }
+}

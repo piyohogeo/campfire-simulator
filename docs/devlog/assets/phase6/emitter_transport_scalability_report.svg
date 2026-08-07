@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6BO emitter transport scalability probe</title>
+  <desc id="desc">USD-only Point emitter scaling separates constant Set counts from increasing array bytes; Flow timing remains pending.</desc>
+  <rect width="1200" height="680" rx="32" fill="#111820"/>
+  <text x="70" y="68" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">PHASE 6BO · DEFAULT-OFF TRANSPORT SPIKE</text>
+  <text x="70" y="116" fill="#fff" font-family="Segoe UI, sans-serif" font-size="35" font-weight="700">Set count is not payload cost</text>
+  <text x="70" y="150" fill="#a8beca" font-family="Segoe UI, sans-serif" font-size="17">20 logs × 1,152 cells · 360 exposed candidates/log · 7,200 points at target</text>
+  <rect x="70" y="185" width="760" height="335" rx="20" fill="#182128"/>
+  <line x1="115" y1="470" x2="790" y2="470" stroke="#506678"/>
+  <polyline points="155,458.0 355,455.8 555,449.1 755,450.1" fill="none" stroke="#65c18c" stroke-width="5"/>
+  <polyline points="155,458.0 355,417.0 555,240.0 755,284.9" fill="none" stroke="#f4b860" stroke-width="5"/>
+  <circle cx="155" cy="458.0" r="7" fill="#65c18c"/><circle cx="355" cy="455.8" r="7" fill="#65c18c"/><circle cx="555" cy="449.1" r="7" fill="#65c18c"/><circle cx="755" cy="450.1" r="7" fill="#65c18c"/>
+  <circle cx="155" cy="458.0" r="7" fill="#f4b860"/><circle cx="355" cy="417.0" r="7" fill="#f4b860"/><circle cx="555" cy="240.0" r="7" fill="#f4b860"/><circle cx="755" cy="284.9" r="7" fill="#f4b860"/>
+  <text x="133" y="500" fill="#a8beca" font-family="Consolas, monospace" font-size="15">360</text><text x="333" y="500" fill="#a8beca" font-family="Consolas, monospace" font-size="15">1800</text><text x="533" y="500" fill="#a8beca" font-family="Consolas, monospace" font-size="15">3600</text><text x="733" y="500" fill="#a8beca" font-family="Consolas, monospace" font-size="15">7200</text>
+  <text x="115" y="220" fill="#65c18c" font-family="Segoe UI, sans-serif" font-size="16">one Point emitter · 4 Set/frame with static positions</text>
+  <text x="115" y="246" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="16">per-log Point emitters · up to 80 Set/frame</text>
+  <text x="115" y="545" fill="#a8beca" font-family="Segoe UI, sans-serif" font-size="15">p95 covers USD Set + ChangeBlock exit/notice; source and NumPy→Vt are reported separately in JSON.</text>
+  <rect x="860" y="185" width="270" height="335" rx="20" fill="#192734" stroke="#315269"/>
+  <text x="890" y="225" fill="#fff" font-family="Segoe UI, sans-serif" font-size="20" font-weight="700">7,200-point target</text>
+  <text x="890" y="270" fill="#65c18c" font-family="Consolas, monospace" font-size="16">1 emitter</text>
+  <text x="890" y="298" fill="#d7e1e8" font-family="Consolas, monospace" font-size="15">86,408 B/frame</text>
+  <text x="890" y="326" fill="#d7e1e8" font-family="Consolas, monospace" font-size="15">p95 0.0474 ms</text>
+  <text x="890" y="380" fill="#f4b860" font-family="Consolas, monospace" font-size="16">20 emitters</text>
+  <text x="890" y="408" fill="#d7e1e8" font-family="Consolas, monospace" font-size="15">86,560 B/frame</text>
+  <text x="890" y="436" fill="#d7e1e8" font-family="Consolas, monospace" font-size="15">p95 0.4408 ms</text>
+  <text x="890" y="482" fill="#a8beca" font-family="Segoe UI, sans-serif" font-size="14">fuel + temp + smoke</text>
+  <rect x="70" y="575" width="1060" height="62" rx="18" fill="#3a2d18" stroke="#f4b860"/>
+  <text x="100" y="613" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="18" font-weight="700">USD-ONLY RESULT · NanoVDB generation, flowusd ingest, raster, solver and render remain unmeasured.</text>
+</svg>

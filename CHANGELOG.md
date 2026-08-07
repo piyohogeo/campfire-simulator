@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6BO default-off emitter transport scalability audit, confirming aggregate Point and NanoVDB schemas in the fixed Flow SDK, measuring 360–7,200 Point payloads with source/copy/Set/notice separation, rejecting per-surface-point Prims, and leaving real Flow ingestion/rasterization as explicit follow-up work.
 - Added the Phase 6BN trackless real-Flow adoption audit, balanced native-producer comparison, exact-output gates, explicit historical-runner opt-outs, and a browser-readable adoption report.
 - Added the Phase 6BM default-off real-Flow `Sdf.ChangeBlock` resident publication candidate, revision-gated notice telemetry, same-block immutable rollback coverage, balanced native-producer measurements, and a browser-readable qualification report.
 - Added the Phase 6BL local-Kit `Sdf.ChangeBlock` contract prototype, proving 19-to-1 USD notice coalescing, revision-consistent publication, explicit same-block snapshot replay, and a revision-gated in-memory timing reduction while leaving production unchanged.
