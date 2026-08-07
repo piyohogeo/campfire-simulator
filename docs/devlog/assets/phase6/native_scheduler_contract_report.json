@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "phase": "phase6ba",
+  "status": "qualified",
+  "source_raw": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6ba\\native_scheduler_contract_raw.json",
+  "runtime": {
+    "python": "3.12.13",
+    "executable": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\python\\python.exe",
+    "kit_python": true,
+    "numpy": "2.3.1"
+  },
+  "native_toolchain": {
+    "abi_version": 1,
+    "msvc_version": 1939,
+    "msvc_full_version": 193933523,
+    "floating_point": "/fp:strict",
+    "dll_sha256": "17ffb56720745c3a1f693e018d6243304bbcc2c199fd067f44baf696fab9e2a7",
+    "source_sha256": "d6d17c7327a18858cf2fbe36f67c4a15d71e36f95c67a3ca1909e31a8208d453"
+  },
+  "measurement": {
+    "log_count": 20,
+    "cells_per_log": 1152,
+    "combined_cell_count": 23040,
+    "combined_conduction_pair_count": 62400,
+    "cycles_per_run": 60,
+    "warmup_cycles_excluded": 10,
+    "runs": 3,
+    "logical_hz": 5,
+    "render_fps": 60,
+    "frames_per_tick": 12,
+    "dt_seconds": 0.2,
+    "heat_flux_w_m2": 150000.0,
+    "oxygen_factor": 0.75
+  },
+  "contract": {
+    "tick_order": [
+      "immutable_input_snapshot",
+      "revision_classification",
+      "resident_input_apply",
+      "native_arrhenius_complete_step",
+      "native_publish_11_values_per_log",
+      "immutable_snapshot_commit",
+      "three_consumer_reads"
+    ],
+    "consumer_names": [
+      "Flow emitter",
+      "visual state",
+      "structural support"
+    ],
+    "update_frame_within_tick": 0,
+    "consumer_only_frames_per_tick": 11,
+    "managed_dirty_import_before_run": true,
+    "structural_dirty_stops_before_native": true
+  },
+  "budget_ms": 4.0,
+  "method_rows": [
+    {
+      "method": "update_frame",
+      "label": "Native 5 Hz update frame",
+      "median_mean_ms": 1.603009975515306,
+      "median_p95_ms": 2.3533999919891357,
+      "maximum_observed_ms": 2.4041999131441116,
+      "meets_4ms_p95": true
+    },
+    {
+      "method": "all_frames",
+      "label": "All 60 Hz frames",
+      "median_mean_ms": 0.13746382823834816,
+      "median_p95_ms": 1.2352000921964645,
+      "maximum_observed_ms": 2.4041999131441116,
+      "meets_4ms_p95": true
+    },
+    {
+      "method": "consumer_only_frame",
+      "label": "Consumer-only frame",
+      "median_mean_ms": 0.0038958167318593373,
+      "median_p95_ms": 0.004700152203440666,
+      "maximum_observed_ms": 0.0779998954385519,
+      "meets_4ms_p95": true
+    },
+    {
+      "method": "managed_dirty_import",
+      "label": "Managed one-log preflight",
+      "median_mean_ms": 1.0274001397192478,
+      "median_p95_ms": 1.0274001397192478,
+      "maximum_observed_ms": 1.4153998345136642,
+      "meets_4ms_p95": true
+    }
+  ],
+  "equivalence": {
+    "maximum_temperature_error_k": 0.0,
+    "maximum_cell_mass_error_kg": 8.673617379884035e-18,
+    "phase_mismatch_count": 0,
+    "maximum_cumulative_error": 3.469446951953614e-18,
+    "maximum_published_output_error": 1.942890293094024e-16,
+    "maximum_mass_balance_error_kg": 6.110667527536862e-13,
+    "passed": true
+  },
+  "consumer": {
+    "read_count_per_run": 2160,
+    "mismatch_count": 0,
+    "last_revision": 60,
+    "strictly_monotonic_all_runs": true,
+    "maximum_tick_staleness": 0
+  },
+  "structural_dirty_proof": {
+    "state_dirty_logs": [],
+    "rebuild_required_logs": [
+      3
+    ],
+    "native_step_called": false,
+    "safe_stop": true
+  },
+  "decision": {
+    "native_scheduler_contract_qualified": true,
+    "managed_dirty_preflight_qualified": true,
+    "structural_dirty_safe_stop_qualified": true,
+    "consumer_revision_contract_qualified": true,
+    "production_backend_qualified": false,
+    "serialization_export_pending": true,
+    "unmarked_direct_write_support_pending": true,
+    "next_step": "define serialization/export and production backend lifecycle gates, then run an opt-in Kit application integration trial"
+  },
+  "limitations": [
+    "production_backend_switch",
+    "unmarked_direct_write_support",
+    "serialization_export",
+    "Flow/USD/rendering/PhysX execution"
+  ],
+  "production_model_changed": false
+}

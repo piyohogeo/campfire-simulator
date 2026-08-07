@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6BA native 5 Hz scheduler contract</title>
+  <desc id="desc">Twenty logs run a resident native Arrhenius complete step and immutable publication on one of every twelve render frames.</desc>
+  <style>.title{fill:#f8fafc;font:700 29px system-ui,sans-serif}.sub{fill:#cbd5e1;font:16px system-ui,sans-serif}.label{fill:#f8fafc;font:600 16px system-ui,sans-serif}.value{fill:#f8fafc;font:700 15px ui-monospace,monospace}.small{fill:#94a3b8;font:14px system-ui,sans-serif}.decision{fill:#fde68a;font:700 19px system-ui,sans-serif}</style>
+  <rect width="1200" height="680" rx="28" fill="#0f172a"/>
+  <text x="58" y="72" class="title">Commit one immutable snapshot every 12 render frames</text>
+  <text x="58" y="108" class="sub">20 logs · 5 Hz native Arrhenius step · 60 Hz consumers · Flow + visual + support share one revision</text>
+  <rect x="58" y="137" width="1084" height="57" rx="16" fill="#1e293b"/>
+  <text x="82" y="160" class="small">SCHEDULER CONTRACT</text>
+  <text x="82" y="184" class="label">ΔT 0 K · Δmass 8.67e-18 kg · output 1.94e-16 · consumer mismatch 0</text>
+  <line x1="781.7" y1="207" x2="781.7" y2="518" stroke="#fbbf24" stroke-width="3" stroke-dasharray="8 7"/>
+  <text x="791.7" y="211" class="value">4 ms p95 gate</text>
+  <text x="58" y="245" class="label">Native 5 Hz update frame</text><rect x="390" y="224" width="230.4" height="32" rx="16" fill="#22c55e"/><text x="634.4" y="246" class="value">p95 2.353 ms</text><text x="390" y="278" class="small">mean 1.603 ms</text><text x="58" y="322" class="label">All 60 Hz frames</text><rect x="390" y="301" width="120.9" height="32" rx="16" fill="#22c55e"/><text x="524.9" y="323" class="value">p95 1.235 ms</text><text x="390" y="355" class="small">mean 0.137 ms</text><text x="58" y="399" class="label">Consumer-only frame</text><rect x="390" y="378" width="0.5" height="32" rx="16" fill="#22c55e"/><text x="404.5" y="400" class="value">p95 0.005 ms</text><text x="390" y="432" class="small">mean 0.004 ms</text><text x="58" y="476" class="label">Managed one-log preflight</text><rect x="390" y="455" width="100.6" height="32" rx="16" fill="#22c55e"/><text x="504.6" y="477" class="value">p95 1.027 ms</text><text x="390" y="509" class="small">mean 1.027 ms</text>
+  <rect x="58" y="548" width="1084" height="78" rx="18" fill="#1e293b"/>
+  <text x="82" y="578" class="decision">Native scheduler contract QUALIFIES; production gate remains closed</text>
+  <text x="82" y="607" class="sub">Structural dirty stops before native · next: serialization/export and opt-in Kit lifecycle</text>
+  <text x="58" y="656" class="small">Headless architecture trial. Flow, USD, rendering, PhysX, and the production backend are unchanged.</text>
+</svg>

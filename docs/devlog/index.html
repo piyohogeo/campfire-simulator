@@ -37,7 +37,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>40 coverage + 1 isolated</strong></div>
-        <div><span>次の焦点</span><strong>5 Hz scheduler + consumer revisions</strong></div>
+        <div><span>次の焦点</span><strong>Resident export + backend lifecycle</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6AZ · Explicit revision / dirty ownership</p>
-            <h2>全セルを見張らず、<br>変わった薪だけ同期する。</h2>
-            <p>20本のrevision確認は0.0022 ms p95、変更された1本のResident SoA再取込みは1.7399 msで、どちらも4 ms内に収まりました。20本全取込みは21.4179 msなので棄却します。温度変更は対象1本だけを誤差0で同期し、体積変更は軽量同期せず再構築要求へ分類します。ただしdirty印のない直接代入は検出できないため、Nativeモードでは管理編集APIが必須です。次は5 Hz schedulerで入力・step・immutable出力・consumer revisionを一つの契約にします。</p>
+            <p class="section-kicker">Phase 6BA · Native 5 Hz scheduler contract</p>
+            <h2>12 frameに一度、<br>同じ結果を全consumerへ。</h2>
+            <p>20本のNative Arrhenius完全step、11値発行、immutable commitを5 Hz更新frameへまとめ、2.3534 ms p95で4 ms内に収めました。残る11 frameは同じsnapshotをFlow・表示・支持判定が読み、2,160読取り/runでrevision不一致0です。Python参照との差は温度0 K、質量8.67e-18 kgでした。構造dirtyはNative実行前に停止します。ただしResident進行後のPython view鮮度とserialization exportは未解決なので、本番backendはまだ有効化しません。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -525,6 +525,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6ba-native-scheduler" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6BA</h3>
+            <a href="assets/phase6/native_scheduler_contract_report.svg" aria-label="Phase 6BA native 5 Hz・12-frame scheduler契約の性能、同値性、consumer revisionレポートを開く">
+              <img src="assets/phase6/native_scheduler_contract_report.svg" width="1200" height="680" alt="20本のNative更新frame、全60 Hz frame、consumer-only frame、管理dirty preflightのp95、4ミリ秒予算、Python参照誤差、consumer revision不一致0を示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Commit one snapshot, then share its revision</strong><span>update p95 2.3534 ms · 2,160 reads/run · 0 mismatches · production gate closed</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6BA baseline burn scenario (reused)" data-video-meta="Headless native scheduler-contract trial · production rendering unchanged · baseline Phase 6AM viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · 既存実画面を再掲</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <figure class="capture-card">
             <a href="assets/phase6/replicate_holdout_report.svg" aria-label="Phase 6C 合板反復ホールドアウトレポートを開く">
               <img src="assets/phase6/replicate_holdout_report.svg" width="1200" height="680" alt="未使用の合板SAMP.3について、着火時刻と平均質量減少速度の観測・初期・SAMP.1/2選定値を並べたSVGグラフ">
@@ -603,6 +617,7 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AX Arrhenius complete step</strong><small>3 pathways + bounded tar · 3 balanced runs · tolerance lockstep passed</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AY immutable output publish</strong><small>11 values/log · 3 balanced runs · mutation detected · full scan rejected</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AZ revision ownership</strong><small>20 revisions · one-log exact import · structural rebuild · unmarked writes unsupported</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6BA native scheduler</strong><small>5 Hz / 12 frames · 3 consumers · 60 revisions · tolerance lockstep passed</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Default timing path</strong><small>homogeneous fast · timers off · 10.4678 s scenario</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>
             </div>
@@ -801,6 +816,12 @@
               <div><dt>Full 20-log import p95</dt><dd>21.4179 ms · rejected</dd></div>
               <div><dt>Native-mode direct writes</dt><dd>explicit managed edit / dirty mark required</dd></div>
               <div><dt>Phase 6AZ regression</dt><dd>40 coverage · collapse isolated 5.5 s · prior clean 41 / 41</dd></div>
+              <div><dt>Native 5 Hz update frame p95</dt><dd>2.3534 ms · max 2.4042 ms</dd></div>
+              <div><dt>All 60 Hz frames p95</dt><dd>1.2352 ms</dd></div>
+              <div><dt>Consumer-only frame p95</dt><dd>0.0047 ms</dd></div>
+              <div><dt>Consumer revisions</dt><dd>2,160 reads/run · 0 mismatches · staleness 0</dd></div>
+              <div><dt>Phase 6BA maximum differences</dt><dd>ΔT 0 K · Δmass 8.67 × 10⁻18 kg</dd></div>
+              <div><dt>Phase 6BA regression</dt><dd>41 / 41 pass · runner 395.6 s · collapse coverage 220.0 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
