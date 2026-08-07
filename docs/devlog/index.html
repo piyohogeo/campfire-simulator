@@ -37,7 +37,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>47 / 47 passed</strong></div>
-        <div><span>次の焦点</span><strong>NanoVDB consumer公開境界</strong></div>
+        <div><span>次の焦点</span><strong>固定Flow consumer採否判断</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6BQ · Fixed-Flow native NanoVDB boundary</p>
-            <h2>配列準備より、<br>NanoVDB生成と同期が重い。</h2>
-            <p>現在のSphere Emitter・19属性最適化を維持したまま、固定Flow 110.0.0の実runtime境界を既定OFFで測りました。persistent contextを正しく再利用すると、360点から7,200点のpoint-to-NanoVDB生成p95は4.0099 msから5.7224 msへ増加し、20本の5 buffer出力は約10.90 MB/updateです。source配列準備はmean 0.0563 msに留まり、支配項ではありません。PointCloudのlive構造変更はnative crashするため不採用、USD Point channelの実Flow取込みも未確認です。production、物理式、JSON、rollback、revision、immutable snapshot、既定値は変更していません。</p>
+            <p class="section-kicker">Phase 6BR–6BT · Fixed-Flow NanoVDB consumer boundary</p>
+            <h2>5本の意味は判明。<br>consumerはまだ未接続。</h2>
+            <p>固定Flow 110.0.0の5 bufferを実測でR/G/B/alphaの4 float gridとpacked RGBA8に識別しました。live構造変更を避け、完成stageで直接4配列、単一RGBA8、FlowPointCloud内配置、UsdVol relationship、assetPathの5公開候補を試しましたが、USD payloadとrevision 1を保った一方でFlow active blockは全て0でした。したがってNanoVDBの取込み、raster、solver、描画、出力同値性は未確認のままです。Sphere production、物理式、JSON、rollback、revision、immutable snapshot、既定値は変更していません。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -808,6 +808,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6br-bt-flow-nanovdb-consumer" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6BR–6BT</h3>
+            <a href="assets/phase6/flow_nanovdb_consumer_report.svg" aria-label="Phase 6BRから6BTのNanoVDB buffer識別と公開consumer試行レポートを開く">
+              <img src="assets/phase6/flow_nanovdb_consumer_report.svg" width="1200" height="680" alt="5本のNanoVDB buffer対応と、5種類の公開consumer候補がいずれもactive block 0で未qualifiedだったことを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Five buffers mapped · no consumer qualified</strong><span>4 float + packed RGBA8 · 5 complete-stage trials · revision 1 preserved · active blocks 0</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6BR–6BT burn scenario (production unchanged, reused)" data-video-meta="The default-off consumer probes did not qualify a new Flow rendering path and changed no production emitter, authoritative wood state, JSON schema, rollback, revision, or defaults · baseline Phase 6AM real viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · production同値の既存実画面</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1146,6 +1160,12 @@
               <div><dt>Phase 6BQ lifetime</dt><dd>persistent context required · non-persistent repetition exceeded 8 GB</dd></div>
               <div><dt>Phase 6BQ scope</dt><dd>native producer only · USD/ingest/consumer/solver/render pending · production unchanged</dd></div>
               <div><dt>Phase 6BQ regression</dt><dd>8 processes · 47 / 47 pass · 317.4 s · collapse coverage 186.8 s</dd></div>
+              <div><dt>Phase 6BS buffer mapping</dt><dd>R / G / B / alpha float grids + packed RGBA8 · grid name Flow</dd></div>
+              <div><dt>Phase 6BT safe trials</dt><dd>5 complete-stage public arrangements · no live structural mutation</dd></div>
+              <div><dt>Phase 6BT USD contract</dt><dd>payload persisted · stage reopened · consumer revision 1 preserved</dd></div>
+              <div><dt>Phase 6BT Flow result</dt><dd>all candidates active blocks 0 · readback empty · consumer unqualified</dd></div>
+              <div><dt>Phase 6BT scope</dt><dd>default OFF · production/physics/schema/lifecycle/rollback unchanged</dd></div>
+              <div><dt>Phase 6BT regression</dt><dd>8 processes · 47 / 47 pass · 328.1 s · collapse coverage 189.3 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>

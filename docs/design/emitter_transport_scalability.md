@@ -93,3 +93,21 @@ productionを変更しない既定OFF runnerで、同梱`PointCloud/Native.usda`
 これはpoint sourceからNanoVDBを作って同期するproducer境界だけの値であり、NanoVDB EmitterへのUSD発行、`omni.flowusd`取込み、consumer revision、Flow solver、描画は含まない。20本ではproducerだけで4 msを超え、入力172.8 KBに対して生成payloadは約10.90 MB/updateとなった。したがってSet回数削減や`Sdf.ChangeBlock`だけでは解消せず、共有SoA＋Python proxy案もこのGPU voxelize／NanoVDB転送ボトルネックを解決しない。
 
 現時点の判断は「native NanoVDB producerは実在するがproduction不採用」である。次は固定Flow版が5 bufferを`FlowEmitterNanoVdb`へ安全に接続できる公開consumer境界を、同梱command／OmniGraph／schemaの範囲で調べる。接続できるまでsolver/renderを含む比較値やfuel・temperature・smoke同値性を推定しない。再現は`run_phase6bq_flow_native_voxelize.ps1`、binding調査は`probe_flow_native_interface.py`である。標準Kit suiteは全8 process・47 / 47件を317.4秒で合格した。
+
+## Phase 6BR–6BT NanoVDB buffer意味論とconsumer試行
+
+固定Flow runtime、schema、同梱C++ OmniGraph node、`omni.volume` bindingを照合した。`voxelize_points_and_sync_v2`の5 bufferは、色をRだけ／Gだけ／Bだけ変える4ケースで次のように識別できた。index 0 / 1 / 2はそれぞれ入力R / G / Bだけに反応するNanoVDB float grid、index 3は入力色に依存しないalpha占有grid、index 4は全RGB入力に反応するgrid type 12のpacked RGBA8である。最初の4本はschemaのtemperature / fuel / burn / smoke、5本目は`nanoVdbRgba8s`に対応する。同梱schemaもPointの`pointColors`をtemperature / fuel / burn、RGBA8をtemperature / fuel / burn / smokeと定義している。各bufferは`buffer_to_volume()`で1 grid、grid名`Flow`、同じindex/world境界として読めた。
+
+live stageのPrim削除・再定義はPhase 6BPでnative crashしたため行わず、Emitter、payload、revisionを全てoffline stageへauthoringしてからKitへ接続した。1本360点、cell size`0.025 m`、max blocks`256`の同一入力で次を試した。
+
+| 公開consumer候補 | USD payload | stage接続 | consumer revision | Flow active block / readback | 判定 |
+|---|---:|---|---:|---:|---|
+| 4 float direct arrays | 4属性、USDA 4,634,548 B | 完了 | 1 | 0 / 空 | 未接続 |
+| packed RGBA8 direct array | 1属性、USDA 1,168,567 B | 完了 | 1 | 0 / 空 | 未接続 |
+| FlowPointCloud内 packed RGBA8 | 1属性、USDA 1,168,888 B | 完了 | 1 | 0 / 空 | 未接続 |
+| `volumePrim`→UsdVol→`.nvdb` | relationship、`.nvdb` 11,560 B | 完了、Fabric proxy警告 | 1 | 0 / 空 | 未接続 |
+| `nanoVdbRgba8s:assetPath` | asset + gridName、`.nvdb` 11,560 B | 完了 | 1 | 0 / 空 | 未接続 |
+
+この試験の各process最初のvoxelize callはCUDA／Flow初期化を含み`36.8–41.1 s`だったため、Phase 6BQのsteady-state producer性能と混ぜない。直接配列のNumPy→Vt、offline Set、USDA保存、stage open値も静的な接続診断であり、高頻度発行性能ではない。`.nvdb`保存自体は`1.51–2.58 ms`だったが、ディスク経路は動的production候補にしない。
+
+結論は「buffer意味論は確認、公開NanoVDB consumerは未qualified」である。USDに値が保存されrevisionが一致しても、Flow取込み、rasterization、solver、描画、fuel／temperature／smoke同値性の成功を意味しない。固定版の正式サンプルまたは公開APIでconsumer接続条件を追加確認できない限りNanoVDB比較の下流値を埋めず、Sphere production経路を維持する。共有SoA案もUSD発行やNanoVDB consumer不在を解決しない。再現は`run_phase6bs_flow_nanovdb_buffer_probe.ps1`と`run_phase6bt_flow_nanovdb_consumer.ps1`で、どちらも既定OFF、production変更なしである。標準Kit suiteは全8 process・47 / 47件を328.1秒で合格し、collapse coverageも189.3秒で完了した。

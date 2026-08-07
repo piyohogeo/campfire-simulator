@@ -2038,3 +2038,14 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 実測: RTX 3090、cell size`0.025 m`、max blocks`256`で、360 / 1,800 / 3,600 / 7,200点のnative voxelize＋5 NanoVDB buffer生成＋同期p95は`4.0099 / 4.2650 / 5.5074 / 5.7224 ms`、meanは`3.0708 / 3.2976 / 4.1380 / 4.3039 ms`だった。7,200点のsource生成meanは`0.0563 ms`、contiguous準備meanは`0.0046 ms`、入力`172,800 bytes/update`、出力`10,896,000 bytes/update`である。
 - 判断: native NanoVDB producerは固定版で実在するがproduction採用しない。20本ではproducer単体で4 msを超え、USD発行、Flow取込み、consumer、solver、描画をまだ含まない。`Sdf.ChangeBlock`、Set回数削減、共有SoA＋Python proxyはいずれもこの生成・転送コスト自体を消さない。次は公開範囲で5 bufferを`FlowEmitterNanoVdb`へ安全に接続できるかを調べ、接続前に採用やsolver/render値を仮定しない。
 - 契約: production経路、物理式、JSON schema、既定値、rollback、revision、immutable snapshotは変更していない。詳細と失敗条件は`docs/design/emitter_transport_scalability.md`、再現runnerは`run_phase6bq_flow_native_voxelize.ps1`、binding metadata probeは`probe_flow_native_interface.py`に残した。標準Kit suiteは全8 process・`47 / 47`件を`317.4 s`で合格し、collapse coverageも`186.8 s`で完了した。描画条件は変えていないため開発日誌動画はPhase 6AMの検証済み実画面を再利用する。
+
+## 100. Phase 6BR–6BT 固定Flow NanoVDB consumer境界
+
+### 2026-08-07: 5 bufferを識別し、公開USD経路を完成stageで試す
+
+- buffer意味論: `voxelize_points_and_sync_v2`へR-only／G-only／B-only／RGBの4入力を与え、5 buffer全てを`buffer_to_volume()`で検査した。index 0 / 1 / 2はR / G / Bに対応するfloat grid、index 3は色に依存しないalpha占有float grid、index 4は全RGBを含むpacked RGBA8 gridである。全て1 grid、短縮名`Flow`、同じindex/world境界だった。schemaとOmniGraph定義を合わせ、temperature / fuel / burn / smokeの4 float配列または単一`nanoVdbRgba8s`として扱えることまで確認した。
+- 安全性: Phase 6BPで失敗したlive構造変更を避け、Sphere削除、NanoVDB Emitter定義、全payload、revisionをoffline stageで完了してからKit contextへ接続した。直接4 float配列、直接packed RGBA8、`FlowPointCloud`内packed RGBA8、`.nvdb`を`volumePrim`／UsdVolで参照、`.nvdb`をschema assetPathで参照する5候補は全てクラッシュせずstageを開き、USD payloadとconsumer revision `1`を保持した。
+- consumer結果: 5候補すべてFlow active block peakは`0`、NanoVDB readbackは全channel空だった。UsdVol候補ではFabric `attribute proxy not found`警告も出た。したがって固定版の公開consumer接続は未qualifiedであり、成功したUSD authoring、`.nvdb`保存、revisionをFlow取込み／raster／solver／描画／出力同値性の成功として扱わない。
+- 静的境界: 4 float配列はUSDA`4,634,548 B`、単一RGBA8配列は`1,168,567 B`、asset属性stageは`13,458 B`、保存`.nvdb`は`11,560 B`だった。各process初回producerはFlow/CUDA初期化込み`36.8–41.1 s`なのでsteady-state性能値ではない。asset保存`1.5098 ms`、UsdVol用保存`2.5808 ms`もディスク経由の静的診断でありproduction候補ではない。
+- 判断: production Sphere Emitter、物理式、JSON schema、既定値、lifecycle、rollback、revision、immutable snapshotを維持し、Point／NanoVDBを採用しない。固定版の正式サンプルまたは公開APIで追加条件を確認できるまで、NanoVDBのingest、raster、solver/render、同値性を推定値で埋めない。共有SoA案はこのconsumer未接続やUSD発行ボトルネックを解決しない。
+- 再現と回帰: `run_phase6bs_flow_nanovdb_buffer_probe.ps1`が5 bufferの型／hash／grid metadataを記録し、`run_phase6bt_flow_nanovdb_consumer.ps1`がencoding、container、sourceを切り替える。いずれも既定OFFでproductionコードと正規sceneを変更しない。標準Kit suiteは全8 process・`47 / 47`件を`328.1 s`で合格し、collapse coverageも`189.3 s`で完了した。開発日誌動画は描画変更がないためPhase 6AMの検証済み実画面を再利用する。
