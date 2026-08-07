@@ -66,6 +66,29 @@ class ResidentUsdTransactionProfile:
     attribute_write_disposition: tuple[tuple[str, str], ...]
 
 
+@dataclass(frozen=True)
+class ResidentUsdLightweightTailProfile:
+    """Low-overhead timings for one lightweight USD publication."""
+
+    revision: int
+    tick: int
+    status: str
+    total_ms: float
+    validation_ms: float
+    prim_lookup_ms: float
+    payload_preparation_ms: float
+    attribute_lookup_ms: float
+    attribute_set_ms: float
+    write_observer_ms: float
+    commit_ms: float
+    recovery_ms: float
+    unattributed_ms: float
+    write_count: int
+    skipped_write_count: int
+    group_ms: tuple[tuple[str, float], ...]
+    group_write_disposition: tuple[tuple[str, int, int], ...]
+
+
 class UsdResidentSnapshotAdapter:
     """Publish one immutable revision to Flow, visual, and support consumers."""
 
@@ -80,6 +103,7 @@ class UsdResidentSnapshotAdapter:
         cache_usd_handles: bool = False,
         lightweight_commits: bool = False,
         skip_unchanged_derived: bool = False,
+        profile_lightweight_tails: bool = False,
     ):
         if stage is None:
             raise ValueError("A USD stage is required")
@@ -95,6 +119,10 @@ class UsdResidentSnapshotAdapter:
             raise ValueError(
                 "Skipping unchanged derived values requires lightweight commits"
             )
+        if profile_lightweight_tails and not lightweight_commits:
+            raise ValueError(
+                "Lightweight tail profiling requires lightweight commits"
+            )
         self._stage = stage
         self._log_ids = tuple(log_ids)
         self._initial_dry_mass_kg = dict(initial_dry_mass_kg)
@@ -103,7 +131,11 @@ class UsdResidentSnapshotAdapter:
         self._cache_usd_handles = bool(cache_usd_handles)
         self._lightweight_commits = bool(lightweight_commits)
         self._skip_unchanged_derived = bool(skip_unchanged_derived)
+        self._profile_lightweight_tails = bool(profile_lightweight_tails)
         self._transaction_profiles: list[ResidentUsdTransactionProfile] = []
+        self._lightweight_tail_profiles: list[
+            ResidentUsdLightweightTailProfile
+        ] = []
         self._cached_emitter = None
         self._cached_log_prims = ()
         self._attribute_cache = {}
@@ -281,15 +313,40 @@ class UsdResidentSnapshotAdapter:
         write_index,
         *,
         label,
+        group,
         notify_observer,
+        profile=None,
     ):
+        operation_started = time.perf_counter_ns() if profile is not None else 0
+        started = time.perf_counter_ns() if profile is not None else 0
         _, attribute = self._resolve_attribute(prim, name, type_name, label)
+        if profile is not None:
+            self._add_elapsed(profile, "attribute_lookup_ms", started)
+            started = time.perf_counter_ns()
         if not attribute.Set(value):
             raise RuntimeError(f"Unable to publish USD attribute {prim.GetPath()}.{name}")
+        if profile is not None:
+            self._add_elapsed(profile, "attribute_set_ms", started)
         self._lightweight_write_count += 1
         write_index += 1
+        if profile is not None:
+            profile["write_count"] += 1
+            disposition = profile["group_write_disposition"].setdefault(
+                group, {"written": 0, "skipped": 0}
+            )
+            disposition["written"] += 1
         if notify_observer and self._write_observer is not None:
+            started = time.perf_counter_ns() if profile is not None else 0
             self._write_observer(write_index, name)
+            if profile is not None:
+                self._add_elapsed(profile, "write_observer_ms", started)
+        if profile is not None:
+            operation_ms = (
+                time.perf_counter_ns() - operation_started
+            ) / 1_000_000.0
+            profile["group_ms"][group] = (
+                profile["group_ms"].get(group, 0.0) + operation_ms
+            )
         return write_index
 
     def _set_derived_attribute_lightweight(
@@ -302,11 +359,19 @@ class UsdResidentSnapshotAdapter:
         write_index,
         *,
         label,
+        group,
         notify_observer,
         skip_unchanged,
+        profile=None,
     ):
         if skip_unchanged and self._usd_values_equal(value, previous_value):
             self._skipped_unchanged_write_count += 1
+            if profile is not None:
+                profile["skipped_write_count"] += 1
+                disposition = profile["group_write_disposition"].setdefault(
+                    group, {"written": 0, "skipped": 0}
+                )
+                disposition["skipped"] += 1
             return write_index
         return self._set_attribute_lightweight(
             prim,
@@ -315,7 +380,9 @@ class UsdResidentSnapshotAdapter:
             value,
             write_index,
             label=label,
+            group=group,
             notify_observer=notify_observer,
+            profile=profile,
         )
 
     @staticmethod
@@ -343,18 +410,28 @@ class UsdResidentSnapshotAdapter:
         }
 
     def _write_snapshot_lightweight(
-        self, snapshot, emitter, log_prims, *, notify_observer, skip_unchanged=False
+        self,
+        snapshot,
+        emitter,
+        log_prims,
+        *,
+        notify_observer,
+        skip_unchanged=False,
+        profile=None,
     ):
         """Write a complete derived snapshot without reading USD old values."""
 
         write_index = 0
         previous_snapshot = self._last_committed_snapshot if skip_unchanged else None
+        started = time.perf_counter_ns() if profile is not None else 0
         flow_values = self._flow_payload(snapshot.rows[0])
         previous_flow_values = (
             self._flow_payload(previous_snapshot.rows[0])
             if previous_snapshot is not None
             else {}
         )
+        if profile is not None:
+            self._add_elapsed(profile, "payload_preparation_ms", started)
         for name, value in flow_values.items():
             write_index = self._set_derived_attribute_lightweight(
                 emitter,
@@ -364,14 +441,17 @@ class UsdResidentSnapshotAdapter:
                 previous_flow_values.get(name),
                 write_index,
                 label=f"Emitter.{name}",
+                group="emitter_payload",
                 notify_observer=notify_observer,
                 skip_unchanged=skip_unchanged,
+                profile=profile,
             )
 
         revision_writes = []
         for row_index, (log_id, prim, row) in enumerate(
             zip(self._log_ids, log_prims, snapshot.rows)
         ):
+            started = time.perf_counter_ns() if profile is not None else 0
             values = self._log_payload(log_id, row)
             previous_row = (
                 previous_snapshot.rows[row_index]
@@ -383,9 +463,15 @@ class UsdResidentSnapshotAdapter:
                 if previous_row is not None
                 else {}
             )
+            if profile is not None:
+                self._add_elapsed(profile, "payload_preparation_ms", started)
+                started = time.perf_counter_ns()
             display_color = UsdGeom.Gprim(prim).GetDisplayColorAttr()
             if not display_color:
                 raise RuntimeError(f"Log {log_id} has no displayColor attribute")
+            if profile is not None:
+                self._add_elapsed(profile, "attribute_lookup_ms", started)
+                started = time.perf_counter_ns()
             color = [self._visual_color(row, self._initial_dry_mass_kg[log_id])]
             previous_color = (
                 [
@@ -396,6 +482,8 @@ class UsdResidentSnapshotAdapter:
                 if previous_row is not None
                 else None
             )
+            if profile is not None:
+                self._add_elapsed(profile, "payload_preparation_ms", started)
             write_index = self._set_derived_attribute_lightweight(
                 prim,
                 display_color.GetName(),
@@ -404,8 +492,10 @@ class UsdResidentSnapshotAdapter:
                 previous_color,
                 write_index,
                 label=f"{log_id}.{display_color.GetName()}",
+                group="visual_payload",
                 notify_observer=notify_observer,
                 skip_unchanged=skip_unchanged,
+                profile=profile,
             )
             for name, value in values.items():
                 write_index = self._set_derived_attribute_lightweight(
@@ -416,8 +506,10 @@ class UsdResidentSnapshotAdapter:
                     previous_values.get(name),
                     write_index,
                     label=f"{log_id}.{name}",
+                    group="diagnostic_payload",
                     notify_observer=notify_observer,
                     skip_unchanged=skip_unchanged,
+                    profile=profile,
                 )
             revision_writes.append((log_id, prim))
 
@@ -431,7 +523,9 @@ class UsdResidentSnapshotAdapter:
                 snapshot.revision,
                 write_index,
                 label=f"{log_id}.campfire:residentRevision",
+                group="revision",
                 notify_observer=notify_observer,
+                profile=profile,
             )
         self._set_attribute_lightweight(
             emitter,
@@ -440,10 +534,20 @@ class UsdResidentSnapshotAdapter:
             snapshot.revision,
             write_index,
             label="Emitter.campfire:residentRevision",
+            group="revision",
             notify_observer=notify_observer,
+            profile=profile,
         )
 
-    def _publish_lightweight(self, snapshot, emitter, log_prims):
+    def _publish_lightweight(
+        self,
+        snapshot,
+        emitter,
+        log_prims,
+        *,
+        profile=None,
+        transaction_started_ns=0,
+    ):
         previous_snapshot = self._last_committed_snapshot
         try:
             self._write_snapshot_lightweight(
@@ -452,9 +556,13 @@ class UsdResidentSnapshotAdapter:
                 log_prims,
                 notify_observer=True,
                 skip_unchanged=self._skip_unchanged_derived,
+                profile=profile,
             )
         except Exception:
             self._lightweight_failure_count += 1
+            recovery_started = (
+                time.perf_counter_ns() if profile is not None else 0
+            )
             try:
                 self._write_snapshot_lightweight(
                     previous_snapshot,
@@ -464,20 +572,103 @@ class UsdResidentSnapshotAdapter:
                     skip_unchanged=False,
                 )
             except Exception as recovery_error:
+                if profile is not None:
+                    self._add_elapsed(profile, "recovery_ms", recovery_started)
+                    self._finish_lightweight_tail_profile(
+                        profile, "faulted", transaction_started_ns
+                    )
                 self._faulted = True
                 raise RuntimeError(
                     "Resident lightweight publication and snapshot recovery failed"
                 ) from recovery_error
             self._lightweight_recovery_count += 1
+            if profile is not None:
+                self._add_elapsed(profile, "recovery_ms", recovery_started)
+                self._finish_lightweight_tail_profile(
+                    profile, "recovered", transaction_started_ns
+                )
             raise
+        commit_started = time.perf_counter_ns() if profile is not None else 0
         self._revision = snapshot.revision
         self._publish_count += 1
         self._lightweight_commit_count += 1
         self._last_committed_snapshot = snapshot
+        if profile is not None:
+            self._add_elapsed(profile, "commit_ms", commit_started)
+            self._finish_lightweight_tail_profile(
+                profile, "committed", transaction_started_ns
+            )
 
     @staticmethod
     def _add_elapsed(profile, name, started_ns):
         profile[name] += (time.perf_counter_ns() - started_ns) / 1_000_000.0
+
+    @staticmethod
+    def _new_lightweight_tail_profile(snapshot):
+        return {
+            "revision": int(snapshot.revision),
+            "tick": int(snapshot.tick),
+            "validation_ms": 0.0,
+            "prim_lookup_ms": 0.0,
+            "payload_preparation_ms": 0.0,
+            "attribute_lookup_ms": 0.0,
+            "attribute_set_ms": 0.0,
+            "write_observer_ms": 0.0,
+            "commit_ms": 0.0,
+            "recovery_ms": 0.0,
+            "write_count": 0,
+            "skipped_write_count": 0,
+            "group_ms": {},
+            "group_write_disposition": {},
+        }
+
+    def _finish_lightweight_tail_profile(
+        self, profile, status, transaction_started_ns
+    ):
+        total_ms = (
+            time.perf_counter_ns() - transaction_started_ns
+        ) / 1_000_000.0
+        attributed_ms = sum(
+            profile[name]
+            for name in (
+                "validation_ms",
+                "prim_lookup_ms",
+                "payload_preparation_ms",
+                "attribute_lookup_ms",
+                "attribute_set_ms",
+                "write_observer_ms",
+                "commit_ms",
+                "recovery_ms",
+            )
+        )
+        self._lightweight_tail_profiles.append(
+            ResidentUsdLightweightTailProfile(
+                revision=profile["revision"],
+                tick=profile["tick"],
+                status=status,
+                total_ms=total_ms,
+                validation_ms=profile["validation_ms"],
+                prim_lookup_ms=profile["prim_lookup_ms"],
+                payload_preparation_ms=profile["payload_preparation_ms"],
+                attribute_lookup_ms=profile["attribute_lookup_ms"],
+                attribute_set_ms=profile["attribute_set_ms"],
+                write_observer_ms=profile["write_observer_ms"],
+                commit_ms=profile["commit_ms"],
+                recovery_ms=profile["recovery_ms"],
+                unattributed_ms=max(0.0, total_ms - attributed_ms),
+                write_count=profile["write_count"],
+                skipped_write_count=profile["skipped_write_count"],
+                group_ms=tuple(sorted(profile["group_ms"].items())),
+                group_write_disposition=tuple(
+                    sorted(
+                        (name, counts["written"], counts["skipped"])
+                        for name, counts in profile[
+                            "group_write_disposition"
+                        ].items()
+                    )
+                ),
+            )
+        )
 
     @classmethod
     def _usd_values_equal(cls, previous_value, stored_value):
@@ -655,18 +846,43 @@ class UsdResidentSnapshotAdapter:
 
     def publish(self, snapshot: ResidentPublishedSnapshot):
         profile = self._new_profile() if self._profile_transactions else None
+        lightweight_profile = (
+            self._new_lightweight_tail_profile(snapshot)
+            if self._profile_lightweight_tails
+            and self._lightweight_commits
+            and self._last_committed_snapshot is not None
+            else None
+        )
         transaction_started = time.perf_counter_ns() if profile is not None else 0
-        started = time.perf_counter_ns() if profile is not None else 0
+        lightweight_transaction_started = (
+            time.perf_counter_ns() if lightweight_profile is not None else 0
+        )
+        started = (
+            time.perf_counter_ns()
+            if profile is not None or lightweight_profile is not None
+            else 0
+        )
         self._require_publishable(snapshot)
         if profile is not None:
             self._add_elapsed(profile, "validation_ms", started)
             started = time.perf_counter_ns()
+        elif lightweight_profile is not None:
+            self._add_elapsed(lightweight_profile, "validation_ms", started)
+            started = time.perf_counter_ns()
         emitter, log_prims = self._resolve_publish_prims()
         if profile is not None:
             self._add_elapsed(profile, "prim_lookup_ms", started)
+        elif lightweight_profile is not None:
+            self._add_elapsed(lightweight_profile, "prim_lookup_ms", started)
 
         if self._lightweight_commits and self._last_committed_snapshot is not None:
-            self._publish_lightweight(snapshot, emitter, log_prims)
+            self._publish_lightweight(
+                snapshot,
+                emitter,
+                log_prims,
+                profile=lightweight_profile,
+                transaction_started_ns=lightweight_transaction_started,
+            )
             return
 
         restores = []
@@ -782,6 +998,10 @@ class UsdResidentSnapshotAdapter:
         self._require_owner()
         return tuple(self._transaction_profiles)
 
+    def lightweight_tail_profiles(self):
+        self._require_owner()
+        return tuple(self._lightweight_tail_profiles)
+
     def status(self):
         self._require_owner()
         return {
@@ -794,6 +1014,10 @@ class UsdResidentSnapshotAdapter:
             "owner_thread_id": self._owner_thread_id,
             "transaction_profiling_enabled": self._profile_transactions,
             "transaction_profile_count": len(self._transaction_profiles),
+            "lightweight_tail_profiling_enabled": self._profile_lightweight_tails,
+            "lightweight_tail_profile_count": len(
+                self._lightweight_tail_profiles
+            ),
             "handle_cache_enabled": self._cache_usd_handles,
             "cached_attribute_count": len(self._attribute_cache),
             "prim_cache_hit_count": self._prim_cache_hit_count,

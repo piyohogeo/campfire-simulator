@@ -155,6 +155,7 @@ from .support import (
 )
 from .performance import summarize_timing_ms
 from .resident_snapshot_adapter import (
+    ResidentUsdLightweightTailProfile,
     ResidentUsdTransactionProfile,
     UsdResidentSnapshotAdapter,
 )
@@ -225,6 +226,7 @@ __all__ = [
     "ResidentNativeBackend",
     "ResidentNativeStep",
     "ResidentUsdTransactionProfile",
+    "ResidentUsdLightweightTailProfile",
     "UsdResidentSnapshotAdapter",
     "published_row_from_python_model",
     "summarize_timing_ms",

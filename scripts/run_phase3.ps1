@@ -33,6 +33,7 @@ param(
     [switch]$ResidentSnapshotHandleCache,
     [switch]$ResidentSnapshotLightweightCommit,
     [switch]$ResidentSnapshotSkipUnchanged,
+    [switch]$ResidentSnapshotLightweightTailTiming,
     [switch]$ResidentNativeBackend,
     [string]$ResidentNativeLibraryPath = ""
 )
@@ -100,6 +101,9 @@ if ($ResidentSnapshotLightweightCommit.IsPresent -and $ResidentSnapshotTiming.Is
 if ($ResidentSnapshotSkipUnchanged.IsPresent -and -not $ResidentSnapshotLightweightCommit.IsPresent) {
     throw "Resident snapshot unchanged-value skipping requires lightweight commit."
 }
+if ($ResidentSnapshotLightweightTailTiming.IsPresent -and -not $ResidentSnapshotLightweightCommit.IsPresent) {
+    throw "Resident snapshot lightweight tail timing requires lightweight commit."
+}
 if ($ResidentNativeBackend.IsPresent -and -not $ResidentSnapshotAdapter.IsPresent) {
     throw "Resident native backend requires the resident snapshot adapter."
 }
@@ -156,6 +160,7 @@ $kitArgs = @(
     "--/exts/campfire.app/residentSnapshotHandleCacheEnabled=$($ResidentSnapshotHandleCache.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentSnapshotLightweightCommitEnabled=$($ResidentSnapshotLightweightCommit.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentSnapshotSkipUnchangedEnabled=$($ResidentSnapshotSkipUnchanged.IsPresent.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/residentSnapshotLightweightTailTimingEnabled=$($ResidentSnapshotLightweightTailTiming.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentNativeBackendEnabled=$($ResidentNativeBackend.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentNativeLibraryPath=$ResidentNativeLibraryPath",
     "--/rtx/flow/enabled=true",
@@ -244,6 +249,9 @@ if ([bool]$residentAdapter.lightweight_commit_enabled -ne $ResidentSnapshotLight
 }
 if ([bool]$residentAdapter.skip_unchanged_derived_enabled -ne $ResidentSnapshotSkipUnchanged.IsPresent) {
     throw "Phase 3 used an unexpected resident snapshot unchanged-value setting."
+}
+if ([bool]$residentAdapter.lightweight_tail_timing_enabled -ne $ResidentSnapshotLightweightTailTiming.IsPresent) {
+    throw "Phase 3 used an unexpected resident snapshot lightweight tail timing setting."
 }
 if ([bool]$residentAdapter.native_producer_connected -ne $ResidentNativeBackend.IsPresent) {
     throw "Phase 3 reported an unexpected native producer connection."

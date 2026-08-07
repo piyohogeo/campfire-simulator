@@ -37,7 +37,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>46 / 46 passed</strong></div>
-        <div><span>次の焦点</span><strong>USD tail安定性の再監査</strong></div>
+        <div><span>次の焦点</span><strong>USD通知集約APIの実挙動</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6BJ · Opt-in native lifecycle integration</p>
-            <h2>Native木材は速くなった。<br>USDのtailは、まだ揺れる。</h2>
-            <p>目標は、Resident C++の1,200 stepを既存のimmutable snapshot、USD adapter、終了時serializationまで通すことでした。乾燥／湿潤の権威SHA、metrics CSV、着火66.2／166.4秒はPython経路と3 pairすべて完全一致し、木材step p95中央値は7.3995から0.4875 msへ下がりました。一方、同じUSD adapterのp95は2.9818／3.5052／5.4819 msで、正式runの1本が4 msを超えました。直後の確認runは3.1797 msへ戻りましたが、失敗値を置き換えず性能採用を保留します。production既定はOFFのまま、次はFlow/render負荷とUSD通知・属性groupのtail相関を測ります。</p>
+            <p class="section-kicker">Phase 6BK · Lightweight USD tail trace</p>
+            <h2>遅いのは、Flowではなく<br>USD Setの内側だった。</h2>
+            <p>旧値取得を戻さず、lightweight commitのvalidation、handle探索、値準備、UsdAttribute.Set、revision commitを236 sampleずつ3 runで追跡しました。Set合計はprofile p95の中央値83.0%を占め、外側USD transactionとの相関は0.9880でした。書込み数だけの相関0.4532に対し、Set 1回あたりの遅延も0.6136で連動しており、属性数だけでなくUSD authoring／通知境界そのものが揺れています。同tickのFlow/renderとは全runで負相関となり、Phase 6BJで一度見えた同時悪化は再現しませんでした。production既定、rollback、revision-lastは変えず、次は通知集約APIの実挙動を小さなstageで確認します。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -80,35 +80,80 @@
             </figure>
           </div>
 
-          <figure class="capture-card">
+          <figure id="phase6b-osb-holdout" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6B</h3>
             <a href="assets/phase6/holdout_report.svg" aria-label="Phase 6B OSB外部ホールドアウトレポートを開く">
               <img src="assets/phase6/holdout_report.svg" width="1200" height="680" alt="OSBの着火時刻と平均質量減少速度について観測・初期・合板校正値を並べたSVGグラフ">
             </a>
             <figcaption><div><strong>External-material holdout</strong><span>OSB · plywood-fit parameters · no refitting</span></div></figcaption>
           </figure>
 
-          <figure class="capture-card">
+          <figure id="phase6c-replicate-holdout" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6C</h3>
+            <a href="assets/phase6/replicate_holdout_report.svg" aria-label="Phase 6C 合板反復ホールドアウトレポートを開く">
+              <img src="assets/phase6/replicate_holdout_report.svg" width="1200" height="680" alt="未使用の合板SAMP.3について、着火時刻と平均質量減少速度の観測・初期・SAMP.1/2選定値を並べたSVGグラフ">
+            </a>
+            <figcaption><div><strong>Same-material replicate holdout</strong><span>SAMP.1/2 fit → reserved SAMP.3 · no refitting</span></div></figcaption>
+          </figure>
+
+          <figure id="phase6h-layer-profile" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6H</h3>
+            <a href="assets/phase6/layer_profile_report.svg" aria-label="Phase 6H 範囲限定温度依存比熱を含む5層合板温度プロファイルを開く">
+              <img src="assets/phase6/layer_profile_report.svg" width="1200" height="680" alt="合板の一定熱伝導率、293 K基準と420 K固定後の比熱、4つの未解決接着界面、5層温度を示したSVG図">
+            </a>
+            <figcaption><div><strong>Bounded cp(T) five-ply profile</strong><span>Normalized at 293 K · clamped to 280–420 K · constant conductivity</span></div></figcaption>
+          </figure>
+
+          <figure id="phase6i-secondary-tar" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6I</h3>
+            <a href="assets/phase6/kinetics_report.svg" aria-label="Phase 6I 二次タール反応と変換前後の生成物収率を開く">
+              <img src="assets/phase6/kinetics_report.svg" width="1200" height="680" alt="一次ガス・タール・チャー経路、二次タール反応速度、35と70 kW毎平方メートルの変換前後収率を示したSVGグラフ">
+            </a>
+            <figcaption><div><strong>Primary pathways and secondary tar split</strong><span>τ = 1 s · bounded 773–1073 K · diagnostic only</span></div></figcaption>
+          </figure>
+
+          <figure id="phase6j-residence-sensitivity" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6J</h3>
+            <a href="assets/phase6/tar_residence_sensitivity_report.svg" aria-label="Phase 6J 滞留時間感度レポートを開く">
+              <img src="assets/phase6/tar_residence_sensitivity_report.svg" width="1200" height="680" alt="滞留時間0.9、1.0、2.2秒に対する35と70 kW毎平方メートルの二次ガスと残存タール収率を示したSVGグラフ">
+            </a>
+            <figcaption><div><strong>Residence-time sensitivity</strong><span>0.9 / 1.0 / 2.2 s · experiment-bounded scenario, not validation</span></div></figcaption>
+          </figure>
+
+          <figure id="phase6k-gas-transport" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6K</h3>
+            <a href="assets/phase6/gas_transport_readiness_report.svg" aria-label="Phase 6K 気相輸送入力充足レポートを開く">
+              <img src="assets/phase6/gas_transport_readiness_report.svg" width="1200" height="680" alt="Darcy滞留時間式、既知の試験片全厚、ブナ球の文献値、合板で欠けている5入力、閉じた結合ゲートを示したSVG図">
+            </a>
+            <figcaption><div><strong>Gas-transport coupling gate</strong><span>Darcy input contract · 5 plywood inputs missing · τ withheld</span></div></figcaption>
+          </figure>
+
+          <figure id="phase6l-char-geometry" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6L</h3>
             <a href="assets/phase6/char_geometry_report.svg" aria-label="Phase 6L 固定格子反応進行と物理炭化層厚さの分離レポートを開く">
               <img src="assets/phase6/char_geometry_report.svg" width="1200" height="680" alt="35と70 kW毎平方メートルの5層乾燥木材変換率、未収縮相当深さ、保留した物理炭化層厚さ、ブナ球の収縮補正文脈を示すSVG図">
             </a>
             <figcaption><div><strong>Reaction progress ≠ physical thickness</strong><span>9.240 / 12.700 mm unshrunk equivalent · shrinkage withheld</span></div></figcaption>
           </figure>
 
-          <figure class="capture-card">
+          <figure id="phase6m-char-depth-benchmark" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6M</h3>
             <a href="assets/phase6/char_depth_benchmark_report.svg" aria-label="Phase 6M 外部合板炭化深さの比較可能性レポートを開く">
               <img src="assets/phase6/char_depth_benchmark_report.svg" width="1200" height="680" alt="現在の未収縮相当深さ9.24 mmと外部カバ合板の炭化深さ13.77プラスマイナス0.60 mm、10条件中3条件の一致、非採点と転用禁止を示すSVG図">
             </a>
             <figcaption><div><strong>External char-depth comparability gate</strong><span>3 / 10 conditions match · error null · transfer blocked</span></div></figcaption>
           </figure>
 
-          <figure class="capture-card">
+          <figure id="phase6n-measurement-contract" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6N</h3>
             <a href="assets/phase6/char_depth_measurement_protocol_report.svg" aria-label="Phase 6N 一致条件炭化深さ測定契約を開く">
               <img src="assets/phase6/char_depth_measurement_protocol_report.svg" width="1200" height="680" alt="35と70 kW毎平方メートル、60・180・300・600秒、各3反復の24試験と、厚さ変位・二つの炭化前線・試験片識別情報・不確かさを要求する閉じたデータゲート">
             </a>
             <figcaption><div><strong>Matched measurement contract · archived</strong><span>24 designed · 0 executed · real-wood experiments out of scope</span></div></figcaption>
           </figure>
 
-          <figure class="capture-card">
+          <figure id="phase6o-experiment-plan" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6O</h3>
             <a href="assets/phase6/char_depth_experiment_plan_report.svg" aria-label="Phase 6O 同期実験実施計画を開く">
               <img src="assets/phase6/char_depth_experiment_plan_report.svg" width="1200" height="680" alt="初期露出面基準の座標、DAQ基準の露出・点火・中断・消火タイムライン、質量・温度・表面・断面の取得、技術完成と実行未承認を示すSVG図">
             </a>
@@ -539,6 +584,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6bb-native-lifecycle" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6BB</h3>
+            <a href="assets/phase6/native_backend_lifecycle_report.svg" aria-label="Phase 6BB Resident backend lifecycleのexport性能、rollback、再構築、shutdown契約レポートを開く">
+              <img src="assets/phase6/native_backend_lifecycle_report.svg" width="1200" height="680" alt="単一薪exportのp95と4ミリ秒予算、serialization、競合拒否、rollback、構造再構築、shutdownの合格状態を示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Export fresh, validate candidate, then swap</strong><span>one log p95 1.1643 ms · 9/9 gates · shutdown export 17.7040 ms · production gate closed</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6BB baseline burn scenario (reused)" data-video-meta="Headless resident lifecycle trial · production rendering unchanged · baseline Phase 6AM viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · 既存実画面を再掲</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <figure id="phase6bc-resident-snapshot-adapter" class="capture-card">
             <h3 class="capture-phase-heading">Phase 6BC</h3>
             <a href="assets/phase6/resident_snapshot_adapter_report.svg" aria-label="Phase 6BC opt-in Kit resident snapshot adapter timing and lifecycle report">
@@ -665,53 +724,18 @@
             </figcaption>
           </figure>
 
-          <figure id="phase6bb-native-lifecycle" class="capture-card">
-            <h3 class="capture-phase-heading">Phase 6BB</h3>
-            <a href="assets/phase6/native_backend_lifecycle_report.svg" aria-label="Phase 6BB Resident backend lifecycleのexport性能、rollback、再構築、shutdown契約レポートを開く">
-              <img src="assets/phase6/native_backend_lifecycle_report.svg" width="1200" height="680" alt="単一薪exportのp95と4ミリ秒予算、serialization、競合拒否、rollback、構造再構築、shutdownの合格状態を示すSVG図">
+          <figure id="phase6bk-usd-tail-correlation" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6BK</h3>
+            <a href="assets/phase6/usd_tail_correlation_report.svg" aria-label="Phase 6BK lightweight USD SetとFlow renderのtail相関レポートを開く">
+              <img src="assets/phase6/usd_tail_correlation_report.svg" width="1200" height="680" alt="追加USD読取りなしのtail計測でSetがp95の83パーセントを占め、Flow renderとの同時悪化が再現しないことを示すSVG図">
             </a>
             <figcaption>
-              <div><strong>Export fresh, validate candidate, then swap</strong><span>one log p95 1.1643 ms · 9/9 gates · shutdown export 17.7040 ms · production gate closed</span></div>
-              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6BB baseline burn scenario (reused)" data-video-meta="Headless resident lifecycle trial · production rendering unchanged · baseline Phase 6AM viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
+              <div><strong>Set dominates · Flow co-spike not reproduced</strong><span>Set share 83.0% · Set r 0.9880 · Flow/render r −0.4309 · all runs below 4 ms</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6BK burn scenario (rendering unchanged, reused)" data-video-meta="Tail instrumentation changes no production rendering or authoritative snapshot values and remains default-off · baseline Phase 6AM viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
                 <span class="video-trigger-icon" aria-hidden="true"></span>
-                <span><strong>実行動画</strong><small>6秒 · 既存実画面を再掲</small></span>
+                <span><strong>実行動画</strong><small>6秒 · 同値の既存実画面を再掲</small></span>
               </button>
             </figcaption>
-          </figure>
-
-          <figure class="capture-card">
-            <a href="assets/phase6/replicate_holdout_report.svg" aria-label="Phase 6C 合板反復ホールドアウトレポートを開く">
-              <img src="assets/phase6/replicate_holdout_report.svg" width="1200" height="680" alt="未使用の合板SAMP.3について、着火時刻と平均質量減少速度の観測・初期・SAMP.1/2選定値を並べたSVGグラフ">
-            </a>
-            <figcaption><div><strong>Same-material replicate holdout</strong><span>SAMP.1/2 fit → reserved SAMP.3 · no refitting</span></div></figcaption>
-          </figure>
-
-          <figure class="capture-card">
-            <a href="assets/phase6/layer_profile_report.svg" aria-label="Phase 6H 範囲限定温度依存比熱を含む5層合板温度プロファイルを開く">
-              <img src="assets/phase6/layer_profile_report.svg" width="1200" height="680" alt="合板の一定熱伝導率、293 K基準と420 K固定後の比熱、4つの未解決接着界面、5層温度を示したSVG図">
-            </a>
-            <figcaption><div><strong>Bounded cp(T) five-ply profile</strong><span>Normalized at 293 K · clamped to 280–420 K · constant conductivity</span></div></figcaption>
-          </figure>
-
-          <figure class="capture-card">
-            <a href="assets/phase6/kinetics_report.svg" aria-label="Phase 6J 二次タール反応と変換前後の生成物収率を開く">
-              <img src="assets/phase6/kinetics_report.svg" width="1200" height="680" alt="一次ガス・タール・チャー経路、二次タール反応速度、35と70 kW毎平方メートルの変換前後収率を示したSVGグラフ">
-            </a>
-            <figcaption><div><strong>Primary pathways and secondary tar split</strong><span>τ = 1 s · bounded 773–1073 K · diagnostic only</span></div></figcaption>
-          </figure>
-
-          <figure class="capture-card">
-            <a href="assets/phase6/tar_residence_sensitivity_report.svg" aria-label="Phase 6J 滞留時間感度レポートを開く">
-              <img src="assets/phase6/tar_residence_sensitivity_report.svg" width="1200" height="680" alt="滞留時間0.9、1.0、2.2秒に対する35と70 kW毎平方メートルの二次ガスと残存タール収率を示したSVGグラフ">
-            </a>
-            <figcaption><div><strong>Residence-time sensitivity</strong><span>0.9 / 1.0 / 2.2 s · experiment-bounded scenario, not validation</span></div></figcaption>
-          </figure>
-
-          <figure class="capture-card">
-            <a href="assets/phase6/gas_transport_readiness_report.svg" aria-label="Phase 6K 気相輸送入力充足レポートを開く">
-              <img src="assets/phase6/gas_transport_readiness_report.svg" width="1200" height="680" alt="Darcy滞留時間式、既知の試験片全厚、ブナ球の文献値、合板で欠けている5入力、閉じた結合ゲートを示したSVG図">
-            </a>
-            <figcaption><div><strong>Gas-transport coupling gate</strong><span>Darcy input contract · 5 plywood inputs missing · τ withheld</span></div></figcaption>
           </figure>
 
           <div class="story-grid">
@@ -1014,6 +1038,13 @@
               <div><dt>Phase 6BJ equivalence</dt><dd>state SHA / CSV / ignition exact · USD max Δ 2.22e−16</dd></div>
               <div><dt>Phase 6BJ lifecycle</dt><dd>1200 step · 240 publish · 1 shutdown export · default OFF</dd></div>
               <div><dt>Phase 6BJ regression</dt><dd>46 / 46 pass · 327.7 s · collapse coverage 191.2 s</dd></div>
+              <div><dt>Phase 6BK control USD p95</dt><dd>2.3737 / 2.5446 / 2.5358 ms</dd></div>
+              <div><dt>Phase 6BK profiled USD p95</dt><dd>2.7332 / 2.7538 / 2.3843 ms · all below 4 ms</dd></div>
+              <div><dt>Phase 6BK Set attribution</dt><dd>83.0% p95 share · transaction r 0.9880</dd></div>
+              <div><dt>Phase 6BK Flow correlation</dt><dd>r −0.4309 · co-spike not reproduced</dd></div>
+              <div><dt>Phase 6BK profiler overhead</dt><dd>+0.1974 ms median p95 · no extra USD Get</dd></div>
+              <div><dt>Phase 6BK equivalence</dt><dd>state SHA / CSV / ignition / final USD exact</dd></div>
+              <div><dt>Phase 6BK regression</dt><dd>46 / 46 pass · 336.3 s · collapse coverage 197.3 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>

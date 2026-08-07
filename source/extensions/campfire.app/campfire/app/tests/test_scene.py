@@ -1082,6 +1082,7 @@ class TestScene(omni.kit.test.AsyncTestCase):
             write_observer=fail_second_publish_fourth_write,
             cache_usd_handles=True,
             lightweight_commits=True,
+            profile_lightweight_tails=True,
         )
         with self.assertRaisesRegex(ValueError, "transactional detail profiling"):
             campfire.app.UsdResidentSnapshotAdapter(
@@ -1135,6 +1136,13 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(status["lightweight_commit_count"], 0)
         self.assertEqual(status["lightweight_failure_count"], 1)
         self.assertEqual(status["lightweight_recovery_count"], 1)
+        failed_tail_profile = adapter.lightweight_tail_profiles()[0]
+        self.assertIsInstance(
+            failed_tail_profile, campfire.app.ResidentUsdLightweightTailProfile
+        )
+        self.assertEqual(failed_tail_profile.status, "recovered")
+        self.assertEqual(failed_tail_profile.revision, 2)
+        self.assertGreater(failed_tail_profile.recovery_ms, 0.0)
         self.assertFalse(status["faulted"])
 
         third = campfire.app.ResidentPublishedSnapshot(3, 2, log_ids, second_rows)
@@ -1144,6 +1152,10 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(status["publish_count"], 2)
         self.assertEqual(status["lightweight_commit_count"], 1)
         self.assertEqual(status["lightweight_recovery_count"], 1)
+        committed_tail_profile = adapter.lightweight_tail_profiles()[1]
+        self.assertEqual(committed_tail_profile.status, "committed")
+        self.assertEqual(committed_tail_profile.revision, 3)
+        self.assertEqual(status["lightweight_tail_profile_count"], 2)
         self.assertEqual(
             emitter.GetAttribute("campfire:residentRevision").Get(), 3
         )
@@ -1209,6 +1221,13 @@ class TestScene(omni.kit.test.AsyncTestCase):
                 initial_dry_mass,
                 skip_unchanged_derived=True,
             )
+        with self.assertRaisesRegex(ValueError, "requires lightweight commits"):
+            campfire.app.UsdResidentSnapshotAdapter(
+                stage,
+                log_ids,
+                initial_dry_mass,
+                profile_lightweight_tails=True,
+            )
         adapter = campfire.app.UsdResidentSnapshotAdapter(
             stage,
             log_ids,
@@ -1217,6 +1236,7 @@ class TestScene(omni.kit.test.AsyncTestCase):
             cache_usd_handles=True,
             lightweight_commits=True,
             skip_unchanged_derived=True,
+            profile_lightweight_tails=True,
         )
         adapter.on_timeline_started()
         adapter.publish(campfire.app.ResidentPublishedSnapshot(1, 0, log_ids, rows))
@@ -1240,6 +1260,27 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(status["skipped_unchanged_write_count"], 30)
         self.assertEqual(observer_calls, 27)
         self.assertEqual(status["revision"], 3)
+        self.assertTrue(status["lightweight_tail_profiling_enabled"])
+        self.assertEqual(status["lightweight_tail_profile_count"], 2)
+        unchanged_profile, changed_profile = adapter.lightweight_tail_profiles()
+        self.assertEqual(
+            (
+                unchanged_profile.write_count,
+                unchanged_profile.skipped_write_count,
+            ),
+            (3, 16),
+        )
+        self.assertEqual(
+            (changed_profile.write_count, changed_profile.skipped_write_count),
+            (5, 14),
+        )
+        self.assertEqual(
+            dict(
+                (name, (written, skipped))
+                for name, written, skipped in unchanged_profile.group_write_disposition
+            )["revision"],
+            (3, 0),
+        )
         emitter = stage.GetPrimAtPath(campfire.app.FLOW_EMITTER_PATH)
         self.assertEqual(
             emitter.GetAttribute("campfire:residentRevision").Get(), 3

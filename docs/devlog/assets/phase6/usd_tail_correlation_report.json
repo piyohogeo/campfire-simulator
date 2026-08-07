@@ -1,0 +1,1010 @@
+{
+  "schema_version": 1,
+  "phase": "phase6bk",
+  "status": "characterized",
+  "measurement": {
+    "pairs": 3,
+    "balanced_order": true,
+    "steps_per_run": 1200,
+    "published_revisions_per_run": 240,
+    "profiled_lightweight_revisions_per_run": 239,
+    "analyzed_samples_per_run": 236,
+    "production_default_enabled": false,
+    "additional_usd_get_calls": 0
+  },
+  "equivalence": {
+    "all_pairs_exact": true
+  },
+  "overhead": {
+    "control_usd_p95_ms": [
+      2.3737,
+      2.5446,
+      2.5358
+    ],
+    "profiled_usd_p95_ms": [
+      2.7332,
+      2.7538,
+      2.3843
+    ],
+    "median_p95_delta_ms": 0.19740000000000002
+  },
+  "correlation_median": {
+    "profile_total_vs_outer_transaction": 0.999880064315297,
+    "flow_render_update_vs_outer_transaction": -0.43089961990052233,
+    "write_count_vs_outer_transaction": 0.45323136194269437,
+    "attribute_set_per_write_vs_outer_transaction": 0.61358718704347,
+    "active_blocks_vs_outer_transaction": 0.3731284620453977
+  },
+  "attribution": {
+    "attribute_set_p95_share": [
+      0.7959456449097795,
+      0.8299084659780172,
+      0.82975156881286
+    ],
+    "median_attribute_set_p95_share": 0.82975156881286,
+    "attribute_set_per_write_median_ms": [
+      0.11901517857142854,
+      0.1193012987012987,
+      0.11767714285714284
+    ]
+  },
+  "operation_correlation_median": {
+    "total_ms": 0.999880064315297,
+    "validation_ms": 0.28725373853227687,
+    "prim_lookup_ms": 0.23754493035415425,
+    "payload_preparation_ms": 0.5499411073438486,
+    "attribute_lookup_ms": 0.7403982710220498,
+    "attribute_set_ms": 0.987999059190074,
+    "write_observer_ms": 0.0,
+    "commit_ms": 0.29827465869039294,
+    "recovery_ms": 0.0,
+    "unattributed_ms": 0.6047354254015723
+  },
+  "group_correlation_median": {
+    "diagnostic_payload": 0.8352227625067161,
+    "emitter_payload": 0.6616110673839632,
+    "revision": 0.61124568561044,
+    "visual_payload": 0.6798279715698631
+  },
+  "pairs": [
+    {
+      "pair": 1,
+      "order": [
+        "control",
+        "profiled"
+      ],
+      "equivalence": {
+        "dry_authoritative_sha256": true,
+        "wet_authoritative_sha256": true,
+        "metrics_csv_sha256": true,
+        "ignition": true,
+        "final_usd_state": true
+      },
+      "control": {
+        "usd_transaction_p95_ms": 2.3737,
+        "flow_render_update_p95_ms": 7.5507
+      },
+      "profiled": {
+        "usd_transaction_p95_ms": 2.7332,
+        "flow_render_update_p95_ms": 7.3451,
+        "tail": {
+          "sample_count": 236,
+          "outer_transaction_p95_ms": 2.7331999999660184,
+          "profile_total_p95_ms": 2.6934,
+          "attribute_set_p95_share": 0.7959456449097795,
+          "attribute_set_per_write_median_ms": 0.11901517857142854,
+          "flow_render_update_p95_ms": 7.345099999838567,
+          "profile_coverage_ratio_median": 0.9837001026535034,
+          "correlation": {
+            "profile_total_vs_outer_transaction": 0.999880064315297,
+            "flow_render_update_vs_outer_transaction": -0.5439814620943805,
+            "write_count_vs_outer_transaction": 0.49844045822681354,
+            "attribute_set_per_write_vs_outer_transaction": 0.61358718704347,
+            "active_blocks_vs_outer_transaction": 0.47193016798726833,
+            "operations_vs_outer_transaction": {
+              "total_ms": 0.999880064315297,
+              "validation_ms": 0.28725373853227687,
+              "prim_lookup_ms": 0.23060156586712824,
+              "payload_preparation_ms": 0.5499411073438486,
+              "attribute_lookup_ms": 0.7403982710220498,
+              "attribute_set_ms": 0.987999059190074,
+              "write_observer_ms": 0.0,
+              "commit_ms": 0.16214917846909785,
+              "recovery_ms": 0.0,
+              "unattributed_ms": 0.6047354254015723
+            },
+            "groups_vs_outer_transaction": {
+              "diagnostic_payload": 0.8709737601604183,
+              "emitter_payload": 0.6255718369266321,
+              "revision": 0.507202853364389,
+              "visual_payload": 0.7040357825855657
+            }
+          },
+          "operation_p95_ms": {
+            "total_ms": 2.6934,
+            "validation_ms": 0.0067,
+            "prim_lookup_ms": 0.0345,
+            "payload_preparation_ms": 0.09670000000000001,
+            "attribute_lookup_ms": 0.1333,
+            "attribute_set_ms": 2.1438,
+            "write_observer_ms": 0.0,
+            "commit_ms": 0.0011,
+            "recovery_ms": 0.0,
+            "unattributed_ms": 0.2869000000000006
+          },
+          "group_p95_ms": {
+            "diagnostic_payload": 0.8956,
+            "emitter_payload": 0.734,
+            "revision": 0.4731000000000001,
+            "visual_payload": 0.3447
+          },
+          "slowest_samples": [
+            {
+              "revision": 735,
+              "tick": 735,
+              "status": "committed",
+              "profile_total_ms": 3.8455,
+              "outer_transaction_ms": 3.880100000060338,
+              "flow_render_update_ms": 4.538599999250437,
+              "active_block_count": 98,
+              "operations_ms": {
+                "total_ms": 3.8455,
+                "validation_ms": 0.0062,
+                "prim_lookup_ms": 0.0327,
+                "payload_preparation_ms": 0.1535,
+                "attribute_lookup_ms": 0.1683,
+                "attribute_set_ms": 3.0454,
+                "write_observer_ms": 0.0,
+                "commit_ms": 0.0009,
+                "recovery_ms": 0.0,
+                "unattributed_ms": 0.4384999999999999
+              },
+              "groups_ms": {
+                "diagnostic_payload": 1.494,
+                "emitter_payload": 0.5774,
+                "revision": 0.7614,
+                "visual_payload": 0.385
+              },
+              "write_count": 12,
+              "skipped_write_count": 7,
+              "group_write_disposition": {
+                "diagnostic_payload": {
+                  "written": 6,
+                  "skipped": 2
+                },
+                "emitter_payload": {
+                  "written": 2,
+                  "skipped": 4
+                },
+                "revision": {
+                  "written": 3,
+                  "skipped": 0
+                },
+                "visual_payload": {
+                  "written": 1,
+                  "skipped": 1
+                }
+              }
+            },
+            {
+              "revision": 1200,
+              "tick": 1200,
+              "status": "committed",
+              "profile_total_ms": 3.6802,
+              "outer_transaction_ms": 3.7152999993850244,
+              "flow_render_update_ms": 4.425999999511987,
+              "active_block_count": 187,
+              "operations_ms": {
+                "total_ms": 3.6802,
+                "validation_ms": 0.0089,
+                "prim_lookup_ms": 0.0394,
+                "payload_preparation_ms": 0.10919999999999999,
+                "attribute_lookup_ms": 0.1515,
+                "attribute_set_ms": 2.9440999999999997,
+                "write_observer_ms": 0.0,
+                "commit_ms": 0.0006,
+                "recovery_ms": 0.0,
+                "unattributed_ms": 0.4265000000000003
+              },
+              "groups_ms": {
+                "diagnostic_payload": 1.4584,
+                "emitter_payload": 0.8047,
+                "revision": 0.28790000000000004,
+                "visual_payload": 0.5395
+              },
+              "write_count": 14,
+              "skipped_write_count": 5,
+              "group_write_disposition": {
+                "diagnostic_payload": {
+                  "written": 7,
+                  "skipped": 1
+                },
+                "emitter_payload": {
+                  "written": 2,
+                  "skipped": 4
+                },
+                "revision": {
+                  "written": 3,
+                  "skipped": 0
+                },
+                "visual_payload": {
+                  "written": 2,
+                  "skipped": 0
+                }
+              }
+            },
+            {
+              "revision": 960,
+              "tick": 960,
+              "status": "committed",
+              "profile_total_ms": 3.4443,
+              "outer_transaction_ms": 3.4773000006680377,
+              "flow_render_update_ms": 4.312500000196451,
+              "active_block_count": 137,
+              "operations_ms": {
+                "total_ms": 3.4443,
+                "validation_ms": 0.005,
+                "prim_lookup_ms": 0.0184,
+                "payload_preparation_ms": 0.063,
+                "attribute_lookup_ms": 0.08719999999999999,
+                "attribute_set_ms": 3.0769,
+                "write_observer_ms": 0.0,
+                "commit_ms": 0.0008,
+                "recovery_ms": 0.0,
+                "unattributed_ms": 0.19300000000000006
+              },
+              "groups_ms": {
+                "diagnostic_payload": 0.8755,
+                "emitter_payload": 0.4583,
+                "revision": 1.5804,
+                "visual_payload": 0.25
+              },
+              "write_count": 14,
+              "skipped_write_count": 5,
+              "group_write_disposition": {
+                "diagnostic_payload": {
+                  "written": 7,
+                  "skipped": 1
+                },
+                "emitter_payload": {
+                  "written": 2,
+                  "skipped": 4
+                },
+                "revision": {
+                  "written": 3,
+                  "skipped": 0
+                },
+                "visual_payload": {
+                  "written": 2,
+                  "skipped": 0
+                }
+              }
+            },
+            {
+              "revision": 800,
+              "tick": 800,
+              "status": "committed",
+              "profile_total_ms": 3.2075,
+              "outer_transaction_ms": 3.2455999999001506,
+              "flow_render_update_ms": 5.690799999683804,
+              "active_block_count": 106,
+              "operations_ms": {
+                "total_ms": 3.2075,
+                "validation_ms": 0.0071,
+                "prim_lookup_ms": 0.0304,
+                "payload_preparation_ms": 0.0886,
+                "attribute_lookup_ms": 0.13949999999999999,
+                "attribute_set_ms": 2.5786,
+                "write_observer_ms": 0.0,
+                "commit_ms": 0.0013,
+                "recovery_ms": 0.0,
+                "unattributed_ms": 0.3620000000000001
+              },
+              "groups_ms": {
+                "diagnostic_payload": 1.206,
+                "emitter_payload": 0.5305,
+                "revision": 0.6022000000000001,
+                "visual_payload": 0.3746
+              },
+              "write_count": 12,
+              "skipped_write_count": 7,
+              "group_write_disposition": {
+                "diagnostic_payload": {
+                  "written": 6,
+                  "skipped": 2
+                },
+                "emitter_payload": {
+                  "written": 2,
+                  "skipped": 4
+                },
+                "revision": {
+                  "written": 3,
+                  "skipped": 0
+                },
+                "visual_payload": {
+                  "written": 1,
+                  "skipped": 1
+                }
+              }
+            },
+            {
+              "revision": 1110,
+              "tick": 1110,
+              "status": "committed",
+              "profile_total_ms": 3.0891,
+              "outer_transaction_ms": 3.1166999997367384,
+              "flow_render_update_ms": 4.396300000735209,
+              "active_block_count": 173,
+              "operations_ms": {
+                "total_ms": 3.0891,
+                "validation_ms": 0.0043,
+                "prim_lookup_ms": 0.0206,
+                "payload_preparation_ms": 0.0853,
+                "attribute_lookup_ms": 0.1202,
+                "attribute_set_ms": 2.5318000000000005,
+                "write_observer_ms": 0.0,
+                "commit_ms": 0.0007,
+                "recovery_ms": 0.0,
+                "unattributed_ms": 0.3261999999999996
+              },
+              "groups_ms": {
+                "diagnostic_payload": 1.3554,
+                "emitter_payload": 0.4606,
+                "revision": 0.3574,
+                "visual_payload": 0.48050000000000004
+              },
+              "write_count": 14,
+              "skipped_write_count": 5,
+              "group_write_disposition": {
+                "diagnostic_payload": {
+                  "written": 7,
+                  "skipped": 1
+                },
+                "emitter_payload": {
+                  "written": 2,
+                  "skipped": 4
+                },
+                "revision": {
+                  "written": 3,
+                  "skipped": 0
+                },
+                "visual_payload": {
+                  "written": 2,
+                  "skipped": 0
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "pair": 2,
+      "order": [
+        "profiled",
+        "control"
+      ],
+      "equivalence": {
+        "dry_authoritative_sha256": true,
+        "wet_authoritative_sha256": true,
+        "metrics_csv_sha256": true,
+        "ignition": true,
+        "final_usd_state": true
+      },
+      "control": {
+        "usd_transaction_p95_ms": 2.5446,
+        "flow_render_update_p95_ms": 7.6809
+      },
+      "profiled": {
+        "usd_transaction_p95_ms": 2.7538,
+        "flow_render_update_p95_ms": 7.3705,
+        "tail": {
+          "sample_count": 236,
+          "outer_transaction_p95_ms": 2.753800000391493,
+          "profile_total_p95_ms": 2.7203,
+          "attribute_set_p95_share": 0.8299084659780172,
+          "attribute_set_per_write_median_ms": 0.1193012987012987,
+          "flow_render_update_p95_ms": 7.370500000433822,
+          "profile_coverage_ratio_median": 0.9832911660445987,
+          "correlation": {
+            "profile_total_vs_outer_transaction": 0.9999020747707478,
+            "flow_render_update_vs_outer_transaction": -0.43089961990052233,
+            "write_count_vs_outer_transaction": 0.4272928388619219,
+            "attribute_set_per_write_vs_outer_transaction": 0.6758813936836345,
+            "active_blocks_vs_outer_transaction": 0.28780478958437694,
+            "operations_vs_outer_transaction": {
+              "total_ms": 0.9999020747707478,
+              "validation_ms": 0.41750115724059694,
+              "prim_lookup_ms": 0.3756179827900116,
+              "payload_preparation_ms": 0.6223360876368768,
+              "attribute_lookup_ms": 0.8976519271761515,
+              "attribute_set_ms": 0.9910174682822196,
+              "write_observer_ms": 0.0,
+              "commit_ms": 0.29827465869039294,
+              "recovery_ms": 0.0,
+              "unattributed_ms": 0.6100349545583689
+            },
+            "groups_vs_outer_transaction": {
+              "diagnostic_payload": 0.8352227625067161,
+              "emitter_payload": 0.714796699057671,
+              "revision": 0.61124568561044,
+              "visual_payload": 0.6798279715698631
+            }
+          },
+          "operation_p95_ms": {
+            "total_ms": 2.7203,
+            "validation_ms": 0.0069,
+            "prim_lookup_ms": 0.0309,
+            "payload_preparation_ms": 0.1007,
+            "attribute_lookup_ms": 0.11950000000000001,
+            "attribute_set_ms": 2.2576,
+            "write_observer_ms": 0.0,
+            "commit_ms": 0.0012,
+            "recovery_ms": 0.0,
+            "unattributed_ms": 0.32979999999999987
+          },
+          "group_p95_ms": {
+            "diagnostic_payload": 0.9636,
+            "emitter_payload": 0.7623,
+            "revision": 0.6343,
+            "visual_payload": 0.3349
+          },
+          "slowest_samples": [
+            {
+              "revision": 540,
+              "tick": 540,
+              "status": "committed",
+              "profile_total_ms": 3.6542,
+              "outer_transaction_ms": 3.69700000010198,
+              "flow_render_update_ms": 4.504300000007788,
+              "active_block_count": 24,
+              "operations_ms": {
+                "total_ms": 3.6542,
+                "validation_ms": 0.0102,
+                "prim_lookup_ms": 0.0507,
+                "payload_preparation_ms": 0.11860000000000001,
+                "attribute_lookup_ms": 0.1455,
+                "attribute_set_ms": 2.9597,
+                "write_observer_ms": 0.0,
+                "commit_ms": 0.0009,
+                "recovery_ms": 0.0,
+                "unattributed_ms": 0.3685999999999998
+              },
+              "groups_ms": {
+                "diagnostic_payload": 1.1003,
+                "emitter_payload": 0.914,
+                "revision": 0.8083,
+                "visual_payload": 0.2631
+              },
+              "write_count": 11,
+              "skipped_write_count": 8,
+              "group_write_disposition": {
+                "diagnostic_payload": {
+                  "written": 5,
+                  "skipped": 3
+                },
+                "emitter_payload": {
+                  "written": 2,
+                  "skipped": 4
+                },
+                "revision": {
+                  "written": 3,
+                  "skipped": 0
+                },
+                "visual_payload": {
+                  "written": 1,
+                  "skipped": 1
+                }
+              }
+            },
+            {
+              "revision": 380,
+              "tick": 380,
+              "status": "committed",
+              "profile_total_ms": 3.5361,
+              "outer_transaction_ms": 3.575099999579834,
+              "flow_render_update_ms": 6.099900000663183,
+              "active_block_count": 12,
+              "operations_ms": {
+                "total_ms": 3.5361,
+                "validation_ms": 0.0133,
+                "prim_lookup_ms": 0.0256,
+                "payload_preparation_ms": 0.11800000000000001,
+                "attribute_lookup_ms": 0.1463,
+                "attribute_set_ms": 2.8599000000000006,
+                "write_observer_ms": 0.0,
+                "commit_ms": 0.001,
+                "recovery_ms": 0.0,
+                "unattributed_ms": 0.37199999999999944
+              },
+              "groups_ms": {
+                "diagnostic_payload": 0.9117,
+                "emitter_payload": 1.1459,
+                "revision": 0.6628000000000001,
+                "visual_payload": 0.2709
+              },
+              "write_count": 11,
+              "skipped_write_count": 8,
+              "group_write_disposition": {
+                "diagnostic_payload": {
+                  "written": 4,
+                  "skipped": 4
+                },
+                "emitter_payload": {
+                  "written": 3,
+                  "skipped": 3
+                },
+                "revision": {
+                  "written": 3,
+                  "skipped": 0
+                },
+                "visual_payload": {
+                  "written": 1,
+                  "skipped": 1
+                }
+              }
+            },
+            {
+              "revision": 375,
+              "tick": 375,
+              "status": "committed",
+              "profile_total_ms": 3.4325,
+              "outer_transaction_ms": 3.4783000000970787,
+              "flow_render_update_ms": 7.055000000036671,
+              "active_block_count": 8,
+              "operations_ms": {
+                "total_ms": 3.4325,
+                "validation_ms": 0.0067,
+                "prim_lookup_ms": 0.0299,
+                "payload_preparation_ms": 0.11080000000000001,
+                "attribute_lookup_ms": 0.1391,
+                "attribute_set_ms": 2.7995,
+                "write_observer_ms": 0.0,
+                "commit_ms": 0.0011,
+                "recovery_ms": 0.0,
+                "unattributed_ms": 0.34540000000000015
+              },
+              "groups_ms": {
+                "diagnostic_payload": 0.8734,
+                "emitter_payload": 1.1382999999999999,
+                "revision": 0.6506000000000001,
+                "visual_payload": 0.2662
+              },
+              "write_count": 11,
+              "skipped_write_count": 8,
+              "group_write_disposition": {
+                "diagnostic_payload": {
+                  "written": 4,
+                  "skipped": 4
+                },
+                "emitter_payload": {
+                  "written": 3,
+                  "skipped": 3
+                },
+                "revision": {
+                  "written": 3,
+                  "skipped": 0
+                },
+                "visual_payload": {
+                  "written": 1,
+                  "skipped": 1
+                }
+              }
+            },
+            {
+              "revision": 575,
+              "tick": 575,
+              "status": "committed",
+              "profile_total_ms": 3.2548,
+              "outer_transaction_ms": 3.29890000011801,
+              "flow_render_update_ms": 4.833999999391381,
+              "active_block_count": 32,
+              "operations_ms": {
+                "total_ms": 3.2548,
+                "validation_ms": 0.0063,
+                "prim_lookup_ms": 0.0215,
+                "payload_preparation_ms": 0.1298,
+                "attribute_lookup_ms": 0.12830000000000003,
+                "attribute_set_ms": 2.6126,
+                "write_observer_ms": 0.0,
+                "commit_ms": 0.0009,
+                "recovery_ms": 0.0,
+                "unattributed_ms": 0.35539999999999994
+              },
+              "groups_ms": {
+                "diagnostic_payload": 1.1677,
+                "emitter_payload": 0.7506999999999999,
+                "revision": 0.43079999999999996,
+                "visual_payload": 0.385
+              },
+              "write_count": 11,
+              "skipped_write_count": 8,
+              "group_write_disposition": {
+                "diagnostic_payload": {
+                  "written": 5,
+                  "skipped": 3
+                },
+                "emitter_payload": {
+                  "written": 2,
+                  "skipped": 4
+                },
+                "revision": {
+                  "written": 3,
+                  "skipped": 0
+                },
+                "visual_payload": {
+                  "written": 1,
+                  "skipped": 1
+                }
+              }
+            },
+            {
+              "revision": 500,
+              "tick": 500,
+              "status": "committed",
+              "profile_total_ms": 3.2676,
+              "outer_transaction_ms": 3.2978999997794745,
+              "flow_render_update_ms": 4.307199999857403,
+              "active_block_count": 24,
+              "operations_ms": {
+                "total_ms": 3.2676,
+                "validation_ms": 0.004,
+                "prim_lookup_ms": 0.0218,
+                "payload_preparation_ms": 0.11030000000000001,
+                "attribute_lookup_ms": 0.1385,
+                "attribute_set_ms": 2.6452,
+                "write_observer_ms": 0.0,
+                "commit_ms": 0.0009,
+                "recovery_ms": 0.0,
+                "unattributed_ms": 0.34689999999999976
+              },
+              "groups_ms": {
+                "diagnostic_payload": 1.0654000000000001,
+                "emitter_payload": 0.6688000000000001,
+                "revision": 0.7095,
+                "visual_payload": 0.3228
+              },
+              "write_count": 11,
+              "skipped_write_count": 8,
+              "group_write_disposition": {
+                "diagnostic_payload": {
+                  "written": 5,
+                  "skipped": 3
+                },
+                "emitter_payload": {
+                  "written": 2,
+                  "skipped": 4
+                },
+                "revision": {
+                  "written": 3,
+                  "skipped": 0
+                },
+                "visual_payload": {
+                  "written": 1,
+                  "skipped": 1
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "pair": 3,
+      "order": [
+        "control",
+        "profiled"
+      ],
+      "equivalence": {
+        "dry_authoritative_sha256": true,
+        "wet_authoritative_sha256": true,
+        "metrics_csv_sha256": true,
+        "ignition": true,
+        "final_usd_state": true
+      },
+      "control": {
+        "usd_transaction_p95_ms": 2.5358,
+        "flow_render_update_p95_ms": 7.4712
+      },
+      "profiled": {
+        "usd_transaction_p95_ms": 2.3843,
+        "flow_render_update_p95_ms": 7.4325,
+        "tail": {
+          "sample_count": 236,
+          "outer_transaction_p95_ms": 2.3842999999033054,
+          "profile_total_p95_ms": 2.3266,
+          "attribute_set_p95_share": 0.82975156881286,
+          "attribute_set_per_write_median_ms": 0.11767714285714284,
+          "flow_render_update_p95_ms": 7.43250000050466,
+          "profile_coverage_ratio_median": 0.9845658399865804,
+          "correlation": {
+            "profile_total_vs_outer_transaction": 0.9998398382222162,
+            "flow_render_update_vs_outer_transaction": -0.2899472587637323,
+            "write_count_vs_outer_transaction": 0.45323136194269437,
+            "attribute_set_per_write_vs_outer_transaction": 0.5723885471049353,
+            "active_blocks_vs_outer_transaction": 0.3731284620453977,
+            "operations_vs_outer_transaction": {
+              "total_ms": 0.9998398382222162,
+              "validation_ms": 0.2605135319332285,
+              "prim_lookup_ms": 0.23754493035415425,
+              "payload_preparation_ms": 0.5083896497639785,
+              "attribute_lookup_ms": 0.7237495079949214,
+              "attribute_set_ms": 0.9833293224943099,
+              "write_observer_ms": 0.0,
+              "commit_ms": 0.42052083397971485,
+              "recovery_ms": 0.0,
+              "unattributed_ms": 0.5036806898141737
+            },
+            "groups_vs_outer_transaction": {
+              "diagnostic_payload": 0.8296909848200175,
+              "emitter_payload": 0.6616110673839632,
+              "revision": 0.6344185846268778,
+              "visual_payload": 0.664804994751021
+            }
+          },
+          "operation_p95_ms": {
+            "total_ms": 2.3266,
+            "validation_ms": 0.0075,
+            "prim_lookup_ms": 0.0303,
+            "payload_preparation_ms": 0.0903,
+            "attribute_lookup_ms": 0.1075,
+            "attribute_set_ms": 1.9305,
+            "write_observer_ms": 0.0,
+            "commit_ms": 0.0011,
+            "recovery_ms": 0.0,
+            "unattributed_ms": 0.28259999999999996
+          },
+          "group_p95_ms": {
+            "diagnostic_payload": 0.8521,
+            "emitter_payload": 0.6886,
+            "revision": 0.4314,
+            "visual_payload": 0.2814
+          },
+          "slowest_samples": [
+            {
+              "revision": 430,
+              "tick": 430,
+              "status": "committed",
+              "profile_total_ms": 3.4872,
+              "outer_transaction_ms": 3.5372000002098503,
+              "flow_render_update_ms": 6.666199999926903,
+              "active_block_count": 24,
+              "operations_ms": {
+                "total_ms": 3.4872,
+                "validation_ms": 0.0048,
+                "prim_lookup_ms": 0.0221,
+                "payload_preparation_ms": 0.1138,
+                "attribute_lookup_ms": 0.13310000000000002,
+                "attribute_set_ms": 2.8426000000000005,
+                "write_observer_ms": 0.0,
+                "commit_ms": 0.0016,
+                "recovery_ms": 0.0,
+                "unattributed_ms": 0.36919999999999975
+              },
+              "groups_ms": {
+                "diagnostic_payload": 0.9354,
+                "emitter_payload": 0.9239,
+                "revision": 0.8249,
+                "visual_payload": 0.2827
+              },
+              "write_count": 10,
+              "skipped_write_count": 9,
+              "group_write_disposition": {
+                "diagnostic_payload": {
+                  "written": 4,
+                  "skipped": 4
+                },
+                "emitter_payload": {
+                  "written": 2,
+                  "skipped": 4
+                },
+                "revision": {
+                  "written": 3,
+                  "skipped": 0
+                },
+                "visual_payload": {
+                  "written": 1,
+                  "skipped": 1
+                }
+              }
+            },
+            {
+              "revision": 425,
+              "tick": 425,
+              "status": "committed",
+              "profile_total_ms": 3.4278,
+              "outer_transaction_ms": 3.475399999842921,
+              "flow_render_update_ms": 6.83149999986199,
+              "active_block_count": 24,
+              "operations_ms": {
+                "total_ms": 3.4278,
+                "validation_ms": 0.0079,
+                "prim_lookup_ms": 0.0314,
+                "payload_preparation_ms": 0.1127,
+                "attribute_lookup_ms": 0.13139999999999996,
+                "attribute_set_ms": 2.7193,
+                "write_observer_ms": 0.0,
+                "commit_ms": 0.0016,
+                "recovery_ms": 0.0,
+                "unattributed_ms": 0.42349999999999977
+              },
+              "groups_ms": {
+                "diagnostic_payload": 0.8806,
+                "emitter_payload": 0.9946,
+                "revision": 0.696,
+                "visual_payload": 0.2705
+              },
+              "write_count": 10,
+              "skipped_write_count": 9,
+              "group_write_disposition": {
+                "diagnostic_payload": {
+                  "written": 4,
+                  "skipped": 4
+                },
+                "emitter_payload": {
+                  "written": 2,
+                  "skipped": 4
+                },
+                "revision": {
+                  "written": 3,
+                  "skipped": 0
+                },
+                "visual_payload": {
+                  "written": 1,
+                  "skipped": 1
+                }
+              }
+            },
+            {
+              "revision": 1190,
+              "tick": 1190,
+              "status": "committed",
+              "profile_total_ms": 3.1526,
+              "outer_transaction_ms": 3.1817999997656443,
+              "flow_render_update_ms": 4.720099999758531,
+              "active_block_count": 173,
+              "operations_ms": {
+                "total_ms": 3.1526,
+                "validation_ms": 0.0036,
+                "prim_lookup_ms": 0.0161,
+                "payload_preparation_ms": 0.096,
+                "attribute_lookup_ms": 0.30329999999999996,
+                "attribute_set_ms": 2.5236000000000005,
+                "write_observer_ms": 0.0,
+                "commit_ms": 0.0008,
+                "recovery_ms": 0.0,
+                "unattributed_ms": 0.2091999999999996
+              },
+              "groups_ms": {
+                "diagnostic_payload": 1.1057,
+                "emitter_payload": 0.3971,
+                "revision": 0.4817,
+                "visual_payload": 0.6796
+              },
+              "write_count": 14,
+              "skipped_write_count": 5,
+              "group_write_disposition": {
+                "diagnostic_payload": {
+                  "written": 7,
+                  "skipped": 1
+                },
+                "emitter_payload": {
+                  "written": 2,
+                  "skipped": 4
+                },
+                "revision": {
+                  "written": 3,
+                  "skipped": 0
+                },
+                "visual_payload": {
+                  "written": 2,
+                  "skipped": 0
+                }
+              }
+            },
+            {
+              "revision": 600,
+              "tick": 600,
+              "status": "committed",
+              "profile_total_ms": 3.0472,
+              "outer_transaction_ms": 3.080999999838241,
+              "flow_render_update_ms": 6.113000000368629,
+              "active_block_count": 32,
+              "operations_ms": {
+                "total_ms": 3.0472,
+                "validation_ms": 0.0072,
+                "prim_lookup_ms": 0.026,
+                "payload_preparation_ms": 0.0963,
+                "attribute_lookup_ms": 0.12079999999999998,
+                "attribute_set_ms": 2.4720000000000004,
+                "write_observer_ms": 0.0,
+                "commit_ms": 0.0011,
+                "recovery_ms": 0.0,
+                "unattributed_ms": 0.32379999999999987
+              },
+              "groups_ms": {
+                "diagnostic_payload": 1.0218,
+                "emitter_payload": 0.7225,
+                "revision": 0.6003999999999999,
+                "visual_payload": 0.2454
+              },
+              "write_count": 11,
+              "skipped_write_count": 8,
+              "group_write_disposition": {
+                "diagnostic_payload": {
+                  "written": 5,
+                  "skipped": 3
+                },
+                "emitter_payload": {
+                  "written": 2,
+                  "skipped": 4
+                },
+                "revision": {
+                  "written": 3,
+                  "skipped": 0
+                },
+                "visual_payload": {
+                  "written": 1,
+                  "skipped": 1
+                }
+              }
+            },
+            {
+              "revision": 820,
+              "tick": 820,
+              "status": "committed",
+              "profile_total_ms": 2.9693,
+              "outer_transaction_ms": 3.001800000674848,
+              "flow_render_update_ms": 4.885700000158977,
+              "active_block_count": 109,
+              "operations_ms": {
+                "total_ms": 2.9693,
+                "validation_ms": 0.0034,
+                "prim_lookup_ms": 0.0127,
+                "payload_preparation_ms": 0.0624,
+                "attribute_lookup_ms": 0.09419999999999999,
+                "attribute_set_ms": 2.1371000000000007,
+                "write_observer_ms": 0.0,
+                "commit_ms": 0.001,
+                "recovery_ms": 0.0,
+                "unattributed_ms": 0.6584999999999992
+              },
+              "groups_ms": {
+                "diagnostic_payload": 1.3212,
+                "emitter_payload": 0.36629999999999996,
+                "revision": 0.3003,
+                "visual_payload": 0.2415
+              },
+              "write_count": 12,
+              "skipped_write_count": 7,
+              "group_write_disposition": {
+                "diagnostic_payload": {
+                  "written": 6,
+                  "skipped": 2
+                },
+                "emitter_payload": {
+                  "written": 2,
+                  "skipped": 4
+                },
+                "revision": {
+                  "written": 3,
+                  "skipped": 0
+                },
+                "visual_payload": {
+                  "written": 1,
+                  "skipped": 1
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "decision": {
+    "production_default_changed": false,
+    "rollback_changed": false,
+    "revision_last_changed": false,
+    "next_step": "Use the measured tail attribution to choose the smallest default-off USD notification or publication-boundary experiment."
+  }
+}

@@ -1088,6 +1088,9 @@ class CampfireAppExtension(omni.ext.IExt):
         resident_snapshot_skip_unchanged_enabled = settings.get_as_bool(
             f"{SETTINGS_ROOT}/residentSnapshotSkipUnchangedEnabled"
         )
+        resident_snapshot_lightweight_tail_timing_enabled = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/residentSnapshotLightweightTailTimingEnabled"
+        )
         resident_native_backend_enabled = settings.get_as_bool(
             f"{SETTINGS_ROOT}/residentNativeBackendEnabled"
         )
@@ -1166,6 +1169,13 @@ class CampfireAppExtension(omni.ext.IExt):
             raise ValueError(
                 "Resident snapshot unchanged-value skipping requires lightweight commits"
             )
+        if (
+            resident_snapshot_lightweight_tail_timing_enabled
+            and not resident_snapshot_lightweight_commit_enabled
+        ):
+            raise ValueError(
+                "Resident snapshot lightweight tail timing requires lightweight commits"
+            )
         if resident_native_backend_enabled and not resident_snapshot_adapter_enabled:
             raise ValueError(
                 "Resident native backend requires the resident snapshot adapter"
@@ -1215,6 +1225,7 @@ class CampfireAppExtension(omni.ext.IExt):
         resident_adapter_status = None
         resident_final_usd_state = None
         resident_transaction_profiles = ()
+        resident_lightweight_tail_profiles = ()
         if resident_snapshot_adapter_enabled:
             resident_timeline = omni.timeline.get_timeline_interface()
             resident_timeline_was_playing = bool(resident_timeline.is_playing())
@@ -1239,6 +1250,9 @@ class CampfireAppExtension(omni.ext.IExt):
                 cache_usd_handles=resident_snapshot_handle_cache_enabled,
                 lightweight_commits=resident_snapshot_lightweight_commit_enabled,
                 skip_unchanged_derived=resident_snapshot_skip_unchanged_enabled,
+                profile_lightweight_tails=(
+                    resident_snapshot_lightweight_tail_timing_enabled
+                ),
             )
             self._resident_snapshot_adapter = resident_adapter
         ignition_seconds = {"dry": None, "wet": None}
@@ -1254,6 +1268,7 @@ class CampfireAppExtension(omni.ext.IExt):
         resident_snapshot_build_times_ms = []
         resident_snapshot_transaction_times_ms = []
         update_times_ms = []
+        flow_update_steps = []
         active_block_query_times_ms = []
         capture_times_ms = []
         video_capture_times_ms = []
@@ -1476,6 +1491,7 @@ class CampfireAppExtension(omni.ext.IExt):
                     )
                 )
                 if update_flow:
+                    flow_update_steps.append(step_index)
                     adapter_started = time.perf_counter()
                     if resident_adapter is not None:
                         snapshot_build_started = time.perf_counter()
@@ -1623,6 +1639,9 @@ class CampfireAppExtension(omni.ext.IExt):
                 resident_adapter_status = resident_adapter.status()
                 resident_transaction_profiles = (
                     resident_adapter.transaction_profiles()
+                )
+                resident_lightweight_tail_profiles = (
+                    resident_adapter.lightweight_tail_profiles()
                 )
                 emitter = stage.GetPrimAtPath(FLOW_EMITTER_PATH)
                 resident_final_usd_state = {
@@ -1866,6 +1885,123 @@ class CampfireAppExtension(omni.ext.IExt):
                         },
                     },
                 }
+            resident_lightweight_tail_profile = None
+            if resident_lightweight_tail_profiles:
+                tail_warmup_samples = max(0, flow_warmup_samples - 1)
+                measured_tail_profiles = resident_lightweight_tail_profiles[
+                    tail_warmup_samples:
+                ]
+                tail_operation_fields = (
+                    "total_ms",
+                    "validation_ms",
+                    "prim_lookup_ms",
+                    "payload_preparation_ms",
+                    "attribute_lookup_ms",
+                    "attribute_set_ms",
+                    "write_observer_ms",
+                    "commit_ms",
+                    "recovery_ms",
+                    "unattributed_ms",
+                )
+                tail_group_names = tuple(
+                    sorted(
+                        {
+                            name
+                            for profile in measured_tail_profiles
+                            for name, _value in profile.group_ms
+                        }
+                    )
+                )
+                flow_samples_by_step = {
+                    step: {
+                        "outer_transaction_ms": transaction_ms,
+                        "flow_render_update_ms": update_ms,
+                        "active_block_count": active_count,
+                    }
+                    for step, transaction_ms, update_ms, active_count in zip(
+                        flow_update_steps,
+                        resident_snapshot_transaction_times_ms,
+                        update_times_ms,
+                        active_block_counts,
+                    )
+                }
+                tail_samples = []
+                for profile in measured_tail_profiles:
+                    correlated = flow_samples_by_step[profile.tick]
+                    tail_samples.append(
+                        {
+                            "revision": profile.revision,
+                            "tick": profile.tick,
+                            "status": profile.status,
+                            "profile_total_ms": profile.total_ms,
+                            "outer_transaction_ms": correlated[
+                                "outer_transaction_ms"
+                            ],
+                            "flow_render_update_ms": correlated[
+                                "flow_render_update_ms"
+                            ],
+                            "active_block_count": correlated[
+                                "active_block_count"
+                            ],
+                            "operations_ms": {
+                                name: getattr(profile, name)
+                                for name in tail_operation_fields
+                            },
+                            "groups_ms": dict(profile.group_ms),
+                            "write_count": profile.write_count,
+                            "skipped_write_count": profile.skipped_write_count,
+                            "group_write_disposition": {
+                                name: {"written": written, "skipped": skipped}
+                                for name, written, skipped in (
+                                    profile.group_write_disposition
+                                )
+                            },
+                        }
+                    )
+                resident_lightweight_tail_profile = {
+                    "sample_count": len(measured_tail_profiles),
+                    "warmup_samples_excluded": tail_warmup_samples + 1,
+                    "seed_transaction_profiled": False,
+                    "status_counts": {
+                        status: sum(
+                            profile.status == status
+                            for profile in resident_lightweight_tail_profiles
+                        )
+                        for status in ("committed", "recovered", "faulted")
+                    },
+                    "operations": {
+                        name: summarize_timing_ms(
+                            [
+                                getattr(profile, name)
+                                for profile in measured_tail_profiles
+                            ]
+                        )
+                        for name in tail_operation_fields
+                    },
+                    "groups": {
+                        name: summarize_timing_ms(
+                            [
+                                dict(profile.group_ms).get(name, 0.0)
+                                for profile in measured_tail_profiles
+                            ]
+                        )
+                        for name in tail_group_names
+                    },
+                    "counts": {
+                        name: {
+                            "minimum": min(
+                                getattr(profile, name)
+                                for profile in measured_tail_profiles
+                            ),
+                            "maximum": max(
+                                getattr(profile, name)
+                                for profile in measured_tail_profiles
+                            ),
+                        }
+                        for name in ("write_count", "skipped_write_count")
+                    },
+                    "samples": tail_samples,
+                }
             startup_known_seconds = sum(self._startup_timing.values())
             startup_timing = {
                 **self._startup_timing,
@@ -2058,6 +2194,9 @@ class CampfireAppExtension(omni.ext.IExt):
                         "skip_unchanged_derived_enabled": (
                             resident_snapshot_skip_unchanged_enabled
                         ),
+                        "lightweight_tail_timing_enabled": (
+                            resident_snapshot_lightweight_tail_timing_enabled
+                        ),
                         "producer": (
                             "resident_native_backend"
                             if resident_native_backend_enabled
@@ -2079,6 +2218,9 @@ class CampfireAppExtension(omni.ext.IExt):
                         "status_after_timeline_stop": resident_adapter_status,
                         "final_usd_state": resident_final_usd_state,
                         "transaction_profile": resident_transaction_profile,
+                        "lightweight_tail_profile": (
+                            resident_lightweight_tail_profile
+                        ),
                     },
                     "final_phase_refresh_seconds": round(
                         final_phase_refresh_seconds, 6
