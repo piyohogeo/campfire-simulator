@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6BQ fixed Flow point-to-NanoVDB scaling</title>
+  <desc id="desc">Persistent native voxelization p95 rises from 4.0099 milliseconds at 360 points to 5.7224 milliseconds at 7200 points while generated NanoVDB payload grows from 2.90 to 10.90 megabytes.</desc>
+  <rect width="1200" height="680" rx="32" fill="#111820"/>
+  <text x="70" y="68" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">PHASE 6BQ · DEFAULT-OFF FIXED-FLOW SPIKE</text>
+  <text x="70" y="116" fill="#fff" font-family="Segoe UI, sans-serif" font-size="35" font-weight="700">NanoVDB generation is the expensive boundary</text>
+  <text x="70" y="150" fill="#a8beca" font-family="Segoe UI, sans-serif" font-size="17">Flow 110.0.0 · RTX 3090 · persistent context · 120 measured + 20 warmup · maxBlocks 256</text>
+  <rect x="70" y="190" width="650" height="345" rx="20" fill="#182128"/>
+  <text x="105" y="230" fill="#fff" font-family="Segoe UI, sans-serif" font-size="20" font-weight="700">Native call p95 (ms)</text>
+  <line x1="115" y1="475" x2="680" y2="475" stroke="#506678"/>
+  <line x1="115" y1="275" x2="115" y2="475" stroke="#506678"/>
+  <line x1="115" y1="409" x2="680" y2="409" stroke="#2d3d49" stroke-dasharray="6 7"/><text x="82" y="414" fill="#a8beca" font-family="Consolas, monospace" font-size="13">2</text>
+  <line x1="115" y1="342" x2="680" y2="342" stroke="#2d3d49" stroke-dasharray="6 7"/><text x="82" y="347" fill="#a8beca" font-family="Consolas, monospace" font-size="13">4</text>
+  <line x1="115" y1="275" x2="680" y2="275" stroke="#2d3d49" stroke-dasharray="6 7"/><text x="82" y="280" fill="#a8beca" font-family="Consolas, monospace" font-size="13">6</text>
+  <polyline points="155,340.7 320,332.8 485,291.4 650,283.0" fill="none" stroke="#f4b860" stroke-width="5"/>
+  <circle cx="155" cy="340.7" r="7" fill="#f4b860"/><circle cx="320" cy="332.8" r="7" fill="#f4b860"/><circle cx="485" cy="291.4" r="7" fill="#f4b860"/><circle cx="650" cy="283.0" r="7" fill="#f4b860"/>
+  <text x="129" y="326" fill="#fff" font-family="Consolas, monospace" font-size="14">4.0099</text><text x="294" y="318" fill="#fff" font-family="Consolas, monospace" font-size="14">4.2650</text><text x="459" y="277" fill="#fff" font-family="Consolas, monospace" font-size="14">5.5074</text><text x="624" y="269" fill="#fff" font-family="Consolas, monospace" font-size="14">5.7224</text>
+  <text x="133" y="505" fill="#a8beca" font-family="Consolas, monospace" font-size="14">360</text><text x="296" y="505" fill="#a8beca" font-family="Consolas, monospace" font-size="14">1,800</text><text x="461" y="505" fill="#a8beca" font-family="Consolas, monospace" font-size="14">3,600</text><text x="626" y="505" fill="#a8beca" font-family="Consolas, monospace" font-size="14">7,200</text>
+  <rect x="750" y="190" width="380" height="345" rx="20" fill="#192734" stroke="#315269"/>
+  <text x="785" y="230" fill="#fff" font-family="Segoe UI, sans-serif" font-size="20" font-weight="700">20-log target · 7,200 points</text>
+  <text x="785" y="278" fill="#65c18c" font-family="Segoe UI, sans-serif" font-size="15">NumPy source preparation</text><text x="785" y="307" fill="#fff" font-family="Consolas, monospace" font-size="22">mean 0.0563 ms</text>
+  <text x="785" y="353" fill="#65c18c" font-family="Segoe UI, sans-serif" font-size="15">Native voxelize + NanoVDB + sync</text><text x="785" y="382" fill="#fff" font-family="Consolas, monospace" font-size="22">p95 5.7224 ms</text>
+  <text x="785" y="428" fill="#65c18c" font-family="Segoe UI, sans-serif" font-size="15">Generated five-buffer payload</text><text x="785" y="457" fill="#fff" font-family="Consolas, monospace" font-size="22">10.90 MB / update</text>
+  <text x="785" y="500" fill="#a8beca" font-family="Segoe UI, sans-serif" font-size="14">USD / ingest / consumer / solver excluded</text>
+  <rect x="70" y="575" width="1060" height="62" rx="18" fill="#3a2d18" stroke="#f4b860"/>
+  <text x="100" y="601" fill="#f4b860" font-family="Segoe UI, sans-serif" font-size="17" font-weight="700">NOT AN ADOPTION RESULT · persistent lifetime is mandatory; non-persistent repetition exceeded 8 GB.</text>
+  <text x="100" y="624" fill="#d7e1e8" font-family="Segoe UI, sans-serif" font-size="14">Shared SoA and ChangeBlock do not remove producer, payload, ingest, rasterization, solver, or rendering cost.</text>
+</svg>

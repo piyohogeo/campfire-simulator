@@ -74,3 +74,22 @@ productionコードを変えず、別runnerで実Flow matrixを既定OFF実行�
 この実験が終わるまでPoint／NanoVDBをproduction採用せず、物理式、JSON schema、既定値、rollback、revision、immutable snapshot契約を変更しない。
 
 再現コマンドは`powershell.exe -ExecutionPolicy Bypass -File .\scripts\run_phase6bo_emitter_transport_scalability.ps1`である。標準回帰は全8 process・47 / 47件を320.0秒で合格した。
+
+## Phase 6BP/BQ 固定Flow runtime境界の途中評価
+
+productionを変更しない既定OFF runnerで、同梱`PointCloud/Native.usda`と実`omni.flowusd`を調べた。Flow stage接続後にPointCloud内部のEmitterを削除・再定義し、core simulationを有効化した試行は`omni.flowusd.plugin.dll`でnative crashした。そのためlive stageの構造変更は比較方法として不採用とし、以後は既存Primへの値設定またはステージ接続前のoverlay authoringだけに限定した。
+
+同梱command実装ではNative PointCloudが`FlowEmitterPoint.pointsPrim` relationshipでUSD `Points`を参照する。`FlowEmitterPoint`へ`pointPositions`／`pointFuels`／`pointTemperatures`／`pointSmokes`を直接設定する試行、および完成済みoverlayで`pointsPrim`を事前authoringする試行は、USDの点数・合計値・revisionが一致し、1 publicationにつき関連`ObjectsChanged` 1回で完走した。しかし固定buildのFabricはpoint channelまたはrelationshipを未登録と警告し、public active-block／NanoVDB readbackは0だった。したがってこの経路のFlow取込み・rasterization・出力同値性は未確認であり、成功値として扱わない。なおNative PointCloud presetはcore simulationを既定で無効にするため、public active-block queryがこのoffscreen point-cloud処理を表す保証もない。
+
+一方、固定extensionのbundled testと`FlowVoxelizePointsAndSync` commandが実際に呼ぶ`IFlowUsd.voxelize_points_and_sync_v2`は利用可能だった。runtime docstringも取得し、points/colorsは連続`numpy.float32`、2 transformは`numpy.float64`、cell sizeとmax blocksを受け、5 bufferを返すことを確認した。`init_persistent_voxelize_context()`／`release_persistent_voxelize_context()`は引数なしである。persistent contextを使わない反復は360点・`maxBlocks=256`でもprivate memoryが8 GBを超えて完了せず、毎frame利用候補として失格である。persistent contextをrun全体で再利用すると120計測＋20 warmupを安定完了した。
+
+| 薪 | 点 | 入力bytes/update | source mean | contiguous準備 mean | native voxelize＋NanoVDB＋sync mean / p95 / max | 5 buffer bytes |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 360 | 8,640 | 0.0335 ms | 0.0030 ms | 3.0708 / 4.0099 / 9.6276 ms | 2,901,280 |
+| 5 | 1,800 | 43,200 | 0.0355 ms | 0.0038 ms | 3.2976 / 4.2650 / 4.9662 ms | 5,794,880 |
+| 10 | 3,600 | 86,400 | 0.0417 ms | 0.0032 ms | 4.1380 / 5.5074 / 5.9611 ms | 9,523,840 |
+| 20 | 7,200 | 172,800 | 0.0563 ms | 0.0046 ms | 4.3039 / 5.7224 / 6.1838 ms | 10,896,000 |
+
+これはpoint sourceからNanoVDBを作って同期するproducer境界だけの値であり、NanoVDB EmitterへのUSD発行、`omni.flowusd`取込み、consumer revision、Flow solver、描画は含まない。20本ではproducerだけで4 msを超え、入力172.8 KBに対して生成payloadは約10.90 MB/updateとなった。したがってSet回数削減や`Sdf.ChangeBlock`だけでは解消せず、共有SoA＋Python proxy案もこのGPU voxelize／NanoVDB転送ボトルネックを解決しない。
+
+現時点の判断は「native NanoVDB producerは実在するがproduction不採用」である。次は固定Flow版が5 bufferを`FlowEmitterNanoVdb`へ安全に接続できる公開consumer境界を、同梱command／OmniGraph／schemaの範囲で調べる。接続できるまでsolver/renderを含む比較値やfuel・temperature・smoke同値性を推定しない。再現は`run_phase6bq_flow_native_voxelize.ps1`、binding調査は`probe_flow_native_interface.py`である。標準Kit suiteは全8 process・47 / 47件を317.4秒で合格した。

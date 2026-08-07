@@ -37,7 +37,7 @@
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>47 / 47 passed</strong></div>
-        <div><span>次の焦点</span><strong>Emitter実Flow容量比較</strong></div>
+        <div><span>次の焦点</span><strong>NanoVDB consumer公開境界</strong></div>
       </div>
     </div>
   </header>
@@ -60,9 +60,9 @@
         </aside>
         <div class="entry-body">
           <header class="entry-header">
-            <p class="section-kicker">Phase 6BO · Emitter transport scalability</p>
-            <h2>Setが少なくても、<br>配列は軽くならない。</h2>
-            <p>現在のSphere Emitter・19属性最適化を維持したまま、将来のPoint／NanoVDB経路を固定Flow 110.0.0で監査しました。1本360表面点、20本7,200点を基準に、Point 1 Primと薪ごと最大20 PrimをUSD-onlyで測定。1 Primでは動的3配列のSet数は4のままですが、NumPy→Vt p95は360点0.0051 msから7,200点0.0385 msへ増えました。ChangeBlockは全caseを1通知へ集約しても、配列生成・copy・Flow取込み・ラスタライズは消しません。NanoVDBを含む実Flow比較は次の既定OFF実験へ分離し、production、物理式、JSON、既定値は変更していません。</p>
+            <p class="section-kicker">Phase 6BQ · Fixed-Flow native NanoVDB boundary</p>
+            <h2>配列準備より、<br>NanoVDB生成と同期が重い。</h2>
+            <p>現在のSphere Emitter・19属性最適化を維持したまま、固定Flow 110.0.0の実runtime境界を既定OFFで測りました。persistent contextを正しく再利用すると、360点から7,200点のpoint-to-NanoVDB生成p95は4.0099 msから5.7224 msへ増加し、20本の5 buffer出力は約10.90 MB/updateです。source配列準備はmean 0.0563 msに留まり、支配項ではありません。PointCloudのlive構造変更はnative crashするため不採用、USD Point channelの実Flow取込みも未確認です。production、物理式、JSON、rollback、revision、immutable snapshot、既定値は変更していません。</p>
           </header>
 
           <div class="capture-pair" aria-label="Phase 6校正シーンと数値レポート">
@@ -794,6 +794,20 @@
             </figcaption>
           </figure>
 
+          <figure id="phase6bq-flow-native-voxelize" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6BQ</h3>
+            <a href="assets/phase6/flow_native_voxelize_report.svg" aria-label="Phase 6BQ 固定Flow point-to-NanoVDB生成時間とpayload量の実測レポートを開く">
+              <img src="assets/phase6/flow_native_voxelize_report.svg" width="1200" height="680" alt="360点から7200点までのpersistent native voxelize p95と、20本で約10.90 MBになるNanoVDB payloadを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Persistent native boundary · no adoption</strong><span>7,200 points · p95 5.7224 ms · 10.90 MB/update · USD/ingest/solver/render excluded</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase3_phase6am_burn.mp4" data-video-poster="assets/phase6/phase3_phase6am_frame_0650.png" data-video-title="Phase 6BQ burn scenario (production unchanged, reused)" data-video-meta="The default-off native producer spike changes no production emitter, authoritative wood state, Flow rendering, JSON schema, rollback, revision, or defaults · baseline Phase 6AM real viewport capture reused · 240 model seconds · 60 real viewport frames · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>実行動画</strong><small>6秒 · production同値の既存実画面</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1126,6 +1140,12 @@
               <div><dt>Phase 6BO notice contract</dt><dd>1 ObjectsChanged/update · all emitter revisions consistent</dd></div>
               <div><dt>Phase 6BO scope</dt><dd>USD-only · Flow ingest/raster/solver/render and NanoVDB generation pending</dd></div>
               <div><dt>Phase 6BO regression</dt><dd>8 processes · 47 / 47 pass · 320.0 s</dd></div>
+              <div><dt>Phase 6BQ native p95</dt><dd>4.0099 / 4.2650 / 5.5074 / 5.7224 ms · 360 → 7,200 points</dd></div>
+              <div><dt>Phase 6BQ source preparation</dt><dd>mean 0.0335 → 0.0563 ms · not the dominant boundary</dd></div>
+              <div><dt>Phase 6BQ NanoVDB payload</dt><dd>2.90 → 10.90 MB/update · five buffers · maxBlocks 256</dd></div>
+              <div><dt>Phase 6BQ lifetime</dt><dd>persistent context required · non-persistent repetition exceeded 8 GB</dd></div>
+              <div><dt>Phase 6BQ scope</dt><dd>native producer only · USD/ingest/consumer/solver/render pending · production unchanged</dd></div>
+              <div><dt>Phase 6BQ regression</dt><dd>8 processes · 47 / 47 pass · 317.4 s · collapse coverage 186.8 s</dd></div>
               <div><dt>Plywood cp 293 / 420 K</dt><dd>1214 / 1696</dd></div>
               <div><dt>OSB cp 293 / 420 K</dt><dd>1298 / 1813</dd></div>
               <div><dt>35 kW/m² gas, τ 0.9 / 1 / 2.2 s</dt><dd>18.0351 / 18.0358 / 18.0423%</dd></div>
