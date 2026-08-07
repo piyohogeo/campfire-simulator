@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6CE default-off replacement-stage recovery path, validating stopped owner-thread consumer handoff, exact pending payload retry across Kit `close_stage_async`/`attach_stage_async`, revision-seeded primary and Point reconstruction, post-attach Flow recovery, and clean shutdown without pending discard.
 - Added the Phase 6CD default-off session-owned Point sidecar, coupling its immutable 7,200-point payload to the existing Resident pending/retry lifecycle, rolling it back when primary snapshot publication fails, restricting layout replacement to stopped owner state, failing closed on stage replacement, and recording a real 60-frame Flow/RTX capture.
 - Added the Phase 6CC default-off Resident-native surface-array producer, separating static 7,200-point layout from dynamic fuel/temperature/smoke channels, preserving immutable snapshot revisions, and qualifying the single Point Emitter through Flow 110 core simulation and RTX rendering without activating the production path.
 - Added the Phase 6CB default-off, preset-independent Flow 110 Point Emitter qualification, proving a fresh pre-connected stage with individual layer, relationship, material, timeline, viewport, core simulation, sparse-field, array-equivalence, revision, notice, and no-live-resync gates from 16 through 7,200 points.

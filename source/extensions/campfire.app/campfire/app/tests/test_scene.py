@@ -1206,12 +1206,14 @@ class TestScene(omni.kit.test.AsyncTestCase):
             def __init__(self):
                 self.revision = 0
                 self.fail_revision = None
+                self.active = False
+                self.closed = False
 
             def on_timeline_started(self):
-                pass
+                self.active = True
 
             def on_timeline_stopped(self):
-                pass
+                self.active = False
 
             def publish(self, snapshot):
                 if snapshot.revision == self.fail_revision:
@@ -1220,9 +1222,15 @@ class TestScene(omni.kit.test.AsyncTestCase):
                 self.revision = snapshot.revision
 
             def status(self):
-                return {"revision": self.revision}
+                return {
+                    "revision": self.revision,
+                    "active": self.active,
+                    "closed": self.closed,
+                }
 
             def close(self):
+                self.active = False
+                self.closed = True
                 return True
 
         class Sidecar:
@@ -1233,6 +1241,7 @@ class TestScene(omni.kit.test.AsyncTestCase):
                 self.published = []
                 self.rollback_count = 0
                 self.layout = None
+                self.closed = False
 
             def prepare(self, snapshot):
                 payload = Payload(snapshot.revision)
@@ -1252,13 +1261,14 @@ class TestScene(omni.kit.test.AsyncTestCase):
                 self.rollback_count += 1
 
             def status(self):
-                return {"revision": self.revision}
+                return {"revision": self.revision, "closed": self.closed}
 
             def replace_layout(self, layout):
                 self.layout = layout
                 return layout
 
             def close(self):
+                self.closed = True
                 return True
 
         backend = Backend()
@@ -1294,9 +1304,44 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(adapter.revision, 3)
         self.assertEqual(sidecar.revision, 3)
         self.assertIsNone(session.status()["pending_sidecar_revision"])
+
+        sidecar.fail_revision = 4
+        with self.assertRaisesRegex(RuntimeError, "injected sidecar failure"):
+            session.step(tick=4)
+        replacement_payload = sidecar.prepared[-1]
+        with self.assertRaisesRegex(RuntimeError, "stopped state"):
+            session.replace_consumers(Adapter(), sidecar=Sidecar())
+        session.stop()
+        mismatched_adapter = Adapter()
+        mismatched_adapter.revision = 2
+        mismatched_sidecar = Sidecar()
+        mismatched_sidecar.revision = 3
+        with self.assertRaisesRegex(ValueError, "adapter revision does not match"):
+            session.replace_consumers(
+                mismatched_adapter, sidecar=mismatched_sidecar
+            )
+        self.assertFalse(adapter.closed)
+        self.assertFalse(sidecar.closed)
+        self.assertEqual(session.status()["pending_revision"], 4)
+        replacement_adapter = Adapter()
+        replacement_adapter.revision = 3
+        replacement_sidecar = Sidecar()
+        replacement_sidecar.revision = 3
+        replacement = session.replace_consumers(
+            replacement_adapter, sidecar=replacement_sidecar
+        )
+        self.assertEqual(replacement["revision"], 3)
+        self.assertEqual(replacement["pending_revision"], 4)
+        self.assertTrue(adapter.closed)
+        self.assertTrue(sidecar.closed)
+        session.start()
+        session.retry_pending()
+        self.assertIs(replacement_sidecar.published[-1], replacement_payload)
+        self.assertEqual(replacement_adapter.revision, 4)
+        self.assertEqual(replacement_sidecar.revision, 4)
         session.stop()
         self.assertEqual(session.replace_sidecar_layout("moving"), "moving")
-        self.assertEqual(sidecar.layout, "moving")
+        self.assertEqual(replacement_sidecar.layout, "moving")
         session.close()
 
     async def test_resident_snapshot_adapter_resumes_only_matching_consumer_revision(self):

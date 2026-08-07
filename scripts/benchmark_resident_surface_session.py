@@ -86,7 +86,17 @@ class ImmutableSurfacePayload:
 class ResidentPointSidecar:
     """Prepare immutable native arrays and transactionally publish one Point consumer."""
 
-    def __init__(self, backend, stage, emitter_path, stage_provider, write_observer=None):
+    def __init__(
+        self,
+        backend,
+        stage,
+        emitter_path,
+        stage_provider,
+        write_observer=None,
+        *,
+        initial_revision=0,
+        initial_layout=None,
+    ):
         self._backend = backend
         self._stage = stage
         self._stage_provider = stage_provider
@@ -95,9 +105,31 @@ class ResidentPointSidecar:
         self._producer = surface.NativeSurfaceProducer(backend)
         self._producer.build_layout()
         self._layout_revision = 1
+        if initial_layout is not None:
+            layout_revision = int(initial_layout["revision"])
+            origins = self._producer.np.asarray(
+                initial_layout["origins"], dtype=self._producer.np.float64
+            )
+            axes = self._producer.np.asarray(
+                initial_layout["axes"], dtype=self._producer.np.uint32
+            )
+            if (
+                layout_revision <= 0
+                or origins.shape != self._producer.origins.shape
+                or axes.shape != self._producer.axes.shape
+            ):
+                raise ValueError("Initial Point layout is incompatible")
+            self._producer.origins[:] = origins
+            self._producer.axes[:] = axes
+            self._producer.build_layout()
+            self._layout_revision = layout_revision
         self._positions = self._producer.positions.tobytes(order="C")
-        self._revision = 0
-        self._committed_layout_revision = 0
+        self._revision = int(initial_revision)
+        if self._revision < 0:
+            raise ValueError("Initial Point revision must be non-negative")
+        self._committed_layout_revision = (
+            self._layout_revision if self._revision else 0
+        )
         self._last_snapshot = None
         self._last_undo = None
         self._prepare_count = 0
@@ -120,6 +152,9 @@ class ResidentPointSidecar:
         }
         if not all(self._attributes.values()):
             raise RuntimeError("Point sidecar requires pre-authored attributes")
+        stored_revision = self._attributes["revision"].Get()
+        if self._revision and stored_revision != self._revision:
+            raise ValueError("Initial Point consumer revision does not match")
 
     def prepare(self, snapshot):
         if self._closed:
@@ -156,13 +191,13 @@ class ResidentPointSidecar:
     def publish(self, payload):
         if self._closed:
             raise RuntimeError("Point sidecar is closed")
+        self.attempt_payload_ids.append(id(payload))
+        self.attempt_payload_digests.append(payload.digest())
         if self._stage_provider() is not self._stage:
             self._failure_count += 1
             raise RuntimeError("Point sidecar rejected replaced stage")
         if payload.revision <= self._revision:
             raise RuntimeError("Point sidecar revision must increase monotonically")
-        self.attempt_payload_ids.append(id(payload))
-        self.attempt_payload_digests.append(payload.digest())
         converted = self._converted(payload)
         previous = {name: attribute.Get() for name, attribute in self._attributes.items()}
         previous_state = (
@@ -575,4 +610,9 @@ async def _run(arguments):
         app.post_uncancellable_quit(exit_code)
 
 
-asyncio.ensure_future(_run(_settings()))
+def main():
+    asyncio.ensure_future(_run(_settings()))
+
+
+if __name__ == "__main__":
+    main()

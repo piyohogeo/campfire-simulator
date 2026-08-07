@@ -30,6 +30,7 @@ class ResidentApplicationSession:
         self._retry_count = 0
         self._start_count = 0
         self._stop_count = 0
+        self._consumer_replace_count = 0
         self._close_result = None
 
     def _prepare_sidecar(self, result):
@@ -94,6 +95,52 @@ class ResidentApplicationSession:
             raise RuntimeError("Resident sidecar layout replacement refuses a pending snapshot")
         return self._sidecar.replace_layout(layout)
 
+    def replace_consumers(self, adapter, *, sidecar=None):
+        """Replace stopped publication consumers without discarding pending data."""
+
+        self._require_owner()
+        if self._state != "stopped":
+            raise RuntimeError("Resident consumer replacement requires stopped state")
+        if adapter is None:
+            raise ValueError("Resident consumer replacement requires an adapter")
+        if (self._sidecar is None) != (sidecar is None):
+            raise ValueError("Resident consumer replacement must preserve sidecar presence")
+
+        committed_revision = self._adapter.status()["revision"]
+        adapter_status = adapter.status()
+        if adapter_status.get("active") or adapter_status.get("closed"):
+            raise RuntimeError("Replacement Resident adapter must be inactive and open")
+        if adapter_status.get("revision") != committed_revision:
+            raise ValueError("Replacement Resident adapter revision does not match")
+
+        if sidecar is not None:
+            committed_sidecar_revision = self._sidecar.status()["revision"]
+            if committed_sidecar_revision != committed_revision:
+                raise RuntimeError("Existing Resident consumer revisions do not match")
+            sidecar_status = sidecar.status()
+            if sidecar_status.get("closed"):
+                raise RuntimeError("Replacement Resident sidecar must be open")
+            if sidecar_status.get("revision") != committed_sidecar_revision:
+                raise ValueError("Replacement Resident sidecar revision does not match")
+
+        previous_adapter = self._adapter
+        previous_sidecar = self._sidecar
+        previous_adapter.close()
+        if previous_sidecar is not None:
+            previous_sidecar.close()
+        self._adapter = adapter
+        self._sidecar = sidecar
+        self._consumer_replace_count += 1
+        return {
+            "revision": committed_revision,
+            "pending_revision": (
+                self._pending_step.snapshot.revision
+                if self._pending_step is not None
+                else None
+            ),
+            "consumer_replace_count": self._consumer_replace_count,
+        }
+
     def step(self, *, tick):
         self._require_state("running")
         if self._pending_step is not None:
@@ -151,6 +198,7 @@ class ResidentApplicationSession:
             "retry_count": self._retry_count,
             "start_count": self._start_count,
             "stop_count": self._stop_count,
+            "consumer_replace_count": self._consumer_replace_count,
             "backend": self._backend.status(),
             "adapter": self._adapter.status(),
             "sidecar": self._sidecar.status() if self._sidecar is not None else None,
