@@ -1,5 +1,10 @@
 # Changelog
 
+- Added Phase 6DE's default-off runtime audit of the fixed Kit profiler, Tf notice, StageUpdate, and `omni.flowusd` surfaces without changing production configuration or publication contracts.
+- Confirmed that public `carb.profiler.IProfileMonitor` can return completed-frame named zones and round-tripped two custom calibration zones while restoring capture mask `0 → 1 → 0`.
+- Correlated 13 live Resident Point updates with active Flow blocks `24–32` and observed USD notice/pending-update, Fabric, Hydra, and PhysX zones, but no direct FlowUsd ingest timer, registered-subscriber enumeration, or Flow-specific named zone.
+- Excluded all profiler-capture durations from performance acceptance because capture inflated an application update to seconds and nested zones overlap; the Phase 6DD residual remains unattributed pending a derived, profiler-off consumer-enablement comparison.
+- Passed all 19 Phase 6DE gates and the final 8-process 59/59 standard suite in 385.9 seconds (collapse coverage 233.4 seconds), with 760/760 publications, zero sidecar failures or Point resyncs, restored profiler masks, and unchanged production-app SHA-256.
 - Added Phase 6DD default-off `ObjectsChanged` callback timing and live four-Set versus six-Set ChangeBlock-exit timing, while preserving the existing coalesced transaction, rollback, and revision-last behavior.
 - Proved that Set-call count differs from notice changed-path count: 60 layout snapshots produced 4 or 6 changed paths, while 700 channel snapshots produced 2, 3, or 4, with one snapshot notice per each of 760 publications and no resync.
 - Measured live ChangeBlock-exit p95 at 1.4380 ms for layout snapshots and 0.9623 ms for channel snapshots; the existing diagnostic callback itself measured only 0.1508 ms and 0.0996 ms respectively.

@@ -1432,6 +1432,26 @@
             <p>Phase 6DCで最大だった<code>Sdf.ChangeBlock</code>終了を、live stageの6 Set layout snapshot、4 Set channel snapshot、既存<code>ObjectsChanged</code> observer自身、Flow等を持たないin-memory USDへ分けました。最終runは760/760 publish、failure 0、layout 60 notice、channel 700 notice、Phase固有12/12 gate合格です。layout群のexit p95は<code>1.4380 ms</code>、transaction <code>1.8093 ms</code>、診断callback自身<code>0.1508 ms</code>、channel群は順に<code>0.9623 ms</code>、<code>1.3051 ms</code>、<code>0.0996 ms</code>でした。Set呼出し数とnotice changed path数は一致せず、layout noticeは4 pathが6回・6 pathが54回、channel noticeは2 pathが342回・3 pathが340回・4 pathが18回でした。同値をSetしたfuel／smoke等はchanged pathから省かれます。in-memory 5 runの6属性exit median p95はlistenerなし<code>0.0071 ms</code>、1 listenerあり<code>0.0112 ms</code>、callback自身<code>0.0019 ms</code>です。ただしlive exitはUSD change processingとすべての同期subscriberを含み、in-memoryとの差を引いてFlow ingestと呼ぶことはできません。release build、Phase 0 RTX回帰、対象transaction試験、標準suite全8 process・59/59件（408.3秒、collapse coverage 240.5秒）も合格しました。production app SHA-256、rollback、revision-last、immutable snapshot、Flow 110.0.0は不変です。動画は同じ決定的scenarioのPhase 6DC実機録画を複製せず再利用し、性能や連続性の合否には使いません。次はsubscriber登録と公開profiler zoneを監査し、直接timerがなければderived sceneでconsumer enablementを一つずつ変える対照実験を設計します。</p>
           </section>
 
+          <figure class="capture-card wide">
+            <h3 class="capture-phase-heading">Phase 6DE</h3>
+            <a href="assets/phase6/resident_profiler_boundary_report.svg" aria-label="Phase 6DE profilerとsubscriber境界レポートを開く">
+              <img src="assets/phase6/resident_profiler_boundary_report.svg" alt="generic profilerで見えるzoneと直接取得できないFlow ingest境界を整理したレポート" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>named zoneは見えるが、Flow ingest単体はまだ見えない</strong><span>19 / 19 gates · 13 updates · active blocks 24–32</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_translation_breakdown.mp4" data-video-poster="assets/phase6/resident_translation_breakdown_frame.png" data-video-title="Phase 6DE profiler boundary — shared deterministic scenario" data-video-meta="Reuses the direct Phase 6DC optimized RTX recording because Phase 6DE observes the same default-off Resident translation scenario · no duplicate media · Flow 110.0.0 · 1280×720 · 10 fps · profiler durations and video are excluded from performance acceptance">
+                <span class="video-trigger-icon" aria-hidden="true">▶</span>
+                <span><strong>同一scenarioの直接動画</strong><small>Phase 6DC実機動画を再利用 · 合否はsurface/zone gate</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6de-note-title">
+            <p class="note-label">2026-08-08 · Goal / public surface / live zones / capture overhead / limitation / next</p>
+            <h3 id="phase6de-note-title">profilerが使えることは確認、ただしdurationを性能値にはしない</h3>
+            <p>固定Kit／Flow 110.0.0で、公開<code>carb.profiler.IProfileMonitor</code>が完了frameのeventを返すことをcustom zone 2個で校正しました。live Resident Point runではrevision 320–348の13 updateをmarkerと対応付け、20 mm edit後のlayout変更と非変更の両方、Flow active blocks <code>24–32</code>、USD notice／pending update、Fabric、Hydra、PhysXのnamed zoneを確認しました。StageUpdate上の<code>FlowUsd</code> nodeは有効・order 1000ですが、直接FlowUsd ingest timer、登録済みTf subscriber列挙、Flow固有named zoneは公開surfaceから得られませんでした。<code>Workflow*</code>は名前に<code>flow</code>を含むだけなのでFlow zoneとして数えません。capture中は1 updateが約4秒へ膨張し、zoneもnestedするため、duration差や合計は性能合否から除外します。したがってPhase 6DDの残差は依然Flowへ帰属できません。Phase固有19/19 gate、760/760 publish、failure／Point resync 0、capture mask復元、production app SHA-256不変に加え、標準suite全8 process・59/59件（385.9秒、collapse coverage 233.4秒）も合格しました。production既定Sphere、Point既定OFF、rollback、revision、immutable snapshot、Flow版は不変です。動画は同じscenarioのPhase 6DC録画を複製せず再利用します。次はderived・既定OFF環境でconsumer enablementを一つずつ変え、性能はprofiler OFF、named zoneは境界確認だけに使います。</p>
+          </section>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1477,6 +1497,8 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6AZ revision ownership</strong><small>20 revisions · one-log exact import · structural rebuild · unmarked writes unsupported</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6BA native scheduler</strong><small>5 Hz / 12 frames · 3 consumers · 60 revisions · tolerance lockstep passed</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6BC Kit adapter</strong><small>owner thread · transactional rollback · 240 shared revisions · default OFF</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DD notice boundary</strong><small>12 / 12 · 760 coalesced notices · Flow residual unattributed</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DE profiler boundary</strong><small>19 / 19 · 13 correlated updates · direct Flow timer absent</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6CI normal Point owner</strong><small>10 / 10 · 710 matched revisions · Point resync 0 · default OFF</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CJ layout + recovery</strong><small>consumer/revisionのみ合格 · Flow field復元と映像連続性は未達</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CK owner-thread commands</strong><small>command結果は合格 · 姿勢/炎の同時不連続は未解決</small></p></div>

@@ -1,0 +1,248 @@
+{
+  "phase": "phase6de",
+  "status": "ok",
+  "scope": "public profiler and subscriber-surface availability audit",
+  "surface_result": {
+    "kit_version": "110.2.0+feature.342835.698af100.gl",
+    "app_name": "campfire.simulator",
+    "stage_update_nodes": [
+      {
+        "index": 0,
+        "name": "PhysX",
+        "enabled": true,
+        "order": 10,
+        "parallel": false
+      },
+      {
+        "index": 1,
+        "name": "OmniGraph",
+        "enabled": true,
+        "order": 100,
+        "parallel": false
+      },
+      {
+        "index": 2,
+        "name": "OmniGraphAttach",
+        "enabled": true,
+        "order": 101,
+        "parallel": false
+      },
+      {
+        "index": 3,
+        "name": "PhysXFabric",
+        "enabled": true,
+        "order": 102,
+        "parallel": false
+      },
+      {
+        "index": 4,
+        "name": "FlowUsd",
+        "enabled": true,
+        "order": 1000,
+        "parallel": false
+      }
+    ],
+    "profile_monitor_methods": [
+      "get_last_profile_events",
+      "mark_frame_end"
+    ],
+    "flow_public_timing_candidates": [],
+    "flow_internal_timing_candidates": [],
+    "tf_notice_methods": [
+      "Listener",
+      "Register",
+      "RegisterGlobally",
+      "Send",
+      "SendGlobally"
+    ],
+    "live_profile_record_count": 13,
+    "layout_changed_after_trigger_record_count": 2,
+    "unchanged_record_count": 10,
+    "active_blocks_min": 24,
+    "active_blocks_max": 32,
+    "observed_zone_groups": {
+      "usd_notice_or_pending": [
+        "FSD - UsdNoticeHandler::applyPendingUsdUpdates",
+        "GizmoController::UsdNoticeListenerhandleChange::(UsdNotice::ObjectsChanged)",
+        "IFabricUsd UsdNoticeListener::Handle(UsdNotice::ObjectsChanged)",
+        "IRenderSettingsContext UsdNoticeListener::handleNotice",
+        "OmniGraphUsdNoticeListener::Handle(UsdNotice::ObjectsChanged)",
+        "OmniUsdTimelineControl::UsdNoticeListener::handleNotice(UsdNotice::ObjectsChanged)",
+        "UsdAudioContext::UsdNoticeListener::Handle(UsdNotice::ObjectsChanged)",
+        "UsdContext::UsdNoticeListener::handleNotice",
+        "UsdNoticeHandler::resetChanges",
+        "WorkflowAutoAuthoring::handleNotice(UsdNotice::ObjectsChanged)",
+        "WorkflowLiveSyncing::handleNotice(UsdNotice::ObjectsChanged)",
+        "WorkflowSpecsLocking::handleNotice(UsdNotice::ObjectsChanged)",
+        "usdrt.population UsdNoticeHandler::handleNotice(UsdNotice::ObjectsChanged)",
+        "void __cdecl usdrt::population::UsdNoticeHandler::_updateAnimatedXforms(struct usdrt::population::UsdNoticeHandler::ApplyChangeContext &)",
+        "void __cdecl usdrt::population::UsdNoticeHandler::_updateTimeSampledXformsInfo(double,class omni::fabric::StageReaderWriter &)"
+      ],
+      "fabric": [
+        "FabricHierarchy updateWorldVisibility",
+        "FabricHierarchy updateWorldXforms",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1255-1256, Fabric read slot: 1-1",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1256-1257, Fabric read slot: 0-0",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1257-1258, Fabric read slot: 1-1",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1258-1259, Fabric read slot: 0-0",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1259-1260, Fabric read slot: 1-1",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1260-1261, Fabric read slot: 0-0",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1261-1262, Fabric read slot: 1-1",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1265-1266, Fabric read slot: 1-1",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1266-1267, Fabric read slot: 0-0",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1270-1271, Fabric read slot: 0-0",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1271-1272, Fabric read slot: 1-1",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1275-1276, Fabric read slot: 1-1",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1276-1277, Fabric read slot: 0-0",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1280-1281, Fabric read slot: 0-0",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1281-1282, Fabric read slot: 1-1",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1286-1287, Fabric read slot: 0-0",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1287-1288, Fabric read slot: 1-1",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1291-1292, Fabric read slot: 1-1",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1292-1293, Fabric read slot: 0-0",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1296-1297, Fabric read slot: 0-0",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1297-1298, Fabric read slot: 1-1",
+        "IFabricUsd UsdNoticeListener::Handle(UsdNotice::ObjectsChanged)",
+        "IRenderSettingsContext Usd Lock Wait For Fabric Validation",
+        "void __cdecl usdrt::population::UsdNoticeHandler::_updateTimeSampledXformsInfo(double,class omni::fabric::StageReaderWriter &)"
+      ],
+      "hydra": [
+        "Dispatch Event: omni.kit.hydra_texture:drawable_changed",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1255-1256, Fabric read slot: 1-1",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1256-1257, Fabric read slot: 0-0",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1257-1258, Fabric read slot: 1-1",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1258-1259, Fabric read slot: 0-0",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1259-1260, Fabric read slot: 1-1",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1260-1261, Fabric read slot: 0-0",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1261-1262, Fabric read slot: 1-1",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1265-1266, Fabric read slot: 1-1",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1266-1267, Fabric read slot: 0-0",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1270-1271, Fabric read slot: 0-0",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1271-1272, Fabric read slot: 1-1",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1275-1276, Fabric read slot: 1-1",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1276-1277, Fabric read slot: 0-0",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1280-1281, Fabric read slot: 0-0",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1281-1282, Fabric read slot: 1-1",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1286-1287, Fabric read slot: 0-0",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1287-1288, Fabric read slot: 1-1",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1291-1292, Fabric read slot: 1-1",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1292-1293, Fabric read slot: 0-0",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1296-1297, Fabric read slot: 0-0",
+        "Hydra render views Engine uid: 1024, index:0, Simulation frame:1297-1298, Fabric read slot: 1-1",
+        "IHydraTextureImpl::_acquireViewportDrawable omni_kit_widget_viewport_ViewportTexture_0",
+        "IHydraTextureImpl::_onRenderFrameComplete",
+        "IHydraTextureImpl::_setupViewport omni_kit_widget_viewport_ViewportTexture_0",
+        "Poll HydraEngines async/child",
+        "RtxHydraEngine::beginFrame",
+        "RtxHydraEngine::endFrame",
+        "RtxHydraEngine::renderSceneRenderer",
+        "RtxHydraEngine::update",
+        "RtxHydraEngine::updateHydraCollections",
+        "RtxHydraEngine::updatePreUsd",
+        "RtxHydraEngine::updateRenderProductPrims",
+        "UsdContext checkHydraRenderFinished",
+        "UsdContext checkHydraRenderFinished renderingEventQueue pumpQueue",
+        "UsdContext hydraRender",
+        "UsdContext releaseHydraRsrcs",
+        "hydraRenderingThread",
+        "omni::usd::hydra::Mesh::Sync",
+        "updateHydraCollections"
+      ],
+      "physx": [
+        "PhysX simulate",
+        "PhysXDeformableSimUpdate",
+        "PhysXForcesUpdate",
+        "PhysXParticlesSimUpdate",
+        "PhysXUpdateQuasistatic",
+        "PhysXVehicleSimUpdate"
+      ],
+      "stage_update": [
+        "StageUpdate::handleChangedPrimOrProperty"
+      ],
+      "flow_specific": []
+    },
+    "flow_specific_zone_observed": false,
+    "direct_flow_ingest_timer_available": false,
+    "registered_subscriber_enumeration_available": false
+  },
+  "calibration": {
+    "custom_zone_name": "CampfirePhase6DEProfileMonitorProbe",
+    "custom_event_count": 2,
+    "custom_events": [
+      {
+        "name": "CampfirePhase6DEProfileMonitorProbe.ExplicitMark (Python)",
+        "thread_id": 303,
+        "start_time": 521069058,
+        "duration": 0.5057500004768372,
+        "indent": 0
+      },
+      {
+        "name": "CampfirePhase6DEProfileMonitorProbe.ApplicationUpdate (Python)",
+        "thread_id": 303,
+        "start_time": 521226567,
+        "duration": 0.5026599764823914,
+        "indent": 0
+      }
+    ],
+    "capture_mask_before": 0,
+    "capture_mask_during": 1,
+    "capture_mask_restored": 0,
+    "duration_is_performance_evidence": false
+  },
+  "interpretation": {
+    "qualified": "The fixed Kit build can return completed-frame generic profiler events and exposes named USD, Fabric, Hydra, and PhysX zones while Flow is active. The FlowUsd StageUpdate node is identifiable.",
+    "not_qualified": "No direct omni.flowusd ingest timer, Flow-specific named zone, or registered Tf subscriber enumeration was exposed. Workflow* names are not Flow zones. Profiler capture inflated updates to seconds, and nested zone durations must not be summed or used for acceptance.",
+    "phase6dd_effect": "Phase 6DD's ChangeBlock-exit residual still cannot be assigned to Flow ingestion or to any single subscriber.",
+    "next": "Use a default-off derived run to vary consumer enablement one item at a time. Measure publication and update timing with profiler capture disabled, then use the profiler only to confirm which boundary ran."
+  },
+  "gates": {
+    "runtime_surface_probe_ok": true,
+    "profile_monitor_calibration_ok": true,
+    "live_profile_probe_ok": true,
+    "generic_profile_snapshot_public": true,
+    "flow_public_direct_timer_absent": true,
+    "flow_internal_direct_timer_absent": true,
+    "tf_subscriber_enumeration_absent": true,
+    "flow_stage_node_enabled_at_1000": true,
+    "custom_zone_round_trip_observed": true,
+    "temporary_capture_masks_restored": true,
+    "live_profile_records_captured": true,
+    "changed_and_unchanged_updates_captured": true,
+    "markers_correlate_each_update": true,
+    "usd_change_zones_observed": true,
+    "fabric_hydra_physx_zones_observed": true,
+    "no_flow_specific_named_zone_observed": true,
+    "flow_simulation_was_active": true,
+    "resident_publication_contract_held": true,
+    "production_app_unchanged": true
+  },
+  "gates_passed": 19,
+  "gate_count": 19,
+  "production_app": {
+    "sha256_before": "6F8E70F5C7E4573C504789D6B9E5282C77920B490E0F41FC2BD86B68D05C9987",
+    "sha256_after": "6F8E70F5C7E4573C504789D6B9E5282C77920B490E0F41FC2BD86B68D05C9987",
+    "changed_during_run": false
+  },
+  "base_harness": {
+    "status": "failed",
+    "inherited_flow_kit_exit_code": 1,
+    "known_reason": "historical Phase 6CO static/STOP expectations conflict with the current default-off dynamic translation qualification"
+  },
+  "contracts": {
+    "production_default": "OFF",
+    "production_sphere_emitter_changed": false,
+    "physics_changed": false,
+    "json_schema_changed": false,
+    "serialization_changed": false,
+    "usd_save_changed": false,
+    "rollback_changed": false,
+    "revision_changed": false,
+    "immutable_snapshot_changed": false,
+    "flow_version": "110.0.0"
+  },
+  "video": {
+    "reused": "resident_translation_breakdown.mp4",
+    "reason": "same deterministic default-off Resident translation scenario",
+    "success_criterion": "not video-only"
+  }
+}
