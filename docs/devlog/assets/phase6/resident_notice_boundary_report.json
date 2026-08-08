@@ -1,0 +1,147 @@
+{
+  "phase": "phase6dd",
+  "status": "ok",
+  "scope": "USD notice observer and ChangeBlock change-processing boundary",
+  "point_count": 720,
+  "live_flow_stage": {
+    "layout_snapshot_notice_count": 60,
+    "channel_snapshot_notice_count": 700,
+    "non_snapshot_notice_count": 1,
+    "layout_changed_path_count": [
+      4,
+      6
+    ],
+    "channel_changed_path_count": [
+      2,
+      3,
+      4
+    ],
+    "layout_changed_path_count_distribution": {
+      "4": 6,
+      "6": 54
+    },
+    "channel_changed_path_count_distribution": {
+      "2": 342,
+      "3": 340,
+      "4": 18
+    },
+    "set_calls_per_layout_snapshot": 6,
+    "set_calls_per_channel_snapshot": 4,
+    "layout_change_block_exit_ms": {
+      "sample_count": 60,
+      "warmup_samples_excluded": 0,
+      "total_ms": 50.8496,
+      "mean_ms": 0.8475,
+      "p95_ms": 1.438,
+      "max_ms": 1.6755
+    },
+    "channel_change_block_exit_ms": {
+      "sample_count": 700,
+      "warmup_samples_excluded": 0,
+      "total_ms": 419.8515,
+      "mean_ms": 0.5998,
+      "p95_ms": 0.9623,
+      "max_ms": 1.9626
+    },
+    "layout_publish_transaction_ms": {
+      "sample_count": 60,
+      "warmup_samples_excluded": 0,
+      "total_ms": 70.2552,
+      "mean_ms": 1.1709,
+      "p95_ms": 1.8093,
+      "max_ms": 1.9551
+    },
+    "channel_publish_transaction_ms": {
+      "sample_count": 700,
+      "warmup_samples_excluded": 0,
+      "total_ms": 561.0397,
+      "mean_ms": 0.8015,
+      "p95_ms": 1.3051,
+      "max_ms": 2.2176
+    },
+    "layout_callback_ms": {
+      "sample_count": 60,
+      "warmup_samples_excluded": 0,
+      "total_ms": 6.7706,
+      "mean_ms": 0.1128,
+      "p95_ms": 0.1508,
+      "max_ms": 0.6704
+    },
+    "channel_callback_ms": {
+      "sample_count": 700,
+      "warmup_samples_excluded": 0,
+      "total_ms": 45.1661,
+      "mean_ms": 0.0645,
+      "p95_ms": 0.0996,
+      "max_ms": 0.3065
+    },
+    "observer_scope": "this diagnostic ObjectsChanged callback only; excludes USD dispatch and other subscribers"
+  },
+  "isolated_usd_stage": {
+    "median_p95_ms": {
+      "revision_only_no_listener_exit": 0.0038,
+      "channels_revision_no_listener_exit": 0.0051,
+      "layout_only_no_listener_exit": 0.0045,
+      "full_layout_no_listener_exit": 0.0071,
+      "full_layout_listener_exit": 0.0112,
+      "full_layout_listener_callback": 0.0019
+    },
+    "run_count": 5,
+    "iterations_per_case_run": 300,
+    "warmup_iterations": 30,
+    "usd_package": "omni.usd.libs-1.0.3+698af100.wx64.r.cp312",
+    "gates": {
+      "all_sample_counts_exact": true,
+      "listener_one_notice_per_publication": true,
+      "listener_changed_path_counts_exact": true,
+      "listener_no_resync": true,
+      "no_listener_has_no_diagnostic_callback": true
+    },
+    "interpretation": "This isolated Stage has no Flow, Hydra, PhysX, or production-stage subscriber set. Live-minus-isolated timing is not a direct Flow-ingest timer."
+  },
+  "interpretation": {
+    "qualified": "ChangeBlock emits one revision-consistent snapshot notice; the diagnostic callback itself is only a small part of live exit time.",
+    "not_qualified": "The remaining live exit time is not assigned to Flow ingestion. It includes USD change processing and every synchronous subscriber, and isolated/live subtraction is not causal.",
+    "next": "Audit subscriber registration and public profiler zones; if no subscriber-level timer exists, vary consumer enablement only in a derived default-off scene before considering publication changes."
+  },
+  "gates": {
+    "isolated_microbenchmark_passed": true,
+    "independent_translation_probe_passed": true,
+    "one_snapshot_notice_per_publish": true,
+    "layout_notice_count_matches_changed_publish": true,
+    "channel_notice_count_matches_unchanged_publish": true,
+    "layout_notice_paths_match_authored_subset": true,
+    "channel_notice_paths_match_authored_subset": true,
+    "layout_exit_samples_exact": true,
+    "channel_exit_samples_exact": true,
+    "diagnostic_callback_samples_exact": true,
+    "no_point_resync_or_unexpected_change": true,
+    "production_app_unchanged": true
+  },
+  "gates_passed": 12,
+  "gate_count": 12,
+  "production_app": {
+    "sha256_before": "6F8E70F5C7E4573C504789D6B9E5282C77920B490E0F41FC2BD86B68D05C9987",
+    "sha256_after": "6F8E70F5C7E4573C504789D6B9E5282C77920B490E0F41FC2BD86B68D05C9987",
+    "changed_during_run": false
+  },
+  "base_harness": {
+    "status": "failed",
+    "inherited_kit_exit_code": 1,
+    "known_reason": "historical Phase 6CO static/STOP gates conflict with dynamic tracking"
+  },
+  "contracts": {
+    "production_default": "OFF",
+    "physics_changed": false,
+    "json_schema_changed": false,
+    "rollback_changed": false,
+    "revision_changed": false,
+    "immutable_snapshot_changed": false,
+    "flow_version": "110.0.0"
+  },
+  "video": {
+    "reused": "resident_translation_breakdown.mp4",
+    "reason": "same deterministic optimized Resident translation scenario",
+    "success_criterion": "not video-only"
+  }
+}

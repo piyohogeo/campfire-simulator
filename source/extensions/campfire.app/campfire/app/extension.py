@@ -848,6 +848,7 @@ class CampfireAppExtension(omni.ext.IExt):
         listener = None
         point_resyncs = []
         point_changes = []
+        point_notice_records = []
         point_prefix = str(RESIDENT_POINT_EMITTER_PATH)
         layout_result = None
         recovery_result = None
@@ -895,16 +896,43 @@ class CampfireAppExtension(omni.ext.IExt):
                 timeline_events.append(record)
 
         def observe_point_changes(notice, _sender):
-            point_resyncs.extend(
+            callback_start = (
+                time.perf_counter_ns()
+                if dynamic_translation_qualification
+                else None
+            )
+            resynced = tuple(
                 str(path)
                 for path in notice.GetResyncedPaths()
                 if str(path).startswith(point_prefix)
             )
-            point_changes.extend(
+            changed = tuple(
                 str(path)
                 for path in notice.GetChangedInfoOnlyPaths()
                 if str(path).startswith(point_prefix)
             )
+            point_resyncs.extend(resynced)
+            point_changes.extend(changed)
+            if callback_start is not None and (resynced or changed):
+                point_notice_records.append(
+                    {
+                        "elapsed_ms": (
+                            time.perf_counter_ns() - callback_start
+                        )
+                        / 1_000_000.0,
+                        "resynced_paths": list(resynced),
+                        "changed_paths": list(changed),
+                        "snapshot_publication": any(
+                            path.endswith(".campfire:residentRevision")
+                            for path in changed
+                        ),
+                        "layout_publication": any(
+                            path.endswith(".pointPositions")
+                            or path.endswith(".campfire:layoutRevision")
+                            for path in changed
+                        ),
+                    }
+                )
 
         def register_point_listener(target_stage):
             return Tf.Notice.Register(
@@ -1798,6 +1826,74 @@ class CampfireAppExtension(omni.ext.IExt):
                             else None
                         ),
                         "samples": point_enclosing_update_samples,
+                    },
+                    "point_notice_observer": {
+                        "scope": (
+                            "this diagnostic ObjectsChanged callback only; excludes "
+                            "USD dispatch and other subscribers"
+                        ),
+                        "total_relevant_notice_count": len(point_notice_records),
+                        "snapshot_notice_count": sum(
+                            sample["snapshot_publication"]
+                            for sample in point_notice_records
+                        ),
+                        "layout_snapshot_notice_count": sum(
+                            sample["snapshot_publication"]
+                            and sample["layout_publication"]
+                            for sample in point_notice_records
+                        ),
+                        "channel_only_snapshot_notice_count": sum(
+                            sample["snapshot_publication"]
+                            and not sample["layout_publication"]
+                            for sample in point_notice_records
+                        ),
+                        "non_snapshot_notice_count": sum(
+                            not sample["snapshot_publication"]
+                            for sample in point_notice_records
+                        ),
+                        "all_callbacks": (
+                            summarize_timing_ms(
+                                [
+                                    sample["elapsed_ms"]
+                                    for sample in point_notice_records
+                                ]
+                            )
+                            if point_notice_records
+                            else None
+                        ),
+                        "layout_snapshot_callbacks": (
+                            summarize_timing_ms(
+                                [
+                                    sample["elapsed_ms"]
+                                    for sample in point_notice_records
+                                    if sample["snapshot_publication"]
+                                    and sample["layout_publication"]
+                                ]
+                            )
+                            if any(
+                                sample["snapshot_publication"]
+                                and sample["layout_publication"]
+                                for sample in point_notice_records
+                            )
+                            else None
+                        ),
+                        "channel_only_snapshot_callbacks": (
+                            summarize_timing_ms(
+                                [
+                                    sample["elapsed_ms"]
+                                    for sample in point_notice_records
+                                    if sample["snapshot_publication"]
+                                    and not sample["layout_publication"]
+                                ]
+                            )
+                            if any(
+                                sample["snapshot_publication"]
+                                and not sample["layout_publication"]
+                                for sample in point_notice_records
+                            )
+                            else None
+                        ),
+                        "records": point_notice_records,
                     },
                 },
                 "known_issue": {

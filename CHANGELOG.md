@@ -1,5 +1,10 @@
 # Changelog
 
+- Added Phase 6DD default-off `ObjectsChanged` callback timing and live four-Set versus six-Set ChangeBlock-exit timing, while preserving the existing coalesced transaction, rollback, and revision-last behavior.
+- Proved that Set-call count differs from notice changed-path count: 60 layout snapshots produced 4 or 6 changed paths, while 700 channel snapshots produced 2, 3, or 4, with one snapshot notice per each of 760 publications and no resync.
+- Measured live ChangeBlock-exit p95 at 1.4380 ms for layout snapshots and 0.9623 ms for channel snapshots; the existing diagnostic callback itself measured only 0.1508 ms and 0.0996 ms respectively.
+- Added a five-run isolated USD baseline across 1/2/4/6 authored attributes: full-layout exit median p95 was 0.0071 ms without a listener and 0.0112 ms with one enumerating listener, explicitly rejecting live-minus-isolated subtraction as a Flow-ingest timer.
+- Passed all 12 Phase 6DD gates, the release build, Phase 0 RTX regression, focused transaction test, and the final 8-process 59/59 standard suite in 408.3 seconds (collapse coverage 240.5 seconds), with unchanged production-app SHA-256; reused the same deterministic Phase 6DC video rather than duplicating media.
 - Added Phase 6DC default-off changed-tick timing for all four Vt conversions, previous-value snapshots, `Sdf.ChangeBlock` entry/exit, four array Sets, two revision Sets, the full publication transaction, and producer commit.
 - Measured 56 changed publications at 720 points: transaction p95 was 1.8616 ms, with `ChangeBlock` exit p95 1.3539 ms, four array-Set p95 sum 0.2221 ms, four Vt-conversion p95 sum 0.0961 ms, and previous-value snapshot p95 0.1183 ms.
 - Added an enclosing `next_update_async` wall-time comparison (changed p95 98.2902 ms, unchanged p95 75.8272 ms) while explicitly leaving direct `omni.flowusd` ingest timing unavailable through the inspected public Flow 110 Python, `IFlowUsd`, and StageUpdate surfaces.

@@ -1412,6 +1412,26 @@
             <p>Phase 6DBで残った変更tickの処理を、4個のVt変換、rollback用旧値snapshot、<code>Sdf.ChangeBlock</code> enter／exit、4個の配列<code>Set()</code>、2個のrevision <code>Set()</code>、transaction全体、成功後producer commitへ分離しました。Flow 110.0.0、RTX 3090、720点、760 snapshotの独立runで変更56回、未変更skip 704回、publish 760/760、failure 0、Phase固有9/9 gateに合格しました。変更tickのp95はVt変換4区間の記述上の合計<code>0.0961 ms</code>、旧値snapshot <code>0.1183 ms</code>、配列Set 4区間の合計<code>0.2221 ms</code>、revision Set 2区間の合計<code>0.0471 ms</code>、<code>ChangeBlock</code> exit <code>1.3539 ms</code>、transaction全体<code>1.8616 ms</code>でした。各p95の合計は合計処理そのもののp95ではありません。固定Flowの公開Python、<code>IFlowUsd</code>、StageUpdate surfaceにはUSD Emitter取込みだけの独立timerを確認できなかったため、5 step直後の<code>next_update_async()</code>も外側の上限として測りました。変更あり8 sampleのp95は<code>98.2902 ms</code>、変更なし62 sampleは<code>75.8272 ms</code>ですが、これはFlow取込みだけでなくStageUpdate、PhysX、solver、renderを含み、Flow取込み単体値ではありません。release build、Phase 0 RTX回帰、標準suite全8 process・59/59件（396.3秒、collapse coverage 232.2秒）も合格しました。production app SHA-256と既定値、rollback、revision-last、immutable snapshot、Flow 110.0.0は不変です。frame 30で炎描画を目視しましたが動画は性能・連続性判定には使わず、回転追従、1 update内reset除外、solver checkpoint、seamless visual continuityは未達のままです。次は<code>ChangeBlock</code>終了時のnotice／change processingを公開境界でさらに切り分けます。</p>
           </section>
 
+          <figure id="phase6dd-resident-notice-boundary" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6DD</h3>
+            <a href="assets/phase6/resident_notice_boundary_report.svg" aria-label="Phase 6DD USD notice境界レポートを開く">
+              <img src="assets/phase6/resident_notice_boundary_report.svg" width="1200" height="680" alt="live Flow stageのChangeBlock終了、既存診断callback、in-memory USD基準を分離したSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Set数とnotice path数は一致せず、observer自身も全費用ではない</strong><span>12 / 12 gates · layout exit p95 1.4380 ms · callback 0.1508 ms</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_translation_breakdown.mp4" data-video-poster="assets/phase6/resident_translation_breakdown_frame.png" data-video-title="Phase 6DD notice boundary — shared deterministic scenario" data-video-meta="Reuses the direct Phase 6DC optimized RTX recording because Phase 6DD measures the same deterministic Resident translation scenario · no duplicate media · Flow 110.0.0 · 1280×720 · 10 fps · 6 s · video is not the timing or continuity pass criterion">
+                <span class="video-trigger-icon" aria-hidden="true">▶</span>
+                <span><strong>同一scenarioの直接動画</strong><small>Phase 6DC実機動画を再利用 · 合否はnotice/timing gate</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6dd-note-title">
+            <p class="note-label">2026-08-08 · Goal / notice paths / observer cost / isolated baseline / limitation / next</p>
+            <h3 id="phase6dd-note-title">約1 msの残差を、まだFlow取込みとは呼ばない</h3>
+            <p>Phase 6DCで最大だった<code>Sdf.ChangeBlock</code>終了を、live stageの6 Set layout snapshot、4 Set channel snapshot、既存<code>ObjectsChanged</code> observer自身、Flow等を持たないin-memory USDへ分けました。最終runは760/760 publish、failure 0、layout 60 notice、channel 700 notice、Phase固有12/12 gate合格です。layout群のexit p95は<code>1.4380 ms</code>、transaction <code>1.8093 ms</code>、診断callback自身<code>0.1508 ms</code>、channel群は順に<code>0.9623 ms</code>、<code>1.3051 ms</code>、<code>0.0996 ms</code>でした。Set呼出し数とnotice changed path数は一致せず、layout noticeは4 pathが6回・6 pathが54回、channel noticeは2 pathが342回・3 pathが340回・4 pathが18回でした。同値をSetしたfuel／smoke等はchanged pathから省かれます。in-memory 5 runの6属性exit median p95はlistenerなし<code>0.0071 ms</code>、1 listenerあり<code>0.0112 ms</code>、callback自身<code>0.0019 ms</code>です。ただしlive exitはUSD change processingとすべての同期subscriberを含み、in-memoryとの差を引いてFlow ingestと呼ぶことはできません。release build、Phase 0 RTX回帰、対象transaction試験、標準suite全8 process・59/59件（408.3秒、collapse coverage 240.5秒）も合格しました。production app SHA-256、rollback、revision-last、immutable snapshot、Flow 110.0.0は不変です。動画は同じ決定的scenarioのPhase 6DC実機録画を複製せず再利用し、性能や連続性の合否には使いません。次はsubscriber登録と公開profiler zoneを監査し、直接timerがなければderived sceneでconsumer enablementを一つずつ変える対照実験を設計します。</p>
+          </section>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>

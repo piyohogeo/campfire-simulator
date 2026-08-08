@@ -372,6 +372,8 @@ class ResidentPointSidecar:
             "change_block_exit": [],
             "publish_transaction": [],
             "producer_commit": [],
+            "channel_only_change_block_exit": [],
+            "channel_only_publish_transaction": [],
         }
         self._closed = False
         self.attempt_payload_ids = []
@@ -503,10 +505,16 @@ class ResidentPointSidecar:
         if payload.revision <= self._revision:
             raise RuntimeError("Point sidecar revision must increase monotonically")
         has_layout = bool(payload.layout_origins)
+        profiles_live_translation = self._translation_provider is not None
         expected_layout_revision = self._layout_revision + (1 if has_layout else 0)
         if payload.layout_revision != expected_layout_revision:
             raise RuntimeError("Point sidecar payload layout revision is not contiguous")
         transaction_start = time.perf_counter_ns() if has_layout else None
+        channel_only_transaction_start = (
+            time.perf_counter_ns()
+            if profiles_live_translation and not has_layout
+            else None
+        )
         converted = self._converted(payload, profile_translation=has_layout)
         previous_start = time.perf_counter_ns() if has_layout else None
         previous = {name: attribute.Get() for name, attribute in self._attributes.items()}
@@ -585,15 +593,29 @@ class ResidentPointSidecar:
             block.__exit__(*sys.exc_info())
             self._failure_count += 1
             raise
-        block_exit_start = time.perf_counter_ns() if has_layout else None
+        block_exit_start = (
+            time.perf_counter_ns() if profiles_live_translation else None
+        )
         block.__exit__(None, None, None)
         if block_exit_start is not None:
-            self._live_translation_timing_ms["change_block_exit"].append(
+            exit_metric = (
+                "change_block_exit"
+                if has_layout
+                else "channel_only_change_block_exit"
+            )
+            self._live_translation_timing_ms[exit_metric].append(
                 (time.perf_counter_ns() - block_exit_start) / 1_000_000.0
             )
         if transaction_start is not None:
             self._live_translation_timing_ms["publish_transaction"].append(
                 (time.perf_counter_ns() - transaction_start) / 1_000_000.0
+            )
+        if channel_only_transaction_start is not None:
+            self._live_translation_timing_ms[
+                "channel_only_publish_transaction"
+            ].append(
+                (time.perf_counter_ns() - channel_only_transaction_start)
+                / 1_000_000.0
             )
         self._last_undo = previous_state
         self._revision = payload.revision

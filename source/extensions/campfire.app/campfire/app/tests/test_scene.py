@@ -1066,6 +1066,8 @@ class TestScene(omni.kit.test.AsyncTestCase):
             "change_block_exit": [],
             "publish_transaction": [],
             "producer_commit": [],
+            "channel_only_change_block_exit": [],
+            "channel_only_publish_transaction": [],
         }
         sidecar._closed = False
         sidecar._stage = stage
@@ -1117,10 +1119,17 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(producer.layout_candidate_count, 1)
         self.assertEqual(unchanged.layout_revision, 1)
         self.assertEqual(sidecar._live_translation_unchanged_count, 1)
+        sidecar.publish(unchanged)
         timing = sidecar.status()["live_translation_timing_ms"]
         self.assertEqual(timing["provider"]["sample_count"], 2)
         self.assertEqual(timing["candidate_build"]["sample_count"], 1)
         self.assertEqual(timing["position_usd_set"]["sample_count"], 1)
+        self.assertEqual(
+            timing["channel_only_change_block_exit"]["sample_count"], 1
+        )
+        self.assertEqual(
+            timing["channel_only_publish_transaction"]["sample_count"], 1
+        )
         for timing_name in (
             "fuel_vt_conversion",
             "temperature_vt_conversion",
