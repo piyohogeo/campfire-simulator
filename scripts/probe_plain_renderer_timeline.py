@@ -18,6 +18,39 @@ import omni.usd
 
 CAPTURE_RESOLUTION = (1280, 720)
 CAMERA_PATH = "/World/Camera"
+SETTINGS_SNAPSHOT_ROOTS = (
+    "/app/player",
+    "/app/runLoops",
+    "/app/viewport",
+    "/exts/omni.kit.renderer.core",
+    "/persistent/app/viewport",
+    "/renderer",
+    "/rtx/ecoMode",
+    "/rtx/hydra",
+    "/timeline",
+)
+
+
+def _json_safe(value):
+    if isinstance(value, dict):
+        return {str(key): _json_safe(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_safe(item) for item in value]
+    if value is None or isinstance(value, (bool, int, float, str)):
+        return value
+    return str(value)
+
+
+def _settings_snapshot(settings):
+    snapshot = {}
+    for root in SETTINGS_SNAPSHOT_ROOTS:
+        dictionary = settings.get_settings_dictionary(root)
+        snapshot[root] = (
+            _json_safe(dictionary.get_dict() or {})
+            if dictionary is not None
+            else {}
+        )
+    return snapshot
 
 
 async def _play_case(name, timeline, set_case):
@@ -196,6 +229,7 @@ async def _run():
             "renderer_enabled": True,
             "probe_app": probe_app,
         },
+        "settings_snapshot": _settings_snapshot(settings),
         "viewport_readiness": readiness,
         "requested_resolution_retained": (
             readiness["resolution"] == list(CAPTURE_RESOLUTION)

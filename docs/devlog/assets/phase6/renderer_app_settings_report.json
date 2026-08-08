@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "phase": "phase6ct",
+  "status": "ok",
+  "timestamp_utc": "2026-08-08T08:10:14.734976+00:00",
+  "settings_scalar_counts": {
+    "campfire": 225,
+    "editor_matched_extensions": 229,
+    "difference_count": 15
+  },
+  "runtime_settings_differences": [
+    {
+      "path": "//app/runLoops/main/rateLimitFrequency",
+      "campfire": 120,
+      "editor": 60
+    },
+    {
+      "path": "//app/runLoops/main/rateLimitUsePrecisionSleep",
+      "campfire": false,
+      "editor": true
+    },
+    {
+      "path": "//app/runLoops/present/rateLimitUsePrecisionSleep",
+      "campfire": false,
+      "editor": true
+    },
+    {
+      "path": "//app/runLoops/rendering_0/rateLimitFrequency",
+      "campfire": 120,
+      "editor": 60
+    },
+    {
+      "path": "//app/runLoops/rendering_0/rateLimitUsePrecisionSleep",
+      "campfire": false,
+      "editor": true
+    },
+    {
+      "path": "//app/runLoops/rendering_1/rateLimitEnabled",
+      "campfire": null,
+      "editor": true
+    },
+    {
+      "path": "//app/runLoops/rendering_1/rateLimitFrequency",
+      "campfire": null,
+      "editor": 60
+    },
+    {
+      "path": "//app/runLoops/rendering_1/rateLimitUsePrecisionSleep",
+      "campfire": null,
+      "editor": true
+    },
+    {
+      "path": "//app/runLoops/rendering_1/syncToPresent",
+      "campfire": null,
+      "editor": true
+    },
+    {
+      "path": "//exts/omni.kit.renderer.core/imgui/enableMips",
+      "campfire": false,
+      "editor": true
+    },
+    {
+      "path": "//exts/omni.kit.renderer.core/present/presentAfterRendering",
+      "campfire": false,
+      "editor": true
+    },
+    {
+      "path": "//persistent/app/viewport/Viewport/Viewport0/resolution",
+      "campfire": [
+        1280,
+        720
+      ],
+      "editor": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "//persistent/app/viewport/autoFrame/mode",
+      "campfire": "first_open",
+      "editor": ""
+    },
+    {
+      "path": "//persistent/app/viewport/defaults/tickRate",
+      "campfire": 120,
+      "editor": 60
+    },
+    {
+      "path": "//renderer/gpuEnumeration/glInterop/enabled",
+      "campfire": false,
+      "editor": true
+    }
+  ],
+  "timeline_matrix": {
+    "editor_matched_extension_set": {
+      "resolution": [
+        1280,
+        720
+      ],
+      "after_remained_playing": true,
+      "after_stop_event_count": 0,
+      "retry_remained_playing": true,
+      "retry_stop_event_count": 0
+    },
+    "campfire_editor_run_loops": {
+      "resolution": [
+        1280,
+        720
+      ],
+      "after_remained_playing": false,
+      "after_stop_event_count": 1,
+      "retry_remained_playing": false,
+      "retry_stop_event_count": 1
+    },
+    "campfire_without_first_open_auto_frame": {
+      "resolution": [
+        1280,
+        720
+      ],
+      "after_remained_playing": false,
+      "after_stop_event_count": 1,
+      "retry_remained_playing": false,
+      "retry_stop_event_count": 1
+    },
+    "campfire_editor_graphics_defaults": {
+      "resolution": [
+        1280,
+        720
+      ],
+      "after_remained_playing": false,
+      "after_stop_event_count": 1,
+      "retry_remained_playing": false,
+      "retry_stop_event_count": 1
+    },
+    "campfire_editor_persistent_resolution": {
+      "resolution": [
+        1280,
+        720
+      ],
+      "after_remained_playing": false,
+      "after_stop_event_count": 1,
+      "retry_remained_playing": false,
+      "retry_stop_event_count": 1
+    },
+    "campfire_all_known_settings": {
+      "resolution": [
+        1280,
+        720
+      ],
+      "after_remained_playing": false,
+      "after_stop_event_count": 1,
+      "retry_remained_playing": false,
+      "retry_stop_event_count": 1
+    },
+    "campfire_fill_viewport": {
+      "resolution": [
+        949,
+        577
+      ],
+      "after_remained_playing": true,
+      "after_stop_event_count": 0,
+      "retry_remained_playing": true,
+      "retry_stop_event_count": 0
+    }
+  },
+  "conclusion": {
+    "extension_set_is_sufficient_for_stop": false,
+    "captured_scalar_settings_values_are_sufficient_for_stop": false,
+    "fill_viewport_true_is_a_measured_workaround": true,
+    "workaround_adopted": false,
+    "remaining_boundary": "Application configuration initialization order, viewport creation timing, or internal state outside the non-sensitive settings allowlist. Compare a derived diagnostic .kit app before changing the production app.",
+    "timeline_continuity_qualified": false,
+    "seamless_visual_continuity_qualified": false
+  },
+  "gates": {
+    "settings_probe_completed": true,
+    "sensitive_settings_roots_excluded": true,
+    "runtime_settings_delta_is_bounded": true,
+    "matched_extension_set_preserves_play": true,
+    "matched_extension_set_retains_1280x720": true,
+    "editor_run_loops_do_not_remove_stop": true,
+    "auto_frame_does_not_remove_stop": true,
+    "graphics_defaults_do_not_remove_stop": true,
+    "persistent_resolution_does_not_remove_stop": true,
+    "all_known_settings_do_not_remove_stop": true,
+    "all_known_settings_retain_1280x720": true,
+    "fill_viewport_workaround_still_preserves_play": true,
+    "production_unchanged": true
+  }
+}

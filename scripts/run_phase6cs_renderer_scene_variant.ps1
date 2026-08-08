@@ -6,10 +6,14 @@ param(
     [int]$PostViewportSettleFrames = 0,
     [double]$PostViewportSettleSeconds = 0.0,
     [switch]$RetryAfterStop,
-    [ValidateSet("campfire", "editor_base", "editor_base_flow", "editor_base_campfire")][string]$ProbeApp = "campfire",
+    [ValidateSet("campfire", "editor_base", "editor_base_flow", "editor_base_campfire", "editor_base_developer", "editor_base_shell")][string]$ProbeApp = "campfire",
     [switch]$AsyncRendererInit,
     [ValidateSet("app_default", "true", "false")][string]$ViewportFillDefault = "app_default",
-    [switch]$EditorPresentTiming
+    [switch]$EditorPresentTiming,
+    [switch]$EditorRunLoopTiming,
+    [switch]$DisableFirstOpenAutoFrame,
+    [switch]$EditorGraphicsDefaults,
+    [switch]$EditorPersistentResolution
 )
 
 $ErrorActionPreference = "Stop"
@@ -17,7 +21,7 @@ $repositoryRoot = Split-Path -Parent $PSScriptRoot
 $releaseRoot = Join-Path $repositoryRoot "_build\windows-x86_64\release"
 $kit = Join-Path $releaseRoot "kit\kit.exe"
 $app = Join-Path $releaseRoot "apps\campfire.simulator.kit"
-$probeAppPath = if ($ProbeApp -in ("editor_base", "editor_base_flow", "editor_base_campfire")) {
+$probeAppPath = if ($ProbeApp -in ("editor_base", "editor_base_flow", "editor_base_campfire", "editor_base_developer", "editor_base_shell")) {
     Join-Path $releaseRoot "kit\apps\omni.app.editor.base.kit"
 } else {
     $app
@@ -66,16 +70,32 @@ $probeArgs = @(
     "--exec",
     $probe
 )
-if ($ProbeApp -in ("editor_base_flow", "editor_base_campfire")) {
+if ($ProbeApp -in ("editor_base_flow", "editor_base_campfire", "editor_base_developer", "editor_base_shell")) {
     $probeArgs = @($probeAppPath, "--enable", "omni.flowusd") + $probeArgs[1..($probeArgs.Count - 1)]
 }
-if ($ProbeApp -eq "editor_base_campfire") {
+if ($ProbeApp -in ("editor_base_campfire", "editor_base_developer", "editor_base_shell")) {
     $probeArgs = @(
         $probeAppPath,
         "--ext-folder",
         (Join-Path $releaseRoot "exts"),
         "--enable",
         "campfire.app"
+    ) + $probeArgs[1..($probeArgs.Count - 1)]
+}
+if ($ProbeApp -in ("editor_base_developer", "editor_base_shell")) {
+    $probeArgs = @(
+        $probeAppPath,
+        "--enable",
+        "omni.kit.developer.bundle"
+    ) + $probeArgs[1..($probeArgs.Count - 1)]
+}
+if ($ProbeApp -eq "editor_base_shell") {
+    $probeArgs = @(
+        $probeAppPath,
+        "--enable",
+        "omni.kit.menu.common",
+        "--enable",
+        "omni.kit.ui.actions"
     ) + $probeArgs[1..($probeArgs.Count - 1)]
 }
 if ($AsyncRendererInit) {
@@ -93,6 +113,39 @@ if ($EditorPresentTiming) {
         "--/exts/omni.kit.renderer.core/present/enabled=true",
         "--/exts/omni.kit.renderer.core/present/presentAfterRendering=true",
         "--/persistent/app/viewport/defaults/tickRate=60"
+    ) + $probeArgs[1..($probeArgs.Count - 1)]
+}
+if ($EditorRunLoopTiming) {
+    $probeArgs = @(
+        $probeAppPath,
+        "--/app/runLoops/main/rateLimitFrequency=60",
+        "--/app/runLoops/main/rateLimitUsePrecisionSleep=true",
+        "--/app/runLoops/present/rateLimitUsePrecisionSleep=true",
+        "--/app/runLoops/rendering_0/rateLimitFrequency=60",
+        "--/app/runLoops/rendering_0/rateLimitUsePrecisionSleep=true",
+        "--/app/runLoops/rendering_1/rateLimitEnabled=true",
+        "--/app/runLoops/rendering_1/rateLimitFrequency=60",
+        "--/app/runLoops/rendering_1/rateLimitUsePrecisionSleep=true",
+        "--/app/runLoops/rendering_1/syncToPresent=true"
+    ) + $probeArgs[1..($probeArgs.Count - 1)]
+}
+if ($DisableFirstOpenAutoFrame) {
+    $probeArgs = @(
+        $probeAppPath,
+        "--/persistent/app/viewport/autoFrame/mode="
+    ) + $probeArgs[1..($probeArgs.Count - 1)]
+}
+if ($EditorGraphicsDefaults) {
+    $probeArgs = @(
+        $probeAppPath,
+        "--/renderer/gpuEnumeration/glInterop/enabled=true",
+        "--/exts/omni.kit.renderer.core/imgui/enableMips=true"
+    ) + $probeArgs[1..($probeArgs.Count - 1)]
+}
+if ($EditorPersistentResolution) {
+    $probeArgs = @(
+        $probeAppPath,
+        "--/persistent/app/viewport/Viewport/Viewport0/resolution=[1920,1080]"
     ) + $probeArgs[1..($probeArgs.Count - 1)]
 }
 if (-not $WindowedProbe) {

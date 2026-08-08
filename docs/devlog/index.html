@@ -1212,6 +1212,26 @@
             <p>stage接続前にFlow、Physics、または両方を除去し、最後はWorld・Camera・Cubeだけの新規USDまで縮小しましたが、Campfire appでは最初のviewport frame後に毎回STOPしました。通常windowでも再現し、settle後の再PLAYもSTOPするため、headless固有や一回限りの遅延eventではありません。一方、同梱editor baseはFlowUsd、非動作Campfire拡張、async renderer、固定1280×720 viewportを個別に足してもPLAYを維持しました。Campfire appの<code>fillViewport=true</code>ではPLAYが続く回避策を確認しましたが、描画がUI寸法へ変わり固定1280×720 capture契約を壊すため採用していません。Phase 6CSは16/16 gate、標準回帰は8 process・58/58件で合格しました。production、Flow 110、Point既定OFF、木材状態、timeline/Flow/映像の未合格判定は変更していません。次はCampfire appとeditor baseのdependency/settings差分を最小化します。添付動画はPhase 6COの関連映像で、Phase 6CSの根拠は16条件のevent記録です。</p>
           </section>
 
+          <figure id="phase6ct-renderer-app-settings" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6CT</h3>
+            <a href="assets/phase6/renderer_app_settings_report.svg" aria-label="Phase 6CT application settings境界レポートを開く">
+              <img src="assets/phase6/renderer_app_settings_report.svg" width="1200" height="680" alt="extension集合と15設定差を一致させてもCampfireのSTOPが残ることを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Extensionも15 settings差も、単純な原因ではない</strong><span>13 / 13 gates · matched editor PLAY · all-known Campfire STOP×2 · fixed 1280×720</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_timeline_continuity.mp4" data-video-poster="assets/phase6/resident_renderer_timeline_capture.png" data-video-title="Phase 6CO boundary video referenced by Phase 6CT" data-video-meta="Related Phase 6CO RTX evidence, not a direct Phase 6CT recording · Phase 6CT compares extension sets and non-sensitive runtime settings · the shared video does not qualify timeline continuity · 1280×720 · 10 fps · 6 s">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>設定境界の関連動画</strong><small>Phase 6CO再利用 · Phase 6CTはevent/settings probe</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6ct-note-title">
+            <p class="note-label">2026-08-08 · Goal / isolation / measured result / limitation / next</p>
+            <h3 id="phase6ct-note-title">15差分を全部合わせてもSTOP。次は初期化順序</h3>
+            <p>editor baseへCampfire側のFlowUsd、Campfire拡張、developer bundle、menu、UI actionsを追加してextension集合を揃えても、固定1280×720でPLAYを維持しました。次に非機密のviewport・renderer・run-loop・timeline周辺だけをruntime snapshot化し、225対229 scalarから15差分を抽出しました。run-loop、auto-frame、GPU/ImGui、persistent解像度、present/tickを個別に合わせてもSTOPし、15差分を全て同時に合わせてもafter/retryは0.0秒で各1 STOPでした。単純な設定値では説明できないため、残る候補はapplication初期化順序、viewport生成時点、またはallowlist外の内部状態です。Phase 6CTは13/13 gate、標準回帰は8 process・58/58件で合格しました。<code>fillViewport=true</code>の回避策は固定captureを壊すため未採用です。productionと未合格判定は変更していません。次はproductionを触る前にderived diagnostic <code>.kit</code>で構成順序を二分探索します。動画はPhase 6COの関連映像で、Phase 6CTの根拠は13条件のevent/settings記録です。</p>
+          </section>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>

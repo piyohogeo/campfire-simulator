@@ -2293,3 +2293,13 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - application matrix: 固定SDK同梱`omni.app.editor.base.kit`ではafter/retryともPLAYを維持した。editor baseへFlowUsd、`autoCreateScene=false`の`campfire.app`、`renderer.asyncInit=true`、固定1280×720 viewportを個別に追加してもPLAYを維持した。したがって各要素単独は十分条件ではない。Campfire appへeditorのpresent順序/tick設定だけを足してもSTOPは残った。
 - 回避策と不採用判断: Campfire appを`fillViewport=true`で起動するとafter/retryともSTOP 0でPLAYを維持した。ただし実描画寸法は固定1280×720からUI寸法へ変わり、再現可能な固定解像度capture契約を壊す。このためproduction既定値には採用しない。残る境界はCampfire application構成と固定viewport modeの複合相互作用であり、次はapp dependency/settings差分をさらに縮小してから変更可否を判断する。
 - 検証と非変更: Phase 6CS reportは`16 / 16` gateに合格し、標準suiteは全8 process・`58 / 58`件が`340.5 s`で合格した。production既定Sphere、Point既定OFF、物理式、JSON schema、Flow 110/dependency、正規scene、rollback、immutable snapshot、revision契約、固定capture既定値は変更しない。`timeline_continuity_qualified=false`、`seamless_visual_continuity_qualified=false`、`flow_solver_state_checkpointed=false`を維持する。
+
+## 126. Phase 6CT application settings / initialization boundary
+
+### 2026-08-08: extension集合とallowlist settings値を十分条件から除外する
+
+- extension集合比較: Campfire側だけで起動していたdeveloper bundle、menu common、UI actionsをFlowUsdと`autoCreateScene=false`の`campfire.app`とともにeditor baseへ追加した。起動ログ上の実extension集合を揃え、固定1280×720 viewportでafter/retryともPLAY・STOP 0を維持した。extension集合だけではSTOPを再現できない。
+- 非機密settings差分: `/app/player`、`/app/runLoops`、`/app/viewport`、renderer core、persistent viewport、renderer、RTX eco/hydra、timelineに限定したruntime snapshotをrenderer非依存probeで取得した。Campfire 225 scalar、matched editor 229 scalarの間に15差分を得た。認証、network、user data rootは取得対象外とした。
+- 差分matrix: editorのrun-loop群、`autoFrame.mode`、GPU/ImGui defaults、persistent解像度、present/tickを個別にCampfireへ適用しても各afterはSTOPした。`fillViewport=false`と実1280×720を維持したまま15差分すべてを同時に合わせても、after/retryは各1 STOP・time 0.0秒だった。したがってallowlist上の単純なscalar設定値およびその合成は十分条件ではない。
+- 判断: editor baseでPLAY、CampfireでSTOP、Campfireの`fillViewport=true`だけがPLAY回避という差は残る。次の候補は`.kit` application構成の初期化順序、viewport生成時点、またはallowlist外の内部状態である。production appを変更する前に、固定SDK内でderived diagnostic `.kit`を作り、設定宣言の順序とviewport window compositionを二分探索する。
+- 検証と非変更: Phase 6CT reportは`13 / 13` gateに合格し、標準suiteは全8 process・`58 / 58`件が`343.2 s`で合格した。production `.kit`、固定1280×720 capture、Flow 110、Sphere既定、Point既定OFF、木材権威状態、物理式、JSON schema、rollback、immutable snapshot、revision契約は変更しない。`timeline_continuity_qualified=false`、`seamless_visual_continuity_qualified=false`を維持する。
