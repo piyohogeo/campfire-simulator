@@ -2472,6 +2472,19 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 判定と次: isolated frame kernel correctnessはqualified、production integrationはunqualifiedとする。標準suiteは全8 process・`59 / 59`件合格（全体`379.2 s`、collapse coverage `225.9 s`）だった。次は実USD transformからowner threadでframeを一回sampleし、各point positionと同じstable surface-cell identityのfuel／temperature／smokeが対応することを検証する。互換性を隠すindex並べ替えは行わず、このmappingが成立するまでResident payload、production native library、schema、既定設定を変更しない。
 - 非変更: production既定Sphere、Point既定OFF、Flow 110.0.0、物理式、JSON schema、serialization、USD保存、rollback、revision、immutable snapshot、timeline／visual／solver continuity未達は不変である。
 
+## 143. Phase 6DK USD transform / surface-channel identity
+
+### 2026-08-09: 実USD frameがstable surface-cell順を保つことと、旧Y reflectionの値不一致を確定する
+
+- 実行境界: fixed Kit/Flow appをrenderer無効、production自動scene無効で起動し、Kit contextへ接続しないanonymous in-memory USD stageを作った。productionの`create_log()`でidentity、Z 90度、Z 45度、任意軸37度の4本をauthoringし、各`ComputeLocalToWorldTransform()`を一度sampleした。4本とも`xformOp:translate`→`xformOp:orient`で、basis norm 1、相互dotほぼ0、determinant 1の右手系frameだった。
+- cell identity: productionの24×12×4木材modelを使い、surface-cellごとにstable `log_id:local_index`と固有温度を与えた。cardinal 2本×360点と45度＋3D 2本×360点を独立scenarioとし、native frame出力の各indexを、そのcellのlocal位置へUSD world transformを適用したfloat32参照と比較した。両scenarioとも最大位置誤差`0.0 m`で、fuel／temperature／smokeを含むrecord digestを固定した。
+- 旧Y値境界: production cardinal resolverはidentity／90度をaxes `(0, 1)`として受理し、45度／3Dは従来どおりfail closedにした。旧Y native出力と正しい90度frame出力は360座標すべて共通だったが、cell-varying temperatureは`360 / 360`座標で別値になった。fuel mismatchとsmoke mismatchは各0で、これは現行両channelが薪単位一定だからであり、reflectionが値同値である証拠ではない。
+- 判定: Phase固有`14 / 14` gateに合格し、production appとPhase 6AU native sourceの前後SHAは一致した。USD frame extractionとframe内position/channel identityはqualified、legacy-axisからのmigrationとproduction integrationはunqualifiedである。Flow、renderer、USD Point publication、payload、revision、rollbackはこのprobeで動かしていない。
+- 回帰: 標準suiteは全8 process・`59 / 59`件が`344.9 s`で合格し、collapse coverageは`204.3 s`で完了した。
+- migration契約: layout表現はsession生成時に固定し、同じsessionのretry／rollback／stage recoveryで維持する。committed legacy-axis payloadをframe payloadとして再解釈せず、live layout transaction中に表現を切り替えない。将来のframe modeは追加の既定OFF opt-inで新規sessionだけに適用し、legacy sessionはstop＋rebuildなしに移行させない。この契約を最小prototypeで確認するまで既存sidecar／payloadを変更しない。
+- 次: immutable payloadへ排他的なlayout representationを持たせる隔離prototypeを作り、legacyとframeのretry digest、failure rollback、shared layout state、replacement-stage recoveryを検査する。その後に変更属性maskを追加し、USD Set集合とFlow出力を別々に測る。
+- 非変更: production既定Sphere、Point既定OFF、Flow 110.0.0、物理式、JSON schema、serialization、USD保存、rollback、revision、immutable snapshot、timeline／visual／solver continuity未達は不変である。
+
 ## 144. Phase 6DL immutable layout representation lifecycle
 
 ### 2026-08-09: legacy/frame表現をpayload identityへ含め、session中の再解釈を拒否する
@@ -2485,15 +2498,15 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 次: production変更前に、既存payload／sidecar／sessionへ必要な最小fieldと検査点を差分設計し、legacy既定値のserialization／checkpoint互換、stage上の表現識別子をUSDへauthoringすべきか、frame producer接続前のrollback保存集合を決める。selective field maskとFlow実測はその後に分離する。
 - 非変更: production既定Sphere、Point既定OFF、Flow 110.0.0、物理式、JSON schema、serialization、USD保存、rollback、revision、immutable snapshot、timeline／visual／solver continuity未達は不変である。
 
-## 143. Phase 6DK USD transform / surface-channel identity
+## 145. Phase 6DM layout representation compatibility audit
 
-### 2026-08-09: 実USD frameがstable surface-cell順を保つことと、旧Y reflectionの値不一致を確定する
+### 2026-08-09: production実装前に変更点と永続化境界を機械監査する
 
-- 実行境界: fixed Kit/Flow appをrenderer無効、production自動scene無効で起動し、Kit contextへ接続しないanonymous in-memory USD stageを作った。productionの`create_log()`でidentity、Z 90度、Z 45度、任意軸37度の4本をauthoringし、各`ComputeLocalToWorldTransform()`を一度sampleした。4本とも`xformOp:translate`→`xformOp:orient`で、basis norm 1、相互dotほぼ0、determinant 1の右手系frameだった。
-- cell identity: productionの24×12×4木材modelを使い、surface-cellごとにstable `log_id:local_index`と固有温度を与えた。cardinal 2本×360点と45度＋3D 2本×360点を独立scenarioとし、native frame出力の各indexを、そのcellのlocal位置へUSD world transformを適用したfloat32参照と比較した。両scenarioとも最大位置誤差`0.0 m`で、fuel／temperature／smokeを含むrecord digestを固定した。
-- 旧Y値境界: production cardinal resolverはidentity／90度をaxes `(0, 1)`として受理し、45度／3Dは従来どおりfail closedにした。旧Y native出力と正しい90度frame出力は360座標すべて共通だったが、cell-varying temperatureは`360 / 360`座標で別値になった。fuel mismatchとsmoke mismatchは各0で、これは現行両channelが薪単位一定だからであり、reflectionが値同値である証拠ではない。
-- 判定: Phase固有`14 / 14` gateに合格し、production appとPhase 6AU native sourceの前後SHAは一致した。USD frame extractionとframe内position/channel identityはqualified、legacy-axisからのmigrationとproduction integrationはunqualifiedである。Flow、renderer、USD Point publication、payload、revision、rollbackはこのprobeで動かしていない。
-- 回帰: 標準suiteは全8 process・`59 / 59`件が`344.9 s`で合格し、collapse coverageは`204.3 s`で完了した。
-- migration契約: layout表現はsession生成時に固定し、同じsessionのretry／rollback／stage recoveryで維持する。committed legacy-axis payloadをframe payloadとして再解釈せず、live layout transaction中に表現を切り替えない。将来のframe modeは追加の既定OFF opt-inで新規sessionだけに適用し、legacy sessionはstop＋rebuildなしに移行させない。この契約を最小prototypeで確認するまで既存sidecar／payloadを変更しない。
-- 次: immutable payloadへ排他的なlayout representationを持たせる隔離prototypeを作り、legacyとframeのretry digest、failure rollback、shared layout state、replacement-stage recoveryを検査する。その後に変更属性maskを追加し、USD Set集合とFlow出力を別々に測る。
-- 非変更: production既定Sphere、Point既定OFF、Flow 110.0.0、物理式、JSON schema、serialization、USD保存、rollback、revision、immutable snapshot、timeline／visual／solver continuity未達は不変である。
+- 現行surface: AST/source監査で`ImmutableSurfacePayload`は10 field、constructorはproduction 1箇所とunit test 1箇所、public export済みであることを確認した。digestは既存layout origin／axisと4数値配列を含み、sessionはpending sidecar payloadを作り直さずretryへ渡す。`replace_consumers()`はrevisionとclosed/active状態を検証してから旧consumerを閉じるため、表現比較を同じpre-close区間へ追加できる。
+- 確認したgap: payload、sidecar `publish()`／`status()`、session consumer rebind、Point stage、owner shared layout stateの5境界にrepresentationが存在しない。Point stageは`campfire:layoutRevision`と`campfire:residentRevision`を接続前にauthoringするが、固定表現tokenを持たない。
+- 最小差分: payload末尾へ既定`legacy_cardinal_axes_v1`のfieldを追加して既存positional／keyword callerを維持し、digestへ含める。sidecarは一つのimmutable representationを保持し、attempt計上・変換・USD write前にpayloadを拒否してstatusへ公開する。sceneは`Sdf.ValueTypeNames.Token`の`campfire:layoutRepresentation`を接続前に1回だけauthoringし、live Setしない。sessionは旧／新sidecarの表現を旧consumer close前に比較し、ownerはshared layout stateへ同じ値を保持してrefresh／replace中のmode switchを拒否する。定数exportと互換／失敗／recovery unit testを含め、変更領域は5組に限定する。
+- 永続化判断: wood JSONと`ResidentPublishedSnapshot`は木材権威状態でありlayoutを含めない。現行checkpoint v1はconsumer数`len(log_ids)+1`でSphere revisionだけを扱い、Point sidecarをresumeしないため変更しない。将来Point checkpointを保存する場合だけschema versionを上げ、representationを必須にする。stage exportはpre-authored tokenを保持するが、tokenのない旧Point stageをframe-aware sessionへ暗黙変換せずoffline再生成／upgradeさせる。
+- 判定: Phase固有`19 / 19` audit gateに合格し、production extension source SHAは不変だった。最小差分設計はqualified、production implementationは未qualifiedである。詳細は`docs/design/resident_layout_compatibility.md`、再現は`run_phase6dm_layout_compatibility.ps1`、結果は`resident_layout_compatibility_report.json/.svg`へ固定する。
+- 回帰: 標準suiteは全8 process・`59 / 59`件が`369.3 s`で合格し、collapse coverageは`213.4 s`で完了した。
+- 次: この最小差分を既定legacy・Point既定OFFのままproductionへ実装し、既存caller同値、missing/mismatched USD token fail-closed、payload mismatch zero-write、replacement-stage retry、rollback、revision、既存checkpoint v1読込をunit／Kitで検証する。frame native producerの接続はその合格後の別Phaseとする。
+- 非変更: production既定Sphere、Point既定OFF、Flow 110.0.0、物理式、wood JSON、Resident snapshot schema、checkpoint v1、native ABI、rollback、revision、immutable snapshot、timeline／visual／solver continuity未達は不変である。

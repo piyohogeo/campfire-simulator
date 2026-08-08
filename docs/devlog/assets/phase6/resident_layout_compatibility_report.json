@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "phase": "phase6dm",
+  "status": "ok",
+  "audit": {
+    "payload_fields": [
+      "revision",
+      "tick",
+      "layout_revision",
+      "point_count",
+      "positions",
+      "fuels",
+      "temperatures",
+      "smokes",
+      "layout_origins",
+      "layout_axes"
+    ],
+    "payload_constructor_sites": [
+      {
+        "path": "source\\extensions\\campfire.app\\campfire\\app\\resident_point_sidecar.py",
+        "line": 451,
+        "production": true
+      },
+      {
+        "path": "source\\extensions\\campfire.app\\campfire\\app\\tests\\test_scene.py",
+        "line": 2044,
+        "production": false
+      }
+    ],
+    "checkpoint_version": 1,
+    "current_point_usd_attributes": [
+      "pointPositions",
+      "pointFuels",
+      "pointTemperatures",
+      "pointSmokes",
+      "campfire:layoutRevision",
+      "campfire:residentRevision"
+    ],
+    "confirmed_gaps": [
+      "ImmutableSurfacePayload has no representation field",
+      "ResidentPointSidecar status/publish has no representation guard",
+      "ResidentApplicationSession.replace_consumers compares revisions but not representation",
+      "Point stage has no immutable layout-representation token",
+      "ResidentPointApplicationOwner shared layout state contains revision/origins/axes only"
+    ]
+  },
+  "minimum_production_delta": [
+    {
+      "file": "resident_point_sidecar.py",
+      "changes": [
+        "append a defaulted layout_representation field after all existing payload fields",
+        "include representation in payload digest",
+        "store one immutable sidecar representation and expose it through status",
+        "reject payload representation mismatch before attempt accounting, conversion, or USD writes",
+        "validate the pre-authored USD representation token during construction"
+      ]
+    },
+    {
+      "file": "resident_application_session.py",
+      "changes": [
+        "compare existing and replacement sidecar representation before closing old consumers"
+      ]
+    },
+    {
+      "file": "resident_point_scene.py",
+      "changes": [
+        "pre-author one token campfire:layoutRepresentation=legacy_cardinal_axes_v1 before stage connection"
+      ]
+    },
+    {
+      "file": "resident_point_application_owner.py",
+      "changes": [
+        "carry representation in shared layout state and reject replace/refresh mode switches"
+      ]
+    },
+    {
+      "file": "__init__.py and tests/test_scene.py",
+      "changes": [
+        "export stable representation constants and add constructor/publish/rebind/recovery compatibility tests"
+      ]
+    }
+  ],
+  "compatibility_policy": {
+    "payload_constructor": "trailing default preserves existing keyword and positional call sites",
+    "legacy_default": "legacy_cardinal_axes_v1",
+    "frame_opt_in": "rigid_frame_v1",
+    "usd_attribute_type": "Sdf.ValueTypeNames.Token",
+    "usd_write_frequency": "pre-authored once; never changed during a live session",
+    "legacy_stage_without_token": "fail closed once representation-aware Point mode is enabled; regenerate or upgrade offline",
+    "replacement_stage": "token, shared descriptor, and sidecar status must match before old consumer close",
+    "payload_digest": "changes intentionally because representation becomes part of immutable identity; no digest is currently persisted"
+  },
+  "explicit_non_changes": {
+    "wood_json_schema": "unchanged; layout is application state, not wood authority state",
+    "resident_snapshot_schema": "unchanged",
+    "checkpoint_v1": "unchanged; current format has no Point sidecar and resumes Sphere only",
+    "future_point_checkpoint": "requires a new checkpoint schema version and mandatory representation field",
+    "stage_recovery_orchestrator": "unchanged; session/factory validation is the existing handoff boundary",
+    "native_abi": "unchanged until the frame producer is integrated separately",
+    "flow_attributes_and_version": "unchanged",
+    "physics_and_defaults": "unchanged"
+  },
+  "gates": {
+    "passed": 19,
+    "total": 19,
+    "checks": {
+      "payload_field_shape_exact": true,
+      "payload_is_frozen_dataclass": true,
+      "one_production_payload_constructor": true,
+      "payload_constructor_surface_is_two_sites": true,
+      "payload_is_publicly_exported": true,
+      "current_digest_covers_layout_and_arrays": true,
+      "pending_retry_reuses_stored_sidecar_payload": true,
+      "consumer_validation_precedes_old_consumer_close": true,
+      "consumer_rebind_representation_check_is_missing": true,
+      "sidecar_status_representation_is_missing": true,
+      "sidecar_publish_representation_check_is_missing": true,
+      "usd_representation_attribute_is_missing": true,
+      "point_structure_is_pre_authored": true,
+      "owner_layout_state_is_legacy_shape": true,
+      "checkpoint_schema_remains_v1": true,
+      "checkpoint_consumer_shape_is_logs_plus_sphere": true,
+      "checkpoint_has_no_point_layout_contract": true,
+      "wood_json_has_no_point_layout_contract": true,
+      "production_extension_sources_unchanged": true
+    }
+  },
+  "decisions": {
+    "minimum_diff_defined": true,
+    "checkpoint_v1_change_required_now": false,
+    "wood_json_change_required": false,
+    "usd_static_token_required_before_frame_mode": true,
+    "production_implementation_qualified": false
+  },
+  "raw_report": "artifacts\\phase6\\phase6dm\\resident_layout_compatibility_raw.json",
+  "contracts": {
+    "production_extension_sources_changed": false,
+    "production_sphere_default": true,
+    "point_emitter_default_off": true,
+    "flow_version": "110.0.0",
+    "physics_changed": false,
+    "wood_json_schema_changed": false,
+    "checkpoint_v1_changed": false,
+    "usd_stage_changed": false,
+    "rollback_changed": false,
+    "revision_changed": false
+  }
+}

@@ -1592,6 +1592,26 @@
             <p>productionの<code>ResidentApplicationSession</code>を変更せず読み込み、その外側へ隔離descriptorとguardを置きました。<code>legacy_cardinal_axes_v1</code>と<code>rigid_frame_v1</code>は排他的metadataを持ち、representationとdescriptor全体をpayload digestへ含めます。同じ720点・17,280 Bの数値配列でもdigestは別です。両表現でrevision 1 commit、revision 2 primary失敗、Point exact rollback、次tick拒否、stopped consumer差替え、同一pending payloadのrevision 2 retry、revision 3継続を完走しました。反対表現への差替えは旧consumerを閉じる前に拒否し、同値descriptorを別objectとして再構築したrecoveryは受理します。Phase固有20/20 gateに合格し、production extension sourceは不変です。標準suiteも全8 process・59/59件合格（342.6秒、collapse coverage 200.9秒）でした。digest p95 0.0141 msは隔離Python SHA値で、USDやFlowの性能値ではありません。production integrationとlive migrationは未合格のままです。次は既存payload／sidecar／sessionへ必要な最小fieldと、serialization・checkpoint・USD保存の互換境界を差分設計します。動画は現行cardinal経路の外観参照だけで、Phase 6DL自体はUSDもFlowも動かしていません。</p>
           </section>
 
+          <figure class="capture-card wide">
+            <h3 class="capture-phase-heading">Phase 6DM</h3>
+            <a href="assets/phase6/resident_layout_compatibility_report.svg" aria-label="Phase 6DM layout representation compatibility監査レポートを開く">
+              <img src="assets/phase6/resident_layout_compatibility_report.svg" alt="現在のpayload、欠けているguard、最小production差分、永続化非変更を示す監査レポート" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>変更はPoint固有5領域、wood JSONとcheckpoint v1は維持</strong><span>19 / 19 audit gates · 10 fields · 2 constructor sites</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_translation_breakdown.mp4" data-video-poster="assets/phase6/resident_translation_breakdown_frame.png" data-video-title="Phase 6DM current production reference — shared video" data-video-meta="Reuses the Phase 6DC enabled Resident Point recording only as the current cardinal-path reference · Phase 6DM is a static source audit and makes no USD, Flow, renderer, or production-code change · Flow 110.0.0 · 1280×720 · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true">▶</span>
+                <span><strong>現行production参照</strong><small>Phase 6DC実機動画を再利用 · 監査自体の映像ではない</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6dm-note-title">
+            <p class="note-label">2026-08-09 · Goal / AST audit / minimum diff / persistence / compatibility / next</p>
+            <h3 id="phase6dm-note-title">表現guardの導入範囲を、Point固有の5領域へ限定した。</h3>
+            <p>productionを変更せずAST/source監査を行い、現行payload 10 field、constructor 2箇所（production 1、test 1）、pending payloadの既存exact retry、consumer close前の既存validation順を確認しました。欠けているのはpayload、sidecar publish/status、session rebind、Point USD token、owner shared stateの5境界です。将来の最小実装はpayload末尾へ既定legacy fieldを追加し、<code>campfire:layoutRepresentation</code> Tokenをstage接続前に1回だけauthoringし、payload writeとconsumer closeより前に表現不一致を拒否します。wood JSONとResident snapshotは木材権威状態なので変更しません。checkpoint v1もSphereだけを保存しPointをresumeしないため維持し、将来Point checkpointを導入する時だけ新versionにします。tokenのない旧Point stageは実行中に推測・修復せずoffline再生成します。Phase固有19/19 audit gateに合格しproduction extension SHAは不変です。標準suiteも全8 process・59/59件合格（369.3秒、collapse coverage 213.4秒）でした。production実装はまだ未合格です。次はこの最小差分を既定legacy・Point既定OFFで実装し、missing/mismatch token、zero-write拒否、rollback、replacement-stage retry、checkpoint v1非回帰を検証します。動画は現行cardinal経路の外観参照です。</p>
+          </section>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1646,6 +1666,7 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DJ isolated frame kernel</strong><small>10 / 10 · rotations exact · legacy Y channel order unresolved</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DK transform/channel identity</strong><small>14 / 14 · frame exact · legacy Y temperature 360/360 mismatched</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DL immutable layout mode</strong><small>20 / 20 · exact retry · cross-mode recovery rejected</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DM compatibility audit</strong><small>19 / 19 · 5-area minimum diff · checkpoint v1 unchanged</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6CI normal Point owner</strong><small>10 / 10 · 710 matched revisions · Point resync 0 · default OFF</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CJ layout + recovery</strong><small>consumer/revisionのみ合格 · Flow field復元と映像連続性は未達</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CK owner-thread commands</strong><small>command結果は合格 · 姿勢/炎の同時不連続は未解決</small></p></div>

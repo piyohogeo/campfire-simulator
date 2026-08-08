@@ -1,5 +1,11 @@
 # Changelog
 
+- Added Phase 6DM's static AST/source compatibility audit for a future immutable Point layout-representation field without changing production code.
+- Confirmed the current boundary precisely: 10 payload fields, two constructor sites, exact pending payload reuse, revision-safe consumer handoff, and five missing representation checks/identifiers.
+- Defined a five-area minimum production delta with a trailing legacy-default payload field, sidecar publish/status validation, pre-authored USD Token, pre-close consumer comparison, and owner shared-state propagation.
+- Kept wood JSON, Resident snapshot schema, checkpoint v1, stage recovery orchestration, native ABI, Flow 110.0.0, physics, and defaults outside the first integration change; a future Point checkpoint requires a new schema version.
+- Passed all 19 Phase 6DM audit gates and verified production extension source hashes remained unchanged.
+- Re-ran the complete regression after Phase 6DM: all 8 test processes and 59 / 59 cases passed in 369.3 s, including 213.4 s of collapse coverage.
 - Added Phase 6DL's isolated immutable layout-representation prototype around the unchanged production `ResidentApplicationSession`.
 - Qualified both `legacy_cardinal_axes_v1` and `rigid_frame_v1` through commit, injected primary failure, exact Point rollback, stopped consumer replacement, identical pending-payload retry, and continued revision 3.
 - Rejected cross-representation payload publication and consumer replacement before writes or old-consumer close; equal replacement descriptor values remain recoverable without requiring Python object identity.

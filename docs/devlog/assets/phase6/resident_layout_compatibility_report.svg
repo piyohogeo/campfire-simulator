@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6DM layout representation compatibility audit</title>
+  <desc id="desc">The audit identifies the minimum future Point-specific production delta while keeping wood JSON and checkpoint version 1 unchanged.</desc>
+  <rect width="1200" height="680" rx="28" fill="#111827"/>
+  <text x="58" y="72" fill="#f8fafc" font-family="Segoe UI, sans-serif" font-size="32" font-weight="700">Phase 6DM / COMPATIBILITY + MINIMUM DIFF</text>
+  <text x="58" y="108" fill="#aebbd0" font-family="Segoe UI, sans-serif" font-size="18">Static AST/source audit · production unchanged · implementation still blocked</text>
+  <rect x="58" y="148" width="330" height="190" rx="18" fill="#1d3038" stroke="#4b8496" stroke-width="2"/>
+  <text x="82" y="190" fill="#e2f6ff" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">Current surface</text>
+  <text x="82" y="230" fill="#7ee0b5" font-family="Consolas, monospace" font-size="25" font-weight="700">10 payload fields</text>
+  <text x="82" y="268" fill="#c6d4dd" font-family="Segoe UI, sans-serif" font-size="16">2 constructor sites · 1 production</text>
+  <text x="82" y="300" fill="#c6d4dd" font-family="Segoe UI, sans-serif" font-size="16">pending payload already reused exactly</text>
+  <rect x="414" y="148" width="354" height="190" rx="18" fill="#302a20" stroke="#a98243" stroke-width="2"/>
+  <text x="438" y="190" fill="#fff2cf" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">Confirmed missing guards</text>
+  <text x="438" y="230" fill="#f3bd6d" font-family="Segoe UI, sans-serif" font-size="17">payload / sidecar representation</text>
+  <text x="438" y="266" fill="#f3bd6d" font-family="Segoe UI, sans-serif" font-size="17">consumer replacement comparison</text>
+  <text x="438" y="302" fill="#f3bd6d" font-family="Segoe UI, sans-serif" font-size="17">static USD representation token</text>
+  <rect x="792" y="148" width="350" height="190" rx="18" fill="#272940" stroke="#7378a5" stroke-width="2"/>
+  <text x="816" y="190" fill="#eceeff" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">Minimum future delta</text>
+  <text x="816" y="230" fill="#c9cbff" font-family="Consolas, monospace" font-size="25" font-weight="700">5 code/test areas</text>
+  <text x="816" y="268" fill="#d0d2e8" font-family="Segoe UI, sans-serif" font-size="16">one pre-authored Token · zero live Sets</text>
+  <text x="816" y="300" fill="#d0d2e8" font-family="Segoe UI, sans-serif" font-size="16">legacy default · frame explicit opt-in</text>
+  <rect x="58" y="380" width="1084" height="184" rx="20" fill="#191f2b" stroke="#465269" stroke-width="2"/>
+  <text x="84" y="422" fill="#f8fafc" font-family="Segoe UI, sans-serif" font-size="23" font-weight="700">Compatibility boundary</text>
+  <text x="84" y="464" fill="#cad3e0" font-family="Segoe UI, sans-serif" font-size="17">Wood JSON and Resident snapshot schema remain untouched; layout is application state, not wood authority state.</text>
+  <text x="84" y="500" fill="#cad3e0" font-family="Segoe UI, sans-serif" font-size="17">Checkpoint v1 stays unchanged because it contains Sphere consumers only; a future Point checkpoint must use a new version.</text>
+  <text x="84" y="538" fill="#f2b36f" font-family="Segoe UI, sans-serif" font-size="17" font-weight="700">A legacy Point stage without the token must be regenerated offline, never guessed during a connected session.</text>
+  <text x="58" y="620" fill="#72e0af" font-family="Consolas, monospace" font-size="22" font-weight="700">19 / 19 audit gates</text>
+  <text x="1142" y="646" text-anchor="end" fill="#778196" font-family="Consolas, monospace" font-size="14">Sphere default / Point OFF / Flow 110.0.0</text>
+</svg>
