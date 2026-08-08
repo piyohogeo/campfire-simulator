@@ -1,0 +1,1599 @@
+{
+  "schema_version": 1,
+  "phase": "phase6cz",
+  "status": "ok",
+  "timestamp_utc": "2026-08-08T10:31:00.094326+00:00",
+  "scope": {
+    "default_off": true,
+    "production_code_changed": false,
+    "observes_existing_phase6co_scenario": true,
+    "flow_version": "110.0.0",
+    "point_emitter_default_enabled": false,
+    "flow_solver_state_checkpointed": false
+  },
+  "samples": [
+    {
+      "revision": 335,
+      "timeline_time_s": 1.2,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 24,
+      "dry_log_origin_m": [
+        -1.3783718486592988e-06,
+        -0.3399653732776642,
+        0.15999983251094818
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        0.0,
+        -0.34000000009934106,
+        0.18000000110930867
+      ],
+      "maximum_alignment_error_m": 0.020000198621002073,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 1
+    },
+    {
+      "revision": 340,
+      "timeline_time_s": 1.2,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 24,
+      "dry_log_origin_m": [
+        -1.3783718486592988e-06,
+        -0.3399653732776642,
+        0.15999983251094818
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        0.0,
+        -0.34000000009934106,
+        0.18000000110930867
+      ],
+      "maximum_alignment_error_m": 0.020000198621002073,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 2
+    },
+    {
+      "revision": 341,
+      "timeline_time_s": 1.2,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 24,
+      "dry_log_origin_m": [
+        -1.3783718486592988e-06,
+        -0.3399653732776642,
+        0.15999983251094818
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        0.0,
+        -0.34000000009934106,
+        0.18000000110930867
+      ],
+      "maximum_alignment_error_m": 0.020000198621002073,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 3
+    },
+    {
+      "revision": 342,
+      "timeline_time_s": 1.4,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 24,
+      "dry_log_origin_m": [
+        -2.8202744033478666e-06,
+        -0.3399510681629181,
+        0.16000284254550934
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        0.0,
+        -0.34000000009934106,
+        0.18000000110930867
+      ],
+      "maximum_alignment_error_m": 0.019998324744837224,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 4
+    },
+    {
+      "revision": 343,
+      "timeline_time_s": 1.4,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 24,
+      "dry_log_origin_m": [
+        -2.8202744033478666e-06,
+        -0.3399510681629181,
+        0.16000284254550934
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        0.0,
+        -0.34000000009934106,
+        0.18000000110930867
+      ],
+      "maximum_alignment_error_m": 0.019998324744837224,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 5
+    },
+    {
+      "revision": 344,
+      "timeline_time_s": 1.5999999999999999,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 24,
+      "dry_log_origin_m": [
+        -2.700641289266059e-06,
+        -0.33993610739707947,
+        0.16000279784202576
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        0.0,
+        -0.34000000009934106,
+        0.18000000110930867
+      ],
+      "maximum_alignment_error_m": 0.019998346787911393,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 6
+    },
+    {
+      "revision": 345,
+      "timeline_time_s": 1.7999999999999998,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 32,
+      "dry_log_origin_m": [
+        -2.690841483854456e-06,
+        -0.33992037177085876,
+        0.16000275313854218
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        0.0,
+        -0.34000000009934106,
+        0.18000000110930867
+      ],
+      "maximum_alignment_error_m": 0.019998397477904026,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 7
+    },
+    {
+      "revision": 346,
+      "timeline_time_s": 1.7999999999999998,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 32,
+      "dry_log_origin_m": [
+        -2.690841483854456e-06,
+        -0.33992037177085876,
+        0.16000275313854218
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        0.0,
+        -0.34000000009934106,
+        0.18000000110930867
+      ],
+      "maximum_alignment_error_m": 0.019998397477904026,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 8
+    },
+    {
+      "revision": 347,
+      "timeline_time_s": 1.9999999999999998,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 40,
+      "dry_log_origin_m": [
+        -2.6572874958219472e-06,
+        -0.3399040997028351,
+        0.16000275313854218
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        0.0,
+        -0.34000000009934106,
+        0.18000000110930867
+      ],
+      "maximum_alignment_error_m": 0.019998479114559726,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 9
+    },
+    {
+      "revision": 348,
+      "timeline_time_s": 1.9999999999999998,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 40,
+      "dry_log_origin_m": [
+        -2.6572874958219472e-06,
+        -0.3399040997028351,
+        0.16000275313854218
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        0.0,
+        -0.34000000009934106,
+        0.18000000110930867
+      ],
+      "maximum_alignment_error_m": 0.019998479114559726,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 10
+    },
+    {
+      "revision": 349,
+      "timeline_time_s": 2.1999999999999997,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 40,
+      "dry_log_origin_m": [
+        -2.779742317216005e-06,
+        -0.33988717198371887,
+        0.16000275313854218
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        0.0,
+        -0.34000000009934106,
+        0.18000000110930867
+      ],
+      "maximum_alignment_error_m": 0.019998518383427095,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 11
+    },
+    {
+      "revision": 350,
+      "timeline_time_s": 2.4,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 44,
+      "dry_log_origin_m": [
+        -2.7671758289216086e-06,
+        -0.3398697078227997,
+        0.16000276803970337
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        0.0,
+        -0.34000000009934106,
+        0.18000000110930867
+      ],
+      "maximum_alignment_error_m": 0.019998590540357613,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 12
+    },
+    {
+      "revision": 351,
+      "timeline_time_s": 2.6,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 48,
+      "dry_log_origin_m": [
+        -6.403618954209378e-06,
+        -0.30352863669395447,
+        0.1600007861852646
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.003658930982263284,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 13
+    },
+    {
+      "revision": 352,
+      "timeline_time_s": 2.6,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 48,
+      "dry_log_origin_m": [
+        -6.403618954209378e-06,
+        -0.30352863669395447,
+        0.1600007861852646
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.003658930982263284,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 14
+    },
+    {
+      "revision": 353,
+      "timeline_time_s": 2.8000000000000003,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 48,
+      "dry_log_origin_m": [
+        -6.852704245829955e-06,
+        -0.3034991919994354,
+        0.15999971330165863
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.003629487528350256,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 15
+    },
+    {
+      "revision": 354,
+      "timeline_time_s": 2.8000000000000003,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 48,
+      "dry_log_origin_m": [
+        -6.852704245829955e-06,
+        -0.3034991919994354,
+        0.15999971330165863
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.003629487528350256,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 16
+    },
+    {
+      "revision": 355,
+      "timeline_time_s": 3.0000000000000004,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 52,
+      "dry_log_origin_m": [
+        -6.922471129655605e-06,
+        -0.30344441533088684,
+        0.16000021994113922
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0035747105983616003,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 17
+    },
+    {
+      "revision": 356,
+      "timeline_time_s": 3.0000000000000004,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 52,
+      "dry_log_origin_m": [
+        -6.922471129655605e-06,
+        -0.30344441533088684,
+        0.16000021994113922
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0035747105983616003,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 18
+    },
+    {
+      "revision": 357,
+      "timeline_time_s": 3.2000000000000006,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 56,
+      "dry_log_origin_m": [
+        -5.477600097947288e-06,
+        -0.3033806383609772,
+        0.15999966859817505
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.003510932719128114,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 19
+    },
+    {
+      "revision": 358,
+      "timeline_time_s": 3.400000000000001,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 56,
+      "dry_log_origin_m": [
+        -6.160065822768956e-06,
+        -0.30331891775131226,
+        0.15999893844127655
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0034492134894667293,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 20
+    },
+    {
+      "revision": 359,
+      "timeline_time_s": 3.400000000000001,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 56,
+      "dry_log_origin_m": [
+        -6.160065822768956e-06,
+        -0.30331891775131226,
+        0.15999893844127655
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0034492134894667293,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 21
+    },
+    {
+      "revision": 360,
+      "timeline_time_s": 3.600000000000001,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 70,
+      "dry_log_origin_m": [
+        -6.565303010575008e-06,
+        -0.30322328209877014,
+        0.15999934077262878
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0033535779444969676,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 22
+    },
+    {
+      "revision": 361,
+      "timeline_time_s": 3.600000000000001,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 70,
+      "dry_log_origin_m": [
+        -6.565303010575008e-06,
+        -0.30322328209877014,
+        0.15999934077262878
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0033535779444969676,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 23
+    },
+    {
+      "revision": 362,
+      "timeline_time_s": 3.800000000000001,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 72,
+      "dry_log_origin_m": [
+        -4.821416951017454e-06,
+        -0.3031110465526581,
+        0.15999875962734222
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.003241341625264504,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 24
+    },
+    {
+      "revision": 363,
+      "timeline_time_s": 4.000000000000001,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 72,
+      "dry_log_origin_m": [
+        -6.227641733858036e-06,
+        -0.30298030376434326,
+        0.15999825298786163
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0031106009088111798,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 25
+    },
+    {
+      "revision": 364,
+      "timeline_time_s": 4.000000000000001,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 72,
+      "dry_log_origin_m": [
+        -6.227641733858036e-06,
+        -0.30298030376434326,
+        0.15999825298786163
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0031106009088111798,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 26
+    },
+    {
+      "revision": 365,
+      "timeline_time_s": 4.200000000000001,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 76,
+      "dry_log_origin_m": [
+        -5.853680704603903e-06,
+        -0.3028331398963928,
+        0.15999849140644073
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.00296343653243215,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 27
+    },
+    {
+      "revision": 366,
+      "timeline_time_s": 4.200000000000001,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 76,
+      "dry_log_origin_m": [
+        -5.853680704603903e-06,
+        -0.3028331398963928,
+        0.15999849140644073
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.00296343653243215,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 28
+    },
+    {
+      "revision": 367,
+      "timeline_time_s": 4.400000000000001,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 86,
+      "dry_log_origin_m": [
+        -4.734082267532358e-06,
+        -0.3026809096336365,
+        0.15999847650527954
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0028112055400236233,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 29
+    },
+    {
+      "revision": 368,
+      "timeline_time_s": 4.400000000000001,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 86,
+      "dry_log_origin_m": [
+        -4.734082267532358e-06,
+        -0.3026809096336365,
+        0.15999847650527954
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0028112055400236233,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 30
+    },
+    {
+      "revision": 369,
+      "timeline_time_s": 4.600000000000001,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 88,
+      "dry_log_origin_m": [
+        -6.6184743445774075e-06,
+        -0.3025222718715668,
+        0.15999802947044373
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.002652570842181588,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 31
+    },
+    {
+      "revision": 370,
+      "timeline_time_s": 4.800000000000002,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 88,
+      "dry_log_origin_m": [
+        -5.655119821312837e-06,
+        -0.3023601770401001,
+        0.1599985957145691
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.002490474151900507,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 32
+    },
+    {
+      "revision": 371,
+      "timeline_time_s": 4.800000000000002,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 88,
+      "dry_log_origin_m": [
+        -5.655119821312837e-06,
+        -0.3023601770401001,
+        0.1599985957145691
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.002490474151900507,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 33
+    },
+    {
+      "revision": 372,
+      "timeline_time_s": 5.000000000000002,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 98,
+      "dry_log_origin_m": [
+        -5.960689577477751e-06,
+        -0.3021826148033142,
+        0.15999829769134521
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.002312913270051263,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 34
+    },
+    {
+      "revision": 373,
+      "timeline_time_s": 5.000000000000002,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 98,
+      "dry_log_origin_m": [
+        -5.960689577477751e-06,
+        -0.3021826148033142,
+        0.15999829769134521
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.002312913270051263,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 35
+    },
+    {
+      "revision": 374,
+      "timeline_time_s": 5.200000000000002,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 106,
+      "dry_log_origin_m": [
+        -4.721508958027698e-06,
+        -0.3020067512989044,
+        0.15999801456928253
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0021370494204512084,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 36
+    },
+    {
+      "revision": 375,
+      "timeline_time_s": 5.400000000000002,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 101,
+      "dry_log_origin_m": [
+        -5.790744580735918e-06,
+        -0.30181360244750977,
+        0.1599973440170288
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0019439043065633493,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 37
+    },
+    {
+      "revision": 376,
+      "timeline_time_s": 5.400000000000002,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 101,
+      "dry_log_origin_m": [
+        -5.790744580735918e-06,
+        -0.30181360244750977,
+        0.1599973440170288
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0019439043065633493,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 38
+    },
+    {
+      "revision": 377,
+      "timeline_time_s": 5.600000000000002,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 116,
+      "dry_log_origin_m": [
+        -5.953860636509489e-06,
+        -0.30161160230636597,
+        0.1599978655576706
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0021176364609129398,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 39
+    },
+    {
+      "revision": 378,
+      "timeline_time_s": 5.600000000000002,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 116,
+      "dry_log_origin_m": [
+        -5.953860636509489e-06,
+        -0.30161160230636597,
+        0.1599978655576706
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0021176364609129398,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 40
+    },
+    {
+      "revision": 379,
+      "timeline_time_s": 5.8000000000000025,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 123,
+      "dry_log_origin_m": [
+        -4.703304512077011e-06,
+        -0.30139291286468506,
+        0.15999747812747955
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.002336923318123331,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 41
+    },
+    {
+      "revision": 380,
+      "timeline_time_s": 5.8000000000000025,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 123,
+      "dry_log_origin_m": [
+        -4.703304512077011e-06,
+        -0.30139291286468506,
+        0.15999747812747955
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.002336923318123331,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 42
+    },
+    {
+      "revision": 381,
+      "timeline_time_s": 6.000000000000003,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 132,
+      "dry_log_origin_m": [
+        -5.677842636941932e-06,
+        -0.3011589050292969,
+        0.1599969118833542
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0025721816636305036,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 43
+    },
+    {
+      "revision": 382,
+      "timeline_time_s": 6.000000000000003,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 132,
+      "dry_log_origin_m": [
+        -5.677842636941932e-06,
+        -0.3011589050292969,
+        0.1599969118833542
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0025721816636305036,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 44
+    },
+    {
+      "revision": 383,
+      "timeline_time_s": 6.200000000000003,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 139,
+      "dry_log_origin_m": [
+        -6.414403742383001e-06,
+        -0.3009185791015625,
+        0.1599973738193512
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.002812149754660281,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 45
+    },
+    {
+      "revision": 384,
+      "timeline_time_s": 6.400000000000003,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 131,
+      "dry_log_origin_m": [
+        -5.707160653400933e-06,
+        -0.3006632626056671,
+        0.1599966436624527
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0030691650543391777,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 46
+    },
+    {
+      "revision": 385,
+      "timeline_time_s": 6.400000000000003,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 131,
+      "dry_log_origin_m": [
+        -5.707160653400933e-06,
+        -0.3006632626056671,
+        0.1599966436624527
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0030691650543391777,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 47
+    },
+    {
+      "revision": 386,
+      "timeline_time_s": 6.600000000000003,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 126,
+      "dry_log_origin_m": [
+        -6.357608981488738e-06,
+        -0.3003997802734375,
+        0.1599971204996109
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0033325578509291512,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 48
+    },
+    {
+      "revision": 387,
+      "timeline_time_s": 6.600000000000003,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 126,
+      "dry_log_origin_m": [
+        -6.357608981488738e-06,
+        -0.3003997802734375,
+        0.1599971204996109
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0033325578509291512,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 49
+    },
+    {
+      "revision": 388,
+      "timeline_time_s": 6.800000000000003,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 130,
+      "dry_log_origin_m": [
+        -5.608534593193326e-06,
+        -0.300121545791626,
+        0.15999627113342285
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0036124912765132457,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 50
+    },
+    {
+      "revision": 389,
+      "timeline_time_s": 7.0000000000000036,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 137,
+      "dry_log_origin_m": [
+        -6.243211373657687e-06,
+        -0.2998349964618683,
+        0.15999683737754822
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0038989510149228333,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 51
+    },
+    {
+      "revision": 390,
+      "timeline_time_s": 7.0000000000000036,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 137,
+      "dry_log_origin_m": [
+        -6.243211373657687e-06,
+        -0.2998349964618683,
+        0.15999683737754822
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.0038989510149228333,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 52
+    },
+    {
+      "revision": 391,
+      "timeline_time_s": 7.200000000000004,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 145,
+      "dry_log_origin_m": [
+        -5.554974450205918e-06,
+        -0.29954424500465393,
+        0.15999624133110046
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.004191401211883541,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 53
+    },
+    {
+      "revision": 392,
+      "timeline_time_s": 7.200000000000004,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 145,
+      "dry_log_origin_m": [
+        -5.554974450205918e-06,
+        -0.29954424500465393,
+        0.15999624133110046
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.004191401211883541,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 54
+    },
+    {
+      "revision": 393,
+      "timeline_time_s": 7.400000000000004,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 150,
+      "dry_log_origin_m": [
+        -6.602604571526172e-06,
+        -0.29928058385849,
+        0.15999676287174225
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.004454078612251093,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 55
+    },
+    {
+      "revision": 394,
+      "timeline_time_s": 7.400000000000004,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 150,
+      "dry_log_origin_m": [
+        -6.602604571526172e-06,
+        -0.29928058385849,
+        0.15999676287174225
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.004454078612251093,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 56
+    },
+    {
+      "revision": 395,
+      "timeline_time_s": 7.600000000000004,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 159,
+      "dry_log_origin_m": [
+        -5.952952506049769e-06,
+        -0.29902082681655884,
+        0.15999676287174225
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.004715117226711552,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 57
+    },
+    {
+      "revision": 396,
+      "timeline_time_s": 7.600000000000004,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 159,
+      "dry_log_origin_m": [
+        -5.952952506049769e-06,
+        -0.29902082681655884,
+        0.15999676287174225
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.004715117226711552,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 58
+    },
+    {
+      "revision": 397,
+      "timeline_time_s": 7.800000000000004,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 164,
+      "dry_log_origin_m": [
+        -6.469064373959554e-06,
+        -0.29878368973731995,
+        0.1599970906972885
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.004952432864939092,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 59
+    },
+    {
+      "revision": 398,
+      "timeline_time_s": 8.000000000000004,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 179,
+      "dry_log_origin_m": [
+        -6.6255397541681305e-06,
+        -0.29856017231941223,
+        0.15999731421470642
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.005176516545244564,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 60
+    },
+    {
+      "revision": 399,
+      "timeline_time_s": 8.000000000000004,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 179,
+      "dry_log_origin_m": [
+        -6.6255397541681305e-06,
+        -0.29856017231941223,
+        0.15999731421470642
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.005176516545244564,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 61
+    },
+    {
+      "revision": 400,
+      "timeline_time_s": 8.200000000000003,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 191,
+      "dry_log_origin_m": [
+        -6.045584086677991e-06,
+        -0.29834720492362976,
+        0.15999743342399597
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.005390050247132386,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 62
+    }
+  ],
+  "field_snapshots": {
+    "pre_layout_revision_350": {
+      "sample": {
+        "revision": 350,
+        "timeline_time_s": 2.4,
+        "timeline_playing": true,
+        "timeline_stopped": false,
+        "active_blocks": 44,
+        "dry_log_origin_m": [
+          -2.7671758289216086e-06,
+          -0.3398697078227997,
+          0.16000276803970337
+        ],
+        "point_count": 720,
+        "dry_log_point_centroid_m": [
+          0.0,
+          -0.34000000009934106,
+          0.18000000110930867
+        ],
+        "maximum_alignment_error_m": 0.019998590540357613,
+        "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+        "sample": 12
+      },
+      "channels": {
+        "temperature": {
+          "dtype": "uint32",
+          "shape": [
+            986304
+          ],
+          "word_count": 986304,
+          "byte_count": 3945216,
+          "sha256": "134c114b45976f54ce1c0f15cc13fec2d6f070653f2b71768f90a73370fafbbd"
+        },
+        "fuel": {
+          "dtype": "uint32",
+          "shape": [
+            986304
+          ],
+          "word_count": 986304,
+          "byte_count": 3945216,
+          "sha256": "998fd94c38222c820f7a3936b35fe02d5fe51f702f6f348a2f1bdfa9fa3a4cef"
+        },
+        "burn": {
+          "dtype": "uint32",
+          "shape": [
+            986304
+          ],
+          "word_count": 986304,
+          "byte_count": 3945216,
+          "sha256": "0fd600be123b93a9409ce439e38f0aadf69c13d1b743f020e76006fcde431d9d"
+        },
+        "smoke": {
+          "dtype": "uint32",
+          "shape": [
+            986304
+          ],
+          "word_count": 986304,
+          "byte_count": 3945216,
+          "sha256": "0f4fc7247f48cc15533671d0ec2f4d5fc3a0d5f74e5d4d2d7fe03f6ac59ce677"
+        },
+        "velocity": {
+          "dtype": "uint32",
+          "shape": [
+            1336776
+          ],
+          "word_count": 1336776,
+          "byte_count": 5347104,
+          "sha256": "b3fb2a8b1706d69b2c524eac84cefbcaca509c3ece7078a545aadceae06a3973"
+        },
+        "divergence": {
+          "dtype": "uint32",
+          "shape": [
+            0
+          ],
+          "word_count": 0,
+          "byte_count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    "post_first_publication_revision_351": {
+      "sample": {
+        "revision": 351,
+        "timeline_time_s": 2.6,
+        "timeline_playing": true,
+        "timeline_stopped": false,
+        "active_blocks": 48,
+        "dry_log_origin_m": [
+          -6.403618954209378e-06,
+          -0.30352863669395447,
+          0.1600007861852646
+        ],
+        "point_count": 720,
+        "dry_log_point_centroid_m": [
+          -2.7670214573542276e-06,
+          -0.2998697080545955,
+          0.1600027661356661
+        ],
+        "maximum_alignment_error_m": 0.003658930982263284,
+        "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+        "sample": 13
+      },
+      "channels": {
+        "temperature": {
+          "dtype": "uint32",
+          "shape": [
+            1020608
+          ],
+          "word_count": 1020608,
+          "byte_count": 4082432,
+          "sha256": "4c1d871be28bdeeaddf35eb0c344653b79a1b2957ea9c6497789897c72fb941c"
+        },
+        "fuel": {
+          "dtype": "uint32",
+          "shape": [
+            1020608
+          ],
+          "word_count": 1020608,
+          "byte_count": 4082432,
+          "sha256": "cea3528b1ee7f43e0799ab55f72febc40546b7c39593b1eddc76bfb51a1b169d"
+        },
+        "burn": {
+          "dtype": "uint32",
+          "shape": [
+            1020608
+          ],
+          "word_count": 1020608,
+          "byte_count": 4082432,
+          "sha256": "97aa1ffddb549beb1a46f2f178f38de09bbfa4325960f7b642ac329a455e9b63"
+        },
+        "smoke": {
+          "dtype": "uint32",
+          "shape": [
+            1020608
+          ],
+          "word_count": 1020608,
+          "byte_count": 4082432,
+          "sha256": "89099ed6777f6b51c29c14768fb7d42bba49bf3fd1ef49a35d26de59179898ad"
+        },
+        "velocity": {
+          "dtype": "uint32",
+          "shape": [
+            1349320
+          ],
+          "word_count": 1349320,
+          "byte_count": 5397280,
+          "sha256": "9ba50ce0b2c84c47ca35288b5a859fe241ddf755c4b86871eeb138dbe3ad32d0"
+        },
+        "divergence": {
+          "dtype": "uint32",
+          "shape": [
+            0
+          ],
+          "word_count": 0,
+          "byte_count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    }
+  },
+  "layout_boundary": {
+    "log_displacement_m": 0.0363410713648243,
+    "point_centroid_delta_m": [
+      -2.7670214573542276e-06,
+      0.04013029204474555,
+      -0.019997234973642558
+    ],
+    "point_centroid_displacement_m": 0.04483670096967493,
+    "pre_layout_sample": {
+      "revision": 350,
+      "timeline_time_s": 2.4,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 44,
+      "dry_log_origin_m": [
+        -2.7671758289216086e-06,
+        -0.3398697078227997,
+        0.16000276803970337
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        0.0,
+        -0.34000000009934106,
+        0.18000000110930867
+      ],
+      "maximum_alignment_error_m": 0.019998590540357613,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 12
+    },
+    "post_first_publication_sample": {
+      "revision": 351,
+      "timeline_time_s": 2.6,
+      "timeline_playing": true,
+      "timeline_stopped": false,
+      "active_blocks": 48,
+      "dry_log_origin_m": [
+        -6.403618954209378e-06,
+        -0.30352863669395447,
+        0.1600007861852646
+      ],
+      "point_count": 720,
+      "dry_log_point_centroid_m": [
+        -2.7670214573542276e-06,
+        -0.2998697080545955,
+        0.1600027661356661
+      ],
+      "maximum_alignment_error_m": 0.003658930982263284,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda",
+      "sample": 13
+    }
+  },
+  "observation": {
+    "required_nonempty_channels": [
+      "temperature",
+      "fuel",
+      "burn",
+      "smoke",
+      "velocity"
+    ],
+    "required_fields_nonempty": {
+      "pre_layout_revision_350": true,
+      "post_first_publication_revision_351": true
+    },
+    "active_blocks": {
+      "pre_layout_revision_350": 44,
+      "post_first_publication_revision_351": 48
+    },
+    "no_sampled_zero_field_transition": true,
+    "flow_solver_state_checkpointed": false,
+    "within_update_reset_can_be_excluded": false,
+    "dynamic_log_point_tracking_implemented": false,
+    "post_publication_alignment_within_2_mm": false,
+    "root_layers": [
+      "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cz-flow-field-boundary/scene/phase3_point_application.usda"
+    ]
+  },
+  "gates": {
+    "pre_layout_revision_350_captured": true,
+    "post_first_publication_revision_351_captured": true,
+    "expected_40_mm_lateral_point_centroid_edit": true,
+    "required_fields_nonempty_at_both_samples": true,
+    "active_blocks_nonzero_at_both_samples": true,
+    "single_root_layer_observed": true,
+    "revision_400_observed": true
+  },
+  "production_app": {
+    "sha256_before": "48EB57E8B562C4B51D4BFEF6BD538BB8B387FCF9B9F9C0246DDED27AB5F9E8B7",
+    "sha256_after": "48EB57E8B562C4B51D4BFEF6BD538BB8B387FCF9B9F9C0246DDED27AB5F9E8B7",
+    "changed": false
+  },
+  "superseded_phase6co_expectations": {
+    "legacy_false_gates": [
+      "point_flow_timeline_stop_reproduced",
+      "point_pose_alignment_remained_within_tolerance",
+      "stopped_layout_published_atomically",
+      "timeline_held_at_zero_despite_explicit_transport"
+    ],
+    "unexpected_failures": [],
+    "reason": "The corrected 30000-frame safety cap preserves PLAY, so the old negative STOP and stopped-layout alignment gates are not Phase 6CZ success criteria."
+  },
+  "video": {
+    "frame_count": 60,
+    "boundary_frame": 10,
+    "segments": {
+      "before_layout_edit": 10,
+      "after_layout_edit": 50
+    },
+    "human_review": {
+      "status": "pending for this independently instrumented run",
+      "prior_phase6co_observation": "log placement jump visible; complete flame extinction and re-ignition from zero not visually observed"
+    }
+  },
+  "decision": {
+    "sampled_flow_boundary": "qualified; required readbacks and active blocks remain nonzero",
+    "visible_flame_reset": "not inferred from telemetry; direct review of this video remains pending",
+    "flow_solver_state_checkpointed": false,
+    "seamless_visual_continuity_qualified": false,
+    "dynamic_log_point_tracking_implemented": false,
+    "limitation": "reset and repopulation within one Kit update cannot be excluded",
+    "next_boundary": "run the same synchronized telemetry on the uninterrupted single-PLAY renderer harness and remove the stopped layout transition"
+  }
+}

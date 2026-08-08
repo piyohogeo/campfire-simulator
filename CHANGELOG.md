@@ -1,5 +1,9 @@
 # Changelog
 
+- Added Phase 6CZ sampled Resident/Flow boundary telemetry and a direct 60-frame RTX video, correlating revisions 350→351 with log transform, Point centroid, active blocks, and NanoVDB readback.
+- Measured a Point-centroid jump of Y +40.130 mm and Z -19.997 mm (44.837 mm total), while Flow active blocks remained 44→48 and temperature, fuel, burn, smoke, and velocity readbacks remained nonempty at both observable samples.
+- Kept seamless visual continuity and complete Flow-solver checkpoint continuity unqualified: the two-sample public readback cannot exclude reset-and-repopulation within one Kit update, and dynamic log-to-Point tracking remains unimplemented.
+- Treated the four historical Phase 6CO STOP/stopped-layout gates as superseded under the corrected 30,000-frame safety cap; all other Phase 6CO scenario gates passed and the production application SHA-256 remained unchanged.
 - Added Phase 6CY uninterrupted Resident renderer qualification: one PLAY crosses disabled viewport updates, the first enabled 1280×720 frame, and a capture callback without probe pauses or time resets.
 - Qualified timeline continuity for that bounded run with revision 0→57, Flow active-block peak 24, one root layer, zero STOP/PAUSE events, zero PhysX/Flow stage-reattach errors, and an unchanged production-app SHA-256; visual seam continuity and Flow-field checkpointing remain unqualified.
 - Retained the historical Phase 6CQ STOP-expectation mode while adding an observation-only mode, and rejected its sequential pause/reset matrix as continuity evidence because the matrix repeatedly recomposed the stopped log layout and stage attachments.

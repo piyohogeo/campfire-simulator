@@ -1309,7 +1309,7 @@
           <section class="note caution" aria-labelledby="phase6cx-note-title">
             <p class="note-label">2026-08-08 · Goal / harness correction / measured result / limitation / next</p>
             <h3 id="phase6cx-note-title">root app差ではなく、診断の900-frame auto-quit</h3>
-            <p>Phase 6CTから対照にしていたproduction STOPを再監査しました。<code>quitAfter=900</code>は900秒ではなく900 application update frameで、warm再測定でも約14.7秒でauto-quitし、probeのJSON発行前に終了しました。旧cold記録はviewport readiness 193.3988秒でafter/retryともSTOPでしたが、この上限に汚染されているためqualified baselineから除外します。上限を30,000 frameへ広げると、同じproduction app、同じscene bytes、固定1280×720、全5 StageUpdate nodeでreadiness 9.8123秒、after/retryともPLAY、STOP event 0でした。既存cacheを削除せず新規<code>omni_cache</code>へapplication shader cacheを隔離した条件でも26.9770秒、PLAY/PLAYです。Phase 6CXは12/12 gate合格、production app SHA-256前後一致です。標準suiteも8 process・58/58件合格（372.8秒、collapse coverage 217.2秒）しました。したがってPhase 6CTのSTOP baselineとPhase 6CU〜6CWの因果結論はsupersededです。ただし、添付したPhase 6CO映像に残る炎消失・薪配置ジャンプは別の未解決事項であり、timeline、Flow solver state、映像連続性は未合格のままです。次は修正済み安全上限でResident/Flow continuityを再qualificationします。</p>
+            <p>Phase 6CTから対照にしていたproduction STOPを再監査しました。<code>quitAfter=900</code>は900秒ではなく900 application update frameで、warm再測定でも約14.7秒でauto-quitし、probeのJSON発行前に終了しました。旧cold記録はviewport readiness 193.3988秒でafter/retryともSTOPでしたが、この上限に汚染されているためqualified baselineから除外します。上限を30,000 frameへ広げると、同じproduction app、同じscene bytes、固定1280×720、全5 StageUpdate nodeでreadiness 9.8123秒、after/retryともPLAY、STOP event 0でした。既存cacheを削除せず新規<code>omni_cache</code>へapplication shader cacheを隔離した条件でも26.9770秒、PLAY/PLAYです。Phase 6CXは12/12 gate合格、production app SHA-256前後一致です。標準suiteも8 process・58/58件合格（372.8秒、collapse coverage 217.2秒）しました。したがってPhase 6CTのSTOP baselineとPhase 6CU〜6CWの因果結論はsupersededです。ただし、添付したPhase 6CO映像では薪配置ジャンプが見える一方、炎が完全に消えてゼロから再着火する現象は視認できません。Flow solver stateを境界前後で比較していないため、映像とFlow場の連続性は未合格のままです。次は修正済み安全上限でResident/Flow continuityを再qualificationします。</p>
           </section>
 
           <figure id="phase6cy-resident-continuous-renderer" class="capture-card">
@@ -1330,6 +1330,26 @@
             <p class="note-label">2026-08-08 · Goal / harness isolation / measured result / limitation / next</p>
             <h3 id="phase6cy-note-title">timelineは連続した。映像seamとFlow場はまだ未合格</h3>
             <p>Phase 6CQの多case試験は、caseごとに<code>pause</code>して0秒へ戻すため、Campfireのstopped log layout再コミットとPhysX/Flowのstage再接続を同じrunへ混ぜていました。Phase 6CYではproductionを変更せず、viewport updates無効状態から一度だけPLAYし、有効化した最初の固定1280×720 frameとcapture callbackを、probeのpause・stop・時刻resetなしで通過させました。最終再現runは72 sampleすべてPLAY、STOP/PAUSE event 0、Resident revision 0→57、Flow active block peak 24、root layer 1個、capture成功で、このrunのstage再接続errorも0、production app SHA-256も前後一致です。runner全体の再実行と、標準suite 8 process・58/58件（354.2秒、collapse 209.5秒）も合格しました。したがってこの有限区間の<code>timeline_continuity_qualified</code>はtrueへ更新します。ただし添付動画は既知のseamを含むPhase 6COの再利用で、Phase 6CYの静止画だけから炎・薪・Flow fieldの連続性は判定しません。<code>seamless_visual_continuity_qualified=false</code>、<code>flow_solver_state_checkpointed=false</code>を維持し、次は同じ単一PLAY harnessで境界前後の動画、log transform、Point centroid、Flow field readbackを同時取得します。</p>
+          </section>
+
+          <figure id="phase6cz-resident-flow-field-boundary" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6CZ</h3>
+            <a href="assets/phase6/resident_flow_field_boundary_report.svg" aria-label="Phase 6CZ Resident Flow field境界レポートを開く">
+              <img src="assets/phase6/resident_flow_field_boundary_report.svg" width="1200" height="680" alt="revision 350から351の薪配置ジャンプ前後でFlow active blocksと5つのNanoVDB readbackが非ゼロを維持したこと、および完全なsolver checkpoint連続性は未証明であることを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>観測した境界ではFlow場はゼロ化しなかった</strong><span>7 / 7 gates · Point Y +40.130 mm／Z −19.997 mm · blocks 44→48</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_flow_field_boundary.mp4" data-video-poster="assets/phase6/resident_flow_field_boundary_frame.png" data-video-title="Phase 6CZ synchronized Resident / Flow boundary" data-video-meta="Direct Phase 6CZ RTX recording · 10 frames before and 50 after the revision 350→351 layout boundary · synchronized public Flow readback telemetry · human review of this independent run pending · 1280×720 · 10 fps · 6 s">
+                <span class="video-trigger-icon" aria-hidden="true">▶</span>
+                <span><strong>Flow場同時取得の直接動画</strong><small>Phase 6CZ新規run · 10 frame前 + 50 frame後</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6cz-note-title">
+            <p class="note-label">2026-08-08 · Goal / synchronized telemetry / measured result / limitation / next</p>
+            <h3 id="phase6cz-note-title">観測した2点では、Flow readbackはゼロ化していない</h3>
+            <p>Phase 6CO動画への人間の確認では薪の瞬間移動は見える一方、炎が完全に消えてゼロから再着火する様子は見えませんでした。Phase 6CZではproductionを変更せず、30,000-frame安全上限下の同じ境界を独立に再実行し、revision 350と351でlog transform、360点group centroid、Flow active blocks、公開NanoVDB readbackを同期取得しました。Point centroidはYに<code>+40.130 mm</code>、Zに<code>−19.997 mm</code>、合計<code>44.837 mm</code>瞬間移動しました。Yは指示した40 mm edit、Zは動的log-to-Point追従が未実装の間に生じた高さ差の同時補正です。一方、active blocksは<code>44 → 48</code>、temperature／fuel／burn／smoke／velocityは両sampleとも非空で、Phase 6CZは7/7 gate合格、production app SHA-256も前後一致でした。したがって、revision 350と351の各観測時点でFlow場全体がゼロだった可能性は否定できます。ただし2点間、特に1 Kit update内のresetと再構成、Flow solverのhidden stateまではpublic readbackで除外できません。新しい添付動画の人間レビューも保留しているため、<code>seamless_visual_continuity_qualified=false</code>と<code>flow_solver_state_checkpointed=false</code>は維持します。次はpause／owner stopなしでdynamic log-to-Point trackingを行える境界を設計し、同じ同期計測を単一PLAYで繰り返します。</p>
           </section>
 
           <div class="story-grid">
@@ -1389,6 +1409,7 @@
               <div role="listitem"><span aria-hidden="true">↺</span><p><strong>Phase 6CW public root identity</strong><small>identity一致実測は保持 · production STOP対照はPhase 6CXでsuperseded</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6CX quit-limit boundary</strong><small>900-frame auto-quit棄却 · safe production／isolated cache PLAY/PLAY · 12/12</small></p></div>
               <div role="listitem"><span aria-hidden="true">◐</span><p><strong>Phase 6CY uninterrupted Resident run</strong><small>timeline連続性合格 · revision 0→57 · blocks 24 · 映像seam/Flow checkpoint未合格</small></p></div>
+              <div role="listitem"><span aria-hidden="true">◐</span><p><strong>Phase 6CZ sampled Flow boundary</strong><small>7/7 · blocks 44→48 · 5 field非空 · 44.837 mm Point jump · checkpoint未合格</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6BB backend lifecycle</strong><small>fresh export · conflict reject · transactional rollback · rebuild · shutdown</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Default timing path</strong><small>homogeneous fast · timers off · 10.4678 s scenario</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>
