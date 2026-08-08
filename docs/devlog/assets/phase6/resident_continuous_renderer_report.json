@@ -1,0 +1,508 @@
+{
+  "schema_version": 1,
+  "phase": "phase6cy",
+  "status": "ok",
+  "scope": {
+    "default_off": true,
+    "production_changed": false,
+    "flow_version": "110.0.0",
+    "resident_point_application_enabled": true,
+    "fixed_resolution": [
+      1280,
+      720
+    ],
+    "single_play_without_probe_pause_or_time_reset": true
+  },
+  "viewport_wait": {
+    "wall_seconds": 9.3008,
+    "resolution": [
+      1280,
+      720
+    ]
+  },
+  "capture": {
+    "completed": true,
+    "file_written": true,
+    "wall_seconds": 1.1246,
+    "bytes": 719537,
+    "sha256": "f3d9a6e3d7f39fc89129a39e88fe591bbcacfe7d98ef4168cfb297d7cabb3516"
+  },
+  "segments": {
+    "viewport_updates_disabled": {
+      "sample_count": 24,
+      "all_playing": true,
+      "time_start_s": 0.2,
+      "time_end_s": 0.4,
+      "revision_start": 0,
+      "revision_end": 2,
+      "active_blocks_peak": 0
+    },
+    "after_updates_enabled_frame": {
+      "sample_count": 24,
+      "all_playing": true,
+      "time_start_s": 9.399999999999999,
+      "time_end_s": 9.799999999999997,
+      "revision_start": 47,
+      "revision_end": 49,
+      "active_blocks_peak": 24
+    },
+    "after_capture_callback": {
+      "sample_count": 24,
+      "all_playing": true,
+      "time_start_s": 10.799999999999994,
+      "time_end_s": 11.199999999999992,
+      "revision_start": 55,
+      "revision_end": 57,
+      "active_blocks_peak": 24
+    }
+  },
+  "timeline_events": [
+    {
+      "segment": "setup",
+      "event": "tick",
+      "time_s": 0.0,
+      "playing": false,
+      "stopped": true
+    },
+    {
+      "segment": "viewport_updates_disabled",
+      "event": "play",
+      "time_s": 0.0,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "viewport_updates_disabled",
+      "event": "tick",
+      "time_s": 0.2,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "viewport_updates_disabled",
+      "event": "tick",
+      "time_s": 0.4,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 0.6000000000000001,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 0.8,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 1.0,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 1.2,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 1.4,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 1.5999999999999999,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 1.7999999999999998,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 1.9999999999999998,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 2.1999999999999997,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 2.4,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 2.6,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 2.8000000000000003,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 3.0000000000000004,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 3.2000000000000006,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 3.400000000000001,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 3.600000000000001,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 3.800000000000001,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 4.000000000000001,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 4.200000000000001,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 4.400000000000001,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 4.600000000000001,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 4.800000000000002,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 5.000000000000002,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 5.200000000000002,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 5.400000000000002,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 5.600000000000002,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 5.8000000000000025,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 6.000000000000003,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 6.200000000000003,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 6.400000000000003,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 6.600000000000003,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 6.800000000000003,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 7.0000000000000036,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 7.200000000000004,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 7.400000000000004,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 7.600000000000004,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 7.800000000000004,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 8.000000000000004,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 8.200000000000003,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 8.400000000000002,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 8.600000000000001,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 8.8,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 9.0,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 9.2,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 9.399999999999999,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 9.599999999999998,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_updates_enabled_frame",
+      "event": "tick",
+      "time_s": 9.799999999999997,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_capture_callback",
+      "event": "tick",
+      "time_s": 9.999999999999996,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_capture_callback",
+      "event": "tick",
+      "time_s": 10.199999999999996,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_capture_callback",
+      "event": "tick",
+      "time_s": 10.399999999999995,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_capture_callback",
+      "event": "tick",
+      "time_s": 10.599999999999994,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_capture_callback",
+      "event": "tick",
+      "time_s": 10.799999999999994,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_capture_callback",
+      "event": "tick",
+      "time_s": 10.999999999999993,
+      "playing": true,
+      "stopped": false
+    },
+    {
+      "segment": "after_capture_callback",
+      "event": "tick",
+      "time_s": 11.199999999999992,
+      "playing": true,
+      "stopped": false
+    }
+  ],
+  "stage": {
+    "before": {
+      "available": true,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cy-continuous-renderer/scene/phase3_point_application.usda",
+      "point_valid": true
+    },
+    "after": {
+      "available": true,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cy-continuous-renderer/scene/phase3_point_application.usda",
+      "point_valid": true
+    },
+    "root_layers": [
+      "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6cy-continuous-renderer/scene/phase3_point_application.usda"
+    ]
+  },
+  "production_app": {
+    "sha256_before": "48EB57E8B562C4B51D4BFEF6BD538BB8B387FCF9B9F9C0246DDED27AB5F9E8B7",
+    "sha256_after": "48EB57E8B562C4B51D4BFEF6BD538BB8B387FCF9B9F9C0246DDED27AB5F9E8B7",
+    "changed": false
+  },
+  "runtime_attachment_errors": {
+    "physx_stage_already_attached": 0,
+    "flow_stage_reattach_without_detach": 0
+  },
+  "decision": {
+    "historical_900_frame_stop_superseded": true,
+    "sequential_pause_reset_matrix_is_valid_continuity_evidence": false,
+    "single_play_timeline_continuity_qualified": true,
+    "active_blocks_peak": 24,
+    "flow_solver_state_checkpointed": false,
+    "seamless_visual_continuity_qualified": false,
+    "remaining_boundary": "visual and Flow-field continuity across the known video seam"
+  },
+  "gates": {
+    "raw_probe_completed": true,
+    "coverage_gates_passed": true,
+    "single_uninterrupted_play_contract": true,
+    "fixed_capture_written": true,
+    "all_segments_have_flow_samples": true,
+    "production_unchanged": true
+  }
+}

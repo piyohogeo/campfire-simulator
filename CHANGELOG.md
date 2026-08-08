@@ -1,5 +1,8 @@
 # Changelog
 
+- Added Phase 6CY uninterrupted Resident renderer qualification: one PLAY crosses disabled viewport updates, the first enabled 1280×720 frame, and a capture callback without probe pauses or time resets.
+- Qualified timeline continuity for that bounded run with revision 0→57, Flow active-block peak 24, one root layer, zero STOP/PAUSE events, zero PhysX/Flow stage-reattach errors, and an unchanged production-app SHA-256; visual seam continuity and Flow-field checkpointing remain unqualified.
+- Retained the historical Phase 6CQ STOP-expectation mode while adding an observation-only mode, and rejected its sequential pause/reset matrix as continuity evidence because the matrix repeatedly recomposed the stopped log layout and stage attachments.
 - Added Phase 6CX quit-limit qualification: Kit's `quitAfter=900` is an application-update frame cap, and a warm recheck auto-quits before the renderer timeline probe can publish its report.
 - Superseded the Phase 6CT STOP baseline and the Phase 6CU-CW causal contrasts; the same production app remains PLAY after the viewport frame and retry with a 30,000-frame cap, both with the normal cache and a newly isolated application shader cache.
 - Raised the renderer diagnostic safety cap to 30,000 frames for Phase 6CQ, 6CR, 6CS, 6CU, 6CV, and 6CW while keeping production configuration and the unresolved Resident/Flow visual-continuity qualifications unchanged.

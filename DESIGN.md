@@ -2342,3 +2342,13 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 回帰: 標準suiteは8 process・58/58件合格（repo suite 372.8秒、collapse coverage 217.2秒）。Python構文、PowerShell 7 scriptの構文、JSON 12/12 gate、SVG XML、HTMLのSVG・動画・poster参照、Phase見出し順、`git diff --check`も合格した。
 - harness修正: `run_phase6cq_resident_renderer_timeline.ps1`、`run_phase6cr_plain_renderer_timeline.ps1`、`run_phase6cs_renderer_scene_variant.ps1`、`run_phase6cu_app_variant.ps1`、`run_phase6cv_settings_variant.ps1`、`run_phase6cw_root_identity.ps1`のrenderer safety capを30,000 frameへ変更する。probe自身が正常終了するため、通常は上限へ到達しない。
 - 非変更と次: production既定Sphere、Point既定OFF、Flow 110.0.0、固定capture、木材権威状態、物理式、JSON schema、rollback、immutable snapshot、revision契約は変更しない。plain-stage STOP偽陽性の棄却はResident/Flow映像の炎消失・薪配置ジャンプを解決しないため、`timeline_continuity_qualified=false`、`seamless_visual_continuity_qualified=false`、`flow_solver_state_checkpointed=false`を維持する。次は安全上限下でResident/Flow continuityを独立に再qualificationする。
+
+## 131. Phase 6CY uninterrupted Resident renderer qualification
+
+### 2026-08-08: probeのpause/resetを除外し、1回のPLAYでrenderer境界を再測定する
+
+- 試験契約: production Campfire app、Flow 110.0.0、既存Resident native library、既定OFFのResident Point application、固定1280×720を使い、production設定とscene schemaは変更しない。viewport updatesを無効にした状態で一度だけ`PLAY`し、そのままupdatesを有効化して1 viewport frameを待ち、capture callbackを完了する。測定終了までprobeから`pause`、`stop`、0秒へのresetを行わない。
+- 多case試験の再評価: Phase 6CQを安全上限とobservation modeで再実行すると、旧900-frame由来のSTOP eventは消えた。一方、caseごとのteardown `pause`と0秒resetによりCampfireがstopped log layoutを再コミットし、同じrun内で`Stage already attached!`と`Attaching FlowUsd to a new stage without detaching`が発生した。このため、その逐次matrixは連続再生の合否証拠には使わない。historical `expect_stop`既定は再現用に保持し、観測専用modeだけを追加する。
+- 連続実測: 72 sampleを1回のPLAYで取得した。最終再現runのviewport updates無効区間はtime 0.2→0.4秒、revision 0→2、viewport frame待ち後は9.4→9.8秒、revision 47→49、capture後は10.8→11.2秒、revision 55→57だった。全sampleでPLAY、STOP/PAUSE event 0、root layer 1個、revision単調増加、Flow active block peak 24、capture成功である。この独立runではPhysX/Flow stage再接続errorも0で、production app SHA-256は実行前後で一致した。
+- 判定と限界: この固定条件・有限区間について`timeline_continuity_qualified=true`へ更新する。runner全体の再実行、Python/PowerShell/JSON/SVG/HTML静的検査、in-app BrowserでのSVG・動画modal実表示、標準suite全8 process・`58 / 58`件（`354.2 s`、collapse coverage `209.5 s`）も合格した。これはPhase 6CO動画で確認された炎消失と薪配置ジャンプを解決した証拠ではなく、Flow sparse fieldの値を境界前後でcheckpoint比較してもいない。したがって`seamless_visual_continuity_qualified=false`と`flow_solver_state_checkpointed=false`は維持する。次は同じ単一PLAY harnessで境界前後の連続動画、log transform、Point centroid、Flow field readbackを同時刻へ揃え、既知の映像seamを再qualificationする。
+- 非変更: production既定Sphere、Point既定OFF、木材権威状態、物理式、JSON schema、snapshot lifecycle、rollback、revision、immutable snapshot契約、Flow/Kit dependency versionは変更しない。

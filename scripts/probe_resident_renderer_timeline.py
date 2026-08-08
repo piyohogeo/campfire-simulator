@@ -207,6 +207,13 @@ async def _run():
     settings = carb.settings.get_settings()
     output = Path(settings.get_as_string("/phase6cq/output")).resolve()
     capture_path = Path(settings.get_as_string("/phase6cq/capture")).resolve()
+    qualification_mode = (
+        settings.get_as_string("/phase6cq/qualificationMode") or "expect_stop"
+    )
+    if qualification_mode not in {"expect_stop", "observe"}:
+        raise ValueError(
+            "Phase 6CQ qualificationMode must be expect_stop or observe"
+        )
     output.parent.mkdir(parents=True, exist_ok=True)
     context = omni.usd.get_context()
     stage = await _wait_for_point_stage(context)
@@ -354,8 +361,12 @@ async def _run():
             captured["capture"]["completed"]
             and captured["capture"]["file_written"]
         ),
-        "renderer_stop_reproduced": rendered["stop_event_count"] == 1
-        and not rendered["remained_playing"],
+        "renderer_outcome_matches_mode": (
+            rendered["stop_event_count"] == 1
+            and not rendered["remained_playing"]
+            if qualification_mode == "expect_stop"
+            else len(rendered["samples"]) == 24
+        ),
         "disable_matrix_complete": len(matrix) == len(nodes_before),
         "one_node_disabled_per_matrix_case": all(
             case["disabled_during_case"] for case in matrix
@@ -379,6 +390,7 @@ async def _run():
             "renderer_enabled": True,
             "capture_harness_enabled": False,
             "capture_callback_count": 1,
+            "qualification_mode": qualification_mode,
         },
         "viewport_readiness": viewport_readiness,
         "cases": cases,
@@ -388,6 +400,7 @@ async def _run():
         "gates": gates,
         "decision": {
             "renderer_or_viewport_requests_stop": rendered["stop_event_count"] > 0,
+            "renderer_stop_observed": rendered["stop_event_count"] > 0,
             "renderer_before_viewport_frame_requests_stop": (
                 before_viewport["stop_event_count"] > 0
             ),
