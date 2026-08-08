@@ -62,7 +62,9 @@ class ResidentPointCommandQueue:
         self._results = deque(maxlen=int(max_results))
         self._delivery_results = deque()
         self._next_sequence = 1
+        self._request_count = 0
         self._submitted_count = 0
+        self._coalesced_submission_count = 0
         self._executed_count = 0
         self._rejected_count = 0
         self._closed = False
@@ -72,13 +74,26 @@ class ResidentPointCommandQueue:
         if threading.get_ident() != self._owner_thread_id:
             raise RuntimeError("Resident Point commands must drain on the owner thread")
 
-    def submit_refresh_layout(self, *, source="api") -> int:
+    def submit_refresh_layout(self, *, source="api", coalesce=False) -> int:
         """Queue a stopped-layout refresh without reading the USD stage."""
 
         source = str(source).strip()
         if not source:
             raise ValueError("Resident Point command source must not be empty")
         with self._lock:
+            self._request_count += 1
+            if coalesce and not self._closed:
+                pending = next(
+                    (
+                        item
+                        for item in self._pending
+                        if item[1] == "refresh_layout"
+                    ),
+                    None,
+                )
+                if pending is not None:
+                    self._coalesced_submission_count += 1
+                    return pending[0]
             sequence = self._next_sequence
             self._next_sequence += 1
             self._submitted_count += 1
@@ -186,7 +201,9 @@ class ResidentPointCommandQueue:
                 "closed": self._closed,
                 "pending_count": len(self._pending),
                 "retained_result_count": len(self._results),
+                "request_count": self._request_count,
                 "submitted_count": self._submitted_count,
+                "coalesced_submission_count": self._coalesced_submission_count,
                 "executed_count": self._executed_count,
                 "rejected_count": self._rejected_count,
                 "next_sequence": self._next_sequence,
@@ -214,3 +231,76 @@ class ResidentPointCommandQueue:
                 self._rejected_count += 1
                 rejected.append(result)
         return tuple(rejected)
+
+
+class ResidentPointTransformObserver:
+    """Translate stopped log transform notices into coalesced layout commands."""
+
+    def __init__(self, command_queue, log_paths, state_provider):
+        if command_queue is None or not callable(state_provider):
+            raise ValueError("Resident Point transform observer requires collaborators")
+        normalized_paths = tuple(str(path).rstrip("/") for path in log_paths)
+        if not normalized_paths or any(not path for path in normalized_paths):
+            raise ValueError("Resident Point transform observer requires log paths")
+        self._owner_thread_id = threading.get_ident()
+        self._command_queue = command_queue
+        self._log_paths = normalized_paths
+        self._state_provider = state_provider
+        self._notice_count = 0
+        self._matched_notice_count = 0
+        self._submitted_request_count = 0
+        self._ignored_running_count = 0
+        self._ignored_non_transform_count = 0
+        self._closed = False
+
+    def _require_owner_thread(self):
+        if threading.get_ident() != self._owner_thread_id:
+            raise RuntimeError(
+                "Resident Point transform notices must run on the owner thread"
+            )
+
+    def _matches_transform(self, path) -> bool:
+        value = str(path)
+        return any(
+            value.startswith(f"{log_path}.xformOp:")
+            or value == f"{log_path}.xformOpOrder"
+            for log_path in self._log_paths
+        )
+
+    def observe(self, notice, _sender=None):
+        """Observe one USD notice without reading transform values."""
+
+        self._require_owner_thread()
+        if self._closed:
+            return None
+        self._notice_count += 1
+        changed_paths = tuple(notice.GetChangedInfoOnlyPaths())
+        if not any(self._matches_transform(path) for path in changed_paths):
+            self._ignored_non_transform_count += 1
+            return None
+        self._matched_notice_count += 1
+        if self._state_provider() not in ("ready", "stopped"):
+            self._ignored_running_count += 1
+            return None
+        self._submitted_request_count += 1
+        return self._command_queue.submit_refresh_layout(
+            source="usd_notice", coalesce=True
+        )
+
+    def status(self) -> dict:
+        self._require_owner_thread()
+        return {
+            "closed": self._closed,
+            "log_paths": self._log_paths,
+            "notice_count": self._notice_count,
+            "matched_notice_count": self._matched_notice_count,
+            "submitted_request_count": self._submitted_request_count,
+            "ignored_running_count": self._ignored_running_count,
+            "ignored_non_transform_count": self._ignored_non_transform_count,
+        }
+
+    def close(self):
+        self._require_owner_thread()
+        already_closed = self._closed
+        self._closed = True
+        return not already_closed

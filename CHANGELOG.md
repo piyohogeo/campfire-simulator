@@ -1,6 +1,6 @@
 # Changelog
 
-- Added the Phase 6CK default-off owner-thread Resident Point command queue, sharing one result schema across UI, timeline, and headless callers, rejecting unsupported 45-degree layouts without Point/revision mutation, and resuming real Flow only after a cardinal layout commit.
+- Added the Phase 6CL default-off transform observer, filtering real USD notices by stopped log xform, coalescing 13 rapid edit requests into two owner-thread commands, and advancing layout revision only once for the final supported transform.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6CL stage-rebind-aware transform notice observer and queue coalescing counters, with running/non-transform filtering and a 14-gate real Flow/RTX qualification video.
 - Added the Phase 6CK bounded FIFO and compact Resident Point control window, with owner-thread-only USD execution, structured accepted/rejected results, explicit shutdown discard, and a 13-gate real Flow/RTX qualification video.
 - Added the Phase 6CJ explicit qualification path for PLAY-time stopped layout refresh, monotonic layout revision, current-layout recovery factory sharing, normal-owner stage lifecycle observation, and real Flow/RTX continuation after consumer replacement.
 - Added the Phase 6CI default-off normal application composition, including complete offline schema authoring before context connection, extension-owned timeline/update lifecycle, primary and Point consumer pre-authoring, and a reproducible 10-gate real-Kit/Flow capture.

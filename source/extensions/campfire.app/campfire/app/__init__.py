@@ -186,6 +186,7 @@ from .resident_point_application_owner import ResidentPointApplicationOwner
 from .resident_point_commands import (
     ResidentPointCommandQueue,
     ResidentPointCommandResult,
+    ResidentPointTransformObserver,
     format_resident_point_command_result,
 )
 from .resident_stage_recovery import ResidentStageRecoveryOrchestrator
@@ -254,6 +255,7 @@ __all__ = [
     "ResidentPointApplicationOwner",
     "ResidentPointCommandQueue",
     "ResidentPointCommandResult",
+    "ResidentPointTransformObserver",
     "RESIDENT_POINT_APPLICATION_SETTING",
     "RESIDENT_POINT_EMITTER_PATH",
     "RESIDENT_POINT_SOURCE_PATH",

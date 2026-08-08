@@ -1052,6 +1052,26 @@
             <p>UI・timeline・headlessは同じbounded FIFOへ小さなcommandを投入し、USD読取りとlayout commitはowner threadだけが行います。45°回転は<code>unsupported_layout</code>として拒否され、Point 4配列・consumer revision・layout revision・replace countは不変でした。0°へ戻した次commandだけを受理し、revision 710まで実Flowを継続しています。現ABIは水平cardinal X/Yのみで、任意回転は未対応です。次はinteractive transform編集の観測方法とqueue backpressureを検証し、Pointの既定OFFは維持します。</p>
           </section>
 
+          <figure id="phase6cl-resident-transform-observer" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6CL</h3>
+            <a href="assets/phase6/resident_transform_observer_report.svg" aria-label="Phase 6CL Resident Point transform observerレポートを開く">
+              <img src="assets/phase6/resident_transform_observer_report.svg" width="1200" height="680" alt="停止中の連続USD transform noticeを2件のowner-thread commandへ集約し、未対応burstを拒否、cardinal復帰を1 revisionだけcommitした実測SVG図">
+            </a>
+            <figcaption>
+              <div><strong>Observe · filter · coalesce · reject/commit · continue</strong><span>14 / 14 · 1,507 notices · 13 stopped requests → 2 commands · 11 coalesced · final 710 × 3</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_transform_observer.mp4" data-video-poster="assets/phase6/resident_transform_observer_frame.png" data-video-title="Phase 6CL coalesced transform-observer scenario" data-video-meta="Flow 110.0.0 · real Usd.Notice.ObjectsChanged filtering · 6 unsupported edits to one rejection · 7 cardinal restore notices to one commit · uninterrupted Resident revisions 651–710 during capture · Flow plume intensity may pulse but simulation does not restart · 60 separate real Flow/RTX frames, all unique · 1280×720 · 10 fps · 6 s">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>連続編集集約後の炎と煙</strong><small>6秒 · revision 651–710連続 · 全60フレーム固有</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6cl-note-title">
+            <p class="note-label">2026-08-08 · Goal / implementation / known limit / next</p>
+            <h3 id="phase6cl-note-title">最終transformだけを1回評価し、途中編集でrevisionを消費しない</h3>
+            <p>通常Point opt-inは対象薪の<code>xformOp:*</code>だけを観測し、running中と非transform noticeを無視します。実測1,507 notice中、対象transformは31件、running中18件、停止中13件でした。停止中は2 burstへ集約され、45°側6要求はPoint値不変で拒否、cardinal復帰側7要求はlayout revisionを1回だけ進めました。実GUI manipulatorの一連操作とstage recovery後のobserver再bindはまだ独立実測しておらず、notice callback overheadも性能値にはしていません。次はこの2境界を検証します。</p>
+          </section>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1100,6 +1120,7 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6CI normal Point owner</strong><small>10 / 10 · 710 matched revisions · Point resync 0 · default OFF</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6CJ layout + recovery</strong><small>13 / 13 · layout revision 2 · seed 301 → final 710 · resync 0</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6CK owner-thread commands</strong><small>13 / 13 · 45° fail-closed · Point/revision unchanged · final 710 × 3</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6CL transform coalescing</strong><small>14 / 14 · 13 stopped requests → 2 commands · 11 coalesced · final 710 × 3</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6BB backend lifecycle</strong><small>fresh export · conflict reject · transactional rollback · rebuild · shutdown</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Default timing path</strong><small>homogeneous fast · timers off · 10.4678 s scenario</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>

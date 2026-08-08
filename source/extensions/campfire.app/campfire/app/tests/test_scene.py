@@ -1033,6 +1033,66 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(unchanged[0].code, "layout_unchanged")
         self.assertEqual(command_queue.status()["rejected_count"], 1)
         command_queue.close()
+
+        class FakeNotice:
+            def __init__(self, *paths):
+                self._paths = paths
+
+            def GetChangedInfoOnlyPaths(self):
+                return self._paths
+
+        coalescing_queue = campfire.app.ResidentPointCommandQueue(
+            layout_owner, lambda: stage, max_pending=1
+        )
+        transform_observer = campfire.app.ResidentPointTransformObserver(
+            coalescing_queue,
+            (f"/World/Logs/{log_id}" for log_id in log_ids),
+            lambda: layout_owner.status()["session"]["state"],
+        )
+        observed_sequences = []
+        for index in range(5):
+            campfire.app.move_log(
+                stage,
+                log_ids[0],
+                (0.06 + 0.01 * index, 0.0, 0.2),
+                0.0,
+            )
+            observed_sequences.append(
+                transform_observer.observe(
+                    FakeNotice(f"/World/Logs/{log_ids[0]}.xformOp:translate")
+                )
+            )
+        self.assertEqual(len(set(observed_sequences)), 1)
+        queued_status = coalescing_queue.status()
+        self.assertEqual(queued_status["request_count"], 5)
+        self.assertEqual(queued_status["submitted_count"], 1)
+        self.assertEqual(queued_status["coalesced_submission_count"], 4)
+        self.assertEqual(queued_status["pending_count"], 1)
+        coalesced = coalescing_queue.drain()
+        self.assertEqual(len(coalesced), 1)
+        self.assertTrue(coalesced[0].accepted)
+        self.assertEqual(coalesced[0].layout_revision, 4)
+        self.assertEqual(layout_owner.status()["layout_replace_count"], 3)
+
+        self.assertIsNone(
+            transform_observer.observe(
+                FakeNotice(f"/World/Logs/{log_ids[0]}.displayColor")
+            )
+        )
+        layout_owner._session.state = "running"
+        self.assertIsNone(
+            transform_observer.observe(
+                FakeNotice(f"/World/Logs/{log_ids[0]}.xformOp:orient")
+            )
+        )
+        layout_owner._session.state = "stopped"
+        observer_status = transform_observer.status()
+        self.assertEqual(observer_status["matched_notice_count"], 6)
+        self.assertEqual(observer_status["submitted_request_count"], 5)
+        self.assertEqual(observer_status["ignored_running_count"], 1)
+        self.assertEqual(observer_status["ignored_non_transform_count"], 1)
+        transform_observer.close()
+        coalescing_queue.close()
         layout_owner.close()
 
     async def test_phase3_default_keeps_sphere_without_point_structure(self):

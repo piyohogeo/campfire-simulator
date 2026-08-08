@@ -114,3 +114,40 @@ Reproduction:
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_phase6ck_resident_point_commands.ps1
 ```
+
+## Phase 6CL stopped transform observation and coalescing
+
+`ResidentPointTransformObserver` filters `Usd.Notice.ObjectsChanged` paths to
+the configured log `xformOp:*` properties. It reads neither transform values nor
+Point state. Notices are accepted only while the Resident session is `ready` or
+`stopped`; running physics updates and unrelated USD changes are counted and
+ignored. The listener is revoked on stage closing and registered against the
+new current stage after opening.
+
+Automatic notice requests call the existing queue with coalescing enabled. If a
+layout refresh is already pending, another request returns the same command
+sequence instead of consuming queue capacity or a layout revision. The later
+owner-thread drain reads the final stage transform once. Manual UI, timeline,
+and headless submissions retain their non-coalesced behavior.
+
+The real Phase 6CL run observed 1,507 USD notices. Thirty-one matched target log
+transforms: 18 occurred while running and were ignored, while 13 stopped notices
+became two commands. Six edits ending at 45 degrees coalesced into one rejected
+command with Point arrays and revisions unchanged. Seven notices restoring the
+cardinal transform coalesced into one accepted command and advanced layout
+revision exactly once from 1 to 2. The queue recorded 13 requests, two submitted
+commands, 11 coalesced submissions, two executions, one rejection, and no
+pending work.
+
+All 14 gates passed. Backend, primary, and Point revisions ended at 710, Point
+resync remained zero, Flow peaked at 454 active blocks, required field readbacks
+were non-empty, and all 60 RTX frames were unique. The capture spans continuous
+Resident revisions 651 through 710; visible Flow plume pulsation is not a state
+restart. Real GUI manipulator interaction, observer rebind during an actual stage
+recovery, and notice-callback cost remain separate follow-up measurements.
+
+Reproduction:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_phase6cl_resident_transform_observer.ps1
+```

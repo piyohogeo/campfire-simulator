@@ -96,6 +96,7 @@ from .resident_native_backend import ResidentNativeBackend
 from .resident_point_application_owner import ResidentPointApplicationOwner
 from .resident_point_commands import (
     ResidentPointCommandQueue,
+    ResidentPointTransformObserver,
     format_resident_point_command_result,
 )
 from .resident_point_scene import (
@@ -178,6 +179,8 @@ class CampfireAppExtension(omni.ext.IExt):
         self._resident_snapshot_adapter = None
         self._resident_point_owner = None
         self._resident_point_command_queue = None
+        self._resident_point_transform_observer = None
+        self._resident_point_transform_listener = None
         self._resident_point_stage_subscription = None
         self._resident_point_timeline_subscription = None
         self._resident_point_update_subscription = None
@@ -192,6 +195,12 @@ class CampfireAppExtension(omni.ext.IExt):
         self._resident_point_update_subscription = None
         self._resident_point_timeline_subscription = None
         self._resident_point_stage_subscription = None
+        if self._resident_point_transform_listener is not None:
+            self._resident_point_transform_listener.Revoke()
+            self._resident_point_transform_listener = None
+        if self._resident_point_transform_observer is not None:
+            self._resident_point_transform_observer.close()
+            self._resident_point_transform_observer = None
         if self._resident_point_command_queue is not None:
             try:
                 self._resident_point_command_queue.close()
@@ -422,8 +431,13 @@ class CampfireAppExtension(omni.ext.IExt):
             recovery_qualification = point_settings.get_as_bool(
                 f"{SETTINGS_ROOT}/residentPointRecoveryQualificationEnabled"
             )
+            transform_qualification = point_settings.get_as_bool(
+                f"{SETTINGS_ROOT}/residentPointTransformQualificationEnabled"
+            )
             point_phase = (
-                "phase6ck"
+                "phase6cl"
+                if transform_qualification
+                else "phase6ck"
                 if command_qualification
                 else "phase6cj"
                 if recovery_qualification
@@ -490,6 +504,15 @@ class CampfireAppExtension(omni.ext.IExt):
             self._resident_point_command_queue = ResidentPointCommandQueue(
                 owner, context.get_stage
             )
+            if not capture_requested or transform_qualification:
+                self._resident_point_transform_observer = (
+                    ResidentPointTransformObserver(
+                        self._resident_point_command_queue,
+                        (f"/World/Logs/{log_id}" for log_id in log_ids),
+                        lambda: owner.status()["session"]["state"],
+                    )
+                )
+                self._bind_resident_point_transform_stage(stage)
             event_names = {
                 int(omni.usd.StageEventType.CLOSING): "closing",
                 int(omni.usd.StageEventType.CLOSED): "closed",
@@ -501,7 +524,13 @@ class CampfireAppExtension(omni.ext.IExt):
                 current_owner = self._resident_point_owner
                 event_name = event_names.get(int(event.type))
                 if current_owner is not None and event_name is not None:
+                    if event_name == "closing":
+                        self._revoke_resident_point_transform_stage()
                     current_owner.observe_stage_event(event_name)
+                    if event_name == "opened":
+                        self._bind_resident_point_transform_stage(
+                            context.get_stage()
+                        )
 
             self._resident_point_stage_subscription = (
                 context.get_stage_event_stream().create_subscription_to_pop(
@@ -516,6 +545,10 @@ class CampfireAppExtension(omni.ext.IExt):
             )
             return stage, scene_path
         except Exception:
+            self._revoke_resident_point_transform_stage()
+            if self._resident_point_transform_observer is not None:
+                self._resident_point_transform_observer.close()
+                self._resident_point_transform_observer = None
             if self._resident_point_owner is not None:
                 try:
                     self._resident_point_owner.close(discard_pending=True)
@@ -527,6 +560,22 @@ class CampfireAppExtension(omni.ext.IExt):
             elif backend is not None:
                 backend.close()
             raise
+
+    def _bind_resident_point_transform_stage(self, stage):
+        """Bind the transform observer to exactly the currently owned stage."""
+
+        self._revoke_resident_point_transform_stage()
+        observer = self._resident_point_transform_observer
+        if observer is not None and stage is not None:
+            self._resident_point_transform_listener = Tf.Notice.Register(
+                Usd.Notice.ObjectsChanged, observer.observe, stage
+            )
+
+    def _revoke_resident_point_transform_stage(self):
+        listener = self._resident_point_transform_listener
+        if listener is not None:
+            listener.Revoke()
+            self._resident_point_transform_listener = None
 
     def _bind_resident_point_interactive_lifecycle(self, timeline):
         """Bind the normal interactive timeline without adding state authority."""
@@ -712,10 +761,22 @@ class CampfireAppExtension(omni.ext.IExt):
         command_qualification = carb.settings.get_settings().get_as_bool(
             f"{SETTINGS_ROOT}/residentPointCommandQualificationEnabled"
         )
-        if recovery_qualification and command_qualification:
+        transform_qualification = carb.settings.get_settings().get_as_bool(
+            f"{SETTINGS_ROOT}/residentPointTransformQualificationEnabled"
+        )
+        if sum(
+            bool(value)
+            for value in (
+                recovery_qualification,
+                command_qualification,
+                transform_qualification,
+            )
+        ) > 1:
             raise ValueError("Resident Point qualifications are mutually exclusive")
         phase_name = (
-            "phase6ck"
+            "phase6cl"
+            if transform_qualification
+            else "phase6ck"
             if command_qualification
             else "phase6cj"
             if recovery_qualification
@@ -740,6 +801,8 @@ class CampfireAppExtension(omni.ext.IExt):
         rejected_point_state_unchanged = None
         rejected_owner_state_unchanged = None
         command_queue_status = None
+        transform_observer_status = None
+        transform_batches = None
 
         def observe_point_changes(notice, _sender):
             point_resyncs.extend(
@@ -771,7 +834,9 @@ class CampfireAppExtension(omni.ext.IExt):
             frame_count = 60
             initial_warmup_steps = (
                 300
-                if recovery_qualification or command_qualification
+                if recovery_qualification
+                or command_qualification
+                or transform_qualification
                 else warmup_steps
             )
             for tick in range(1, initial_warmup_steps + 1):
@@ -781,7 +846,11 @@ class CampfireAppExtension(omni.ext.IExt):
                     active_blocks.append(
                         int(flow_interface.get_active_block_count())
                     )
-            if recovery_qualification or command_qualification:
+            if (
+                recovery_qualification
+                or command_qualification
+                or transform_qualification
+            ):
                 timeline.pause()
                 owner.stop()
                 point_attribute = stage.GetPrimAtPath(
@@ -797,7 +866,7 @@ class CampfireAppExtension(omni.ext.IExt):
                     float(original_origin[1]) + 0.04,
                     float(original_origin[2]),
                 )
-                if command_qualification:
+                if command_qualification or transform_qualification:
                     point_prim_before = stage.GetPrimAtPath(
                         RESIDENT_POINT_EMITTER_PATH
                     )
@@ -812,12 +881,30 @@ class CampfireAppExtension(omni.ext.IExt):
                         )
                     }
                     owner_status_before_rejection = owner.status()
-                    move_log(stage, PHASE3_DRY_LOG_ID, original_origin, 45.0)
-                    rejected_sequence = (
-                        self._resident_point_command_queue.submit_refresh_layout(
-                            source="headless"
+                    if transform_qualification:
+                        for edit_index in range(6):
+                            move_log(
+                                stage,
+                                PHASE3_DRY_LOG_ID,
+                                (
+                                    float(original_origin[0]),
+                                    float(original_origin[1])
+                                    + 0.005 * edit_index,
+                                    float(original_origin[2]),
+                                ),
+                                45.0,
+                            )
+                        unsupported_batch = (
+                            self._resident_point_command_queue.status()
                         )
-                    )
+                        rejected_sequence = unsupported_batch["next_sequence"] - 1
+                    else:
+                        move_log(stage, PHASE3_DRY_LOG_ID, original_origin, 45.0)
+                        rejected_sequence = (
+                            self._resident_point_command_queue.submit_refresh_layout(
+                                source="headless"
+                            )
+                        )
                     rejected_results = self._drain_resident_point_commands()
                     rejected_result = next(
                         item
@@ -843,12 +930,32 @@ class CampfireAppExtension(omni.ext.IExt):
                         and owner_status_after_rejection["session"]["state"]
                         == "stopped"
                     )
-                    move_log(stage, PHASE3_DRY_LOG_ID, moved_origin, 0.0)
-                    accepted_sequence = (
-                        self._resident_point_command_queue.submit_refresh_layout(
-                            source="headless"
+                    if transform_qualification:
+                        for edit_index in range(1, 7):
+                            move_log(
+                                stage,
+                                PHASE3_DRY_LOG_ID,
+                                (
+                                    float(original_origin[0]),
+                                    float(original_origin[1])
+                                    + 0.04 * edit_index / 6.0,
+                                    float(original_origin[2]),
+                                ),
+                                0.0,
+                            )
+                        cardinal_batch = self._resident_point_command_queue.status()
+                        accepted_sequence = cardinal_batch["next_sequence"] - 1
+                        transform_batches = {
+                            "unsupported": unsupported_batch,
+                            "cardinal": cardinal_batch,
+                        }
+                    else:
+                        move_log(stage, PHASE3_DRY_LOG_ID, moved_origin, 0.0)
+                        accepted_sequence = (
+                            self._resident_point_command_queue.submit_refresh_layout(
+                                source="headless"
+                            )
                         )
-                    )
                     accepted_results = self._drain_resident_point_commands()
                     accepted_result = next(
                         item
@@ -935,8 +1042,15 @@ class CampfireAppExtension(omni.ext.IExt):
                 session_status["adapter"]["revision"],
                 session_status["sidecar"]["revision"],
             )
+            if self._resident_point_transform_observer is not None:
+                transform_observer_status = (
+                    self._resident_point_transform_observer.status()
+                )
+                self._revoke_resident_point_transform_stage()
+                self._resident_point_transform_observer.close()
+                self._resident_point_transform_observer = None
             if self._resident_point_command_queue is not None:
-                if command_qualification:
+                if command_qualification or transform_qualification:
                     command_queue_status = (
                         self._resident_point_command_queue.status()
                     )
@@ -963,7 +1077,11 @@ class CampfireAppExtension(omni.ext.IExt):
             )
             point_prim = stage.GetPrimAtPath(RESIDENT_POINT_EMITTER_PATH)
             expected_owner_transitions = (
-                2 if recovery_qualification or command_qualification else 1
+                2
+                if recovery_qualification
+                or command_qualification
+                or transform_qualification
+                else 1
             )
             gates = {
                 "explicit_setting_enabled": resident_point_application_enabled(
@@ -1063,6 +1181,58 @@ class CampfireAppExtension(omni.ext.IExt):
                         ),
                     }
                 )
+            if transform_qualification:
+                gates.update(
+                    {
+                        "unsupported_transform_batch_rejected_fail_closed": (
+                            len(command_results) == 2
+                            and command_results[0]["status"] == "rejected"
+                            and command_results[0]["code"] == "unsupported_layout"
+                            and command_results[0]["source"] == "usd_notice"
+                            and rejected_point_state_unchanged
+                            and rejected_owner_state_unchanged
+                        ),
+                        "rapid_transform_notices_coalesced_in_sequence": (
+                            transform_batches is not None
+                            and transform_batches["unsupported"]["pending_count"]
+                            == 1
+                            and transform_batches["unsupported"]["submitted_count"]
+                            == 1
+                            and transform_batches["unsupported"]["request_count"] >= 6
+                            and transform_batches["unsupported"]
+                            ["coalesced_submission_count"]
+                            == transform_batches["unsupported"]["request_count"] - 1
+                            and transform_batches["cardinal"]["pending_count"] == 1
+                            and transform_batches["cardinal"]["submitted_count"] == 2
+                            and transform_batches["cardinal"]["request_count"] >= 12
+                            and transform_batches["cardinal"]
+                            ["coalesced_submission_count"]
+                            == transform_batches["cardinal"]["request_count"] - 2
+                        ),
+                        "latest_cardinal_transform_committed_once": (
+                            command_results[1]["status"] == "accepted"
+                            and command_results[1]["code"] == "layout_replaced"
+                            and command_results[1]["source"] == "usd_notice"
+                            and command_results[1]["layout_revision"] == 2
+                            and stopped_status["layout_revision"] == 2
+                            and stopped_status["layout_replace_count"] == 1
+                            and session_status["sidecar"]["layout_revision"] == 2
+                            and 360 <= layout_changed_point_count <= 720
+                            and layout_changed_point_count % 360 == 0
+                        ),
+                        "transform_observer_matches_queue_requests": (
+                            transform_observer_status is not None
+                            and transform_observer_status[
+                                "submitted_request_count"
+                            ]
+                            == command_queue_status["request_count"]
+                            and command_queue_status["pending_count"] == 0
+                            and command_queue_status["submitted_count"] == 2
+                            and command_queue_status["executed_count"] == 2
+                            and command_queue_status["rejected_count"] == 1
+                        ),
+                    }
+                )
             summary = {
                 "schema_version": 1,
                 "status": "ok" if all(gates.values()) else "failed",
@@ -1076,6 +1246,7 @@ class CampfireAppExtension(omni.ext.IExt):
                     "stage_built_before_connection": True,
                     "layout_recovery_qualification": recovery_qualification,
                     "command_queue_qualification": command_qualification,
+                    "transform_notice_qualification": transform_qualification,
                     "point_count": 720,
                     "surface_points_per_log": 360,
                     "log_count": 2,
@@ -1094,6 +1265,8 @@ class CampfireAppExtension(omni.ext.IExt):
                     "recovery": recovery_result,
                     "commands": command_results,
                     "command_queue": command_queue_status,
+                    "transform_observer": transform_observer_status,
+                    "transform_batches": transform_batches,
                     "rejected_point_state_unchanged": rejected_point_state_unchanged,
                     "rejected_owner_state_unchanged": rejected_owner_state_unchanged,
                     "replacement_scene": (
@@ -1130,6 +1303,10 @@ class CampfireAppExtension(omni.ext.IExt):
                 listener.Revoke()
             if flow_interface is not None:
                 _flowusd.release_flowusd_interface(flow_interface)
+            self._revoke_resident_point_transform_stage()
+            if self._resident_point_transform_observer is not None:
+                self._resident_point_transform_observer.close()
+                self._resident_point_transform_observer = None
             if self._resident_point_command_queue is not None:
                 self._resident_point_command_queue.close()
                 self._resident_point_command_queue = None
