@@ -438,8 +438,13 @@ class CampfireAppExtension(omni.ext.IExt):
             continuity_qualification = point_settings.get_as_bool(
                 f"{SETTINGS_ROOT}/residentPointContinuityQualificationEnabled"
             )
+            continuity_fix_qualification = point_settings.get_as_bool(
+                f"{SETTINGS_ROOT}/residentPointContinuityFixQualificationEnabled"
+            )
             point_phase = (
-                "phase6cm"
+                "phase6cn"
+                if continuity_fix_qualification
+                else "phase6cm"
                 if continuity_qualification
                 else "phase6cl"
                 if transform_qualification
@@ -773,6 +778,12 @@ class CampfireAppExtension(omni.ext.IExt):
         continuity_qualification = carb.settings.get_settings().get_as_bool(
             f"{SETTINGS_ROOT}/residentPointContinuityQualificationEnabled"
         )
+        continuity_fix_qualification = carb.settings.get_settings().get_as_bool(
+            f"{SETTINGS_ROOT}/residentPointContinuityFixQualificationEnabled"
+        )
+        continuity_diagnostic = (
+            continuity_qualification or continuity_fix_qualification
+        )
         if sum(
             bool(value)
             for value in (
@@ -780,11 +791,14 @@ class CampfireAppExtension(omni.ext.IExt):
                 command_qualification,
                 transform_qualification,
                 continuity_qualification,
+                continuity_fix_qualification,
             )
         ) > 1:
             raise ValueError("Resident Point qualifications are mutually exclusive")
         phase_name = (
-            "phase6cm"
+            "phase6cn"
+            if continuity_fix_qualification
+            else "phase6cm"
             if continuity_qualification
             else "phase6cl"
             if transform_qualification
@@ -818,6 +832,31 @@ class CampfireAppExtension(omni.ext.IExt):
         alignment_before_first_publication = None
         alignment_samples = []
         alignment_tolerance_m = 0.002
+        layout_transaction_resident_revision = None
+        timeline_end_before_s = None
+        timeline_end_configured_s = None
+        timeline_events = []
+        timeline_event_subscription = None
+        timeline_event_context = {"phase": "setup"}
+
+        def observe_timeline_event(event):
+            event_names = {
+                int(omni.timeline.TimelineEventType.PLAY): "play",
+                int(omni.timeline.TimelineEventType.PAUSE): "pause",
+                int(omni.timeline.TimelineEventType.STOP): "stop",
+                int(omni.timeline.TimelineEventType.END_TIME_CHANGED): (
+                    "end_time_changed"
+                ),
+            }
+            event_name = event_names.get(event.type)
+            if event_name is not None:
+                record = {
+                    "event": event_name,
+                    "phase": timeline_event_context["phase"],
+                    "time_s": float(timeline.get_current_time()),
+                    "playing": bool(timeline.is_playing()),
+                }
+                timeline_events.append(record)
 
         def observe_point_changes(notice, _sender):
             point_resyncs.extend(
@@ -838,10 +877,29 @@ class CampfireAppExtension(omni.ext.IExt):
 
         try:
             listener = register_point_listener(stage)
+            if continuity_fix_qualification:
+                timeline_event_subscription = (
+                    timeline.get_timeline_event_stream()
+                    .create_subscription_to_pop(
+                        observe_timeline_event,
+                        0,
+                        "Campfire Phase 6CN timeline diagnostic",
+                    )
+                )
+            timeline_event_context["phase"] = "initial_stop"
             timeline.stop()
+            if continuity_fix_qualification:
+                await omni.kit.app.get_app().next_update_async()
             timeline.set_current_time(0.0)
+            if continuity_fix_qualification:
+                await omni.kit.app.get_app().next_update_async()
+            timeline_end_before_s = float(timeline.get_end_time())
+            timeline_end_configured_s = float(timeline.get_end_time())
             owner.start()
+            timeline_event_context["phase"] = "initial_play"
             timeline.play()
+            if continuity_fix_qualification:
+                await omni.kit.app.get_app().next_update_async()
             flow_interface = _flowusd.acquire_flowusd_interface()
             active_blocks = []
             result = None
@@ -852,7 +910,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 if recovery_qualification
                 or command_qualification
                 or transform_qualification
-                or continuity_qualification
+                or continuity_diagnostic
                 else warmup_steps
             )
             for tick in range(1, initial_warmup_steps + 1):
@@ -866,9 +924,12 @@ class CampfireAppExtension(omni.ext.IExt):
                 recovery_qualification
                 or command_qualification
                 or transform_qualification
-                or continuity_qualification
+                or continuity_diagnostic
             ):
+                timeline_event_context["phase"] = "layout_pause"
                 timeline.pause()
+                if continuity_fix_qualification:
+                    await omni.kit.app.get_app().next_update_async()
                 owner.stop()
                 point_attribute = stage.GetPrimAtPath(
                     RESIDENT_POINT_EMITTER_PATH
@@ -886,7 +947,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 if (
                     command_qualification
                     or transform_qualification
-                    or continuity_qualification
+                    or continuity_diagnostic
                 ):
                     point_prim_before = stage.GetPrimAtPath(
                         RESIDENT_POINT_EMITTER_PATH
@@ -899,6 +960,7 @@ class CampfireAppExtension(omni.ext.IExt):
                             "pointTemperatures",
                             "pointSmokes",
                             "campfire:residentRevision",
+                            "campfire:layoutRevision",
                         )
                     }
                     owner_status_before_rejection = owner.status()
@@ -992,8 +1054,14 @@ class CampfireAppExtension(omni.ext.IExt):
                     move_log(stage, PHASE3_DRY_LOG_ID, moved_origin, 0.0)
                     layout_result = owner.refresh_layout(stage)
                 owner.start()
+                timeline_event_context["phase"] = "layout_play"
                 timeline.play()
-                if continuity_qualification:
+                if continuity_fix_qualification:
+                    # Timeline state is frame-immutable.  Let the PLAY request
+                    # become visible to Flow/PhysX before the first Resident
+                    # snapshot authors live USD values.
+                    await omni.kit.app.get_app().next_update_async()
+                if continuity_diagnostic:
                     alignment_before_first_publication = (
                         measure_resident_point_log_alignment(
                             stage,
@@ -1002,10 +1070,15 @@ class CampfireAppExtension(omni.ext.IExt):
                             points_per_log=360,
                         )
                     )
+                    layout_transaction_resident_revision = int(
+                        point_prim_before.GetAttribute(
+                            "campfire:residentRevision"
+                        ).Get()
+                    )
                 result = owner.step()
                 await omni.kit.app.get_app().next_update_async()
                 active_blocks.append(int(flow_interface.get_active_block_count()))
-                if continuity_qualification:
+                if continuity_diagnostic:
                     alignment_samples.append(
                         {
                             "sample": 0,
@@ -1058,7 +1131,7 @@ class CampfireAppExtension(omni.ext.IExt):
                         active_blocks.append(
                             int(flow_interface.get_active_block_count())
                         )
-                        if continuity_qualification:
+                        if continuity_diagnostic:
                             alignment_samples.append(
                                 {
                                     "sample": len(alignment_samples),
@@ -1079,7 +1152,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 result = owner.step()
                 await omni.kit.app.get_app().next_update_async()
                 active_blocks.append(int(flow_interface.get_active_block_count()))
-                if continuity_qualification:
+                if continuity_diagnostic:
                     await omni.kit.viewport.utility.next_viewport_frame_async(viewport)
                     alignment_samples.append(
                         {
@@ -1136,7 +1209,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 if (
                     command_qualification
                     or transform_qualification
-                    or continuity_qualification
+                    or continuity_diagnostic
                 ):
                     command_queue_status = (
                         self._resident_point_command_queue.status()
@@ -1158,6 +1231,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 f"{point_prefix}.pointTemperatures",
                 f"{point_prefix}.pointSmokes",
                 f"{point_prefix}.campfire:residentRevision",
+                f"{point_prefix}.campfire:layoutRevision",
             }
             unexpected_point_changes = sorted(
                 set(point_changes).difference(allowed_point_properties)
@@ -1168,7 +1242,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 if recovery_qualification
                 or command_qualification
                 or transform_qualification
-                or continuity_qualification
+                or continuity_diagnostic
                 else 1
             )
             gates = {
@@ -1184,6 +1258,8 @@ class CampfireAppExtension(omni.ext.IExt):
                     bool(point_prim)
                     and point_prim.GetTypeName() == "FlowEmitterPoint"
                     and len(point_prim.GetAttribute("pointPositions").Get()) == 720
+                    and point_prim.GetAttribute("campfire:layoutRevision").Get()
+                    >= 1
                 ),
                 "only_existing_point_properties_changed_live": (
                     not point_resyncs and not unexpected_point_changes
@@ -1321,7 +1397,7 @@ class CampfireAppExtension(omni.ext.IExt):
                         ),
                     }
                 )
-            if continuity_qualification:
+            if continuity_diagnostic:
                 gates.update(
                     {
                         "supported_layout_committed_for_continuity_audit": (
@@ -1339,13 +1415,36 @@ class CampfireAppExtension(omni.ext.IExt):
                                 for sample in alignment_samples
                             )
                         ),
-                        "prepublication_alignment_gap_reproduced": (
+                    }
+                )
+            if continuity_fix_qualification:
+                gates.update(
+                    {
+                        "stopped_layout_published_atomically": (
                             alignment_before_first_publication["max_error_m"]
-                            > alignment_tolerance_m
-                        ),
-                        "first_publication_restored_point_pose_alignment": (
-                            alignment_samples[0]["max_error_m"]
                             <= alignment_tolerance_m
+                            and stage.GetPrimAtPath(
+                                RESIDENT_POINT_EMITTER_PATH
+                            ).GetAttribute("campfire:layoutRevision").Get()
+                            == 2
+                        ),
+                        "layout_transaction_preserved_resident_revision": (
+                            layout_transaction_resident_revision == 300
+                        ),
+                        "point_pose_alignment_remained_within_tolerance": all(
+                            sample["max_error_m"] <= alignment_tolerance_m
+                            for sample in alignment_samples
+                        ),
+                        "timeline_state_telemetry_recorded": (
+                            bool(alignment_samples)
+                            and any(
+                                event["event"] == "play"
+                                for event in timeline_events
+                            )
+                            and all(
+                                "timeline_playing" in sample
+                                for sample in alignment_samples
+                            )
                         ),
                     }
                 )
@@ -1364,6 +1463,7 @@ class CampfireAppExtension(omni.ext.IExt):
                     "command_queue_qualification": command_qualification,
                     "transform_notice_qualification": transform_qualification,
                     "continuity_qualification": continuity_qualification,
+                    "continuity_fix_qualification": continuity_fix_qualification,
                     "point_count": 720,
                     "surface_points_per_log": 360,
                     "log_count": 2,
@@ -1388,6 +1488,12 @@ class CampfireAppExtension(omni.ext.IExt):
                         alignment_before_first_publication
                     ),
                     "alignment_samples": alignment_samples,
+                    "layout_transaction_resident_revision": (
+                        layout_transaction_resident_revision
+                    ),
+                    "timeline_end_before_s": timeline_end_before_s,
+                    "timeline_end_configured_s": timeline_end_configured_s,
+                    "timeline_events": timeline_events,
                     "rejected_point_state_unchanged": rejected_point_state_unchanged,
                     "rejected_owner_state_unchanged": rejected_owner_state_unchanged,
                     "replacement_scene": (
@@ -1411,10 +1517,24 @@ class CampfireAppExtension(omni.ext.IExt):
                 },
                 "known_issue": {
                     "id": "resident-point-flow-visual-discontinuity",
-                    "classification": "unresolved_defect",
+                    "classification": (
+                        "partially_mitigated"
+                        if continuity_fix_qualification
+                        else "unresolved_defect"
+                    ),
                     "seamless_visual_continuity_qualified": False,
                     "dynamic_log_point_tracking_implemented": False,
                     "flow_solver_state_checkpointed": False,
+                    "layout_publication_continuity_qualified": (
+                        continuity_fix_qualification
+                        and alignment_before_first_publication is not None
+                        and alignment_before_first_publication["max_error_m"]
+                        <= alignment_tolerance_m
+                        and all(
+                            sample["max_error_m"] <= alignment_tolerance_m
+                            for sample in alignment_samples
+                        )
+                    ),
                     "alignment_tolerance_m": alignment_tolerance_m,
                     "maximum_observed_alignment_error_m": max(
                         (
@@ -1443,7 +1563,11 @@ class CampfireAppExtension(omni.ext.IExt):
                         for sample in alignment_samples
                     ),
                     "note": (
-                        "This diagnostic phase records the known log jump and Flow "
+                        "Phase 6CN qualifies atomic stopped-layout publication only. "
+                        "The headless Flow/PhysX boundary still emits STOP after PLAY, "
+                        "and Flow solver-field continuity remains unqualified."
+                        if continuity_fix_qualification
+                        else "This diagnostic phase records the known log jump and Flow "
                         "field discontinuity; passing its audit gates does not qualify "
                         "seamless recovery or editing."
                     ),
@@ -1459,6 +1583,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 f"revision={revisions[0]}, activeBlocks={max(active_blocks)}"
             )
         finally:
+            timeline_event_subscription = None
             if listener is not None:
                 listener.Revoke()
             if flow_interface is not None:

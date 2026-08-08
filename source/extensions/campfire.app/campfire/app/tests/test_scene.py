@@ -7,6 +7,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import campfire.app
+import numpy as np
 import omni.kit.test
 from pxr import Gf, Sdf, Tf, Usd, UsdGeom, UsdPhysics
 
@@ -862,11 +863,13 @@ class TestScene(omni.kit.test.AsyncTestCase):
             "pointTemperatures",
             "pointSmokes",
             "campfire:residentRevision",
+            "campfire:layoutRevision",
         ):
             self.assertTrue(emitter.GetAttribute(name))
         self.assertEqual(len(emitter.GetAttribute("pointPositions").Get()), 4)
         self.assertEqual(len(UsdGeom.Points(source).GetPointsAttr().Get()), 4)
         self.assertEqual(emitter.GetAttribute("campfire:residentRevision").Get(), 0)
+        self.assertEqual(emitter.GetAttribute("campfire:layoutRevision").Get(), 1)
         sphere = stage.GetPrimAtPath(campfire.app.FLOW_EMITTER_PATH)
         self.assertEqual(sphere.GetAttribute("campfire:residentRevision").Get(), 0)
         for log_id in log_ids:
@@ -882,6 +885,80 @@ class TestScene(omni.kit.test.AsyncTestCase):
         layer_data = stage.GetRootLayer().customLayerData
         self.assertTrue(layer_data["campfire:residentPointApplication"])
         self.assertEqual(layer_data["campfire:residentPointEmitterCount"], 1)
+
+    async def test_resident_point_layout_transaction_updates_and_rolls_back(self):
+        class Producer:
+            def __init__(self):
+                self.np = np
+                self.origins = np.asarray(
+                    ((0.0, -0.3, 0.18), (0.0, 0.3, 0.18)), dtype=np.float64
+                )
+                self.axes = np.asarray((0, 0), dtype=np.uint32)
+                self.positions = np.empty((2, 3), dtype=np.float32)
+                self.build_layout()
+
+            def build_layout(self):
+                self.positions[:] = self.origins
+
+        class Attribute:
+            def __init__(self, value):
+                self.value = value
+                self.fail_once = False
+
+            def Get(self):
+                return self.value
+
+            def Set(self, value):
+                if self.fail_once:
+                    self.fail_once = False
+                    return False
+                self.value = value
+                return True
+
+        producer = Producer()
+        old_positions = producer.positions.tobytes(order="C")
+        sidecar = object.__new__(campfire.app.ResidentPointSidecar)
+        sidecar._producer = producer
+        sidecar._positions = old_positions
+        sidecar._layout_revision = 1
+        sidecar._committed_layout_revision = 1
+        sidecar._layout_replace_count = 0
+        sidecar._last_undo = object()
+        sidecar._attributes = {
+            "positions": Attribute(
+                tuple(
+                    Gf.Vec3f(*(float(component) for component in position))
+                    for position in producer.positions
+                )
+            ),
+            "layout_revision": Attribute(1),
+        }
+        candidate = {
+            "revision": 2,
+            "origins": ((0.0, -0.26, 0.18), (0.0, 0.3, 0.18)),
+            "axes": (0, 0),
+        }
+
+        sidecar._attributes["layout_revision"].fail_once = True
+        with self.assertRaisesRegex(RuntimeError, "layout revision Set failed"):
+            sidecar.replace_layout(candidate)
+        self.assertEqual(
+            producer.origins.tolist(),
+            [[0.0, -0.3, 0.18], [0.0, 0.3, 0.18]],
+        )
+        self.assertEqual(sidecar._positions, old_positions)
+        self.assertEqual(sidecar._layout_revision, 1)
+        self.assertEqual(sidecar._committed_layout_revision, 1)
+        self.assertEqual(sidecar._attributes["layout_revision"].Get(), 1)
+        self.assertEqual(sidecar._layout_replace_count, 0)
+
+        self.assertEqual(sidecar.replace_layout(candidate), 2)
+        self.assertEqual(sidecar._layout_revision, 2)
+        self.assertEqual(sidecar._committed_layout_revision, 2)
+        self.assertEqual(sidecar._attributes["layout_revision"].Get(), 2)
+        self.assertEqual(sidecar._layout_replace_count, 1)
+        self.assertIsNone(sidecar._last_undo)
+        self.assertNotEqual(sidecar._positions, old_positions)
 
     async def test_resident_point_layout_accepts_only_cardinal_horizontal_logs(self):
         stage = Usd.Stage.CreateInMemory()

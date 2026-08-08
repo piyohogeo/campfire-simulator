@@ -281,12 +281,17 @@ class ResidentPointSidecar:
             "temperatures": emitter.GetAttribute("pointTemperatures"),
             "smokes": emitter.GetAttribute("pointSmokes"),
             "revision": emitter.GetAttribute("campfire:residentRevision"),
+            "layout_revision": emitter.GetAttribute("campfire:layoutRevision"),
         }
         if not all(self._attributes.values()):
             raise RuntimeError("Point sidecar requires pre-authored attributes")
         stored_revision = self._attributes["revision"].Get()
         if self._revision and stored_revision != self._revision:
             raise ValueError("Initial Point consumer revision does not match")
+        stored_layout_revision = self._attributes["layout_revision"].Get()
+        if stored_layout_revision != self._layout_revision:
+            raise ValueError("Initial Point layout revision does not match")
+        self._committed_layout_revision = self._layout_revision
 
     def prepare(self, snapshot):
         if self._closed:
@@ -385,6 +390,8 @@ class ResidentPointSidecar:
         self._rollback_count += 1
 
     def replace_layout(self, layout):
+        """Transactionally publish a stopped layout without advancing snapshot revision."""
+
         revision = layout["revision"]
         if isinstance(revision, bool) or not isinstance(revision, int):
             raise ValueError("Point layout revision must be an integer")
@@ -398,11 +405,45 @@ class ResidentPointSidecar:
             raise ValueError("Point layout shape changed structurally")
         if not self._producer.np.isfinite(origins).all():
             raise ValueError("Point layout origins must be finite")
-        self._producer.origins[:] = origins
-        self._producer.axes[:] = axes
-        self._producer.build_layout()
-        self._positions = self._producer.positions.tobytes(order="C")
+        previous_origins = self._producer.origins.copy(order="C")
+        previous_axes = self._producer.axes.copy(order="C")
+        previous_positions = self._positions
+        previous_layout_revision = self._layout_revision
+        previous_committed_layout_revision = self._committed_layout_revision
+        previous_usd_positions = self._attributes["positions"].Get()
+        previous_usd_layout_revision = self._attributes["layout_revision"].Get()
+        block = Sdf.ChangeBlock()
+        block.__enter__()
+        try:
+            self._producer.origins[:] = origins
+            self._producer.axes[:] = axes
+            self._producer.build_layout()
+            candidate_positions = self._producer.positions.tobytes(order="C")
+            converted_positions = Vt.Vec3fArray.FromNumpy(
+                self._producer.np.frombuffer(
+                    candidate_positions, dtype=self._producer.np.float32
+                ).reshape((-1, 3))
+            )
+            if not self._attributes["positions"].Set(converted_positions):
+                raise RuntimeError("Point sidecar layout positions Set failed")
+            if not self._attributes["layout_revision"].Set(revision):
+                raise RuntimeError("Point sidecar layout revision Set failed")
+        except Exception:
+            self._producer.origins[:] = previous_origins
+            self._producer.axes[:] = previous_axes
+            self._producer.build_layout()
+            self._positions = previous_positions
+            self._layout_revision = previous_layout_revision
+            self._committed_layout_revision = previous_committed_layout_revision
+            self._attributes["positions"].Set(previous_usd_positions)
+            self._attributes["layout_revision"].Set(previous_usd_layout_revision)
+            block.__exit__(*sys.exc_info())
+            raise
+        block.__exit__(None, None, None)
+        self._positions = candidate_positions
         self._layout_revision = revision
+        self._committed_layout_revision = revision
+        self._last_undo = None
         self._layout_replace_count += 1
         return revision
 

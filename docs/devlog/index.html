@@ -1092,6 +1092,26 @@
             <p>既存CJ〜CLの成功表現を訂正し、<code>unresolved_defect</code>として再分類しました。診断では各薪world originと360点群の重心を130回比較しています。layout command後、薪は新位置なのにPoint配列は旧位置のままで40.000 mmずれ、次のResident publication後に0.0000019 mmまで一致しました。つまりlayout確定とPoint USD発行の間に不整合状態が露出しています。また全130サンプルでtimelineは停止しており、既存動画は連続PLAYを証明していません。revision 710/710/710、active block 459、固有60フレームは維持されましたが、これらを映像連続性の合格条件にはしません。次はtimeline終端・発行同期と、stage replacement時のFlow場再初期化を分離して修正します。</p>
           </section>
 
+          <figure id="phase6cn-resident-point-continuity-fix" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6CN</h3>
+            <a href="assets/phase6/resident_point_continuity_fix_report.svg" aria-label="Phase 6CN stopped layout原子発行レポートを開く">
+              <img src="assets/phase6/resident_point_continuity_fix_report.svg" width="1200" height="680" alt="Point位置とlayout revisionを原子的に発行して40 mmの露出を約1.9 nmへ減らした一方、timelineとFlow場の連続性は未合格であることを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Atomic layout publication qualified · visual continuity still unresolved</strong><span>16 / 16 bounded gates · pre-publish gap 0.0000019 mm · Resident revision held at 300 · timeline playing 0 / 130 samples</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_point_continuity_fix.mp4" data-video-poster="assets/phase6/resident_point_continuity_fix_frame.png" data-video-title="Phase 6CN atomic stopped-layout publication evidence" data-video-meta="Partial fix evidence · default-off Point path · 720 Point samples · layout revision 2 · Resident revision 710/710/710 · active block peak 439 · 60/60 unique RTX frames · PLAY is followed by STOP · Flow-field and seamless visual continuity remain NOT QUALIFIED · 1280×720 · 10 fps · 6 s">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>layout原子発行の実測動画</strong><small>6秒 · 実RTX 60フレーム · 映像連続性の合格動画ではありません</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6cn-note-title">
+            <p class="note-label">2026-08-08 · Goal / implementation / measured result / known defect / next</p>
+            <h3 id="phase6cn-note-title">40 mmの状態露出は解消、Timeline停止とFlow場再生成は別件として継続</h3>
+            <p>停止中layout変更でnative配置、既存<code>pointPositions</code>、事前定義済み<code>campfire:layoutRevision</code>をrollback可能な1 transactionとして公開します。layout-only transactionでは木材snapshot revisionを進めず、実測でもResident revision 300のままlayout revisionだけが1→2になりました。最初の木材発行前gapは40.000 mmから0.0000019 mmへ減り、130 sampleすべてが2 mm許容内です。一方、Flow/PhysXのC++境界はPLAY直後にSTOPを発行し、timelineは0/130 PLAYでした。Flow NanoVDB場の移動・checkpoint・stage recoveryも未実装です。したがって合格範囲は「停止中layoutが次tick前にPointへ見える」ことだけで、炎の滑らかな連続性はまだ主張しません。release build、既定OFF Phase 0、全8 process・58/58回帰は合格しました。次はPLAY→STOP発行境界とPoint移動時のFlow resetを分離して調査します。</p>
+          </section>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1142,6 +1162,7 @@
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CK owner-thread commands</strong><small>command結果は合格 · 姿勢/炎の同時不連続は未解決</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CL transform coalescing</strong><small>observer集約は合格 · revision連続性≠映像連続性</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CM continuity audit</strong><small>40.000 mm発行前gap · timeline 0/130 PLAY · seamless continuity未合格</small></p></div>
+              <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CN atomic layout publication</strong><small>gap 0.0000019 mmへ改善 · timeline/Flow場/映像連続性は未合格</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6BB backend lifecycle</strong><small>fresh export · conflict reject · transactional rollback · rebuild · shutdown</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Default timing path</strong><small>homogeneous fast · timers off · 10.4678 s scenario</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>

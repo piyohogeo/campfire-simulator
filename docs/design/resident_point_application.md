@@ -159,6 +159,20 @@ Reproduction:
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_phase6cm_resident_point_continuity.ps1
 ```
 
+## Phase 6CN atomic stopped-layout publication
+
+Phase 6CN removes the state exposure found by Phase 6CM without changing the Resident snapshot authority. The Point prim preauthors `campfire:layoutRevision`. While the owner is stopped, `replace_layout()` updates the native producer layout and the existing `pointPositions` attribute inside one `Sdf.ChangeBlock`, writes the layout revision last, and restores both native and USD values on failure. No live prim or attribute definition is permitted.
+
+The layout-only transaction does not consume a wood revision. In the real run, Resident revision remained 300 while layout revision advanced from 1 to 2; normal publication then continued through revision 710. The pre-first-publication alignment error fell from the Phase 6CM value of 0.040000000099 m to 1.8577e-9 m, and all 130 pose samples remained within the 0.002 m tolerance. Backend, primary, and Point revisions ended at 710, Flow peaked at 439 active blocks, and all 60 RTX frames were unique. The release build, default-off Phase 0, and all eight test processes with 58/58 tests passed.
+
+This is a deliberately partial qualification. The headless Flow/PhysX boundary emitted STOP immediately after each PLAY request, so 0/130 evidence samples were playing. Flow solver-field relocation, checkpointing, replacement-stage restoration, and seamless visual continuity remain unqualified. Passing Phase 6CN means only that a supported stopped layout is visible in the Point array before the next wood tick.
+
+Reproduction:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_phase6cn_resident_point_continuity_fix.ps1
+```
+
 Reproduction:
 
 ```powershell

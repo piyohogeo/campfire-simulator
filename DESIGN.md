@@ -2234,3 +2234,13 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 診断境界: 既定OFFの`residentPointContinuityQualificationEnabled`を追加し、各薪world origin、360点単位のPoint群重心、SI距離誤差、Resident tick/revision、timeline状態、active blockを描画frame単位で記録する。初回実測でlayout command後・最初のPoint publish前に40.0 mmの不一致を検出し、最初のpublish後は約2 nmへ一致した。layout確定とUSD Point発行の間に異なる状態が露出する。また再開後sampleのtimelineは停止しており連続PLAY証跡ではなかった。診断合格は不具合の再現・記録だけを意味し、`seamless_visual_continuity_qualified=false`を維持する。
 - 非変更: production既定Sphere、Point既定OFF、木材権威状態、物理式、JSON schema、Flow 110、revision/rollback/immutable snapshot契約は変更しない。次は姿勢同期とFlow場復元を別問題として切り分け、未確認PhysX APIを推測実装せずローカルSDKで検証する。
 - 実測: 実Kit/Flow 110で130 sampleを採取し、発行前最大誤差`0.040000000099 m`、revision 301発行後`1.8577e-9 m`、timeline PLAY sample`0 / 130`を記録した。backend/primary/Pointは`710 / 710 / 710`、active block peak`459`、実RTX動画は60/60固有frame、診断gateは`14 / 14`だった。ただしseamless visual continuityとtimeline continuityは明示的にfalseである。release build、既定OFF Phase 0、全8 process・`57 / 57`回帰は合格した。
+
+## 120. Phase 6CN atomic stopped-layout publication
+
+### 2026-08-08: layout値を次の木材tickまで待たずPoint USDへ原子的に公開する
+
+- 修正境界: Point Emitterへ事前定義済み`campfire:layoutRevision`を追加し、停止中のlayout変更ではnative producerの配置と既存`pointPositions`を同じ`Sdf.ChangeBlock`内で更新する。`layoutRevision`を最後に書き、途中失敗時はnative配置、Point配列、layout revisionを旧値へ戻す。構造的Prim/属性作成はlive stage上で行わない。
+- revision契約: layout-only transactionは木材tick/snapshotの`campfire:residentRevision`を進めない。実測ではlayout変更中もResident revisionは`300`、layout revisionだけが`1 → 2`となり、次の木材発行は従来どおりrevision 301から続いた。rollback、immutable snapshot、consumer revision契約は維持する。
+- 実測: Phase 6CMで40.000 mmだった最初の木材発行前gapは`1.8577e-9 m`（`0.0000019 mm`）となり、130 sampleすべてが2 mm許容内だった。backend/primary/Pointは`710 / 710 / 710`、active block peak`439`、実RTX動画は60/60固有frame、限定した`16 / 16` gateが合格した。release build、既定OFF Phase 0、全8 process・`58 / 58`回帰も合格した。
+- 未達: headless Flow/PhysX境界はPLAY直後にSTOPを発行し、timelineは`0 / 130` PLAYのままである。Flow NanoVDB solver場の移動・checkpoint・stage recoveryも未実装であり、`seamless_visual_continuity_qualified=false`と`timeline_continuity_qualified=false`を維持する。Phase 6CNが合格させるのは停止中layoutのPoint公開だけで、映像連続性ではない。
+- 非変更: production既定Sphere、Point既定OFF、木材権威状態、物理式、JSON schema、Flow 110/dependency、正規sceneを変更しない。次はPLAY→STOPを発行するC++購読境界と、Point移動時のFlow field resetを独立に調べる。

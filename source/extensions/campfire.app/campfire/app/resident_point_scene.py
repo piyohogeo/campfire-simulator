@@ -222,6 +222,11 @@ def configure_resident_point_application_scene(
     )
     if not revision.Set(initial_revision):
         raise RuntimeError("Unable to initialize Resident Point revision")
+    layout_revision = emitter.CreateAttribute(
+        "campfire:layoutRevision", Sdf.ValueTypeNames.Int64
+    )
+    if not layout_revision.Set(1):
+        raise RuntimeError("Unable to initialize Resident Point layout revision")
 
     layer_data = dict(stage.GetRootLayer().customLayerData)
     layer_data.update(
