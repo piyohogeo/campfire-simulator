@@ -1,0 +1,101 @@
+﻿{
+    "schema_version":  1,
+    "phase":  "phase6dh",
+    "status":  "pass",
+    "generated_utc":  "2026-08-08T21:41:21.1412172Z",
+    "scope":  "stage-free public native attachment and timing surface audit",
+    "gate_summary":  {
+                         "passed":  12,
+                         "total":  12,
+                         "checks":  {
+                                        "native_probe_status_ok":  true,
+                                        "stage_not_opened":  true,
+                                        "fixed_flow_version":  true,
+                                        "native_member_count_19":  true,
+                                        "native_control_member_count_zero":  true,
+                                        "consumer_write_candidate_count_zero":  true,
+                                        "documented_control_term_count_zero":  true,
+                                        "public_python_api_is_extension_only":  true,
+                                        "plugin_export_count_8":  true,
+                                        "plugin_exports_are_lifecycle_only":  true,
+                                        "binding_export_is_pyinit_only":  true,
+                                        "production_app_unchanged":  true
+                                    }
+                     },
+    "runtime":  {
+                    "interface_member_count":  19,
+                    "interface_members":  [
+                                              "buffer_to_volume",
+                                              "convert_dense_sdf_to_nanovdb_and_sync",
+                                              "get_active_block_count",
+                                              "get_alpha_array",
+                                              "get_alpha_array_as_rgba8",
+                                              "get_float4_array",
+                                              "get_float4_at_position",
+                                              "get_float_array_as_rgba8",
+                                              "get_float_at_position",
+                                              "get_latest_nanovdb_readback",
+                                              "get_max_block_count",
+                                              "init_persistent_voxelize_context",
+                                              "release_persistent_voxelize_context",
+                                              "save_nanovdb",
+                                              "voxelize_points_and_sync",
+                                              "voxelize_points_and_sync_v2",
+                                              "voxelize_velocity_points_and_sync",
+                                              "voxelize_velocity_points_and_sync_v2",
+                                              "voxelize_velocity_points_and_sync_v3"
+                                          ],
+                    "attachment_or_timing_members":  [
+
+                                                     ],
+                    "consumer_write_candidates":  [
+
+                                                  ]
+                },
+    "packaged_public_api":  {
+                                "path":  "config/python_api.md",
+                                "classes":  [
+                                                "PublicExtension"
+                                            ],
+                                "functions":  [
+                                                  "register_all_flow_commands"
+                                              ],
+                                "attachment_or_timing_terms":  [
+
+                                                               ]
+                            },
+    "binary_exports":  {
+                           "plugin":  [
+                                          "carbGetFrameworkVersion",
+                                          "carbGetPluginDeps",
+                                          "carbOnPluginPostShutdown",
+                                          "carbOnPluginPreStartup",
+                                          "carbOnPluginRegisterEx",
+                                          "carbOnPluginRegisterEx2",
+                                          "carbOnPluginShutdown",
+                                          "carbOnPluginStartup"
+                                      ],
+                           "python_binding":  [
+                                                  "PyInit__flowusd"
+                                              ],
+                           "interpretation":  "Export tables expose Carbonite lifecycle entry points and PyInit only; this does not claim that private implementation code lacks attachment logic."
+                       },
+    "decision":  {
+                     "public_notice_attachment_control_found":  false,
+                     "direct_flowusd_ingest_timer_found":  false,
+                     "continue_consumer_subtraction":  false,
+                     "reason":  "No supported attachment/detachment, subscriber enumeration, or direct ingest timing control is exposed by the inspected Flow 110.0.0 surfaces."
+                 },
+    "contracts":  {
+                      "production_code_changed":  false,
+                      "production_sphere_default":  true,
+                      "point_emitter_default_off":  true,
+                      "flow_version":  "110.0.0",
+                      "physics_changed":  false,
+                      "json_schema_changed":  false,
+                      "rollback_changed":  false,
+                      "revision_changed":  false,
+                      "immutable_snapshot_changed":  false
+                  },
+    "next":  "Return to value-preserving Point publication work: audit rotation representation and update only attributes whose candidate values changed."
+}

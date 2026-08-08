@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "phase": "phase6di",
+  "status": "design_only",
+  "generated_utc": "2026-08-08T21:49:06.5579441Z",
+  "scope": "default-off arbitrary-rotation and selective Point publication design contract",
+  "design_checks": {
+    "passed": 12,
+    "total": 12,
+    "checks": {
+      "legacy_native_abi_unchanged": true,
+      "additive_frame_abi": true,
+      "fixed_topology_and_schema": true,
+      "rigid_transform_validation": true,
+      "single_owner_thread_sample": true,
+      "immutable_payload_extended": true,
+      "rollback_retry_and_recovery_preserved": true,
+      "selective_field_mask_is_process_local": true,
+      "resident_revision_written_last": true,
+      "cost_categories_measured_separately": true,
+      "point_emitter_remains_default_off": true,
+      "no_runtime_qualification_claimed": true
+    }
+  },
+  "layout_mapping": "world = origin + axial * axis_x + cross_a * axis_y + cross_b * axis_z",
+  "target_point_counts": [720, 7200],
+  "decision": {
+    "representation": "per-log right-handed orthonormal frame",
+    "quaternion_rejected_for_boundary": "component order and sign equivalence add avoidable ABI ambiguity",
+    "changed_attribute_detection": "compare immutable float32 candidate bytes before Vt conversion",
+    "usd_bottleneck_solved": false,
+    "reason": "A changed array still incurs complete-array conversion, USD authoring, notice, Flow ingestion, and rasterization costs."
+  },
+  "contracts": {
+    "production_code_changed": false,
+    "production_sphere_default": true,
+    "point_emitter_default_off": true,
+    "flow_version": "110.0.0",
+    "physics_changed": false,
+    "json_schema_changed": false,
+    "serialization_changed": false,
+    "rollback_changed": false,
+    "revision_changed": false,
+    "immutable_snapshot_changed": false
+  },
+  "next": "Implement the additive frame layout function and reference tests in an isolated default-off spike, then add selective publication without activating production."
+}

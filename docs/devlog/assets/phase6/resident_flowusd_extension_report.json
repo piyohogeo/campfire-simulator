@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "phase": "phase6dg",
+  "status": "pass",
+  "generated_utc": "2026-08-08T14:04:11.660578+00:00",
+  "scope": "public FlowUsd extension disable/restore boundary before stage connection",
+  "gate_summary": {
+    "passed": 16,
+    "total": 16,
+    "checks": {
+      "runtime_status_ok": true,
+      "manifest_status_ok": true,
+      "no_stage_opened": true,
+      "disable_request_succeeded": true,
+      "flowusd_disabled": true,
+      "flowusd_module_unloaded": true,
+      "flow_stageupdate_node_removed": true,
+      "campfire_app_cascaded_off": true,
+      "flow_schema_remained_enabled": true,
+      "extension_state_restored": true,
+      "flow_node_restored": true,
+      "production_app_unchanged": true,
+      "root_declares_flowusd": true,
+      "campfire_declares_flowusd": true,
+      "flowusd_declares_schema": true,
+      "fixed_flow_version": true
+    }
+  },
+  "dependency_chain": [
+    "campfire.simulator root -> omni.flowusd",
+    "campfire.simulator root -> campfire.app -> omni.flowusd",
+    "omni.flowusd -> omni.usd.schema.flow"
+  ],
+  "runtime": {
+    "schema_version": 1,
+    "phase": "phase6dg",
+    "status": "ok",
+    "timestamp_utc": "2026-08-08T14:04:07.708642+00:00",
+    "scope": {
+      "stage_opened": false,
+      "production_configuration_changed": false,
+      "public_api": "ExtensionManager.set_extension_enabled_immediate"
+    },
+    "before": {
+      "extensions": {
+        "campfire.app": {
+          "enabled": true,
+          "enabled_id": "campfire.app-0.1.0"
+        },
+        "omni.flowusd": {
+          "enabled": true,
+          "enabled_id": "omni.flowusd-110.0.0"
+        },
+        "omni.usd.schema.flow": {
+          "enabled": true,
+          "enabled_id": "omni.usd.schema.flow-110.0.0"
+        }
+      },
+      "stage_update": {
+        "node_count": 5,
+        "flow_node_count": 1,
+        "flow_nodes": [
+          {
+            "index": 4,
+            "name": "FlowUsd",
+            "enabled": true,
+            "order": 1000
+          }
+        ]
+      },
+      "flowusd_module_loaded": true
+    },
+    "disable_request": {
+      "extension_id": "omni.flowusd-110.0.0",
+      "result": true
+    },
+    "after_disable": {
+      "extensions": {
+        "campfire.app": {
+          "enabled": false,
+          "enabled_id": null
+        },
+        "omni.flowusd": {
+          "enabled": false,
+          "enabled_id": null
+        },
+        "omni.usd.schema.flow": {
+          "enabled": true,
+          "enabled_id": "omni.usd.schema.flow-110.0.0"
+        }
+      },
+      "stage_update": {
+        "node_count": 4,
+        "flow_node_count": 0,
+        "flow_nodes": []
+      },
+      "flowusd_module_loaded": false
+    },
+    "restore_requests": [
+      {
+        "extension": "omni.flowusd",
+        "result": true
+      },
+      {
+        "extension": "campfire.app",
+        "result": true
+      }
+    ],
+    "after_restore": {
+      "extensions": {
+        "campfire.app": {
+          "enabled": true,
+          "enabled_id": "campfire.app-0.1.0"
+        },
+        "omni.flowusd": {
+          "enabled": true,
+          "enabled_id": "omni.flowusd-110.0.0"
+        },
+        "omni.usd.schema.flow": {
+          "enabled": true,
+          "enabled_id": "omni.usd.schema.flow-110.0.0"
+        }
+      },
+      "stage_update": {
+        "node_count": 5,
+        "flow_node_count": 1,
+        "flow_nodes": [
+          {
+            "index": 4,
+            "name": "FlowUsd",
+            "enabled": true,
+            "order": 1000
+          }
+        ]
+      },
+      "flowusd_module_loaded": true
+    },
+    "conclusions": {
+      "flowusd_disabled": true,
+      "campfire_app_remained_enabled": false,
+      "schema_remained_enabled": true,
+      "flow_stageupdate_node_removed": true,
+      "restored_exactly": true
+    }
+  },
+  "decision": {
+    "adopt_as_performance_control": false,
+    "reason": "Disabling omni.flowusd removes the FlowUsd StageUpdate node, but also disables campfire.app and therefore the Resident producer. It is not a subscriber-only contrast.",
+    "flow_ingest_timer_obtained": false,
+    "phase6dd_residual_attributed_to_flowusd": false
+  },
+  "contracts": {
+    "production_sphere_default": true,
+    "point_emitter_default_off": true,
+    "flow_version": "110.0.0",
+    "physics_changed": false,
+    "json_schema_changed": false,
+    "rollback_changed": false,
+    "revision_changed": false,
+    "immutable_snapshot_changed": false
+  },
+  "next": "Audit whether the FlowUsd native plugin exposes an independently controllable USD-notice attachment boundary. If not, stop subtractive consumer isolation and return to value-preserving publication work."
+}

@@ -2427,3 +2427,35 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - profiler OFF timing: runごとのp95中央値は、5 Resident step後の外側updateがON `14.2288 ms`、OFF `13.7408 ms`（ON−OFF `+3.5515%`）、layout変更updateが`6.5346 / 6.1943 ms`、layout `ChangeBlock` exitが`1.1046 / 1.0046 ms`、channel exitが`0.9748 / 0.8597 ms`だった。外側updateのON範囲`13.9836–14.2612 ms`とOFF範囲`13.6022–14.7470 ms`は重なり、layout／channel exitもrun間変動がある。単純差をFlow ingest単体の因果量にはしない。
 - 解釈: StageUpdate OFFでもUSD Set、ChangeBlock、notice dispatch、同期subscriberの可能性は残り、block exitは0にならなかった。StageUpdate node無効化はFlow simulation／rasterization／solver／renderをまとめて失わせる対照であり、notice subscriberを登録解除した証拠ではない。よってPhase 6DD残差の全量をFlowUsd StageUpdateへ割り当てず、Phase 6DEの「直接timerなし」という結論を維持する。
 - 判定と次: Phase固有`13 / 13` gate、全caseのnode復元、profiler mask 0、production app SHA-256前後一致を確認した。標準suiteは全8 process・`59 / 59`件合格（全体`351.7 s`、collapse coverage `207.9 s`）だった。production既定Sphere、Point既定OFF、Flow 110.0.0、物理式、JSON schema、serialization、USD保存、rollback、revision、immutable snapshot契約は変更しない。次はderived環境で`omni.flowusd` extension自体をtarget stage接続前に無効化できるか、USD schemaとdependencyを壊さずsubscriber登録境界だけを変えられるかをAPI実測する。成立確認前に採用せず、Flow出力を失うcaseを性能改善とは呼ばない。
+
+## 139. Phase 6DG FlowUsd extension lifecycle boundary
+
+### 2026-08-08: extension解除はFlowUsd subscriberだけでなくResident producerも停止する
+
+- 静的契約: production rootは`omni.flowusd`と`campfire.app`を直接依存に持ち、`campfire.app`も`omni.flowusd`を必須依存に持つ。固定`omni.flowusd 110.0.0`は`omni.usd.schema.flow`へ依存する。ローカルKitの公開`ExtensionManager` stubと同梱snippetから、`set_extension_enabled_immediate(extension_id, enabled) -> bool`を確認してから実測した。未確認APIは使っていない。
+- 隔離実測: production自動sceneを無効にし、USD stageを一度も開かない独立Kit processで、初期有効ID、Python module、StageUpdate nodeを記録した。`omni.flowusd-110.0.0`への即時disable要求は成功し、moduleはunload、StageUpdate nodeは`5 → 4`、`FlowUsd` nodeは`1 → 0`になった。これはextension停止時にsubscriber登録境界が実際に消えることを公開surfaceで確認した結果である。
+- dependency cascade: 同じ操作で`campfire.app`もenabledからdisabledへ遷移した。一方、`omni.usd.schema.flow`はenabledのままだった。したがってschemaを残してFlowUsdを外すこと自体は可能だが、現行依存グラフではResident producer／owner lifecycleまで同時に失われる。これはPhase 6DDの同期subscriber残差だけを比較する狭い対照ではない。
+- 可逆性と判定: probeは`omni.flowusd`、続いて`campfire.app`を即時復帰し、3 extensionのenabled状態、`FlowUsd` node 1個、node総数5を初期値へ戻した。production app SHA-256も前後一致し、Phase固有`16 / 16` gateに合格した。最終標準suiteも全8 process・`59 / 59`件合格（全体`351.6 s`、collapse coverage `210.4 s`）だった。ただしこのcaseを性能測定またはproduction最適化候補として採用しない。producerなしのChangeBlock／revision／Flow出力比較は契約同値ではなく、extension unload/reload自体も通常frame lifecycleではないためである。
+- 非変更と次: production既定Sphere、Point既定OFF、Flow 110.0.0、物理式、JSON schema、serialization、USD保存、rollback、revision、immutable snapshot契約は不変である。Phase 6DFのStageUpdate OFFと同様、Flow出力を失うcaseを高速化とは呼ばず、Phase 6DD残差をFlowUsdへ帰属しない。次は固定Flow native pluginにUSD notice attachmentだけを独立制御・計測する公開境界があるかをローカルbinary metadata／同梱surfaceで限定監査する。存在しなければconsumer subtractionを打ち切り、値同値性を保てる発行属性／頻度最適化と固定点数回転追従スパイクへ戻る。
+
+## 140. Phase 6DH public native attachment surface audit
+
+### 2026-08-09: 未公開hookを仮定せずconsumer減算調査を終了する
+
+- 監査範囲: production自動sceneとrendererを無効にしたstage未接続Kit processで、既存の`probe_flow_native_interface.py`を再利用して固定`IFlowUsd` surfaceを取得した。加えて同梱`config/python_api.md`、`omni.flowusd.plugin.dll`、`_flowusd.cp312-win_amd64.pyd`のexport tableを検査した。新しいnative関数は推測で呼ばず、extension unload、StageUpdate disable、USD stage作成、source publicationは行っていない。
+- runtime surface: `IFlowUsd`の公開memberは19個で、NanoVDB buffer変換、active/max block query、field query/readback、persistent voxelize context、NanoVDB保存、point／velocity voxelizeから構成される。名前にattach、detach、notice、subscribe、listener、stage、update、timer、profile、ingestを含むmemberは0、既存probeのconsumer-write candidateも0だった。`voxelize_points_and_sync*`は公開native生成境界だが、既存USD Emitterのnotice attachment制御またはingest timerではない。
+- packaged APIとbinary metadata: 同梱の公開Python API一覧は`PublicExtension` classと`register_all_flow_commands()`だけで、attachment／timer語は0だった。plugin DLLのexportはCarbonite lifecycle 8個、Python bindingは`PyInit__flowusd` 1個だけだった。export tableの結果は「private実装にattachment処理が存在しない」証明には使わず、「固定版がsupported public controlとして公開していない」という範囲に限定する。
+- 判定: Phase固有`12 / 12` gateに合格し、production app SHA-256は前後一致した。公開notice attachment controlと直接FlowUsd ingest timerはともに`false`と確定し、Phase 6DDの残差をFlowへ帰属させない。private symbol、binary patch、未文書化interface取得を前提にしたconsumer subtractionは保守性・ABI安全性・再現性を満たさないため、ここで打ち切る。
+- 次: production既定Sphere、Point既定OFF、Flow 110.0.0、物理式、JSON schema、serialization、USD保存、rollback、revision、immutable snapshot契約を維持する。次は値同値性を保てるPoint発行作業へ戻り、固定点数の回転表現、candidate値が変わった属性だけを更新する集合、revision／rollback整合を既定OFFスパイクとして設計する。NanoVDB／公開native direct transportは既存の将来比較候補として残すが、USD発行ボトルネックを自動的に解決するとは扱わない。
+
+## 141. Phase 6DI arbitrary-rotation and selective-publication design
+
+### 2026-08-09: 任意回転と変更属性発行を、既存契約を維持した既定OFF試作として分離する
+
+- 回転表現: 現行の`campfire_native_surface_layout`とcardinal X/Y axis codeは変更しない。別のadditive native entry pointへ、薪ごとのoriginと右手系orthonormal frameを渡す。`world = origin + axial * axis_x + cross_a * axis_y + cross_b * axis_z`とし、quaternionの成分順・符号同値性をC++/ctypes/NumPy境界へ持ち込まない。非有限値、scale、shear、reflectionは状態を変えずfail closedにする。
+- transform authority: owner threadで各薪のlocal-to-world matrixを一度だけ取得し、originと3本のbasisを同じsampleから作る。Prim数、point数、relationship、material、USD schemaは固定し、live stageでは既存配列属性だけを更新する。frame変更時はpositionsを再生成し、成功したSetの後でのみlayout revisionを進める。
+- immutable / rollback: layout metadataにframe表現を追加するが、legacy axes表現との同時使用は禁止する。origin、表現種別、frameまたはaxis、全数値bytesをdigestへ含める。commit、retry、rollback、stopped layout replacement、shared layout state、stage recoveryは同じframeを運び、失敗時はUSD値、revision、native positions、layout metadataを完全に旧値へ戻す。
+- 変更属性集合: float32 candidate bytesをVt変換前に直前のcommitted payloadと比較し、process内だけのchanged-field maskを作る。未変更のpositions/fuels/temperatures/smokesは変換も`Set()`もしない。`campfire:layoutRevision`はpositions変更時だけ、`campfire:residentRevision`は各wood snapshotの最終書込みとして残す。revisionは値同期の代用品ではなく、tick、snapshot、retry、recovery、consumer整合性の契約である。
+- 性能境界: Set回数とPython/Vt変換を減らせても、変更された大配列の全量copy、USD authoring、`Sdf.ChangeBlock` exit、notice、`omni.flowusd`取込み、Flow rasterization、solver、renderは残る。したがってこの設計はUSD発行ボトルネックの解決とは扱わず、各costを分離して720点、その後20本×360点=7,200点で測る。
+- 採用条件: cardinal同値、45度Z回転、任意3D rigid rotation、invalid transform拒否、field別Set集合、全書込み位置へのfailure injection、retry digest同一性、最新frameでのstage recoveryを既定OFF試作で確認する。静止transform noiseを先に測り、rotation change toleranceは実測なしにproduction定数へしない。
+- 非変更: production既定Sphere、Point既定OFF、Flow 110.0.0、物理式、JSON schema、serialization、USD保存、rollback、revision、immutable snapshot、既知のtimeline/visual/solver continuity未達は変更しない。詳細契約は`docs/design/resident_point_rotation_spike.md`に記録した。Phase 6DIは設計だけで、runtime qualificationではない。

@@ -1,5 +1,16 @@
 # Changelog
 
+- Added the Phase 6DI design-only contract for an additive per-log rigid-frame layout ABI, preserving the existing cardinal ABI and rejecting scale, shear, reflection, and other non-rigid transforms.
+- Defined immutable byte-level changed-field detection before Vt conversion, selective Point attribute Sets, layout-revision-on-position-change, resident-revision-last publication, and exact rollback/retry/recovery requirements.
+- Kept the work default-off and production-neutral, and explicitly separated reduced Set-call/conversion work from the still-unresolved complete-array USD authoring and Flow ingestion cost.
+- Added Phase 6DH's stage-free audit of the pinned Flow 110.0.0 runtime interface, packaged public Python API, and native export tables.
+- Confirmed that all 19 `IFlowUsd` members are voxelization, conversion, readback, or field-query surfaces; no attachment/detachment, subscriber enumeration, direct ingest timer, or profiling control is exposed.
+- Confirmed that the packaged Python API contains only `PublicExtension` and command registration, while binary exports are limited to eight Carbonite lifecycle entries and one Python `PyInit` entry; this is not presented as proof about private implementation internals.
+- Passed all 12 Phase 6DH gates with no stage connection and unchanged production app SHA-256, and ended subtractive consumer-isolation work rather than relying on an unsupported private hook.
+- Added Phase 6DG's stage-free, default-off audit of the public Flow USD extension lifecycle boundary using the pinned Kit/Flow runtime.
+- Confirmed that immediate `omni.flowusd` disablement succeeds and removes the `FlowUsd` StageUpdate node, while `omni.usd.schema.flow` remains enabled.
+- Rejected extension disablement as a narrow performance control because dependency resolution also disables `campfire.app`, removing the Resident producer rather than isolating only the Flow USD subscriber.
+- Restored `omni.flowusd`, `campfire.app`, and the original StageUpdate node exactly, passed all 16 Phase 6DG gates and the final 8-process 59/59 standard suite in 351.6 seconds (collapse coverage 210.4 seconds), and preserved the production app SHA-256 and all production defaults/contracts.
 - Added Phase 6DF's derived, profiler-off FlowUsd StageUpdate enablement matrix: three paired 500-revision runs configure the node before target-stage connection and restore it after every process.
 - Preserved exact native-state and Point positions/fuel/temperature/smoke SHA-256 values, 500/500/500 consumer revisions, 500/500 publications, and zero failures or Point resyncs across all six cases.
 - Measured run-median enclosing-update p95 at 14.2288 ms with FlowUsd StageUpdate enabled versus 13.7408 ms disabled (+3.55%); the per-run ranges overlap, so the contrast is not a direct Flow-ingest timer.

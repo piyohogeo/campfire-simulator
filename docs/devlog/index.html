@@ -1472,6 +1472,66 @@
             <p>完全なResident Point stageをoffline作成し、target stage接続前に<code>FlowUsd</code> StageUpdate nodeだけをON／OFFへ設定する独立processを3組実行しました。全runはprofiler mask 0、固定1280×720、720点、500 revisionです。native stateとPoint positions／fuel／temperature／smoke SHA-256、consumer revision <code>500/500/500</code>、500/500 publishは6 runすべて完全一致し、failure／rollback／Point resyncは0でした。一方、ONはactive blocks最大32と5種の非空NanoVDB readbackを得ましたが、OFFはblocks 0・全readback 0です。外側update p95のrun中央値はON <code>14.2288 ms</code>、OFF <code>13.7408 ms</code>（+3.55%）ですが両群のrun範囲は重なります。layout <code>ChangeBlock</code> exitも<code>1.1046 / 1.0046 ms</code>、channel exitも<code>0.9748 / 0.8597 ms</code>と両modeで残りました。したがってON−OFF差を直接Flow ingest timerとは呼べず、StageUpdate OFFが同期notice subscriberを除いた証拠にもなりません。Phase固有13/13 gate、node復元、production app SHA不変に加え、標準suite全8 process・59/59件（351.7秒、collapse coverage 207.9秒）も合格しました。OFFはFlow出力を失うためproduction候補ではありません。動画ボタンはsource publicationが同じenabled参照だけを示し、OFFの映像成功は主張しません。次はderived環境でextension登録境界を安全に変えられるかを調べます。</p>
           </section>
 
+          <figure class="capture-card wide">
+            <h3 class="capture-phase-heading">Phase 6DG</h3>
+            <a href="assets/phase6/resident_flowusd_extension_report.svg" aria-label="Phase 6DG FlowUsd extension lifecycle境界レポートを開く">
+              <img src="assets/phase6/resident_flowusd_extension_report.svg" alt="FlowUsd extension解除がcampfire.appへcascadeし、schemaだけが残ることを示すレポート" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>FlowUsd nodeは消えるが、Resident producerも同時に停止</strong><span>16 / 16 gates · stage未接続 · 完全復帰</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_translation_breakdown.mp4" data-video-poster="assets/phase6/resident_translation_breakdown_frame.png" data-video-title="Phase 6DG enabled production reference — shared video" data-video-meta="Reuses the direct Phase 6DC enabled Resident Point recording only as the production-side reference · Phase 6DG itself opens no stage and makes no visual-success claim for the disabled state · Flow 110.0.0 · 1280×720 · 10 fps · video is not an extension-lifecycle pass criterion">
+                <span class="video-trigger-icon" aria-hidden="true">▶</span>
+                <span><strong>enabled参照動画</strong><small>Phase 6DC実機動画を再利用 · disabled映像の成功は主張しない</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6dg-note-title">
+            <p class="note-label">2026-08-08 · Goal / public API / dependency cascade / restoration / decision / next</p>
+            <h3 id="phase6dg-note-title">extension解除はsubscriberだけの対照にならない</h3>
+            <p>固定Flow 110.0.0とローカルKit stubで公開<code>set_extension_enabled_immediate()</code>を確認したうえで、stageを一度も開かない隔離processから<code>omni.flowusd-110.0.0</code>を解除しました。要求は成功し、Python moduleはunload、StageUpdate node総数は5→4、<code>FlowUsd</code>は1→0になりました。しかし必須dependentである<code>campfire.app</code>も同時に停止し、Resident producer／owner lifecycleを維持できません。<code>omni.usd.schema.flow</code>だけは有効のままでした。その後<code>omni.flowusd</code>と<code>campfire.app</code>を順に復帰し、extension状態とnode構成を初期値へ完全復元しました。Phase固有16/16 gate、production app SHA-256不変、標準suite全8 process・59/59件（351.6秒、collapse coverage 210.4秒）を確認しています。この方法はFlowUsd subscriberだけでなくproducerまで除くため、Phase 6DDの<code>ChangeBlock</code>残差を測る性能対照にもproduction最適化にも採用しません。動画はenabled側の外観参照としてPhase 6DC実機録画を再利用するだけで、Phase 6DG disabled状態の映像成功を示しません。production既定Sphere、Point既定OFF、rollback、revision、immutable snapshot契約は不変です。次はnative pluginにnotice attachmentだけを独立制御できる公開境界があるかを限定監査し、なければこの減算経路を打ち切ります。</p>
+          </section>
+
+          <figure class="capture-card wide">
+            <h3 class="capture-phase-heading">Phase 6DH</h3>
+            <a href="assets/phase6/resident_native_attachment_report.svg" aria-label="Phase 6DH native attachment公開surface監査レポートを開く">
+              <img src="assets/phase6/resident_native_attachment_report.svg" alt="Flow 110.0.0のruntime member、公開Python API、binary exportにnotice attachment制御がないことを示すレポート" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>公開attachment制御はなく、consumer減算調査を終了</strong><span>12 / 12 gates · 19 native members · control 0</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_translation_breakdown.mp4" data-video-poster="assets/phase6/resident_translation_breakdown_frame.png" data-video-title="Phase 6DH enabled production reference — shared video" data-video-meta="Reuses the Phase 6DC enabled Resident Point recording only as a production-side reference · Phase 6DH opens no stage and changes no Flow output · no disabled or native-hook visual success is claimed · Flow 110.0.0 · 1280×720 · 10 fps · video is not an API-surface pass criterion">
+                <span class="video-trigger-icon" aria-hidden="true">▶</span>
+                <span><strong>production参照動画</strong><small>Phase 6DC実機動画を再利用 · API監査の合否には使わない</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6dh-note-title">
+            <p class="note-label">2026-08-09 · Goal / runtime members / packaged API / exports / decision / next</p>
+            <h3 id="phase6dh-note-title">未公開native hookを仮定せず、値同値な発行作業へ戻る</h3>
+            <p>production自動sceneとrendererを無効にしたstage未接続processで、固定Flow 110.0.0の<code>IFlowUsd</code>を再列挙しました。19 memberはvoxelize、NanoVDB変換／保存／readback、field queryで構成され、attach／detach／notice／subscribe／timer／profile／ingest制御は0です。同梱公開Python APIも<code>PublicExtension</code>とcommand登録だけでした。DLL exportはCarbonite lifecycle 8個、Python bindingは<code>PyInit__flowusd</code> 1個です。ただしこれはprivate実装内にattachment処理がない証明ではなく、supported public controlがないという限定結論です。Phase固有12/12 gateとproduction app SHA-256不変を確認しました。unsupported symbolやbinary patchに依存する比較はABI安全性と保守性を満たさないため、consumer減算調査を終了し、Phase 6DDの残差は未帰属のまま維持します。動画はproduction enabled側の外観参照としてPhase 6DC録画を再利用するだけです。次は値同値性を保つPoint発行へ戻り、固定点数回転表現と変更属性集合を既定OFFで設計します。</p>
+          </section>
+
+          <figure class="capture-card wide">
+            <h3 class="capture-phase-heading">Phase 6DI</h3>
+            <a href="assets/phase6/resident_rotation_design_report.svg" aria-label="Phase 6DI 任意回転と変更属性発行の設計図を開く">
+              <img src="assets/phase6/resident_rotation_design_report.svg" alt="任意回転frameからimmutable candidateを作り、変更されたPoint属性だけを発行する設計図" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>任意回転と選択発行を、別々に検証する</strong><span>12 / 12 design checks · runtime未実装 · production不変</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_translation_breakdown.mp4" data-video-poster="assets/phase6/resident_translation_breakdown_frame.png" data-video-title="Phase 6DI current cardinal-path reference — shared video" data-video-meta="Reuses the Phase 6DC enabled Resident Point recording only as the current cardinal-path reference · Phase 6DI is design-only and does not demonstrate arbitrary rotation or selective publication · Flow 110.0.0 · 1280×720 · 10 fps · video is not a design-contract pass criterion">
+                <span class="video-trigger-icon" aria-hidden="true">▶</span>
+                <span><strong>現行cardinal経路</strong><small>Phase 6DC実機動画を再利用 · 新方式の成功映像ではない</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6di-note-title">
+            <p class="note-label">2026-08-09 · Goal / frame ABI / immutable payload / selective Set / rollback / next</p>
+            <h3 id="phase6di-note-title">回転の正確性と発行量削減を、既定OFFの二段階試作にする</h3>
+            <p>現行native layoutは薪ごとのoriginとX/Yの2値axisだけを受け取るため、45度や3D回転を正確に表現できません。既存ABIを残したまま、別entry pointへ右手系orthonormal frameを渡し、同じowner-thread matrix sampleから<code>world = origin + axial·axis_x + cross_a·axis_y + cross_b·axis_z</code>を計算する設計にしました。scale・shear・reflectionは近似せず拒否します。さらにimmutable float32 candidate bytesをVt変換前に比較し、変更された<code>pointPositions</code>、<code>pointFuels</code>、<code>pointTemperatures</code>、<code>pointSmokes</code>だけを変換・Setします。layout revisionはpositions変更時だけ、resident revisionはwood snapshotの最終書込みとして維持し、failure、retry、stage recoveryではframeを含む旧状態を完全復元します。ただし変更された大配列のcopy、USD authoring、notice、Flow取込み・rasterizationは残るため、USDボトルネック解消とは判定しません。Phase 6DIは12/12の設計項目を固定しただけでruntime未実装です。次はproductionを変えずadditive native frame関数を720点で試し、cardinal同値、45度、任意3D回転、invalid transform、failure injectionを確認してから7,200点と選択発行へ進みます。</p>
+          </section>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1520,6 +1580,9 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DD notice boundary</strong><small>12 / 12 · 760 coalesced notices · Flow residual unattributed</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DE profiler boundary</strong><small>19 / 19 · 13 correlated updates · direct Flow timer absent</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DF StageUpdate control</strong><small>13 / 13 · source hashes exact · OFF loses all Flow output</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DG extension lifecycle</strong><small>16 / 16 · FlowUsd node removed · campfire.app also stops · restored</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DH native attachment audit</strong><small>12 / 12 · 19 members · no public attachment/timer control</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DI rotation/publication design</strong><small>12 / 12 design checks · runtime unqualified · production unchanged</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6CI normal Point owner</strong><small>10 / 10 · 710 matched revisions · Point resync 0 · default OFF</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CJ layout + recovery</strong><small>consumer/revisionのみ合格 · Flow field復元と映像連続性は未達</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CK owner-thread commands</strong><small>command結果は合格 · 姿勢/炎の同時不連続は未解決</small></p></div>

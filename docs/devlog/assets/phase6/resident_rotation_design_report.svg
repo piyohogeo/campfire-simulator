@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6DI arbitrary rotation and selective publication design</title>
+  <desc id="desc">A design-only diagram showing a rigid per-log frame, immutable candidate bytes, selective USD attribute writes, and preserved revision-last rollback contracts.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#171b2b"/>
+      <stop offset="1" stop-color="#27203a"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#d9a35f"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="680" rx="28" fill="url(#bg)"/>
+  <text x="64" y="72" fill="#f5eee6" font-family="Segoe UI, sans-serif" font-size="34" font-weight="700">Phase 6DI / DESIGN ONLY</text>
+  <text x="64" y="108" fill="#bdb6c9" font-family="Segoe UI, sans-serif" font-size="19">Arbitrary rigid rotation + changed-attribute Point publication</text>
+
+  <rect x="64" y="154" width="298" height="244" rx="20" fill="#232a40" stroke="#5f709b" stroke-width="2"/>
+  <text x="88" y="193" fill="#dce6ff" font-family="Segoe UI, sans-serif" font-size="23" font-weight="700">One owner-thread sample</text>
+  <text x="88" y="229" fill="#b9c6e5" font-family="Consolas, monospace" font-size="17">origin + axis_x/y/z</text>
+  <line x1="170" y1="322" x2="268" y2="284" stroke="#f0a35a" stroke-width="6" marker-end="url(#arrow)"/>
+  <line x1="170" y1="322" x2="123" y2="253" stroke="#78d2b4" stroke-width="6" marker-end="url(#arrow)"/>
+  <line x1="170" y1="322" x2="170" y2="222" stroke="#7ba9ff" stroke-width="6" marker-end="url(#arrow)"/>
+  <text x="88" y="374" fill="#f5eee6" font-family="Segoe UI, sans-serif" font-size="16">Rigid, finite, orthonormal, right-handed</text>
+
+  <path d="M382 276H446" stroke="#d9a35f" stroke-width="4" marker-end="url(#arrow)"/>
+  <rect x="466" y="154" width="298" height="244" rx="20" fill="#2d283c" stroke="#8e6ba5" stroke-width="2"/>
+  <text x="490" y="193" fill="#f0dcff" font-family="Segoe UI, sans-serif" font-size="23" font-weight="700">Immutable candidate</text>
+  <text x="490" y="232" fill="#ccb8dc" font-family="Consolas, monospace" font-size="17">positions bytes</text>
+  <text x="490" y="265" fill="#ccb8dc" font-family="Consolas, monospace" font-size="17">fuels bytes</text>
+  <text x="490" y="298" fill="#ccb8dc" font-family="Consolas, monospace" font-size="17">temperatures bytes</text>
+  <text x="490" y="331" fill="#ccb8dc" font-family="Consolas, monospace" font-size="17">smokes bytes</text>
+  <text x="490" y="372" fill="#f5eee6" font-family="Segoe UI, sans-serif" font-size="16">Digest + changed-field mask</text>
+
+  <path d="M784 276H848" stroke="#d9a35f" stroke-width="4" marker-end="url(#arrow)"/>
+  <rect x="868" y="154" width="268" height="244" rx="20" fill="#302a27" stroke="#b07d49" stroke-width="2"/>
+  <text x="892" y="193" fill="#ffe4c2" font-family="Segoe UI, sans-serif" font-size="23" font-weight="700">Existing USD attrs</text>
+  <text x="892" y="232" fill="#dcc4aa" font-family="Segoe UI, sans-serif" font-size="17">Convert + Set changed only</text>
+  <text x="892" y="269" fill="#dcc4aa" font-family="Segoe UI, sans-serif" font-size="17">layoutRevision if positions</text>
+  <text x="892" y="306" fill="#f4bd74" font-family="Segoe UI, sans-serif" font-size="17" font-weight="700">residentRevision last</text>
+  <text x="892" y="343" fill="#dcc4aa" font-family="Segoe UI, sans-serif" font-size="17">Exact rollback on failure</text>
+  <text x="892" y="375" fill="#f5eee6" font-family="Segoe UI, sans-serif" font-size="16">No Prim or schema changes</text>
+
+  <rect x="64" y="446" width="1072" height="164" rx="20" fill="#191e2c" stroke="#444d68" stroke-width="2"/>
+  <text x="88" y="486" fill="#f5eee6" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">Qualification before adoption</text>
+  <text x="88" y="525" fill="#bbc5dc" font-family="Segoe UI, sans-serif" font-size="17">720 then 7,200 points | cardinal parity | 45-degree + 3D rotations | invalid transforms fail closed</text>
+  <text x="88" y="558" fill="#bbc5dc" font-family="Segoe UI, sans-serif" font-size="17">Per-field Set matrix | injected rollback | retry digest | recovery frames | separated timing and bytes</text>
+  <text x="88" y="591" fill="#e6a55d" font-family="Segoe UI, sans-serif" font-size="17" font-weight="700">Selective Set does not remove changed-array USD / Flow ingest cost. Point remains default OFF.</text>
+  <text x="1118" y="649" text-anchor="end" fill="#888fa4" font-family="Consolas, monospace" font-size="14">Flow 110.0.0 / production unchanged</text>
+</svg>
