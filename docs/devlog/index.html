@@ -1192,6 +1192,26 @@
             <p>Phase 6CQと同じ保存済みPoint/Flow/PhysX stageをfresh processで開き、Resident backend、USD adapter、Point sidecar、session、ownerを一切composeせずに比較しました。入力layerとproductionコードは変更していません。最初のviewport frame前は0.8秒までPLAYしましたが、frame完了後は0.0秒でSTOPし、通常owner経路と同じ境界を再現しました。これにより木材ownerとinteractive publicationは必要条件から外れます。Phase 6CRは7/7 gate、標準回帰は8 process・58/58件で合格しました。次はlive stageでPrimを削除・再定義せず、Flow、PhysX、render product、relationshipを接続前に分けたoffline scene variantsで十分条件を調べます。動画はPhase 6COの関連証拠を再利用しており、Phase 6CRの合格根拠はtimeline event記録です。</p>
           </section>
 
+          <figure id="phase6cs-renderer-scene-variants" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6CS</h3>
+            <a href="assets/phase6/renderer_scene_variant_report.svg" aria-label="Phase 6CS renderer scene・application境界レポートを開く">
+              <img src="assets/phase6/renderer_scene_variant_report.svg" width="1200" height="680" alt="Flow、PhysX、Resident、headless modeを除外し、Campfire appの複合条件とfillViewport回避策を示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Sceneではなく、Campfire appの複合境界</strong><span>16 / 16 gates · Camera＋CubeでもSTOP · editor baseはPLAY · fillViewport回避策は未採用</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_timeline_continuity.mp4" data-video-poster="assets/phase6/resident_renderer_timeline_capture.png" data-video-title="Phase 6CO boundary video referenced by Phase 6CS" data-video-meta="Related Phase 6CO RTX evidence, not a direct Phase 6CS recording · Phase 6CS uses offline scene variants and timeline event probes · the video does not qualify the measured workaround · 1280×720 · 10 fps · 6 s">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>境界現象の関連動画</strong><small>Phase 6CO再利用 · Phase 6CSはevent probe</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6cs-note-title">
+            <p class="note-label">2026-08-08 · Goal / isolation / measured result / limitation / next</p>
+            <h3 id="phase6cs-note-title">FlowもPhysXも不要。固定captureを壊さない解決は未達</h3>
+            <p>stage接続前にFlow、Physics、または両方を除去し、最後はWorld・Camera・Cubeだけの新規USDまで縮小しましたが、Campfire appでは最初のviewport frame後に毎回STOPしました。通常windowでも再現し、settle後の再PLAYもSTOPするため、headless固有や一回限りの遅延eventではありません。一方、同梱editor baseはFlowUsd、非動作Campfire拡張、async renderer、固定1280×720 viewportを個別に足してもPLAYを維持しました。Campfire appの<code>fillViewport=true</code>ではPLAYが続く回避策を確認しましたが、描画がUI寸法へ変わり固定1280×720 capture契約を壊すため採用していません。Phase 6CSは16/16 gate、標準回帰は8 process・58/58件で合格しました。production、Flow 110、Point既定OFF、木材状態、timeline/Flow/映像の未合格判定は変更していません。次はCampfire appとeditor baseのdependency/settings差分を最小化します。添付動画はPhase 6COの関連映像で、Phase 6CSの根拠は16条件のevent記録です。</p>
+          </section>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>

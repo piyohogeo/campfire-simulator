@@ -2283,3 +2283,13 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 実測: 最初のviewport frame完了前は0.8秒までPLAYを維持しSTOP eventは0だった。201.89秒後に最初の1280×720 frameが完了すると、その後のPLAYは直ちに0.0秒でSTOPし、STOP eventは1だった。Phase 6CQと同じ前後差がResident ownerなしで再現した。
 - 判断: Resident backend、USD snapshot adapter、Point sidecar、session、owner、interactive publicationはSTOPの必要条件ではない。保存済みPoint/Flow/PhysX stageと最初のcompleted viewport frameだけで再現する。次はlive stageでPrimを削除・再定義せず、Flow、PhysX、render product、relationshipをstage接続前に除外または無効化したfresh offline scene variantsで十分条件を分解する。
 - 検証と非変更: Phase 6CR reportは`7 / 7` gateに合格し、Python compile、JSON/SVG、開発日誌参照、`git diff --check`を確認した。標準suiteは全8 process・`58 / 58`件が`352.9 s`で合格した。production既定Sphere、Point既定OFF、物理式、JSON schema、Flow 110/dependency、正規scene、rollback、immutable snapshot、revision契約を変更しない。timeline、Flow solver場、映像連続性は未合格のままである。
+
+## 125. Phase 6CS offline scene / application boundary matrix
+
+### 2026-08-08: scene内容を必要条件から除外し、Campfire app複合条件まで境界を縮小する
+
+- stage接続前variant: fresh processで複製したsceneから`/World/Flow`だけ、Physics Prim/schema/propertyだけ、または両方をoffline除去した。さらに正規Phase 0と、新規作成した`/World`、Camera、Cube、0–100 frameだけの最小USDを測った。live stage上のPrim削除・再定義は0回である。全variantが最初のviewport frame後にPLAY直後のSTOPを再現したため、Flow、PhysX、Point/Phase 3内容は必要条件ではない。
+- window境界: Camera＋Cubeだけの最小USDは`--no-window`と通常windowの両方でSTOPした。12 update＋0.5秒のsettle後もSTOPし、直後の再PLAYも0.0秒で再度STOPした。headless modeや一回限りの遅延eventではない。
+- application matrix: 固定SDK同梱`omni.app.editor.base.kit`ではafter/retryともPLAYを維持した。editor baseへFlowUsd、`autoCreateScene=false`の`campfire.app`、`renderer.asyncInit=true`、固定1280×720 viewportを個別に追加してもPLAYを維持した。したがって各要素単独は十分条件ではない。Campfire appへeditorのpresent順序/tick設定だけを足してもSTOPは残った。
+- 回避策と不採用判断: Campfire appを`fillViewport=true`で起動するとafter/retryともSTOP 0でPLAYを維持した。ただし実描画寸法は固定1280×720からUI寸法へ変わり、再現可能な固定解像度capture契約を壊す。このためproduction既定値には採用しない。残る境界はCampfire application構成と固定viewport modeの複合相互作用であり、次はapp dependency/settings差分をさらに縮小してから変更可否を判断する。
+- 検証と非変更: Phase 6CS reportは`16 / 16` gateに合格し、標準suiteは全8 process・`58 / 58`件が`340.5 s`で合格した。production既定Sphere、Point既定OFF、物理式、JSON schema、Flow 110/dependency、正規scene、rollback、immutable snapshot、revision契約、固定capture既定値は変更しない。`timeline_continuity_qualified=false`、`seamless_visual_continuity_qualified=false`、`flow_solver_state_checkpointed=false`を維持する。

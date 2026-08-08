@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "phase": "phase6cs",
+  "status": "ok",
+  "timestamp_utc": "2026-08-08T07:22:34.257163+00:00",
+  "offline_scene_variants": {
+    "no_flow": {
+      "remained_playing": false,
+      "advanced_from_zero": false,
+      "stop_event_count": 1,
+      "resolution": [
+        1280,
+        720
+      ],
+      "viewport_ready_seconds": 177.0259,
+      "flow_present": false,
+      "physics_scene_present": null,
+      "physics_schema_count": null,
+      "live_prim_edits": 0,
+      "production_changed": false
+    },
+    "no_physics": {
+      "remained_playing": false,
+      "advanced_from_zero": false,
+      "stop_event_count": 1,
+      "resolution": [
+        1280,
+        720
+      ],
+      "viewport_ready_seconds": 173.372,
+      "flow_present": true,
+      "physics_scene_present": false,
+      "physics_schema_count": 0,
+      "live_prim_edits": 0,
+      "production_changed": false
+    },
+    "render_only": {
+      "remained_playing": false,
+      "advanced_from_zero": false,
+      "stop_event_count": 1,
+      "resolution": [
+        1280,
+        720
+      ],
+      "viewport_ready_seconds": 171.0616,
+      "flow_present": false,
+      "physics_scene_present": false,
+      "physics_schema_count": 0,
+      "live_prim_edits": 0,
+      "production_changed": false
+    },
+    "phase0": {
+      "remained_playing": false,
+      "advanced_from_zero": false,
+      "stop_event_count": 1,
+      "resolution": [
+        1280,
+        720
+      ],
+      "viewport_ready_seconds": 184.0097,
+      "flow_present": false,
+      "physics_scene_present": true,
+      "physics_schema_count": 1,
+      "live_prim_edits": 0,
+      "production_changed": false
+    },
+    "minimal_headless": {
+      "remained_playing": false,
+      "advanced_from_zero": false,
+      "stop_event_count": 1,
+      "resolution": [
+        1280,
+        720
+      ],
+      "viewport_ready_seconds": 190.4333,
+      "flow_present": false,
+      "physics_scene_present": false,
+      "physics_schema_count": 0,
+      "live_prim_edits": 0,
+      "production_changed": false
+    }
+  },
+  "application_matrix": {
+    "campfire_windowed_fixed": {
+      "remained_playing": false,
+      "advanced_from_zero": false,
+      "stop_event_count": 1,
+      "resolution": [
+        1280,
+        720
+      ],
+      "viewport_ready_seconds": 9.9201
+    },
+    "campfire_windowed_fixed_retry": {
+      "remained_playing": false,
+      "advanced_from_zero": false,
+      "stop_event_count": 1,
+      "resolution": [
+        1280,
+        720
+      ],
+      "viewport_ready_seconds": 9.9201
+    },
+    "editor_base": {
+      "remained_playing": true,
+      "advanced_from_zero": true,
+      "stop_event_count": 0,
+      "resolution": [
+        1260,
+        628
+      ],
+      "viewport_ready_seconds": 0.0174
+    },
+    "editor_base_plus_flowusd": {
+      "remained_playing": true,
+      "advanced_from_zero": true,
+      "stop_event_count": 0,
+      "resolution": [
+        1260,
+        628
+      ],
+      "viewport_ready_seconds": 0.0164
+    },
+    "editor_base_plus_flowusd_plus_campfire_app": {
+      "remained_playing": true,
+      "advanced_from_zero": true,
+      "stop_event_count": 0,
+      "resolution": [
+        1260,
+        628
+      ],
+      "viewport_ready_seconds": 0.0169
+    },
+    "editor_base_plus_flowusd_async_renderer": {
+      "remained_playing": true,
+      "advanced_from_zero": true,
+      "stop_event_count": 0,
+      "resolution": [
+        1260,
+        628
+      ],
+      "viewport_ready_seconds": 9.6892
+    },
+    "editor_base_plus_flowusd_fixed_viewport": {
+      "remained_playing": true,
+      "advanced_from_zero": true,
+      "stop_event_count": 0,
+      "resolution": [
+        1280,
+        720
+      ],
+      "viewport_ready_seconds": 0.0169
+    },
+    "campfire_fill_viewport_true": {
+      "remained_playing": true,
+      "advanced_from_zero": true,
+      "stop_event_count": 0,
+      "resolution": [
+        949,
+        577
+      ],
+      "viewport_ready_seconds": 9.7391
+    },
+    "campfire_fixed_plus_editor_present_timing": {
+      "remained_playing": false,
+      "advanced_from_zero": false,
+      "stop_event_count": 1,
+      "resolution": [
+        1280,
+        720
+      ],
+      "viewport_ready_seconds": 10.0592
+    }
+  },
+  "conclusion": {
+    "scene_content_is_required_for_stop": false,
+    "resident_is_required_for_stop": false,
+    "headless_mode_is_required_for_stop": false,
+    "flowusd_alone_is_sufficient_for_stop": false,
+    "campfire_extension_alone_is_sufficient_for_stop": false,
+    "async_renderer_init_alone_is_sufficient_for_stop": false,
+    "fixed_viewport_alone_is_sufficient_for_stop": false,
+    "fill_viewport_true_is_a_measured_workaround": true,
+    "workaround_adopted": false,
+    "workaround_rejection_reason": "Changing the application default to fill the UI viewport would break the deterministic fixed-resolution capture contract.",
+    "remaining_boundary": "A compound interaction between the Campfire application configuration and its fixed viewport mode; isolate the minimal application dependency/settings delta before changing production.",
+    "timeline_continuity_qualified": false,
+    "seamless_visual_continuity_qualified": false
+  },
+  "gates": {
+    "flow_not_required": true,
+    "physics_not_required": true,
+    "flow_and_physics_not_required": true,
+    "phase3_content_not_required": true,
+    "minimal_camera_cube_reproduces_stop": true,
+    "window_system_not_required": true,
+    "stop_repeats_on_retry": true,
+    "editor_base_preserves_play": true,
+    "flowusd_alone_preserves_play": true,
+    "campfire_extension_alone_preserves_play": true,
+    "async_renderer_init_alone_preserves_play": true,
+    "fixed_viewport_alone_preserves_play": true,
+    "campfire_fill_viewport_workaround_preserves_play": true,
+    "present_timing_does_not_remove_stop": true,
+    "offline_variants_have_no_live_prim_edits": true,
+    "production_unchanged": true
+  }
+}

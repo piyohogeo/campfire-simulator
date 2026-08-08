@@ -67,6 +67,14 @@ async def _run():
     settings = carb.settings.get_settings()
     scene = Path(settings.get_as_string("/phase6cr/scene")).resolve()
     output = Path(settings.get_as_string("/phase6cr/output")).resolve()
+    probe_app = settings.get_as_string("/phase6cr/probeApp") or "unspecified"
+    post_viewport_settle_frames = max(
+        0, settings.get_as_int("/phase6cr/postViewportSettleFrames")
+    )
+    post_viewport_settle_seconds = max(
+        0.0, settings.get_as_float("/phase6cr/postViewportSettleSeconds")
+    )
+    retry_after_stop = settings.get_as_bool("/phase6cr/retryAfterStop")
     if not scene.is_file():
         raise RuntimeError(f"Phase 6CR scene is missing: {scene}")
     context = omni.usd.get_context()
@@ -128,13 +136,27 @@ async def _run():
             "wall_seconds": round(time.perf_counter() - started, 4),
             "resolution": list(viewport.resolution),
         }
+        set_case("viewport_settle")
+        for _ in range(post_viewport_settle_frames):
+            await omni.kit.app.get_app().next_update_async()
+        if post_viewport_settle_seconds > 0.0:
+            await asyncio.sleep(post_viewport_settle_seconds)
+            await omni.kit.app.get_app().next_update_async()
         after = await _play_case("after_viewport_frame", timeline, set_case)
+        retry = None
+        if retry_after_stop:
+            retry = await _play_case(
+                "after_viewport_frame_retry", timeline, set_case
+            )
     finally:
         set_case("teardown")
         timeline.pause()
         timeline.commit()
         subscription = None
-    for case in (before, after):
+    cases = [before, after]
+    if retry is not None:
+        cases.append(retry)
+    for case in cases:
         case["stop_event_count"] = sum(
             event["case"] == case["name"] and event["event"] == "stop"
             for event in events
@@ -152,8 +174,12 @@ async def _run():
         "plain_stage_only": True,
         "before_case_recorded": len(before["samples"]) == 24,
         "after_case_recorded": len(after["samples"]) == 24,
-        "viewport_frame_completed": readiness["resolution"]
-        == list(CAPTURE_RESOLUTION),
+        "retry_case_recorded": retry is None or len(retry["samples"]) == 24,
+        "viewport_frame_completed": (
+            readiness["wall_seconds"] >= 0.0
+            and len(readiness["resolution"]) == 2
+            and all(component > 0 for component in readiness["resolution"])
+        ),
         "all_stage_update_nodes_enabled": all(node["enabled"] for node in nodes),
     }
     report = {
@@ -168,15 +194,32 @@ async def _run():
             "resident_owner_composed": False,
             "input_layer_mutated": False,
             "renderer_enabled": True,
+            "probe_app": probe_app,
         },
         "viewport_readiness": readiness,
-        "cases": [before, after],
+        "requested_resolution_retained": (
+            readiness["resolution"] == list(CAPTURE_RESOLUTION)
+        ),
+        "post_viewport_settle": {
+            "frames": post_viewport_settle_frames,
+            "seconds": post_viewport_settle_seconds,
+            "stop_event_count": sum(
+                event["case"] == "viewport_settle" and event["event"] == "stop"
+                for event in events
+            ),
+        },
+        "cases": cases,
         "timeline_events": events,
         "stage_update_nodes": nodes,
         "gates": gates,
         "decision": {
             "plain_stage_stops_after_viewport_frame": (
                 after["stop_event_count"] > 0 and not after["remained_playing"]
+            ),
+            "plain_stage_stops_on_retry": (
+                retry is not None
+                and retry["stop_event_count"] > 0
+                and not retry["remained_playing"]
             ),
             "resident_owner_is_required_for_stop": None,
         },
