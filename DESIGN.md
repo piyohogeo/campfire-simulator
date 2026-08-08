@@ -2472,6 +2472,19 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 判定と次: isolated frame kernel correctnessはqualified、production integrationはunqualifiedとする。標準suiteは全8 process・`59 / 59`件合格（全体`379.2 s`、collapse coverage `225.9 s`）だった。次は実USD transformからowner threadでframeを一回sampleし、各point positionと同じstable surface-cell identityのfuel／temperature／smokeが対応することを検証する。互換性を隠すindex並べ替えは行わず、このmappingが成立するまでResident payload、production native library、schema、既定設定を変更しない。
 - 非変更: production既定Sphere、Point既定OFF、Flow 110.0.0、物理式、JSON schema、serialization、USD保存、rollback、revision、immutable snapshot、timeline／visual／solver continuity未達は不変である。
 
+## 144. Phase 6DL immutable layout representation lifecycle
+
+### 2026-08-09: legacy/frame表現をpayload identityへ含め、session中の再解釈を拒否する
+
+- 隔離構成: productionの`ResidentApplicationSession`をfile pathからそのまま読み込み、prototype-onlyのimmutable layout descriptor、surface payload、consumer、representation guardを外側へ置いた。production extension sourceは変更もmonkey-patchもせず、USD、Flow、renderer、native DLLは動かしていない。
+- 表現契約: `legacy_cardinal_axes_v1`はorigin＋cardinal axisだけを、`rigid_frame_v1`はorigin＋右手系orthonormal basisだけを保持し、両方のmetadataを同時に持つdescriptorを拒否する。representationとdescriptor全体をpayload digestへ含め、同じ17,280 Bのposition／fuel／temperature／smoke配列でもlayout modeが異なればdigestを分離した。720点payloadのSHA-256計算500 sampleはp95 `0.0141 ms`だったが、隔離Python値でありUSD／Flow性能値ではない。
+- failure／retry: 両表現を別sessionでrevision 1 commit、revision 2 primary発行失敗、Point側をrevision 1へexact rollback、次tick拒否、stopped consumer replacement、保持中の同一payload object／digestでrevision 2 retry、revision 3 commitまで実行した。backend／primary／sidecar revisionはretry後2、継続後3で一致した。
+- recovery境界: 反対表現のreplacement sidecarは旧consumerを閉じる前に拒否した。同じdescriptor値を新しいobjectとして再構築したreplacementは受理し、object identityではなくcanonical value/digestでstage recovery可能な形にした。live legacy↔frame migrationは引き続き未qualifiedであり、既存sessionをその場で切り替えない。
+- 判定: Phase固有`20 / 20` gateに合格した。session-lifetime representation guardの設計は隔離条件でqualifiedだが、既存`ImmutableSurfacePayload`、`ResidentPointSidecar`、`replace_consumers()`へのproduction integrationは未qualifiedである。詳細は`docs/design/resident_layout_representation.md`、再現は`run_phase6dl_layout_representation.ps1`、結果は`resident_layout_representation_report.json/.svg`へ固定する。
+- 回帰: 標準suiteは全8 process・`59 / 59`件が`342.6 s`で合格し、collapse coverageは`200.9 s`で完了した。
+- 次: production変更前に、既存payload／sidecar／sessionへ必要な最小fieldと検査点を差分設計し、legacy既定値のserialization／checkpoint互換、stage上の表現識別子をUSDへauthoringすべきか、frame producer接続前のrollback保存集合を決める。selective field maskとFlow実測はその後に分離する。
+- 非変更: production既定Sphere、Point既定OFF、Flow 110.0.0、物理式、JSON schema、serialization、USD保存、rollback、revision、immutable snapshot、timeline／visual／solver continuity未達は不変である。
+
 ## 143. Phase 6DK USD transform / surface-channel identity
 
 ### 2026-08-09: 実USD frameがstable surface-cell順を保つことと、旧Y reflectionの値不一致を確定する

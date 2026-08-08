@@ -1,0 +1,382 @@
+{
+  "schema_version": 1,
+  "phase": "phase6dl",
+  "status": "ok",
+  "scope": {
+    "prototype_only": true,
+    "production_import": "source\\extensions\\campfire.app\\campfire\\app\\resident_application_session.py",
+    "point_count": 720,
+    "flow_or_usd_used": false
+  },
+  "representations": {
+    "legacy": "legacy_cardinal_axes_v1",
+    "frame": "rigid_frame_v1",
+    "legacy_layout_digest": "1668e0f3477d492b44e325bfc4f9b0325b34e4e60fd93c8b4308c81bb2105e17",
+    "frame_layout_digest": "a709affac3e0c826c11c93c7a6cc28ef9a0b1a4cc25c2961ba1574f6b894d33c",
+    "same_numeric_array_bytes": 17280,
+    "payload_digest_distinct": true
+  },
+  "digest_timing_ms": {
+    "samples": 500,
+    "mean": 0.013811799999999999,
+    "p95": 0.0141,
+    "max": 0.1801
+  },
+  "scenarios": {
+    "legacy_cardinal_axes_v1": {
+      "representation": "legacy_cardinal_axes_v1",
+      "layout_digest": "1668e0f3477d492b44e325bfc4f9b0325b34e4e60fd93c8b4308c81bb2105e17",
+      "replacement_layout_equal": true,
+      "replacement_layout_same_object": false,
+      "first_revision": 1,
+      "failure_seen": true,
+      "committed_digest_before_failure": "271d64bbb3fbd9fc4c071091e8d9e1f9cdc9897b0f81a03dfd9aa3b66a40cd61",
+      "pending": {
+        "state": "running",
+        "pending_revision": 2,
+        "pending_sidecar_revision": 2,
+        "step_count": 2,
+        "publish_count": 1,
+        "publish_failure_count": 1,
+        "retry_count": 0,
+        "start_count": 1,
+        "stop_count": 0,
+        "consumer_replace_count": 0,
+        "backend": {
+          "revision": 2,
+          "tick": 2,
+          "closed": false
+        },
+        "adapter": {
+          "revision": 1,
+          "active": true,
+          "closed": false
+        },
+        "sidecar": {
+          "revision": 1,
+          "layout_revision": 1,
+          "representation": "legacy_cardinal_axes_v1",
+          "layout_digest": "1668e0f3477d492b44e325bfc4f9b0325b34e4e60fd93c8b4308c81bb2105e17",
+          "rollback_count": 1,
+          "closed": false
+        }
+      },
+      "rollback_exact": true,
+      "blocked_next_tick": true,
+      "switch_rejected": true,
+      "old_consumers_open_after_switch_rejection": true,
+      "old_consumers_closed_after_valid_rebind": true,
+      "rebind": {
+        "revision": 1,
+        "pending_revision": 2,
+        "consumer_replace_count": 1
+      },
+      "after_rebind": {
+        "state": "stopped",
+        "pending_revision": 2,
+        "pending_sidecar_revision": 2,
+        "step_count": 2,
+        "publish_count": 1,
+        "publish_failure_count": 1,
+        "retry_count": 0,
+        "start_count": 1,
+        "stop_count": 1,
+        "consumer_replace_count": 1,
+        "backend": {
+          "revision": 2,
+          "tick": 2,
+          "closed": false
+        },
+        "adapter": {
+          "revision": 1,
+          "active": false,
+          "closed": false
+        },
+        "sidecar": {
+          "revision": 1,
+          "layout_revision": 1,
+          "representation": "legacy_cardinal_axes_v1",
+          "layout_digest": "1668e0f3477d492b44e325bfc4f9b0325b34e4e60fd93c8b4308c81bb2105e17",
+          "rollback_count": 0,
+          "closed": false
+        }
+      },
+      "retry_revision": 2,
+      "retry_same_payload_object": true,
+      "retry_same_payload_digest": true,
+      "after_retry": {
+        "state": "running",
+        "pending_revision": null,
+        "pending_sidecar_revision": null,
+        "step_count": 2,
+        "publish_count": 2,
+        "publish_failure_count": 1,
+        "retry_count": 1,
+        "start_count": 2,
+        "stop_count": 1,
+        "consumer_replace_count": 1,
+        "backend": {
+          "revision": 2,
+          "tick": 2,
+          "closed": false
+        },
+        "adapter": {
+          "revision": 2,
+          "active": true,
+          "closed": false
+        },
+        "sidecar": {
+          "revision": 2,
+          "layout_revision": 1,
+          "representation": "legacy_cardinal_axes_v1",
+          "layout_digest": "1668e0f3477d492b44e325bfc4f9b0325b34e4e60fd93c8b4308c81bb2105e17",
+          "rollback_count": 0,
+          "closed": false
+        }
+      },
+      "continued_revision": 3,
+      "final": {
+        "state": "running",
+        "pending_revision": null,
+        "pending_sidecar_revision": null,
+        "step_count": 3,
+        "publish_count": 3,
+        "publish_failure_count": 1,
+        "retry_count": 1,
+        "start_count": 2,
+        "stop_count": 1,
+        "consumer_replace_count": 1,
+        "backend": {
+          "revision": 3,
+          "tick": 3,
+          "closed": false
+        },
+        "adapter": {
+          "revision": 3,
+          "active": true,
+          "closed": false
+        },
+        "sidecar": {
+          "revision": 3,
+          "layout_revision": 1,
+          "representation": "legacy_cardinal_axes_v1",
+          "layout_digest": "1668e0f3477d492b44e325bfc4f9b0325b34e4e60fd93c8b4308c81bb2105e17",
+          "rollback_count": 0,
+          "closed": false
+        }
+      },
+      "close": {
+        "already_closed": false,
+        "pending_discarded": false,
+        "backend": {
+          "revision": 3,
+          "tick": 3
+        },
+        "adapter_closed": true,
+        "sidecar_closed": true
+      },
+      "rejected_switches": 1
+    },
+    "rigid_frame_v1": {
+      "representation": "rigid_frame_v1",
+      "layout_digest": "a709affac3e0c826c11c93c7a6cc28ef9a0b1a4cc25c2961ba1574f6b894d33c",
+      "replacement_layout_equal": true,
+      "replacement_layout_same_object": false,
+      "first_revision": 1,
+      "failure_seen": true,
+      "committed_digest_before_failure": "43b7581f9d6bac04e07c72da1e87be93d8e500b7fc14c4a2636a8652922db2e8",
+      "pending": {
+        "state": "running",
+        "pending_revision": 2,
+        "pending_sidecar_revision": 2,
+        "step_count": 2,
+        "publish_count": 1,
+        "publish_failure_count": 1,
+        "retry_count": 0,
+        "start_count": 1,
+        "stop_count": 0,
+        "consumer_replace_count": 0,
+        "backend": {
+          "revision": 2,
+          "tick": 2,
+          "closed": false
+        },
+        "adapter": {
+          "revision": 1,
+          "active": true,
+          "closed": false
+        },
+        "sidecar": {
+          "revision": 1,
+          "layout_revision": 1,
+          "representation": "rigid_frame_v1",
+          "layout_digest": "a709affac3e0c826c11c93c7a6cc28ef9a0b1a4cc25c2961ba1574f6b894d33c",
+          "rollback_count": 1,
+          "closed": false
+        }
+      },
+      "rollback_exact": true,
+      "blocked_next_tick": true,
+      "switch_rejected": true,
+      "old_consumers_open_after_switch_rejection": true,
+      "old_consumers_closed_after_valid_rebind": true,
+      "rebind": {
+        "revision": 1,
+        "pending_revision": 2,
+        "consumer_replace_count": 1
+      },
+      "after_rebind": {
+        "state": "stopped",
+        "pending_revision": 2,
+        "pending_sidecar_revision": 2,
+        "step_count": 2,
+        "publish_count": 1,
+        "publish_failure_count": 1,
+        "retry_count": 0,
+        "start_count": 1,
+        "stop_count": 1,
+        "consumer_replace_count": 1,
+        "backend": {
+          "revision": 2,
+          "tick": 2,
+          "closed": false
+        },
+        "adapter": {
+          "revision": 1,
+          "active": false,
+          "closed": false
+        },
+        "sidecar": {
+          "revision": 1,
+          "layout_revision": 1,
+          "representation": "rigid_frame_v1",
+          "layout_digest": "a709affac3e0c826c11c93c7a6cc28ef9a0b1a4cc25c2961ba1574f6b894d33c",
+          "rollback_count": 0,
+          "closed": false
+        }
+      },
+      "retry_revision": 2,
+      "retry_same_payload_object": true,
+      "retry_same_payload_digest": true,
+      "after_retry": {
+        "state": "running",
+        "pending_revision": null,
+        "pending_sidecar_revision": null,
+        "step_count": 2,
+        "publish_count": 2,
+        "publish_failure_count": 1,
+        "retry_count": 1,
+        "start_count": 2,
+        "stop_count": 1,
+        "consumer_replace_count": 1,
+        "backend": {
+          "revision": 2,
+          "tick": 2,
+          "closed": false
+        },
+        "adapter": {
+          "revision": 2,
+          "active": true,
+          "closed": false
+        },
+        "sidecar": {
+          "revision": 2,
+          "layout_revision": 1,
+          "representation": "rigid_frame_v1",
+          "layout_digest": "a709affac3e0c826c11c93c7a6cc28ef9a0b1a4cc25c2961ba1574f6b894d33c",
+          "rollback_count": 0,
+          "closed": false
+        }
+      },
+      "continued_revision": 3,
+      "final": {
+        "state": "running",
+        "pending_revision": null,
+        "pending_sidecar_revision": null,
+        "step_count": 3,
+        "publish_count": 3,
+        "publish_failure_count": 1,
+        "retry_count": 1,
+        "start_count": 2,
+        "stop_count": 1,
+        "consumer_replace_count": 1,
+        "backend": {
+          "revision": 3,
+          "tick": 3,
+          "closed": false
+        },
+        "adapter": {
+          "revision": 3,
+          "active": true,
+          "closed": false
+        },
+        "sidecar": {
+          "revision": 3,
+          "layout_revision": 1,
+          "representation": "rigid_frame_v1",
+          "layout_digest": "a709affac3e0c826c11c93c7a6cc28ef9a0b1a4cc25c2961ba1574f6b894d33c",
+          "rollback_count": 0,
+          "closed": false
+        }
+      },
+      "close": {
+        "already_closed": false,
+        "pending_discarded": false,
+        "backend": {
+          "revision": 3,
+          "tick": 3
+        },
+        "adapter_closed": true,
+        "sidecar_closed": true
+      },
+      "rejected_switches": 1
+    }
+  },
+  "gates": {
+    "passed": 20,
+    "total": 20,
+    "checks": {
+      "representation_metadata_is_exclusive": true,
+      "payload_arrays_are_immutable": true,
+      "same_numeric_arrays_are_shared_by_comparison": true,
+      "representation_descriptor_participates_in_payload_digest": true,
+      "wrong_representation_fails_before_write": true,
+      "legacy_first_revision_commits": true,
+      "legacy_primary_failure_rolls_sidecar_back": true,
+      "legacy_pending_blocks_next_tick": true,
+      "legacy_representation_switch_rejected_atomically": true,
+      "legacy_equivalent_descriptor_recovers": true,
+      "legacy_retry_reuses_exact_payload": true,
+      "legacy_revision_chain_continues": true,
+      "frame_first_revision_commits": true,
+      "frame_primary_failure_rolls_sidecar_back": true,
+      "frame_pending_blocks_next_tick": true,
+      "frame_representation_switch_rejected_atomically": true,
+      "frame_equivalent_descriptor_recovers": true,
+      "frame_retry_reuses_exact_payload": true,
+      "frame_revision_chain_continues": true,
+      "production_extension_sources_unchanged": true
+    }
+  },
+  "decisions": {
+    "representation_fixed_for_session": true,
+    "retry_reuses_original_payload": true,
+    "replacement_accepts_equal_descriptor_not_identity": true,
+    "live_representation_migration_qualified": false,
+    "production_integration_qualified": false
+  },
+  "raw_report": "artifacts\\phase6\\phase6dl\\resident_layout_representation_raw.json",
+  "contracts": {
+    "production_extension_sources_changed": false,
+    "production_sphere_default": true,
+    "point_emitter_default_off": true,
+    "flow_version": "110.0.0",
+    "physics_changed": false,
+    "json_schema_changed": false,
+    "serialization_changed": false,
+    "usd_save_changed": false,
+    "rollback_changed": false,
+    "revision_changed": false,
+    "immutable_snapshot_changed": false
+  }
+}

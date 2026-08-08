@@ -1572,6 +1572,26 @@
             <p>productionの<code>create_log()</code>でidentity、90度、45度、任意軸37度の薪をanonymous USD stageへauthoringし、各<code>ComputeLocalToWorldTransform()</code>を一度だけsampleしました。4本とも右手系・直交frameです。cardinal 2本の720点と、45度＋3Dの720点は、stable <code>log_id:local_index</code>ごとのUSD参照位置へ最大誤差0 mで一致し、同じindexにfuel・temperature・smokeを保持しました。Phase固有14/14 gateに合格し、production appとPhase 6AU sourceのSHAも不変です。一方、旧Y reflectionと正しい90度frameは360座標を共有しても、cell固有温度が360/360座標で別値になりました。fuel・smoke不一致0は現在それらが薪単位一定だからで、旧方式が値同値という意味ではありません。したがってframe抽出と新frame内のchannel identityは合格、旧sessionからのmigrationとproduction integrationは未合格です。layout表現はsession生成時に固定し、retry・rollback・stage recoveryまで維持し、live transaction中に切り替えない方針にします。標準suiteも全8 process・59/59件合格（344.9秒、collapse coverage 204.3秒）でした。次は排他的なlegacy/frame metadataを持つ隔離payloadでfailure rollbackとrecoveryを試します。動画は現行経路の外観参照だけで、今回Flowやrendererは動かしていません。</p>
           </section>
 
+          <figure class="capture-card wide">
+            <h3 class="capture-phase-heading">Phase 6DL</h3>
+            <a href="assets/phase6/resident_layout_representation_report.svg" aria-label="Phase 6DL immutable layout representation lifecycleレポートを開く">
+              <img src="assets/phase6/resident_layout_representation_report.svg" alt="legacyとrigid frameの両表現がrollback、consumer差替え、同一payload retryを通過したレポート" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>表現をpayload identityへ固定し、異種recoveryを原子的に拒否</strong><span>20 / 20 gates · legacy + frame · revision 1 → 2 → 3</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_translation_breakdown.mp4" data-video-poster="assets/phase6/resident_translation_breakdown_frame.png" data-video-title="Phase 6DL current production reference — shared video" data-video-meta="Reuses the Phase 6DC enabled Resident Point recording only as the current cardinal-path reference · Phase 6DL is a no-USD/no-Flow lifecycle prototype and does not demonstrate rigid-frame flames or seamless continuity · Flow 110.0.0 · 1280×720 · 10 fps">
+                <span class="video-trigger-icon" aria-hidden="true">▶</span>
+                <span><strong>現行production参照</strong><small>Phase 6DC実機動画を再利用 · lifecycle gateの映像ではない</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6dl-note-title">
+            <p class="note-label">2026-08-09 · Goal / immutable mode / rollback / retry / recovery / next</p>
+            <h3 id="phase6dl-note-title">同じ配列でも、legacyとframeを同じpayloadとして扱わない。</h3>
+            <p>productionの<code>ResidentApplicationSession</code>を変更せず読み込み、その外側へ隔離descriptorとguardを置きました。<code>legacy_cardinal_axes_v1</code>と<code>rigid_frame_v1</code>は排他的metadataを持ち、representationとdescriptor全体をpayload digestへ含めます。同じ720点・17,280 Bの数値配列でもdigestは別です。両表現でrevision 1 commit、revision 2 primary失敗、Point exact rollback、次tick拒否、stopped consumer差替え、同一pending payloadのrevision 2 retry、revision 3継続を完走しました。反対表現への差替えは旧consumerを閉じる前に拒否し、同値descriptorを別objectとして再構築したrecoveryは受理します。Phase固有20/20 gateに合格し、production extension sourceは不変です。標準suiteも全8 process・59/59件合格（342.6秒、collapse coverage 200.9秒）でした。digest p95 0.0141 msは隔離Python SHA値で、USDやFlowの性能値ではありません。production integrationとlive migrationは未合格のままです。次は既存payload／sidecar／sessionへ必要な最小fieldと、serialization・checkpoint・USD保存の互換境界を差分設計します。動画は現行cardinal経路の外観参照だけで、Phase 6DL自体はUSDもFlowも動かしていません。</p>
+          </section>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1625,6 +1645,7 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DI rotation/publication design</strong><small>12 / 12 design checks · runtime unqualified · production unchanged</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DJ isolated frame kernel</strong><small>10 / 10 · rotations exact · legacy Y channel order unresolved</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DK transform/channel identity</strong><small>14 / 14 · frame exact · legacy Y temperature 360/360 mismatched</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DL immutable layout mode</strong><small>20 / 20 · exact retry · cross-mode recovery rejected</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6CI normal Point owner</strong><small>10 / 10 · 710 matched revisions · Point resync 0 · default OFF</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CJ layout + recovery</strong><small>consumer/revisionのみ合格 · Flow field復元と映像連続性は未達</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CK owner-thread commands</strong><small>command結果は合格 · 姿勢/炎の同時不連続は未解決</small></p></div>

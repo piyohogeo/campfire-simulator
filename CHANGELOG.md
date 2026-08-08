@@ -1,5 +1,10 @@
 # Changelog
 
+- Added Phase 6DL's isolated immutable layout-representation prototype around the unchanged production `ResidentApplicationSession`.
+- Qualified both `legacy_cardinal_axes_v1` and `rigid_frame_v1` through commit, injected primary failure, exact Point rollback, stopped consumer replacement, identical pending-payload retry, and continued revision 3.
+- Rejected cross-representation payload publication and consumer replacement before writes or old-consumer close; equal replacement descriptor values remain recoverable without requiring Python object identity.
+- Passed all 20 Phase 6DL gates while leaving production extension sources, Sphere default, Point default-OFF, Flow 110.0.0, physics, schemas, persistence, rollback, and revision contracts unchanged.
+- Re-ran the complete regression after Phase 6DL: all 8 test processes and 59 / 59 cases passed in 342.6 s, including 200.9 s of collapse coverage.
 - Added Phase 6DK's real-Kit, anonymous-USD transform/channel-identity probe using the production `create_log()` authoring path and two separate 720-point scenarios.
 - Passed all 14 Phase 6DK gates: cardinal, 45-degree, and arbitrary-axis USD frames were right-handed and preserved stable surface-cell position/channel order with zero observed float32 position error.
 - Demonstrated the legacy Y reflection's value impact: all 360 geometric coordinates remained present, but all 360 cell-varying temperatures moved to different coordinates; log-constant fuel and smoke remained aligned.
