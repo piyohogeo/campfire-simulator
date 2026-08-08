@@ -1152,6 +1152,46 @@
             <p>公開APIでStageUpdate graphを列挙すると、normal/benchmarkとも<code>PhysX</code>、<code>OmniGraph</code>、<code>OmniGraphAttach</code>、<code>PhysXFabric</code>、<code>FlowUsd</code>の同じ5ノードでした。全ノード有効のまま、保存済みPoint stage単独、productionのbackend・adapter・sidecar・owner合成、captureを外したextension対話lifecycleの3経路がすべてPLAYを維持しました。対話経路は0.8秒まで進み、Point revisionも0→4へ増えたためownerが実際にstep/publicationしたことを確認しています。再現しないbaselineでノードを無効化してもSTOP要求元を特定できないため、1ノードずつのdisable matrixはまだ開始しません。Phase 6COのRTX capture経路だけがSTOPを再現しており、次はrenderer有効の対話経路とcapture callbackを分離して再現baselineを作ります。なおrenderer有効のproduction対話連続性とFlow solver場連続性は未合格のままです。</p>
           </section>
 
+          <figure id="phase6cq-resident-renderer-timeline" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6CQ</h3>
+            <a href="assets/phase6/resident_renderer_timeline_report.svg" aria-label="Phase 6CQ renderer Hydra timeline境界レポートを開く">
+              <img src="assets/phase6/resident_renderer_timeline_report.svg" width="1200" height="680" alt="最初のviewport frame完了前はPLAYを維持する一方、完了後はSTOPし、公開StageUpdate全5ノードを無効化してもSTOPが残ることを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>First completed viewport frame is the observed boundary</strong><span>10 / 10 gates · before: PLAY 0.8 s / revision 0→3 · after: STOP @ 0.0 s · viewport updates OFF: still STOP · all 5 nodes disabled: still STOP</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_timeline_continuity.mp4" data-video-poster="assets/phase6/resident_renderer_timeline_capture.png" data-video-title="Phase 6CO boundary video referenced by Phase 6CQ" data-video-meta="Related Phase 6CO RTX evidence, not a direct recording of the Phase 6CQ pre-frame/post-frame comparison · the poster is Phase 6CQ's actual capture callback frame · Phase 6CQ proves numerically that STOP already exists after the first completed viewport frame and before capture is required · 1280×720 · 10 fps · 6 s">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>renderer境界の関連動画</strong><small>Phase 6CO動画再利用 · posterはPhase 6CQ実capture</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6cq-note-title">
+            <p class="note-label">2026-08-08 · Goal / isolation / measured result / limitation / next</p>
+            <h3 id="phase6cq-note-title">captureではなく、最初のviewport frame完了後からSTOPする</h3>
+            <p>renderer有効の通常対話lifecycleを、最初のviewport frame完了の前後で比較しました。完了前は0.8秒までPLAYを維持しPoint revisionも0→3へ進みましたが、最初の1280×720 frameが完了した後はcapture callbackを呼ばなくてもPLAY直後にSTOPしました。frame完了後に公開<code>ViewportAPI.updates_enabled</code>をFalseへ切り替えてもSTOPしたため、継続描画そのものは必要条件ではありません。5つの公開StageUpdateノードを1つずつ、さらに全部同時に無効化してもSTOPは残りました。ただし同一process内の再有効化ではPhysX/Flowの既接続警告が出ており、最初のframeで成立済みのattachment副作用までは除外できません。残る境界はHydra/render-product stage attachmentまたは公開graph外のviewport subscriberです。添付動画はPhase 6COの関連映像を再利用しており、Phase 6CQの前後比較そのものは数値event記録が根拠です。timeline、Flow場、映像連続性は未合格のままです。</p>
+          </section>
+
+          <figure id="phase6cr-plain-renderer-timeline" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6CR</h3>
+            <a href="assets/phase6/plain_renderer_timeline_report.svg" aria-label="Phase 6CR plain stage renderer境界レポートを開く">
+              <img src="assets/phase6/plain_renderer_timeline_report.svg" width="1200" height="680" alt="Resident ownerなしの保存済みPoint Flow PhysX stageでも、viewport frame前はPLAYし完了後はSTOPすることを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>Resident ownership is not required for STOP</strong><span>7 / 7 gates · owner absent · input layer unchanged · before frame PLAY 0.8 s · after frame STOP @ 0.0 s</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_timeline_continuity.mp4" data-video-poster="assets/phase6/resident_renderer_timeline_capture.png" data-video-title="Phase 6CO boundary video referenced by Phase 6CR" data-video-meta="Related Phase 6CO RTX evidence, not a direct Phase 6CR recording · Phase 6CR is a plain saved-stage event probe with no Resident backend, adapter, sidecar, session, or owner · the shared poster is the actual Phase 6CQ renderer capture · 1280×720 · 10 fps · 6 s">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>plain-stage境界の関連動画</strong><small>Phase 6CO再利用 · Phase 6CRはevent probe</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6cr-note-title">
+            <p class="note-label">2026-08-08 · Goal / isolation / measured result / limitation / next</p>
+            <h3 id="phase6cr-note-title">Resident ownerなしでも、viewport frame後に同じSTOPを再現</h3>
+            <p>Phase 6CQと同じ保存済みPoint/Flow/PhysX stageをfresh processで開き、Resident backend、USD adapter、Point sidecar、session、ownerを一切composeせずに比較しました。入力layerとproductionコードは変更していません。最初のviewport frame前は0.8秒までPLAYしましたが、frame完了後は0.0秒でSTOPし、通常owner経路と同じ境界を再現しました。これにより木材ownerとinteractive publicationは必要条件から外れます。Phase 6CRは7/7 gate、標準回帰は8 process・58/58件で合格しました。次はlive stageでPrimを削除・再定義せず、Flow、PhysX、render product、relationshipを接続前に分けたoffline scene variantsで十分条件を調べます。動画はPhase 6COの関連証拠を再利用しており、Phase 6CRの合格根拠はtimeline event記録です。</p>
+          </section>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>

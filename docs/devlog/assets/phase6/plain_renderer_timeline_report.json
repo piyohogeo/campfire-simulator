@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "phase": "phase6cr",
+  "status": "ok",
+  "timestamp_utc": "2026-08-08T06:32:16.346501+00:00",
+  "viewport_readiness": {
+    "wall_seconds": 193.0358,
+    "resolution": [
+      1280,
+      720
+    ]
+  },
+  "resident_owner_composed": false,
+  "before_first_viewport_frame": {
+    "remained_playing": true,
+    "timeline_end_s": 0.8,
+    "stop_event_count": 0
+  },
+  "after_first_viewport_frame": {
+    "remained_playing": false,
+    "timeline_end_s": 0.0,
+    "stop_event_count": 1
+  },
+  "stage_update_nodes": [
+    "PhysX",
+    "OmniGraph",
+    "OmniGraphAttach",
+    "PhysXFabric",
+    "FlowUsd"
+  ],
+  "conclusion": {
+    "resident_owner_is_required_for_stop": false,
+    "saved_point_flow_physx_stage_plus_completed_viewport_frame_is_sufficient": true,
+    "remaining_boundary": "Offline-authored scene components must be removed or disabled before stage connection in fresh-process variants to separate Flow, PhysX, render product, and their relationships.",
+    "timeline_continuity_qualified": false,
+    "seamless_visual_continuity_qualified": false
+  },
+  "gates": {
+    "raw_probe_completed": true,
+    "resident_owner_absent": true,
+    "input_layer_unchanged": true,
+    "before_frame_remained_playing": true,
+    "after_frame_stop_reproduced": true,
+    "all_stage_update_nodes_enabled": true,
+    "production_unchanged": true
+  }
+}

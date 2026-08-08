@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "phase": "phase6cq",
+  "status": "ok",
+  "timestamp_utc": "2026-08-08T06:32:16.290509+00:00",
+  "viewport_readiness": {
+    "frame_wait_count": 1,
+    "wall_seconds": 181.8889,
+    "resolution": [
+      1280,
+      720
+    ]
+  },
+  "before_first_viewport_frame": {
+    "remained_playing": true,
+    "timeline_end_s": 0.8,
+    "revision_before": 0,
+    "revision_after": 3,
+    "stop_event_count": 0
+  },
+  "after_first_viewport_frame": {
+    "remained_playing": false,
+    "timeline_end_s": 0.0,
+    "revision_before": 3,
+    "revision_after": 3,
+    "stop_event_count": 1
+  },
+  "capture_callback": {
+    "requested": true,
+    "completed": true,
+    "file_written": true,
+    "wall_seconds": 0.6267,
+    "bytes": 757674,
+    "sha256": "3830449ca648e49fd3eeb08966d1d39eb7839248a1970e0e5e96d48326a396da"
+  },
+  "viewport_updates_disabled": {
+    "remained_playing": false,
+    "timeline_end_s": 0.0,
+    "revision_before": 3,
+    "revision_after": 3,
+    "stop_event_count": 1
+  },
+  "viewport_updates_reenabled": {
+    "remained_playing": false,
+    "timeline_end_s": 0.0,
+    "revision_before": 3,
+    "revision_after": 3,
+    "stop_event_count": 1
+  },
+  "stage_update_nodes": [
+    "PhysX",
+    "OmniGraph",
+    "OmniGraphAttach",
+    "PhysXFabric",
+    "FlowUsd"
+  ],
+  "single_node_disable_results": {
+    "PhysX": {
+      "remained_playing": false,
+      "stop_event_count": 1
+    },
+    "OmniGraph": {
+      "remained_playing": false,
+      "stop_event_count": 1
+    },
+    "OmniGraphAttach": {
+      "remained_playing": false,
+      "stop_event_count": 1
+    },
+    "PhysXFabric": {
+      "remained_playing": false,
+      "stop_event_count": 1
+    },
+    "FlowUsd": {
+      "remained_playing": false,
+      "stop_event_count": 1
+    }
+  },
+  "all_nodes_disabled": {
+    "remained_playing": false,
+    "stop_event_count": 1
+  },
+  "conclusion": {
+    "capture_callback_is_minimum_boundary": false,
+    "first_completed_viewport_frame_is_observed_boundary": true,
+    "viewport_update_gate_restores_play": false,
+    "public_stage_update_disable_controls_remove_stop": false,
+    "matrix_reenable_warnings_limit_root_cause_claim": true,
+    "remaining_boundary": "Hydra/render-product stage attachment, an attachment side effect already established before the disable matrix, or another viewport render subscriber outside the public StageUpdate node graph",
+    "timeline_continuity_qualified": false,
+    "seamless_visual_continuity_qualified": false
+  },
+  "gates": {
+    "raw_probe_completed": true,
+    "pre_viewport_frame_remained_playing": true,
+    "post_viewport_frame_stop_reproduced": true,
+    "viewport_update_gate_measured": true,
+    "capture_callback_not_required_for_stop": true,
+    "single_node_matrix_complete": true,
+    "no_single_node_disable_preserved_play": true,
+    "all_public_nodes_disabled_still_stopped": true,
+    "all_public_nodes_restored": true,
+    "production_unchanged": true
+  }
+}

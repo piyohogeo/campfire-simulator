@@ -2264,3 +2264,22 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 判断: 全node有効baselineが再現しない状態で1 nodeずつ無効化しても要求元を同定できないため、disable matrixは開始しない。Phase 6COのPLAY→STOPは現時点ではrenderer有効のRTX capture qualification pathに限定する。ただしrenderer有効のproduction interactive playbackはまだ未計測なので、production連続性を合格とはしない。次はrenderer有効interactive playback、viewport frame wait、capture callbackを段階的に足し、STOPが再現する最小境界を作ってから同じ5 nodeのdisable matrixを行う。
 - 検証: inventory 2 app、owner合成、interactive lifecycle、report/SVG生成を個別実行し、Phase 6CP reportの`9 / 9` gateが合格した。Python compile、SVG XML、開発日誌参照、`git diff --check`を確認し、標準Kit testは全8 process・`58 / 58`が`351.6 s`で合格した。rendererを無効化した診断は2 appで`13.3 s`、owner probeは`5.9 s`、interactive probeは`9.7 s`で終了し、RTX async ready待ちを診断時間から除外した。
 - 非変更: production既定Sphere、Point既定OFF、物理式、JSON schema、Flow 110/dependency、正規scene、rollback、immutable snapshot、revision契約を変更しない。`timeline_continuity_qualified=false`、`seamless_visual_continuity_qualified=false`、`flow_solver_state_checkpointed=false`を維持する。
+
+## 123. Phase 6CQ renderer / Hydra timeline boundary isolation
+
+### 2026-08-08: 最初のviewport frame完了をPLAY→STOPの最小観測境界として特定する
+
+- 段階比較: capture harnessを使わない通常extension対話lifecycleをrenderer有効で起動した。最初の`next_viewport_frame_async()`完了前はtimelineが0.8秒までPLAYを維持し、Point revisionは`0 → 3`、STOP eventは0だった。同じstageで最初の1280×720 viewport frameが183.415秒で完了した後は、capture callbackを呼ぶ前からPLAY直後にSTOPし、time 0.0秒・revision 3のままだった。したがってcapture callback自体は最小条件ではない。
+- 公開StageUpdate matrix: `PhysX`、`OmniGraph`、`OmniGraphAttach`、`PhysXFabric`、`FlowUsd`を1つずつ無効化した5ケースと、5つすべてを同時無効化したケースを同一renderer-ready processで測った。各ケースは無効化状態を確認したが、すべてPLAY直後に1 STOPを発行した。公開nodeのenable制御だけではSTOPを除去できない。ただしnode再有効化時にPhysX/Flowの既接続警告が出たため、初回viewport frameで成立済みのattachment副作用まで除外したとは判断しない。
+- viewport更新gate: ローカルSDKで公開・使用実績を確認した`ViewportAPI.updates_enabled`を最初のframe完了後にFalseへ切り替えたが、PLAYは0.0秒でSTOPしrevision 3のままだった。Trueへ戻したケースも同じだった。継続的なviewport更新がSTOPの必要条件ではなく、最初のframe完了時に成立したattachment状態または別subscriberが残る。
+- 判断: 現在の最小観測境界は最初のcompleted viewport frameであり、残る候補はHydra/render-product stage attachment、その時点ですでに成立したattachment副作用、または公開StageUpdate graph外のviewport/render subscriberである。未確認のdetach APIは推測実装しない。
+- 検証と非変更: 実Kit/Flow 110のdefault-off probe、capture callback 1回、viewport updates OFF/ON、単独5 node＋全node matrixを実行し、Phase 6CQ reportは`10 / 10` gateに合格した。production既定Sphere、Point既定OFF、木材権威状態、物理式、JSON schema、Flow 110/dependency、正規scene、rollback、immutable snapshot、revision契約は変更しない。`timeline_continuity_qualified=false`、`seamless_visual_continuity_qualified=false`、`flow_solver_state_checkpointed=false`を維持する。
+
+## 124. Phase 6CR plain-stage renderer boundary
+
+### 2026-08-08: Resident ownerをSTOPの必要条件から除外する
+
+- fresh process比較: Phase 6CQが保存した同一のPoint/Flow/PhysX USDAを通常appで開き、`ResidentNativeBackend`、`UsdResidentSnapshotAdapter`、`ResidentPointSidecar`、`ResidentApplicationSession`、`ResidentPointApplicationOwner`をcomposeしないplain-stage probeを実行した。入力layerは変更せず、5つのStageUpdate nodeはすべて有効とした。
+- 実測: 最初のviewport frame完了前は0.8秒までPLAYを維持しSTOP eventは0だった。201.89秒後に最初の1280×720 frameが完了すると、その後のPLAYは直ちに0.0秒でSTOPし、STOP eventは1だった。Phase 6CQと同じ前後差がResident ownerなしで再現した。
+- 判断: Resident backend、USD snapshot adapter、Point sidecar、session、owner、interactive publicationはSTOPの必要条件ではない。保存済みPoint/Flow/PhysX stageと最初のcompleted viewport frameだけで再現する。次はlive stageでPrimを削除・再定義せず、Flow、PhysX、render product、relationshipをstage接続前に除外または無効化したfresh offline scene variantsで十分条件を分解する。
+- 検証と非変更: Phase 6CR reportは`7 / 7` gateに合格し、Python compile、JSON/SVG、開発日誌参照、`git diff --check`を確認した。標準suiteは全8 process・`58 / 58`件が`352.9 s`で合格した。production既定Sphere、Point既定OFF、物理式、JSON schema、Flow 110/dependency、正規scene、rollback、immutable snapshot、revision契約を変更しない。timeline、Flow solver場、映像連続性は未合格のままである。

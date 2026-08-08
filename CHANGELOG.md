@@ -1,5 +1,8 @@
 # Changelog
 
+- Added Phase 6CQ renderer/Hydra boundary isolation: the normal Resident interactive lifecycle remains PLAY to 0.8 s and advances revision 0 to 3 before the first completed viewport frame, then reproduces STOP at 0.0 s immediately after that frame.
+- Confirmed that neither a capture callback nor ongoing viewport updates are required for the STOP and that disabling each public StageUpdate node—or all five together—does not remove it; the first completed frame's attachment state remains under investigation.
+- Added Phase 6CR plain-stage isolation: the same saved Point/Flow/PhysX stage reproduces the post-viewport-frame STOP without composing the Resident backend, USD adapter, Point sidecar, session, or owner.
 - Added Phase 6CP StageUpdate boundary isolation: normal and benchmark apps expose the same five enabled nodes, and the plain stage, composed Resident owner, and renderer-disabled extension interactive lifecycle all remain PLAY with zero STOP events.
 - Confirmed the interactive Resident owner actually advances Point revision from 0 to 4; the unresolved PLAY→STOP is therefore currently confined to the RTX capture qualification path, while renderer-enabled production continuity remains unqualified.
 - Added Phase 6CO as a default-off negative timeline-boundary audit: explicit stage/session range, auto-update, looping, and `Timeline.commit()` still reproduce PLAY→STOP twice at 0.0 s in the normal Resident Point owner path, while an isolated stage probe remains playing.
