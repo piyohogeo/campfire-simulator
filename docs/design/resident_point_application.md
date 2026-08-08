@@ -1,6 +1,6 @@
 # Resident Point application scene boundary
 
-Status: Phase 6CI qualifies the normal application owner behind the same explicit default-off setting. The normal production default remains the existing Sphere path.
+Status: Phase 6CJ qualifies stopped layout refresh and normal-owner stage recovery behind explicit default-off settings. The normal production default remains the existing Sphere path.
 
 ## Scene contract
 
@@ -56,4 +56,24 @@ Reproduction:
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_phase6ci_resident_point_owner.ps1
+```
+
+## Phase 6CJ stopped layout and normal-owner recovery
+
+`ResidentPointApplicationOwner.refresh_layout()` reads the current log transforms only on its owner thread. An unchanged layout does not advance revision. A changed layout delegates to the existing stopped-session sidecar replacement contract, so running or pending sessions continue to fail closed. The interactive timeline callback performs this refresh immediately before a stopped owner enters PLAY.
+
+The owner and recovery consumer factory now retain the same layout mapping object. Layout replacement mutates that mapping only after the sidecar accepts the new monotonic revision. Consequently, a later consumer factory call receives the latest origins, axes, and layout revision instead of the startup layout.
+
+The Phase 6CJ normal-app qualification stopped at Resident revision 300, moved the dry log by 0.04 m, and refreshed layout revision 1 to 2. PhysX settling had changed both log world origins, so the next Point publication changed two complete 360-point log groups, or 720 positions. The gate accepts only whole 360-point groups and rejects partial layout changes.
+
+Revision 301, including layout revision 2, was exported into a separate replacement stage. The existing normal-owner recovery orchestrator observed `closing`, `closed`, `opening`, and `opened`, then rebuilt both consumers from committed revision 301 and current layout revision 2. It resumed without pending work or retry and continued through revision 710. Backend, primary adapter, and Point sidecar revisions matched; Point resync and pending discard remained zero.
+
+All 13 gates passed. Flow peaked at 427 active blocks. Temperature, fuel, burn, and smoke readbacks contained 3,806,912 words each, velocity contained 2,410,056 words, and all 60 RTX evidence frames were unique. The full suite passed 56/56 checks in 301.4 s, collapse coverage completed in 177.9 s, and the default-off Phase 0 capture passed.
+
+The current native layout ABI still accepts horizontal cardinal X/Y logs only. Unsupported arbitrary rotations must not be silently approximated; owner-thread command routing and explicit UI/headless failure reporting remain the next boundary. Point remains default-off.
+
+Reproduction:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_phase6cj_resident_point_recovery.ps1
 ```

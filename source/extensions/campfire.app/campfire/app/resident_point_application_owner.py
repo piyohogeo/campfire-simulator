@@ -5,7 +5,10 @@ from __future__ import annotations
 import threading
 
 from .resident_application_session import ResidentApplicationSession
-from .resident_point_scene import RESIDENT_POINT_EMITTER_PATH
+from .resident_point_scene import (
+    RESIDENT_POINT_EMITTER_PATH,
+    resident_point_layout_for_logs,
+)
 from .resident_point_sidecar import ResidentPointSidecar
 from .resident_snapshot_adapter import UsdResidentSnapshotAdapter
 from .resident_stage_recovery import ResidentStageRecoveryOrchestrator
@@ -19,7 +22,7 @@ class ResidentPointApplicationOwner:
     session and orchestrator contracts.
     """
 
-    def __init__(self, session, orchestrator):
+    def __init__(self, session, orchestrator, *, layout_state=None, log_ids=()):
         if session is None or orchestrator is None:
             raise ValueError("Resident Point application owner requires collaborators")
         self._owner_thread_id = threading.get_ident()
@@ -28,9 +31,10 @@ class ResidentPointApplicationOwner:
         self._start_count = 0
         self._stop_count = 0
         self._step_count = 0
+        self._layout_replace_count = 0
         self._close_result = None
-        self._layout_state = {"revision": 1}
-        self._log_ids = ()
+        self._layout_state = layout_state or {"revision": 1}
+        self._log_ids = tuple(log_ids)
 
     @classmethod
     def compose(
@@ -98,10 +102,12 @@ class ResidentPointApplicationOwner:
                 next_update,
                 drain_updates=4,
             )
-            owner = cls(session, orchestrator)
-            owner._layout_state = layout_state
-            owner._log_ids = log_ids
-            return owner
+            return cls(
+                session,
+                orchestrator,
+                layout_state=layout_state,
+                log_ids=log_ids,
+            )
         except Exception:
             if sidecar is not None:
                 sidecar.close()
@@ -143,12 +149,56 @@ class ResidentPointApplicationOwner:
     def replace_layout(self, layout):
         self._require_owner()
         revision = self._session.replace_sidecar_layout(layout)
-        self._layout_state = {
-            "revision": revision,
-            "origins": layout["origins"],
-            "axes": layout["axes"],
-        }
+        # Keep this object identity: the recovery consumer factory closes over
+        # the same mapping and must see the latest stopped-owner layout.
+        self._layout_state.clear()
+        self._layout_state.update(
+            {
+                "revision": revision,
+                "origins": tuple(layout["origins"]),
+                "axes": tuple(layout["axes"]),
+            }
+        )
+        self._layout_replace_count += 1
         return revision
+
+    def refresh_layout(self, stage):
+        """Refresh changed cardinal log transforms while the session is stopped."""
+
+        self._require_owner()
+        if not self._log_ids:
+            raise RuntimeError("Resident Point owner has no application logs")
+        candidate = resident_point_layout_for_logs(stage, self._log_ids)
+        origins = tuple(candidate["origins"])
+        axes = tuple(candidate["axes"])
+        previous_origins = tuple(self._layout_state.get("origins", ()))
+        previous_axes = tuple(self._layout_state.get("axes", ()))
+        origins_equal = len(origins) == len(previous_origins) and all(
+            all(
+                abs(left - right) <= 1.0e-9
+                for left, right in zip(current, previous)
+            )
+            for current, previous in zip(origins, previous_origins)
+        )
+        if origins_equal and axes == previous_axes:
+            return {
+                "changed": False,
+                "revision": self._layout_state["revision"],
+                "origins": origins,
+                "axes": axes,
+            }
+        layout = {
+            "revision": int(self._layout_state["revision"]) + 1,
+            "origins": origins,
+            "axes": axes,
+        }
+        revision = self.replace_layout(layout)
+        return {
+            "changed": True,
+            "revision": revision,
+            "origins": origins,
+            "axes": axes,
+        }
 
     def observe_stage_event(self, event_name):
         self._require_owner()
@@ -168,10 +218,13 @@ class ResidentPointApplicationOwner:
             "start_count": self._start_count,
             "stop_count": self._stop_count,
             "step_count": self._step_count,
+            "layout_replace_count": self._layout_replace_count,
             "closed": self._close_result is not None,
             "session": self._session.status(),
             "orchestrator": self._orchestrator.status(),
             "layout_revision": self._layout_state["revision"],
+            "layout_origins": self._layout_state.get("origins"),
+            "layout_axes": self._layout_state.get("axes"),
             "log_ids": self._log_ids,
         }
 

@@ -1,6 +1,6 @@
 # Changelog
 
-- Added the Phase 6CI normal-application Resident Point owner behind the existing default-off setting, composing the native backend, primary adapter, Point sidecar, session, and stage recovery without adding revision authority; the normal extension completed 710 matched publications, zero Point resyncs, real Flow fire/smoke, and clean shutdown.
+- Added the Phase 6CJ default-off normal-owner layout and stage recovery path, preserving the current stopped-owner layout mapping across real Kit close/attach consumer reconstruction and continuing backend, primary, and Point consumers from revision 301 through 710 without resync or pending discard.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6CJ explicit qualification path for PLAY-time stopped layout refresh, monotonic layout revision, current-layout recovery factory sharing, normal-owner stage lifecycle observation, and real Flow/RTX continuation after consumer replacement.
 - Added the Phase 6CI default-off normal application composition, including complete offline schema authoring before context connection, extension-owned timeline/update lifecycle, primary and Point consumer pre-authoring, and a reproducible 10-gate real-Kit/Flow capture.
 - Added the Phase 6CG production-but-unactivated Resident Point module, extracting the generic native surface producer, immutable byte payload, and transactional Point sidecar from benchmark ownership, enforcing pre-authored Flow schema and geometry/ABI validation, and proving byte-exact extraction plus full stage-recovery continuation in real Flow 110.
 - Added the Phase 6CF default-off owner-thread stage recovery orchestrator, driving the qualified close/drain/attach lifecycle from real Kit events, retaining pending work across injected consumer-factory failure, retrying the exact immutable payload, and continuing Flow without live structural resync or production activation.

@@ -922,6 +922,11 @@ class TestScene(omni.kit.test.AsyncTestCase):
                 self.steps.append(tick)
                 return tick
 
+            def replace_sidecar_layout(self, layout):
+                if self.state not in ("ready", "stopped"):
+                    raise RuntimeError("layout replacement requires stopped state")
+                return layout["revision"]
+
             def close(self, *, discard_pending=False):
                 self.state = "closed"
                 self.closed = True
@@ -955,6 +960,27 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(status["orchestrator"]["observed_events"], ("opening",))
         self.assertFalse(owner.close()["already_closed"])
         self.assertTrue(owner.close()["already_closed"])
+
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase3_scene(stage)
+        log_ids = (campfire.app.PHASE3_DRY_LOG_ID, campfire.app.PHASE3_WET_LOG_ID)
+        layout_state = campfire.app.resident_point_layout_for_logs(stage, log_ids)
+        layout_owner = campfire.app.ResidentPointApplicationOwner(
+            FakeSession(),
+            FakeOrchestrator(),
+            layout_state=layout_state,
+            log_ids=log_ids,
+        )
+        self.assertFalse(layout_owner.refresh_layout(stage)["changed"])
+        shared_state_identity = id(layout_owner._layout_state)
+        campfire.app.move_log(stage, log_ids[0], (0.03, 0.0, 0.2), 90.0)
+        refreshed = layout_owner.refresh_layout(stage)
+        self.assertTrue(refreshed["changed"])
+        self.assertEqual(refreshed["revision"], 2)
+        self.assertEqual(refreshed["axes"], (1, 0))
+        self.assertEqual(id(layout_owner._layout_state), shared_state_identity)
+        self.assertEqual(layout_owner.status()["layout_replace_count"], 1)
+        layout_owner.close()
 
     async def test_phase3_default_keeps_sphere_without_point_structure(self):
         stage = Usd.Stage.CreateInMemory()
