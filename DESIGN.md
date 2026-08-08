@@ -2303,3 +2303,31 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 差分matrix: editorのrun-loop群、`autoFrame.mode`、GPU/ImGui defaults、persistent解像度、present/tickを個別にCampfireへ適用しても各afterはSTOPした。`fillViewport=false`と実1280×720を維持したまま15差分すべてを同時に合わせても、after/retryは各1 STOP・time 0.0秒だった。したがってallowlist上の単純なscalar設定値およびその合成は十分条件ではない。
 - 判断: editor baseでPLAY、CampfireでSTOP、Campfireの`fillViewport=true`だけがPLAY回避という差は残る。次の候補は`.kit` application構成の初期化順序、viewport生成時点、またはallowlist外の内部状態である。production appを変更する前に、固定SDK内でderived diagnostic `.kit`を作り、設定宣言の順序とviewport window compositionを二分探索する。
 - 検証と非変更: Phase 6CT reportは`13 / 13` gateに合格し、標準suiteは全8 process・`58 / 58`件が`343.2 s`で合格した。production `.kit`、固定1280×720 capture、Flow 110、Sphere既定、Point既定OFF、木材権威状態、物理式、JSON schema、rollback、immutable snapshot、revision契約は変更しない。`timeline_continuity_qualified=false`、`seamless_visual_continuity_qualified=false`を維持する。
+
+## 127. Phase 6CU derived root-app initialization boundary
+
+### 2026-08-08: 直接dependency集合と宣言位置をSTOPの十分条件から除外する
+
+- 隔離方法: production `.kit`を編集せず、固定SDK同梱Editor appをroot lifecycleとして維持したderived diagnostic appを4個生成した。`campfire.app`と`omni.flowusd`をdependency先頭または末尾へ置く2構成、Campfireの直接dependency集合をEditor順へ並べる構成、さらに`omni.kit.window.extensions`を加える構成である。派生manifestはbase/output/production SHA-256を記録し、production変更なしを検査する。
+- 実測: Phase 6CTと同じCamera＋Cube stage、Flow 110.0.0、固定1280×720、全5 StageUpdate node有効でfresh processを測った。4構成すべてが最初のviewport frame前、frame後、retry後にtimeを進め、STOP event 0でPLAYを維持した。同条件のCampfire root baselineはframe後とretry後に各1 STOP・time 0.0秒を再現する。
+- 判断: 直接dependencyの集合、宣言の先頭/末尾、Editor型の宣言順、Extensions Managerの有無はいずれもSTOPの十分条件ではない。残る境界はproduction root app固有の静的宣言適用順、生成済みversion lock、package metadata、またはroot lifecycleである。次はEditor rootを固定したままsettings sectionとgenerated lockを独立に移植する二分探索を行い、production変更前に再現する最小derived appを得る。
+- 検証と非変更: reportは`10 / 10` gateに合格した。標準suiteは全8 process・`58 / 58`件が`309.6 s`で合格し、collapse coverageは`183.2 s`で完了した。production既定Sphere、Point既定OFF、固定capture、木材権威状態、物理式、JSON schema、Flow/dependency version、rollback、immutable snapshot、revision契約は変更しない。`timeline_continuity_qualified=false`、`seamless_visual_continuity_qualified=false`、`flow_solver_state_checkpointed=false`を維持する。
+
+## 128. Phase 6CV serialized root configuration boundary
+
+### 2026-08-08: serialized `.kit` 宣言全体をSTOPの十分条件から除外する
+
+- 隔離方法: Phase 6CUで確認したEditor root lifecycleを固定し、production Campfire appから静的settingsとその宣言順、generated version lock、package/template metadata、extension search pathsを単独または組合せで移植した。派生配置で`${app}`相対探索が変わるため、検索パスは同じreleaseの`exts`と`extscache`を指す絶対パスへ等価変換した。production appは生成前後SHA-256で非変更を検査した。
+- 実測: `all_static`、`lock_only`、`static_and_lock`、`package_only`、`static_lock_package`、`full_config_absolute_paths`の6構成を、Phase 6CTと同じCamera＋Cube stage、Flow 110.0.0、固定1280×720、全5 StageUpdate node有効で測定した。6構成すべてがviewport frame前・後・retry後にPLAYを維持し、STOP eventは0だった。同条件のCampfire root baselineだけがafter/retryともSTOPした。reportは`11 / 11` gateに合格した。
+- 判断: 静的settings、generated lock、package/template metadata、検索パス、およびそれらの全併用はSTOPの十分条件ではない。残る境界はserialized `.kit`宣言の外側にあるproduction root-app identityまたはroot lifecycleである。次はproductionを変更せず、実行時app identity、root configロード元、app生成物の起動引数・config stackを記録し、Editor-root派生との最小差を調べる。
+- 検証と非変更: 標準suiteは全8 process・`58 / 58`件が`311.4 s`で合格し、collapse coverageは`184.7 s`で完了した。ブラウザ実レンダリングはlocal file URL policyで実行できなかったため、HTML参照、SVG XML、JSON、動画・poster実在を機械検査した。production既定Sphere、Point既定OFF、固定capture、木材権威状態、物理式、JSON schema、Flow/dependency version、rollback、immutable snapshot、revision契約は変更しない。`timeline_continuity_qualified=false`、`seamless_visual_continuity_qualified=false`、`flow_solver_state_checkpointed=false`を維持し、`fillViewport=true`回避策も不採用のままとする。
+
+## 129. Phase 6CW public root application identity boundary
+
+### 2026-08-08: app filename/nameをSTOPの十分条件から除外する
+
+- 公開API: 固定SDKの`omni.kit.app.IApp`型定義で確認した`get_app_filename()`、`get_app_name()`、`get_app_environment()`、version/build/kernel/Kit/platform APIだけを使い、機密値を除外した起動option名集合と主要extension IDを採取した。推測APIや内部detach APIは使っていない。
+- 同名派生: Phase 6CVの完全root設定派生appを隔離artifact内で`campfire.simulator.kit`と命名した。production rootと同名派生rootは、公開identity 11項目、選択settings、`campfire.app`・`omni.flowusd`・viewport・Extensions Managerの有効ID、非機密option名集合が一致した。
+- 実測: 同名派生rootはCamera＋Cube stage、Flow 110.0.0、全5 StageUpdate node、固定1280×720でviewport frame前・後・retry後にPLAYを維持し、STOP eventは0だった。production Campfire root baselineだけがafter/retryともSTOPした。Phase 6CW reportは`10 / 10` gateに合格した。
+- 検証: 標準suiteは8 process・58/58件合格（313.5秒、collapse coverage 185.6秒）。開発日誌はJSON/SVG/動画/posterの参照とSVG XMLを機械検査した。in-app Browserはローカル`file:` URL policyにより実レンダリングを開けなかったため、ブラウザ表示は未確認として静的検査と分離して記録する。
+- 判断と非変更: app filename/nameおよび公開app identityはSTOPの十分条件ではない。残る境界は、同一identityと最終有効extension集合に現れないroot appロード元、config stack、またはstartup lifecycleである。production既定Sphere、Point既定OFF、固定capture、木材権威状態、物理式、JSON schema、Flow/dependency version、rollback、immutable snapshot、revision契約は変更しない。`timeline_continuity_qualified=false`、`seamless_visual_continuity_qualified=false`、`flow_solver_state_checkpointed=false`を維持する。

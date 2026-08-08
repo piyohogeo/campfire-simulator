@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "phase": "phase6cw",
+  "status": "ok",
+  "timestamp_utc": "2026-08-08T09:13:58.452909+00:00",
+  "scope": {
+    "default_off": true,
+    "production_changed": false,
+    "flow_version": "110.0.0",
+    "fixed_resolution": [
+      1280,
+      720
+    ],
+    "sensitive_argument_values_excluded": true
+  },
+  "identity": {
+    "production": {
+      "app_filename": "campfire.simulator",
+      "app_name": "campfire.simulator",
+      "app_environment": "",
+      "app_version": "0.1.0",
+      "app_version_short": "0.1",
+      "build_version": "110.2.0+feature.342835.698af100.gl",
+      "kernel_version": "210.2.5+release.14036.c700af7d.gl",
+      "kit_version": "110.2.0+feature.342835.698af100.gl",
+      "platform": "windows-x86_64",
+      "is_app_external": true,
+      "is_debug_build": false
+    },
+    "derived_distinct_filename": {
+      "app_filename": "phase6cw_full_config",
+      "app_name": "phase6cw_full_config",
+      "app_environment": "",
+      "app_version": "0.1.0",
+      "app_version_short": "0.1",
+      "build_version": "110.2.0+feature.342835.698af100.gl",
+      "kernel_version": "210.2.5+release.14036.c700af7d.gl",
+      "kit_version": "110.2.0+feature.342835.698af100.gl",
+      "platform": "windows-x86_64",
+      "is_app_external": true,
+      "is_debug_build": false
+    },
+    "derived_matching_filename": {
+      "app_filename": "campfire.simulator",
+      "app_name": "campfire.simulator",
+      "app_environment": "",
+      "app_version": "0.1.0",
+      "app_version_short": "0.1",
+      "build_version": "110.2.0+feature.342835.698af100.gl",
+      "kernel_version": "210.2.5+release.14036.c700af7d.gl",
+      "kit_version": "110.2.0+feature.342835.698af100.gl",
+      "platform": "windows-x86_64",
+      "is_app_external": true,
+      "is_debug_build": false
+    },
+    "matching_fields": {
+      "app_filename": true,
+      "app_name": true,
+      "app_environment": true,
+      "app_version": true,
+      "app_version_short": true,
+      "build_version": true,
+      "kernel_version": true,
+      "kit_version": true,
+      "platform": true,
+      "is_app_external": true,
+      "is_debug_build": true
+    }
+  },
+  "runtime_equivalence": {
+    "settings_equal": true,
+    "important_extensions_equal": true,
+    "option_name_sets_equal": true
+  },
+  "timeline": {
+    "campfire_baseline_after_stops": true,
+    "campfire_baseline_retry_stops": true,
+    "matching_filename_after_plays": true,
+    "matching_filename_retry_plays": true
+  },
+  "gates": {
+    "baseline_reproduces_stop": true,
+    "three_identity_probes_completed": true,
+    "matching_filename_identity_equal": true,
+    "matching_settings_equal": true,
+    "important_extensions_equal": true,
+    "option_name_sets_equal": true,
+    "matching_filename_preserves_play": true,
+    "matching_filename_fixed_1280x720": true,
+    "stage_update_graph_complete": true,
+    "production_app_unchanged": true
+  },
+  "decision": {
+    "app_filename_or_name_explains_stop": false,
+    "public_app_identity_explains_stop": false,
+    "remaining_boundary": "root app load origin, config stack, or startup lifecycle not exposed by the matched public app identity and final enabled-extension set",
+    "timeline_continuity_qualified": false,
+    "seamless_visual_continuity_qualified": false,
+    "flow_solver_state_checkpointed": false,
+    "production_change_authorized": false
+  }
+}

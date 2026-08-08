@@ -1232,6 +1232,66 @@
             <p>editor baseへCampfire側のFlowUsd、Campfire拡張、developer bundle、menu、UI actionsを追加してextension集合を揃えても、固定1280×720でPLAYを維持しました。次に非機密のviewport・renderer・run-loop・timeline周辺だけをruntime snapshot化し、225対229 scalarから15差分を抽出しました。run-loop、auto-frame、GPU/ImGui、persistent解像度、present/tickを個別に合わせてもSTOPし、15差分を全て同時に合わせてもafter/retryは0.0秒で各1 STOPでした。単純な設定値では説明できないため、残る候補はapplication初期化順序、viewport生成時点、またはallowlist外の内部状態です。Phase 6CTは13/13 gate、標準回帰は8 process・58/58件で合格しました。<code>fillViewport=true</code>の回避策は固定captureを壊すため未採用です。productionと未合格判定は変更していません。次はproductionを触る前にderived diagnostic <code>.kit</code>で構成順序を二分探索します。動画はPhase 6COの関連映像で、Phase 6CTの根拠は13条件のevent/settings記録です。</p>
           </section>
 
+          <figure id="phase6cu-renderer-app-initialization" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6CU</h3>
+            <a href="assets/phase6/renderer_app_initialization_report.svg" aria-label="Phase 6CU root application初期化境界レポートを開く">
+              <img src="assets/phase6/renderer_app_initialization_report.svg" width="1200" height="680" alt="4個のEditor-rooted derived appがviewport frame後とretry後もPLAYを維持し、Campfire root baselineだけがSTOPすることを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>直接dependency集合と順序ではSTOPを再現しない</strong><span>10 / 10 gates · 4 derived apps PLAY/PLAY · Campfire baseline STOP/STOP · fixed 1280×720</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_timeline_continuity.mp4" data-video-poster="assets/phase6/resident_renderer_timeline_capture.png" data-video-title="Phase 6CO boundary video referenced by Phase 6CU" data-video-meta="Related Phase 6CO RTX evidence, not a direct Phase 6CU recording · Phase 6CU uses derived diagnostic app files and timeline event probes · all four derived apps remain PLAY, while this shared video only illustrates the unresolved Campfire-root boundary · 1280×720 · 10 fps · 6 s">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>root app境界の関連動画</strong><small>Phase 6CO再利用 · Phase 6CUはevent/app probe</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6cu-note-title">
+            <p class="note-label">2026-08-08 · Goal / isolation / measured result / limitation / next</p>
+            <h3 id="phase6cu-note-title">4構成ともPLAY。残るのはproduction root app初期化</h3>
+            <p>production <code>.kit</code>を変更せず、同梱Editor appのroot lifecycleを固定した派生appを4個作りました。Campfire拡張とFlowUsdをdependency先頭・末尾へ置く構成、Campfireの直接dependency集合をEditor順へ並べた構成、さらにExtensions Managerを加えた構成です。同じCamera＋Cube stage、Flow 110.0.0、全5 StageUpdate node、固定1280×720で、4構成すべてがviewport frame前・後・retry後にPLAYを維持しSTOP eventは0でした。同条件のCampfire root baselineはafter/retryともSTOPします。したがって直接dependencyの集合・位置・順序は十分条件ではなく、残る候補はproduction root固有の静的宣言適用順、生成済みversion lock、package metadata、root lifecycleです。Phase 6CUは10/10 gate、標準回帰は全8 process・58/58件（309.6秒、collapse 183.2秒）で合格しましたがtimeline/Flow場/映像連続性は未合格のままです。次はsettings sectionとgenerated lockを独立に移植し、再現する最小derived appを二分探索します。添付動画はPhase 6COの関連映像で、Phase 6CUの根拠は4構成のevent記録です。</p>
+          </section>
+
+          <figure id="phase6cv-renderer-root-config" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6CV</h3>
+            <a href="assets/phase6/renderer_root_config_report.svg" aria-label="Phase 6CV serialized root configuration境界レポートを開く">
+              <img src="assets/phase6/renderer_root_config_report.svg" width="1200" height="680" alt="静的settings、version lock、package metadata、検索パスを移植した6個のEditor-rooted appがPLAYを維持し、Campfire root baselineだけがSTOPすることを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>serialized root設定全体でもSTOPを再現しない</strong><span>11 / 11 gates · 6 derived apps PLAY/PLAY · Campfire baseline STOP/STOP · fixed 1280×720</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_timeline_continuity.mp4" data-video-poster="assets/phase6/resident_renderer_timeline_capture.png" data-video-title="Phase 6CO boundary video referenced by Phase 6CV" data-video-meta="Related Phase 6CO RTX evidence, not a direct Phase 6CV recording · Phase 6CV uses derived root-configuration files and timeline event probes · all six derived apps remain PLAY while the shared video only illustrates the unresolved Campfire-root boundary · 1280×720 · 10 fps · 6 s">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>root lifecycle境界の関連動画</strong><small>Phase 6CO再利用 · Phase 6CVはevent/config probe</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6cv-note-title">
+            <p class="note-label">2026-08-08 · Goal / isolation / measured result / limitation / next</p>
+            <h3 id="phase6cv-note-title">設定値ではなくroot app identity／lifecycleが残った</h3>
+            <p>production <code>.kit</code>を変更せず、Phase 6CUで確認したEditor rootを固定してCampfireの静的settingsと宣言順、generated version lock、package/template metadata、extension検索パスを単独・併用で移植しました。派生配置で相対検索が変わらないよう、検索パスだけは同じreleaseの<code>exts</code>と<code>extscache</code>を指す絶対パスへ等価変換しています。6構成すべてが同じCamera＋Cube stage、Flow 110.0.0、全5 StageUpdate node、固定1280×720でviewport frame前・後・retry後にPLAYを維持し、STOP eventは0でした。同条件のCampfire root baselineだけがafter/retryともSTOPします。Phase 6CVは11/11 gateに合格し、production appの生成前後SHA-256も一致しました。標準回帰も全8 process・58/58件（311.4秒、collapse 184.7秒）で合格しました。したがってserialized <code>.kit</code>宣言全体はSTOPの十分条件ではなく、残る境界はproduction root-app identityまたはconfig stackを含むroot lifecycleです。timeline、Flow場、映像連続性は未合格のままです。次は起動時app identity、root configロード元、引数とconfig stackを記録して比較します。添付動画はPhase 6COの関連映像で、Phase 6CVの根拠は6構成のevent記録です。</p>
+          </section>
+
+          <figure id="phase6cw-renderer-root-identity" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6CW</h3>
+            <a href="assets/phase6/renderer_root_identity_report.svg" aria-label="Phase 6CW public root application identity境界レポートを開く">
+              <img src="assets/phase6/renderer_root_identity_report.svg" width="1200" height="680" alt="productionと同じcampfire.simulator identityを持つ派生appがPLAYを維持し、production rootだけがSTOPすることを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>campfire.simulatorという同名identityでもPLAY</strong><span>10 / 10 gates · 11 public identity fields equal · derived PLAY/PLAY · production STOP/STOP</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_timeline_continuity.mp4" data-video-poster="assets/phase6/resident_renderer_timeline_capture.png" data-video-title="Phase 6CO boundary video referenced by Phase 6CW" data-video-meta="Related Phase 6CO RTX evidence, not a direct Phase 6CW recording · Phase 6CW compares public root identity and timeline events · the isolated matching-name app remains PLAY while the shared video only illustrates the unresolved production-root boundary · 1280×720 · 10 fps · 6 s">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>root identity境界の関連動画</strong><small>Phase 6CO再利用 · Phase 6CWはidentity/event probe</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6cw-note-title">
+            <p class="note-label">2026-08-08 · Goal / isolation / measured result / limitation / next</p>
+            <h3 id="phase6cw-note-title">同名でも差は残る。次はロード元とconfig stack</h3>
+            <p>固定SDKの公開<code>omni.kit.app.IApp</code> APIで、production root、通常名の完全設定派生root、別ディレクトリで<code>campfire.simulator.kit</code>と命名した完全設定派生rootを比較しました。同名派生rootはproductionと<code>app_filename</code>、<code>app_name</code>、environment、version、build/kernel/Kit version、platform、external/debug状態の11項目が一致し、選択settings、主要extension ID、値を伏せたoption名集合も一致しました。それでも同じCamera＋Cube stage、Flow 110.0.0、全5 StageUpdate node、固定1280×720でframe後・retry後ともPLAYを維持し、STOP eventは0でした。production root baselineだけがSTOP/STOPです。Phase 6CWは10/10 gateに合格し、production appはSHA-256で非変更を確認しました。標準suiteも8 process・58/58件合格（313.5秒、collapse coverage 185.6秒）です。したがってapp filename/nameや公開identityは原因ではなく、残る境界はrootロード元、config stack、または公開identityに現れないstartup lifecycleです。timeline、Flow場、映像連続性は未合格のままです。次は起動時config stackとextension startup順を非機密範囲で比較します。添付動画はPhase 6COの関連映像で、Phase 6CWの根拠はidentityとtimeline event記録です。開発日誌の参照整合は機械検査済みですが、in-app Browserはローカル<code>file:</code> URL policyにより実レンダリングを開けなかったため、ブラウザ表示確認は未実施です。</p>
+          </section>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1284,6 +1344,9 @@
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CM continuity audit</strong><small>40.000 mm発行前gap · timeline 0/130 PLAY · seamless continuity未合格</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CN atomic layout publication</strong><small>gap 0.0000019 mmへ改善 · timeline/Flow場/映像連続性は未合格</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CO timeline boundary audit</strong><small>明示transportでもPLAY→STOP · 境界動画を前10＋後50 frameで取得</small></p></div>
+              <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CU root app isolation</strong><small>4 derived appはPLAY/PLAY · production root初期化境界は未解決</small></p></div>
+              <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CV serialized root config</strong><small>6 derived appはPLAY/PLAY · root identity／lifecycle境界は未解決</small></p></div>
+              <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CW public root identity</strong><small>同名identityでもderived PLAY/PLAY · load origin／config stack境界は未解決</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6BB backend lifecycle</strong><small>fresh export · conflict reject · transactional rollback · rebuild · shutdown</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Default timing path</strong><small>homogeneous fast · timers off · 10.4678 s scenario</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>

@@ -1,5 +1,11 @@
 # Changelog
 
+- Added Phase 6CW public root-identity isolation: an isolated derived app named `campfire.simulator` matches the production public app identity, selected settings, important extension IDs, and non-sensitive option-name set but remains PLAY after the viewport frame and retry.
+- Kept production unchanged and narrowed the repeated STOP boundary beyond app filename/name to root load origin, config stack, or startup lifecycle not exposed by the matched public identity.
+- Added Phase 6CV serialized root-configuration isolation: six Editor-rooted variants covering static settings, generated version lock, package/template metadata, and extension search paths all remain PLAY after the first viewport frame and retry at fixed 1280x720.
+- Kept the production app unchanged and narrowed the repeated STOP boundary to production root-app identity or lifecycle outside the serialized `.kit` declarations; continuity and Flow-field checkpoint qualifications remain false.
+- Added Phase 6CU derived-app initialization isolation: four Editor-rooted variants covering head/tail declarations, Campfire's direct dependency set and order, and the Extensions Manager dependency all remain PLAY after the first viewport frame and retry at fixed 1280x720.
+- Kept the production app unchanged and narrowed the repeated STOP boundary to production root-app initialization, including static declaration application, the generated version lock, package metadata, or root lifecycle.
 - Added Phase 6CT application-boundary isolation: a matched editor-base extension set remains PLAY at fixed 1280x720, while matching all 15 non-sensitive runtime-settings differences in the Campfire app still reproduces STOP on both the first and retry playback.
 - Kept the `fillViewport=true` workaround unadopted and narrowed the remaining boundary to application initialization order, viewport creation timing, or internal state outside the settings allowlist.
 - Added Phase 6CS offline scene and application-boundary isolation: Flow, PhysX, Phase 3 content, Resident ownership, headless mode, FlowUsd alone, the inactive Campfire extension, async renderer init, and fixed viewport mode alone are not sufficient for the repeated post-frame timeline STOP.

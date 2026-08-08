@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "phase": "phase6cu",
+  "status": "ok",
+  "timestamp_utc": "2026-08-08T08:49:25.963083+00:00",
+  "scope": {
+    "default_off": true,
+    "production_changed": false,
+    "scene": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6ct-campfire-all-known-settings\\phase3_point_application_minimal_camera.usda",
+    "flow_version": "110.0.0",
+    "fixed_resolution": [
+      1280,
+      720
+    ]
+  },
+  "campfire_baseline": {
+    "after_stops": true,
+    "retry_stops": true
+  },
+  "variants": [
+    {
+      "name": "editor_declared_head",
+      "base_app": "C:\\packman-repo\\chk\\kit-kernel\\110.2.0+feature.windows-x86_64.release\\apps\\omni.app.editor.base.kit",
+      "base_sha256": "bb1399a71c758abbaa8feca84fba892ad67b1cc5f12a904a26e33e6efa0a50d8",
+      "derived_sha256": "c630104071944f82e6d33e2e3fcbf5fe23436df6dd266daa96f351143299b186",
+      "production_changed": false,
+      "resolution": [
+        1280,
+        720
+      ],
+      "viewport_frame_completed": true,
+      "before_plays": true,
+      "after_plays": true,
+      "retry_plays": true,
+      "stage_update_node_count": 5
+    },
+    {
+      "name": "editor_declared_tail",
+      "base_app": "C:\\packman-repo\\chk\\kit-kernel\\110.2.0+feature.windows-x86_64.release\\apps\\omni.app.editor.base.kit",
+      "base_sha256": "bb1399a71c758abbaa8feca84fba892ad67b1cc5f12a904a26e33e6efa0a50d8",
+      "derived_sha256": "74d269fb95bd62aca85f7120dcfac3b6a522c68b6276a275ac3f9f93608f5454",
+      "production_changed": false,
+      "resolution": [
+        1280,
+        720
+      ],
+      "viewport_frame_completed": true,
+      "before_plays": true,
+      "after_plays": true,
+      "retry_plays": true,
+      "stage_update_node_count": 5
+    },
+    {
+      "name": "campfire_editor_order",
+      "base_app": "C:\\packman-repo\\chk\\kit-kernel\\110.2.0+feature.windows-x86_64.release\\apps\\omni.app.editor.base.kit",
+      "base_sha256": "bb1399a71c758abbaa8feca84fba892ad67b1cc5f12a904a26e33e6efa0a50d8",
+      "derived_sha256": "2574bb8cd8a3fca8ba668c8e2dc80b09605c2a8fa2d18f5a555af0fbe772157f",
+      "production_changed": false,
+      "resolution": [
+        1280,
+        720
+      ],
+      "viewport_frame_completed": true,
+      "before_plays": true,
+      "after_plays": true,
+      "retry_plays": true,
+      "stage_update_node_count": 5
+    },
+    {
+      "name": "campfire_editor_order_window_extensions",
+      "base_app": "C:\\packman-repo\\chk\\kit-kernel\\110.2.0+feature.windows-x86_64.release\\apps\\omni.app.editor.base.kit",
+      "base_sha256": "bb1399a71c758abbaa8feca84fba892ad67b1cc5f12a904a26e33e6efa0a50d8",
+      "derived_sha256": "7aa8905ec864dc8b517ac55b3905663814130cde4b39c5bcc9f07f015329c6a3",
+      "production_changed": false,
+      "resolution": [
+        1280,
+        720
+      ],
+      "viewport_frame_completed": true,
+      "before_plays": true,
+      "after_plays": true,
+      "retry_plays": true,
+      "stage_update_node_count": 5
+    }
+  ],
+  "gates": {
+    "baseline_reproduces_stop": true,
+    "four_variants_measured": true,
+    "all_viewport_frames_completed": true,
+    "all_fixed_1280x720": true,
+    "all_before_cases_play": true,
+    "all_after_cases_play": true,
+    "all_retry_cases_play": true,
+    "all_stage_update_graphs_complete": true,
+    "production_app_unchanged": true,
+    "production_hash_stable": true
+  },
+  "decision": {
+    "direct_dependency_set_explains_stop": false,
+    "direct_dependency_declaration_position_explains_stop": false,
+    "window_extensions_dependency_explains_stop": false,
+    "remaining_boundary": "production root-app initialization: static declaration order, generated version lock, package metadata, or root lifecycle",
+    "production_change_authorized": false
+  }
+}

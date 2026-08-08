@@ -20,6 +20,7 @@ New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
 & $kit @(
     $campfireApp,
     "--no-window",
+    "--/app/file/ignoreUnsavedOnExit=true",
     "--/app/quitAfter=120",
     "--/app/settings/persistent=0",
     "--/app/settings/loadUserConfig=0",
@@ -47,6 +48,7 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     "omni.kit.menu.common",
     "--enable",
     "omni.kit.ui.actions",
+    "--/app/file/ignoreUnsavedOnExit=true",
     "--/app/quitAfter=120",
     "--/app/settings/persistent=0",
     "--/app/settings/loadUserConfig=0",

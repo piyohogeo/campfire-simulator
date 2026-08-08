@@ -41,6 +41,7 @@ New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
 & $kit @(
     $app,
     "--no-window",
+    "--/app/file/ignoreUnsavedOnExit=true",
     "--/app/quitAfter=120",
     "--/app/settings/persistent=0",
     "--/app/settings/loadUserConfig=0",
@@ -56,6 +57,7 @@ New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 $probeArgs = @(
     $probeAppPath,
+    "--/app/file/ignoreUnsavedOnExit=true",
     "--/app/quitAfter=900",
     "--/app/settings/persistent=0",
     "--/app/settings/loadUserConfig=0",

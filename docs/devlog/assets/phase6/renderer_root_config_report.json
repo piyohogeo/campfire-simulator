@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "phase": "phase6cv",
+  "status": "ok",
+  "timestamp_utc": "2026-08-08T09:10:43.057307+00:00",
+  "scope": {
+    "default_off": true,
+    "production_changed": false,
+    "scene": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6ct-campfire-all-known-settings\\phase3_point_application_minimal_camera.usda",
+    "flow_version": "110.0.0",
+    "fixed_resolution": [
+      1280,
+      720
+    ],
+    "root_app": "editor"
+  },
+  "campfire_baseline": {
+    "after_stops": true,
+    "retry_stops": true
+  },
+  "variants": [
+    {
+      "name": "all_static",
+      "settings": true,
+      "generated_lock": false,
+      "package_metadata": false,
+      "extension_search_paths": false,
+      "resolution": [
+        1280,
+        720
+      ],
+      "viewport_frame_completed": true,
+      "before_plays": true,
+      "after_plays": true,
+      "retry_plays": true,
+      "stage_update_node_count": 5,
+      "production_changed": false
+    },
+    {
+      "name": "lock_only",
+      "settings": false,
+      "generated_lock": true,
+      "package_metadata": false,
+      "extension_search_paths": false,
+      "resolution": [
+        1280,
+        720
+      ],
+      "viewport_frame_completed": true,
+      "before_plays": true,
+      "after_plays": true,
+      "retry_plays": true,
+      "stage_update_node_count": 5,
+      "production_changed": false
+    },
+    {
+      "name": "static_and_lock",
+      "settings": true,
+      "generated_lock": true,
+      "package_metadata": false,
+      "extension_search_paths": false,
+      "resolution": [
+        1280,
+        720
+      ],
+      "viewport_frame_completed": true,
+      "before_plays": true,
+      "after_plays": true,
+      "retry_plays": true,
+      "stage_update_node_count": 5,
+      "production_changed": false
+    },
+    {
+      "name": "package_only",
+      "settings": false,
+      "generated_lock": false,
+      "package_metadata": true,
+      "extension_search_paths": false,
+      "resolution": [
+        1280,
+        720
+      ],
+      "viewport_frame_completed": true,
+      "before_plays": true,
+      "after_plays": true,
+      "retry_plays": true,
+      "stage_update_node_count": 5,
+      "production_changed": false
+    },
+    {
+      "name": "static_lock_package",
+      "settings": true,
+      "generated_lock": true,
+      "package_metadata": true,
+      "extension_search_paths": false,
+      "resolution": [
+        1280,
+        720
+      ],
+      "viewport_frame_completed": true,
+      "before_plays": true,
+      "after_plays": true,
+      "retry_plays": true,
+      "stage_update_node_count": 5,
+      "production_changed": false
+    },
+    {
+      "name": "full_config_absolute_paths",
+      "settings": true,
+      "generated_lock": true,
+      "package_metadata": true,
+      "extension_search_paths": true,
+      "resolution": [
+        1280,
+        720
+      ],
+      "viewport_frame_completed": true,
+      "before_plays": true,
+      "after_plays": true,
+      "retry_plays": true,
+      "stage_update_node_count": 5,
+      "production_changed": false
+    }
+  ],
+  "gates": {
+    "baseline_reproduces_stop": true,
+    "six_variants_measured": true,
+    "all_viewport_frames_completed": true,
+    "all_fixed_1280x720": true,
+    "all_before_cases_play": true,
+    "all_after_cases_play": true,
+    "all_retry_cases_play": true,
+    "all_stage_update_graphs_complete": true,
+    "production_app_unchanged": true,
+    "production_hash_stable": true,
+    "complete_root_config_variant_measured": true
+  },
+  "verification": {
+    "standard_test_processes": 8,
+    "standard_test_cases": 58,
+    "standard_test_passed": true,
+    "standard_test_seconds": 311.4,
+    "collapse_coverage_seconds": 184.7,
+    "browser_render_check": "blocked_by_local_file_url_policy",
+    "static_html_asset_check": true
+  },
+  "decision": {
+    "static_settings_explain_stop": false,
+    "generated_version_lock_explains_stop": false,
+    "package_metadata_explains_stop": false,
+    "complete_serialized_root_config_explains_stop": false,
+    "remaining_boundary": "production root-app identity and root lifecycle outside the serialized dependency, settings, version-lock, package, template, and extension-search-path declarations",
+    "timeline_continuity_qualified": false,
+    "seamless_visual_continuity_qualified": false,
+    "flow_solver_state_checkpointed": false,
+    "production_change_authorized": false
+  }
+}
