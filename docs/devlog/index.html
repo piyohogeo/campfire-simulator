@@ -1079,9 +1079,9 @@
             </a>
             <figcaption>
               <div><strong>Known defect reproduced · no false continuity claim</strong><span>14 / 14 diagnostic gates · pre-publish gap 40.000 mm · post-publish 0.0000019 mm · timeline playing 0 / 130 samples</span></div>
-              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_point_continuity.mp4" data-video-poster="assets/phase6/resident_point_continuity_frame.png" data-video-title="Phase 6CM unresolved Point/Flow continuity diagnostic" data-video-meta="Known defect evidence · default-off diagnostic · 720 Point samples · revision 710/710/710 · active block peak 459 · 60/60 unique RTX frames · timeline stopped in all 130 telemetry samples · smooth edit and Flow-field recovery remain NOT QUALIFIED · 1280×720 · 10 fps · 6 s">
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_point_continuity.mp4" data-video-poster="assets/phase6/resident_point_continuity_frame.png" data-video-title="Phase 6CM post-recovery steady segment" data-video-meta="Post-recovery segment only · revisions 651–710 · the layout edit and revision 300→301 boundary are NOT in this clip · 720 Point samples · active block peak 459 · timeline stopped in all 130 telemetry samples · seamless continuity remains NOT QUALIFIED · 1280×720 · 10 fps · 6 s">
                 <span class="video-trigger-icon" aria-hidden="true"></span>
-                <span><strong>未解決の不連続を記録した実測動画</strong><small>6秒 · 実RTX 60フレーム · 成功映像ではありません</small></span>
+                <span><strong>境界後の安定区間を記録した実測動画</strong><small>6秒 · revision 651–710 · 問題の瞬間は含みません</small></span>
               </button>
             </figcaption>
           </figure>
@@ -1089,7 +1089,7 @@
           <section class="note caution" aria-labelledby="phase6cm-note-title">
             <p class="note-label">2026-08-08 · Goal / implementation / measured result / known defect / next</p>
             <h3 id="phase6cm-note-title">revisionが連続していても、同一フレームの薪・Point・Flowは連続とは限らない</h3>
-            <p>既存CJ〜CLの成功表現を訂正し、<code>unresolved_defect</code>として再分類しました。診断では各薪world originと360点群の重心を130回比較しています。layout command後、薪は新位置なのにPoint配列は旧位置のままで40.000 mmずれ、次のResident publication後に0.0000019 mmまで一致しました。つまりlayout確定とPoint USD発行の間に不整合状態が露出しています。また全130サンプルでtimelineは停止しており、既存動画は連続PLAYを証明していません。revision 710/710/710、active block 459、固有60フレームは維持されましたが、これらを映像連続性の合格条件にはしません。次はtimeline終端・発行同期と、stage replacement時のFlow場再初期化を分離して修正します。</p>
+            <p>既存CJ〜CLの成功表現を訂正し、<code>unresolved_defect</code>として再分類しました。診断では各薪world originと360点群の重心を130回比較しています。layout command後、薪は新位置なのにPoint配列は旧位置のままで40.000 mmずれ、次のResident publication後に0.0000019 mmまで一致しました。つまりlayout確定とPoint USD発行の間に不整合状態が露出しています。また全130サンプルでtimelineは停止していました。添付動画はrevision 651〜710の境界後安定区間だけで、layout editとrevision 300→301の瞬間を含みません。数値診断と動画の証明範囲を混同せず、映像連続性は未合格とします。</p>
           </section>
 
           <figure id="phase6cn-resident-point-continuity-fix" class="capture-card">
@@ -1099,9 +1099,9 @@
             </a>
             <figcaption>
               <div><strong>Atomic layout publication qualified · visual continuity still unresolved</strong><span>16 / 16 bounded gates · pre-publish gap 0.0000019 mm · Resident revision held at 300 · timeline playing 0 / 130 samples</span></div>
-              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_point_continuity_fix.mp4" data-video-poster="assets/phase6/resident_point_continuity_fix_frame.png" data-video-title="Phase 6CN atomic stopped-layout publication evidence" data-video-meta="Partial fix evidence · default-off Point path · 720 Point samples · layout revision 2 · Resident revision 710/710/710 · active block peak 439 · 60/60 unique RTX frames · PLAY is followed by STOP · Flow-field and seamless visual continuity remain NOT QUALIFIED · 1280×720 · 10 fps · 6 s">
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_point_continuity_fix.mp4" data-video-poster="assets/phase6/resident_point_continuity_fix_frame.png" data-video-title="Phase 6CN post-fix steady segment" data-video-meta="Post-fix steady segment only · revisions 651–710 · the atomic layout transaction and revision 300→301 boundary are NOT in this clip · 720 Point samples · active block peak 439 · PLAY is followed by STOP · Flow-field continuity remains NOT QUALIFIED · 1280×720 · 10 fps · 6 s">
                 <span class="video-trigger-icon" aria-hidden="true"></span>
-                <span><strong>layout原子発行の実測動画</strong><small>6秒 · 実RTX 60フレーム · 映像連続性の合格動画ではありません</small></span>
+                <span><strong>原子発行後の安定区間を記録した動画</strong><small>6秒 · revision 651–710 · transaction境界は含みません</small></span>
               </button>
             </figcaption>
           </figure>
@@ -1109,7 +1109,47 @@
           <section class="note caution" aria-labelledby="phase6cn-note-title">
             <p class="note-label">2026-08-08 · Goal / implementation / measured result / known defect / next</p>
             <h3 id="phase6cn-note-title">40 mmの状態露出は解消、Timeline停止とFlow場再生成は別件として継続</h3>
-            <p>停止中layout変更でnative配置、既存<code>pointPositions</code>、事前定義済み<code>campfire:layoutRevision</code>をrollback可能な1 transactionとして公開します。layout-only transactionでは木材snapshot revisionを進めず、実測でもResident revision 300のままlayout revisionだけが1→2になりました。最初の木材発行前gapは40.000 mmから0.0000019 mmへ減り、130 sampleすべてが2 mm許容内です。一方、Flow/PhysXのC++境界はPLAY直後にSTOPを発行し、timelineは0/130 PLAYでした。Flow NanoVDB場の移動・checkpoint・stage recoveryも未実装です。したがって合格範囲は「停止中layoutが次tick前にPointへ見える」ことだけで、炎の滑らかな連続性はまだ主張しません。release build、既定OFF Phase 0、全8 process・58/58回帰は合格しました。次はPLAY→STOP発行境界とPoint移動時のFlow resetを分離して調査します。</p>
+            <p>停止中layout変更でnative配置、既存<code>pointPositions</code>、事前定義済み<code>campfire:layoutRevision</code>をrollback可能な1 transactionとして公開します。layout-only transactionでは木材snapshot revisionを進めず、実測でもResident revision 300のままlayout revisionだけが1→2になりました。最初の木材発行前gapは40.000 mmから0.0000019 mmへ減り、130 sampleすべてが2 mm許容内です。一方、Flow/PhysX境界はPLAY直後にSTOPを発行しました。添付動画はrevision 651〜710の後半区間だけでtransaction境界を撮影していないため、原子発行の合格根拠は数値telemetryであり動画ではありません。Flow場と映像連続性は引き続き未合格です。</p>
+          </section>
+
+          <figure id="phase6co-resident-timeline-continuity" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6CO</h3>
+            <a href="assets/phase6/resident_timeline_continuity_report.svg" aria-label="Phase 6CO Point Flow timeline境界監査レポートを開く">
+              <img src="assets/phase6/resident_timeline_continuity_report.svg" width="1200" height="680" alt="明示的なtimeline範囲、auto update、looping、commitでもPLAY直後にSTOPする一方、編集前10フレームと編集後50フレームを収録したことを示す監査SVG図">
+            </a>
+            <figcaption>
+              <div><strong>Transport configuration rejected as root cause</strong><span>23 / 23 audit gates · PLAY→STOP twice at 0.0 s · 10 pre-edit + 50 post-edit frames · Point alignment ≤ 1.86 nm</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_timeline_continuity.mp4" data-video-poster="assets/phase6/resident_timeline_continuity_frame.png" data-video-title="Phase 6CO layout boundary evidence" data-video-meta="Actual boundary clip · frames 0–9 before the edit · frames 10–59 after the 40 mm layout edit · Resident revision 350 at layout-only transaction · 760/760/760 final revisions · active block peak 475 · timeline remains stopped · Flow solver-field continuity NOT QUALIFIED · 1280×720 · 10 fps · 6 s">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>編集境界を実際にまたぐ動画</strong><small>6秒 · 前10＋後50フレーム · 1.0秒地点が境界</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6co-note-title">
+            <p class="note-label">2026-08-08 · Goal / experiments / measured result / known defect / next</p>
+            <h3 id="phase6co-note-title">PLAY→STOPはrange・auto update・looping・commit不足ではない</h3>
+            <p>同じUSDを単独で開くprobeではPLAYを維持できましたが、通常Resident Point所有経路では、global 0–240秒、session timeCode 0–1200、auto update ON、looping ON、明示<code>commit()</code>を設定しても、初回とlayout再開の両方でPLAY直後にSTOPしました。180 telemetry sampleすべてが0.0秒・stoppedで、Point/Flow stage-update統合側の未解決境界として再現しました。動画はrevision 341〜350の10フレームと、40 mm編集直後revision 351〜400の50フレームを連結せず連続取得し、1.0秒地点に実際の境界を含みます。Point重心は最大1.86 nm以内ですが、Flow solver場そのものの移流・再配置は未計測なので映像連続性は未合格です。次はSTOP要求元のstage-update subscriberを切り分けます。</p>
+          </section>
+
+          <figure id="phase6cp-resident-stage-update-boundary" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6CP</h3>
+            <a href="assets/phase6/resident_stage_update_boundary_report.svg" aria-label="Phase 6CP StageUpdate境界切り分けレポートを開く">
+              <img src="assets/phase6/resident_stage_update_boundary_report.svg" width="1200" height="680" alt="5つのStageUpdateノードをすべて有効にした保存済みstage、Resident owner、対話lifecycleがPLAYを維持し、Point revisionが0から4へ進んだことを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>All-enabled StageUpdate baseline remains PLAY</strong><span>9 / 9 gates · 5 identical nodes · plain stage PLAY · owner PLAY · interactive revision 0→4 · 0 STOP</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_timeline_continuity.mp4" data-video-poster="assets/phase6/resident_timeline_continuity_frame.png" data-video-title="Phase 6CO capture-harness boundary referenced by Phase 6CP" data-video-meta="Related Phase 6CO evidence, not a Phase 6CP interactive recording · frames 0–9 before the edit · frames 10–59 after the edit · PLAY→STOP occurs only in this RTX capture qualification path so far · Phase 6CP renderer-disabled interactive playback remains PLAY and advances revision 0→4 · 1280×720 · 10 fps · 6 s">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>残ったcapture境界の関連動画</strong><small>Phase 6CO再利用 · Phase 6CP対話経路の直接映像ではありません</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6cp-note-title">
+            <p class="note-label">2026-08-08 · Goal / isolation / measured result / limitation / next</p>
+            <h3 id="phase6cp-note-title">STOPはResident owner一般ではなく、現時点ではRTX capture qualificationに限定</h3>
+            <p>公開APIでStageUpdate graphを列挙すると、normal/benchmarkとも<code>PhysX</code>、<code>OmniGraph</code>、<code>OmniGraphAttach</code>、<code>PhysXFabric</code>、<code>FlowUsd</code>の同じ5ノードでした。全ノード有効のまま、保存済みPoint stage単独、productionのbackend・adapter・sidecar・owner合成、captureを外したextension対話lifecycleの3経路がすべてPLAYを維持しました。対話経路は0.8秒まで進み、Point revisionも0→4へ増えたためownerが実際にstep/publicationしたことを確認しています。再現しないbaselineでノードを無効化してもSTOP要求元を特定できないため、1ノードずつのdisable matrixはまだ開始しません。Phase 6COのRTX capture経路だけがSTOPを再現しており、次はrenderer有効の対話経路とcapture callbackを分離して再現baselineを作ります。なおrenderer有効のproduction対話連続性とFlow solver場連続性は未合格のままです。</p>
           </section>
 
           <div class="story-grid">
@@ -1163,6 +1203,7 @@
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CL transform coalescing</strong><small>observer集約は合格 · revision連続性≠映像連続性</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CM continuity audit</strong><small>40.000 mm発行前gap · timeline 0/130 PLAY · seamless continuity未合格</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CN atomic layout publication</strong><small>gap 0.0000019 mmへ改善 · timeline/Flow場/映像連続性は未合格</small></p></div>
+              <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CO timeline boundary audit</strong><small>明示transportでもPLAY→STOP · 境界動画を前10＋後50 frameで取得</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6BB backend lifecycle</strong><small>fresh export · conflict reject · transactional rollback · rebuild · shutdown</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Default timing path</strong><small>homogeneous fast · timers off · 10.4678 s scenario</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>

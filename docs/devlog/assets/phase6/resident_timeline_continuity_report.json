@@ -1,0 +1,7580 @@
+{
+  "schema_version": 1,
+  "status": "ok",
+  "phase": "phase6co",
+  "timestamp_utc": "2026-08-08T05:02:12.453500+00:00",
+  "scene": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6co-final\\scene\\phase3_point_application.usda",
+  "scope": {
+    "flow_version": "110.0.0",
+    "default_off": true,
+    "normal_application": true,
+    "stage_built_before_connection": true,
+    "layout_recovery_qualification": false,
+    "command_queue_qualification": false,
+    "transform_notice_qualification": false,
+    "continuity_qualification": false,
+    "continuity_fix_qualification": false,
+    "timeline_continuity_qualification": true,
+    "point_count": 720,
+    "surface_points_per_log": 360,
+    "log_count": 2,
+    "emitter_count": 1,
+    "canonical_scene_changed": false
+  },
+  "lifecycle": {
+    "owner": {
+      "start_count": 2,
+      "stop_count": 2,
+      "step_count": 760,
+      "layout_replace_count": 1,
+      "closed": false,
+      "session": {
+        "state": "stopped",
+        "pending_revision": null,
+        "pending_sidecar_revision": null,
+        "step_count": 760,
+        "publish_count": 760,
+        "publish_failure_count": 0,
+        "retry_count": 0,
+        "start_count": 2,
+        "stop_count": 2,
+        "consumer_replace_count": 0,
+        "backend": {
+          "active": true,
+          "initial_revision": 0,
+          "initial_tick": -1,
+          "revision": 760,
+          "tick": 759,
+          "step_count": 760,
+          "export_count": 0,
+          "log_count": 2,
+          "cells_per_log": 1152,
+          "library_path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6co-final\\native-build\\campfire_wood_native.dll",
+          "abi_version": 1,
+          "msvc_version": 1939,
+          "msvc_full_version": 193933523
+        },
+        "adapter": {
+          "active": false,
+          "closed": false,
+          "revision": 760,
+          "publish_count": 760,
+          "start_count": 2,
+          "stop_count": 2,
+          "initial_revision": 0,
+          "owner_thread_id": 41876,
+          "transaction_profiling_enabled": false,
+          "transaction_profile_count": 0,
+          "lightweight_tail_profiling_enabled": false,
+          "lightweight_tail_profile_count": 0,
+          "handle_cache_enabled": true,
+          "cached_attribute_count": 19,
+          "prim_cache_hit_count": 759,
+          "prim_cache_miss_count": 1,
+          "attribute_cache_hit_count": 7263,
+          "attribute_cache_miss_count": 19,
+          "lightweight_commit_enabled": true,
+          "lightweight_notice_coalescing_enabled": true,
+          "lightweight_notice_tracking_enabled": false,
+          "lightweight_notice_count": 0,
+          "lightweight_notice_accepted_revision_count": 0,
+          "lightweight_notice_rejected_count": 0,
+          "lightweight_notice_publication_count": 0,
+          "lightweight_notices_per_publication_minimum": 0,
+          "lightweight_notices_per_publication_maximum": 0,
+          "lightweight_commit_count": 759,
+          "lightweight_failure_count": 0,
+          "lightweight_recovery_count": 0,
+          "skip_unchanged_derived_enabled": true,
+          "lightweight_write_count": 7263,
+          "skipped_unchanged_write_count": 7158,
+          "faulted": false
+        },
+        "sidecar": {
+          "revision": 760,
+          "layout_revision": 2,
+          "committed_layout_revision": 2,
+          "point_count": 720,
+          "prepare_count": 760,
+          "publish_count": 760,
+          "rollback_count": 0,
+          "failure_count": 0,
+          "layout_replace_count": 1,
+          "closed": false
+        }
+      },
+      "orchestrator": {
+        "state": "idle",
+        "attempt_count": 0,
+        "success_count": 0,
+        "failure_count": 0,
+        "recovery_retry_count": 0,
+        "drain_updates": 4,
+        "observed_events": [],
+        "attached_stage_available": false,
+        "last_error": null,
+        "last_result": null
+      },
+      "layout_revision": 2,
+      "layout_origins": [
+        [
+          0.0,
+          -0.30000000000000004,
+          0.18
+        ],
+        [
+          0.0,
+          0.34,
+          0.18
+        ]
+      ],
+      "layout_axes": [
+        0,
+        0
+      ],
+      "log_ids": [
+        "Log_00",
+        "Log_01"
+      ]
+    },
+    "close": {
+      "already_closed": false,
+      "session": {
+        "already_closed": false,
+        "pending_discarded": false,
+        "backend": {
+          "active": false,
+          "initial_revision": 0,
+          "initial_tick": -1,
+          "revision": 760,
+          "tick": 759,
+          "step_count": 760,
+          "export_count": 1,
+          "log_count": 2,
+          "cells_per_log": 1152,
+          "library_path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6co-final\\native-build\\campfire_wood_native.dll",
+          "abi_version": 1,
+          "msvc_version": 1939,
+          "msvc_full_version": 193933523,
+          "already_closed": false,
+          "export_ms": 2.9993000061949715
+        },
+        "adapter_closed": true,
+        "sidecar_closed": true
+      }
+    },
+    "stage_event_subscription_installed": true,
+    "timeline_paused_after_run": true,
+    "layout_refresh": {
+      "changed": true,
+      "revision": 2
+    },
+    "layout_changed_point_count": 360,
+    "recovery": null,
+    "commands": [
+      {
+        "sequence": 1,
+        "command": "refresh_layout",
+        "source": "headless",
+        "status": "rejected",
+        "code": "unsupported_layout",
+        "message": "Resident Point native layout requires cardinal XY logs",
+        "layout_revision": null,
+        "layout_changed": null,
+        "accepted": false
+      },
+      {
+        "sequence": 2,
+        "command": "refresh_layout",
+        "source": "headless",
+        "status": "accepted",
+        "code": "layout_replaced",
+        "message": "Stopped log layout was committed.",
+        "layout_revision": 2,
+        "layout_changed": true,
+        "accepted": true
+      }
+    ],
+    "command_queue": {
+      "closed": false,
+      "pending_count": 0,
+      "retained_result_count": 2,
+      "request_count": 2,
+      "submitted_count": 2,
+      "coalesced_submission_count": 0,
+      "executed_count": 2,
+      "rejected_count": 1,
+      "next_sequence": 3,
+      "owner_thread_id": 41876
+    },
+    "transform_observer": null,
+    "transform_batches": null,
+    "alignment_before_first_publication": {
+      "log_origins_m": [
+        [
+          0.0,
+          -0.30000000000000004,
+          0.18
+        ],
+        [
+          0.0,
+          0.34,
+          0.18
+        ]
+      ],
+      "point_centroids_m": [
+        [
+          0.0,
+          -0.30000000149011613,
+          0.18000000110930867
+        ],
+        [
+          0.0,
+          0.34000000009934106,
+          0.18000000110930867
+        ]
+      ],
+      "error_m": [
+        1.8576898775928303e-09,
+        1.1137478945596823e-09
+      ],
+      "max_error_m": 1.8576898775928303e-09,
+      "points_per_log": 360,
+      "point_count": 720
+    },
+    "alignment_samples": [
+      {
+        "sample": 0,
+        "capture_frame": 0,
+        "capture_segment": "before_layout_edit",
+        "resident_revision": 341,
+        "resident_tick": 340,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 25,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.34,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.34000000009934106,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.1137478945596823e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.1137478945596823e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 1,
+        "capture_frame": 1,
+        "capture_segment": "before_layout_edit",
+        "resident_revision": 342,
+        "resident_tick": 341,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 44,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.34,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.34000000009934106,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.1137478945596823e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.1137478945596823e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 2,
+        "capture_frame": 2,
+        "capture_segment": "before_layout_edit",
+        "resident_revision": 343,
+        "resident_tick": 342,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 52,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.34,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.34000000009934106,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.1137478945596823e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.1137478945596823e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 3,
+        "capture_frame": 3,
+        "capture_segment": "before_layout_edit",
+        "resident_revision": 344,
+        "resident_tick": 343,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 58,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.34,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.34000000009934106,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.1137478945596823e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.1137478945596823e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 4,
+        "capture_frame": 4,
+        "capture_segment": "before_layout_edit",
+        "resident_revision": 345,
+        "resident_tick": 344,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 72,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.34,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.34000000009934106,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.1137478945596823e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.1137478945596823e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 5,
+        "capture_frame": 5,
+        "capture_segment": "before_layout_edit",
+        "resident_revision": 346,
+        "resident_tick": 345,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 80,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.34,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.34000000009934106,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.1137478945596823e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.1137478945596823e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 6,
+        "capture_frame": 6,
+        "capture_segment": "before_layout_edit",
+        "resident_revision": 347,
+        "resident_tick": 346,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 94,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.34,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.34000000009934106,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.1137478945596823e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.1137478945596823e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 7,
+        "capture_frame": 7,
+        "capture_segment": "before_layout_edit",
+        "resident_revision": 348,
+        "resident_tick": 347,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 98,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.34,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.34000000009934106,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.1137478945596823e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.1137478945596823e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 8,
+        "capture_frame": 8,
+        "capture_segment": "before_layout_edit",
+        "resident_revision": 349,
+        "resident_tick": 348,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 113,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.34,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.34000000009934106,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.1137478945596823e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.1137478945596823e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 9,
+        "capture_frame": 9,
+        "capture_segment": "before_layout_edit",
+        "resident_revision": 350,
+        "resident_tick": 349,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 110,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.34,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.34000000009934106,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.1137478945596823e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.1137478945596823e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 0,
+        "resident_revision": 351,
+        "resident_tick": 350,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 122,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720,
+        "capture_frame": 10,
+        "capture_segment": "after_layout_edit"
+      },
+      {
+        "sample": 11,
+        "capture_frame": 11,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 352,
+        "resident_tick": 351,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 141,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 12,
+        "capture_frame": 12,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 353,
+        "resident_tick": 352,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 148,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 13,
+        "capture_frame": 13,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 354,
+        "resident_tick": 353,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 152,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 14,
+        "capture_frame": 14,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 355,
+        "resident_tick": 354,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 150,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 15,
+        "capture_frame": 15,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 356,
+        "resident_tick": 355,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 163,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 16,
+        "capture_frame": 16,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 357,
+        "resident_tick": 356,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 176,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 17,
+        "capture_frame": 17,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 358,
+        "resident_tick": 357,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 194,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 18,
+        "capture_frame": 18,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 359,
+        "resident_tick": 358,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 192,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 19,
+        "capture_frame": 19,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 360,
+        "resident_tick": 359,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 206,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 20,
+        "capture_frame": 20,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 361,
+        "resident_tick": 360,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 216,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 21,
+        "capture_frame": 21,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 362,
+        "resident_tick": 361,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 230,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 22,
+        "capture_frame": 22,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 363,
+        "resident_tick": 362,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 236,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 23,
+        "capture_frame": 23,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 364,
+        "resident_tick": 363,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 227,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 24,
+        "capture_frame": 24,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 365,
+        "resident_tick": 364,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 213,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 25,
+        "capture_frame": 25,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 366,
+        "resident_tick": 365,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 201,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 26,
+        "capture_frame": 26,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 367,
+        "resident_tick": 366,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 189,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 27,
+        "capture_frame": 27,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 368,
+        "resident_tick": 367,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 200,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 28,
+        "capture_frame": 28,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 369,
+        "resident_tick": 368,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 181,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 29,
+        "capture_frame": 29,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 370,
+        "resident_tick": 369,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 197,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 30,
+        "capture_frame": 30,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 371,
+        "resident_tick": 370,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 210,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 31,
+        "capture_frame": 31,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 372,
+        "resident_tick": 371,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 204,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 32,
+        "capture_frame": 32,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 373,
+        "resident_tick": 372,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 210,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 33,
+        "capture_frame": 33,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 374,
+        "resident_tick": 373,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 230,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 34,
+        "capture_frame": 34,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 375,
+        "resident_tick": 374,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 202,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 35,
+        "capture_frame": 35,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 376,
+        "resident_tick": 375,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 206,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 36,
+        "capture_frame": 36,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 377,
+        "resident_tick": 376,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 221,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 37,
+        "capture_frame": 37,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 378,
+        "resident_tick": 377,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 226,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 38,
+        "capture_frame": 38,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 379,
+        "resident_tick": 378,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 244,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 39,
+        "capture_frame": 39,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 380,
+        "resident_tick": 379,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 241,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 40,
+        "capture_frame": 40,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 381,
+        "resident_tick": 380,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 227,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 41,
+        "capture_frame": 41,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 382,
+        "resident_tick": 381,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 243,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 42,
+        "capture_frame": 42,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 383,
+        "resident_tick": 382,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 245,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 43,
+        "capture_frame": 43,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 384,
+        "resident_tick": 383,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 245,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 44,
+        "capture_frame": 44,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 385,
+        "resident_tick": 384,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 270,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 45,
+        "capture_frame": 45,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 386,
+        "resident_tick": 385,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 271,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 46,
+        "capture_frame": 46,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 387,
+        "resident_tick": 386,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 280,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 47,
+        "capture_frame": 47,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 388,
+        "resident_tick": 387,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 318,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 48,
+        "capture_frame": 48,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 389,
+        "resident_tick": 388,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 328,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 49,
+        "capture_frame": 49,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 390,
+        "resident_tick": 389,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 309,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 50,
+        "capture_frame": 50,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 391,
+        "resident_tick": 390,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 290,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 51,
+        "capture_frame": 51,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 392,
+        "resident_tick": 391,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 292,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 52,
+        "capture_frame": 52,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 393,
+        "resident_tick": 392,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 297,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 53,
+        "capture_frame": 53,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 394,
+        "resident_tick": 393,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 317,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 54,
+        "capture_frame": 54,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 395,
+        "resident_tick": 394,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 318,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 55,
+        "capture_frame": 55,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 396,
+        "resident_tick": 395,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 314,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 56,
+        "capture_frame": 56,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 397,
+        "resident_tick": 396,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 266,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 57,
+        "capture_frame": 57,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 398,
+        "resident_tick": 397,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 302,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 58,
+        "capture_frame": 58,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 399,
+        "resident_tick": 398,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 344,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 59,
+        "capture_frame": 59,
+        "capture_segment": "after_layout_edit",
+        "resident_revision": 400,
+        "resident_tick": 399,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 357,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 60,
+        "resident_revision": 405,
+        "resident_tick": 404,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 380,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 61,
+        "resident_revision": 410,
+        "resident_tick": 409,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 380,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 62,
+        "resident_revision": 415,
+        "resident_tick": 414,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 380,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 63,
+        "resident_revision": 420,
+        "resident_tick": 419,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 383,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 64,
+        "resident_revision": 425,
+        "resident_tick": 424,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 380,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 65,
+        "resident_revision": 430,
+        "resident_tick": 429,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 377,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 66,
+        "resident_revision": 435,
+        "resident_tick": 434,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 365,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 67,
+        "resident_revision": 440,
+        "resident_tick": 439,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 359,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 68,
+        "resident_revision": 445,
+        "resident_tick": 444,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 352,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 69,
+        "resident_revision": 450,
+        "resident_tick": 449,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 332,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 70,
+        "resident_revision": 455,
+        "resident_tick": 454,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 328,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 71,
+        "resident_revision": 460,
+        "resident_tick": 459,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 327,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 72,
+        "resident_revision": 465,
+        "resident_tick": 464,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 318,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 73,
+        "resident_revision": 470,
+        "resident_tick": 469,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 320,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 74,
+        "resident_revision": 475,
+        "resident_tick": 474,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 322,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 75,
+        "resident_revision": 480,
+        "resident_tick": 479,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 328,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 76,
+        "resident_revision": 485,
+        "resident_tick": 484,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 325,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 77,
+        "resident_revision": 490,
+        "resident_tick": 489,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 326,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 78,
+        "resident_revision": 495,
+        "resident_tick": 494,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 325,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 79,
+        "resident_revision": 500,
+        "resident_tick": 499,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 329,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 80,
+        "resident_revision": 505,
+        "resident_tick": 504,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 334,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 81,
+        "resident_revision": 510,
+        "resident_tick": 509,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 338,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 82,
+        "resident_revision": 515,
+        "resident_tick": 514,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 340,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 83,
+        "resident_revision": 520,
+        "resident_tick": 519,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 340,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 84,
+        "resident_revision": 525,
+        "resident_tick": 524,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 346,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 85,
+        "resident_revision": 530,
+        "resident_tick": 529,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 352,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 86,
+        "resident_revision": 535,
+        "resident_tick": 534,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 353,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 87,
+        "resident_revision": 540,
+        "resident_tick": 539,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 359,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 88,
+        "resident_revision": 545,
+        "resident_tick": 544,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 363,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 89,
+        "resident_revision": 550,
+        "resident_tick": 549,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 372,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 90,
+        "resident_revision": 555,
+        "resident_tick": 554,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 377,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 91,
+        "resident_revision": 560,
+        "resident_tick": 559,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 379,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 92,
+        "resident_revision": 565,
+        "resident_tick": 564,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 384,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 93,
+        "resident_revision": 570,
+        "resident_tick": 569,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 391,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 94,
+        "resident_revision": 575,
+        "resident_tick": 574,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 390,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 95,
+        "resident_revision": 580,
+        "resident_tick": 579,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 392,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 96,
+        "resident_revision": 585,
+        "resident_tick": 584,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 399,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 97,
+        "resident_revision": 590,
+        "resident_tick": 589,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 401,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 98,
+        "resident_revision": 595,
+        "resident_tick": 594,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 409,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 99,
+        "resident_revision": 600,
+        "resident_tick": 599,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 406,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 100,
+        "resident_revision": 605,
+        "resident_tick": 604,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 405,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 101,
+        "resident_revision": 610,
+        "resident_tick": 609,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 404,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 102,
+        "resident_revision": 615,
+        "resident_tick": 614,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 392,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 103,
+        "resident_revision": 620,
+        "resident_tick": 619,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 395,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 104,
+        "resident_revision": 625,
+        "resident_tick": 624,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 388,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 105,
+        "resident_revision": 630,
+        "resident_tick": 629,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 384,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 106,
+        "resident_revision": 635,
+        "resident_tick": 634,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 374,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 107,
+        "resident_revision": 640,
+        "resident_tick": 639,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 372,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 108,
+        "resident_revision": 645,
+        "resident_tick": 644,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 370,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 109,
+        "resident_revision": 650,
+        "resident_tick": 649,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 366,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 110,
+        "resident_revision": 655,
+        "resident_tick": 654,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 352,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 111,
+        "resident_revision": 660,
+        "resident_tick": 659,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 348,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 112,
+        "resident_revision": 665,
+        "resident_tick": 664,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 347,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 113,
+        "resident_revision": 670,
+        "resident_tick": 669,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 340,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 114,
+        "resident_revision": 675,
+        "resident_tick": 674,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 341,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 115,
+        "resident_revision": 680,
+        "resident_tick": 679,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 344,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 116,
+        "resident_revision": 685,
+        "resident_tick": 684,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 347,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 117,
+        "resident_revision": 690,
+        "resident_tick": 689,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 346,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 118,
+        "resident_revision": 695,
+        "resident_tick": 694,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 354,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 119,
+        "resident_revision": 700,
+        "resident_tick": 699,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 362,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 120,
+        "capture_frame": 0,
+        "resident_revision": 701,
+        "resident_tick": 700,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 366,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 121,
+        "capture_frame": 1,
+        "resident_revision": 702,
+        "resident_tick": 701,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 393,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 122,
+        "capture_frame": 2,
+        "resident_revision": 703,
+        "resident_tick": 702,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 395,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 123,
+        "capture_frame": 3,
+        "resident_revision": 704,
+        "resident_tick": 703,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 417,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 124,
+        "capture_frame": 4,
+        "resident_revision": 705,
+        "resident_tick": 704,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 425,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 125,
+        "capture_frame": 5,
+        "resident_revision": 706,
+        "resident_tick": 705,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 431,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 126,
+        "capture_frame": 6,
+        "resident_revision": 707,
+        "resident_tick": 706,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 430,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 127,
+        "capture_frame": 7,
+        "resident_revision": 708,
+        "resident_tick": 707,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 429,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 128,
+        "capture_frame": 8,
+        "resident_revision": 709,
+        "resident_tick": 708,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 426,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 129,
+        "capture_frame": 9,
+        "resident_revision": 710,
+        "resident_tick": 709,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 412,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 130,
+        "capture_frame": 10,
+        "resident_revision": 711,
+        "resident_tick": 710,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 394,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 131,
+        "capture_frame": 11,
+        "resident_revision": 712,
+        "resident_tick": 711,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 409,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 132,
+        "capture_frame": 12,
+        "resident_revision": 713,
+        "resident_tick": 712,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 425,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 133,
+        "capture_frame": 13,
+        "resident_revision": 714,
+        "resident_tick": 713,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 413,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 134,
+        "capture_frame": 14,
+        "resident_revision": 715,
+        "resident_tick": 714,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 402,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 135,
+        "capture_frame": 15,
+        "resident_revision": 716,
+        "resident_tick": 715,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 400,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 136,
+        "capture_frame": 16,
+        "resident_revision": 717,
+        "resident_tick": 716,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 394,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 137,
+        "capture_frame": 17,
+        "resident_revision": 718,
+        "resident_tick": 717,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 401,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 138,
+        "capture_frame": 18,
+        "resident_revision": 719,
+        "resident_tick": 718,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 410,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 139,
+        "capture_frame": 19,
+        "resident_revision": 720,
+        "resident_tick": 719,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 428,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 140,
+        "capture_frame": 20,
+        "resident_revision": 721,
+        "resident_tick": 720,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 438,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 141,
+        "capture_frame": 21,
+        "resident_revision": 722,
+        "resident_tick": 721,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 444,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 142,
+        "capture_frame": 22,
+        "resident_revision": 723,
+        "resident_tick": 722,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 443,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 143,
+        "capture_frame": 23,
+        "resident_revision": 724,
+        "resident_tick": 723,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 447,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 144,
+        "capture_frame": 24,
+        "resident_revision": 725,
+        "resident_tick": 724,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 462,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 145,
+        "capture_frame": 25,
+        "resident_revision": 726,
+        "resident_tick": 725,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 464,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 146,
+        "capture_frame": 26,
+        "resident_revision": 727,
+        "resident_tick": 726,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 471,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 147,
+        "capture_frame": 27,
+        "resident_revision": 728,
+        "resident_tick": 727,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 466,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 148,
+        "capture_frame": 28,
+        "resident_revision": 729,
+        "resident_tick": 728,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 454,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 149,
+        "capture_frame": 29,
+        "resident_revision": 730,
+        "resident_tick": 729,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 433,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 150,
+        "capture_frame": 30,
+        "resident_revision": 731,
+        "resident_tick": 730,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 410,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 151,
+        "capture_frame": 31,
+        "resident_revision": 732,
+        "resident_tick": 731,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 399,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 152,
+        "capture_frame": 32,
+        "resident_revision": 733,
+        "resident_tick": 732,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 407,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 153,
+        "capture_frame": 33,
+        "resident_revision": 734,
+        "resident_tick": 733,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 419,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 154,
+        "capture_frame": 34,
+        "resident_revision": 735,
+        "resident_tick": 734,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 421,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 155,
+        "capture_frame": 35,
+        "resident_revision": 736,
+        "resident_tick": 735,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 419,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 156,
+        "capture_frame": 36,
+        "resident_revision": 737,
+        "resident_tick": 736,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 408,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 157,
+        "capture_frame": 37,
+        "resident_revision": 738,
+        "resident_tick": 737,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 392,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 158,
+        "capture_frame": 38,
+        "resident_revision": 739,
+        "resident_tick": 738,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 364,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 159,
+        "capture_frame": 39,
+        "resident_revision": 740,
+        "resident_tick": 739,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 364,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 160,
+        "capture_frame": 40,
+        "resident_revision": 741,
+        "resident_tick": 740,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 393,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 161,
+        "capture_frame": 41,
+        "resident_revision": 742,
+        "resident_tick": 741,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 406,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 162,
+        "capture_frame": 42,
+        "resident_revision": 743,
+        "resident_tick": 742,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 427,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 163,
+        "capture_frame": 43,
+        "resident_revision": 744,
+        "resident_tick": 743,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 453,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 164,
+        "capture_frame": 44,
+        "resident_revision": 745,
+        "resident_tick": 744,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 469,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 165,
+        "capture_frame": 45,
+        "resident_revision": 746,
+        "resident_tick": 745,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 475,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 166,
+        "capture_frame": 46,
+        "resident_revision": 747,
+        "resident_tick": 746,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 469,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 167,
+        "capture_frame": 47,
+        "resident_revision": 748,
+        "resident_tick": 747,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 463,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 168,
+        "capture_frame": 48,
+        "resident_revision": 749,
+        "resident_tick": 748,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 447,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 169,
+        "capture_frame": 49,
+        "resident_revision": 750,
+        "resident_tick": 749,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 426,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 170,
+        "capture_frame": 50,
+        "resident_revision": 751,
+        "resident_tick": 750,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 387,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 171,
+        "capture_frame": 51,
+        "resident_revision": 752,
+        "resident_tick": 751,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 370,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 172,
+        "capture_frame": 52,
+        "resident_revision": 753,
+        "resident_tick": 752,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 357,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 173,
+        "capture_frame": 53,
+        "resident_revision": 754,
+        "resident_tick": 753,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 359,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 174,
+        "capture_frame": 54,
+        "resident_revision": 755,
+        "resident_tick": 754,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 364,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 175,
+        "capture_frame": 55,
+        "resident_revision": 756,
+        "resident_tick": 755,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 366,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 176,
+        "capture_frame": 56,
+        "resident_revision": 757,
+        "resident_tick": 756,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 346,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 177,
+        "capture_frame": 57,
+        "resident_revision": 758,
+        "resident_tick": 757,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 356,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 178,
+        "capture_frame": 58,
+        "resident_revision": 759,
+        "resident_tick": 758,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 356,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      },
+      {
+        "sample": 179,
+        "capture_frame": 59,
+        "resident_revision": 760,
+        "resident_tick": 759,
+        "timeline_time_s": 0.0,
+        "timeline_playing": false,
+        "active_blocks": 352,
+        "log_origins_m": [
+          [
+            0.0,
+            -0.30000000000000004,
+            0.18
+          ],
+          [
+            0.0,
+            0.34,
+            0.18
+          ]
+        ],
+        "point_centroids_m": [
+          [
+            0.0,
+            -0.30000000149011613,
+            0.18000000110930867
+          ],
+          [
+            0.0,
+            0.34000000009934106,
+            0.18000000110930867
+          ]
+        ],
+        "error_m": [
+          1.8576898775928303e-09,
+          1.1137478945596823e-09
+        ],
+        "max_error_m": 1.8576898775928303e-09,
+        "points_per_log": 360,
+        "point_count": 720
+      }
+    ],
+    "layout_transaction_resident_revision": 350,
+    "timeline_end_before_s": 240.0,
+    "timeline_end_configured_s": 240.0,
+    "timeline_zoom_before": {
+      "start_s": 0.0,
+      "end_s": 240.0,
+      "zoomed": false
+    },
+    "timeline_zoom_configured": {
+      "start_s": 0.0,
+      "end_s": 240.0,
+      "zoomed": false
+    },
+    "timeline_transport_before": {
+      "auto_updating": true,
+      "looping": true
+    },
+    "timeline_transport_configured": {
+      "auto_updating": true,
+      "looping": true
+    },
+    "timeline_session_range_timecodes": [
+      0.0,
+      1200.0
+    ],
+    "timeline_events": [
+      {
+        "event": "play",
+        "phase": "initial_play",
+        "time_s": 0.0,
+        "playing": true
+      },
+      {
+        "event": "stop",
+        "phase": "initial_play",
+        "time_s": 0.0,
+        "playing": false
+      },
+      {
+        "event": "play",
+        "phase": "layout_play",
+        "time_s": 0.0,
+        "playing": true
+      },
+      {
+        "event": "stop",
+        "phase": "layout_play",
+        "time_s": 0.0,
+        "playing": false
+      }
+    ],
+    "rejected_point_state_unchanged": true,
+    "rejected_owner_state_unchanged": true,
+    "replacement_scene": null
+  },
+  "publication": {
+    "revisions": [
+      760,
+      760,
+      760
+    ],
+    "point_resyncs": [],
+    "point_changed_properties": [
+      "/World/Flow/ResidentPointEmitter.campfire:layoutRevision",
+      "/World/Flow/ResidentPointEmitter.campfire:residentRevision",
+      "/World/Flow/ResidentPointEmitter.pointFuels",
+      "/World/Flow/ResidentPointEmitter.pointPositions",
+      "/World/Flow/ResidentPointEmitter.pointSmokes",
+      "/World/Flow/ResidentPointEmitter.pointTemperatures"
+    ],
+    "unexpected_point_changes": []
+  },
+  "flow": {
+    "active_blocks_peak": 475,
+    "readback_words": {
+      "temperature": 3712800,
+      "fuel": 3712800,
+      "burn": 3712800,
+      "smoke": 3712800,
+      "velocity": 2348520,
+      "divergence": 0
+    },
+    "video_frame_count": 60,
+    "unique_video_frame_hashes": 60,
+    "final_tick": 759
+  },
+  "known_issue": {
+    "id": "resident-point-flow-visual-discontinuity",
+    "classification": "partially_mitigated",
+    "seamless_visual_continuity_qualified": false,
+    "dynamic_log_point_tracking_implemented": false,
+    "flow_solver_state_checkpointed": false,
+    "layout_publication_continuity_qualified": true,
+    "alignment_tolerance_m": 0.002,
+    "maximum_observed_alignment_error_m": 1.8576898775928303e-09,
+    "timeline_playing_sample_count": 0,
+    "timeline_stopped_sample_count": 180,
+    "timeline_continuity_qualified": false,
+    "note": "Phase 6CO reproduces the Point/Flow stage-update PLAY-to-STOP boundary even with explicit global range, auto-update, looping, and commit. Its video spans ten pre-edit and fifty post-edit frames; solver-field continuity remains unqualified."
+  },
+  "gates": {
+    "explicit_setting_enabled": true,
+    "normal_extension_owner_composed": true,
+    "complete_schema_connected": true,
+    "only_existing_point_properties_changed_live": true,
+    "consumer_revisions_match": true,
+    "final_revision_matches_steps": true,
+    "flow_core_active": true,
+    "fuel_temperature_smoke_present": true,
+    "continuous_video": true,
+    "clean_shutdown": true,
+    "supported_layout_committed_for_continuity_audit": true,
+    "frame_aligned_continuity_telemetry_recorded": true,
+    "stopped_layout_published_atomically": true,
+    "layout_transaction_preserved_resident_revision": true,
+    "point_pose_alignment_remained_within_tolerance": true,
+    "timeline_state_telemetry_recorded": true,
+    "global_timeline_range_preserved": true,
+    "playback_zoom_reset_to_global_range": true,
+    "timeline_transport_enabled": true,
+    "explicit_session_range_matches_stage": true,
+    "point_flow_timeline_stop_reproduced": true,
+    "timeline_held_at_zero_despite_explicit_transport": true,
+    "boundary_video_frames_recorded": true
+  },
+  "decision": {
+    "transport_configuration": "rejected as root cause",
+    "point_pose_publication": "qualified within tolerance",
+    "timeline": "not qualified; explicit range and commit still produce STOP",
+    "boundary_video": "10 pre-edit plus 50 post-edit frames",
+    "flow_solver_field_continuity": "not qualified",
+    "next_boundary": "isolate the Flow/PhysX stage-update subscriber that requests STOP"
+  }
+}

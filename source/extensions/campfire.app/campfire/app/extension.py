@@ -441,8 +441,13 @@ class CampfireAppExtension(omni.ext.IExt):
             continuity_fix_qualification = point_settings.get_as_bool(
                 f"{SETTINGS_ROOT}/residentPointContinuityFixQualificationEnabled"
             )
+            timeline_continuity_qualification = point_settings.get_as_bool(
+                f"{SETTINGS_ROOT}/residentPointTimelineContinuityQualificationEnabled"
+            )
             point_phase = (
-                "phase6cn"
+                "phase6co"
+                if timeline_continuity_qualification
+                else "phase6cn"
                 if continuity_fix_qualification
                 else "phase6cm"
                 if continuity_qualification
@@ -781,8 +786,15 @@ class CampfireAppExtension(omni.ext.IExt):
         continuity_fix_qualification = carb.settings.get_settings().get_as_bool(
             f"{SETTINGS_ROOT}/residentPointContinuityFixQualificationEnabled"
         )
+        timeline_continuity_qualification = (
+            carb.settings.get_settings().get_as_bool(
+                f"{SETTINGS_ROOT}/residentPointTimelineContinuityQualificationEnabled"
+            )
+        )
         continuity_diagnostic = (
-            continuity_qualification or continuity_fix_qualification
+            continuity_qualification
+            or continuity_fix_qualification
+            or timeline_continuity_qualification
         )
         if sum(
             bool(value)
@@ -792,11 +804,14 @@ class CampfireAppExtension(omni.ext.IExt):
                 transform_qualification,
                 continuity_qualification,
                 continuity_fix_qualification,
+                timeline_continuity_qualification,
             )
         ) > 1:
             raise ValueError("Resident Point qualifications are mutually exclusive")
         phase_name = (
-            "phase6cn"
+            "phase6co"
+            if timeline_continuity_qualification
+            else "phase6cn"
             if continuity_fix_qualification
             else "phase6cm"
             if continuity_qualification
@@ -835,6 +850,11 @@ class CampfireAppExtension(omni.ext.IExt):
         layout_transaction_resident_revision = None
         timeline_end_before_s = None
         timeline_end_configured_s = None
+        timeline_zoom_before = None
+        timeline_zoom_configured = None
+        timeline_transport_before = None
+        timeline_transport_configured = None
+        timeline_session_range_timecodes = None
         timeline_events = []
         timeline_event_subscription = None
         timeline_event_context = {"phase": "setup"}
@@ -877,36 +897,79 @@ class CampfireAppExtension(omni.ext.IExt):
 
         try:
             listener = register_point_listener(stage)
-            if continuity_fix_qualification:
+            if continuity_fix_qualification or timeline_continuity_qualification:
                 timeline_event_subscription = (
                     timeline.get_timeline_event_stream()
                     .create_subscription_to_pop(
                         observe_timeline_event,
                         0,
-                        "Campfire Phase 6CN timeline diagnostic",
+                        f"Campfire {phase_name.upper()} timeline diagnostic",
                     )
                 )
             timeline_event_context["phase"] = "initial_stop"
             timeline.stop()
-            if continuity_fix_qualification:
+            if continuity_fix_qualification or timeline_continuity_qualification:
                 await omni.kit.app.get_app().next_update_async()
             timeline.set_current_time(0.0)
-            if continuity_fix_qualification:
+            if continuity_fix_qualification or timeline_continuity_qualification:
                 await omni.kit.app.get_app().next_update_async()
             timeline_end_before_s = float(timeline.get_end_time())
             timeline_end_configured_s = float(timeline.get_end_time())
+            timeline_zoom_before = {
+                "start_s": float(timeline.get_zoom_start_time()),
+                "end_s": float(timeline.get_zoom_end_time()),
+                "zoomed": bool(timeline.is_zoomed()),
+            }
+            timeline_transport_before = {
+                "auto_updating": bool(timeline.is_auto_updating()),
+                "looping": bool(timeline.is_looping()),
+            }
+            if timeline_continuity_qualification:
+                timeline.clear_zoom()
+                timeline.set_auto_update(True)
+                timeline.set_looping(True)
+                timeline.commit()
+            timeline_zoom_configured = {
+                "start_s": float(timeline.get_zoom_start_time()),
+                "end_s": float(timeline.get_zoom_end_time()),
+                "zoomed": bool(timeline.is_zoomed()),
+            }
+            timeline_transport_configured = {
+                "auto_updating": bool(timeline.is_auto_updating()),
+                "looping": bool(timeline.is_looping()),
+            }
+            timeline_session_range_timecodes = (
+                float(timeline.get_start_time())
+                * float(timeline.get_time_codes_per_seconds()),
+                float(timeline.get_end_time())
+                * float(timeline.get_time_codes_per_seconds()),
+            )
             owner.start()
             timeline_event_context["phase"] = "initial_play"
-            timeline.play()
-            if continuity_fix_qualification:
+            if timeline_continuity_qualification:
+                timeline.play(*timeline_session_range_timecodes, True)
+                timeline.commit()
+            else:
+                timeline.play()
+            if continuity_fix_qualification or timeline_continuity_qualification:
                 await omni.kit.app.get_app().next_update_async()
             flow_interface = _flowusd.acquire_flowusd_interface()
             active_blocks = []
             result = None
-            warmup_steps = 650
+            warmup_steps = 700 if timeline_continuity_qualification else 650
             frame_count = 60
+            boundary_pre_capture_count = (
+                10 if timeline_continuity_qualification else 0
+            )
+            boundary_post_capture_count = (
+                frame_count - boundary_pre_capture_count
+                if timeline_continuity_qualification
+                else 0
+            )
             initial_warmup_steps = (
-                300
+                350
+                if timeline_continuity_qualification
+                else 300
                 if recovery_qualification
                 or command_qualification
                 or transform_qualification
@@ -920,6 +983,41 @@ class CampfireAppExtension(omni.ext.IExt):
                     active_blocks.append(
                         int(flow_interface.get_active_block_count())
                     )
+                if (
+                    timeline_continuity_qualification
+                    and tick > initial_warmup_steps - boundary_pre_capture_count
+                ):
+                    await omni.kit.app.get_app().next_update_async()
+                    await omni.kit.viewport.utility.next_viewport_frame_async(viewport)
+                    capture_frame = tick - (
+                        initial_warmup_steps - boundary_pre_capture_count
+                    ) - 1
+                    alignment_samples.append(
+                        {
+                            "sample": len(alignment_samples),
+                            "capture_frame": capture_frame,
+                            "capture_segment": "before_layout_edit",
+                            "resident_revision": int(result.snapshot.revision),
+                            "resident_tick": int(result.snapshot.tick),
+                            "timeline_time_s": float(timeline.get_current_time()),
+                            "timeline_playing": bool(timeline.is_playing()),
+                            "active_blocks": int(
+                                flow_interface.get_active_block_count()
+                            ),
+                            **measure_resident_point_log_alignment(
+                                stage,
+                                (PHASE3_DRY_LOG_ID, PHASE3_WET_LOG_ID),
+                                stage.GetPrimAtPath(
+                                    RESIDENT_POINT_EMITTER_PATH
+                                ).GetAttribute("pointPositions").Get(),
+                                points_per_log=360,
+                            ),
+                        }
+                    )
+                    await self._capture_fast_image(
+                        viewport,
+                        video_frames_dir / f"frame_{capture_frame:04d}.png",
+                    )
             if (
                 recovery_qualification
                 or command_qualification
@@ -928,7 +1026,7 @@ class CampfireAppExtension(omni.ext.IExt):
             ):
                 timeline_event_context["phase"] = "layout_pause"
                 timeline.pause()
-                if continuity_fix_qualification:
+                if continuity_fix_qualification or timeline_continuity_qualification:
                     await omni.kit.app.get_app().next_update_async()
                 owner.stop()
                 point_attribute = stage.GetPrimAtPath(
@@ -1055,8 +1153,12 @@ class CampfireAppExtension(omni.ext.IExt):
                     layout_result = owner.refresh_layout(stage)
                 owner.start()
                 timeline_event_context["phase"] = "layout_play"
-                timeline.play()
-                if continuity_fix_qualification:
+                if timeline_continuity_qualification:
+                    timeline.play(*timeline_session_range_timecodes, True)
+                    timeline.commit()
+                else:
+                    timeline.play()
+                if continuity_fix_qualification or timeline_continuity_qualification:
                     # Timeline state is frame-immutable.  Let the PLAY request
                     # become visible to Flow/PhysX before the first Resident
                     # snapshot authors live USD values.
@@ -1095,6 +1197,15 @@ class CampfireAppExtension(omni.ext.IExt):
                             ),
                         }
                     )
+                if timeline_continuity_qualification:
+                    await omni.kit.viewport.utility.next_viewport_frame_async(viewport)
+                    capture_frame = boundary_pre_capture_count
+                    alignment_samples[-1]["capture_frame"] = capture_frame
+                    alignment_samples[-1]["capture_segment"] = "after_layout_edit"
+                    await self._capture_fast_image(
+                        viewport,
+                        video_frames_dir / f"frame_{capture_frame:04d}.png",
+                    )
                 positions_after = tuple(
                     tuple(float(component) for component in point)
                     for point in point_attribute.Get()
@@ -1123,7 +1234,48 @@ class CampfireAppExtension(omni.ext.IExt):
                     listener = register_point_listener(stage)
                     timeline.play()
 
-                remaining_warmup_steps = warmup_steps - initial_warmup_steps - 1
+                boundary_followup_steps = (
+                    boundary_post_capture_count - 1
+                    if timeline_continuity_qualification
+                    else 0
+                )
+                for boundary_index in range(boundary_followup_steps):
+                    result = owner.step()
+                    await omni.kit.app.get_app().next_update_async()
+                    active_blocks.append(
+                        int(flow_interface.get_active_block_count())
+                    )
+                    await omni.kit.viewport.utility.next_viewport_frame_async(viewport)
+                    capture_frame = boundary_pre_capture_count + boundary_index + 1
+                    alignment_samples.append(
+                        {
+                            "sample": len(alignment_samples),
+                            "capture_frame": capture_frame,
+                            "capture_segment": "after_layout_edit",
+                            "resident_revision": int(result.snapshot.revision),
+                            "resident_tick": int(result.snapshot.tick),
+                            "timeline_time_s": float(timeline.get_current_time()),
+                            "timeline_playing": bool(timeline.is_playing()),
+                            "active_blocks": active_blocks[-1],
+                            **measure_resident_point_log_alignment(
+                                stage,
+                                (PHASE3_DRY_LOG_ID, PHASE3_WET_LOG_ID),
+                                point_attribute.Get(),
+                                points_per_log=360,
+                            ),
+                        }
+                    )
+                    await self._capture_fast_image(
+                        viewport,
+                        video_frames_dir / f"frame_{capture_frame:04d}.png",
+                    )
+
+                remaining_warmup_steps = (
+                    warmup_steps
+                    - initial_warmup_steps
+                    - 1
+                    - boundary_followup_steps
+                )
                 for remaining_index in range(remaining_warmup_steps):
                     result = owner.step()
                     if (remaining_index + 1) % 5 == 0:
@@ -1171,10 +1323,11 @@ class CampfireAppExtension(omni.ext.IExt):
                             ),
                         }
                     )
-                await self._capture_fast_image(
-                    viewport,
-                    video_frames_dir / f"frame_{frame_index:04d}.png",
-                )
+                if not timeline_continuity_qualification:
+                    await self._capture_fast_image(
+                        viewport,
+                        video_frames_dir / f"frame_{frame_index:04d}.png",
+                    )
             timeline.pause()
             await omni.kit.app.get_app().next_update_async()
             raw_readback = flow_interface.get_latest_nanovdb_readback()
@@ -1417,7 +1570,7 @@ class CampfireAppExtension(omni.ext.IExt):
                         ),
                     }
                 )
-            if continuity_fix_qualification:
+            if continuity_fix_qualification or timeline_continuity_qualification:
                 gates.update(
                     {
                         "stopped_layout_published_atomically": (
@@ -1429,7 +1582,8 @@ class CampfireAppExtension(omni.ext.IExt):
                             == 2
                         ),
                         "layout_transaction_preserved_resident_revision": (
-                            layout_transaction_resident_revision == 300
+                            layout_transaction_resident_revision
+                            == initial_warmup_steps
                         ),
                         "point_pose_alignment_remained_within_tolerance": all(
                             sample["max_error_m"] <= alignment_tolerance_m
@@ -1445,6 +1599,56 @@ class CampfireAppExtension(omni.ext.IExt):
                                 "timeline_playing" in sample
                                 for sample in alignment_samples
                             )
+                        ),
+                    }
+                )
+            if timeline_continuity_qualification:
+                gates.update(
+                    {
+                        "global_timeline_range_preserved": (
+                            timeline_end_before_s == timeline_end_configured_s == 240.0
+                        ),
+                        "playback_zoom_reset_to_global_range": (
+                            timeline_zoom_configured is not None
+                            and not timeline_zoom_configured["zoomed"]
+                            and timeline_zoom_configured["start_s"] == 0.0
+                            and timeline_zoom_configured["end_s"] == 240.0
+                        ),
+                        "timeline_transport_enabled": (
+                            timeline_transport_configured
+                            == {"auto_updating": True, "looping": True}
+                        ),
+                        "explicit_session_range_matches_stage": (
+                            timeline_session_range_timecodes == (0.0, 1200.0)
+                        ),
+                        "point_flow_timeline_stop_reproduced": (
+                            bool(alignment_samples)
+                            and not any(
+                                sample["timeline_playing"]
+                                for sample in alignment_samples
+                            )
+                            and sum(
+                                event["event"] == "stop"
+                                for event in timeline_events
+                            ) == 2
+                        ),
+                        "timeline_held_at_zero_despite_explicit_transport": (
+                            bool(alignment_samples)
+                            and max(
+                                sample["timeline_time_s"]
+                                for sample in alignment_samples
+                            ) == 0.0
+                        ),
+                        "boundary_video_frames_recorded": (
+                            len(frame_paths) == frame_count
+                            and sum(
+                                sample.get("capture_segment") == "before_layout_edit"
+                                for sample in alignment_samples
+                            ) == boundary_pre_capture_count
+                            and sum(
+                                sample.get("capture_segment") == "after_layout_edit"
+                                for sample in alignment_samples
+                            ) == boundary_post_capture_count
                         ),
                     }
                 )
@@ -1464,6 +1668,9 @@ class CampfireAppExtension(omni.ext.IExt):
                     "transform_notice_qualification": transform_qualification,
                     "continuity_qualification": continuity_qualification,
                     "continuity_fix_qualification": continuity_fix_qualification,
+                    "timeline_continuity_qualification": (
+                        timeline_continuity_qualification
+                    ),
                     "point_count": 720,
                     "surface_points_per_log": 360,
                     "log_count": 2,
@@ -1493,6 +1700,13 @@ class CampfireAppExtension(omni.ext.IExt):
                     ),
                     "timeline_end_before_s": timeline_end_before_s,
                     "timeline_end_configured_s": timeline_end_configured_s,
+                    "timeline_zoom_before": timeline_zoom_before,
+                    "timeline_zoom_configured": timeline_zoom_configured,
+                    "timeline_transport_before": timeline_transport_before,
+                    "timeline_transport_configured": timeline_transport_configured,
+                    "timeline_session_range_timecodes": (
+                        timeline_session_range_timecodes
+                    ),
                     "timeline_events": timeline_events,
                     "rejected_point_state_unchanged": rejected_point_state_unchanged,
                     "rejected_owner_state_unchanged": rejected_owner_state_unchanged,
@@ -1520,13 +1734,14 @@ class CampfireAppExtension(omni.ext.IExt):
                     "classification": (
                         "partially_mitigated"
                         if continuity_fix_qualification
+                        or timeline_continuity_qualification
                         else "unresolved_defect"
                     ),
                     "seamless_visual_continuity_qualified": False,
                     "dynamic_log_point_tracking_implemented": False,
                     "flow_solver_state_checkpointed": False,
                     "layout_publication_continuity_qualified": (
-                        continuity_fix_qualification
+                        (continuity_fix_qualification or timeline_continuity_qualification)
                         and alignment_before_first_publication is not None
                         and alignment_before_first_publication["max_error_m"]
                         <= alignment_tolerance_m
@@ -1563,6 +1778,12 @@ class CampfireAppExtension(omni.ext.IExt):
                         for sample in alignment_samples
                     ),
                     "note": (
+                        "Phase 6CO reproduces the Point/Flow stage-update PLAY-to-STOP "
+                        "boundary even with explicit global range, auto-update, looping, "
+                        "and commit. Its video spans ten pre-edit and fifty post-edit "
+                        "frames; solver-field continuity remains unqualified."
+                        if timeline_continuity_qualification
+                        else
                         "Phase 6CN qualifies atomic stopped-layout publication only. "
                         "The headless Flow/PhysX boundary still emits STOP after PLAY, "
                         "and Flow solver-field continuity remains unqualified."

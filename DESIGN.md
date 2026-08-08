@@ -2244,3 +2244,23 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 実測: Phase 6CMで40.000 mmだった最初の木材発行前gapは`1.8577e-9 m`（`0.0000019 mm`）となり、130 sampleすべてが2 mm許容内だった。backend/primary/Pointは`710 / 710 / 710`、active block peak`439`、実RTX動画は60/60固有frame、限定した`16 / 16` gateが合格した。release build、既定OFF Phase 0、全8 process・`58 / 58`回帰も合格した。
 - 未達: headless Flow/PhysX境界はPLAY直後にSTOPを発行し、timelineは`0 / 130` PLAYのままである。Flow NanoVDB solver場の移動・checkpoint・stage recoveryも未実装であり、`seamless_visual_continuity_qualified=false`と`timeline_continuity_qualified=false`を維持する。Phase 6CNが合格させるのは停止中layoutのPoint公開だけで、映像連続性ではない。
 - 非変更: production既定Sphere、Point既定OFF、木材権威状態、物理式、JSON schema、Flow 110/dependency、正規sceneを変更しない。次はPLAY→STOPを発行するC++購読境界と、Point移動時のFlow field resetを独立に調べる。
+
+## 121. Phase 6CO Point / Flow timeline boundary audit
+
+### 2026-08-08: transport設定を原因候補から除外し、編集境界を動画へ含める
+
+- 証拠訂正: Phase 6CMと6CNの既存動画はどちらもrevision 651〜710の境界後安定区間で、layout editとrevision 300→301を含まない。CMの40 mm露出とCNの約1.9 nmへの改善はtelemetryで成立するが、旧動画から直接読み取れる結果ではない。開発日誌のbutton title、metadata、captionをこの証明範囲へ訂正し、映像連続性の根拠に使わない。
+- transport監査: 同一Point USDAをbenchmark appで単独openする隔離probeでは、暗黙commit、明示commit、auto-update明示の3方式がいずれも6 update中PLAY状態を維持し、最初の0.2秒tickを観測した。一方、通常`ResidentPointApplicationOwner`統合ではglobal range 0〜240秒、session timeCode 0〜1200、auto-update ON、looping ON、`clear_zoom()`、明示`Timeline.commit()`を設定しても、初回とlayout再開の両方でPLAY直後にSTOPし、180 sampleすべてがtime 0.0秒・stoppedだった。よってrange、zoom、auto-update、looping、commit不足をroot cause候補から除外し、Point/Flow stage-update統合境界の未解決問題として扱う。
+- 境界動画: 編集をrevision 350まで遅らせて炎が存在することを確認し、revision 341〜350の変更前10 frameと、Y方向40 mm layout edit直後のrevision 351〜400の50 frameを連続取得した。動画の1.0秒地点が実際の編集境界で、後半安定区間だけを切り出していない。backend/primary/Pointは最終`760 / 760 / 760`、Point/log重心誤差は最大`1.8577e-9 m`、active block peak`475`、60 frameは60 SHAすべて固有、監査`23 / 23` gateが合格した。
+- 判断: Phase 6COが合格させるのはSTOPの再現、transport原因除外、Point姿勢整合、境界証拠の取得であり、timeline連続性やFlow NanoVDB solver場の移動・再配置ではない。`timeline_continuity_qualified=false`、`seamless_visual_continuity_qualified=false`、`flow_solver_state_checkpointed=false`を維持する。production既定Sphere、Point既定OFF、木材権威状態、物理式、JSON schema、Flow 110/dependency、正規scene、rollback、immutable snapshot、revision契約は変更しない。次はnormal appのstage-update subscriberを一つずつ無効化した隔離probeでSTOP要求元を特定する。
+
+## 122. Phase 6CP StageUpdate boundary isolation
+
+### 2026-08-08: 再現baselineを分解し、STOPをRTX capture qualification側へ限定する
+
+- 公開graph inventory: Flow 110.0.0のローカルSDKで`omni.stageupdate.get_stage_update_interface()`、`get_stage_update_nodes()`、`set_stage_update_node_enabled()`を確認した。同一の保存済みPoint USDAをnormal appとbenchmark appで開くと、両者とも`PhysX(10)`、`OmniGraph(100)`、`OmniGraphAttach(101)`、`PhysXFabric(102)`、`FlowUsd(1000)`の5 nodeが有効で、12 updateを通じPLAYを維持して0.2秒へ進んだ。app差分や追加nodeはなかった。
+- owner境界: productionの`ResidentNativeBackend`、`UsdResidentSnapshotAdapter`、`ResidentPointSidecar`、`ResidentApplicationSession`、`ResidentPointApplicationOwner`を同じstageへ合成し、ownerを開始したが、全5 node有効のままPLAYを維持しSTOP eventは0だった。stepとUSD publicationを発行しない構成なので、owner合成そのものもSTOPの十分条件ではない。
+- 対話lifecycle: capture harnessを使わず、extensionの通常offline build→stage接続→interactive timeline subscription経路をrenderer無効で動かした。timelineは0.8秒までPLAYを維持し、Point revisionは`0 → 4`へ進み、production interactive updateが実際にowner stepとpublicationを発行した。STOP eventは0だった。
+- 判断: 全node有効baselineが再現しない状態で1 nodeずつ無効化しても要求元を同定できないため、disable matrixは開始しない。Phase 6COのPLAY→STOPは現時点ではrenderer有効のRTX capture qualification pathに限定する。ただしrenderer有効のproduction interactive playbackはまだ未計測なので、production連続性を合格とはしない。次はrenderer有効interactive playback、viewport frame wait、capture callbackを段階的に足し、STOPが再現する最小境界を作ってから同じ5 nodeのdisable matrixを行う。
+- 検証: inventory 2 app、owner合成、interactive lifecycle、report/SVG生成を個別実行し、Phase 6CP reportの`9 / 9` gateが合格した。Python compile、SVG XML、開発日誌参照、`git diff --check`を確認し、標準Kit testは全8 process・`58 / 58`が`351.6 s`で合格した。rendererを無効化した診断は2 appで`13.3 s`、owner probeは`5.9 s`、interactive probeは`9.7 s`で終了し、RTX async ready待ちを診断時間から除外した。
+- 非変更: production既定Sphere、Point既定OFF、物理式、JSON schema、Flow 110/dependency、正規scene、rollback、immutable snapshot、revision契約を変更しない。`timeline_continuity_qualified=false`、`seamless_visual_continuity_qualified=false`、`flow_solver_state_checkpointed=false`を維持する。

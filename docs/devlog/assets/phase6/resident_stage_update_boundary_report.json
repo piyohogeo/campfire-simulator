@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "phase": "phase6cp",
+  "status": "ok",
+  "timestamp_utc": "2026-08-08T05:40:56.338107+00:00",
+  "stage_update_nodes": [
+    "PhysX",
+    "OmniGraph",
+    "OmniGraphAttach",
+    "PhysXFabric",
+    "FlowUsd"
+  ],
+  "node_orders": {
+    "PhysX": 10,
+    "OmniGraph": 100,
+    "OmniGraphAttach": 101,
+    "PhysXFabric": 102,
+    "FlowUsd": 1000
+  },
+  "plain_stage": {
+    "normal_remained_playing": true,
+    "benchmark_remained_playing": true
+  },
+  "resident_owner": {
+    "remained_playing": true,
+    "stop_event_count": 0,
+    "steps_issued": 0
+  },
+  "interactive_lifecycle": {
+    "remained_playing": true,
+    "stop_event_count": 0,
+    "timeline_end_s": 0.8,
+    "point_revision_before": 0,
+    "point_revision_after": 4,
+    "interactive_step_published": true
+  },
+  "conclusion": {
+    "stage_update_node_disable_matrix_started": false,
+    "reason": "The all-enabled baseline does not reproduce STOP in the plain stage, composed owner, or extension interactive lifecycle. Disabling nodes would not identify a requester without a reproducing baseline.",
+    "remaining_boundary": "The PLAY-to-STOP event remains confined to the RTX capture qualification path measured by Phase 6CO; renderer-enabled interactive playback is not yet qualified.",
+    "production_interactive_continuity_qualified": false,
+    "capture_harness_continuity_qualified": false
+  },
+  "gates": {
+    "normal_and_benchmark_nodes_match": true,
+    "plain_stage_remained_playing": true,
+    "resident_owner_remained_playing": true,
+    "interactive_lifecycle_remained_playing": true,
+    "interactive_timeline_advanced": true,
+    "interactive_owner_published": true,
+    "no_interactive_stop_event": true,
+    "all_stage_update_nodes_enabled": true,
+    "production_unchanged": true
+  }
+}

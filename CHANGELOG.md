@@ -1,5 +1,10 @@
 # Changelog
 
+- Added Phase 6CP StageUpdate boundary isolation: normal and benchmark apps expose the same five enabled nodes, and the plain stage, composed Resident owner, and renderer-disabled extension interactive lifecycle all remain PLAY with zero STOP events.
+- Confirmed the interactive Resident owner actually advances Point revision from 0 to 4; the unresolved PLAY→STOP is therefore currently confined to the RTX capture qualification path, while renderer-enabled production continuity remains unqualified.
+- Added Phase 6CO as a default-off negative timeline-boundary audit: explicit stage/session range, auto-update, looping, and `Timeline.commit()` still reproduce PLAY→STOP twice at 0.0 s in the normal Resident Point owner path, while an isolated stage probe remains playing.
+- Replaced late-only continuity evidence with a Phase 6CO video that actually spans the layout boundary: 10 RTX frames before the 40 mm edit and 50 immediately after it, with Point/log alignment held within about 1.86 nm and Flow solver-field continuity still unqualified.
+- Corrected the Phase 6CM and 6CN development-log captions: both older clips contain only revisions 651–710 after recovery and do not visually prove the revision 300→301 boundary measured by telemetry.
 - Added Phase 6CN atomic stopped-layout publication, authoring predeclared `pointPositions` and `layoutRevision` in one rollback-capable transaction without advancing the Resident snapshot revision; the former 40 mm exposure fell to about 1.9 nm.
 - Kept Phase 6CN explicitly partial: its real Flow/RTX run records PLAY immediately followed by STOP and does not qualify timeline, Flow solver-field, stage-recovery, or seamless visual continuity.
 - Reclassified the visible Phase 6CJ–6CL log jumps and flame resets as an unresolved continuity defect; their consumer, revision, command, and observer results remain valid, but seamless Flow/visual recovery is no longer claimed.

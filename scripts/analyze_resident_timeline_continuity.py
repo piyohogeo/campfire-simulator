@@ -1,0 +1,75 @@
+"""Validate and publish Phase 6CO Point/Flow timeline-boundary evidence."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import shutil
+from pathlib import Path
+
+
+def _svg(report):
+    issue = report["known_issue"]
+    lifecycle = report["lifecycle"]
+    events = lifecycle["timeline_events"]
+    before = lifecycle["timeline_transport_before"]
+    session_range = lifecycle["timeline_session_range_timecodes"]
+    maximum_nm = issue["maximum_observed_alignment_error_m"] * 1.0e9
+    playing = issue["timeline_playing_sample_count"]
+    stopped = issue["timeline_stopped_sample_count"]
+    gates = len(report["gates"])
+    blocks = report["flow"]["active_blocks_peak"]
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+<title id="title">Phase 6CO Point Flow timeline boundary audit</title><desc id="desc">Explicit timeline range, auto update, looping, and commit still produce PLAY followed by STOP at time zero. The boundary video contains ten frames before and fifty frames after the layout edit.</desc>
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#172554"/><stop offset="1" stop-color="#3f1d2e"/></linearGradient></defs><style>.k{{font:700 17px 'Segoe UI',sans-serif;fill:#93c5fd;letter-spacing:2px}}.t{{font:750 36px 'Segoe UI',sans-serif;fill:#f8fafc}}.s{{font:16px 'Segoe UI',sans-serif;fill:#cbd5e1}}.h{{font:700 17px 'Segoe UI',sans-serif;fill:#f8fafc}}.v{{font:750 24px 'Segoe UI',sans-serif;fill:#fbbf24}}.ok{{font:750 24px 'Segoe UI',sans-serif;fill:#86efac}}.m{{font:14px 'Segoe UI',sans-serif;fill:#94a3b8}}</style>
+<rect width="1200" height="680" rx="30" fill="url(#bg)"/><text x="64" y="62" class="k">PHASE 6CO · TIMELINE BOUNDARY AUDIT</text><text x="64" y="113" class="t">PLAY is rejected at the Point / Flow boundary</text><text x="64" y="150" class="s">Flow 110.0.0 · default OFF · production path and physical model unchanged</text>
+<rect x="64" y="190" width="520" height="126" rx="18" fill="#102a43"/><text x="88" y="228" class="h">Explicit transport contract</text><text x="88" y="269" class="ok">timeCode {session_range[0]:.0f} → {session_range[1]:.0f}</text><text x="88" y="296" class="m">auto update {str(before['auto_updating']).lower()} · looping {str(before['looping']).lower()} · explicit commit</text>
+<rect x="600" y="190" width="536" height="126" rx="18" fill="#102a43"/><text x="624" y="228" class="h">Observed events</text><text x="624" y="269" class="v">PLAY → STOP, twice at 0.0 s</text><text x="624" y="296" class="m">{len(events)} recorded events · {playing} PLAY / {stopped} stopped samples</text>
+<rect x="64" y="338" width="1072" height="114" rx="18" fill="#102a43"/><text x="88" y="376" class="h">Boundary evidence now captured</text><text x="88" y="416" class="ok">10 frames before edit + 50 frames after edit</text>
+<rect x="64" y="476" width="1072" height="106" rx="18" fill="#3a2b12" stroke="#d97706"/><text x="88" y="514" class="h">Qualified scope / remaining limit</text><text x="88" y="552" class="v">Point pose alignment {maximum_nm:.2f} nm · Flow solver-field continuity NOT QUALIFIED</text>
+<text x="64" y="632" class="ok">{gates}/{gates} audit gates · {blocks} active blocks · 60 boundary RTX frames</text><text x="64" y="660" class="m">The audit rejects transport configuration as the cause; the remaining boundary is Point/Flow stage update integration.</text></svg>'''
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--raw", required=True, type=Path)
+    parser.add_argument("--report", required=True, type=Path)
+    parser.add_argument("--svg", required=True, type=Path)
+    parser.add_argument("--poster", required=True, type=Path)
+    parser.add_argument("--frames", required=True, type=Path)
+    arguments = parser.parse_args()
+    report = json.loads(arguments.raw.read_text(encoding="utf-8"))
+    issue = report.get("known_issue", {})
+    samples = report.get("lifecycle", {}).get("alignment_samples", [])
+    events = report.get("lifecycle", {}).get("timeline_events", [])
+    if (
+        report.get("phase") != "phase6co"
+        or report.get("status") != "ok"
+        or not all(report.get("gates", {}).values())
+        or issue.get("timeline_continuity_qualified") is not False
+        or sum(event.get("event") == "stop" for event in events) != 2
+        or sum(sample.get("capture_segment") == "before_layout_edit" for sample in samples) != 10
+        or sum(sample.get("capture_segment") == "after_layout_edit" for sample in samples) != 50
+    ):
+        raise ValueError("Phase 6CO did not preserve the negative timeline boundary")
+    frames = sorted(arguments.frames.glob("frame_*.png"))
+    if len(frames) != 60:
+        raise ValueError(f"Phase 6CO requires 60 boundary frames, got {len(frames)}")
+    for path in (arguments.report, arguments.svg, arguments.poster):
+        path.parent.mkdir(parents=True, exist_ok=True)
+    report["decision"] = {
+        "transport_configuration": "rejected as root cause",
+        "point_pose_publication": "qualified within tolerance",
+        "timeline": "not qualified; explicit range and commit still produce STOP",
+        "boundary_video": "10 pre-edit plus 50 post-edit frames",
+        "flow_solver_field_continuity": "not qualified",
+        "next_boundary": "isolate the Flow/PhysX stage-update subscriber that requests STOP",
+    }
+    arguments.report.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    arguments.svg.write_text(_svg(report), encoding="utf-8")
+    shutil.copy2(frames[10], arguments.poster)
+    print(f"Phase 6CO report written: gates={len(report['gates'])}, events={len(events)}")
+
+
+if __name__ == "__main__":
+    main()
