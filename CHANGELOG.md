@@ -1,5 +1,11 @@
 # Changelog
 
+- Added Phase 6DF's derived, profiler-off FlowUsd StageUpdate enablement matrix: three paired 500-revision runs configure the node before target-stage connection and restore it after every process.
+- Preserved exact native-state and Point positions/fuel/temperature/smoke SHA-256 values, 500/500/500 consumer revisions, 500/500 publications, and zero failures or Point resyncs across all six cases.
+- Measured run-median enclosing-update p95 at 14.2288 ms with FlowUsd StageUpdate enabled versus 13.7408 ms disabled (+3.55%); the per-run ranges overlap, so the contrast is not a direct Flow-ingest timer.
+- Kept ChangeBlock exit live in both modes (layout p95 medians 1.1046 versus 1.0046 ms; channel p95 medians 0.9748 versus 0.8597 ms), showing that StageUpdate disablement does not prove synchronous USD notice subscribers were removed.
+- Rejected the disabled mode as an adoption candidate because active blocks changed from 32 to 0 and all NanoVDB readback channels disappeared, even though authoritative/source values remained exact; production defaults and app SHA-256 remain unchanged.
+- Passed all 13 Phase 6DF gates and the final 8-process 59/59 standard suite in 351.7 seconds (collapse coverage 207.9 seconds), with the FlowUsd node restored and profiler capture disabled in every run.
 - Added Phase 6DE's default-off runtime audit of the fixed Kit profiler, Tf notice, StageUpdate, and `omni.flowusd` surfaces without changing production configuration or publication contracts.
 - Confirmed that public `carb.profiler.IProfileMonitor` can return completed-frame named zones and round-tripped two custom calibration zones while restoring capture mask `0 → 1 → 0`.
 - Correlated 13 live Resident Point updates with active Flow blocks `24–32` and observed USD notice/pending-update, Fabric, Hydra, and PhysX zones, but no direct FlowUsd ingest timer, registered-subscriber enumeration, or Flow-specific named zone.

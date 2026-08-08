@@ -1452,6 +1452,26 @@
             <p>固定Kit／Flow 110.0.0で、公開<code>carb.profiler.IProfileMonitor</code>が完了frameのeventを返すことをcustom zone 2個で校正しました。live Resident Point runではrevision 320–348の13 updateをmarkerと対応付け、20 mm edit後のlayout変更と非変更の両方、Flow active blocks <code>24–32</code>、USD notice／pending update、Fabric、Hydra、PhysXのnamed zoneを確認しました。StageUpdate上の<code>FlowUsd</code> nodeは有効・order 1000ですが、直接FlowUsd ingest timer、登録済みTf subscriber列挙、Flow固有named zoneは公開surfaceから得られませんでした。<code>Workflow*</code>は名前に<code>flow</code>を含むだけなのでFlow zoneとして数えません。capture中は1 updateが約4秒へ膨張し、zoneもnestedするため、duration差や合計は性能合否から除外します。したがってPhase 6DDの残差は依然Flowへ帰属できません。Phase固有19/19 gate、760/760 publish、failure／Point resync 0、capture mask復元、production app SHA-256不変に加え、標準suite全8 process・59/59件（385.9秒、collapse coverage 233.4秒）も合格しました。production既定Sphere、Point既定OFF、rollback、revision、immutable snapshot、Flow版は不変です。動画は同じscenarioのPhase 6DC録画を複製せず再利用します。次はderived・既定OFF環境でconsumer enablementを一つずつ変え、性能はprofiler OFF、named zoneは境界確認だけに使います。</p>
           </section>
 
+          <figure class="capture-card wide">
+            <h3 class="capture-phase-heading">Phase 6DF</h3>
+            <a href="assets/phase6/resident_stageupdate_boundary_report.svg" aria-label="Phase 6DF FlowUsd StageUpdate境界レポートを開く">
+              <img src="assets/phase6/resident_stageupdate_boundary_report.svg" alt="FlowUsd StageUpdate ONとOFFの外側updateおよびChangeBlock timingを比較したレポート" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>OFFはsource値を変えないが、Flow出力をすべて失う</strong><span>13 / 13 gates · 3 paired runs · update p95 +3.55%</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_translation_breakdown.mp4" data-video-poster="assets/phase6/resident_translation_breakdown_frame.png" data-video-title="Phase 6DF source publication scenario — enabled reference video reused" data-video-meta="Reuses the direct Phase 6DC optimized RTX recording only as the enabled source-publication reference · the disabled case has zero Flow blocks/readback and is not represented as visual success · Flow 110.0.0 · 1280×720 · 10 fps · video is not a timing criterion">
+                <span class="video-trigger-icon" aria-hidden="true">▶</span>
+                <span><strong>enabled参照動画</strong><small>Phase 6DC実機動画を再利用 · OFFの映像成功は主張しない</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6df-note-title">
+            <p class="note-label">2026-08-08 · Goal / paired control / source equality / Flow loss / timing / next</p>
+            <h3 id="phase6df-note-title">StageUpdate OFFは診断対照であり、軽量Flow経路ではない</h3>
+            <p>完全なResident Point stageをoffline作成し、target stage接続前に<code>FlowUsd</code> StageUpdate nodeだけをON／OFFへ設定する独立processを3組実行しました。全runはprofiler mask 0、固定1280×720、720点、500 revisionです。native stateとPoint positions／fuel／temperature／smoke SHA-256、consumer revision <code>500/500/500</code>、500/500 publishは6 runすべて完全一致し、failure／rollback／Point resyncは0でした。一方、ONはactive blocks最大32と5種の非空NanoVDB readbackを得ましたが、OFFはblocks 0・全readback 0です。外側update p95のrun中央値はON <code>14.2288 ms</code>、OFF <code>13.7408 ms</code>（+3.55%）ですが両群のrun範囲は重なります。layout <code>ChangeBlock</code> exitも<code>1.1046 / 1.0046 ms</code>、channel exitも<code>0.9748 / 0.8597 ms</code>と両modeで残りました。したがってON−OFF差を直接Flow ingest timerとは呼べず、StageUpdate OFFが同期notice subscriberを除いた証拠にもなりません。Phase固有13/13 gate、node復元、production app SHA不変に加え、標準suite全8 process・59/59件（351.7秒、collapse coverage 207.9秒）も合格しました。OFFはFlow出力を失うためproduction候補ではありません。動画ボタンはsource publicationが同じenabled参照だけを示し、OFFの映像成功は主張しません。次はderived環境でextension登録境界を安全に変えられるかを調べます。</p>
+          </section>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1499,6 +1519,7 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6BC Kit adapter</strong><small>owner thread · transactional rollback · 240 shared revisions · default OFF</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DD notice boundary</strong><small>12 / 12 · 760 coalesced notices · Flow residual unattributed</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DE profiler boundary</strong><small>19 / 19 · 13 correlated updates · direct Flow timer absent</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DF StageUpdate control</strong><small>13 / 13 · source hashes exact · OFF loses all Flow output</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6CI normal Point owner</strong><small>10 / 10 · 710 matched revisions · Point resync 0 · default OFF</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CJ layout + recovery</strong><small>consumer/revisionのみ合格 · Flow field復元と映像連続性は未達</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CK owner-thread commands</strong><small>command結果は合格 · 姿勢/炎の同時不連続は未解決</small></p></div>

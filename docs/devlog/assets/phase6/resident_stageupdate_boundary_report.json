@@ -1,0 +1,281 @@
+{
+  "phase": "phase6df",
+  "status": "ok",
+  "scope": "profiler-off FlowUsd StageUpdate enablement boundary",
+  "run_count": 6,
+  "pair_count": 3,
+  "execution_order_design": [
+    "pair0-enabled",
+    "pair0-disabled",
+    "pair1-disabled",
+    "pair1-enabled",
+    "pair2-enabled",
+    "pair2-disabled"
+  ],
+  "case_paths_sorted": [
+    "pair0-disabled",
+    "pair0-enabled",
+    "pair1-disabled",
+    "pair1-enabled",
+    "pair2-disabled",
+    "pair2-enabled"
+  ],
+  "timing": {
+    "enclosing_update_mean_ms": {
+      "enabled_runs": [
+        5.8724,
+        6.2854,
+        6.0345
+      ],
+      "disabled_runs": [
+        6.531,
+        5.9264,
+        5.8255
+      ],
+      "enabled_median": 6.0345,
+      "disabled_median": 5.9264,
+      "enabled_minus_disabled_ms": 0.1081,
+      "enabled_minus_disabled_percent": 1.824
+    },
+    "enclosing_update_p95_ms": {
+      "enabled_runs": [
+        14.2288,
+        14.2612,
+        13.9836
+      ],
+      "disabled_runs": [
+        14.747,
+        13.6022,
+        13.7408
+      ],
+      "enabled_median": 14.2288,
+      "disabled_median": 13.7408,
+      "enabled_minus_disabled_ms": 0.488,
+      "enabled_minus_disabled_percent": 3.5515
+    },
+    "changed_update_p95_ms": {
+      "enabled_runs": [
+        6.5346,
+        6.1942,
+        6.7216
+      ],
+      "disabled_runs": [
+        7.737,
+        5.774,
+        6.1943
+      ],
+      "enabled_median": 6.5346,
+      "disabled_median": 6.1943,
+      "enabled_minus_disabled_ms": 0.3403,
+      "enabled_minus_disabled_percent": 5.4938
+    },
+    "unchanged_update_p95_ms": {
+      "enabled_runs": [
+        14.2288,
+        14.2612,
+        13.9836
+      ],
+      "disabled_runs": [
+        14.747,
+        13.6022,
+        13.7408
+      ],
+      "enabled_median": 14.2288,
+      "disabled_median": 13.7408,
+      "enabled_minus_disabled_ms": 0.488,
+      "enabled_minus_disabled_percent": 3.5515
+    },
+    "layout_exit_p95_ms": {
+      "enabled_runs": [
+        1.327,
+        1.0615,
+        1.1046
+      ],
+      "disabled_runs": [
+        1.0046,
+        0.9474,
+        1.2468
+      ],
+      "enabled_median": 1.1046,
+      "disabled_median": 1.0046,
+      "enabled_minus_disabled_ms": 0.1,
+      "enabled_minus_disabled_percent": 9.9542
+    },
+    "channel_exit_p95_ms": {
+      "enabled_runs": [
+        0.9406,
+        0.976,
+        0.9748
+      ],
+      "disabled_runs": [
+        0.9856,
+        0.84,
+        0.8597
+      ],
+      "enabled_median": 0.9748,
+      "disabled_median": 0.8597,
+      "enabled_minus_disabled_ms": 0.1151,
+      "enabled_minus_disabled_percent": 13.3884
+    },
+    "layout_transaction_p95_ms": {
+      "enabled_runs": [
+        1.9022,
+        1.5793,
+        1.6527
+      ],
+      "disabled_runs": [
+        1.4348,
+        1.3039,
+        1.5326
+      ],
+      "enabled_median": 1.6527,
+      "disabled_median": 1.4348,
+      "enabled_minus_disabled_ms": 0.2179,
+      "enabled_minus_disabled_percent": 15.1868
+    },
+    "channel_transaction_p95_ms": {
+      "enabled_runs": [
+        1.2525,
+        1.3462,
+        1.2983
+      ],
+      "disabled_runs": [
+        1.3248,
+        1.1248,
+        1.1284
+      ],
+      "enabled_median": 1.2983,
+      "disabled_median": 1.1284,
+      "enabled_minus_disabled_ms": 0.1699,
+      "enabled_minus_disabled_percent": 15.0567
+    }
+  },
+  "output_equivalence": {
+    "native_state_sha256": "bec101cb0f83691b2dfcbe7416043f942d463f06372e646c0fbb5ffe01384537",
+    "point_array_sha256": {
+      "positions": "f70b91eb2ca9e88517f46f6c3297e4bb0bd8eaae30beb860f8949a68e4417cfe",
+      "fuels": "8fad4d669e9d0d778ade526cbde2447d8ae0fa378c716e2da4bca212a47d4ef6",
+      "temperatures": "db22d4c1bf96b5dcd5c8f22d0aac0e9252b722f181070d822b2c77ee93a0f1a6",
+      "smokes": "0421374b2ae4c4bed5b2183ca255e1a5e388b77b4b1dfa1468fb7c8fe922faf6"
+    },
+    "resident_revisions": [
+      500,
+      500,
+      500
+    ],
+    "source_values_equal": true,
+    "flow_output_equal": false,
+    "flow_output_difference_expected": "disabled FlowUsd StageUpdate produces zero active blocks/readback"
+  },
+  "flow_boundary": {
+    "enabled_active_block_maxima": [
+      32,
+      32,
+      32
+    ],
+    "disabled_active_block_maxima": [
+      0,
+      0,
+      0
+    ],
+    "enabled_readback_counts": [
+      {
+        "temperature": 952000,
+        "fuel": 952000,
+        "burn": 952000,
+        "smoke": 952000,
+        "velocity": 1324232,
+        "divergence": 0
+      },
+      {
+        "temperature": 952000,
+        "fuel": 952000,
+        "burn": 952000,
+        "smoke": 952000,
+        "velocity": 1324232,
+        "divergence": 0
+      },
+      {
+        "temperature": 952000,
+        "fuel": 952000,
+        "burn": 952000,
+        "smoke": 952000,
+        "velocity": 1324232,
+        "divergence": 0
+      }
+    ],
+    "disabled_readback_counts": [
+      {
+        "temperature": 0,
+        "fuel": 0,
+        "burn": 0,
+        "smoke": 0,
+        "velocity": 0,
+        "divergence": 0
+      },
+      {
+        "temperature": 0,
+        "fuel": 0,
+        "burn": 0,
+        "smoke": 0,
+        "velocity": 0,
+        "divergence": 0
+      },
+      {
+        "temperature": 0,
+        "fuel": 0,
+        "burn": 0,
+        "smoke": 0,
+        "velocity": 0,
+        "divergence": 0
+      }
+    ]
+  },
+  "interpretation": {
+    "qualified": "The StageUpdate node can be configured before the derived target stage connects and restored after the run. Authoritative wood state, Point source arrays, publication counts, and revisions remain exact.",
+    "not_qualified": "The disabled contrast removes Flow simulation output, so its timing difference is not an output-equivalent optimization or direct ingest timer. StageUpdate disablement does not prove that synchronous USD notice subscribers were unregistered.",
+    "phase6dd_effect": "ChangeBlock exit remains measurable in both modes; the Phase 6DD residual still cannot be assigned wholly to FlowUsd StageUpdate.",
+    "next": "Inspect whether a derived extension-disable control can remove the FlowUsd notice subscriber before stage connection without changing USD schemas; do not adopt it before API and output consequences are proven."
+  },
+  "gates": {
+    "six_cases_captured": true,
+    "three_enabled_and_disabled": true,
+    "each_pair_has_both_modes": true,
+    "all_case_gates_passed": true,
+    "profiler_capture_disabled_all_runs": true,
+    "flow_node_restored_all_runs": true,
+    "revisions_exact_all_runs": true,
+    "native_state_exact_across_modes": true,
+    "point_source_arrays_exact_across_modes": true,
+    "enabled_flow_output_present": true,
+    "disabled_flow_output_absent": true,
+    "publication_integrity_all_runs": true,
+    "production_app_unchanged": true
+  },
+  "gates_passed": 13,
+  "gate_count": 13,
+  "production_app": {
+    "sha256_before": "6F8E70F5C7E4573C504789D6B9E5282C77920B490E0F41FC2BD86B68D05C9987",
+    "sha256_after": "6F8E70F5C7E4573C504789D6B9E5282C77920B490E0F41FC2BD86B68D05C9987",
+    "changed_during_run": false
+  },
+  "contracts": {
+    "production_default": "OFF",
+    "production_sphere_emitter_changed": false,
+    "point_production_adopted": false,
+    "physics_changed": false,
+    "json_schema_changed": false,
+    "serialization_changed": false,
+    "usd_save_changed": false,
+    "rollback_changed": false,
+    "revision_changed": false,
+    "immutable_snapshot_changed": false,
+    "flow_version": "110.0.0"
+  },
+  "video": {
+    "reused": "resident_translation_breakdown.mp4",
+    "reason": "same deterministic Resident translation source publication",
+    "disabled_case_visual_success": false,
+    "success_criterion": "not video-only"
+  }
+}
