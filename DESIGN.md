@@ -2224,3 +2224,13 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - coalescing契約: 自動notice要求だけ`coalesce=True`とし、同種refreshがpendingなら同じcommand sequenceを返す。request countとsubmitted/coalesced countを分離し、drain時にowner threadが最終stage transformを1回だけ読む。UI、timeline、headlessの明示要求は従来どおり独立commandであり、queueは値・pending snapshot・rollback・revision権威を持たない。
 - 実Kit結果: 全1,507 notice中、対象transformは31件、running中無視18件、停止中要求13件だった。45度へ至る6要求は1 commandへまとまり`unsupported_layout`で拒否され、Point 4配列、consumer/layout revision、replace count、stopped状態は不変だった。cardinalへ戻る7要求は次の1 commandへまとまり、layout revisionを`1 → 2`へ1回だけ進めた。queueはrequest 13、submitted 2、coalesced 11、executed 2、rejected 1、pending 0だった。
 - 判断: 実USD notice filteringとburst coalescingを既定OFF境界としてqualifiedとする。`14 / 14` gate、backend/primary/Point=`710 / 710 / 710`、Point resync 0、active block peak`454`、必須readback非空、実RTX 60 frameは全て異なった。動画区間はrevision 651〜710で連続し、炎の脈動はstate restartではない。Point既定、Sphere、物理式、JSON schema、Flow 110/dependency、正規sceneは変更しない。次は実GUI manipulator操作、実stage recovery後のobserver rebind、notice callback費用を独立に測る。再現は`run_phase6cl_resident_transform_observer.ps1`、結果は`resident_transform_observer_report.json/.svg/.mp4`へ固定する。release build、既定OFF Phase 0、全8 process・`56 / 56`回帰は合格した。
+- 訂正: 上記の「炎の脈動はstate restartではない」という判断を撤回する。Phase 6CJ〜6CL動画の隣接フレームで、薪姿勢のジャンプと炎の消失・再生成が確認された。consumer/revision/command/observer gateは有効だが、動的PhysX薪と静的Point layoutの追従、USD/PhysX/Flow/RTX同期、Flow NanoVDB場のcheckpoint/recoveryは未実装であり、映像連続性は未合格とする。
+
+## 119. Phase 6CM Resident Point continuity defect audit
+
+### 2026-08-08: revision連続性と映像連続性を分離して未達を計測する
+
+- 分類: Phase 6CJ〜6CLの現象は意図した仕様ではなく`unresolved_defect`とする。CJはResident consumer/revisionだけを復旧しFlow solver場を保存しない。CK/CLは停止中layout更新後、PhysX薪world pose、Point配列、Flow取込み、RTX描画が同一frameで整合したことを確認していない。
+- 診断境界: 既定OFFの`residentPointContinuityQualificationEnabled`を追加し、各薪world origin、360点単位のPoint群重心、SI距離誤差、Resident tick/revision、timeline状態、active blockを描画frame単位で記録する。初回実測でlayout command後・最初のPoint publish前に40.0 mmの不一致を検出し、最初のpublish後は約2 nmへ一致した。layout確定とUSD Point発行の間に異なる状態が露出する。また再開後sampleのtimelineは停止しており連続PLAY証跡ではなかった。診断合格は不具合の再現・記録だけを意味し、`seamless_visual_continuity_qualified=false`を維持する。
+- 非変更: production既定Sphere、Point既定OFF、木材権威状態、物理式、JSON schema、Flow 110、revision/rollback/immutable snapshot契約は変更しない。次は姿勢同期とFlow場復元を別問題として切り分け、未確認PhysX APIを推測実装せずローカルSDKで検証する。
+- 実測: 実Kit/Flow 110で130 sampleを採取し、発行前最大誤差`0.040000000099 m`、revision 301発行後`1.8577e-9 m`、timeline PLAY sample`0 / 130`を記録した。backend/primary/Pointは`710 / 710 / 710`、active block peak`459`、実RTX動画は60/60固有frame、診断gateは`14 / 14`だった。ただしseamless visual continuityとtimeline continuityは明示的にfalseである。release build、既定OFF Phase 0、全8 process・`57 / 57`回帰は合格した。

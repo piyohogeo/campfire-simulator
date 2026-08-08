@@ -99,6 +99,7 @@ from .resident_point_commands import (
     ResidentPointTransformObserver,
     format_resident_point_command_result,
 )
+from .resident_point_continuity import measure_resident_point_log_alignment
 from .resident_point_scene import (
     RESIDENT_POINT_APPLICATION_SETTING,
     RESIDENT_POINT_EMITTER_PATH,
@@ -434,8 +435,13 @@ class CampfireAppExtension(omni.ext.IExt):
             transform_qualification = point_settings.get_as_bool(
                 f"{SETTINGS_ROOT}/residentPointTransformQualificationEnabled"
             )
+            continuity_qualification = point_settings.get_as_bool(
+                f"{SETTINGS_ROOT}/residentPointContinuityQualificationEnabled"
+            )
             point_phase = (
-                "phase6cl"
+                "phase6cm"
+                if continuity_qualification
+                else "phase6cl"
                 if transform_qualification
                 else "phase6ck"
                 if command_qualification
@@ -764,17 +770,23 @@ class CampfireAppExtension(omni.ext.IExt):
         transform_qualification = carb.settings.get_settings().get_as_bool(
             f"{SETTINGS_ROOT}/residentPointTransformQualificationEnabled"
         )
+        continuity_qualification = carb.settings.get_settings().get_as_bool(
+            f"{SETTINGS_ROOT}/residentPointContinuityQualificationEnabled"
+        )
         if sum(
             bool(value)
             for value in (
                 recovery_qualification,
                 command_qualification,
                 transform_qualification,
+                continuity_qualification,
             )
         ) > 1:
             raise ValueError("Resident Point qualifications are mutually exclusive")
         phase_name = (
-            "phase6cl"
+            "phase6cm"
+            if continuity_qualification
+            else "phase6cl"
             if transform_qualification
             else "phase6ck"
             if command_qualification
@@ -803,6 +815,9 @@ class CampfireAppExtension(omni.ext.IExt):
         command_queue_status = None
         transform_observer_status = None
         transform_batches = None
+        alignment_before_first_publication = None
+        alignment_samples = []
+        alignment_tolerance_m = 0.002
 
         def observe_point_changes(notice, _sender):
             point_resyncs.extend(
@@ -837,6 +852,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 if recovery_qualification
                 or command_qualification
                 or transform_qualification
+                or continuity_qualification
                 else warmup_steps
             )
             for tick in range(1, initial_warmup_steps + 1):
@@ -850,6 +866,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 recovery_qualification
                 or command_qualification
                 or transform_qualification
+                or continuity_qualification
             ):
                 timeline.pause()
                 owner.stop()
@@ -866,7 +883,11 @@ class CampfireAppExtension(omni.ext.IExt):
                     float(original_origin[1]) + 0.04,
                     float(original_origin[2]),
                 )
-                if command_qualification or transform_qualification:
+                if (
+                    command_qualification
+                    or transform_qualification
+                    or continuity_qualification
+                ):
                     point_prim_before = stage.GetPrimAtPath(
                         RESIDENT_POINT_EMITTER_PATH
                     )
@@ -972,9 +993,35 @@ class CampfireAppExtension(omni.ext.IExt):
                     layout_result = owner.refresh_layout(stage)
                 owner.start()
                 timeline.play()
+                if continuity_qualification:
+                    alignment_before_first_publication = (
+                        measure_resident_point_log_alignment(
+                            stage,
+                            (PHASE3_DRY_LOG_ID, PHASE3_WET_LOG_ID),
+                            point_attribute.Get(),
+                            points_per_log=360,
+                        )
+                    )
                 result = owner.step()
                 await omni.kit.app.get_app().next_update_async()
                 active_blocks.append(int(flow_interface.get_active_block_count()))
+                if continuity_qualification:
+                    alignment_samples.append(
+                        {
+                            "sample": 0,
+                            "resident_revision": int(result.snapshot.revision),
+                            "resident_tick": int(result.snapshot.tick),
+                            "timeline_time_s": float(timeline.get_current_time()),
+                            "timeline_playing": bool(timeline.is_playing()),
+                            "active_blocks": active_blocks[-1],
+                            **measure_resident_point_log_alignment(
+                                stage,
+                                (PHASE3_DRY_LOG_ID, PHASE3_WET_LOG_ID),
+                                point_attribute.Get(),
+                                points_per_log=360,
+                            ),
+                        }
+                    )
                 positions_after = tuple(
                     tuple(float(component) for component in point)
                     for point in point_attribute.Get()
@@ -1011,10 +1058,46 @@ class CampfireAppExtension(omni.ext.IExt):
                         active_blocks.append(
                             int(flow_interface.get_active_block_count())
                         )
+                        if continuity_qualification:
+                            alignment_samples.append(
+                                {
+                                    "sample": len(alignment_samples),
+                                    "resident_revision": int(result.snapshot.revision),
+                                    "resident_tick": int(result.snapshot.tick),
+                                    "timeline_time_s": float(timeline.get_current_time()),
+                                    "timeline_playing": bool(timeline.is_playing()),
+                                    "active_blocks": active_blocks[-1],
+                                    **measure_resident_point_log_alignment(
+                                        stage,
+                                        (PHASE3_DRY_LOG_ID, PHASE3_WET_LOG_ID),
+                                        point_attribute.Get(),
+                                        points_per_log=360,
+                                    ),
+                                }
+                            )
             for frame_index in range(frame_count):
                 result = owner.step()
                 await omni.kit.app.get_app().next_update_async()
                 active_blocks.append(int(flow_interface.get_active_block_count()))
+                if continuity_qualification:
+                    await omni.kit.viewport.utility.next_viewport_frame_async(viewport)
+                    alignment_samples.append(
+                        {
+                            "sample": len(alignment_samples),
+                            "capture_frame": frame_index,
+                            "resident_revision": int(result.snapshot.revision),
+                            "resident_tick": int(result.snapshot.tick),
+                            "timeline_time_s": float(timeline.get_current_time()),
+                            "timeline_playing": bool(timeline.is_playing()),
+                            "active_blocks": active_blocks[-1],
+                            **measure_resident_point_log_alignment(
+                                stage,
+                                (PHASE3_DRY_LOG_ID, PHASE3_WET_LOG_ID),
+                                point_attribute.Get(),
+                                points_per_log=360,
+                            ),
+                        }
+                    )
                 await self._capture_fast_image(
                     viewport,
                     video_frames_dir / f"frame_{frame_index:04d}.png",
@@ -1050,7 +1133,11 @@ class CampfireAppExtension(omni.ext.IExt):
                 self._resident_point_transform_observer.close()
                 self._resident_point_transform_observer = None
             if self._resident_point_command_queue is not None:
-                if command_qualification or transform_qualification:
+                if (
+                    command_qualification
+                    or transform_qualification
+                    or continuity_qualification
+                ):
                     command_queue_status = (
                         self._resident_point_command_queue.status()
                     )
@@ -1081,6 +1168,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 if recovery_qualification
                 or command_qualification
                 or transform_qualification
+                or continuity_qualification
                 else 1
             )
             gates = {
@@ -1233,6 +1321,34 @@ class CampfireAppExtension(omni.ext.IExt):
                         ),
                     }
                 )
+            if continuity_qualification:
+                gates.update(
+                    {
+                        "supported_layout_committed_for_continuity_audit": (
+                            len(command_results) == 2
+                            and command_results[0]["status"] == "rejected"
+                            and command_results[1]["status"] == "accepted"
+                            and command_results[1]["layout_revision"] == 2
+                            and stopped_status["layout_replace_count"] == 1
+                        ),
+                        "frame_aligned_continuity_telemetry_recorded": (
+                            alignment_before_first_publication is not None
+                            and len(alignment_samples) >= frame_count
+                            and all(
+                                sample["point_count"] == 720
+                                for sample in alignment_samples
+                            )
+                        ),
+                        "prepublication_alignment_gap_reproduced": (
+                            alignment_before_first_publication["max_error_m"]
+                            > alignment_tolerance_m
+                        ),
+                        "first_publication_restored_point_pose_alignment": (
+                            alignment_samples[0]["max_error_m"]
+                            <= alignment_tolerance_m
+                        ),
+                    }
+                )
             summary = {
                 "schema_version": 1,
                 "status": "ok" if all(gates.values()) else "failed",
@@ -1247,6 +1363,7 @@ class CampfireAppExtension(omni.ext.IExt):
                     "layout_recovery_qualification": recovery_qualification,
                     "command_queue_qualification": command_qualification,
                     "transform_notice_qualification": transform_qualification,
+                    "continuity_qualification": continuity_qualification,
                     "point_count": 720,
                     "surface_points_per_log": 360,
                     "log_count": 2,
@@ -1267,6 +1384,10 @@ class CampfireAppExtension(omni.ext.IExt):
                     "command_queue": command_queue_status,
                     "transform_observer": transform_observer_status,
                     "transform_batches": transform_batches,
+                    "alignment_before_first_publication": (
+                        alignment_before_first_publication
+                    ),
+                    "alignment_samples": alignment_samples,
                     "rejected_point_state_unchanged": rejected_point_state_unchanged,
                     "rejected_owner_state_unchanged": rejected_owner_state_unchanged,
                     "replacement_scene": (
@@ -1287,6 +1408,45 @@ class CampfireAppExtension(omni.ext.IExt):
                     "video_frame_count": len(frame_paths),
                     "unique_video_frame_hashes": unique_frames,
                     "final_tick": result.snapshot.tick if result else None,
+                },
+                "known_issue": {
+                    "id": "resident-point-flow-visual-discontinuity",
+                    "classification": "unresolved_defect",
+                    "seamless_visual_continuity_qualified": False,
+                    "dynamic_log_point_tracking_implemented": False,
+                    "flow_solver_state_checkpointed": False,
+                    "alignment_tolerance_m": alignment_tolerance_m,
+                    "maximum_observed_alignment_error_m": max(
+                        (
+                            [
+                                alignment_before_first_publication["max_error_m"]
+                            ]
+                            if alignment_before_first_publication is not None
+                            else []
+                        )
+                        + [
+                            sample["max_error_m"] for sample in alignment_samples
+                        ],
+                        default=None,
+                    ),
+                    "timeline_playing_sample_count": sum(
+                        bool(sample["timeline_playing"])
+                        for sample in alignment_samples
+                    ),
+                    "timeline_stopped_sample_count": sum(
+                        not bool(sample["timeline_playing"])
+                        for sample in alignment_samples
+                    ),
+                    "timeline_continuity_qualified": bool(alignment_samples)
+                    and all(
+                        bool(sample["timeline_playing"])
+                        for sample in alignment_samples
+                    ),
+                    "note": (
+                        "This diagnostic phase records the known log jump and Flow "
+                        "field discontinuity; passing its audit gates does not qualify "
+                        "seamless recovery or editing."
+                    ),
                 },
                 "gates": gates,
             }

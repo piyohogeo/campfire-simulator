@@ -189,6 +189,10 @@ from .resident_point_commands import (
     ResidentPointTransformObserver,
     format_resident_point_command_result,
 )
+from .resident_point_continuity import (
+    measure_resident_point_log_alignment,
+    resident_point_group_centroids,
+)
 from .resident_stage_recovery import ResidentStageRecoveryOrchestrator
 from .wood import LogSpec, create_log, get_log_world_position, list_log_ids, move_log
 
@@ -256,6 +260,8 @@ __all__ = [
     "ResidentPointCommandQueue",
     "ResidentPointCommandResult",
     "ResidentPointTransformObserver",
+    "measure_resident_point_log_alignment",
+    "resident_point_group_centroids",
     "RESIDENT_POINT_APPLICATION_SETTING",
     "RESIDENT_POINT_EMITTER_PATH",
     "RESIDENT_POINT_SOURCE_PATH",

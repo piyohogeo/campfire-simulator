@@ -1,5 +1,7 @@
 # Changelog
 
+- Reclassified the visible Phase 6CJ–6CL log jumps and flame resets as an unresolved continuity defect; their consumer, revision, command, and observer results remain valid, but seamless Flow/visual recovery is no longer claimed.
+- Added a default-off Phase 6CM frame-aligned continuity diagnostic for PhysX log origins, 360-point group centroids, Resident revision/tick, timeline state, and Flow active blocks; it measured a 40.000 mm pre-publication gap, numerical alignment after revision 301, and zero playing timeline samples while keeping seamless continuity explicitly unqualified.
 - Added the Phase 6CL default-off transform observer, filtering real USD notices by stopped log xform, coalescing 13 rapid edit requests into two owner-thread commands, and advancing layout revision only once for the final supported transform.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).

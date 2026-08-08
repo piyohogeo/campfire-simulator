@@ -899,6 +899,41 @@ class TestScene(omni.kit.test.AsyncTestCase):
         with self.assertRaisesRegex(ValueError, "cardinal XY"):
             campfire.app.resident_point_layout_for_logs(stage, log_ids)
 
+    async def test_resident_point_continuity_measures_complete_log_groups(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase3_scene(stage)
+        log_ids = (campfire.app.PHASE3_DRY_LOG_ID, campfire.app.PHASE3_WET_LOG_ID)
+        origins = tuple(
+            tuple(
+                float(value)
+                for value in campfire.app.get_log_world_position(stage, log_id)
+            )
+            for log_id in log_ids
+        )
+        points = tuple(
+            Gf.Vec3f(origin[0] + offset, origin[1], origin[2])
+            for origin in origins
+            for offset in (-0.01, 0.01)
+        )
+
+        measurement = campfire.app.measure_resident_point_log_alignment(
+            stage, log_ids, points, points_per_log=2
+        )
+
+        self.assertEqual(measurement["point_count"], 4)
+        self.assertAlmostEqual(measurement["max_error_m"], 0.0, places=6)
+        campfire.app.move_log(
+            stage,
+            log_ids[0],
+            (origins[0][0], origins[0][1] + 0.04, origins[0][2]),
+        )
+        moved = campfire.app.measure_resident_point_log_alignment(
+            stage, log_ids, points, points_per_log=2
+        )
+        self.assertAlmostEqual(moved["error_m"][0], 0.04, places=6)
+        with self.assertRaisesRegex(ValueError, "complete per-log groups"):
+            campfire.app.resident_point_group_centroids(points[:-1], 2)
+
     async def test_resident_point_application_owner_assigns_ticks_and_delegates(self):
         class FakeSession:
             def __init__(self):

@@ -68,7 +68,7 @@ The Phase 6CJ normal-app qualification stopped at Resident revision 300, moved t
 
 Revision 301, including layout revision 2, was exported into a separate replacement stage. The existing normal-owner recovery orchestrator observed `closing`, `closed`, `opening`, and `opened`, then rebuilt both consumers from committed revision 301 and current layout revision 2. It resumed without pending work or retry and continued through revision 710. Backend, primary adapter, and Point sidecar revisions matched; Point resync and pending discard remained zero.
 
-All 13 gates passed. Flow peaked at 427 active blocks. Temperature, fuel, burn, and smoke readbacks contained 3,806,912 words each, velocity contained 2,410,056 words, and all 60 RTX evidence frames were unique. The full suite passed 56/56 checks in 301.4 s, collapse coverage completed in 177.9 s, and the default-off Phase 0 capture passed.
+All 13 lifecycle and data gates passed. Flow peaked at 427 active blocks. Temperature, fuel, burn, and smoke readbacks contained 3,806,912 words each, velocity contained 2,410,056 words, and all 60 RTX evidence frames were unique. Subsequent frame-by-frame inspection found that the log pose jumps before ignition and that the Flow field is rebuilt after stage replacement. These gates therefore qualify Resident consumer/revision recovery only; they do not qualify seamless Flow-field or visual recovery. The full suite passed 56/56 checks in 301.4 s, collapse coverage completed in 177.9 s, and the default-off Phase 0 capture passed.
 
 The current native layout ABI still accepts horizontal cardinal X/Y logs only. Unsupported arbitrary rotations must not be silently approximated; owner-thread command routing and explicit UI/headless failure reporting remain the next boundary. Point remains default-off.
 
@@ -101,8 +101,8 @@ rotation and moving the log by 0.04 m, the next command advanced layout revision
 1 to 2. Simulation resumed through revision 710 with backend, primary adapter,
 and Point sidecar equal. Point structural resync remained zero.
 
-All 13 gates passed. Flow peaked at 427 active blocks; required field readbacks
-were non-empty and all 60 RTX evidence frames were unique. The layout ABI remains
+All 13 lifecycle and data gates passed. Flow peaked at 427 active blocks; required field readbacks
+were non-empty and all 60 RTX evidence frames were unique. Frame inspection later found a one-frame log-pose transition with simultaneous flame disappearance. The command result remains valid, but smooth USD/PhysX/Point/Flow/RTX synchronization is an unresolved defect and was not covered by these gates. The layout ABI remains
 limited to horizontal cardinal X/Y logs, and Point remains explicit opt-in. The
 next boundary is interactive transform-edit observation and bounded-queue
 backpressure; arbitrary rotation support is not implied by this result. The final
@@ -139,12 +139,25 @@ revision exactly once from 1 to 2. The queue recorded 13 requests, two submitted
 commands, 11 coalesced submissions, two executions, one rejection, and no
 pending work.
 
-All 14 gates passed. Backend, primary, and Point revisions ended at 710, Point
+All 14 lifecycle and data gates passed. Backend, primary, and Point revisions ended at 710, Point
 resync remained zero, Flow peaked at 454 active blocks, required field readbacks
 were non-empty, and all 60 RTX frames were unique. The capture spans continuous
-Resident revisions 651 through 710; visible Flow plume pulsation is not a state
-restart. Real GUI manipulator interaction, observer rebind during an actual stage
+Resident revisions 651 through 710, but frame inspection found a log jump and simultaneous flame disappearance between adjacent encoded frames. Revision continuity is therefore not evidence of visual or Flow-field continuity. The earlier plume-only interpretation is withdrawn. Real GUI manipulator interaction, observer rebind during an actual stage
 recovery, and notice-callback cost remain separate follow-up measurements.
+
+## Phase 6CM continuity-defect reclassification and diagnostic gate
+
+The Phase 6CJ–6CL evidence has been reclassified: layout/revision/consumer gates remain valid, while seamless visual continuity is explicitly unqualified. Dynamic PhysX log poses are authoritative, but the current Point layout is refreshed only while stopped and then remains static. Stage replacement restores Resident consumers and revisions but does not checkpoint the Flow NanoVDB solver field. Neither limitation is an intended production behavior.
+
+Phase 6CM adds a default-off diagnostic setting and frame-aligned telemetry. It records each PhysX log world origin, each contiguous 360-point group centroid, their SI-unit error, Resident tick/revision, timeline state, and Flow active-block count. The first diagnostic run localized a 40.0 mm gap after the stopped layout command: the log transform had changed while the Point array still represented the old layout. The next Resident publication reduced that gap to numerical noise, proving that layout commit and USD Point publication expose two different states. The samples also showed the timeline stopped rather than continuously playing. A viewport-frame barrier is used for evidence samples so later fixes can be evaluated against the same contract. Passing this diagnostic means only that the unresolved defect was reproduced and recorded; `seamless_visual_continuity_qualified` and timeline continuity remain false.
+
+The completed real-Kit run recorded 130 alignment samples. The pre-publication gap was 0.040000000099 m; after revision 301 publication the maximum error was 1.8577e-9 m. All 130 samples reported the timeline stopped. Backend, primary, and Point revisions still ended at 710, Flow peaked at 459 active blocks, and all 60 evidence frames were unique. The 14/14 diagnostic result does not supersede the two explicit false qualifications.
+
+Reproduction:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_phase6cm_resident_point_continuity.ps1
+```
 
 Reproduction:
 
