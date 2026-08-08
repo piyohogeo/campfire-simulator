@@ -801,6 +801,11 @@ class CampfireAppExtension(omni.ext.IExt):
                 f"{SETTINGS_ROOT}/residentPointTimelineContinuityQualificationEnabled"
             )
         )
+        dynamic_translation_qualification = (
+            carb.settings.get_settings().get_as_bool(
+                f"{SETTINGS_ROOT}/residentPointDynamicTranslationQualificationEnabled"
+            )
+        )
         continuity_diagnostic = (
             continuity_qualification
             or continuity_fix_qualification
@@ -856,6 +861,7 @@ class CampfireAppExtension(omni.ext.IExt):
         transform_batches = None
         alignment_before_first_publication = None
         alignment_samples = []
+        point_enclosing_update_samples = []
         alignment_tolerance_m = 0.002
         layout_transaction_resident_revision = None
         timeline_end_before_s = None
@@ -986,10 +992,29 @@ class CampfireAppExtension(omni.ext.IExt):
                 or continuity_diagnostic
                 else warmup_steps
             )
+            last_update_layout_revision = int(owner.status()["layout_revision"])
             for tick in range(1, initial_warmup_steps + 1):
                 result = owner.step()
                 if tick % 5 == 0:
+                    current_layout_revision = int(owner.status()["layout_revision"])
+                    update_start = time.perf_counter_ns()
                     await omni.kit.app.get_app().next_update_async()
+                    update_elapsed_ms = (
+                        time.perf_counter_ns() - update_start
+                    ) / 1_000_000.0
+                    if dynamic_translation_qualification:
+                        point_enclosing_update_samples.append(
+                            {
+                                "tick": int(result.snapshot.tick),
+                                "layout_changed": (
+                                    current_layout_revision
+                                    > last_update_layout_revision
+                                ),
+                                "layout_revision": current_layout_revision,
+                                "elapsed_ms": update_elapsed_ms,
+                            }
+                        )
+                    last_update_layout_revision = current_layout_revision
                     active_blocks.append(
                         int(flow_interface.get_active_block_count())
                     )
@@ -1738,6 +1763,42 @@ class CampfireAppExtension(omni.ext.IExt):
                     "video_frame_count": len(frame_paths),
                     "unique_video_frame_hashes": unique_frames,
                     "final_tick": result.snapshot.tick if result else None,
+                    "point_enclosing_update": {
+                        "boundary": (
+                            "next_update_async wall time; includes Flow USD ingest, "
+                            "StageUpdate, PhysX, Flow solver, and render"
+                        ),
+                        "direct_flow_ingest_timing_available": False,
+                        "changed": (
+                            summarize_timing_ms(
+                                [
+                                    sample["elapsed_ms"]
+                                    for sample in point_enclosing_update_samples
+                                    if sample["layout_changed"]
+                                ]
+                            )
+                            if any(
+                                sample["layout_changed"]
+                                for sample in point_enclosing_update_samples
+                            )
+                            else None
+                        ),
+                        "unchanged": (
+                            summarize_timing_ms(
+                                [
+                                    sample["elapsed_ms"]
+                                    for sample in point_enclosing_update_samples
+                                    if not sample["layout_changed"]
+                                ]
+                            )
+                            if any(
+                                not sample["layout_changed"]
+                                for sample in point_enclosing_update_samples
+                            )
+                            else None
+                        ),
+                        "samples": point_enclosing_update_samples,
+                    },
                 },
                 "known_issue": {
                     "id": "resident-point-flow-visual-discontinuity",

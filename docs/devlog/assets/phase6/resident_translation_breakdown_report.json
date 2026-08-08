@@ -1,0 +1,201 @@
+{
+  "phase": "phase6dc",
+  "status": "ok",
+  "scope": "changed-tick Resident Point USD transaction breakdown",
+  "resident_revision": 760,
+  "point_count": 720,
+  "changed_publication_count": 56,
+  "unchanged_publication_count": 704,
+  "usd_publication_timing_ms": {
+    "fuel_vt_conversion": {
+      "sample_count": 56,
+      "warmup_samples_excluded": 0,
+      "total_ms": 1.5816,
+      "mean_ms": 0.0282,
+      "p95_ms": 0.0411,
+      "max_ms": 0.0512
+    },
+    "temperature_vt_conversion": {
+      "sample_count": 56,
+      "warmup_samples_excluded": 0,
+      "total_ms": 0.5688,
+      "mean_ms": 0.0102,
+      "p95_ms": 0.0114,
+      "max_ms": 0.2349
+    },
+    "smoke_vt_conversion": {
+      "sample_count": 56,
+      "warmup_samples_excluded": 0,
+      "total_ms": 0.3265,
+      "mean_ms": 0.0058,
+      "p95_ms": 0.0114,
+      "max_ms": 0.0212
+    },
+    "position_vt_conversion": {
+      "sample_count": 56,
+      "warmup_samples_excluded": 0,
+      "total_ms": 1.729,
+      "mean_ms": 0.0309,
+      "p95_ms": 0.0322,
+      "max_ms": 0.4703
+    },
+    "previous_value_snapshot": {
+      "sample_count": 56,
+      "warmup_samples_excluded": 0,
+      "total_ms": 4.2358,
+      "mean_ms": 0.0756,
+      "p95_ms": 0.1183,
+      "max_ms": 0.1342
+    },
+    "change_block_enter": {
+      "sample_count": 56,
+      "warmup_samples_excluded": 0,
+      "total_ms": 0.5681,
+      "mean_ms": 0.0101,
+      "p95_ms": 0.0112,
+      "max_ms": 0.2232
+    },
+    "position_usd_set": {
+      "sample_count": 56,
+      "warmup_samples_excluded": 0,
+      "total_ms": 4.6022,
+      "mean_ms": 0.0822,
+      "p95_ms": 0.1402,
+      "max_ms": 0.1617
+    },
+    "fuel_usd_set": {
+      "sample_count": 56,
+      "warmup_samples_excluded": 0,
+      "total_ms": 1.2989,
+      "mean_ms": 0.0232,
+      "p95_ms": 0.0431,
+      "max_ms": 0.0472
+    },
+    "temperature_usd_set": {
+      "sample_count": 56,
+      "warmup_samples_excluded": 0,
+      "total_ms": 0.6234,
+      "mean_ms": 0.0111,
+      "p95_ms": 0.0205,
+      "max_ms": 0.0219
+    },
+    "smoke_usd_set": {
+      "sample_count": 56,
+      "warmup_samples_excluded": 0,
+      "total_ms": 0.4984,
+      "mean_ms": 0.0089,
+      "p95_ms": 0.0183,
+      "max_ms": 0.0193
+    },
+    "layout_revision_usd_set": {
+      "sample_count": 56,
+      "warmup_samples_excluded": 0,
+      "total_ms": 1.7703,
+      "mean_ms": 0.0316,
+      "p95_ms": 0.0304,
+      "max_ms": 0.7108
+    },
+    "resident_revision_usd_set": {
+      "sample_count": 56,
+      "warmup_samples_excluded": 0,
+      "total_ms": 0.4835,
+      "mean_ms": 0.0086,
+      "p95_ms": 0.0167,
+      "max_ms": 0.0255
+    },
+    "change_block_exit": {
+      "sample_count": 56,
+      "warmup_samples_excluded": 0,
+      "total_ms": 51.0665,
+      "mean_ms": 0.9119,
+      "p95_ms": 1.3539,
+      "max_ms": 1.4346
+    },
+    "publish_transaction": {
+      "sample_count": 56,
+      "warmup_samples_excluded": 0,
+      "total_ms": 71.6001,
+      "mean_ms": 1.2786,
+      "p95_ms": 1.8616,
+      "max_ms": 2.1857
+    },
+    "producer_commit": {
+      "sample_count": 56,
+      "warmup_samples_excluded": 0,
+      "total_ms": 17.3845,
+      "mean_ms": 0.3104,
+      "p95_ms": 0.4642,
+      "max_ms": 0.5242
+    }
+  },
+  "derived": {
+    "vt_conversion_p95_sum_ms": 0.0961,
+    "array_set_p95_sum_ms": 0.2221,
+    "revision_set_p95_sum_ms": 0.0471,
+    "note": "Sums of per-section p95 values are descriptive, not a percentile of their sum."
+  },
+  "enclosing_update_timing_ms": {
+    "changed": {
+      "sample_count": 8,
+      "warmup_samples_excluded": 0,
+      "total_ms": 567.1391,
+      "mean_ms": 70.8924,
+      "p95_ms": 98.2902,
+      "max_ms": 98.2902
+    },
+    "unchanged": {
+      "sample_count": 62,
+      "warmup_samples_excluded": 0,
+      "total_ms": 3940.2021,
+      "mean_ms": 63.5516,
+      "p95_ms": 75.8272,
+      "max_ms": 83.7385
+    },
+    "boundary": "next_update_async wall time; includes Flow USD ingest, StageUpdate, PhysX, Flow solver, and render",
+    "direct_flow_ingest_timing_available": false,
+    "interpretation": "This wall time is an upper enclosing boundary that also includes StageUpdate, PhysX, Flow solver, and render. Flow 110.0.0 exposes no independent USD-emitter ingest timer through the inspected public Python/IFlowUsd/StageUpdate surfaces."
+  },
+  "gates": {
+    "all_detail_samples_match_changed_publications": true,
+    "changed_publications_nonzero": true,
+    "all_snapshots_published": true,
+    "no_sidecar_failure": true,
+    "changed_enclosing_updates_sampled": true,
+    "unchanged_enclosing_updates_sampled": true,
+    "direct_flow_ingest_not_claimed": true,
+    "point_count_preserved": true,
+    "translation_alignment_retained": true
+  },
+  "production_app": {
+    "sha256_before": "6F8E70F5C7E4573C504789D6B9E5282C77920B490E0F41FC2BD86B68D05C9987",
+    "sha256_after": "6F8E70F5C7E4573C504789D6B9E5282C77920B490E0F41FC2BD86B68D05C9987",
+    "changed_during_run": false
+  },
+  "base_harness": {
+    "phase": "phase6co",
+    "status": "failed",
+    "inherited_kit_exit_code": 1,
+    "known_reason": "historical stopped/static Phase 6CO gates conflict with dynamic tracking"
+  },
+  "contracts": {
+    "production_default": "OFF",
+    "physics_changed": false,
+    "json_schema_changed": false,
+    "rollback_changed": false,
+    "revision_changed": false,
+    "immutable_snapshot_changed": false,
+    "flow_version": "110.0.0"
+  },
+  "video": {
+    "frame_count": 60,
+    "source": "direct Phase 6DC optimized run",
+    "success_criterion": "not video-only"
+  },
+  "remaining": {
+    "direct_flow_ingest_timing": "unavailable on inspected public Flow 110.0.0 boundary",
+    "rotation_tracking": "unimplemented",
+    "within_update_flow_reset_excluded": false,
+    "seamless_visual_continuity_qualified": false,
+    "flow_solver_state_checkpointed": false
+  }
+}

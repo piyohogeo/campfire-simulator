@@ -357,9 +357,21 @@ class ResidentPointSidecar:
         self._live_translation_timing_ms = {
             "provider": [],
             "candidate_build": [],
+            "fuel_vt_conversion": [],
+            "temperature_vt_conversion": [],
+            "smoke_vt_conversion": [],
             "position_vt_conversion": [],
+            "previous_value_snapshot": [],
+            "change_block_enter": [],
             "position_usd_set": [],
+            "fuel_usd_set": [],
+            "temperature_usd_set": [],
+            "smoke_usd_set": [],
+            "layout_revision_usd_set": [],
+            "resident_revision_usd_set": [],
+            "change_block_exit": [],
             "publish_transaction": [],
+            "producer_commit": [],
         }
         self._closed = False
         self.attempt_payload_ids = []
@@ -449,15 +461,26 @@ class ResidentPointSidecar:
         self._prepare_count += 1
         return payload
 
-    def _converted(self, payload):
+    def _converted(self, payload, *, profile_translation=False):
         np = self._producer.np
-        converted = {
-            "fuels": Vt.FloatArray.FromNumpy(np.frombuffer(payload.fuels, dtype=np.float32)),
-            "temperatures": Vt.FloatArray.FromNumpy(
-                np.frombuffer(payload.temperatures, dtype=np.float32)
+        converted = {}
+        for name, value, timing_name in (
+            ("fuels", payload.fuels, "fuel_vt_conversion"),
+            (
+                "temperatures",
+                payload.temperatures,
+                "temperature_vt_conversion",
             ),
-            "smokes": Vt.FloatArray.FromNumpy(np.frombuffer(payload.smokes, dtype=np.float32)),
-        }
+            ("smokes", payload.smokes, "smoke_vt_conversion"),
+        ):
+            conversion_start = time.perf_counter_ns() if profile_translation else None
+            converted[name] = Vt.FloatArray.FromNumpy(
+                np.frombuffer(value, dtype=np.float32)
+            )
+            if conversion_start is not None:
+                self._live_translation_timing_ms[timing_name].append(
+                    (time.perf_counter_ns() - conversion_start) / 1_000_000.0
+                )
         if payload.layout_revision != self._committed_layout_revision:
             conversion_start = time.perf_counter_ns()
             converted["positions"] = Vt.Vec3fArray.FromNumpy(
@@ -484,8 +507,13 @@ class ResidentPointSidecar:
         if payload.layout_revision != expected_layout_revision:
             raise RuntimeError("Point sidecar payload layout revision is not contiguous")
         transaction_start = time.perf_counter_ns() if has_layout else None
-        converted = self._converted(payload)
+        converted = self._converted(payload, profile_translation=has_layout)
+        previous_start = time.perf_counter_ns() if has_layout else None
         previous = {name: attribute.Get() for name, attribute in self._attributes.items()}
+        if previous_start is not None:
+            self._live_translation_timing_ms["previous_value_snapshot"].append(
+                (time.perf_counter_ns() - previous_start) / 1_000_000.0
+            )
         previous_state = {
             "revision": self._revision,
             "layout_revision": self._layout_revision,
@@ -498,35 +526,57 @@ class ResidentPointSidecar:
         }
         write_index = 0
         block = Sdf.ChangeBlock()
+        block_enter_start = time.perf_counter_ns() if has_layout else None
         block.__enter__()
+        if block_enter_start is not None:
+            self._live_translation_timing_ms["change_block_enter"].append(
+                (time.perf_counter_ns() - block_enter_start) / 1_000_000.0
+            )
         try:
             for name in ("positions", "fuels", "temperatures", "smokes"):
                 if name not in converted:
                     continue
-                set_start = (
-                    time.perf_counter_ns()
-                    if name == "positions" and has_layout
-                    else None
-                )
+                set_start = time.perf_counter_ns() if has_layout else None
                 if not self._attributes[name].Set(converted[name]):
                     raise RuntimeError(f"Point sidecar {name} Set failed")
                 if set_start is not None:
-                    self._live_translation_timing_ms["position_usd_set"].append(
+                    timing_name = {
+                        "positions": "position_usd_set",
+                        "fuels": "fuel_usd_set",
+                        "temperatures": "temperature_usd_set",
+                        "smokes": "smoke_usd_set",
+                    }[name]
+                    self._live_translation_timing_ms[timing_name].append(
                         (time.perf_counter_ns() - set_start) / 1_000_000.0
                     )
                 if self._write_observer is not None:
                     self._write_observer(write_index, name, payload)
                 write_index += 1
             if has_layout:
+                layout_revision_start = time.perf_counter_ns()
                 if not self._attributes["layout_revision"].Set(
                     payload.layout_revision
                 ):
                     raise RuntimeError("Point sidecar layout revision Set failed")
+                self._live_translation_timing_ms[
+                    "layout_revision_usd_set"
+                ].append(
+                    (time.perf_counter_ns() - layout_revision_start) / 1_000_000.0
+                )
                 if self._write_observer is not None:
                     self._write_observer(write_index, "layout_revision", payload)
                 write_index += 1
+            resident_revision_start = (
+                time.perf_counter_ns() if has_layout else None
+            )
             if not self._attributes["revision"].Set(payload.revision):
                 raise RuntimeError("Point sidecar revision Set failed")
+            if resident_revision_start is not None:
+                self._live_translation_timing_ms[
+                    "resident_revision_usd_set"
+                ].append(
+                    (time.perf_counter_ns() - resident_revision_start) / 1_000_000.0
+                )
             if self._write_observer is not None:
                 self._write_observer(write_index, "revision", payload)
         except Exception:
@@ -535,7 +585,12 @@ class ResidentPointSidecar:
             block.__exit__(*sys.exc_info())
             self._failure_count += 1
             raise
+        block_exit_start = time.perf_counter_ns() if has_layout else None
         block.__exit__(None, None, None)
+        if block_exit_start is not None:
+            self._live_translation_timing_ms["change_block_exit"].append(
+                (time.perf_counter_ns() - block_exit_start) / 1_000_000.0
+            )
         if transaction_start is not None:
             self._live_translation_timing_ms["publish_transaction"].append(
                 (time.perf_counter_ns() - transaction_start) / 1_000_000.0
@@ -543,6 +598,7 @@ class ResidentPointSidecar:
         self._last_undo = previous_state
         self._revision = payload.revision
         if has_layout:
+            producer_commit_start = time.perf_counter_ns()
             self._producer.commit_layout_candidate(
                 payload.layout_origins, payload.layout_axes, payload.positions
             )
@@ -550,6 +606,9 @@ class ResidentPointSidecar:
             self._layout_revision = payload.layout_revision
             self._live_translation_publish_count += 1
             self._update_layout_state()
+            self._live_translation_timing_ms["producer_commit"].append(
+                (time.perf_counter_ns() - producer_commit_start) / 1_000_000.0
+            )
         self._committed_layout_revision = payload.layout_revision
         self._last_snapshot = payload
         self._publish_count += 1

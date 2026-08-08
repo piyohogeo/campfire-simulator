@@ -1392,6 +1392,26 @@
             <p>Phase 6DAの既定OFF経路を、origin取得、native候補生成、Vt変換、<code>pointPositions.Set()</code>、publication transactionへ分離して計測しました。720点・各760 snapshotの比較で、baselineは候補を760回生成しましたが実際の変更は55回でした。事前判定ありでは56変更tickだけを生成し、704回をskipしました。candidate総時間は<code>322.8345 → 16.6326 ms</code>、差は<code>306.2019 ms</code>です。optimized runの変更tickではVt変換p95 <code>0.0335 ms</code>、position Set p95 <code>0.1205 ms</code>、transaction全体p95 <code>1.7951 ms</code>でした。両runとも760/760 publish、failure 0、Phase固有8/8 gate合格です。release build、Phase 0 RTX回帰、最終標準suite全8 process・59/59件（406.2秒、collapse coverage 239.9秒）も合格しました。このprecheckは静止tickのResident側配列生成だけを減らし、変更tickのUSD発行、Flow取込み・rasterization・solver費用は残ります。動画frame 4と30を目視して後半の炎を確認しましたが、edit付近は可視炎がほぼないため連続性は未判定です。production既定、rollback、revision、immutable snapshot、Flow 110.0.0は不変で、次は変更tick transactionの内訳をさらに分離します。</p>
           </section>
 
+          <figure id="phase6dc-resident-translation-breakdown" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6DC</h3>
+            <a href="assets/phase6/resident_translation_breakdown_report.svg" aria-label="Phase 6DC 変更tick transaction内訳レポートを開く">
+              <img src="assets/phase6/resident_translation_breakdown_report.svg" width="1200" height="680" alt="変更tickのVt変換、旧値snapshot、USD Set、revision Set、ChangeBlock exitとKit update全体を分離したSVG図">
+            </a>
+            <figcaption>
+              <div><strong>変更tick transactionの最大区間はChangeBlock終了</strong><span>9 / 9 gates · transaction p95 1.8616 ms · ChangeBlock exit p95 1.3539 ms</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_translation_breakdown.mp4" data-video-poster="assets/phase6/resident_translation_breakdown_frame.png" data-video-title="Phase 6DC changed-tick transaction breakdown" data-video-meta="Direct Phase 6DC optimized RTX recording · 56 changed and 704 unchanged publications · Flow 110.0.0 · 1280×720 · 10 fps · 6 s · video is not the timing or continuity pass criterion">
+                <span class="video-trigger-icon" aria-hidden="true">▶</span>
+                <span><strong>内訳計測runの直接動画</strong><small>後半の炎描画を確認 · 合否はtiming/revision gate</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6dc-note-title">
+            <p class="note-label">2026-08-08 · Goal / transaction anatomy / enclosing update / limitation / next</p>
+            <h3 id="phase6dc-note-title">USD内部は1.8616 ms、Flowを含むupdate全体とは分けて解釈</h3>
+            <p>Phase 6DBで残った変更tickの処理を、4個のVt変換、rollback用旧値snapshot、<code>Sdf.ChangeBlock</code> enter／exit、4個の配列<code>Set()</code>、2個のrevision <code>Set()</code>、transaction全体、成功後producer commitへ分離しました。Flow 110.0.0、RTX 3090、720点、760 snapshotの独立runで変更56回、未変更skip 704回、publish 760/760、failure 0、Phase固有9/9 gateに合格しました。変更tickのp95はVt変換4区間の記述上の合計<code>0.0961 ms</code>、旧値snapshot <code>0.1183 ms</code>、配列Set 4区間の合計<code>0.2221 ms</code>、revision Set 2区間の合計<code>0.0471 ms</code>、<code>ChangeBlock</code> exit <code>1.3539 ms</code>、transaction全体<code>1.8616 ms</code>でした。各p95の合計は合計処理そのもののp95ではありません。固定Flowの公開Python、<code>IFlowUsd</code>、StageUpdate surfaceにはUSD Emitter取込みだけの独立timerを確認できなかったため、5 step直後の<code>next_update_async()</code>も外側の上限として測りました。変更あり8 sampleのp95は<code>98.2902 ms</code>、変更なし62 sampleは<code>75.8272 ms</code>ですが、これはFlow取込みだけでなくStageUpdate、PhysX、solver、renderを含み、Flow取込み単体値ではありません。release build、Phase 0 RTX回帰、標準suite全8 process・59/59件（396.3秒、collapse coverage 232.2秒）も合格しました。production app SHA-256と既定値、rollback、revision-last、immutable snapshot、Flow 110.0.0は不変です。frame 30で炎描画を目視しましたが動画は性能・連続性判定には使わず、回転追従、1 update内reset除外、solver checkpoint、seamless visual continuityは未達のままです。次は<code>ChangeBlock</code>終了時のnotice／change processingを公開境界でさらに切り分けます。</p>
+          </section>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>

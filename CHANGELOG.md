@@ -1,5 +1,10 @@
 # Changelog
 
+- Added Phase 6DC default-off changed-tick timing for all four Vt conversions, previous-value snapshots, `Sdf.ChangeBlock` entry/exit, four array Sets, two revision Sets, the full publication transaction, and producer commit.
+- Measured 56 changed publications at 720 points: transaction p95 was 1.8616 ms, with `ChangeBlock` exit p95 1.3539 ms, four array-Set p95 sum 0.2221 ms, four Vt-conversion p95 sum 0.0961 ms, and previous-value snapshot p95 0.1183 ms.
+- Added an enclosing `next_update_async` wall-time comparison (changed p95 98.2902 ms, unchanged p95 75.8272 ms) while explicitly leaving direct `omni.flowusd` ingest timing unavailable through the inspected public Flow 110 Python, `IFlowUsd`, and StageUpdate surfaces.
+- Passed all 9 Phase 6DC gates with 760/760 snapshots, 56 changed and 704 unchanged publications, no sidecar failure, unchanged production-app SHA-256, and a direct six-second RTX capture; production defaults and transaction contracts remain unchanged.
+- Passed the release build, Phase 0 RTX regression, focused transaction test, and the final 8-process 59/59 standard suite in 396.3 seconds; collapse coverage completed in 232.2 seconds.
 - Added Phase 6DB default-off repeated-translation timing and an unchanged-origin precheck that avoids native Point layout allocation/build work without changing changed-tick publication, rollback, or revision behavior.
 - In matched Flow 110 runs at 720 points, reduced native layout candidate builds from 760 to 56, avoiding 704 builds and 306.2019 ms of measured candidate time; optimized changed ticks measured position Vt conversion p95 0.0335 ms, `pointPositions.Set()` p95 0.1205 ms, and full publication transaction p95 1.7951 ms.
 - Passed all 8 Phase 6DB gates with 760/760 snapshots published and zero sidecar failures in both runs; retained production Sphere/Point defaults and all existing physics, JSON, rollback, revision, and immutable snapshot contracts.

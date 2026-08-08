@@ -1051,9 +1051,21 @@ class TestScene(omni.kit.test.AsyncTestCase):
         sidecar._live_translation_timing_ms = {
             "provider": [],
             "candidate_build": [],
+            "fuel_vt_conversion": [],
+            "temperature_vt_conversion": [],
+            "smoke_vt_conversion": [],
             "position_vt_conversion": [],
+            "previous_value_snapshot": [],
+            "change_block_enter": [],
             "position_usd_set": [],
+            "fuel_usd_set": [],
+            "temperature_usd_set": [],
+            "smoke_usd_set": [],
+            "layout_revision_usd_set": [],
+            "resident_revision_usd_set": [],
+            "change_block_exit": [],
             "publish_transaction": [],
+            "producer_commit": [],
         }
         sidecar._closed = False
         sidecar._stage = stage
@@ -1109,6 +1121,23 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(timing["provider"]["sample_count"], 2)
         self.assertEqual(timing["candidate_build"]["sample_count"], 1)
         self.assertEqual(timing["position_usd_set"]["sample_count"], 1)
+        for timing_name in (
+            "fuel_vt_conversion",
+            "temperature_vt_conversion",
+            "smoke_vt_conversion",
+            "position_vt_conversion",
+            "previous_value_snapshot",
+            "change_block_enter",
+            "fuel_usd_set",
+            "temperature_usd_set",
+            "smoke_usd_set",
+            "layout_revision_usd_set",
+            "resident_revision_usd_set",
+            "change_block_exit",
+            "publish_transaction",
+            "producer_commit",
+        ):
+            self.assertEqual(timing[timing_name]["sample_count"], 1)
 
     async def test_resident_point_layout_accepts_only_cardinal_horizontal_logs(self):
         stage = Usd.Stage.CreateInMemory()
