@@ -1372,6 +1372,26 @@
             <p>既存の停止中編集経路を戻さず、既定OFFの技術スパイクとして実行中の薪world originをowner threadで読み、確定済みResident配列を触らない一時バッファへPoint位置候補を生成しました。候補はimmutable payloadへ封入し、<code>pointPositions</code>、3 channel、<code>layoutRevision</code>、consumer revisionを同じ<code>Sdf.ChangeBlock</code>で確定します。後段発行に失敗すればUSDとproducer配置状態の両方を戻します。実測ではrevision <code>344→345</code>で薪をYへ<code>20.000000 mm</code>移動し、Point centroidは<code>19.999996 mm</code>追従、差は約<code>0.0000037 mm</code>、最大整合誤差は約<code>0.0000053 mm</code>でした。layout revisionも<code>9→10</code>へ同時に進み、両sampleでPLAY、active blocks 24、必須Flow readback非空を維持して8/8 gateに合格しました。build、Phase 0実機回帰、標準suite全8 process・59/59件も合格しました。動画冒頭付近の20 mm移動が今回の実行中境界で、後半には比較用harness由来の停止中40 mm editも含まれます。frame 3→4の目視では薪配置の急なジャンプは見えませんが、この冒頭境界では炎がほぼ出ておらず後から成長するため、編集時の炎連続性を示す証拠にはしていません。現段階は平行移動のみで回転は追従せず、1 update内のFlow resetやhidden solver stateも判定できないため、<code>seamless_visual_continuity_qualified=false</code>と<code>flow_solver_state_checkpointed=false</code>は維持します。次は繰返しPhysX移動で位置配列authoringコストと追従誤差を測ります。</p>
           </section>
 
+          <figure id="phase6db-resident-translation-performance" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6DB</h3>
+            <a href="assets/phase6/resident_translation_performance_report.svg" aria-label="Phase 6DB 繰返し平行移動コストレポートを開く">
+              <img src="assets/phase6/resident_translation_performance_report.svg" width="1200" height="680" alt="変更のないtickを事前判定し、native Point候補生成を760回から56回へ減らしたことを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>静止tickのPoint候補生成を除去</strong><span>8 / 8 gates · 760→56 builds · 704回skip · 306.2019 ms削減</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_translation_performance.mp4" data-video-poster="assets/phase6/resident_translation_performance_frame.png" data-video-title="Phase 6DB repeated translation performance" data-video-meta="Direct optimized Phase 6DB RTX recording · same deterministic 60-frame harness · Flow 110.0.0 · 1280×720 · 10 fps · 6 s · video is not the performance pass criterion">
+                <span class="video-trigger-icon" aria-hidden="true">▶</span>
+                <span><strong>optimized runの直接動画</strong><small>後半の炎描画を確認 · 合否はtiming/revision gate</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6db-note-title">
+            <p class="note-label">2026-08-08 · Goal / isolated timings / measured result / limitation / next</p>
+            <h3 id="phase6db-note-title">変更のない704 tickだけをskipし、変更時のtransactionは維持</h3>
+            <p>Phase 6DAの既定OFF経路を、origin取得、native候補生成、Vt変換、<code>pointPositions.Set()</code>、publication transactionへ分離して計測しました。720点・各760 snapshotの比較で、baselineは候補を760回生成しましたが実際の変更は55回でした。事前判定ありでは56変更tickだけを生成し、704回をskipしました。candidate総時間は<code>322.8345 → 16.6326 ms</code>、差は<code>306.2019 ms</code>です。optimized runの変更tickではVt変換p95 <code>0.0335 ms</code>、position Set p95 <code>0.1205 ms</code>、transaction全体p95 <code>1.7951 ms</code>でした。両runとも760/760 publish、failure 0、Phase固有8/8 gate合格です。release build、Phase 0 RTX回帰、最終標準suite全8 process・59/59件（406.2秒、collapse coverage 239.9秒）も合格しました。このprecheckは静止tickのResident側配列生成だけを減らし、変更tickのUSD発行、Flow取込み・rasterization・solver費用は残ります。動画frame 4と30を目視して後半の炎を確認しましたが、edit付近は可視炎がほぼないため連続性は未判定です。production既定、rollback、revision、immutable snapshot、Flow 110.0.0は不変で、次は変更tick transactionの内訳をさらに分離します。</p>
+          </section>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>

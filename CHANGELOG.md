@@ -1,5 +1,9 @@
 # Changelog
 
+- Added Phase 6DB default-off repeated-translation timing and an unchanged-origin precheck that avoids native Point layout allocation/build work without changing changed-tick publication, rollback, or revision behavior.
+- In matched Flow 110 runs at 720 points, reduced native layout candidate builds from 760 to 56, avoiding 704 builds and 306.2019 ms of measured candidate time; optimized changed ticks measured position Vt conversion p95 0.0335 ms, `pointPositions.Set()` p95 0.1205 ms, and full publication transaction p95 1.7951 ms.
+- Passed all 8 Phase 6DB gates with 760/760 snapshots published and zero sidecar failures in both runs; retained production Sphere/Point defaults and all existing physics, JSON, rollback, revision, and immutable snapshot contracts.
+- Passed the release build, Phase 0 RTX regression, focused rollback/precheck test, and the final 8-process 59/59 standard suite in 406.2 seconds; collapse coverage completed in 239.9 seconds.
 - Added the default-off Phase 6DA running-translation snapshot path: candidate Point positions remain immutable until `positions`, `layoutRevision`, channels, and consumer revision commit together, with producer/layout rollback on downstream failure.
 - Measured a 20.000000 mm running log edit at revision 344→345: the Point centroid moved 19.999996 mm, displacement differed by 0.0000037 mm, maximum alignment error was 0.0000053 mm, and layout revision advanced 9→10.
 - Kept required Flow readbacks and 24 active blocks nonzero at both samples; rotation tracking, within-update Flow reset exclusion, seamless visual continuity, and complete solver checkpoint continuity remain unqualified.

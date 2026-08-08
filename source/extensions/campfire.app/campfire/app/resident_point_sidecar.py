@@ -6,11 +6,13 @@ import ctypes
 import hashlib
 import math
 import sys
+import time
 from dataclasses import dataclass
 
 from pxr import Sdf, Vt
 
 from .resident_snapshot import RESIDENT_PUBLISHED_FIELD_NAMES
+from .performance import summarize_timing_ms
 
 
 FLOW_FUEL_FIELD = RESIDENT_PUBLISHED_FIELD_NAMES.index("flow_fuel")
@@ -232,6 +234,12 @@ class ResidentNativeSurfaceProducer:
             "positions": candidate.tobytes(order="C"),
         }
 
+    def layout_origins_changed(self, origins, tolerance=1.0e-9):
+        """Check translations without allocating or running the native layout kernel."""
+
+        origins, _ = self._validated_layout(origins, self.axes)
+        return bool(self.np.any(self.np.abs(origins - self.origins) > tolerance))
+
     def commit_layout_candidate(self, origins, axes, positions):
         """Commit a previously built candidate without rerunning the native kernel."""
 
@@ -298,6 +306,7 @@ class ResidentPointSidecar:
         producer=None,
         translation_provider=None,
         layout_state=None,
+        skip_unchanged_translation_layout=False,
     ):
         if stage is None or not callable(stage_provider):
             raise ValueError("Resident Point sidecar requires stage collaborators")
@@ -320,6 +329,9 @@ class ResidentPointSidecar:
         if translation_provider is not None and not callable(translation_provider):
             raise ValueError("Resident Point translation provider must be callable")
         self._translation_provider = translation_provider
+        self._skip_unchanged_translation_layout = bool(
+            skip_unchanged_translation_layout
+        )
         self._layout_state = layout_state
         self._producer.build_layout()
         self._layout_revision = layout_revision
@@ -342,6 +354,13 @@ class ResidentPointSidecar:
         self._live_translation_prepare_count = 0
         self._live_translation_publish_count = 0
         self._live_translation_unchanged_count = 0
+        self._live_translation_timing_ms = {
+            "provider": [],
+            "candidate_build": [],
+            "position_vt_conversion": [],
+            "position_usd_set": [],
+            "publish_transaction": [],
+        }
         self._closed = False
         self.attempt_payload_ids = []
         self.attempt_payload_digests = []
@@ -382,17 +401,31 @@ class ResidentPointSidecar:
         layout_origins = ()
         layout_axes = ()
         if self._translation_provider is not None:
+            provider_start = time.perf_counter_ns()
             origins = self._translation_provider()
-            candidate = self._producer.build_layout_candidate(
-                origins, self._producer.axes
+            self._live_translation_timing_ms["provider"].append(
+                (time.perf_counter_ns() - provider_start) / 1_000_000.0
             )
-            changed = any(
-                abs(float(current) - float(previous)) > 1.0e-9
-                for current_origin, previous_origin in zip(
-                    candidate["origins"], self._producer.origins
+            build_candidate = True
+            if self._skip_unchanged_translation_layout:
+                build_candidate = self._producer.layout_origins_changed(origins)
+            candidate = None
+            changed = False
+            if build_candidate:
+                candidate_start = time.perf_counter_ns()
+                candidate = self._producer.build_layout_candidate(
+                    origins, self._producer.axes
                 )
-                for current, previous in zip(current_origin, previous_origin)
-            )
+                self._live_translation_timing_ms["candidate_build"].append(
+                    (time.perf_counter_ns() - candidate_start) / 1_000_000.0
+                )
+                changed = any(
+                    abs(float(current) - float(previous)) > 1.0e-9
+                    for current_origin, previous_origin in zip(
+                        candidate["origins"], self._producer.origins
+                    )
+                    for current, previous in zip(current_origin, previous_origin)
+                )
             if changed:
                 layout_revision += 1
                 positions = candidate["positions"]
@@ -426,9 +459,14 @@ class ResidentPointSidecar:
             "smokes": Vt.FloatArray.FromNumpy(np.frombuffer(payload.smokes, dtype=np.float32)),
         }
         if payload.layout_revision != self._committed_layout_revision:
+            conversion_start = time.perf_counter_ns()
             converted["positions"] = Vt.Vec3fArray.FromNumpy(
                 np.frombuffer(payload.positions, dtype=np.float32).reshape((-1, 3))
             )
+            if self._translation_provider is not None:
+                self._live_translation_timing_ms["position_vt_conversion"].append(
+                    (time.perf_counter_ns() - conversion_start) / 1_000_000.0
+                )
         return converted
 
     def publish(self, payload):
@@ -445,6 +483,7 @@ class ResidentPointSidecar:
         expected_layout_revision = self._layout_revision + (1 if has_layout else 0)
         if payload.layout_revision != expected_layout_revision:
             raise RuntimeError("Point sidecar payload layout revision is not contiguous")
+        transaction_start = time.perf_counter_ns() if has_layout else None
         converted = self._converted(payload)
         previous = {name: attribute.Get() for name, attribute in self._attributes.items()}
         previous_state = {
@@ -464,8 +503,17 @@ class ResidentPointSidecar:
             for name in ("positions", "fuels", "temperatures", "smokes"):
                 if name not in converted:
                     continue
+                set_start = (
+                    time.perf_counter_ns()
+                    if name == "positions" and has_layout
+                    else None
+                )
                 if not self._attributes[name].Set(converted[name]):
                     raise RuntimeError(f"Point sidecar {name} Set failed")
+                if set_start is not None:
+                    self._live_translation_timing_ms["position_usd_set"].append(
+                        (time.perf_counter_ns() - set_start) / 1_000_000.0
+                    )
                 if self._write_observer is not None:
                     self._write_observer(write_index, name, payload)
                 write_index += 1
@@ -488,6 +536,10 @@ class ResidentPointSidecar:
             self._failure_count += 1
             raise
         block.__exit__(None, None, None)
+        if transaction_start is not None:
+            self._live_translation_timing_ms["publish_transaction"].append(
+                (time.perf_counter_ns() - transaction_start) / 1_000_000.0
+            )
         self._last_undo = previous_state
         self._revision = payload.revision
         if has_layout:
@@ -603,6 +655,21 @@ class ResidentPointSidecar:
         return revision
 
     def status(self):
+        timing = {
+            name: (
+                summarize_timing_ms(values)
+                if values
+                else {
+                    "sample_count": 0,
+                    "warmup_samples_excluded": 0,
+                    "total_ms": 0.0,
+                    "mean_ms": None,
+                    "p95_ms": None,
+                    "max_ms": None,
+                }
+            )
+            for name, values in self._live_translation_timing_ms.items()
+        }
         return {
             "revision": self._revision,
             "layout_revision": self._layout_revision,
@@ -614,9 +681,13 @@ class ResidentPointSidecar:
             "failure_count": self._failure_count,
             "layout_replace_count": self._layout_replace_count,
             "live_translation_enabled": self._translation_provider is not None,
+            "skip_unchanged_translation_layout": (
+                self._skip_unchanged_translation_layout
+            ),
             "live_translation_prepare_count": self._live_translation_prepare_count,
             "live_translation_publish_count": self._live_translation_publish_count,
             "live_translation_unchanged_count": self._live_translation_unchanged_count,
+            "live_translation_timing_ms": timing,
             "closed": self._closed,
         }
 

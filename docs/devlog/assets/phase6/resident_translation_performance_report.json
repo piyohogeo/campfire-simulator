@@ -1,0 +1,155 @@
+{
+  "phase": "phase6db",
+  "status": "ok",
+  "scope": "default-off repeated translation layout and pointPositions authoring cost",
+  "runs": {
+    "baseline": {
+      "resident_revision": 760,
+      "point_count": 720,
+      "prepare_count": 760,
+      "publish_count": 760,
+      "changed_count": 55,
+      "unchanged_count": 705,
+      "skip_unchanged_translation_layout": false,
+      "provider": {
+        "sample_count": 760,
+        "warmup_samples_excluded": 0,
+        "total_ms": 284.7008,
+        "mean_ms": 0.3746,
+        "p95_ms": 0.6779,
+        "max_ms": 1.0835
+      },
+      "candidate_build": {
+        "sample_count": 760,
+        "warmup_samples_excluded": 0,
+        "total_ms": 322.8345,
+        "mean_ms": 0.4248,
+        "p95_ms": 0.6628,
+        "max_ms": 1.1787
+      },
+      "position_vt_conversion": {
+        "sample_count": 55,
+        "warmup_samples_excluded": 0,
+        "total_ms": 1.1161,
+        "mean_ms": 0.0203,
+        "p95_ms": 0.0307,
+        "max_ms": 0.0411
+      },
+      "position_usd_set": {
+        "sample_count": 55,
+        "warmup_samples_excluded": 0,
+        "total_ms": 4.2762,
+        "mean_ms": 0.0777,
+        "p95_ms": 0.1253,
+        "max_ms": 0.1803
+      },
+      "publish_transaction": {
+        "sample_count": 55,
+        "warmup_samples_excluded": 0,
+        "total_ms": 67.2279,
+        "mean_ms": 1.2223,
+        "p95_ms": 1.72,
+        "max_ms": 2.3414
+      },
+      "failure_count": 0
+    },
+    "optimized": {
+      "resident_revision": 760,
+      "point_count": 720,
+      "prepare_count": 760,
+      "publish_count": 760,
+      "changed_count": 56,
+      "unchanged_count": 704,
+      "skip_unchanged_translation_layout": true,
+      "provider": {
+        "sample_count": 760,
+        "warmup_samples_excluded": 0,
+        "total_ms": 259.937,
+        "mean_ms": 0.342,
+        "p95_ms": 0.607,
+        "max_ms": 1.1412
+      },
+      "candidate_build": {
+        "sample_count": 56,
+        "warmup_samples_excluded": 0,
+        "total_ms": 16.6326,
+        "mean_ms": 0.297,
+        "p95_ms": 0.5046,
+        "max_ms": 0.5454
+      },
+      "position_vt_conversion": {
+        "sample_count": 56,
+        "warmup_samples_excluded": 0,
+        "total_ms": 1.398,
+        "mean_ms": 0.025,
+        "p95_ms": 0.0335,
+        "max_ms": 0.3094
+      },
+      "position_usd_set": {
+        "sample_count": 56,
+        "warmup_samples_excluded": 0,
+        "total_ms": 4.1032,
+        "mean_ms": 0.0733,
+        "p95_ms": 0.1205,
+        "max_ms": 0.1317
+      },
+      "publish_transaction": {
+        "sample_count": 56,
+        "warmup_samples_excluded": 0,
+        "total_ms": 66.8037,
+        "mean_ms": 1.1929,
+        "p95_ms": 1.7951,
+        "max_ms": 1.8857
+      },
+      "failure_count": 0
+    }
+  },
+  "comparison": {
+    "candidate_builds_avoided": 704,
+    "candidate_build_total_saved_ms": 306.2019,
+    "interpretation": "The precheck removes native layout allocation/build work on unchanged ticks. Changed ticks retain Vt conversion, transactional USD authoring, Flow ingest, and solver work."
+  },
+  "gates": {
+    "baseline_builds_every_prepare": true,
+    "optimized_builds_changed_only": true,
+    "optimized_avoids_unchanged_builds": true,
+    "position_conversion_matches_changed": true,
+    "position_set_matches_changed": true,
+    "transaction_matches_changed": true,
+    "no_publication_failures": true,
+    "point_count_preserved": true
+  },
+  "production_app": {
+    "sha256_before": "6F8E70F5C7E4573C504789D6B9E5282C77920B490E0F41FC2BD86B68D05C9987",
+    "sha256_after": "6F8E70F5C7E4573C504789D6B9E5282C77920B490E0F41FC2BD86B68D05C9987",
+    "changed_during_run": false
+  },
+  "contracts": {
+    "production_default": "OFF",
+    "physics_changed": false,
+    "json_schema_changed": false,
+    "rollback_changed": false,
+    "revision_changed": false,
+    "immutable_snapshot_changed": false,
+    "flow_version": "110.0.0"
+  },
+  "video": {
+    "frame_count": 60,
+    "source": "optimized run using the same deterministic 60-frame renderer harness",
+    "success_criterion": "not video-only",
+    "human_review": {
+      "status": "completed",
+      "frames_reviewed": [
+        4,
+        30
+      ],
+      "observation": "The optimized run renders the expected campfire and later visible flame. The opening running-edit boundary still has negligible visible flame, so this performance run does not qualify flame continuity."
+    }
+  },
+  "remaining": {
+    "rotation_tracking": "unimplemented",
+    "within_update_flow_reset_excluded": false,
+    "seamless_visual_continuity_qualified": false,
+    "flow_solver_state_checkpointed": false
+  }
+}

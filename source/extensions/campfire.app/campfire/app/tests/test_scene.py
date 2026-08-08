@@ -973,11 +973,13 @@ class TestScene(omni.kit.test.AsyncTestCase):
                 self.fuels = np.asarray((0.1, 0.2), dtype=np.float32)
                 self.temperatures = np.asarray((0.3, 0.4), dtype=np.float32)
                 self.smokes = np.asarray((0.5, 0.6), dtype=np.float32)
+                self.layout_candidate_count = 0
 
             def build_channels(self):
                 return self.point_count
 
             def build_layout_candidate(self, origins, axes):
+                self.layout_candidate_count += 1
                 origins = np.asarray(origins, dtype=np.float64)
                 axes = np.asarray(axes, dtype=np.uint32)
                 return {
@@ -985,6 +987,10 @@ class TestScene(omni.kit.test.AsyncTestCase):
                     "axes": tuple(int(value) for value in axes),
                     "positions": origins.astype(np.float32).tobytes(order="C"),
                 }
+
+            def layout_origins_changed(self, origins, tolerance=1.0e-9):
+                origins = np.asarray(origins, dtype=np.float64)
+                return bool(np.any(np.abs(origins - self.origins) > tolerance))
 
             def commit_layout_candidate(self, origins, axes, positions):
                 self.origins[:] = np.asarray(origins, dtype=np.float64)
@@ -1026,6 +1032,7 @@ class TestScene(omni.kit.test.AsyncTestCase):
             (0.0, -0.26, 0.16),
             (0.0, 0.3, 0.18),
         )
+        sidecar._skip_unchanged_translation_layout = True
         sidecar._layout_state = layout_state
         sidecar._positions = old_positions
         sidecar._layout_revision = 1
@@ -1037,9 +1044,17 @@ class TestScene(omni.kit.test.AsyncTestCase):
         sidecar._publish_count = 0
         sidecar._rollback_count = 0
         sidecar._failure_count = 0
+        sidecar._layout_replace_count = 0
         sidecar._live_translation_prepare_count = 0
         sidecar._live_translation_publish_count = 0
         sidecar._live_translation_unchanged_count = 0
+        sidecar._live_translation_timing_ms = {
+            "provider": [],
+            "candidate_build": [],
+            "position_vt_conversion": [],
+            "position_usd_set": [],
+            "publish_transaction": [],
+        }
         sidecar._closed = False
         sidecar._stage = stage
         sidecar._stage_provider = lambda: stage
@@ -1058,6 +1073,7 @@ class TestScene(omni.kit.test.AsyncTestCase):
         }
 
         payload = sidecar.prepare(Snapshot())
+        self.assertEqual(producer.layout_candidate_count, 1)
         self.assertEqual(payload.layout_revision, 2)
         self.assertEqual(payload.layout_origins[0], (0.0, -0.26, 0.16))
         self.assertEqual(sidecar._layout_revision, 1)
@@ -1078,6 +1094,21 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(producer.origins[0].tolist(), [0.0, -0.3, 0.18])
         self.assertEqual(sidecar._positions, old_positions)
         self.assertEqual(layout_state["revision"], 1)
+
+        sidecar._backend.revision = 3
+        Snapshot.revision = 3
+        Snapshot.tick = 3
+        sidecar._translation_provider = lambda: tuple(
+            tuple(float(value) for value in row) for row in producer.origins
+        )
+        unchanged = sidecar.prepare(Snapshot())
+        self.assertEqual(producer.layout_candidate_count, 1)
+        self.assertEqual(unchanged.layout_revision, 1)
+        self.assertEqual(sidecar._live_translation_unchanged_count, 1)
+        timing = sidecar.status()["live_translation_timing_ms"]
+        self.assertEqual(timing["provider"]["sample_count"], 2)
+        self.assertEqual(timing["candidate_build"]["sample_count"], 1)
+        self.assertEqual(timing["position_usd_set"]["sample_count"], 1)
 
     async def test_resident_point_layout_accepts_only_cardinal_horizontal_logs(self):
         stage = Usd.Stage.CreateInMemory()

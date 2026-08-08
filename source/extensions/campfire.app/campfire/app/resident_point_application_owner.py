@@ -31,6 +31,7 @@ class ResidentPointApplicationOwner:
         layout_state=None,
         log_ids=(),
         dynamic_translation_enabled=False,
+        skip_unchanged_translation_layout=False,
     ):
         if session is None or orchestrator is None:
             raise ValueError("Resident Point application owner requires collaborators")
@@ -45,6 +46,9 @@ class ResidentPointApplicationOwner:
         self._layout_state = layout_state or {"revision": 1}
         self._log_ids = tuple(log_ids)
         self._dynamic_translation_enabled = bool(dynamic_translation_enabled)
+        self._skip_unchanged_translation_layout = bool(
+            skip_unchanged_translation_layout
+        )
 
     @classmethod
     def compose(
@@ -57,6 +61,7 @@ class ResidentPointApplicationOwner:
         layout,
         *,
         track_dynamic_translation=False,
+        skip_unchanged_translation_layout=False,
     ):
         if backend is None or stage is None:
             raise ValueError("Resident Point application composition is incomplete")
@@ -106,6 +111,9 @@ class ResidentPointApplicationOwner:
                     initial_layout=layout_state,
                     translation_provider=translation_provider,
                     layout_state=layout_state,
+                    skip_unchanged_translation_layout=(
+                        skip_unchanged_translation_layout
+                    ),
                 )
             except Exception:
                 adapter.close()
@@ -131,6 +139,9 @@ class ResidentPointApplicationOwner:
                 layout_state=layout_state,
                 log_ids=log_ids,
                 dynamic_translation_enabled=track_dynamic_translation,
+                skip_unchanged_translation_layout=(
+                    skip_unchanged_translation_layout
+                ),
             )
         except Exception:
             if sidecar is not None:
@@ -251,6 +262,9 @@ class ResidentPointApplicationOwner:
             "layout_axes": self._layout_state.get("axes"),
             "log_ids": self._log_ids,
             "dynamic_translation_enabled": self._dynamic_translation_enabled,
+            "skip_unchanged_translation_layout": (
+                self._skip_unchanged_translation_layout
+            ),
         }
 
     def close(self, *, discard_pending=False):
