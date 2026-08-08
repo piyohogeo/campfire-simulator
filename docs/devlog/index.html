@@ -1532,6 +1532,26 @@
             <p>現行native layoutは薪ごとのoriginとX/Yの2値axisだけを受け取るため、45度や3D回転を正確に表現できません。既存ABIを残したまま、別entry pointへ右手系orthonormal frameを渡し、同じowner-thread matrix sampleから<code>world = origin + axial·axis_x + cross_a·axis_y + cross_b·axis_z</code>を計算する設計にしました。scale・shear・reflectionは近似せず拒否します。さらにimmutable float32 candidate bytesをVt変換前に比較し、変更された<code>pointPositions</code>、<code>pointFuels</code>、<code>pointTemperatures</code>、<code>pointSmokes</code>だけを変換・Setします。layout revisionはpositions変更時だけ、resident revisionはwood snapshotの最終書込みとして維持し、failure、retry、stage recoveryではframeを含む旧状態を完全復元します。ただし変更された大配列のcopy、USD authoring、notice、Flow取込み・rasterizationは残るため、USDボトルネック解消とは判定しません。Phase 6DIは12/12の設計項目を固定しただけでruntime未実装です。次はproductionを変えずadditive native frame関数を720点で試し、cardinal同値、45度、任意3D回転、invalid transform、failure injectionを確認してから7,200点と選択発行へ進みます。</p>
           </section>
 
+          <figure class="capture-card wide">
+            <h3 class="capture-phase-heading">Phase 6DJ</h3>
+            <a href="assets/phase6/resident_surface_frame_report.svg" aria-label="Phase 6DJ rigid-frame隔離kernelレポートを開く">
+              <img src="assets/phase6/resident_surface_frame_report.svg" alt="720点の任意回転kernel合格と旧Y配置のreflection境界を示すレポート" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>frame kernelは合格、旧Y配置のcell順互換は未合格</strong><span>10 / 10 gates · 720 points · production未接続</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_translation_breakdown.mp4" data-video-poster="assets/phase6/resident_translation_breakdown_frame.png" data-video-title="Phase 6DJ current production reference — shared video" data-video-meta="Reuses the Phase 6DC enabled Resident Point recording only as the current cardinal-path reference · Phase 6DJ is a stage-free isolated native-kernel spike and does not demonstrate arbitrary rotation in Flow · Flow 110.0.0 · 1280×720 · 10 fps · video is not a kernel gate">
+                <span class="video-trigger-icon" aria-hidden="true">▶</span>
+                <span><strong>現行production参照</strong><small>Phase 6DC実機動画を再利用 · frame試作の成功映像ではない</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6dj-note-title">
+            <p class="note-label">2026-08-09 · Goal / isolated DLL / rigid frame / handedness / atomic failure / next</p>
+            <h3 id="phase6dj-note-title">正しい回転は成立したが、旧Y配置はreflectionだった</h3>
+            <p>productionのPhase 6AU native sourceを変更せず、別DLLへ右手系orthonormal frame関数を実装しました。2本×360表面セル=720点で10/10 gateに合格し、identity-Xは旧kernelとbyte一致、45度Z回転と任意3D回転は独立float32 referenceへ最大誤差0 mで一致しました。scale、shear、reflection、NaN、容量不足は明示codeで拒否し、output bytesとpoint countを完全に旧値のまま保ちます。ただし現行Y経路はworld X/Yを単純交換するdeterminant −1のreflectionでした。正しい90度回転とは同じindexで最大177.489 mm違い、点集合をsortすると誤差0です。幾何形状は同じでもfuel・temperature・smokeのcell対応は同じではないため、production integrationは未合格です。隔離kernel p95はlegacy 0.0240 ms、frame 0.0266 msですが、USD、notice、Flow取込み・solver・描画を含まないので発行性能値には使いません。標準suiteは全8 process・59/59件合格（379.2秒、collapse coverage 225.9秒）でした。次は実USD transformからframeを一度sampleし、各位置と同じstable surface-cell identityの3 channelが対応することを先に検証します。動画は現行cardinal経路の外観参照だけで、新frameの映像成功を示しません。</p>
+          </section>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1583,6 +1603,7 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DG extension lifecycle</strong><small>16 / 16 · FlowUsd node removed · campfire.app also stops · restored</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DH native attachment audit</strong><small>12 / 12 · 19 members · no public attachment/timer control</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DI rotation/publication design</strong><small>12 / 12 design checks · runtime unqualified · production unchanged</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DJ isolated frame kernel</strong><small>10 / 10 · rotations exact · legacy Y channel order unresolved</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6CI normal Point owner</strong><small>10 / 10 · 710 matched revisions · Point resync 0 · default OFF</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CJ layout + recovery</strong><small>consumer/revisionのみ合格 · Flow field復元と映像連続性は未達</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CK owner-thread commands</strong><small>command結果は合格 · 姿勢/炎の同時不連続は未解決</small></p></div>

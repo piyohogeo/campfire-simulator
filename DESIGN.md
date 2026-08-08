@@ -2459,3 +2459,15 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 性能境界: Set回数とPython/Vt変換を減らせても、変更された大配列の全量copy、USD authoring、`Sdf.ChangeBlock` exit、notice、`omni.flowusd`取込み、Flow rasterization、solver、renderは残る。したがってこの設計はUSD発行ボトルネックの解決とは扱わず、各costを分離して720点、その後20本×360点=7,200点で測る。
 - 採用条件: cardinal同値、45度Z回転、任意3D rigid rotation、invalid transform拒否、field別Set集合、全書込み位置へのfailure injection、retry digest同一性、最新frameでのstage recoveryを既定OFF試作で確認する。静止transform noiseを先に測り、rotation change toleranceは実測なしにproduction定数へしない。
 - 非変更: production既定Sphere、Point既定OFF、Flow 110.0.0、物理式、JSON schema、serialization、USD保存、rollback、revision、immutable snapshot、既知のtimeline/visual/solver continuity未達は変更しない。詳細契約は`docs/design/resident_point_rotation_spike.md`に記録した。Phase 6DIは設計だけで、runtime qualificationではない。
+
+## 142. Phase 6DJ isolated rigid-frame surface kernel
+
+### 2026-08-09: 正しい回転と旧Y配置のreflection互換性を分離する
+
+- 隔離実装: productionの`native/phase6au`を変更せず、`native/phase6di`に別MSVC `/O2 /fp:strict` DLLを作った。入力はsurface exposure、固定geometry、薪ごとのorigin、右手系orthonormal frameで、`world = origin + axial * axis_x + cross_a * axis_y + cross_b * axis_z`を計算する。production DLLと隔離DLLを同じrunnerでbuildし、Phase 6AU sourceの前後SHA集合一致をgateにした。
+- 数値結果: 2本×360表面セル=720点でPhase固有`10 / 10` gateに合格した。identity-Xは旧kernelとbyte一致し、45度Z回転と任意3D rigid rotationは独立float32 referenceに最大誤差`0.0 m`で一致した。frame許容差は隔離定数`1e-6`であり、production定数にはまだ採用しない。
+- handedness発見: 現行Y経路はworld X/Yを交換しZを維持するためdeterminant `-1`のreflectionであり、rigid rotationではない。正しい右手系90度frameとは、同一indexの最大位置差が`0.1774888635 m`だった。一方、点座標をsortした集合差は`0.0 m`で、幾何形状だけは一致する。fuel／temperature／smokeはsurface-cell順に対応するため、点集合同値をchannel同値とは扱わない。
+- fail closed: scale、shear、reflection、NaN frameはreturn code 3、容量719に対する720点要求はcode 2で拒否した。全caseでoutput sentinel bytesとpoint count sentinelが完全に不変だった。これは隔離関数のatomic failureであり、USD rollback qualificationではない。
+- 局所時間: 各300 sampleの720点kernel p95はlegacy `0.0240 ms`、frame `0.0266 ms`だった。USD stageを開かず、Vt変換、USD Set、`Sdf.ChangeBlock`、notice、`omni.flowusd`取込み、Flow rasterization／solver／renderを含まないため、USD発行性能またはend-to-end改善値には使わない。
+- 判定と次: isolated frame kernel correctnessはqualified、production integrationはunqualifiedとする。標準suiteは全8 process・`59 / 59`件合格（全体`379.2 s`、collapse coverage `225.9 s`）だった。次は実USD transformからowner threadでframeを一回sampleし、各point positionと同じstable surface-cell identityのfuel／temperature／smokeが対応することを検証する。互換性を隠すindex並べ替えは行わず、このmappingが成立するまでResident payload、production native library、schema、既定設定を変更しない。
+- 非変更: production既定Sphere、Point既定OFF、Flow 110.0.0、物理式、JSON schema、serialization、USD保存、rollback、revision、immutable snapshot、timeline／visual／solver continuity未達は不変である。

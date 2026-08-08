@@ -73,3 +73,13 @@ Rotation jitter thresholds are not a production constant yet. The spike first re
 The prototype stays behind a new default-off diagnostic setting and an additive native symbol. Production keeps Sphere as the default emitter, Point stays default-off, Flow remains 110.0.0, and the physical equations, JSON schema, serialization, USD save behavior, revision, rollback, and immutable snapshot contracts remain unchanged.
 
 Adoption requires both correctness and a repeatable reduction in total update cost. If selective Sets save only Python-side work while Flow ingestion remains dominant, the change may still be useful but is not evidence that USD is a scalable high-frequency bulk-data path.
+
+## Phase 6DJ isolated-kernel result
+
+The first implementation is deliberately separate from the production Phase 6AU library. The isolated MSVC `/O2 /fp:strict` DLL passed 10/10 gates with two logs and 720 surface points. Identity-X output is byte-identical to the legacy kernel. A 45-degree Z rotation and an arbitrary 3D rigid rotation both matched the independent float32 reference with zero observed maximum error.
+
+The test also exposed a compatibility constraint that the design must not hide. The legacy Y-axis path swaps world X and Y while leaving Z unchanged, which has determinant `-1`; it is a reflection, not a rigid rotation. A proper right-handed 90-degree frame produces the same geometric point set after sorting with zero observed error, but the same-index positions differ by as much as `0.1774888635 m`. Because fuel, temperature, and smoke are ordered by surface-cell index, geometric set equivalence is not channel equivalence.
+
+Scale, shear, reflection, non-finite frames, and insufficient capacity returned explicit errors without modifying the output buffer or count. The isolated 720-point p95 was `0.0240 ms` for the legacy function and `0.0266 ms` for the frame function. These are kernel-only values and say nothing about Vt conversion, USD authoring, notices, Flow ingestion, rasterization, solver, or rendering.
+
+The frame kernel is therefore correctness-qualified in isolation, but production integration is not qualified. The next spike must derive frames from real USD transforms and validate every emitted position together with the fuel, temperature, and smoke value from the same stable surface-cell identity. No frame metadata is added to the Resident payload until that mapping is demonstrated.

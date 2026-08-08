@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6DJ isolated rigid-frame surface layout result</title>
+  <desc id="desc">The additive frame kernel passes correctness and atomic-failure gates while exposing that the legacy Y mapping is a reflection rather than a rigid rotation.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#111827"/><stop offset="1" stop-color="#29213b"/></linearGradient>
+  </defs>
+  <rect width="1200" height="680" rx="28" fill="url(#bg)"/>
+  <text x="58" y="72" fill="#f8fafc" font-family="Segoe UI, sans-serif" font-size="32" font-weight="700">Phase 6DJ / ISOLATED NATIVE FRAME SPIKE</text>
+  <text x="58" y="108" fill="#b8c1d6" font-family="Segoe UI, sans-serif" font-size="18">2 logs x 360 surface cells = 720 points / no USD stage / production source unchanged</text>
+  <rect x="58" y="146" width="332" height="184" rx="18" fill="#202b3d" stroke="#52749c" stroke-width="2"/>
+  <text x="82" y="184" fill="#dbeafe" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">Rigid-frame correctness</text>
+  <text x="82" y="226" fill="#76e0b5" font-family="Consolas, monospace" font-size="27" font-weight="700">10 / 10 gates</text>
+  <text x="82" y="265" fill="#c9d5e7" font-family="Segoe UI, sans-serif" font-size="16">45-deg max error 0 m</text>
+  <text x="82" y="294" fill="#c9d5e7" font-family="Segoe UI, sans-serif" font-size="16">3D max error 0 m</text>
+  <rect x="414" y="146" width="354" height="184" rx="18" fill="#342b32" stroke="#b47857" stroke-width="2"/>
+  <text x="438" y="184" fill="#ffe2c7" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">Legacy Y handedness</text>
+  <text x="438" y="226" fill="#f6ae72" font-family="Segoe UI, sans-serif" font-size="24" font-weight="700">REFLECTION FOUND</text>
+  <text x="438" y="265" fill="#e2c9b8" font-family="Segoe UI, sans-serif" font-size="16">same-index delta 0.1775 m</text>
+  <text x="438" y="294" fill="#e2c9b8" font-family="Segoe UI, sans-serif" font-size="16">sorted point-set delta 0 m</text>
+  <rect x="792" y="146" width="350" height="184" rx="18" fill="#262b38" stroke="#777f99" stroke-width="2"/>
+  <text x="816" y="184" fill="#e8eaf2" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">720-point local timing</text>
+  <text x="816" y="229" fill="#c8d0e3" font-family="Consolas, monospace" font-size="17">legacy p95 0.0240 ms</text>
+  <text x="816" y="265" fill="#c8d0e3" font-family="Consolas, monospace" font-size="17">frame  p95 0.0266 ms</text>
+  <text x="816" y="299" fill="#969fb7" font-family="Segoe UI, sans-serif" font-size="15">isolated kernel only; not USD timing</text>
+  <rect x="58" y="370" width="1084" height="210" rx="20" fill="#171c29" stroke="#41495e" stroke-width="2"/>
+  <text x="82" y="412" fill="#f8fafc" font-family="Segoe UI, sans-serif" font-size="23" font-weight="700">Decision boundary</text>
+  <text x="82" y="454" fill="#c8d0e3" font-family="Segoe UI, sans-serif" font-size="17">Identity-X remains byte exact. Proper 90-degree Y rotation preserves the geometric point set,</text>
+  <text x="82" y="486" fill="#c8d0e3" font-family="Segoe UI, sans-serif" font-size="17">but not per-cell ordering, because the legacy axis swap has determinant -1.</text>
+  <text x="82" y="526" fill="#f4b86e" font-family="Segoe UI, sans-serif" font-size="17" font-weight="700">Do not integrate until fuel / temperature / smoke channel alignment is qualified.</text>
+  <text x="82" y="556" fill="#aab3c8" font-family="Segoe UI, sans-serif" font-size="15">Scale, shear, reflection, NaN, and insufficient capacity fail without changing output or count.</text>
+  <text x="1142" y="642" text-anchor="end" fill="#7f889e" font-family="Consolas, monospace" font-size="14">Point default OFF / Flow 110.0.0 unchanged</text>
+</svg>

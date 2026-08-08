@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "phase": "phase6dj",
+  "status": "ok",
+  "generated_utc": "2026-08-08T22:08:45.052243+00:00",
+  "measurement": {
+    "log_count": 2,
+    "cells_per_log": 1152,
+    "surface_points_per_log": 360,
+    "point_count": 720,
+    "frame_tolerance": 1e-06
+  },
+  "runtime": {
+    "python": "3.8.3 (tags/v3.8.3:6f8c832, May 13 2020, 22:37:02) [MSC v.1924 64 bit (AMD64)]",
+    "python_executable": "C:\\Python38\\python.exe",
+    "numpy": "1.24.4",
+    "kit_runtime_required": false
+  },
+  "gates": {
+    "passed": 10,
+    "total": 10,
+    "checks": {
+      "legacy_layout_succeeded": true,
+      "frame_layout_succeeded": true,
+      "cardinal_x_byte_exact": true,
+      "legacy_y_is_not_same_index_rigid_rotation": true,
+      "legacy_y_point_set_equivalent": true,
+      "rotation_45_matches_reference": true,
+      "rotation_3d_matches_reference": true,
+      "invalid_frames_fail_closed": true,
+      "capacity_failure_is_atomic": true,
+      "production_native_source_unchanged": true
+    }
+  },
+  "equivalence": {
+    "cardinal_x_byte_exact": true,
+    "cardinal_y_same_index_max_error_m": 0.17748886346817017,
+    "cardinal_y_sorted_point_set_max_error_m": 0.0,
+    "rotation_45_reference_max_error_m": 0.0,
+    "rotation_3d_reference_max_error_m": 0.0
+  },
+  "failure_atomicity": {
+    "invalid_frames": {
+      "scale": {
+        "return_code": 3,
+        "count_unchanged": true,
+        "output_unchanged": true
+      },
+      "shear": {
+        "return_code": 3,
+        "count_unchanged": true,
+        "output_unchanged": true
+      },
+      "reflection": {
+        "return_code": 3,
+        "count_unchanged": true,
+        "output_unchanged": true
+      },
+      "non_finite": {
+        "return_code": 3,
+        "count_unchanged": true,
+        "output_unchanged": true
+      }
+    },
+    "insufficient_capacity": {
+      "return_code": 2,
+      "count_unchanged": true,
+      "output_unchanged": true
+    }
+  },
+  "timing": {
+    "legacy_cardinal_720_points": {
+      "samples": 300,
+      "mean_ms": 0.024139999999999998,
+      "p95_ms": 0.024,
+      "maximum_ms": 0.4259
+    },
+    "rigid_frame_720_points": {
+      "samples": 300,
+      "mean_ms": 0.02668,
+      "p95_ms": 0.0266,
+      "maximum_ms": 0.0665
+    }
+  },
+  "artifacts": {
+    "legacy_dll_sha256": "4cd1be6f1b43a41073ff039a6562179aa4ae2e27d7d99314051a5182089505c7",
+    "frame_dll_sha256": "61f0673e041f87a3e735caaea9e5a5924855eddb07ea0f491f8d1501d83a9cc2"
+  },
+  "decision": {
+    "frame_kernel_correctness_qualified": true,
+    "production_integration_qualified": false,
+    "legacy_y_mapping_is_reflection": true,
+    "channel_alignment_migration_required": true,
+    "next": "Validate per-cell channel alignment against real USD transforms before integrating frame metadata into Resident payloads."
+  },
+  "scope": "isolated additive native frame ABI; no USD stage or production integration",
+  "raw_report": "artifacts\\phase6\\phase6dj\\resident_surface_frame_raw.json",
+  "contracts": {
+    "production_native_source_changed": false,
+    "production_sphere_default": true,
+    "point_emitter_default_off": true,
+    "flow_version": "110.0.0",
+    "physics_changed": false,
+    "json_schema_changed": false,
+    "serialization_changed": false,
+    "rollback_changed": false,
+    "revision_changed": false,
+    "immutable_snapshot_changed": false
+  }
+}

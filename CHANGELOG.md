@@ -1,5 +1,10 @@
 # Changelog
 
+- Added Phase 6DJ's isolated MSVC rigid-frame surface-layout DLL without modifying or linking it into the production Phase 6AU native source.
+- Passed all 10 Phase 6DJ gates at 720 points: identity-X byte parity, exact 45-degree and arbitrary-3D reference results, and atomic rejection of scale, shear, reflection, non-finite frames, and insufficient capacity.
+- Proved that the legacy Y-axis swap is a reflection: its point set matches a proper 90-degree rotation exactly after sorting, but same-index positions differ by up to 0.177489 m, so per-cell channel alignment must be resolved before integration.
+- Measured isolated 720-point kernel p95 at 0.0240 ms for the legacy cardinal function and 0.0266 ms for the rigid-frame spike; these values exclude USD, notices, Flow ingestion, simulation, and rendering.
+- Passed the full eight-process 59/59 standard suite after Phase 6DJ in 379.2 seconds, including 225.9 seconds of collapse coverage.
 - Added the Phase 6DI design-only contract for an additive per-log rigid-frame layout ABI, preserving the existing cardinal ABI and rejecting scale, shear, reflection, and other non-rigid transforms.
 - Defined immutable byte-level changed-field detection before Vt conversion, selective Point attribute Sets, layout-revision-on-position-change, resident-revision-last publication, and exact rollback/retry/recovery requirements.
 - Kept the work default-off and production-neutral, and explicitly separated reduced Set-call/conversion work from the still-unresolved complete-array USD authoring and Flow ingestion cost.
