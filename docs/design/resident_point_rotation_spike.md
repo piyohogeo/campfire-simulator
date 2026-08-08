@@ -83,3 +83,15 @@ The test also exposed a compatibility constraint that the design must not hide. 
 Scale, shear, reflection, non-finite frames, and insufficient capacity returned explicit errors without modifying the output buffer or count. The isolated 720-point p95 was `0.0240 ms` for the legacy function and `0.0266 ms` for the frame function. These are kernel-only values and say nothing about Vt conversion, USD authoring, notices, Flow ingestion, rasterization, solver, or rendering.
 
 The frame kernel is therefore correctness-qualified in isolation, but production integration is not qualified. The next spike must derive frames from real USD transforms and validate every emitted position together with the fuel, temperature, and smoke value from the same stable surface-cell identity. No frame metadata is added to the Resident payload until that mapping is demonstrated.
+
+## Phase 6DK USD transform and channel-identity result
+
+The real Kit probe used the production `create_log()` authoring path on an anonymous in-memory USD stage. It sampled `ComputeLocalToWorldTransform()` once per log and derived the origin and three normalized local basis directions from that matrix. Identity, 90-degree Z, 45-degree Z, and an arbitrary-axis 37-degree orientation were all right-handed and orthonormal. The authored operation order was `xformOp:translate`, then `xformOp:orient` for every log.
+
+Two independent 720-point scenarios passed 14/14 gates. The cardinal pair and the 45-degree/arbitrary-3D pair both matched the stable surface-cell reference with zero observed float32 position error. Each reference record carried the same cell ID, position, fuel, temperature, and smoke ordering used by the native frame call.
+
+The complete regression remained green after the probe: 8 test processes and 59/59 cases passed in 344.9 seconds, including 204.3 seconds of collapse coverage.
+
+The legacy Y boundary is now quantified at the value level. Its 360 coordinates matched the proper rotation's geometric point set, but a deliberately cell-varying temperature was attached to a different coordinate for `360 / 360` surface cells. Fuel and smoke mismatches were both zero because the current producer publishes those channels as log-constant values. This does not make the legacy mapping value-preserving: temperature is already cell-varying, and future channels may become so.
+
+Frame extraction and position/channel identity are qualified, but migration and production integration remain unqualified. A later prototype must keep the layout representation fixed for the lifetime of a session and its recovery consumers. It must never reinterpret a committed legacy-axis payload as a frame payload or switch representations during a live layout transaction. New frame sessions may be evaluated behind an additional default-off opt-in; existing legacy sessions must stop and rebuild rather than migrate in place.

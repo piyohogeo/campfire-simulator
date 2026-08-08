@@ -1,0 +1,230 @@
+{
+  "schema_version": 1,
+  "phase": "phase6dk",
+  "status": "ok",
+  "generated_utc": "2026-08-08T22:24:20.734942+00:00",
+  "scope": {
+    "usd_stage": "anonymous in-memory",
+    "stage_connected_to_kit_context": false,
+    "production_wood_authoring_used": true,
+    "flow_or_renderer_used": false
+  },
+  "measurement": {
+    "scenario_count": 2,
+    "logs_per_scenario": 2,
+    "points_per_scenario": 720,
+    "cells_per_log": 1152,
+    "surface_points_per_log": 360
+  },
+  "gates": {
+    "passed": 14,
+    "total": 14,
+    "checks": {
+      "production_cardinal_resolver_returns_axes_0_1": true,
+      "production_noncardinal_resolver_fails_closed": true,
+      "usd_frames_are_right_handed_orthonormal": true,
+      "cardinal_frame_call_succeeded": true,
+      "arbitrary_frame_call_succeeded": true,
+      "cardinal_position_cell_identity_matches": true,
+      "arbitrary_position_cell_identity_matches": true,
+      "stable_channel_identity_digests_present": true,
+      "legacy_y_geometry_set_is_complete": true,
+      "legacy_y_temperature_misalignment_detected": true,
+      "legacy_y_log_constant_channels_remain_aligned": true,
+      "legacy_call_succeeded": true,
+      "production_app_unchanged": true,
+      "production_native_source_unchanged": true
+    }
+  },
+  "usd_transform_samples": {
+    "frame_x": {
+      "origin": [
+        -0.2,
+        -0.26,
+        0.16
+      ],
+      "frame": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "axis_norms": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dot_xy": 0.0,
+      "dot_xz": 0.0,
+      "dot_yz": 0.0,
+      "determinant": 1.0,
+      "xform_op_order": [
+        "xformOp:translate",
+        "xformOp:orient"
+      ]
+    },
+    "frame_y": {
+      "origin": [
+        0.2,
+        0.26,
+        0.16
+      ],
+      "frame": [
+        [
+          -3.42285417787025e-08,
+          0.9999999999999996,
+          0.0
+        ],
+        [
+          -0.9999999999999996,
+          -3.42285417787025e-08,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "axis_norms": [
+        0.9999999999999999,
+        0.9999999999999999,
+        1.0
+      ],
+      "dot_xy": 0.0,
+      "dot_xz": 0.0,
+      "dot_yz": 0.0,
+      "determinant": 1.0000000000000002,
+      "xform_op_order": [
+        "xformOp:translate",
+        "xformOp:orient"
+      ]
+    },
+    "frame_45": {
+      "origin": [
+        -0.2,
+        -0.12,
+        0.34
+      ],
+      "frame": [
+        [
+          0.7071066765757053,
+          0.7071068857973744,
+          0.0
+        ],
+        [
+          -0.7071068857973744,
+          0.7071066765757053,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "axis_norms": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dot_xy": 0.0,
+      "dot_xz": 0.0,
+      "dot_yz": 0.0,
+      "determinant": 1.0,
+      "xform_op_order": [
+        "xformOp:translate",
+        "xformOp:orient"
+      ]
+    },
+    "frame_3d": {
+      "origin": [
+        0.2,
+        0.12,
+        0.38
+      ],
+      "frame": [
+        [
+          0.8130187307000674,
+          0.5112917850297412,
+          -0.27853411656734695
+        ],
+        [
+          -0.45375908211776267,
+          0.8561682578840512,
+          0.2471408699253007
+        ],
+        [
+          0.36483316588064874,
+          -0.07454277129869714,
+          0.9280841213600269
+        ]
+      ],
+      "axis_norms": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dot_xy": 0.0,
+      "dot_xz": 1.3877787807814457e-17,
+      "dot_yz": 1.3877787807814457e-17,
+      "determinant": 1.0000000000000002,
+      "xform_op_order": [
+        "xformOp:translate",
+        "xformOp:orient"
+      ]
+    }
+  },
+  "production_resolver": {
+    "cardinal_axes": [
+      0,
+      1
+    ],
+    "noncardinal_error": "Resident Point native layout requires cardinal XY logs"
+  },
+  "position_identity": {
+    "cardinal_max_error_m": 0.0,
+    "arbitrary_max_error_m": 0.0,
+    "cardinal_record_sha256": "37dfe557d04b1422df9dac195339f70c3069fa8f608e99afd6396d06f5020f8a",
+    "arbitrary_record_sha256": "23746a2233259b1e0287489f6a68dc47f03139d48ec4b75cad9fd6f15fef087f"
+  },
+  "legacy_y_channel_boundary": {
+    "common_coordinate_count": 360,
+    "temperature_mismatch_count": 360,
+    "fuel_mismatch_count": 0,
+    "smoke_mismatch_count": 0,
+    "interpretation": "Legacy reflection preserves the point set and log-constant channels but assigns cell-varying temperature values to different coordinates."
+  },
+  "decision": {
+    "usd_frame_extraction_qualified": true,
+    "frame_position_channel_identity_qualified": true,
+    "legacy_axis_migration_is_value_preserving": false,
+    "production_integration_qualified": false,
+    "next": "Define an explicit migration policy for existing Y layouts, then prototype immutable frame metadata and selective publication without activating Point."
+  },
+  "raw_report": "artifacts\\phase6\\phase6dk\\resident_transform_channel_raw.json",
+  "contracts": {
+    "production_app_changed": false,
+    "production_native_source_changed": false,
+    "production_sphere_default": true,
+    "point_emitter_default_off": true,
+    "flow_version": "110.0.0",
+    "physics_changed": false,
+    "json_schema_changed": false,
+    "serialization_changed": false,
+    "rollback_changed": false,
+    "revision_changed": false,
+    "immutable_snapshot_changed": false
+  }
+}

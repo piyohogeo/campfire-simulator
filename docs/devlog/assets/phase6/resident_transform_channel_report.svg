@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6DK USD transform and surface-channel identity</title>
+  <desc id="desc">Production wood USD transforms produce correct right-handed frames and preserve stable surface-cell channel identity, while the legacy Y reflection misplaces cell-varying temperatures.</desc>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#111827"/><stop offset="1" stop-color="#1f2937"/></linearGradient></defs>
+  <rect width="1200" height="680" rx="28" fill="url(#bg)"/>
+  <text x="58" y="72" fill="#f8fafc" font-family="Segoe UI, sans-serif" font-size="32" font-weight="700">Phase 6DK / USD TRANSFORM + CELL IDENTITY</text>
+  <text x="58" y="108" fill="#bbc6d8" font-family="Segoe UI, sans-serif" font-size="18">Production wood authoring / anonymous USD stage / two independent 720-point scenarios</text>
+  <rect x="58" y="148" width="330" height="184" rx="18" fill="#1f3340" stroke="#4f8198" stroke-width="2"/>
+  <text x="82" y="188" fill="#dff5ff" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">USD frame extraction</text>
+  <text x="82" y="232" fill="#73dfb3" font-family="Consolas, monospace" font-size="27" font-weight="700">14 / 14 gates</text>
+  <text x="82" y="273" fill="#c2d2df" font-family="Segoe UI, sans-serif" font-size="16">right-handed / orthonormal</text>
+  <text x="82" y="302" fill="#c2d2df" font-family="Segoe UI, sans-serif" font-size="16">translate + orient sampled once</text>
+  <rect x="414" y="148" width="354" height="184" rx="18" fill="#252c3d" stroke="#68749b" stroke-width="2"/>
+  <text x="438" y="188" fill="#e6eaff" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">Stable cell identity</text>
+  <text x="438" y="231" fill="#c9d2eb" font-family="Consolas, monospace" font-size="17">cardinal error 0 m</text>
+  <text x="438" y="268" fill="#c9d2eb" font-family="Consolas, monospace" font-size="17">45-deg + 3D 0 m</text>
+  <text x="438" y="302" fill="#aab5d1" font-family="Segoe UI, sans-serif" font-size="15">position + fuel + temperature + smoke</text>
+  <rect x="792" y="148" width="350" height="184" rx="18" fill="#3a2925" stroke="#b56e4d" stroke-width="2"/>
+  <text x="816" y="188" fill="#ffe2d3" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">Legacy Y reflection</text>
+  <text x="816" y="232" fill="#ffad78" font-family="Consolas, monospace" font-size="24" font-weight="700">TEMP 360 / 360</text>
+  <text x="816" y="271" fill="#e4c4b5" font-family="Segoe UI, sans-serif" font-size="16">fuel mismatch 0</text>
+  <text x="816" y="302" fill="#e4c4b5" font-family="Segoe UI, sans-serif" font-size="16">smoke mismatch 0</text>
+  <rect x="58" y="372" width="1084" height="210" rx="20" fill="#171d29" stroke="#424b61" stroke-width="2"/>
+  <text x="82" y="414" fill="#f8fafc" font-family="Segoe UI, sans-serif" font-size="23" font-weight="700">Decision boundary</text>
+  <text x="82" y="456" fill="#c7d0df" font-family="Segoe UI, sans-serif" font-size="17">The frame kernel preserves the original surface-cell order for cardinal, 45-degree, and 3D USD transforms.</text>
+  <text x="82" y="490" fill="#c7d0df" font-family="Segoe UI, sans-serif" font-size="17">The legacy Y point set is complete, but its reflection assigns all cell-varying temperatures to other coordinates.</text>
+  <text x="82" y="530" fill="#f2b36f" font-family="Segoe UI, sans-serif" font-size="17" font-weight="700">Integration remains blocked until an explicit migration policy for existing Y layouts is selected.</text>
+  <text x="82" y="560" fill="#a7b1c4" font-family="Segoe UI, sans-serif" font-size="15">No Kit-context stage, Flow simulation, USD Point publication, payload, revision, or rollback change.</text>
+  <text x="1142" y="642" text-anchor="end" fill="#7f899d" font-family="Consolas, monospace" font-size="14">Sphere default / Point OFF / Flow 110.0.0</text>
+</svg>

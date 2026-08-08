@@ -1,5 +1,10 @@
 # Changelog
 
+- Added Phase 6DK's real-Kit, anonymous-USD transform/channel-identity probe using the production `create_log()` authoring path and two separate 720-point scenarios.
+- Passed all 14 Phase 6DK gates: cardinal, 45-degree, and arbitrary-axis USD frames were right-handed and preserved stable surface-cell position/channel order with zero observed float32 position error.
+- Demonstrated the legacy Y reflection's value impact: all 360 geometric coordinates remained present, but all 360 cell-varying temperatures moved to different coordinates; log-constant fuel and smoke remained aligned.
+- Kept production integration unqualified and required an explicit session-bound migration policy before adding immutable frame metadata or selective publication to the existing Point sidecar.
+- Re-ran the complete regression after Phase 6DK: all 8 test processes and 59 / 59 cases passed in 344.9 s, including 204.3 s of collapse coverage.
 - Added Phase 6DJ's isolated MSVC rigid-frame surface-layout DLL without modifying or linking it into the production Phase 6AU native source.
 - Passed all 10 Phase 6DJ gates at 720 points: identity-X byte parity, exact 45-degree and arbitrary-3D reference results, and atomic rejection of scale, shear, reflection, non-finite frames, and insufficient capacity.
 - Proved that the legacy Y-axis swap is a reflection: its point set matches a proper 90-degree rotation exactly after sorting, but same-index positions differ by up to 0.177489 m, so per-cell channel alignment must be resolved before integration.

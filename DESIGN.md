@@ -2471,3 +2471,16 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 局所時間: 各300 sampleの720点kernel p95はlegacy `0.0240 ms`、frame `0.0266 ms`だった。USD stageを開かず、Vt変換、USD Set、`Sdf.ChangeBlock`、notice、`omni.flowusd`取込み、Flow rasterization／solver／renderを含まないため、USD発行性能またはend-to-end改善値には使わない。
 - 判定と次: isolated frame kernel correctnessはqualified、production integrationはunqualifiedとする。標準suiteは全8 process・`59 / 59`件合格（全体`379.2 s`、collapse coverage `225.9 s`）だった。次は実USD transformからowner threadでframeを一回sampleし、各point positionと同じstable surface-cell identityのfuel／temperature／smokeが対応することを検証する。互換性を隠すindex並べ替えは行わず、このmappingが成立するまでResident payload、production native library、schema、既定設定を変更しない。
 - 非変更: production既定Sphere、Point既定OFF、Flow 110.0.0、物理式、JSON schema、serialization、USD保存、rollback、revision、immutable snapshot、timeline／visual／solver continuity未達は不変である。
+
+## 143. Phase 6DK USD transform / surface-channel identity
+
+### 2026-08-09: 実USD frameがstable surface-cell順を保つことと、旧Y reflectionの値不一致を確定する
+
+- 実行境界: fixed Kit/Flow appをrenderer無効、production自動scene無効で起動し、Kit contextへ接続しないanonymous in-memory USD stageを作った。productionの`create_log()`でidentity、Z 90度、Z 45度、任意軸37度の4本をauthoringし、各`ComputeLocalToWorldTransform()`を一度sampleした。4本とも`xformOp:translate`→`xformOp:orient`で、basis norm 1、相互dotほぼ0、determinant 1の右手系frameだった。
+- cell identity: productionの24×12×4木材modelを使い、surface-cellごとにstable `log_id:local_index`と固有温度を与えた。cardinal 2本×360点と45度＋3D 2本×360点を独立scenarioとし、native frame出力の各indexを、そのcellのlocal位置へUSD world transformを適用したfloat32参照と比較した。両scenarioとも最大位置誤差`0.0 m`で、fuel／temperature／smokeを含むrecord digestを固定した。
+- 旧Y値境界: production cardinal resolverはidentity／90度をaxes `(0, 1)`として受理し、45度／3Dは従来どおりfail closedにした。旧Y native出力と正しい90度frame出力は360座標すべて共通だったが、cell-varying temperatureは`360 / 360`座標で別値になった。fuel mismatchとsmoke mismatchは各0で、これは現行両channelが薪単位一定だからであり、reflectionが値同値である証拠ではない。
+- 判定: Phase固有`14 / 14` gateに合格し、production appとPhase 6AU native sourceの前後SHAは一致した。USD frame extractionとframe内position/channel identityはqualified、legacy-axisからのmigrationとproduction integrationはunqualifiedである。Flow、renderer、USD Point publication、payload、revision、rollbackはこのprobeで動かしていない。
+- 回帰: 標準suiteは全8 process・`59 / 59`件が`344.9 s`で合格し、collapse coverageは`204.3 s`で完了した。
+- migration契約: layout表現はsession生成時に固定し、同じsessionのretry／rollback／stage recoveryで維持する。committed legacy-axis payloadをframe payloadとして再解釈せず、live layout transaction中に表現を切り替えない。将来のframe modeは追加の既定OFF opt-inで新規sessionだけに適用し、legacy sessionはstop＋rebuildなしに移行させない。この契約を最小prototypeで確認するまで既存sidecar／payloadを変更しない。
+- 次: immutable payloadへ排他的なlayout representationを持たせる隔離prototypeを作り、legacyとframeのretry digest、failure rollback、shared layout state、replacement-stage recoveryを検査する。その後に変更属性maskを追加し、USD Set集合とFlow出力を別々に測る。
+- 非変更: production既定Sphere、Point既定OFF、Flow 110.0.0、物理式、JSON schema、serialization、USD保存、rollback、revision、immutable snapshot、timeline／visual／solver continuity未達は不変である。
