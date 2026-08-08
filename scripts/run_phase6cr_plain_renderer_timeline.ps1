@@ -18,7 +18,7 @@ New-Item -ItemType Directory -Path (Split-Path -Parent $Output) -Force | Out-Nul
 & $kit @(
     $app,
     "--no-window",
-    "--/app/quitAfter=900",
+    "--/app/quitAfter=30000",
     "--/app/settings/persistent=0",
     "--/app/settings/loadUserConfig=0",
     "--/exts/campfire.app/autoCreateScene=false",

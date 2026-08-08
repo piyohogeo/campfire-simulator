@@ -1,5 +1,8 @@
 # Changelog
 
+- Added Phase 6CX quit-limit qualification: Kit's `quitAfter=900` is an application-update frame cap, and a warm recheck auto-quits before the renderer timeline probe can publish its report.
+- Superseded the Phase 6CT STOP baseline and the Phase 6CU-CW causal contrasts; the same production app remains PLAY after the viewport frame and retry with a 30,000-frame cap, both with the normal cache and a newly isolated application shader cache.
+- Raised the renderer diagnostic safety cap to 30,000 frames for Phase 6CQ, 6CR, 6CS, 6CU, 6CV, and 6CW while keeping production configuration and the unresolved Resident/Flow visual-continuity qualifications unchanged.
 - Added Phase 6CW public root-identity isolation: an isolated derived app named `campfire.simulator` matches the production public app identity, selected settings, important extension IDs, and non-sensitive option-name set but remains PLAY after the viewport frame and retry.
 - Kept production unchanged and narrowed the repeated STOP boundary beyond app filename/name to root load origin, config stack, or startup lifecycle not exposed by the matched public identity.
 - Added Phase 6CV serialized root-configuration isolation: six Editor-rooted variants covering static settings, generated version lock, package/template metadata, and extension search paths all remain PLAY after the first viewport frame and retry at fixed 1280x720.

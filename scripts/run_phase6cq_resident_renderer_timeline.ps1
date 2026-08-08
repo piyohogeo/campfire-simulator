@@ -22,7 +22,7 @@ if (-not (Test-Path -LiteralPath $nativeLibrary)) {
 & $kit @(
     $app,
     "--no-window",
-    "--/app/quitAfter=900",
+    "--/app/quitAfter=30000",
     "--/app/settings/persistent=0",
     "--/app/settings/loadUserConfig=0",
     "--/exts/campfire.app/autoCreateScene=true",

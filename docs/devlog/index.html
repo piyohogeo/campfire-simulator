@@ -1292,6 +1292,26 @@
             <p>固定SDKの公開<code>omni.kit.app.IApp</code> APIで、production root、通常名の完全設定派生root、別ディレクトリで<code>campfire.simulator.kit</code>と命名した完全設定派生rootを比較しました。同名派生rootはproductionと<code>app_filename</code>、<code>app_name</code>、environment、version、build/kernel/Kit version、platform、external/debug状態の11項目が一致し、選択settings、主要extension ID、値を伏せたoption名集合も一致しました。それでも同じCamera＋Cube stage、Flow 110.0.0、全5 StageUpdate node、固定1280×720でframe後・retry後ともPLAYを維持し、STOP eventは0でした。production root baselineだけがSTOP/STOPです。Phase 6CWは10/10 gateに合格し、production appはSHA-256で非変更を確認しました。標準suiteも8 process・58/58件合格（313.5秒、collapse coverage 185.6秒）です。したがってapp filename/nameや公開identityは原因ではなく、残る境界はrootロード元、config stack、または公開identityに現れないstartup lifecycleです。timeline、Flow場、映像連続性は未合格のままです。次は起動時config stackとextension startup順を非機密範囲で比較します。添付動画はPhase 6COの関連映像で、Phase 6CWの根拠はidentityとtimeline event記録です。開発日誌の参照整合は機械検査済みですが、in-app Browserはローカル<code>file:</code> URL policyにより実レンダリングを開けなかったため、ブラウザ表示確認は未実施です。</p>
           </section>
 
+          <figure id="phase6cx-renderer-quit-limit" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6CX</h3>
+            <a href="assets/phase6/renderer_quit_limit_report.svg" aria-label="Phase 6CX renderer quit-limit境界レポートを開く">
+              <img src="assets/phase6/renderer_quit_limit_report.svg" width="1200" height="680" alt="旧900-frame上限がauto-quitし、安全な30000-frame上限ではproductionと隔離application shader cacheの両方がPLAYを維持することを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>900は秒ではなく更新frame上限だった</strong><span>12 / 12 gates · legacy auto-quit · safe PLAY/PLAY · isolated cache PLAY/PLAY</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_timeline_continuity.mp4" data-video-poster="assets/phase6/resident_renderer_timeline_capture.png" data-video-title="Phase 6CO unresolved continuity video referenced by Phase 6CX" data-video-meta="Related Phase 6CO RTX evidence, not a direct Phase 6CX recording · Phase 6CX corrects the diagnostic frame safety cap only · the shared clip still contains unresolved Resident/Flow visual continuity behavior · 1280×720 · 10 fps · 6 s">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>未解決映像連続性の関連動画</strong><small>Phase 6CO再利用 · Phase 6CXはquit-limit/event probe</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6cx-note-title">
+            <p class="note-label">2026-08-08 · Goal / harness correction / measured result / limitation / next</p>
+            <h3 id="phase6cx-note-title">root app差ではなく、診断の900-frame auto-quit</h3>
+            <p>Phase 6CTから対照にしていたproduction STOPを再監査しました。<code>quitAfter=900</code>は900秒ではなく900 application update frameで、warm再測定でも約14.7秒でauto-quitし、probeのJSON発行前に終了しました。旧cold記録はviewport readiness 193.3988秒でafter/retryともSTOPでしたが、この上限に汚染されているためqualified baselineから除外します。上限を30,000 frameへ広げると、同じproduction app、同じscene bytes、固定1280×720、全5 StageUpdate nodeでreadiness 9.8123秒、after/retryともPLAY、STOP event 0でした。既存cacheを削除せず新規<code>omni_cache</code>へapplication shader cacheを隔離した条件でも26.9770秒、PLAY/PLAYです。Phase 6CXは12/12 gate合格、production app SHA-256前後一致です。標準suiteも8 process・58/58件合格（372.8秒、collapse coverage 217.2秒）しました。したがってPhase 6CTのSTOP baselineとPhase 6CU〜6CWの因果結論はsupersededです。ただし、添付したPhase 6CO映像に残る炎消失・薪配置ジャンプは別の未解決事項であり、timeline、Flow solver state、映像連続性は未合格のままです。次は修正済み安全上限でResident/Flow continuityを再qualificationします。</p>
+          </section>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -1344,9 +1364,10 @@
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CM continuity audit</strong><small>40.000 mm発行前gap · timeline 0/130 PLAY · seamless continuity未合格</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CN atomic layout publication</strong><small>gap 0.0000019 mmへ改善 · timeline/Flow場/映像連続性は未合格</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CO timeline boundary audit</strong><small>明示transportでもPLAY→STOP · 境界動画を前10＋後50 frameで取得</small></p></div>
-              <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CU root app isolation</strong><small>4 derived appはPLAY/PLAY · production root初期化境界は未解決</small></p></div>
-              <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CV serialized root config</strong><small>6 derived appはPLAY/PLAY · root identity／lifecycle境界は未解決</small></p></div>
-              <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CW public root identity</strong><small>同名identityでもderived PLAY/PLAY · load origin／config stack境界は未解決</small></p></div>
+              <div role="listitem"><span aria-hidden="true">↺</span><p><strong>Phase 6CU root app isolation</strong><small>derived PLAY実測は保持 · production STOP対照はPhase 6CXでsuperseded</small></p></div>
+              <div role="listitem"><span aria-hidden="true">↺</span><p><strong>Phase 6CV serialized root config</strong><small>derived PLAY実測は保持 · root差の因果結論はPhase 6CXでsuperseded</small></p></div>
+              <div role="listitem"><span aria-hidden="true">↺</span><p><strong>Phase 6CW public root identity</strong><small>identity一致実測は保持 · production STOP対照はPhase 6CXでsuperseded</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6CX quit-limit boundary</strong><small>900-frame auto-quit棄却 · safe production／isolated cache PLAY/PLAY · 12/12</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6BB backend lifecycle</strong><small>fresh export · conflict reject · transactional rollback · rebuild · shutdown</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Default timing path</strong><small>homogeneous fast · timers off · 10.4678 s scenario</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mass</strong><small>≤ 8.33 × 10⁻¹⁷ kg · best Table 2 cases</small></p></div>

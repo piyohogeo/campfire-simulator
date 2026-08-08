@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "phase": "phase6cx",
+  "status": "ok",
+  "timestamp_utc": "2026-08-08T09:39:27.847456+00:00",
+  "scope": {
+    "default_off": true,
+    "production_changed": false,
+    "flow_version": "110.0.0",
+    "fixed_resolution": [
+      1280,
+      720
+    ],
+    "existing_cache_deleted": false,
+    "isolated_application_shader_cache_only": true
+  },
+  "frame_limits": {
+    "legacy": 900,
+    "qualified": 30000,
+    "unit": "application update frames"
+  },
+  "historical_phase6ct": {
+    "viewport_readiness_seconds": 193.3988,
+    "resolution": [
+      1280,
+      720
+    ],
+    "after_plays": false,
+    "retry_plays": false,
+    "after_stop_events": 1,
+    "retry_stop_events": 1,
+    "stage_update_node_count": 5
+  },
+  "legacy_900_recheck": {
+    "autoquit_observed": true,
+    "report_completed": false,
+    "result_accepted": false
+  },
+  "safe_30000": {
+    "viewport_readiness_seconds": 9.8123,
+    "resolution": [
+      1280,
+      720
+    ],
+    "after_plays": true,
+    "retry_plays": true,
+    "after_stop_events": 0,
+    "retry_stop_events": 0,
+    "stage_update_node_count": 5
+  },
+  "isolated_application_shader_cache_30000": {
+    "viewport_readiness_seconds": 26.977,
+    "resolution": [
+      1280,
+      720
+    ],
+    "after_plays": true,
+    "retry_plays": true,
+    "after_stop_events": 0,
+    "retry_stop_events": 0,
+    "stage_update_node_count": 5
+  },
+  "production_app_sha256_before": "48eb57e8b562c4b51d4bfef6bd538bb8b387fcf9b9f9c0246dded27ab5f9e8b7",
+  "production_app_sha256_after": "48eb57e8b562c4b51d4bfef6bd538bb8b387fcf9b9f9c0246dded27ab5f9e8b7",
+  "gates": {
+    "historical_stop_recorded": true,
+    "legacy_900_frame_autoquit_observed": true,
+    "legacy_900_result_rejected": true,
+    "safe_30000_completed": true,
+    "safe_30000_preserves_play": true,
+    "safe_30000_fixed_1280x720": true,
+    "isolated_cache_completed": true,
+    "isolated_cache_preserves_play": true,
+    "isolated_cache_fixed_1280x720": true,
+    "stage_update_graph_complete": true,
+    "scene_bytes_equal": true,
+    "production_app_unchanged": true
+  },
+  "decision": {
+    "phase6ct_stop_baseline_qualified": false,
+    "phase6ct_stop_baseline_superseded": true,
+    "phase6cu_to_phase6cw_causal_conclusions_superseded": true,
+    "safe_cap_plain_renderer_stop_reproduced": false,
+    "isolated_application_shader_cache_reproduces_stop": false,
+    "root_app_fix_required_by_this_probe": false,
+    "remaining_boundary": "The plain-stage STOP was a diagnostic frame-limit artifact. Resident/Flow visual continuity must be requalified independently with the safe cap.",
+    "timeline_continuity_qualified": false,
+    "seamless_visual_continuity_qualified": false,
+    "flow_solver_state_checkpointed": false
+  }
+}

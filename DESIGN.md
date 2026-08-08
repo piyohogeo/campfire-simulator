@@ -2331,3 +2331,14 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 実測: 同名派生rootはCamera＋Cube stage、Flow 110.0.0、全5 StageUpdate node、固定1280×720でviewport frame前・後・retry後にPLAYを維持し、STOP eventは0だった。production Campfire root baselineだけがafter/retryともSTOPした。Phase 6CW reportは`10 / 10` gateに合格した。
 - 検証: 標準suiteは8 process・58/58件合格（313.5秒、collapse coverage 185.6秒）。開発日誌はJSON/SVG/動画/posterの参照とSVG XMLを機械検査した。in-app Browserはローカル`file:` URL policyにより実レンダリングを開けなかったため、ブラウザ表示は未確認として静的検査と分離して記録する。
 - 判断と非変更: app filename/nameおよび公開app identityはSTOPの十分条件ではない。残る境界は、同一identityと最終有効extension集合に現れないroot appロード元、config stack、またはstartup lifecycleである。production既定Sphere、Point既定OFF、固定capture、木材権威状態、物理式、JSON schema、Flow/dependency version、rollback、immutable snapshot、revision契約は変更しない。`timeline_continuity_qualified=false`、`seamless_visual_continuity_qualified=false`、`flow_solver_state_checkpointed=false`を維持する。
+
+## 130. Phase 6CX renderer diagnostic quit-limit boundary
+
+### 2026-08-08: 900 frame上限によるSTOP偽陽性を棄却する
+
+- 発見: renderer診断で使っていた`--/app/quitAfter=900`は秒ではなくapplication update frame数だった。warm production再測定では約14.7秒で900 frame auto-quitへ到達し、`probe_plain_renderer_timeline.py`がJSONを発行する前に終了した。Phase 6CTの193.3988秒cold記録は同じ上限下でafter/retryにSTOP eventを1件ずつ記録しており、root app固有STOPのqualified baselineとして扱えない。
+- 安全上限: safety capを30,000 frameへ広げると、同一production app・同一scene bytes・固定1280×720・全5 StageUpdate nodeでviewport readiness 9.8123秒、after/retryともPLAY、STOP event 0だった。既存cacheを削除せず新規`${omni_cache}`へapplication shader cacheを隔離した条件でもreadiness 26.9770秒、after/retryともPLAY、STOP event 0だった。隔離条件はdriver全体の完全cold再現ではない。
+- 判定: Phase 6CXは12/12 gateに合格し、production app SHA-256の前後一致を確認した。Phase 6CTのSTOP baselineと、それを対照にしたPhase 6CU〜6CWの因果結論はsupersededとする。各derived appがPLAYした実測自体は有効だが、production rootとの差を示す証拠には使わない。このplain-stage probeからproduction root app修正は要求しない。
+- 回帰: 標準suiteは8 process・58/58件合格（repo suite 372.8秒、collapse coverage 217.2秒）。Python構文、PowerShell 7 scriptの構文、JSON 12/12 gate、SVG XML、HTMLのSVG・動画・poster参照、Phase見出し順、`git diff --check`も合格した。
+- harness修正: `run_phase6cq_resident_renderer_timeline.ps1`、`run_phase6cr_plain_renderer_timeline.ps1`、`run_phase6cs_renderer_scene_variant.ps1`、`run_phase6cu_app_variant.ps1`、`run_phase6cv_settings_variant.ps1`、`run_phase6cw_root_identity.ps1`のrenderer safety capを30,000 frameへ変更する。probe自身が正常終了するため、通常は上限へ到達しない。
+- 非変更と次: production既定Sphere、Point既定OFF、Flow 110.0.0、固定capture、木材権威状態、物理式、JSON schema、rollback、immutable snapshot、revision契約は変更しない。plain-stage STOP偽陽性の棄却はResident/Flow映像の炎消失・薪配置ジャンプを解決しないため、`timeline_continuity_qualified=false`、`seamless_visual_continuity_qualified=false`、`flow_solver_state_checkpointed=false`を維持する。次は安全上限下でResident/Flow continuityを独立に再qualificationする。

@@ -39,7 +39,7 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     "--ext-folder", (Join-Path $releaseRoot "exts"),
     "--ext-folder", (Join-Path $releaseRoot "extscache"),
     "--/app/file/ignoreUnsavedOnExit=true",
-    "--/app/quitAfter=900",
+    "--/app/quitAfter=30000",
     "--/app/settings/persistent=0",
     "--/app/settings/loadUserConfig=0",
     "--/exts/campfire.app/autoCreateScene=false",
