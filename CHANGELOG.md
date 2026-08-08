@@ -1,6 +1,6 @@
 # Changelog
 
-- Added the Phase 6CJ default-off normal-owner layout and stage recovery path, preserving the current stopped-owner layout mapping across real Kit close/attach consumer reconstruction and continuing backend, primary, and Point consumers from revision 301 through 710 without resync or pending discard.
+- Added the Phase 6CK default-off owner-thread Resident Point command queue, sharing one result schema across UI, timeline, and headless callers, rejecting unsupported 45-degree layouts without Point/revision mutation, and resuming real Flow only after a cardinal layout commit.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6CK bounded FIFO and compact Resident Point control window, with owner-thread-only USD execution, structured accepted/rejected results, explicit shutdown discard, and a 13-gate real Flow/RTX qualification video.
 - Added the Phase 6CJ explicit qualification path for PLAY-time stopped layout refresh, monotonic layout revision, current-layout recovery factory sharing, normal-owner stage lifecycle observation, and real Flow/RTX continuation after consumer replacement.
 - Added the Phase 6CI default-off normal application composition, including complete offline schema authoring before context connection, extension-owned timeline/update lifecycle, primary and Point consumer pre-authoring, and a reproducible 10-gate real-Kit/Flow capture.
 - Added the Phase 6CG production-but-unactivated Resident Point module, extracting the generic native surface producer, immutable byte payload, and transactional Point sidecar from benchmark ownership, enforcing pre-authored Flow schema and geometry/ABI validation, and proving byte-exact extraction plus full stage-recovery continuation in real Flow 110.

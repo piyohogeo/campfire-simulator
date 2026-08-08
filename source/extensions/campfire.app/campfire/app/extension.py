@@ -23,7 +23,7 @@ from omni.physx import get_physx_simulation_interface
 from omni.physx.bindings._physx import SETTING_UPDATE_TO_USD
 from pxr import Gf, Tf, Usd, UsdPhysics, UsdUtils
 
-from .controls import CampfireControlWindow
+from .controls import CampfireControlWindow, ResidentPointControlWindow
 from .flow_scene import (
     EMITTER_END,
     EMITTER_START,
@@ -94,6 +94,10 @@ from .resident_snapshot_adapter import (
 )
 from .resident_native_backend import ResidentNativeBackend
 from .resident_point_application_owner import ResidentPointApplicationOwner
+from .resident_point_commands import (
+    ResidentPointCommandQueue,
+    format_resident_point_command_result,
+)
 from .resident_point_scene import (
     RESIDENT_POINT_APPLICATION_SETTING,
     RESIDENT_POINT_EMITTER_PATH,
@@ -170,8 +174,10 @@ class CampfireAppExtension(omni.ext.IExt):
         extension_manager = omni.kit.app.get_app().get_extension_manager()
         self._extension_path = Path(extension_manager.get_extension_path(ext_id)).resolve()
         self._control_window = None
+        self._resident_point_control_window = None
         self._resident_snapshot_adapter = None
         self._resident_point_owner = None
+        self._resident_point_command_queue = None
         self._resident_point_stage_subscription = None
         self._resident_point_timeline_subscription = None
         self._resident_point_update_subscription = None
@@ -186,6 +192,14 @@ class CampfireAppExtension(omni.ext.IExt):
         self._resident_point_update_subscription = None
         self._resident_point_timeline_subscription = None
         self._resident_point_stage_subscription = None
+        if self._resident_point_command_queue is not None:
+            try:
+                self._resident_point_command_queue.close()
+            except Exception as exc:
+                carb.log_error(
+                    f"[campfire.app] Resident Point command shutdown failed: {exc}"
+                )
+            self._resident_point_command_queue = None
         if self._resident_point_owner is not None:
             try:
                 self._resident_point_owner.close()
@@ -212,6 +226,9 @@ class CampfireAppExtension(omni.ext.IExt):
         if self._control_window is not None:
             self._control_window.destroy()
             self._control_window = None
+        if self._resident_point_control_window is not None:
+            self._resident_point_control_window.destroy()
+            self._resident_point_control_window = None
         carb.log_info("[campfire.app] Extension shutdown")
 
     async def _initialize(self):
@@ -341,6 +358,10 @@ class CampfireAppExtension(omni.ext.IExt):
 
             if phase == "phase2" and not capture_requested:
                 self._control_window = CampfireControlWindow()
+            if phase == "phase3" and point_application_enabled and not capture_requested:
+                self._resident_point_control_window = ResidentPointControlWindow(
+                    self._resident_point_command_queue
+                )
 
             if capture_requested and quit_after_capture:
                 settings.set("/app/fastShutdown", True)
@@ -394,9 +415,23 @@ class CampfireAppExtension(omni.ext.IExt):
                 offline_stage, producer.positions
             )
             preauthor_resident_snapshot_consumers(offline_stage, log_ids)
+            point_settings = carb.settings.get_settings()
+            command_qualification = point_settings.get_as_bool(
+                f"{SETTINGS_ROOT}/residentPointCommandQualificationEnabled"
+            )
+            recovery_qualification = point_settings.get_as_bool(
+                f"{SETTINGS_ROOT}/residentPointRecoveryQualificationEnabled"
+            )
+            point_phase = (
+                "phase6ck"
+                if command_qualification
+                else "phase6cj"
+                if recovery_qualification
+                else "phase6ci"
+            )
             offline_stage.GetRootLayer().customLayerData = {
                 **offline_stage.GetRootLayer().customLayerData,
-                "campfire:phase": "phase6ci",
+                "campfire:phase": point_phase,
                 "campfire:flowVersion": FLOW_VERSION,
                 "campfire:stageBuiltBeforeConnection": True,
                 "campfire:normalApplicationOwner": True,
@@ -452,6 +487,9 @@ class CampfireAppExtension(omni.ext.IExt):
             )
             backend = None
             self._resident_point_owner = owner
+            self._resident_point_command_queue = ResidentPointCommandQueue(
+                owner, context.get_stage
+            )
             event_names = {
                 int(omni.usd.StageEventType.CLOSING): "closing",
                 int(omni.usd.StageEventType.CLOSED): "closed",
@@ -483,6 +521,9 @@ class CampfireAppExtension(omni.ext.IExt):
                     self._resident_point_owner.close(discard_pending=True)
                 finally:
                     self._resident_point_owner = None
+            if self._resident_point_command_queue is not None:
+                self._resident_point_command_queue.close()
+                self._resident_point_command_queue = None
             elif backend is not None:
                 backend.close()
             raise
@@ -498,18 +539,21 @@ class CampfireAppExtension(omni.ext.IExt):
 
         def observe_timeline(event):
             owner = self._resident_point_owner
+            command_queue = self._resident_point_command_queue
             name = event_names.get(int(event.type))
-            if owner is None or name is None:
+            if owner is None or command_queue is None or name is None:
                 return
             try:
                 state = owner.status()["session"]["state"]
                 if name == "play" and state in ("ready", "stopped"):
-                    layout = owner.refresh_layout(omni.usd.get_context().get_stage())
-                    if layout["changed"]:
-                        carb.log_info(
-                            "[campfire.app] Resident Point layout refreshed before "
-                            f"PLAY: revision={layout['revision']}"
-                        )
+                    sequence = command_queue.submit_refresh_layout(source="timeline")
+                    results = self._drain_resident_point_commands()
+                    result = next(
+                        (item for item in results if item.sequence == sequence), None
+                    )
+                    if result is None or not result.accepted:
+                        timeline.pause()
+                        return
                     owner.start()
                     self._resident_point_last_step_perf = time.perf_counter()
                 elif name in ("pause", "stop") and state == "running":
@@ -530,6 +574,7 @@ class CampfireAppExtension(omni.ext.IExt):
             if owner is None:
                 return
             try:
+                self._drain_resident_point_commands()
                 if owner.status()["session"]["state"] != "running":
                     return
                 now = time.perf_counter()
@@ -550,8 +595,33 @@ class CampfireAppExtension(omni.ext.IExt):
             )
         )
         if timeline.is_playing():
-            self._resident_point_owner.start()
-            self._resident_point_last_step_perf = time.perf_counter()
+            sequence = self._resident_point_command_queue.submit_refresh_layout(
+                source="timeline"
+            )
+            results = self._drain_resident_point_commands()
+            result = next((item for item in results if item.sequence == sequence), None)
+            if result is not None and result.accepted:
+                self._resident_point_owner.start()
+                self._resident_point_last_step_perf = time.perf_counter()
+            else:
+                timeline.pause()
+
+    def _drain_resident_point_commands(self):
+        """Execute queued layout commands and fan out their common results."""
+
+        command_queue = self._resident_point_command_queue
+        if command_queue is None:
+            return ()
+        results = command_queue.drain()
+        if self._resident_point_control_window is not None:
+            self._resident_point_control_window.apply_results(results)
+        for result in results:
+            message = format_resident_point_command_result(result)
+            if result.accepted:
+                carb.log_info(f"[campfire.app] Resident Point command: {message}")
+            else:
+                carb.log_warn(f"[campfire.app] Resident Point command: {message}")
+        return results
 
     async def _get_viewport(self):
         viewport = None
@@ -639,7 +709,18 @@ class CampfireAppExtension(omni.ext.IExt):
         recovery_qualification = carb.settings.get_settings().get_as_bool(
             f"{SETTINGS_ROOT}/residentPointRecoveryQualificationEnabled"
         )
-        phase_name = "phase6cj" if recovery_qualification else "phase6ci"
+        command_qualification = carb.settings.get_settings().get_as_bool(
+            f"{SETTINGS_ROOT}/residentPointCommandQualificationEnabled"
+        )
+        if recovery_qualification and command_qualification:
+            raise ValueError("Resident Point qualifications are mutually exclusive")
+        phase_name = (
+            "phase6ck"
+            if command_qualification
+            else "phase6cj"
+            if recovery_qualification
+            else "phase6ci"
+        )
         output_dir = self._output_dir()
         video_frames_dir = output_dir / "video_frames"
         video_frames_dir.mkdir(parents=True, exist_ok=True)
@@ -655,6 +736,10 @@ class CampfireAppExtension(omni.ext.IExt):
         recovery_result = None
         layout_changed_point_count = 0
         replacement_scene_path = None
+        command_results = []
+        rejected_point_state_unchanged = None
+        rejected_owner_state_unchanged = None
+        command_queue_status = None
 
         def observe_point_changes(notice, _sender):
             point_resyncs.extend(
@@ -684,7 +769,11 @@ class CampfireAppExtension(omni.ext.IExt):
             result = None
             warmup_steps = 650
             frame_count = 60
-            initial_warmup_steps = 300 if recovery_qualification else warmup_steps
+            initial_warmup_steps = (
+                300
+                if recovery_qualification or command_qualification
+                else warmup_steps
+            )
             for tick in range(1, initial_warmup_steps + 1):
                 result = owner.step()
                 if tick % 5 == 0:
@@ -692,7 +781,7 @@ class CampfireAppExtension(omni.ext.IExt):
                     active_blocks.append(
                         int(flow_interface.get_active_block_count())
                     )
-            if recovery_qualification:
+            if recovery_qualification or command_qualification:
                 timeline.pause()
                 owner.stop()
                 point_attribute = stage.GetPrimAtPath(
@@ -708,8 +797,72 @@ class CampfireAppExtension(omni.ext.IExt):
                     float(original_origin[1]) + 0.04,
                     float(original_origin[2]),
                 )
-                move_log(stage, PHASE3_DRY_LOG_ID, moved_origin, 0.0)
-                layout_result = owner.refresh_layout(stage)
+                if command_qualification:
+                    point_prim_before = stage.GetPrimAtPath(
+                        RESIDENT_POINT_EMITTER_PATH
+                    )
+                    point_values_before_rejection = {
+                        name: point_prim_before.GetAttribute(name).Get()
+                        for name in (
+                            "pointPositions",
+                            "pointFuels",
+                            "pointTemperatures",
+                            "pointSmokes",
+                            "campfire:residentRevision",
+                        )
+                    }
+                    owner_status_before_rejection = owner.status()
+                    move_log(stage, PHASE3_DRY_LOG_ID, original_origin, 45.0)
+                    rejected_sequence = (
+                        self._resident_point_command_queue.submit_refresh_layout(
+                            source="headless"
+                        )
+                    )
+                    rejected_results = self._drain_resident_point_commands()
+                    rejected_result = next(
+                        item
+                        for item in rejected_results
+                        if item.sequence == rejected_sequence
+                    )
+                    command_results.append(rejected_result.to_dict())
+                    point_values_after_rejection = {
+                        name: point_prim_before.GetAttribute(name).Get()
+                        for name in point_values_before_rejection
+                    }
+                    owner_status_after_rejection = owner.status()
+                    rejected_point_state_unchanged = all(
+                        point_values_before_rejection[name]
+                        == point_values_after_rejection[name]
+                        for name in point_values_before_rejection
+                    )
+                    rejected_owner_state_unchanged = (
+                        owner_status_before_rejection["layout_revision"]
+                        == owner_status_after_rejection["layout_revision"]
+                        and owner_status_before_rejection["layout_replace_count"]
+                        == owner_status_after_rejection["layout_replace_count"]
+                        and owner_status_after_rejection["session"]["state"]
+                        == "stopped"
+                    )
+                    move_log(stage, PHASE3_DRY_LOG_ID, moved_origin, 0.0)
+                    accepted_sequence = (
+                        self._resident_point_command_queue.submit_refresh_layout(
+                            source="headless"
+                        )
+                    )
+                    accepted_results = self._drain_resident_point_commands()
+                    accepted_result = next(
+                        item
+                        for item in accepted_results
+                        if item.sequence == accepted_sequence
+                    )
+                    command_results.append(accepted_result.to_dict())
+                    layout_result = {
+                        "changed": accepted_result.layout_changed,
+                        "revision": accepted_result.layout_revision,
+                    }
+                else:
+                    move_log(stage, PHASE3_DRY_LOG_ID, moved_origin, 0.0)
+                    layout_result = owner.refresh_layout(stage)
                 owner.start()
                 timeline.play()
                 result = owner.step()
@@ -724,23 +877,24 @@ class CampfireAppExtension(omni.ext.IExt):
                     for before, after in zip(positions_before, positions_after)
                 )
 
-                replacement_scene_path = output_dir / "replacement_stage.usda"
-                replacement_scene_path.unlink(missing_ok=True)
-                if not stage.Export(str(replacement_scene_path)):
-                    raise RuntimeError("Resident Point replacement stage export failed")
-                replacement_stage = Usd.Stage.Open(str(replacement_scene_path))
-                if replacement_stage is None:
-                    raise RuntimeError("Resident Point replacement stage did not open")
-                listener.Revoke()
-                listener = None
-                recovery_result = await owner.replace_stage(replacement_stage)
-                stage = omni.usd.get_context().get_stage()
-                if stage is not replacement_stage:
-                    raise RuntimeError(
-                        "Resident Point recovery attached an unexpected stage"
-                    )
-                listener = register_point_listener(stage)
-                timeline.play()
+                if recovery_qualification:
+                    replacement_scene_path = output_dir / "replacement_stage.usda"
+                    replacement_scene_path.unlink(missing_ok=True)
+                    if not stage.Export(str(replacement_scene_path)):
+                        raise RuntimeError("Resident Point replacement stage export failed")
+                    replacement_stage = Usd.Stage.Open(str(replacement_scene_path))
+                    if replacement_stage is None:
+                        raise RuntimeError("Resident Point replacement stage did not open")
+                    listener.Revoke()
+                    listener = None
+                    recovery_result = await owner.replace_stage(replacement_stage)
+                    stage = omni.usd.get_context().get_stage()
+                    if stage is not replacement_stage:
+                        raise RuntimeError(
+                            "Resident Point recovery attached an unexpected stage"
+                        )
+                    listener = register_point_listener(stage)
+                    timeline.play()
 
                 remaining_warmup_steps = warmup_steps - initial_warmup_steps - 1
                 for remaining_index in range(remaining_warmup_steps):
@@ -781,6 +935,13 @@ class CampfireAppExtension(omni.ext.IExt):
                 session_status["adapter"]["revision"],
                 session_status["sidecar"]["revision"],
             )
+            if self._resident_point_command_queue is not None:
+                if command_qualification:
+                    command_queue_status = (
+                        self._resident_point_command_queue.status()
+                    )
+                self._resident_point_command_queue.close()
+                self._resident_point_command_queue = None
             close_result = owner.close()
             self._resident_point_owner = None
             frame_paths = sorted(video_frames_dir.glob("frame_*.png"))
@@ -801,7 +962,9 @@ class CampfireAppExtension(omni.ext.IExt):
                 set(point_changes).difference(allowed_point_properties)
             )
             point_prim = stage.GetPrimAtPath(RESIDENT_POINT_EMITTER_PATH)
-            expected_owner_transitions = 2 if recovery_qualification else 1
+            expected_owner_transitions = (
+                2 if recovery_qualification or command_qualification else 1
+            )
             gates = {
                 "explicit_setting_enabled": resident_point_application_enabled(
                     carb.settings.get_settings()
@@ -871,6 +1034,35 @@ class CampfireAppExtension(omni.ext.IExt):
                         ),
                     }
                 )
+            if command_qualification:
+                gates.update(
+                    {
+                        "unsupported_layout_rejected_fail_closed": (
+                            len(command_results) == 2
+                            and command_results[0]["status"] == "rejected"
+                            and command_results[0]["code"] == "unsupported_layout"
+                            and "cardinal XY" in command_results[0]["message"]
+                            and rejected_point_state_unchanged
+                            and rejected_owner_state_unchanged
+                        ),
+                        "restored_cardinal_layout_committed_through_queue": (
+                            command_results[1]["status"] == "accepted"
+                            and command_results[1]["code"] == "layout_replaced"
+                            and command_results[1]["layout_revision"] == 2
+                            and stopped_status["layout_revision"] == 2
+                            and stopped_status["layout_replace_count"] == 1
+                            and session_status["sidecar"]["layout_revision"] == 2
+                            and 360 <= layout_changed_point_count <= 720
+                            and layout_changed_point_count % 360 == 0
+                        ),
+                        "command_queue_drained_without_new_authority": (
+                            command_queue_status["pending_count"] == 0
+                            and command_queue_status["submitted_count"] == 2
+                            and command_queue_status["executed_count"] == 2
+                            and command_queue_status["rejected_count"] == 1
+                        ),
+                    }
+                )
             summary = {
                 "schema_version": 1,
                 "status": "ok" if all(gates.values()) else "failed",
@@ -883,6 +1075,7 @@ class CampfireAppExtension(omni.ext.IExt):
                     "normal_application": True,
                     "stage_built_before_connection": True,
                     "layout_recovery_qualification": recovery_qualification,
+                    "command_queue_qualification": command_qualification,
                     "point_count": 720,
                     "surface_points_per_log": 360,
                     "log_count": 2,
@@ -899,6 +1092,10 @@ class CampfireAppExtension(omni.ext.IExt):
                     "layout_refresh": layout_result,
                     "layout_changed_point_count": layout_changed_point_count,
                     "recovery": recovery_result,
+                    "commands": command_results,
+                    "command_queue": command_queue_status,
+                    "rejected_point_state_unchanged": rejected_point_state_unchanged,
+                    "rejected_owner_state_unchanged": rejected_owner_state_unchanged,
                     "replacement_scene": (
                         str(replacement_scene_path)
                         if replacement_scene_path is not None
@@ -933,6 +1130,9 @@ class CampfireAppExtension(omni.ext.IExt):
                 listener.Revoke()
             if flow_interface is not None:
                 _flowusd.release_flowusd_interface(flow_interface)
+            if self._resident_point_command_queue is not None:
+                self._resident_point_command_queue.close()
+                self._resident_point_command_queue = None
             if self._resident_point_owner is owner:
                 try:
                     owner.close(discard_pending=True)

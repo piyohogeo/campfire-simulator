@@ -183,6 +183,11 @@ from .resident_point_scene import (
     resident_point_layout_for_logs,
 )
 from .resident_point_application_owner import ResidentPointApplicationOwner
+from .resident_point_commands import (
+    ResidentPointCommandQueue,
+    ResidentPointCommandResult,
+    format_resident_point_command_result,
+)
 from .resident_stage_recovery import ResidentStageRecoveryOrchestrator
 from .wood import LogSpec, create_log, get_log_world_position, list_log_ids, move_log
 
@@ -247,6 +252,8 @@ __all__ = [
     "ResidentNativeSurfaceProducer",
     "ResidentPointSidecar",
     "ResidentPointApplicationOwner",
+    "ResidentPointCommandQueue",
+    "ResidentPointCommandResult",
     "RESIDENT_POINT_APPLICATION_SETTING",
     "RESIDENT_POINT_EMITTER_PATH",
     "RESIDENT_POINT_SOURCE_PATH",
@@ -254,6 +261,7 @@ __all__ = [
     "ResidentUsdTransactionProfile",
     "ResidentUsdLightweightTailProfile",
     "UsdResidentSnapshotAdapter",
+    "format_resident_point_command_result",
     "published_row_from_python_model",
     "summarize_timing_ms",
     "add_scenario_log",

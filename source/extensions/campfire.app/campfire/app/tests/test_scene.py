@@ -980,6 +980,59 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(refreshed["axes"], (1, 0))
         self.assertEqual(id(layout_owner._layout_state), shared_state_identity)
         self.assertEqual(layout_owner.status()["layout_replace_count"], 1)
+
+        command_queue = campfire.app.ResidentPointCommandQueue(
+            layout_owner, lambda: stage
+        )
+        campfire.app.move_log(stage, log_ids[0], (0.03, 0.0, 0.2), 45.0)
+        rejected_sequence = command_queue.submit_refresh_layout(source="headless")
+        rejected = command_queue.drain()
+        self.assertEqual(rejected[0].sequence, rejected_sequence)
+        self.assertFalse(rejected[0].accepted)
+        self.assertEqual(rejected[0].code, "unsupported_layout")
+        self.assertIn("cardinal XY", rejected[0].message)
+        self.assertEqual(layout_owner.status()["layout_revision"], 2)
+        self.assertEqual(layout_owner.status()["layout_replace_count"], 1)
+
+        campfire.app.move_log(stage, log_ids[0], (0.05, 0.0, 0.2), 0.0)
+        accepted_sequence = command_queue.submit_refresh_layout(source="ui")
+        accepted = command_queue.drain()
+        self.assertEqual(accepted[0].sequence, accepted_sequence)
+        self.assertTrue(accepted[0].accepted)
+        self.assertEqual(accepted[0].code, "layout_replaced")
+        self.assertEqual(accepted[0].layout_revision, 3)
+        self.assertEqual(layout_owner.status()["layout_replace_count"], 2)
+        self.assertIn(
+            "Applied", campfire.app.format_resident_point_command_result(accepted[0])
+        )
+
+        worker_sequences = []
+        worker = threading.Thread(
+            target=lambda: worker_sequences.append(
+                command_queue.submit_refresh_layout(source="worker")
+            )
+        )
+        worker.start()
+        worker.join()
+        self.assertEqual(len(worker_sequences), 1)
+        wrong_thread_errors = []
+
+        def drain_on_worker():
+            try:
+                command_queue.drain()
+            except Exception as exc:
+                wrong_thread_errors.append(exc)
+
+        wrong_thread = threading.Thread(target=drain_on_worker)
+        wrong_thread.start()
+        wrong_thread.join()
+        self.assertEqual(len(wrong_thread_errors), 1)
+        self.assertIn("owner thread", str(wrong_thread_errors[0]))
+        unchanged = command_queue.drain()
+        self.assertTrue(unchanged[0].accepted)
+        self.assertEqual(unchanged[0].code, "layout_unchanged")
+        self.assertEqual(command_queue.status()["rejected_count"], 1)
+        command_queue.close()
         layout_owner.close()
 
     async def test_phase3_default_keeps_sphere_without_point_structure(self):

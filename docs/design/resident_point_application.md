@@ -77,3 +77,40 @@ Reproduction:
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_phase6cj_resident_point_recovery.ps1
 ```
+
+## Phase 6CK owner-thread commands and fail-closed layout UX
+
+`ResidentPointCommandQueue` is a bounded FIFO between callers and the existing
+application owner. Submitting a refresh does not inspect USD and is safe from a
+non-owner thread. Draining is restricted to the construction/owner thread; only
+that operation obtains the current stage and calls the existing
+`ResidentPointApplicationOwner.refresh_layout()`. The queue owns no wood values,
+Point arrays, pending payload, rollback journal, snapshot, or revision.
+
+UI, timeline PLAY, and headless qualification use the same immutable result
+schema and one-line formatter. Results distinguish `layout_replaced`,
+`layout_unchanged`, `unsupported_layout`, queue closure/overflow, and unexpected
+execution failure. A rejected PLAY transition pauses the timeline and does not
+start the Resident session. Shutdown rejects queued work rather than applying it.
+
+The Phase 6CK normal-app run stopped at revision 300 and submitted a 45-degree
+dry-log rotation. The command returned `unsupported_layout`; Point positions,
+fuels, temperatures, smokes, Point revision, layout revision, layout replace
+count, and stopped session state were unchanged. After restoring a cardinal
+rotation and moving the log by 0.04 m, the next command advanced layout revision
+1 to 2. Simulation resumed through revision 710 with backend, primary adapter,
+and Point sidecar equal. Point structural resync remained zero.
+
+All 13 gates passed. Flow peaked at 427 active blocks; required field readbacks
+were non-empty and all 60 RTX evidence frames were unique. The layout ABI remains
+limited to horizontal cardinal X/Y logs, and Point remains explicit opt-in. The
+next boundary is interactive transform-edit observation and bounded-queue
+backpressure; arbitrary rotation support is not implied by this result. The final
+suite passed 56/56 checks across eight processes in 290.9 s, collapse coverage
+completed in 171.0 s, and release build plus the default-off Phase 0 capture passed.
+
+Reproduction:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_phase6ck_resident_point_commands.ps1
+```
