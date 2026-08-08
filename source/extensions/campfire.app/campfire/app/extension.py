@@ -444,6 +444,9 @@ class CampfireAppExtension(omni.ext.IExt):
             timeline_continuity_qualification = point_settings.get_as_bool(
                 f"{SETTINGS_ROOT}/residentPointTimelineContinuityQualificationEnabled"
             )
+            dynamic_translation_qualification = point_settings.get_as_bool(
+                f"{SETTINGS_ROOT}/residentPointDynamicTranslationQualificationEnabled"
+            )
             point_phase = (
                 "phase6co"
                 if timeline_continuity_qualification
@@ -514,6 +517,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 timeline,
                 omni.kit.app.get_app().next_update_async,
                 layout,
+                track_dynamic_translation=dynamic_translation_qualification,
             )
             backend = None
             self._resident_point_owner = owner

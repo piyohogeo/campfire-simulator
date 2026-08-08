@@ -1,5 +1,9 @@
 # Changelog
 
+- Added the default-off Phase 6DA running-translation snapshot path: candidate Point positions remain immutable until `positions`, `layoutRevision`, channels, and consumer revision commit together, with producer/layout rollback on downstream failure.
+- Measured a 20.000000 mm running log edit at revision 344→345: the Point centroid moved 19.999996 mm, displacement differed by 0.0000037 mm, maximum alignment error was 0.0000053 mm, and layout revision advanced 9→10.
+- Kept required Flow readbacks and 24 active blocks nonzero at both samples; rotation tracking, within-update Flow reset exclusion, seamless visual continuity, and complete solver checkpoint continuity remain unqualified.
+- Passed the release build, Phase 0 RTX regression, rendered devlog/modal verification, and the full 8-process 59/59 standard suite in 433.5 seconds after adding the Phase 6DA contract tests.
 - Added Phase 6CZ sampled Resident/Flow boundary telemetry and a direct 60-frame RTX video, correlating revisions 350→351 with log transform, Point centroid, active blocks, and NanoVDB readback.
 - Measured a Point-centroid jump of Y +40.130 mm and Z -19.997 mm (44.837 mm total), while Flow active blocks remained 44→48 and temperature, fuel, burn, smoke, and velocity readbacks remained nonempty at both observable samples.
 - Kept seamless visual continuity and complete Flow-solver checkpoint continuity unqualified: the two-sample public readback cannot exclude reset-and-repopulation within one Kit update, and dynamic log-to-Point tracking remains unimplemented.

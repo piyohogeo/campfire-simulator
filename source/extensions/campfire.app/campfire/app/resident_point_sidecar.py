@@ -27,6 +27,8 @@ class ImmutableSurfacePayload:
     fuels: bytes
     temperatures: bytes
     smokes: bytes
+    layout_origins: tuple = ()
+    layout_axes: tuple = ()
 
     def __post_init__(self):
         if any(
@@ -55,10 +57,36 @@ class ImmutableSurfacePayload:
             for value in (self.fuels, self.temperatures, self.smokes)
         ):
             raise ValueError("Surface channel byte count is invalid")
+        if (
+            type(self.layout_origins) is not tuple
+            or type(self.layout_axes) is not tuple
+        ):
+            raise TypeError("Surface payload layout metadata must be immutable tuples")
+        if any(type(origin) is not tuple for origin in self.layout_origins):
+            raise TypeError("Surface payload layout origins must be immutable tuples")
+        if bool(self.layout_origins) != bool(self.layout_axes):
+            raise ValueError("Surface payload layout metadata must be paired")
+        if self.layout_origins:
+            if len(self.layout_origins) != len(self.layout_axes):
+                raise ValueError("Surface payload layout metadata count is invalid")
+            if any(
+                len(origin) != 3
+                or not all(math.isfinite(float(component)) for component in origin)
+                for origin in self.layout_origins
+            ):
+                raise ValueError("Surface payload layout origins are invalid")
+            if any(
+                isinstance(axis, bool)
+                or not isinstance(axis, int)
+                or axis not in (0, 1)
+                for axis in self.layout_axes
+            ):
+                raise ValueError("Surface payload layout axes are invalid")
 
     def digest(self):
         digest = hashlib.sha256()
         digest.update(str((self.revision, self.tick, self.layout_revision)).encode("ascii"))
+        digest.update(repr((self.layout_origins, self.layout_axes)).encode("ascii"))
         for value in (self.positions, self.fuels, self.temperatures, self.smokes):
             digest.update(value)
         return digest.hexdigest()
@@ -147,7 +175,20 @@ class ResidentNativeSurfaceProducer:
             "smokes": int(self.smokes.ctypes.data),
         }
 
-    def build_layout(self):
+    def _validated_layout(self, origins, axes):
+        origins = self.np.asarray(origins, dtype=self.np.float64)
+        axes = self.np.asarray(axes, dtype=self.np.uint32)
+        if origins.shape != (self.log_count, 3):
+            raise ValueError("Resident Point origins must have shape (log_count, 3)")
+        if axes.shape != (self.log_count,):
+            raise ValueError("Resident Point axes must have shape (log_count,)")
+        if not self.np.isfinite(origins).all():
+            raise ValueError("Resident Point origins must be finite")
+        if not self.np.isin(axes, (0, 1)).all():
+            raise ValueError("Resident Point axes must contain only 0 or 1")
+        return origins, axes
+
+    def _build_layout_into(self, origins, axes, positions):
         dp = ctypes.POINTER(ctypes.c_double)
         fp = ctypes.POINTER(ctypes.c_float)
         up = ctypes.POINTER(ctypes.c_uint32)
@@ -162,9 +203,9 @@ class ResidentNativeSurfaceProducer:
             spec.radial_cells,
             spec.radius_m,
             spec.length_m,
-            self.origins.ctypes.data_as(dp),
-            self.axes.ctypes.data_as(up),
-            self.positions.ctypes.data_as(fp),
+            origins.ctypes.data_as(dp),
+            axes.ctypes.data_as(up),
+            positions.ctypes.data_as(fp),
             self.point_count,
             ctypes.byref(count),
         )
@@ -173,6 +214,34 @@ class ResidentNativeSurfaceProducer:
                 f"Native surface layout failed: code={result}, points={count.value}"
             )
         return count.value
+
+    def build_layout(self):
+        return self._build_layout_into(self.origins, self.axes, self.positions)
+
+    def build_layout_candidate(self, origins, axes):
+        """Build an immutable candidate without mutating the committed arrays."""
+
+        origins, axes = self._validated_layout(origins, axes)
+        candidate = self.np.empty_like(self.positions)
+        self._build_layout_into(origins, axes, candidate)
+        return {
+            "origins": tuple(
+                tuple(float(component) for component in origin) for origin in origins
+            ),
+            "axes": tuple(int(axis) for axis in axes),
+            "positions": candidate.tobytes(order="C"),
+        }
+
+    def commit_layout_candidate(self, origins, axes, positions):
+        """Commit a previously built candidate without rerunning the native kernel."""
+
+        origins, axes = self._validated_layout(origins, axes)
+        converted = self.np.frombuffer(positions, dtype=self.np.float32)
+        if converted.size != self.positions.size:
+            raise ValueError("Resident Point candidate position count is invalid")
+        self.origins[:] = origins
+        self.axes[:] = axes
+        self.positions[:] = converted.reshape(self.positions.shape)
 
     def build_channels(self):
         dp = ctypes.POINTER(ctypes.c_double)
@@ -227,6 +296,8 @@ class ResidentPointSidecar:
         initial_revision=0,
         initial_layout=None,
         producer=None,
+        translation_provider=None,
+        layout_state=None,
     ):
         if stage is None or not callable(stage_provider):
             raise ValueError("Resident Point sidecar requires stage collaborators")
@@ -246,6 +317,10 @@ class ResidentPointSidecar:
         self._stage_provider = stage_provider
         self._emitter_path = emitter_path
         self._write_observer = write_observer
+        if translation_provider is not None and not callable(translation_provider):
+            raise ValueError("Resident Point translation provider must be callable")
+        self._translation_provider = translation_provider
+        self._layout_state = layout_state
         self._producer.build_layout()
         self._layout_revision = layout_revision
         if self._layout_revision <= 0:
@@ -264,6 +339,9 @@ class ResidentPointSidecar:
         self._rollback_count = 0
         self._failure_count = 0
         self._layout_replace_count = 0
+        self._live_translation_prepare_count = 0
+        self._live_translation_publish_count = 0
+        self._live_translation_unchanged_count = 0
         self._closed = False
         self.attempt_payload_ids = []
         self.attempt_payload_digests = []
@@ -299,15 +377,41 @@ class ResidentPointSidecar:
         if snapshot.revision != self._backend.revision:
             raise RuntimeError("Point sidecar requires current Resident revision")
         self._producer.build_channels()
+        layout_revision = self._layout_revision
+        positions = self._positions
+        layout_origins = ()
+        layout_axes = ()
+        if self._translation_provider is not None:
+            origins = self._translation_provider()
+            candidate = self._producer.build_layout_candidate(
+                origins, self._producer.axes
+            )
+            changed = any(
+                abs(float(current) - float(previous)) > 1.0e-9
+                for current_origin, previous_origin in zip(
+                    candidate["origins"], self._producer.origins
+                )
+                for current, previous in zip(current_origin, previous_origin)
+            )
+            if changed:
+                layout_revision += 1
+                positions = candidate["positions"]
+                layout_origins = candidate["origins"]
+                layout_axes = candidate["axes"]
+                self._live_translation_prepare_count += 1
+            else:
+                self._live_translation_unchanged_count += 1
         payload = ImmutableSurfacePayload(
             revision=snapshot.revision,
             tick=snapshot.tick,
-            layout_revision=self._layout_revision,
+            layout_revision=layout_revision,
             point_count=self._producer.point_count,
-            positions=self._positions,
+            positions=positions,
             fuels=self._producer.fuels.tobytes(order="C"),
             temperatures=self._producer.temperatures.tobytes(order="C"),
             smokes=self._producer.smokes.tobytes(order="C"),
+            layout_origins=layout_origins,
+            layout_axes=layout_axes,
         )
         self._prepare_count += 1
         return payload
@@ -337,14 +441,22 @@ class ResidentPointSidecar:
             raise RuntimeError("Point sidecar rejected replaced stage")
         if payload.revision <= self._revision:
             raise RuntimeError("Point sidecar revision must increase monotonically")
+        has_layout = bool(payload.layout_origins)
+        expected_layout_revision = self._layout_revision + (1 if has_layout else 0)
+        if payload.layout_revision != expected_layout_revision:
+            raise RuntimeError("Point sidecar payload layout revision is not contiguous")
         converted = self._converted(payload)
         previous = {name: attribute.Get() for name, attribute in self._attributes.items()}
-        previous_state = (
-            self._revision,
-            self._committed_layout_revision,
-            self._last_snapshot,
-            previous,
-        )
+        previous_state = {
+            "revision": self._revision,
+            "layout_revision": self._layout_revision,
+            "committed_layout_revision": self._committed_layout_revision,
+            "last_snapshot": self._last_snapshot,
+            "values": previous,
+            "origins": self._producer.origins.copy(order="C"),
+            "axes": self._producer.axes.copy(order="C"),
+            "positions": self._positions,
+        }
         write_index = 0
         block = Sdf.ChangeBlock()
         block.__enter__()
@@ -356,6 +468,14 @@ class ResidentPointSidecar:
                     raise RuntimeError(f"Point sidecar {name} Set failed")
                 if self._write_observer is not None:
                     self._write_observer(write_index, name, payload)
+                write_index += 1
+            if has_layout:
+                if not self._attributes["layout_revision"].Set(
+                    payload.layout_revision
+                ):
+                    raise RuntimeError("Point sidecar layout revision Set failed")
+                if self._write_observer is not None:
+                    self._write_observer(write_index, "layout_revision", payload)
                 write_index += 1
             if not self._attributes["revision"].Set(payload.revision):
                 raise RuntimeError("Point sidecar revision Set failed")
@@ -370,6 +490,14 @@ class ResidentPointSidecar:
         block.__exit__(None, None, None)
         self._last_undo = previous_state
         self._revision = payload.revision
+        if has_layout:
+            self._producer.commit_layout_candidate(
+                payload.layout_origins, payload.layout_axes, payload.positions
+            )
+            self._positions = payload.positions
+            self._layout_revision = payload.layout_revision
+            self._live_translation_publish_count += 1
+            self._update_layout_state()
         self._committed_layout_revision = payload.layout_revision
         self._last_snapshot = payload
         self._publish_count += 1
@@ -379,15 +507,41 @@ class ResidentPointSidecar:
     def rollback_last_commit(self, revision):
         if self._last_undo is None or self._revision != revision:
             raise RuntimeError("Point sidecar has no matching commit to roll back")
-        previous_revision, previous_layout, previous_snapshot, previous_values = self._last_undo
+        previous_state = self._last_undo
         with Sdf.ChangeBlock():
-            for name, value in previous_values.items():
+            for name, value in previous_state["values"].items():
                 self._attributes[name].Set(value)
-        self._revision = previous_revision
-        self._committed_layout_revision = previous_layout
-        self._last_snapshot = previous_snapshot
+        self._producer.commit_layout_candidate(
+            previous_state["origins"],
+            previous_state["axes"],
+            previous_state["positions"],
+        )
+        self._positions = previous_state["positions"]
+        self._revision = previous_state["revision"]
+        self._layout_revision = previous_state["layout_revision"]
+        self._committed_layout_revision = previous_state[
+            "committed_layout_revision"
+        ]
+        self._last_snapshot = previous_state["last_snapshot"]
+        self._update_layout_state()
         self._last_undo = None
         self._rollback_count += 1
+
+    def _update_layout_state(self):
+        layout_state = getattr(self, "_layout_state", None)
+        if layout_state is None:
+            return
+        layout_state.clear()
+        layout_state.update(
+            {
+                "revision": self._layout_revision,
+                "origins": tuple(
+                    tuple(float(component) for component in origin)
+                    for origin in self._producer.origins
+                ),
+                "axes": tuple(int(axis) for axis in self._producer.axes),
+            }
+        )
 
     def replace_layout(self, layout):
         """Transactionally publish a stopped layout without advancing snapshot revision."""
@@ -443,6 +597,7 @@ class ResidentPointSidecar:
         self._positions = candidate_positions
         self._layout_revision = revision
         self._committed_layout_revision = revision
+        self._update_layout_state()
         self._last_undo = None
         self._layout_replace_count += 1
         return revision
@@ -458,6 +613,10 @@ class ResidentPointSidecar:
             "rollback_count": self._rollback_count,
             "failure_count": self._failure_count,
             "layout_replace_count": self._layout_replace_count,
+            "live_translation_enabled": self._translation_provider is not None,
+            "live_translation_prepare_count": self._live_translation_prepare_count,
+            "live_translation_publish_count": self._live_translation_publish_count,
+            "live_translation_unchanged_count": self._live_translation_unchanged_count,
             "closed": self._closed,
         }
 

@@ -1,0 +1,410 @@
+{
+  "schema_version": 1,
+  "phase": "phase6da",
+  "status": "ok",
+  "timestamp_utc": "2026-08-08T11:02:04.441531+00:00",
+  "scope": {
+    "default_off": true,
+    "flow_version": "110.0.0",
+    "translation_only": true,
+    "rotation_tracking_qualified": false,
+    "flow_solver_state_checkpointed": false
+  },
+  "samples": [
+    {
+      "revision": 340,
+      "layout_revision": 7,
+      "timeline_time_s": 1.2,
+      "timeline_playing": true,
+      "active_blocks": 24,
+      "dry_log_origin_m": [
+        -1.3783718486592988e-06,
+        -0.3399653732776642,
+        0.15999983251094818
+      ],
+      "dry_log_point_centroid_m": [
+        -1.3788541158040364e-06,
+        -0.3399653712908427,
+        0.15999983077247937
+      ],
+      "maximum_alignment_error_m": 3.199048529325503e-09,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6da-dynamic-translation/scene/phase3_point_application.usda"
+    },
+    {
+      "revision": 341,
+      "layout_revision": 7,
+      "timeline_time_s": 1.2,
+      "timeline_playing": true,
+      "active_blocks": 24,
+      "dry_log_origin_m": [
+        -1.3783718486592988e-06,
+        -0.3399653732776642,
+        0.15999983251094818
+      ],
+      "dry_log_point_centroid_m": [
+        -1.3788541158040364e-06,
+        -0.3399653712908427,
+        0.15999983077247937
+      ],
+      "maximum_alignment_error_m": 3.199048529325503e-09,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6da-dynamic-translation/scene/phase3_point_application.usda"
+    },
+    {
+      "revision": 342,
+      "layout_revision": 8,
+      "timeline_time_s": 1.4,
+      "timeline_playing": true,
+      "active_blocks": 24,
+      "dry_log_origin_m": [
+        -2.8202744033478666e-06,
+        -0.3399510681629181,
+        0.16000284254550934
+      ],
+      "dry_log_point_centroid_m": [
+        -2.8227766354878744e-06,
+        -0.3399510661760966,
+        0.16000284080704053
+      ],
+      "maximum_alignment_error_m": 3.637430289528677e-09,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6da-dynamic-translation/scene/phase3_point_application.usda"
+    },
+    {
+      "revision": 343,
+      "layout_revision": 8,
+      "timeline_time_s": 1.4,
+      "timeline_playing": true,
+      "active_blocks": 24,
+      "dry_log_origin_m": [
+        -2.8202744033478666e-06,
+        -0.3399510681629181,
+        0.16000284254550934
+      ],
+      "dry_log_point_centroid_m": [
+        -2.8227766354878744e-06,
+        -0.3399510661760966,
+        0.16000284080704053
+      ],
+      "maximum_alignment_error_m": 3.637430289528677e-09,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6da-dynamic-translation/scene/phase3_point_application.usda"
+    },
+    {
+      "revision": 344,
+      "layout_revision": 9,
+      "timeline_time_s": 1.5999999999999999,
+      "timeline_playing": true,
+      "active_blocks": 24,
+      "dry_log_origin_m": [
+        -2.700641289266059e-06,
+        -0.33993610739707947,
+        0.16000279784202576
+      ],
+      "dry_log_point_centroid_m": [
+        -2.703567345937093e-06,
+        -0.339936105410258,
+        0.1600027959379885
+      ],
+      "maximum_alignment_error_m": 5.28381288776796e-09,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6da-dynamic-translation/scene/phase3_point_application.usda"
+    },
+    {
+      "revision": 345,
+      "layout_revision": 10,
+      "timeline_time_s": 1.5999999999999999,
+      "timeline_playing": true,
+      "active_blocks": 24,
+      "dry_log_origin_m": [
+        -2.700641289266059e-06,
+        -0.31993610739707945,
+        0.16000279784202576
+      ],
+      "dry_log_point_centroid_m": [
+        -2.703567345937093e-06,
+        -0.3199361090858777,
+        0.1600027959379885
+      ],
+      "maximum_alignment_error_m": 5.28381288776796e-09,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6da-dynamic-translation/scene/phase3_point_application.usda"
+    },
+    {
+      "revision": 346,
+      "layout_revision": 11,
+      "timeline_time_s": 1.7999999999999998,
+      "timeline_playing": true,
+      "active_blocks": 32,
+      "dry_log_origin_m": [
+        -7.313237802009098e-06,
+        -0.3238093852996826,
+        0.15999992191791534
+      ],
+      "dry_log_point_centroid_m": [
+        -7.310137152671814e-06,
+        -0.32380938331286113,
+        0.15999992017944653
+      ],
+      "maximum_alignment_error_m": 4.072316262459866e-09,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6da-dynamic-translation/scene/phase3_point_application.usda"
+    },
+    {
+      "revision": 347,
+      "layout_revision": 12,
+      "timeline_time_s": 1.9999999999999998,
+      "timeline_playing": true,
+      "active_blocks": 40,
+      "dry_log_origin_m": [
+        -6.524840955535183e-06,
+        -0.32380858063697815,
+        0.16000021994113922
+      ],
+      "dry_log_point_centroid_m": [
+        -6.524349252382914e-06,
+        -0.32380857865015666,
+        0.1600002182026704
+      ],
+      "maximum_alignment_error_m": 4.340315100114217e-09,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6da-dynamic-translation/scene/phase3_point_application.usda"
+    },
+    {
+      "revision": 348,
+      "layout_revision": 12,
+      "timeline_time_s": 1.9999999999999998,
+      "timeline_playing": true,
+      "active_blocks": 40,
+      "dry_log_origin_m": [
+        -6.524840955535183e-06,
+        -0.32380858063697815,
+        0.16000021994113922
+      ],
+      "dry_log_point_centroid_m": [
+        -6.524349252382914e-06,
+        -0.32380857865015666,
+        0.1600002182026704
+      ],
+      "maximum_alignment_error_m": 4.340315100114217e-09,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6da-dynamic-translation/scene/phase3_point_application.usda"
+    },
+    {
+      "revision": 349,
+      "layout_revision": 13,
+      "timeline_time_s": 2.1999999999999997,
+      "timeline_playing": true,
+      "active_blocks": 40,
+      "dry_log_origin_m": [
+        -6.693428076687269e-06,
+        -0.32380539178848267,
+        0.16000016033649445
+      ],
+      "dry_log_point_centroid_m": [
+        -6.687020262082418e-06,
+        -0.3238053898016612,
+        0.16000015859802563
+      ],
+      "maximum_alignment_error_m": 6.930355073070735e-09,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6da-dynamic-translation/scene/phase3_point_application.usda"
+    },
+    {
+      "revision": 350,
+      "layout_revision": 13,
+      "timeline_time_s": 2.1999999999999997,
+      "timeline_playing": true,
+      "active_blocks": 40,
+      "dry_log_origin_m": [
+        -6.693428076687269e-06,
+        -0.32380539178848267,
+        0.16000016033649445
+      ],
+      "dry_log_point_centroid_m": [
+        -6.687020262082418e-06,
+        -0.3238053898016612,
+        0.16000015859802563
+      ],
+      "maximum_alignment_error_m": 6.930355073070735e-09,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6da-dynamic-translation/scene/phase3_point_application.usda"
+    },
+    {
+      "revision": 351,
+      "layout_revision": 15,
+      "timeline_time_s": 2.6,
+      "timeline_playing": true,
+      "active_blocks": 44,
+      "dry_log_origin_m": [
+        -1.5034077478048857e-05,
+        -0.287557452917099,
+        0.16000087559223175
+      ],
+      "dry_log_point_centroid_m": [
+        -1.5030925472577413e-05,
+        -0.2875574512614144,
+        0.16000087385376294
+      ],
+      "maximum_alignment_error_m": 4.193702349810444e-09,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6da-dynamic-translation/scene/phase3_point_application.usda"
+    }
+  ],
+  "boundary": {
+    "trigger_revision": 344,
+    "requested_target_m": [
+      -2.700641289266059e-06,
+      -0.31993610739707945,
+      0.16000279784202576
+    ],
+    "pre": {
+      "revision": 344,
+      "layout_revision": 9,
+      "timeline_time_s": 1.5999999999999999,
+      "timeline_playing": true,
+      "active_blocks": 24,
+      "dry_log_origin_m": [
+        -2.700641289266059e-06,
+        -0.33993610739707947,
+        0.16000279784202576
+      ],
+      "dry_log_point_centroid_m": [
+        -2.703567345937093e-06,
+        -0.339936105410258,
+        0.1600027959379885
+      ],
+      "maximum_alignment_error_m": 5.28381288776796e-09,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6da-dynamic-translation/scene/phase3_point_application.usda"
+    },
+    "post": {
+      "revision": 345,
+      "layout_revision": 10,
+      "timeline_time_s": 1.5999999999999999,
+      "timeline_playing": true,
+      "active_blocks": 24,
+      "dry_log_origin_m": [
+        -2.700641289266059e-06,
+        -0.31993610739707945,
+        0.16000279784202576
+      ],
+      "dry_log_point_centroid_m": [
+        -2.703567345937093e-06,
+        -0.3199361090858777,
+        0.1600027959379885
+      ],
+      "maximum_alignment_error_m": 5.28381288776796e-09,
+      "root_layer": "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6da-dynamic-translation/scene/phase3_point_application.usda"
+    },
+    "log_displacement_m": 0.020000000000000018,
+    "point_centroid_displacement_m": 0.019999996324380265,
+    "displacement_difference_m": 3.675619753007453e-09
+  },
+  "fields": {
+    "pre": {
+      "temperature": {
+        "word_count": 883392,
+        "byte_count": 3533568,
+        "sha256": "396c2484b9db89fd34d20c5dd382aaf8d8290579e1c5f47115b67ac6af4ea162"
+      },
+      "fuel": {
+        "word_count": 883392,
+        "byte_count": 3533568,
+        "sha256": "23c957f2d055aaea062a2e47d90defe7efc694b40a96206bcdee9a5df48780a6"
+      },
+      "burn": {
+        "word_count": 883392,
+        "byte_count": 3533568,
+        "sha256": "33ca69369531166c21612e78a322fe2bc42570fd439b5d3551d0d1835d6efeb2"
+      },
+      "smoke": {
+        "word_count": 883392,
+        "byte_count": 3533568,
+        "sha256": "b7179e45b2a9b8908cc068213e64b021b0aa35b9d469eb6607ddff740998b83c"
+      },
+      "velocity": {
+        "word_count": 1299144,
+        "byte_count": 5196576,
+        "sha256": "4aa26b9a6039c2096a9c34c95389bf8364374cfc2a6f354bcb8b40b046f0c1dd"
+      },
+      "divergence": {
+        "word_count": 0,
+        "byte_count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "post": {
+      "temperature": {
+        "word_count": 883392,
+        "byte_count": 3533568,
+        "sha256": "396c2484b9db89fd34d20c5dd382aaf8d8290579e1c5f47115b67ac6af4ea162"
+      },
+      "fuel": {
+        "word_count": 883392,
+        "byte_count": 3533568,
+        "sha256": "23c957f2d055aaea062a2e47d90defe7efc694b40a96206bcdee9a5df48780a6"
+      },
+      "burn": {
+        "word_count": 883392,
+        "byte_count": 3533568,
+        "sha256": "33ca69369531166c21612e78a322fe2bc42570fd439b5d3551d0d1835d6efeb2"
+      },
+      "smoke": {
+        "word_count": 883392,
+        "byte_count": 3533568,
+        "sha256": "b7179e45b2a9b8908cc068213e64b021b0aa35b9d469eb6607ddff740998b83c"
+      },
+      "velocity": {
+        "word_count": 1299144,
+        "byte_count": 5196576,
+        "sha256": "4aa26b9a6039c2096a9c34c95389bf8364374cfc2a6f354bcb8b40b046f0c1dd"
+      },
+      "divergence": {
+        "word_count": 0,
+        "byte_count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  "observation": {
+    "dynamic_log_point_translation_implemented": true,
+    "rotation_tracking_implemented": false,
+    "seamless_visual_continuity_qualified": false,
+    "flow_solver_state_checkpointed": false,
+    "within_update_reset_can_be_excluded": false,
+    "root_layers": [
+      "C:/Users/junic/src/campfire-simulator/artifacts/phase3/phase6da-dynamic-translation/scene/phase3_point_application.usda"
+    ]
+  },
+  "gates": {
+    "running_pre_sample_captured": true,
+    "next_revision_post_sample_captured": true,
+    "layout_revision_advanced_with_snapshot": true,
+    "post_alignment_within_2_mm": true,
+    "point_and_log_displacement_agree_within_2_mm": true,
+    "required_flow_fields_nonempty": true,
+    "active_blocks_nonzero": true,
+    "single_root_layer_observed": true
+  },
+  "production_app": {
+    "sha256_before": "866760DA9AA12373B8DCFE3E6304864E1D2E358A7EC0993ED8E123BFE3385D1B",
+    "sha256_after": "866760DA9AA12373B8DCFE3E6304864E1D2E358A7EC0993ED8E123BFE3385D1B",
+    "changed_during_run": false
+  },
+  "base_scenario": {
+    "phase": "phase6co",
+    "status": "failed",
+    "kit_exit_code": 1,
+    "purpose": "provides the existing deterministic 60-frame renderer harness"
+  },
+  "video": {
+    "frame_count": 60,
+    "running_edit_near_frame": 4,
+    "includes_later_stopped_layout_boundary": true,
+    "human_review": {
+      "status": "completed",
+      "boundary_frames_reviewed": [
+        3,
+        4
+      ],
+      "observation": "No abrupt log-placement jump is visible across the injected running boundary. Visible flame is negligible at that opening boundary and grows later, so flame continuity at the edit is not qualified."
+    }
+  },
+  "decision": {
+    "running_translation_snapshot": "qualified at the public USD consumer boundary",
+    "production_default": "remain OFF",
+    "rotation_tracking": "not implemented",
+    "flow_solver_state_checkpointed": false,
+    "seamless_visual_continuity_qualified": false,
+    "next_boundary": "measure repeated PhysX-driven translations and per-step position authoring cost"
+  }
+}

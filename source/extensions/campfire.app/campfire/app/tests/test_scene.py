@@ -960,6 +960,125 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertIsNone(sidecar._last_undo)
         self.assertNotEqual(sidecar._positions, old_positions)
 
+    async def test_resident_point_live_translation_commits_with_snapshot_and_rolls_back(self):
+        class Producer:
+            def __init__(self):
+                self.np = np
+                self.origins = np.asarray(
+                    ((0.0, -0.3, 0.18), (0.0, 0.3, 0.18)), dtype=np.float64
+                )
+                self.axes = np.asarray((0, 0), dtype=np.uint32)
+                self.positions = self.origins.astype(np.float32)
+                self.point_count = 2
+                self.fuels = np.asarray((0.1, 0.2), dtype=np.float32)
+                self.temperatures = np.asarray((0.3, 0.4), dtype=np.float32)
+                self.smokes = np.asarray((0.5, 0.6), dtype=np.float32)
+
+            def build_channels(self):
+                return self.point_count
+
+            def build_layout_candidate(self, origins, axes):
+                origins = np.asarray(origins, dtype=np.float64)
+                axes = np.asarray(axes, dtype=np.uint32)
+                return {
+                    "origins": tuple(tuple(float(value) for value in row) for row in origins),
+                    "axes": tuple(int(value) for value in axes),
+                    "positions": origins.astype(np.float32).tobytes(order="C"),
+                }
+
+            def commit_layout_candidate(self, origins, axes, positions):
+                self.origins[:] = np.asarray(origins, dtype=np.float64)
+                self.axes[:] = np.asarray(axes, dtype=np.uint32)
+                self.positions[:] = np.frombuffer(
+                    positions, dtype=np.float32
+                ).reshape(self.positions.shape)
+
+        class Attribute:
+            def __init__(self, value):
+                self.value = value
+
+            def Get(self):
+                return self.value
+
+            def Set(self, value):
+                self.value = value
+                return True
+
+        class Backend:
+            revision = 2
+
+        class Snapshot:
+            revision = 2
+            tick = 2
+
+        producer = Producer()
+        old_positions = producer.positions.tobytes(order="C")
+        stage = object()
+        layout_state = {
+            "revision": 1,
+            "origins": tuple(tuple(value for value in row) for row in producer.origins),
+            "axes": (0, 0),
+        }
+        sidecar = object.__new__(campfire.app.ResidentPointSidecar)
+        sidecar._producer = producer
+        sidecar._backend = Backend()
+        sidecar._translation_provider = lambda: (
+            (0.0, -0.26, 0.16),
+            (0.0, 0.3, 0.18),
+        )
+        sidecar._layout_state = layout_state
+        sidecar._positions = old_positions
+        sidecar._layout_revision = 1
+        sidecar._committed_layout_revision = 1
+        sidecar._revision = 1
+        sidecar._last_snapshot = None
+        sidecar._last_undo = None
+        sidecar._prepare_count = 0
+        sidecar._publish_count = 0
+        sidecar._rollback_count = 0
+        sidecar._failure_count = 0
+        sidecar._live_translation_prepare_count = 0
+        sidecar._live_translation_publish_count = 0
+        sidecar._live_translation_unchanged_count = 0
+        sidecar._closed = False
+        sidecar._stage = stage
+        sidecar._stage_provider = lambda: stage
+        sidecar._write_observer = None
+        sidecar.attempt_payload_ids = []
+        sidecar.attempt_payload_digests = []
+        sidecar.published_payload_ids = []
+        sidecar.published_payload_digests = []
+        sidecar._attributes = {
+            "positions": Attribute(old_positions),
+            "fuels": Attribute(None),
+            "temperatures": Attribute(None),
+            "smokes": Attribute(None),
+            "revision": Attribute(1),
+            "layout_revision": Attribute(1),
+        }
+
+        payload = sidecar.prepare(Snapshot())
+        self.assertEqual(payload.layout_revision, 2)
+        self.assertEqual(payload.layout_origins[0], (0.0, -0.26, 0.16))
+        self.assertEqual(sidecar._layout_revision, 1)
+        self.assertEqual(producer.origins[0].tolist(), [0.0, -0.3, 0.18])
+
+        sidecar.publish(payload)
+        self.assertEqual(sidecar._attributes["layout_revision"].Get(), 2)
+        self.assertEqual(sidecar._attributes["revision"].Get(), 2)
+        self.assertEqual(sidecar._layout_revision, 2)
+        self.assertEqual(producer.origins[0].tolist(), [0.0, -0.26, 0.16])
+        self.assertEqual(layout_state["revision"], 2)
+        self.assertEqual(layout_state["origins"][0], (0.0, -0.26, 0.16))
+
+        sidecar.rollback_last_commit(2)
+        self.assertEqual(sidecar._attributes["layout_revision"].Get(), 1)
+        self.assertEqual(sidecar._attributes["revision"].Get(), 1)
+        self.assertEqual(sidecar._layout_revision, 1)
+        self.assertEqual(producer.origins[0].tolist(), [0.0, -0.3, 0.18])
+        self.assertEqual(sidecar._positions, old_positions)
+        self.assertEqual(layout_state["revision"], 1)
+
     async def test_resident_point_layout_accepts_only_cardinal_horizontal_logs(self):
         stage = Usd.Stage.CreateInMemory()
         campfire.app.populate_phase3_scene(stage)
@@ -1878,6 +1997,26 @@ class TestScene(omni.kit.test.AsyncTestCase):
             replace(payload, revision=True)
         with self.assertRaisesRegex(TypeError, "immutable bytes"):
             replace(payload, smokes=bytearray(payload.smokes))
+        moved = replace(
+            payload,
+            layout_origins=((0.0, 0.0, 0.1),),
+            layout_axes=(0,),
+        )
+        self.assertNotEqual(payload.digest(), moved.digest())
+        with self.assertRaisesRegex(ValueError, "metadata must be paired"):
+            replace(payload, layout_origins=((0.0, 0.0, 0.1),))
+        with self.assertRaisesRegex(ValueError, "layout axes are invalid"):
+            replace(
+                payload,
+                layout_origins=((0.0, 0.0, 0.1),),
+                layout_axes=(True,),
+            )
+        with self.assertRaisesRegex(TypeError, "immutable tuples"):
+            replace(
+                payload,
+                layout_origins=[[0.0, 0.0, 0.1]],
+                layout_axes=[0],
+            )
 
     async def test_resident_snapshot_adapter_resumes_only_matching_consumer_revision(self):
         stage = Usd.Stage.CreateInMemory()

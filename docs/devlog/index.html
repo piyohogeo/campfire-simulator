@@ -36,7 +36,7 @@
       <div class="shell status-grid">
         <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>58 / 58 passed</strong></div>
+        <div><span>テスト</span><strong>59 / 59 passed</strong></div>
         <div><span>次の焦点</span><strong>Point / Flow continuity defect</strong></div>
       </div>
     </div>
@@ -1350,6 +1350,26 @@
             <p class="note-label">2026-08-08 · Goal / synchronized telemetry / measured result / limitation / next</p>
             <h3 id="phase6cz-note-title">観測した2点では、Flow readbackはゼロ化していない</h3>
             <p>Phase 6CO動画への人間の確認では薪の瞬間移動は見える一方、炎が完全に消えてゼロから再着火する様子は見えませんでした。Phase 6CZではproductionを変更せず、30,000-frame安全上限下の同じ境界を独立に再実行し、revision 350と351でlog transform、360点group centroid、Flow active blocks、公開NanoVDB readbackを同期取得しました。Point centroidはYに<code>+40.130 mm</code>、Zに<code>−19.997 mm</code>、合計<code>44.837 mm</code>瞬間移動しました。Yは指示した40 mm edit、Zは動的log-to-Point追従が未実装の間に生じた高さ差の同時補正です。一方、active blocksは<code>44 → 48</code>、temperature／fuel／burn／smoke／velocityは両sampleとも非空で、Phase 6CZは7/7 gate合格、production app SHA-256も前後一致でした。したがって、revision 350と351の各観測時点でFlow場全体がゼロだった可能性は否定できます。ただし2点間、特に1 Kit update内のresetと再構成、Flow solverのhidden stateまではpublic readbackで除外できません。新しい添付動画の人間レビューも保留しているため、<code>seamless_visual_continuity_qualified=false</code>と<code>flow_solver_state_checkpointed=false</code>は維持します。次はpause／owner stopなしでdynamic log-to-Point trackingを行える境界を設計し、同じ同期計測を単一PLAYで繰り返します。</p>
+          </section>
+
+          <figure id="phase6da-resident-dynamic-translation" class="capture-card">
+            <h3 class="capture-phase-heading">Phase 6DA</h3>
+            <a href="assets/phase6/resident_dynamic_translation_report.svg" aria-label="Phase 6DA 実行中Point平行移動レポートを開く">
+              <img src="assets/phase6/resident_dynamic_translation_report.svg" width="1200" height="680" alt="実行中revision 344から345で薪を20 mm移動し、Point centroidがほぼ同量追従してlayout revisionも同じsnapshotで進んだことを示すSVG図">
+            </a>
+            <figcaption>
+              <div><strong>実行中の薪移動を同じsnapshotでPointへ反映</strong><span>8 / 8 gates · log 20.000000 mm · Point 19.999996 mm · 最大誤差 0.0000053 mm</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/resident_dynamic_translation.mp4" data-video-poster="assets/phase6/resident_dynamic_translation_frame.png" data-video-title="Phase 6DA running Point translation" data-video-meta="Direct Phase 6DA RTX recording · injected running 20 mm edit near frame 4 · later frames also include the existing stopped 40 mm harness edit · Flow 110.0.0 · 1280×720 · 10 fps · 6 s">
+                <span class="video-trigger-icon" aria-hidden="true">▶</span>
+                <span><strong>実行中追従の直接動画</strong><small>冒頭付近が6DA境界 · 後半に既存停止中editも含む</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note caution" aria-labelledby="phase6da-note-title">
+            <p class="note-label">2026-08-08 · Goal / implementation / measured result / limitation / next</p>
+            <h3 id="phase6da-note-title">平行移動ジャンプは解消できるが、回転とFlow solver連続性は未達</h3>
+            <p>既存の停止中編集経路を戻さず、既定OFFの技術スパイクとして実行中の薪world originをowner threadで読み、確定済みResident配列を触らない一時バッファへPoint位置候補を生成しました。候補はimmutable payloadへ封入し、<code>pointPositions</code>、3 channel、<code>layoutRevision</code>、consumer revisionを同じ<code>Sdf.ChangeBlock</code>で確定します。後段発行に失敗すればUSDとproducer配置状態の両方を戻します。実測ではrevision <code>344→345</code>で薪をYへ<code>20.000000 mm</code>移動し、Point centroidは<code>19.999996 mm</code>追従、差は約<code>0.0000037 mm</code>、最大整合誤差は約<code>0.0000053 mm</code>でした。layout revisionも<code>9→10</code>へ同時に進み、両sampleでPLAY、active blocks 24、必須Flow readback非空を維持して8/8 gateに合格しました。build、Phase 0実機回帰、標準suite全8 process・59/59件も合格しました。動画冒頭付近の20 mm移動が今回の実行中境界で、後半には比較用harness由来の停止中40 mm editも含まれます。frame 3→4の目視では薪配置の急なジャンプは見えませんが、この冒頭境界では炎がほぼ出ておらず後から成長するため、編集時の炎連続性を示す証拠にはしていません。現段階は平行移動のみで回転は追従せず、1 update内のFlow resetやhidden solver stateも判定できないため、<code>seamless_visual_continuity_qualified=false</code>と<code>flow_solver_state_checkpointed=false</code>は維持します。次は繰返しPhysX移動で位置配列authoringコストと追従誤差を測ります。</p>
           </section>
 
           <div class="story-grid">

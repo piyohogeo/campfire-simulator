@@ -12,6 +12,7 @@ from .resident_point_scene import (
 from .resident_point_sidecar import ResidentPointSidecar
 from .resident_snapshot_adapter import UsdResidentSnapshotAdapter
 from .resident_stage_recovery import ResidentStageRecoveryOrchestrator
+from .wood import get_log_world_position
 
 
 class ResidentPointApplicationOwner:
@@ -22,7 +23,15 @@ class ResidentPointApplicationOwner:
     session and orchestrator contracts.
     """
 
-    def __init__(self, session, orchestrator, *, layout_state=None, log_ids=()):
+    def __init__(
+        self,
+        session,
+        orchestrator,
+        *,
+        layout_state=None,
+        log_ids=(),
+        dynamic_translation_enabled=False,
+    ):
         if session is None or orchestrator is None:
             raise ValueError("Resident Point application owner requires collaborators")
         self._owner_thread_id = threading.get_ident()
@@ -35,6 +44,7 @@ class ResidentPointApplicationOwner:
         self._close_result = None
         self._layout_state = layout_state or {"revision": 1}
         self._log_ids = tuple(log_ids)
+        self._dynamic_translation_enabled = bool(dynamic_translation_enabled)
 
     @classmethod
     def compose(
@@ -45,6 +55,8 @@ class ResidentPointApplicationOwner:
         timeline,
         next_update,
         layout,
+        *,
+        track_dynamic_translation=False,
     ):
         if backend is None or stage is None:
             raise ValueError("Resident Point application composition is incomplete")
@@ -65,6 +77,15 @@ class ResidentPointApplicationOwner:
         }
 
         def make_consumers(target_stage, revision):
+            translation_provider = None
+            if track_dynamic_translation:
+                translation_provider = lambda: tuple(
+                    tuple(
+                        float(component)
+                        for component in get_log_world_position(target_stage, log_id)
+                    )
+                    for log_id in log_ids
+                )
             adapter = UsdResidentSnapshotAdapter(
                 target_stage,
                 log_ids,
@@ -83,6 +104,8 @@ class ResidentPointApplicationOwner:
                     stage_context.get_stage,
                     initial_revision=revision,
                     initial_layout=layout_state,
+                    translation_provider=translation_provider,
+                    layout_state=layout_state,
                 )
             except Exception:
                 adapter.close()
@@ -107,6 +130,7 @@ class ResidentPointApplicationOwner:
                 orchestrator,
                 layout_state=layout_state,
                 log_ids=log_ids,
+                dynamic_translation_enabled=track_dynamic_translation,
             )
         except Exception:
             if sidecar is not None:
@@ -226,6 +250,7 @@ class ResidentPointApplicationOwner:
             "layout_origins": self._layout_state.get("origins"),
             "layout_axes": self._layout_state.get("axes"),
             "log_ids": self._log_ids,
+            "dynamic_translation_enabled": self._dynamic_translation_enabled,
         }
 
     def close(self, *, discard_pending=False):
