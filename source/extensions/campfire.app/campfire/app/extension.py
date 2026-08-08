@@ -21,7 +21,7 @@ import omni.usd
 from omni.flowusd import _flowusd
 from omni.physx import get_physx_simulation_interface
 from omni.physx.bindings._physx import SETTING_UPDATE_TO_USD
-from pxr import Gf, UsdPhysics, UsdUtils
+from pxr import Gf, Tf, Usd, UsdPhysics, UsdUtils
 
 from .controls import CampfireControlWindow
 from .flow_scene import (
@@ -93,6 +93,16 @@ from .resident_snapshot_adapter import (
     published_row_from_python_model,
 )
 from .resident_native_backend import ResidentNativeBackend
+from .resident_point_application_owner import ResidentPointApplicationOwner
+from .resident_point_scene import (
+    RESIDENT_POINT_APPLICATION_SETTING,
+    RESIDENT_POINT_EMITTER_PATH,
+    configure_resident_point_application_scene,
+    preauthor_resident_snapshot_consumers,
+    resident_point_application_enabled,
+    resident_point_layout_for_logs,
+)
+from .resident_point_sidecar import ResidentNativeSurfaceProducer
 from .wood import get_log_world_position, list_log_ids
 from .char_depth_experiment import (
     create_char_depth_dry_run_package,
@@ -161,6 +171,11 @@ class CampfireAppExtension(omni.ext.IExt):
         self._extension_path = Path(extension_manager.get_extension_path(ext_id)).resolve()
         self._control_window = None
         self._resident_snapshot_adapter = None
+        self._resident_point_owner = None
+        self._resident_point_stage_subscription = None
+        self._resident_point_timeline_subscription = None
+        self._resident_point_update_subscription = None
+        self._resident_point_last_step_perf = None
         self._startup_task = asyncio.ensure_future(self._initialize())
         carb.log_info("[campfire.app] Extension startup")
 
@@ -168,6 +183,24 @@ class CampfireAppExtension(omni.ext.IExt):
         if self._startup_task and not self._startup_task.done():
             self._startup_task.cancel()
         self._startup_task = None
+        self._resident_point_update_subscription = None
+        self._resident_point_timeline_subscription = None
+        self._resident_point_stage_subscription = None
+        if self._resident_point_owner is not None:
+            try:
+                self._resident_point_owner.close()
+            except Exception as exc:
+                carb.log_error(
+                    f"[campfire.app] Resident Point owner shutdown failed: {exc}"
+                )
+                try:
+                    self._resident_point_owner.close(discard_pending=True)
+                except Exception as discard_exc:
+                    carb.log_error(
+                        "[campfire.app] Resident Point pending discard failed: "
+                        f"{discard_exc}"
+                    )
+            self._resident_point_owner = None
         if self._resident_snapshot_adapter is not None:
             try:
                 self._resident_snapshot_adapter.close()
@@ -189,7 +222,12 @@ class CampfireAppExtension(omni.ext.IExt):
         capture_requested = settings.get_as_bool(f"{SETTINGS_ROOT}/captureOnStartup")
         quit_after_capture = settings.get_as_bool(f"{SETTINGS_ROOT}/quitAfterCapture")
         phase = settings.get_as_string(f"{SETTINGS_ROOT}/phase") or "phase0"
+        point_application_enabled = resident_point_application_enabled(settings)
         try:
+            if point_application_enabled and phase != "phase3":
+                raise ValueError(
+                    "Resident Point application is available only for Phase 3"
+                )
             scene_setup_started = time.perf_counter()
             context = omni.usd.get_context()
             for _ in range(30):
@@ -220,7 +258,6 @@ class CampfireAppExtension(omni.ext.IExt):
                 )
             elif phase == "phase3":
                 settings.set("/rtx/flow/enabled", True)
-                populate_phase3_scene(stage)
                 configured_scene_output_dir = settings.get_as_string(
                     f"{SETTINGS_ROOT}/sceneOutputDir"
                 )
@@ -229,9 +266,17 @@ class CampfireAppExtension(omni.ext.IExt):
                     if configured_scene_output_dir
                     else repo_root / "assets" / "scenes"
                 )
-                scene_path = export_phase3_stage(
-                    stage, phase3_scene_dir / "phase3_thermal.usda"
-                )
+                if point_application_enabled:
+                    stage, scene_path = await self._initialize_resident_point_stage(
+                        context,
+                        phase3_scene_dir / "phase3_point_application.usda",
+                        capture_requested=capture_requested,
+                    )
+                else:
+                    populate_phase3_scene(stage)
+                    scene_path = export_phase3_stage(
+                        stage, phase3_scene_dir / "phase3_thermal.usda"
+                    )
             elif phase == "phase2":
                 settings.set("/rtx/flow/enabled", True)
                 populate_phase2_scene(stage)
@@ -281,7 +326,12 @@ class CampfireAppExtension(omni.ext.IExt):
                 elif phase == "phase4":
                     await self._capture_phase4(viewport, stage, scene_path)
                 elif phase == "phase3":
-                    await self._run_phase3(viewport, stage, scene_path)
+                    if point_application_enabled:
+                        await self._run_resident_point_application(
+                            viewport, stage, scene_path
+                        )
+                    else:
+                        await self._run_phase3(viewport, stage, scene_path)
                 elif phase == "phase2":
                     await self._run_phase2(viewport, stage, scene_path)
                 elif phase == "phase1":
@@ -301,6 +351,201 @@ class CampfireAppExtension(omni.ext.IExt):
             carb.log_error(f"[campfire.app] {phase} initialization failed: {exc}")
             if capture_requested and quit_after_capture:
                 omni.kit.app.get_app().post_uncancellable_quit(1)
+
+    async def _initialize_resident_point_stage(
+        self, context, scene_path: Path, *, capture_requested: bool
+    ):
+        """Build the complete opt-in Point stage before connecting it to Kit."""
+
+        settings = carb.settings.get_settings()
+        native_library_path = settings.get_as_string(
+            f"{SETTINGS_ROOT}/residentNativeLibraryPath"
+        )
+        if not native_library_path:
+            raise ValueError(
+                "Resident Point application requires residentNativeLibraryPath"
+            )
+        scene_path = scene_path.resolve()
+        scene_path.parent.mkdir(parents=True, exist_ok=True)
+        scene_path.unlink(missing_ok=True)
+        offline_stage = Usd.Stage.CreateNew(str(scene_path))
+        backend = None
+        try:
+            populate_phase3_scene(offline_stage)
+            log_ids = (PHASE3_DRY_LOG_ID, PHASE3_WET_LOG_ID)
+            models = tuple(
+                load_model_from_prim(
+                    offline_stage.GetPrimAtPath(f"/World/Logs/{log_id}")
+                )
+                for log_id in log_ids
+            )
+            backend = ResidentNativeBackend(
+                models,
+                Path(native_library_path).resolve(),
+                dt_seconds=PHASE3_MODEL_DT_SECONDS,
+                heat_flux_w_m2=PHASE3_EXTERNAL_HEAT_FLUX_W_M2,
+            )
+            layout = resident_point_layout_for_logs(offline_stage, log_ids)
+            producer = ResidentNativeSurfaceProducer(
+                backend, layout["origins"], layout["axes"]
+            )
+            producer.build_layout()
+            scene_contract = configure_resident_point_application_scene(
+                offline_stage, producer.positions
+            )
+            preauthor_resident_snapshot_consumers(offline_stage, log_ids)
+            offline_stage.GetRootLayer().customLayerData = {
+                **offline_stage.GetRootLayer().customLayerData,
+                "campfire:phase": "phase6ci",
+                "campfire:flowVersion": FLOW_VERSION,
+                "campfire:stageBuiltBeforeConnection": True,
+                "campfire:normalApplicationOwner": True,
+            }
+            if not offline_stage.GetRootLayer().Save():
+                raise RuntimeError(
+                    f"Failed to save Resident Point application stage: {scene_path}"
+                )
+            del producer
+            del offline_stage
+
+            if context.get_stage() is not None:
+                # The app's empty-stage template may expose a stage object just
+                # before its asynchronous OPENED transition.  Let that startup
+                # transaction finish before requesting the opt-in replacement.
+                for _ in range(60):
+                    await omni.kit.app.get_app().next_update_async()
+                closed = False
+                close_error = None
+                for _ in range(120):
+                    closed, close_error = await context.close_stage_async()
+                    if closed and not close_error:
+                        break
+                    if "already in progress" not in str(close_error).lower():
+                        break
+                    await omni.kit.app.get_app().next_update_async()
+                if not closed or close_error:
+                    raise RuntimeError(
+                        "Unable to close the initial stage before Resident Point "
+                        f"connection: {close_error}"
+                    )
+                for _ in range(4):
+                    await omni.kit.app.get_app().next_update_async()
+            opened, open_error = await context.open_stage_async(str(scene_path))
+            if not opened or open_error:
+                raise RuntimeError(
+                    f"Unable to connect Resident Point stage: {open_error}"
+                )
+            for _ in range(4):
+                await omni.kit.app.get_app().next_update_async()
+            stage = context.get_stage()
+            if stage is None:
+                raise RuntimeError("Resident Point stage connection returned no stage")
+
+            timeline = omni.timeline.get_timeline_interface()
+            owner = ResidentPointApplicationOwner.compose(
+                backend,
+                stage,
+                context,
+                timeline,
+                omni.kit.app.get_app().next_update_async,
+                layout,
+            )
+            backend = None
+            self._resident_point_owner = owner
+            event_names = {
+                int(omni.usd.StageEventType.CLOSING): "closing",
+                int(omni.usd.StageEventType.CLOSED): "closed",
+                int(omni.usd.StageEventType.OPENING): "opening",
+                int(omni.usd.StageEventType.OPENED): "opened",
+            }
+
+            def observe_stage_event(event):
+                current_owner = self._resident_point_owner
+                event_name = event_names.get(int(event.type))
+                if current_owner is not None and event_name is not None:
+                    current_owner.observe_stage_event(event_name)
+
+            self._resident_point_stage_subscription = (
+                context.get_stage_event_stream().create_subscription_to_pop(
+                    observe_stage_event, name="campfire-resident-point-stage"
+                )
+            )
+            if not capture_requested:
+                self._bind_resident_point_interactive_lifecycle(timeline)
+            carb.log_info(
+                "[campfire.app] Resident Point stage connected after complete "
+                f"offline authoring: points={scene_contract['point_count']}"
+            )
+            return stage, scene_path
+        except Exception:
+            if self._resident_point_owner is not None:
+                try:
+                    self._resident_point_owner.close(discard_pending=True)
+                finally:
+                    self._resident_point_owner = None
+            elif backend is not None:
+                backend.close()
+            raise
+
+    def _bind_resident_point_interactive_lifecycle(self, timeline):
+        """Bind the normal interactive timeline without adding state authority."""
+
+        event_names = {
+            int(omni.timeline.TimelineEventType.PLAY): "play",
+            int(omni.timeline.TimelineEventType.PAUSE): "pause",
+            int(omni.timeline.TimelineEventType.STOP): "stop",
+        }
+
+        def observe_timeline(event):
+            owner = self._resident_point_owner
+            name = event_names.get(int(event.type))
+            if owner is None or name is None:
+                return
+            try:
+                state = owner.status()["session"]["state"]
+                if name == "play" and state in ("ready", "stopped"):
+                    owner.start()
+                    self._resident_point_last_step_perf = time.perf_counter()
+                elif name in ("pause", "stop") and state == "running":
+                    owner.stop()
+            except Exception as exc:
+                carb.log_error(
+                    f"[campfire.app] Resident Point timeline transition failed: {exc}"
+                )
+
+        self._resident_point_timeline_subscription = (
+            timeline.get_timeline_event_stream().create_subscription_to_pop(
+                observe_timeline, 0, "campfire-resident-point-timeline"
+            )
+        )
+
+        def update_resident_point(_event):
+            owner = self._resident_point_owner
+            if owner is None:
+                return
+            try:
+                if owner.status()["session"]["state"] != "running":
+                    return
+                now = time.perf_counter()
+                previous = self._resident_point_last_step_perf
+                if previous is None or now - previous >= PHASE3_MODEL_DT_SECONDS:
+                    owner.step()
+                    self._resident_point_last_step_perf = now
+            except Exception as exc:
+                carb.log_error(
+                    f"[campfire.app] Resident Point interactive step failed: {exc}"
+                )
+
+        self._resident_point_update_subscription = (
+            omni.kit.app.get_app()
+            .get_update_event_stream()
+            .create_subscription_to_pop(
+                update_resident_point, name="campfire-resident-point-update"
+            )
+        )
+        if timeline.is_playing():
+            self._resident_point_owner.start()
+            self._resident_point_last_step_perf = time.perf_counter()
 
     async def _get_viewport(self):
         viewport = None
@@ -354,6 +599,224 @@ class CampfireAppExtension(omni.ext.IExt):
                 f"{CAPTURE_RESOLUTION}"
             )
         return image_resolution
+
+    async def _capture_fast_image(self, viewport, image_path: Path) -> tuple[int, int]:
+        """Capture one animation frame without the static-scene settle delay."""
+
+        capture = omni.kit.viewport.utility.capture_viewport_to_file(
+            viewport, file_path=str(image_path)
+        )
+        if not await capture.wait_for_result(completion_frames=2):
+            raise RuntimeError(f"Animation frame capture failed: {image_path}")
+        for _ in range(30):
+            if image_path.is_file():
+                break
+            await omni.kit.app.get_app().next_update_async()
+        if not image_path.is_file():
+            raise RuntimeError(f"Animation frame was not written: {image_path}")
+        resolution = _read_png_resolution(image_path)
+        if resolution != CAPTURE_RESOLUTION:
+            raise RuntimeError(
+                f"Animation PNG resolution is {resolution}, expected "
+                f"{CAPTURE_RESOLUTION}"
+            )
+        return resolution
+
+    async def _run_resident_point_application(
+        self, viewport, stage, scene_path: Path
+    ):
+        """Qualify the normal extension-owned Resident Point composition."""
+
+        owner = self._resident_point_owner
+        if owner is None:
+            raise RuntimeError("Resident Point application owner is unavailable")
+        output_dir = self._output_dir()
+        video_frames_dir = output_dir / "video_frames"
+        video_frames_dir.mkdir(parents=True, exist_ok=True)
+        for old_frame in video_frames_dir.glob("frame_*.png"):
+            old_frame.unlink()
+        timeline = omni.timeline.get_timeline_interface()
+        flow_interface = None
+        listener = None
+        point_resyncs = []
+        point_changes = []
+        point_prefix = str(RESIDENT_POINT_EMITTER_PATH)
+
+        def observe_point_changes(notice, _sender):
+            point_resyncs.extend(
+                str(path)
+                for path in notice.GetResyncedPaths()
+                if str(path).startswith(point_prefix)
+            )
+            point_changes.extend(
+                str(path)
+                for path in notice.GetChangedInfoOnlyPaths()
+                if str(path).startswith(point_prefix)
+            )
+
+        try:
+            listener = Tf.Notice.Register(
+                Usd.Notice.ObjectsChanged, observe_point_changes, stage
+            )
+            timeline.stop()
+            timeline.set_current_time(0.0)
+            owner.start()
+            timeline.play()
+            flow_interface = _flowusd.acquire_flowusd_interface()
+            active_blocks = []
+            result = None
+            warmup_steps = 650
+            frame_count = 60
+            for tick in range(1, warmup_steps + 1):
+                result = owner.step()
+                if tick % 5 == 0:
+                    await omni.kit.app.get_app().next_update_async()
+                    active_blocks.append(
+                        int(flow_interface.get_active_block_count())
+                    )
+            for frame_index in range(frame_count):
+                result = owner.step()
+                await omni.kit.app.get_app().next_update_async()
+                active_blocks.append(int(flow_interface.get_active_block_count()))
+                await self._capture_fast_image(
+                    viewport,
+                    video_frames_dir / f"frame_{frame_index:04d}.png",
+                )
+            timeline.pause()
+            await omni.kit.app.get_app().next_update_async()
+            raw_readback = flow_interface.get_latest_nanovdb_readback()
+            readback_names = (
+                "temperature",
+                "fuel",
+                "burn",
+                "smoke",
+                "velocity",
+                "divergence",
+            )
+            readback = {}
+            for index, name in enumerate(readback_names):
+                value = raw_readback[index] if index < len(raw_readback) else []
+                readback[name] = int(getattr(value, "size", len(value)))
+            owner.stop()
+            stopped_status = owner.status()
+            session_status = stopped_status["session"]
+            revisions = (
+                session_status["backend"]["revision"],
+                session_status["adapter"]["revision"],
+                session_status["sidecar"]["revision"],
+            )
+            close_result = owner.close()
+            self._resident_point_owner = None
+            frame_paths = sorted(video_frames_dir.glob("frame_*.png"))
+            unique_frames = len(
+                {
+                    hashlib.sha256(path.read_bytes()).hexdigest()
+                    for path in frame_paths
+                }
+            )
+            allowed_point_properties = {
+                f"{point_prefix}.pointPositions",
+                f"{point_prefix}.pointFuels",
+                f"{point_prefix}.pointTemperatures",
+                f"{point_prefix}.pointSmokes",
+                f"{point_prefix}.campfire:residentRevision",
+            }
+            unexpected_point_changes = sorted(
+                set(point_changes).difference(allowed_point_properties)
+            )
+            point_prim = stage.GetPrimAtPath(RESIDENT_POINT_EMITTER_PATH)
+            gates = {
+                "explicit_setting_enabled": resident_point_application_enabled(
+                    carb.settings.get_settings()
+                ),
+                "normal_extension_owner_composed": (
+                    stopped_status["start_count"] == 1
+                    and stopped_status["stop_count"] == 1
+                    and stopped_status["step_count"] == warmup_steps + frame_count
+                ),
+                "complete_schema_connected": (
+                    bool(point_prim)
+                    and point_prim.GetTypeName() == "FlowEmitterPoint"
+                    and len(point_prim.GetAttribute("pointPositions").Get()) == 720
+                ),
+                "only_existing_point_properties_changed_live": (
+                    not point_resyncs and not unexpected_point_changes
+                ),
+                "consumer_revisions_match": len(set(revisions)) == 1,
+                "final_revision_matches_steps": revisions[0]
+                == warmup_steps + frame_count,
+                "flow_core_active": max(active_blocks, default=0) > 0,
+                "fuel_temperature_smoke_present": all(
+                    readback[name] > 0
+                    for name in ("fuel", "temperature", "smoke", "burn")
+                ),
+                "continuous_video": (
+                    len(frame_paths) == frame_count and unique_frames >= 55
+                ),
+                "clean_shutdown": (
+                    not close_result["session"]["backend"]["active"]
+                    and close_result["session"]["adapter_closed"]
+                    and close_result["session"]["sidecar_closed"]
+                ),
+            }
+            summary = {
+                "schema_version": 1,
+                "status": "ok" if all(gates.values()) else "failed",
+                "phase": "phase6ci",
+                "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+                "scene": str(scene_path),
+                "scope": {
+                    "flow_version": FLOW_VERSION,
+                    "default_off": True,
+                    "normal_application": True,
+                    "stage_built_before_connection": True,
+                    "point_count": 720,
+                    "surface_points_per_log": 360,
+                    "log_count": 2,
+                    "emitter_count": 1,
+                    "canonical_scene_changed": False,
+                },
+                "lifecycle": {
+                    "owner": stopped_status,
+                    "close": close_result,
+                    "stage_event_subscription_installed": (
+                        self._resident_point_stage_subscription is not None
+                    ),
+                    "timeline_paused_after_run": not timeline.is_playing(),
+                },
+                "publication": {
+                    "revisions": revisions,
+                    "point_resyncs": sorted(set(point_resyncs)),
+                    "point_changed_properties": sorted(set(point_changes)),
+                    "unexpected_point_changes": unexpected_point_changes,
+                },
+                "flow": {
+                    "active_blocks_peak": max(active_blocks, default=0),
+                    "readback_words": readback,
+                    "video_frame_count": len(frame_paths),
+                    "unique_video_frame_hashes": unique_frames,
+                    "final_tick": result.snapshot.tick if result else None,
+                },
+                "gates": gates,
+            }
+            self._write_summary(output_dir, summary)
+            if not all(gates.values()):
+                failed = [name for name, passed in gates.items() if not passed]
+                raise RuntimeError(f"Phase 6CI gates failed: {failed}")
+            carb.log_info(
+                "[campfire.app] Phase 6CI complete: "
+                f"revision={revisions[0]}, activeBlocks={max(active_blocks)}"
+            )
+        finally:
+            if listener is not None:
+                listener.Revoke()
+            if flow_interface is not None:
+                _flowusd.release_flowusd_interface(flow_interface)
+            if self._resident_point_owner is owner:
+                try:
+                    owner.close(discard_pending=True)
+                finally:
+                    self._resident_point_owner = None
 
     async def _capture_phase0(self, viewport, scene_path: Path):
         output_dir = self._output_dir()

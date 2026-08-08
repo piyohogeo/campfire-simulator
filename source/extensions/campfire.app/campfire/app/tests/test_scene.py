@@ -842,6 +842,8 @@ class TestScene(omni.kit.test.AsyncTestCase):
         result = campfire.app.configure_resident_point_application_scene(
             stage, points
         )
+        log_ids = (campfire.app.PHASE3_DRY_LOG_ID, campfire.app.PHASE3_WET_LOG_ID)
+        campfire.app.preauthor_resident_snapshot_consumers(stage, log_ids)
 
         self.assertEqual(result["point_count"], 4)
         sphere = stage.GetPrimAtPath(campfire.app.FLOW_EMITTER_PATH)
@@ -865,9 +867,94 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(len(emitter.GetAttribute("pointPositions").Get()), 4)
         self.assertEqual(len(UsdGeom.Points(source).GetPointsAttr().Get()), 4)
         self.assertEqual(emitter.GetAttribute("campfire:residentRevision").Get(), 0)
+        sphere = stage.GetPrimAtPath(campfire.app.FLOW_EMITTER_PATH)
+        self.assertEqual(sphere.GetAttribute("campfire:residentRevision").Get(), 0)
+        for log_id in log_ids:
+            prim = stage.GetPrimAtPath(f"/World/Logs/{log_id}")
+            for name in (
+                "campfire:surfaceTemperatureK",
+                "campfire:charFraction",
+                "campfire:remainingMassRatio",
+                "campfire:weakestSupportRatio",
+                "campfire:residentRevision",
+            ):
+                self.assertTrue(prim.GetAttribute(name).HasAuthoredValueOpinion())
         layer_data = stage.GetRootLayer().customLayerData
         self.assertTrue(layer_data["campfire:residentPointApplication"])
         self.assertEqual(layer_data["campfire:residentPointEmitterCount"], 1)
+
+    async def test_resident_point_layout_accepts_only_cardinal_horizontal_logs(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase3_scene(stage)
+        log_ids = (campfire.app.PHASE3_DRY_LOG_ID, campfire.app.PHASE3_WET_LOG_ID)
+
+        initial = campfire.app.resident_point_layout_for_logs(stage, log_ids)
+        self.assertEqual(initial["revision"], 1)
+        self.assertEqual(initial["axes"], (0, 0))
+        campfire.app.move_log(stage, log_ids[0], (0.1, -0.2, 0.3), 90.0)
+        rotated = campfire.app.resident_point_layout_for_logs(stage, log_ids)
+        self.assertEqual(rotated["axes"], (1, 0))
+        self.assertEqual(rotated["origins"][0], (0.1, -0.2, 0.3))
+        campfire.app.move_log(stage, log_ids[0], (0.1, -0.2, 0.3), 45.0)
+        with self.assertRaisesRegex(ValueError, "cardinal XY"):
+            campfire.app.resident_point_layout_for_logs(stage, log_ids)
+
+    async def test_resident_point_application_owner_assigns_ticks_and_delegates(self):
+        class FakeSession:
+            def __init__(self):
+                self.state = "ready"
+                self.tick = -1
+                self.steps = []
+                self.closed = False
+
+            def status(self):
+                return {"state": self.state, "backend": {"tick": self.tick}}
+
+            def start(self):
+                self.state = "running"
+
+            def stop(self):
+                self.state = "stopped"
+                return True
+
+            def step(self, *, tick):
+                self.tick = tick
+                self.steps.append(tick)
+                return tick
+
+            def close(self, *, discard_pending=False):
+                self.state = "closed"
+                self.closed = True
+                return {"pending_discarded": discard_pending}
+
+        class FakeOrchestrator:
+            def __init__(self):
+                self.events = []
+
+            def observe_stage_event(self, name):
+                self.events.append(name)
+
+            def status(self):
+                return {"state": "idle", "observed_events": tuple(self.events)}
+
+        session = FakeSession()
+        orchestrator = FakeOrchestrator()
+        owner = campfire.app.ResidentPointApplicationOwner(session, orchestrator)
+        self.assertTrue(owner.start())
+        self.assertFalse(owner.start())
+        self.assertEqual(owner.step(), 0)
+        self.assertEqual(owner.step(), 1)
+        owner.observe_stage_event("opening")
+        self.assertTrue(owner.stop())
+        self.assertFalse(owner.stop())
+        status = owner.status()
+        self.assertEqual(session.steps, [0, 1])
+        self.assertEqual(status["start_count"], 1)
+        self.assertEqual(status["stop_count"], 1)
+        self.assertEqual(status["step_count"], 2)
+        self.assertEqual(status["orchestrator"]["observed_events"], ("opening",))
+        self.assertFalse(owner.close()["already_closed"])
+        self.assertTrue(owner.close()["already_closed"])
 
     async def test_phase3_default_keeps_sphere_without_point_structure(self):
         stage = Usd.Stage.CreateInMemory()

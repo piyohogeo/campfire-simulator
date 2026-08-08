@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "status": "ok",
+  "phase": "phase6ci",
+  "timestamp_utc": "2026-08-08T01:59:36.252350+00:00",
+  "scene": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6ci\\scene\\phase3_point_application.usda",
+  "scope": {
+    "flow_version": "110.0.0",
+    "default_off": true,
+    "normal_application": true,
+    "stage_built_before_connection": true,
+    "point_count": 720,
+    "surface_points_per_log": 360,
+    "log_count": 2,
+    "emitter_count": 1,
+    "canonical_scene_changed": false
+  },
+  "lifecycle": {
+    "owner": {
+      "start_count": 1,
+      "stop_count": 1,
+      "step_count": 710,
+      "closed": false,
+      "session": {
+        "state": "stopped",
+        "pending_revision": null,
+        "pending_sidecar_revision": null,
+        "step_count": 710,
+        "publish_count": 710,
+        "publish_failure_count": 0,
+        "retry_count": 0,
+        "start_count": 1,
+        "stop_count": 1,
+        "consumer_replace_count": 0,
+        "backend": {
+          "active": true,
+          "initial_revision": 0,
+          "initial_tick": -1,
+          "revision": 710,
+          "tick": 709,
+          "step_count": 710,
+          "export_count": 0,
+          "log_count": 2,
+          "cells_per_log": 1152,
+          "library_path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6ci\\native-build\\campfire_wood_native.dll",
+          "abi_version": 1,
+          "msvc_version": 1939,
+          "msvc_full_version": 193933523
+        },
+        "adapter": {
+          "active": false,
+          "closed": false,
+          "revision": 710,
+          "publish_count": 710,
+          "start_count": 1,
+          "stop_count": 1,
+          "initial_revision": 0,
+          "owner_thread_id": 51388,
+          "transaction_profiling_enabled": false,
+          "transaction_profile_count": 0,
+          "lightweight_tail_profiling_enabled": false,
+          "lightweight_tail_profile_count": 0,
+          "handle_cache_enabled": true,
+          "cached_attribute_count": 19,
+          "prim_cache_hit_count": 709,
+          "prim_cache_miss_count": 1,
+          "attribute_cache_hit_count": 6663,
+          "attribute_cache_miss_count": 19,
+          "lightweight_commit_enabled": true,
+          "lightweight_notice_coalescing_enabled": true,
+          "lightweight_notice_tracking_enabled": false,
+          "lightweight_notice_count": 0,
+          "lightweight_notice_accepted_revision_count": 0,
+          "lightweight_notice_rejected_count": 0,
+          "lightweight_notice_publication_count": 0,
+          "lightweight_notices_per_publication_minimum": 0,
+          "lightweight_notices_per_publication_maximum": 0,
+          "lightweight_commit_count": 709,
+          "lightweight_failure_count": 0,
+          "lightweight_recovery_count": 0,
+          "skip_unchanged_derived_enabled": true,
+          "lightweight_write_count": 6663,
+          "skipped_unchanged_write_count": 6808,
+          "faulted": false
+        },
+        "sidecar": {
+          "revision": 710,
+          "layout_revision": 1,
+          "committed_layout_revision": 1,
+          "point_count": 720,
+          "prepare_count": 710,
+          "publish_count": 710,
+          "rollback_count": 0,
+          "failure_count": 0,
+          "layout_replace_count": 0,
+          "closed": false
+        }
+      },
+      "orchestrator": {
+        "state": "idle",
+        "attempt_count": 0,
+        "success_count": 0,
+        "failure_count": 0,
+        "recovery_retry_count": 0,
+        "drain_updates": 4,
+        "observed_events": [],
+        "attached_stage_available": false,
+        "last_error": null,
+        "last_result": null
+      },
+      "layout_revision": 1,
+      "log_ids": [
+        "Log_00",
+        "Log_01"
+      ]
+    },
+    "close": {
+      "already_closed": false,
+      "session": {
+        "already_closed": false,
+        "pending_discarded": false,
+        "backend": {
+          "active": false,
+          "initial_revision": 0,
+          "initial_tick": -1,
+          "revision": 710,
+          "tick": 709,
+          "step_count": 710,
+          "export_count": 1,
+          "log_count": 2,
+          "cells_per_log": 1152,
+          "library_path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase3\\phase6ci\\native-build\\campfire_wood_native.dll",
+          "abi_version": 1,
+          "msvc_version": 1939,
+          "msvc_full_version": 193933523,
+          "already_closed": false,
+          "export_ms": 3.3019999973475933
+        },
+        "adapter_closed": true,
+        "sidecar_closed": true
+      }
+    },
+    "stage_event_subscription_installed": true,
+    "timeline_paused_after_run": true
+  },
+  "publication": {
+    "revisions": [
+      710,
+      710,
+      710
+    ],
+    "point_resyncs": [],
+    "point_changed_properties": [
+      "/World/Flow/ResidentPointEmitter.campfire:residentRevision",
+      "/World/Flow/ResidentPointEmitter.pointFuels",
+      "/World/Flow/ResidentPointEmitter.pointSmokes",
+      "/World/Flow/ResidentPointEmitter.pointTemperatures"
+    ],
+    "unexpected_point_changes": []
+  },
+  "flow": {
+    "active_blocks_peak": 383,
+    "readback_words": {
+      "temperature": 3584160,
+      "fuel": 3584160,
+      "burn": 3584160,
+      "smoke": 3584160,
+      "velocity": 2301480,
+      "divergence": 0
+    },
+    "video_frame_count": 60,
+    "unique_video_frame_hashes": 60,
+    "final_tick": 709
+  },
+  "gates": {
+    "explicit_setting_enabled": true,
+    "normal_extension_owner_composed": true,
+    "complete_schema_connected": true,
+    "only_existing_point_properties_changed_live": true,
+    "consumer_revisions_match": true,
+    "final_revision_matches_steps": true,
+    "flow_core_active": true,
+    "fuel_temperature_smoke_present": true,
+    "continuous_video": true,
+    "clean_shutdown": true
+  },
+  "decision": {
+    "normal_application_owner": "qualified behind explicit default-off setting",
+    "production_default": "Sphere unchanged",
+    "next_boundary": "interactive layout refresh and recovery exercise"
+  }
+}

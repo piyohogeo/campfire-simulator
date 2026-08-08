@@ -29,6 +29,76 @@ def resident_point_application_enabled(settings) -> bool:
     return bool(settings.get_as_bool(RESIDENT_POINT_APPLICATION_SETTING))
 
 
+def resident_point_layout_for_logs(stage: Usd.Stage, log_ids) -> dict:
+    """Return the cardinal XY layout supported by the native Point ABI."""
+
+    origins = []
+    axes = []
+    for log_id in log_ids:
+        prim = stage.GetPrimAtPath(f"/World/Logs/{log_id}")
+        if not prim or not prim.IsA(UsdGeom.Cylinder):
+            raise RuntimeError(f"Resident Point log is not a cylinder: {log_id}")
+        cylinder = UsdGeom.Cylinder(prim)
+        if cylinder.GetAxisAttr().Get() != UsdGeom.Tokens.x:
+            raise ValueError("Resident Point native layout requires local-X logs")
+        transform = UsdGeom.Xformable(prim).ComputeLocalToWorldTransform(
+            Usd.TimeCode.Default()
+        )
+        origin = transform.ExtractTranslation()
+        axial = transform.TransformDir(Gf.Vec3d(1.0, 0.0, 0.0)).GetNormalized()
+        if abs(float(axial[2])) > 1.0e-5:
+            raise ValueError("Resident Point native layout requires horizontal logs")
+        absolute_x = abs(float(axial[0]))
+        absolute_y = abs(float(axial[1]))
+        if max(absolute_x, absolute_y) < 1.0 - 1.0e-5:
+            raise ValueError("Resident Point native layout requires cardinal XY logs")
+        origins.append(tuple(float(value) for value in origin))
+        axes.append(0 if absolute_x >= absolute_y else 1)
+    if not origins:
+        raise ValueError("Resident Point layout requires logs")
+    return {"revision": 1, "origins": tuple(origins), "axes": tuple(axes)}
+
+
+def preauthor_resident_snapshot_consumers(
+    stage: Usd.Stage, log_ids, *, initial_revision: int = 0
+) -> None:
+    """Author the complete primary snapshot schema before stage connection."""
+
+    if (
+        isinstance(initial_revision, bool)
+        or not isinstance(initial_revision, int)
+        or initial_revision < 0
+    ):
+        raise ValueError("Initial Resident consumer revision must be non-negative")
+    emitter = stage.GetPrimAtPath(FLOW_EMITTER_PATH)
+    if not emitter:
+        raise RuntimeError("Resident primary emitter is unavailable")
+    emitter.CreateAttribute(
+        "campfire:residentRevision", Sdf.ValueTypeNames.Int64
+    ).Set(initial_revision)
+    for log_id in log_ids:
+        prim = stage.GetPrimAtPath(f"/World/Logs/{log_id}")
+        if not prim:
+            raise RuntimeError(f"Resident primary log is unavailable: {log_id}")
+        values = (
+            ("campfire:surfaceTemperatureK", Sdf.ValueTypeNames.Double, 293.15),
+            ("campfire:charFraction", Sdf.ValueTypeNames.Double, 0.0),
+            ("campfire:remainingMassRatio", Sdf.ValueTypeNames.Double, 1.0),
+            ("campfire:weakestSupportRatio", Sdf.ValueTypeNames.Double, 1.0),
+            ("campfire:residentRevision", Sdf.ValueTypeNames.Int64, initial_revision),
+        )
+        for name, type_name, fallback in values:
+            attribute = prim.GetAttribute(name)
+            if not attribute:
+                attribute = prim.CreateAttribute(name, type_name)
+            if not attribute.HasAuthoredValueOpinion() and not attribute.Set(fallback):
+                raise RuntimeError(f"Unable to pre-author Resident attribute: {name}")
+            if name == "campfire:residentRevision" and not attribute.Set(
+                initial_revision
+            ):
+                raise RuntimeError("Unable to initialize Resident log revision")
+
+
 def _set_existing(prim: Usd.Prim, name: str, value) -> None:
     attribute = prim.GetAttribute(name)
     if not attribute:

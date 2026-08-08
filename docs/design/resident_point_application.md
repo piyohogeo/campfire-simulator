@@ -1,6 +1,6 @@
 # Resident Point application scene boundary
 
-Status: Phase 6CH qualifies the pre-authored application scene behind one explicit default-off setting. The normal production default remains the existing Sphere path.
+Status: Phase 6CI qualifies the normal application owner behind the same explicit default-off setting. The normal production default remains the existing Sphere path.
 
 ## Scene contract
 
@@ -26,7 +26,7 @@ Flow reached 382 active blocks. Temperature, fuel, burn, and smoke NanoVDB readb
 
 The 60-frame, 1280x720 RTX evidence video has 60 unique frame hashes. It visibly contains fire and smoke emerging from the two log surfaces. Capture and the initial RTX shader warm-up are evidence costs, not performance measurements.
 
-The standard regression suite passed 54/54 checks across eight processes in 291.4 s; collapse coverage completed in 171.6 s.
+The standard Phase 6CH regression suite passed 54/54 checks across eight processes in 291.4 s; collapse coverage completed in 171.6 s.
 
 ## Decision
 
@@ -38,4 +38,22 @@ Reproduction:
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_phase6ch_resident_point_application.ps1
+```
+
+## Phase 6CI normal owner composition
+
+`ResidentPointApplicationOwner` composes the existing native backend, primary snapshot adapter, Point sidecar, session, and recovery orchestrator. It creates no additional pending, rollback, snapshot, or revision authority. Its only scheduling responsibility is assigning the next tick on the construction thread.
+
+When the existing setting is enabled for Phase 3, the normal extension builds an isolated USDA offline, pre-authors the complete Point and primary-consumer schema, saves it, waits for Kit's initial empty-stage transaction, and only then connects the completed stage. The setting remains invalid for other phases. With the setting disabled, the existing Sphere Phase 3 and all canonical scenes are unchanged.
+
+The normal `campfire.simulator.kit` owner completed 710 steps with backend, primary adapter, and Point sidecar revisions all at 710. There were no publish failures, retries, rollbacks, pending snapshots, or Point resyncs. Shutdown exported the native state once and closed both consumers. Flow peaked at 383 active blocks; temperature, fuel, burn, smoke, and velocity readbacks were non-empty. All 60 RTX evidence frames were unique.
+
+The stage-recovery orchestrator and real stage-event subscription are composed into the normal owner, but Phase 6CI does not duplicate the replacement-stage failure/retry experiment already qualified in Phase 6CF. Interactive log-layout refresh and one normal-owner recovery exercise remain the next boundary. Point stays default-off and the Flow 110 initial-cache warning remains under observation.
+
+The full suite passed 56/56 checks across eight processes in 310.5 s; collapse coverage completed in 183.2 s. The default-off Phase 0 application capture also passed.
+
+Reproduction:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_phase6ci_resident_point_owner.ps1
 ```

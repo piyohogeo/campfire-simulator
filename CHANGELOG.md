@@ -1,6 +1,6 @@
 # Changelog
 
-- Added the Phase 6CH default-off Resident Point application scene boundary: one 720-point emitter is fully authored before stage connection, the unchanged Sphere path is verified as fallback, live updates produce zero Point resyncs through revision 710, and real Flow 110 fire/smoke plus startup/timeline/clean shutdown pass the 14-gate evaluation.
+- Added the Phase 6CI normal-application Resident Point owner behind the existing default-off setting, composing the native backend, primary adapter, Point sidecar, session, and stage recovery without adding revision authority; the normal extension completed 710 matched publications, zero Point resyncs, real Flow fire/smoke, and clean shutdown.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added the Phase 6CI default-off normal application composition, including complete offline schema authoring before context connection, extension-owned timeline/update lifecycle, primary and Point consumer pre-authoring, and a reproducible 10-gate real-Kit/Flow capture.
 - Added the Phase 6CG production-but-unactivated Resident Point module, extracting the generic native surface producer, immutable byte payload, and transactional Point sidecar from benchmark ownership, enforcing pre-authored Flow schema and geometry/ABI validation, and proving byte-exact extraction plus full stage-recovery continuation in real Flow 110.
 - Added the Phase 6CF default-off owner-thread stage recovery orchestrator, driving the qualified close/drain/attach lifecycle from real Kit events, retaining pending work across injected consumer-factory failure, retrying the exact immutable payload, and continuing Flow without live structural resync or production activation.
 - Added the Phase 6CE default-off replacement-stage recovery path, validating stopped owner-thread consumer handoff, exact pending payload retry across Kit `close_stage_async`/`attach_stage_async`, revision-seeded primary and Point reconstruction, post-attach Flow recovery, and clean shutdown without pending discard.
