@@ -138,6 +138,7 @@ CAMPFIRE_API std::int32_t campfire_native_step(
 #include "arrhenius_complete_step.inl"
 #include "native_publish_outputs.inl"
 #include "native_surface_arrays.inl"
+#include "native_visual_surface.inl"
 
 CAMPFIRE_API std::int32_t campfire_native_conduction_step(
     const std::size_t cell_count,

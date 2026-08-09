@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v1">最新記録</a>
+        <a href="#phase-v2">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v1">Phase V1を読む</a>
+        <a class="button primary" href="#phase-v2">Phase V2を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V1 完了判定</strong></div>
+        <div><span>現在地</span><strong>Phase V2 完了判定</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>64 / 64 passed</strong></div>
-        <div><span>次の焦点</span><strong>Phase V2 · visual surface payload</strong></div>
+        <div><span>テスト</span><strong>66 / 66 passed</strong></div>
+        <div><span>次の焦点</span><strong>Phase V3 · dynamic texture feasibility</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,69 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-v2" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number">V2</span>
+          <p><time datetime="2026-08-09">2026.08.09</time></p>
+          <span class="pill current">Bulk boundary</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Phase V2 · Immutable visual surface payload</p>
+            <h2>7,200表面セルを、<br>Pointとは別の連続bufferで運ぶ。</h2>
+            <p>Resident native SoAからtemperature、moisture、char、ashをC++で一括抽出し、visual専用immutable bytesへ固定しました。identityは<code>log_id + local_surface_index</code>、順序はlog-majorです。world位置、layout frame、Point payload、sidecar、session consumer数には依存しません。</p>
+          </header>
+
+          <div class="notes-grid">
+            <section class="note">
+              <p class="note-label">Correctness</p>
+              <h3>全7,200要素を独立照合</h3>
+              <p>24×12×4 gridから360 surface cell／薪を同じnative local-cell走査で抽出しました。20本の全4 channelとidentityを独立NumPy参照へ要素単位で比較し、すべて完全一致しました。2点だけを交換して値集合を保つpermutationも、平均ではなく順序比較で確実に検出します。</p>
+            </section>
+            <section class="note">
+              <p class="note-label">Ownership</p>
+              <h3>144,000 bytes · immutable</h3>
+              <p>20本payloadは4状態channel＋local surface indexで144,000 bytesです。配列長、dtype、有限値、正温度、非負質量、各logの0…359 identity順を構築時に検証し、metadataと全bytesをSHA-256 digestへ含めます。セルごとのPython objectは生成しません。</p>
+            </section>
+          </div>
+
+          <section class="verification" aria-labelledby="phasev2-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Measured boundary</p>
+              <h3 id="phasev2-verification-title">bulk抽出は速いが、検証込みtailは1 ms超。</h3>
+              <p>20本100 post-warmup sampleでnative pack p95 0.4738 ms、boundary copy 0.1132 ms、validation 0.6203 ms、digest 0.1406 ms、total 1.3646 msでした。V2はtexture uploadやUSD Setを含まないため、V3 publication性能とは解釈しません。</p>
+              <code>.\scripts\run_phasev2_wood_visual_surface.ps1</code>
+              <p><a href="assets/phasev2/wood_visual_surface_report.json">機械可読レポートを開く</a></p>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase V2検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>V2 gates</strong><small>8 / 8 · 2 logs and 20 logs</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Exact reference</strong><small>7,200 × 4 channels + identity</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Native pack p95</strong><small>0.4738 ms · 20 logs</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Regression</strong><small>8 processes · 66 / 66 · 350.2 s</small></p></div>
+            </div>
+          </section>
+
+          <div class="notes-grid">
+            <section class="note caution">
+              <p class="note-label">Known limits</p>
+              <h3>まだ表示transportではない</h3>
+              <p>V2はCPU immutable payloadまでです。texture resource、RTX shader、upload、revision commit、notice、frame latencyは測っていません。現状の検証込みtotal p95 1.3646 msは参考予算を超えるため、V3では検証・pack・uploadを分離して扱います。</p>
+            </section>
+            <section class="note next">
+              <p class="note-label">Evidence video</p>
+              <h3>V1固定snapshotを再参照</h3>
+              <p>V2単体には時間発展する画面がないため、表示目的を示すV1固定snapshot比較を複製せず再参照します。</p>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev1/wood_visual_v0_v1_fixed_snapshot.mp4" data-video-poster="assets/phasev1/wood_visual_v1.png" data-video-title="Visual surface payload target locality" data-video-meta="Reused Phase V1 fixed-snapshot diagnostic · not V2 runtime output · not a combustion trajectory · 4 s · 5 fps">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>関連動画</strong><small>V1固定snapshot · 再利用</small></span>
+              </button>
+            </section>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v1" class="section entry-section phase-six">

@@ -1,0 +1,123 @@
+{
+  "schema": "campfire.phasev2.wood_visual_surface_report.v1",
+  "status": "ok",
+  "scope": {
+    "visual_only_payload": true,
+    "identity": "log_id + local_surface_index",
+    "order": "log-major, ascending native local-cell traversal",
+    "world_or_layout_dependent": false,
+    "python_cell_objects_created": false,
+    "native_bulk_pack": true,
+    "point_payload_or_sidecar_modified": false
+  },
+  "gates": {
+    "surface_count_360_per_log": true,
+    "twenty_logs_7200_points": true,
+    "revision_matches_committed_input": true,
+    "all_channels_match_independent_reference": true,
+    "permutation_not_hidden_by_mean": true,
+    "immutable_byte_ownership": true,
+    "point_payload_unchanged": true,
+    "session_consumer_count_unchanged": true
+  },
+  "cases": [
+    {
+      "log_count": 2,
+      "points_per_log": 360,
+      "point_count": 720,
+      "payload_bytes": 14400,
+      "revision": 105,
+      "tick": 104,
+      "digest": "b8e28ca519396e822b8133fd63cd6e0e00adda2cbf16e8a1c7543aec36fe3080",
+      "exact_all_elements": {
+        "temperatures": true,
+        "moistures": true,
+        "chars": true,
+        "ashes": true,
+        "local_surface_indices": true
+      },
+      "permutation_same_mean_detected": true,
+      "timing": {
+        "native_pack_ms": {
+          "samples": 100,
+          "mean_ms": 0.11349000000000001,
+          "p95_ms": 0.1638,
+          "maximum_ms": 0.3715
+        },
+        "boundary_copy_ms": {
+          "samples": 100,
+          "mean_ms": 0.048094,
+          "p95_ms": 0.0656,
+          "maximum_ms": 0.1687
+        },
+        "validation_ms": {
+          "samples": 100,
+          "mean_ms": 0.24647300000000003,
+          "p95_ms": 0.3539,
+          "maximum_ms": 0.4834
+        },
+        "digest_ms": {
+          "samples": 100,
+          "mean_ms": 0.021829,
+          "p95_ms": 0.0316,
+          "maximum_ms": 0.0469
+        },
+        "total_ms": {
+          "samples": 100,
+          "mean_ms": 0.429886,
+          "p95_ms": 0.645,
+          "maximum_ms": 0.8015
+        }
+      }
+    },
+    {
+      "log_count": 20,
+      "points_per_log": 360,
+      "point_count": 7200,
+      "payload_bytes": 144000,
+      "revision": 105,
+      "tick": 104,
+      "digest": "b7644cfe62690f0282fb221d6ebf7aca3f31445eb264adf148d7eef8ae9e3bbc",
+      "exact_all_elements": {
+        "temperatures": true,
+        "moistures": true,
+        "chars": true,
+        "ashes": true,
+        "local_surface_indices": true
+      },
+      "permutation_same_mean_detected": true,
+      "timing": {
+        "native_pack_ms": {
+          "samples": 100,
+          "mean_ms": 0.296535,
+          "p95_ms": 0.4738,
+          "maximum_ms": 1.078
+        },
+        "boundary_copy_ms": {
+          "samples": 100,
+          "mean_ms": 0.074424,
+          "p95_ms": 0.1132,
+          "maximum_ms": 0.1731
+        },
+        "validation_ms": {
+          "samples": 100,
+          "mean_ms": 0.452206,
+          "p95_ms": 0.6203,
+          "maximum_ms": 0.7661
+        },
+        "digest_ms": {
+          "samples": 100,
+          "mean_ms": 0.114571,
+          "p95_ms": 0.1406,
+          "maximum_ms": 0.1508
+        },
+        "total_ms": {
+          "samples": 100,
+          "mean_ms": 0.937736,
+          "p95_ms": 1.3646,
+          "maximum_ms": 1.8852
+        }
+      }
+    }
+  ]
+}

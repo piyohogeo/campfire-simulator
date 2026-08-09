@@ -1068,6 +1068,46 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(repeated.usd_set_count, 0)
         consumer.close()
 
+    async def test_wood_visual_surface_payload_is_immutable_and_ordered(self):
+        log_ids = ("Log_00", "Log_01")
+        indices = array("I", (0, 1, 2, 0, 1, 2)).tobytes()
+        temperatures = array("f", (300.0, 301.0, 302.0, 400.0, 401.0, 402.0)).tobytes()
+        masses = array("f", (0.0, 0.1, 0.2, 0.3, 0.4, 0.5)).tobytes()
+        payload = campfire.app.ImmutableWoodVisualSurfacePayload(
+            7,
+            9,
+            log_ids,
+            3,
+            indices,
+            temperatures,
+            masses,
+            masses,
+            masses,
+        )
+        self.assertEqual(payload.point_count, 6)
+        self.assertEqual(payload.digest(), payload.digest())
+        self.assertIs(type(payload.temperatures), bytes)
+        with self.assertRaisesRegex(ValueError, "identity order"):
+            campfire.app.ImmutableWoodVisualSurfacePayload(
+                7,
+                9,
+                log_ids,
+                3,
+                array("I", (0, 2, 1, 0, 1, 2)).tobytes(),
+                temperatures,
+                masses,
+                masses,
+                masses,
+            )
+
+    async def test_wood_visual_surface_permutation_is_not_hidden_by_mean(self):
+        values = np.arange(7200, dtype=np.float32)
+        permuted = values.copy()
+        permuted[[123, 4567]] = permuted[[4567, 123]]
+        self.assertTrue(np.array_equal(np.sort(values), np.sort(permuted)))
+        self.assertFalse(np.array_equal(values, permuted))
+        self.assertNotEqual(values.tobytes(), permuted.tobytes())
+
     async def test_resident_point_application_scene_is_explicit_and_pre_authored(self):
         stage = Usd.Stage.CreateInMemory()
         campfire.app.populate_phase3_scene(stage)

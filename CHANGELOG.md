@@ -1,5 +1,10 @@
 # Changelog
 
+- Added Phase V2's independent `ImmutableWoodVisualSurfacePayload` and native bulk producer for temperature, moisture, char, ash, and stable local-surface identity without modifying Point payloads, sidecars, session consumers, layouts, physics, Flow, or defaults.
+- Added the audited MSVC bulk pack entry point to the existing native library; it traverses the resident SoA in log-major/local-cell order, rejects invalid values before completion, and creates no per-cell Python objects.
+- Compared every channel and identity element against an independent reference for 720 and 7,200 surface cells and proved that a two-cell permutation with the same value multiset is not hidden by aggregate statistics.
+- Passed all 8 V2 gates and the complete 8-process regression with 66 / 66 cases in 350.2 s.
+- Measured 20-log p95 costs separately: native pack 0.4738 ms, boundary copy 0.1132 ms, validation 0.6203 ms, digest 0.1406 ms, and total 1.3646 ms over 100 post-warmup samples.
 - Added the independent, default-off Phase V1 eight-band visual probe without resuming or changing the held Phase 6DM layout production work.
 - Aggregated stable local wood-cell identity into eight axial surface bands and reused V0 dry/wet/char/ash/emission semantics; the physical Cylinder, collision, Flow source, authority, schemas, and production defaults remain unchanged.
 - Pre-authored 8 render-only diagnostic Cylinders per log in a dedicated stage, kept all physics APIs on the original logs, and skipped all USD writes for an unchanged revision.

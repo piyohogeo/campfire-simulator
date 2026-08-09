@@ -215,6 +215,12 @@ from .wood_visual_v1 import (
     aggregate_model_into_visual_bands,
     preauthor_wood_visual_v1,
 )
+from .wood_visual_surface import (
+    WOOD_VISUAL_SURFACE_CHANNELS,
+    ImmutableWoodVisualSurfacePayload,
+    ResidentNativeWoodVisualSurfaceProducer,
+    WoodVisualSurfacePackProfile,
+)
 from .wood import LogSpec, create_log, get_log_world_position, list_log_ids, move_log
 
 __all__ = [
@@ -296,12 +302,16 @@ __all__ = [
     "WOOD_VISUAL_V1_BAND_COUNT",
     "WOOD_VISUAL_V1_ROOT",
     "WOOD_VISUAL_V1_SETTING",
+    "WOOD_VISUAL_SURFACE_CHANNELS",
     "WoodVisualPublicationProfile",
     "WoodVisualUniform",
     "WoodVisualV0Consumer",
     "WoodVisualBandPublicationProfile",
     "WoodVisualBandSnapshot",
     "WoodVisualV1Consumer",
+    "ImmutableWoodVisualSurfacePayload",
+    "ResidentNativeWoodVisualSurfaceProducer",
+    "WoodVisualSurfacePackProfile",
     "format_resident_point_command_result",
     "published_row_from_python_model",
     "summarize_timing_ms",

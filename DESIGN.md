@@ -2536,3 +2536,14 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 実機視認性: 同じCamera、light、1280×720、同じ4本の固定snapshotをV0とV1で描画した。V0では薪全体が一様だったが、V1では局所赤熱、湿り勾配、char／ashの軸方向差を識別でき、8 / 8 gateに合格した。比較MP4はV0静止状態2秒とV1静止状態2秒を連結した表示診断で、燃焼trajectoryではない。
 - 性能境界: 20本では160 render Prim、480 shader input＋1 revisionの最大481 Set／revisionとなる。85 sampleからwarmup 5を除いたpublicationはmean `44.6918 ms`、p95 `52.4202 ms`、max `145.3226 ms`、USD Set区間p95 `4.8859 ms`で、観測最大Setは411だった。同一revisionはSet 0だが、更新コストとPrim数は薪数に比例し、1.0 ms参考予算を大幅に超える。したがってV1は視認性probe／fallbackとしてqualified、20本production transportとしてrejectedとする。
 - 回帰と次: release buildに成功し、V1 test 2件を加えた標準suiteは全8 process・`64 / 64`件が`350.1 s`で合格した。次はV1を拡張せず、Point payload／session consumer数から独立したV2 immutable visual surface payloadをnative SoAから一括packし、2本720セルと20本7,200セルの全要素順序・digest・native pack／boundary copy／digest／total性能を検証する。
+
+## Phase V2 表示専用immutable surface payload
+
+### 2026-08-09: Point transportと分離したnative bulk境界を固定する
+
+- schema: `ImmutableWoodVisualSurfacePayload`はrevision、tick、固定log id順、360 points/log、local surface index、temperature／moisture／char／ashのfloat32 immutable bytesを保持する。identityは`log_id + local_surface_index`、配列順はlog-major／native local-cell ascendingで、world position、layout origin／axis／rigid frameには依存しない。metadataと5配列すべてをSHA-256 digestへ含める。
+- 検証: 構築時に整数metadata、unique log id、byte length／dtype、有限値、正温度、非負質量、各log blockのlocal surface index `0..359`をNumPy bulk演算で検査する。セルごとのPython objectとPython texture-pack loopは作らない。revisionはcallerが渡すcommit済みResident revisionと一致し、producer自体はsession consumer／commit authorityにならない。
+- native pack: audited MSVC Phase 6AU libraryへvisual-only exportを追加した。既存Resident SoAのsurface exposureをlog-major／local-cell順に走査し、4状態channelとlocal surface ordinalを事前確保した連続bufferへ一括出力する。出力容量不足、非有限／非正温度、負質量はerror codeで拒否する。既存step／publish／Point entry pointとABI versionは変更しない。
+- 完全照合: 2本720点と20本7,200点へlog／cell固有値をseedし、SoA boolean maskから作った独立float32参照とtemperature、moisture、char、ash、identityを全要素比較した。すべてbyte順で一致した。2点を交換したpermutationは同じ値multisetを保つが参照との要素順比較に失敗し、平均値で順序不具合を隠さないgateを固定した。
+- 性能: 各105 sampleからwarmup 5を除いた。2本p95はnative pack `0.1638 ms`、boundary copy `0.0656 ms`、validation `0.3539 ms`、digest `0.0316 ms`、total `0.6450 ms`。20本p95は順に`0.4738 ms`、`0.1132 ms`、`0.6203 ms`、`0.1406 ms`、total `1.3646 ms`、payloadは144,000 bytesだった。V2はtexture upload、USD revision Set／notice、RTX frameを含まないため、V3 publication予算合格とは扱わない。totalは1.0 ms参考値を超えるのでvalidationとtransportをV3で分離測定する。
+- 判定と非変更: Phase固有`8 / 8` gate、標準suite全8 process・`66 / 66`件合格（`350.2 s`）を確認した。V2 payloadはqualified、dynamic texture transportはunqualifiedである。`ImmutableSurfacePayload`、Resident Point sidecar／session consumer数、Point position／fuel／temperature／smoke、wood authority／式／JSON、Resident snapshot、layout representation、Flow 110.0.0、Emitter、collision、physical Cylinder、checkpoint、rollback／retry／revision／owner lifecycle、production既定は不変である。次は固定Kit／RTXでdynamic textureとanalytic Cylinder UVを最小probeし、UVまたはresource lifetime gateが不成立ならintegrationせず停止する。
