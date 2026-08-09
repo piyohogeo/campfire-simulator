@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6">最新記録</a>
+        <a href="#phase-v0">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6">Phase 6を読む</a>
+        <a class="button primary" href="#phase-v0">Phase V0を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6 進行中</strong></div>
+        <div><span>現在地</span><strong>Phase V0 完了判定</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>59 / 59 passed</strong></div>
-        <div><span>次の焦点</span><strong>Point / Flow continuity defect</strong></div>
+        <div><span>テスト</span><strong>62 / 62 passed</strong></div>
+        <div><span>次の焦点</span><strong>Phase 6へ復帰 · V1は未承認</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,87 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-v0" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number">V0</span>
+          <p><time datetime="2026-08-09">2026.08.09</time></p>
+          <span class="pill current">Default OFF</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Phase V0 · Per-log material state</p>
+            <h2>湿り、炭、灰、赤熱を、<br>薪ごとの外観で読めるようにする。</h2>
+            <p>Phase 6DMをテスト・記録・commitまで完了した後、独立した表示observerとして実装しました。入力は既存のimmutable <code>ResidentPublishedSnapshot</code>だけです。木材の権威状態、Flow、Emitter、collision、形状、Point payload、layout representationは変更していません。</p>
+          </header>
+
+          <div class="capture-pair" aria-label="Phase V0機能OFFとONの固定条件比較">
+            <figure class="capture-card">
+              <a href="assets/phasev0/wood_visual_off.png" aria-label="Phase V0機能OFF画像を原寸で開く">
+                <img src="assets/phasev0/wood_visual_off.png" width="1280" height="720" alt="同じ茶色の材質で表示された4本の薪を固定カメラで撮影したPhase V0機能OFF画像">
+              </a>
+              <figcaption><div><strong>Feature OFF</strong><span>従来の固定木材色 · V0のmaterial Primなし</span></div></figcaption>
+            </figure>
+            <figure class="capture-card">
+              <a href="assets/phasev0/wood_visual_on.png" aria-label="Phase V0機能ON画像を原寸で開く">
+                <img src="assets/phasev0/wood_visual_on.png" width="1280" height="720" alt="乾燥、湿潤、炭化と赤熱、灰化を異なる材質で表示した4本の薪のPhase V0機能ON画像">
+              </a>
+              <figcaption>
+                <div><strong>Feature ON</strong><span>乾燥 · 湿潤 · 炭＋赤熱 · 灰を同一条件で比較</span></div>
+                <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev0/wood_visual_v0.mp4" data-video-poster="assets/phasev0/wood_visual_on.png" data-video-title="Phase V0 four-log material states" data-video-meta="Dedicated fixed-snapshot visual diagnostic · dry / wet / char / ash · not a combustion trajectory · 2 s · 10 fps">
+                  <span class="video-trigger-icon" aria-hidden="true"></span>
+                  <span><strong>実行動画</strong><small>2秒 · 4状態</small></span>
+                </button>
+              </figcaption>
+            </figure>
+          </div>
+
+          <div class="notes-grid">
+            <section class="note">
+              <p class="note-label">Implementation</p>
+              <h3>事前作成したPreviewSurface</h3>
+              <p>Kit / Flow 110実測で、<code>displayColor</code>はbase colorしか持たず粗さと発光を表せないことを確認しました。接続前に薪ごとのUsdPreviewSurfaceをbindし、実行中はdiffuseColor、roughness、emissiveColorと最後のrevisionだけを更新します。同一revisionと同一値のSetは省略します。</p>
+            </section>
+            <section class="note">
+              <p class="note-label">Four-log probe</p>
+              <h3>13 / 13 gates passed</h3>
+              <p>4本の色はすべて別値となり、全出力は有限範囲内でした。materialとphysics bindingを共存させ、live Prim追加・削除なし、同一revisionのUSD Setは0でした。表示失敗はvisual属性だけを戻し、Resident snapshotやFlow publicationを巻き戻しません。</p>
+            </section>
+          </div>
+
+          <section class="verification" aria-labelledby="phasev0-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Measured boundary</p>
+              <h3 id="phasev0-verification-title">見た目と既存計算を別々に検証。</h3>
+              <p>4本probeは全material値を動かす厳しい表示専用測定です。Phase 3は2本の実際のResident native producerを1200 revisionまで動かし、ON/OFFで権威状態SHA-256が完全一致しました。</p>
+              <code>.\scripts\run_phasev0_wood_visual.ps1</code>
+              <p><a href="assets/phasev0/wood_visual_v0_report.json">機械可読な統合レポートを開く</a></p>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase V0検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>4-log probe</strong><small>13 / 13 · same camera · 1280 × 720</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Resident / Flow</strong><small>revision 1200 · visual failures 0 · active blocks 135</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>2-log V0 publish</strong><small>mean 0.4340 ms · p95 0.7652 ms · 240 updates</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Update frame p95</strong><small>OFF 8.7928 ms · ON 8.5964 ms · sequential runs</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Regression</strong><small>8 processes · 62 / 62 · 368.8 s</small></p></div>
+            </div>
+          </section>
+
+          <div class="notes-grid">
+            <section class="note caution">
+              <p class="note-label">Known limits</p>
+              <h3>一様表示と20本予算</h3>
+              <p>表面平均なので、局所的な炭化や赤熱は表せません。4本の全属性を毎回変えるprobeはpublication p95 4.4895 msで、将来20本向けの1.0 ms参考予算を満たしません。2本の実シナリオが0.7652 msでも、20本へそのまま拡張できるとは判定しません。</p>
+            </section>
+            <section class="note next">
+              <p class="note-label">Stop point</p>
+              <h3>V0で停止</h3>
+              <p>V0はデモ動画で薪単位の状態差を読む目的を満たします。V1の8 band、V2のsurface-cell payload、V3のtextureは未実装です。次はPhase 6のResident／layout representation作業へ戻し、V1は必要性と性能案を提示した上で承認を待ちます。</p>
+            </section>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6" class="section entry-section phase-six">
@@ -2616,7 +2697,7 @@
         <strong>Campfire Simulator</strong>
         <p>Build the fire. Keep the evidence.</p>
       </div>
-      <p>Last updated <time datetime="2026-08-08">2026.08.08</time></p>
+      <p>Last updated <time datetime="2026-08-09">2026.08.09</time></p>
     </div>
   </footer>
 

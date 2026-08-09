@@ -9,7 +9,7 @@ from tempfile import TemporaryDirectory
 import campfire.app
 import numpy as np
 import omni.kit.test
-from pxr import Gf, Sdf, Tf, Usd, UsdGeom, UsdPhysics
+from pxr import Gf, Sdf, Tf, Usd, UsdGeom, UsdPhysics, UsdShade
 
 
 class TestScene(omni.kit.test.AsyncTestCase):
@@ -829,6 +829,173 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(
             stage.GetRootLayer().customLayerData["campfire:phase"], "phase3"
         )
+
+    async def test_wood_visual_v0_mapping_is_deterministic_finite_and_readable(self):
+        def row(temperature, moisture, dry, char, ash):
+            return campfire.app.ResidentPublishedRow(
+                temperature,
+                moisture,
+                dry,
+                char,
+                ash,
+                1.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+            )
+
+        dry = campfire.app.wood_visual_uniform_from_row(
+            row(420.0, 0.05, 1.0, 0.0, 0.0)
+        )
+        wet = campfire.app.wood_visual_uniform_from_row(
+            row(420.0, 0.60, 1.0, 0.0, 0.0)
+        )
+        charred = campfire.app.wood_visual_uniform_from_row(
+            row(900.0, 0.0, 0.25, 0.75, 0.0)
+        )
+        ash = campfire.app.wood_visual_uniform_from_row(
+            row(1100.0, 0.0, 0.05, 0.10, 0.85)
+        )
+        self.assertEqual(
+            dry,
+            campfire.app.wood_visual_uniform_from_row(
+                row(420.0, 0.05, 1.0, 0.0, 0.0)
+            ),
+        )
+        self.assertLess(sum(wet.base_color), sum(dry.base_color))
+        self.assertLess(sum(charred.base_color), sum(dry.base_color))
+        self.assertGreater(sum(ash.base_color), sum(charred.base_color))
+        self.assertLess(wet.roughness, dry.roughness)
+        self.assertGreater(charred.roughness, dry.roughness)
+        self.assertGreater(ash.roughness, charred.roughness)
+        self.assertEqual(dry.emission_color, (0.0, 0.0, 0.0))
+        self.assertGreater(sum(charred.emission_color), 0.0)
+        for visual in (dry, wet, charred, ash):
+            values = (
+                *visual.base_color,
+                visual.roughness,
+                *visual.emission_color,
+                visual.moisture_fraction,
+                visual.char_fraction,
+                visual.ash_fraction,
+            )
+            self.assertTrue(all(math.isfinite(value) for value in values))
+        for temperature in (1.0, 649.999, 650.0, 800.0, 1000.0, 1300.0, 5000.0):
+            for masses in (
+                (0.0, 0.0, 0.0, 0.0),
+                (1.0, 0.0, 0.0, 0.0),
+                (0.0, 1.0, 0.0, 0.0),
+                (0.0, 0.0, 1.0, 0.0),
+                (0.0, 0.0, 0.0, 1.0),
+            ):
+                boundary = campfire.app.wood_visual_uniform_from_row(
+                    row(temperature, *masses)
+                )
+                self.assertTrue(
+                    all(
+                        math.isfinite(value)
+                        for value in (
+                            *boundary.base_color,
+                            boundary.roughness,
+                            *boundary.emission_color,
+                            boundary.moisture_fraction,
+                            boundary.char_fraction,
+                            boundary.ash_fraction,
+                        )
+                    )
+                )
+        with self.assertRaisesRegex(ValueError, "mass values must be non-negative"):
+            campfire.app.wood_visual_uniform_from_row(
+                row(420.0, -0.01, 1.0, 0.0, 0.0)
+            )
+        with self.assertRaisesRegex(ValueError, "resident values must be finite"):
+            campfire.app.wood_visual_uniform_from_row(
+                row(float("nan"), 0.0, 1.0, 0.0, 0.0)
+            )
+
+    async def test_wood_visual_v0_is_pre_authored_and_skips_unchanged_revision(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase3_scene(stage)
+        log_ids = ("Log_00", "Log_01", "Log_02", "Log_03")
+        contract = campfire.app.preauthor_wood_visual_v0(stage, log_ids)
+        self.assertEqual(contract["log_ids"], list(log_ids))
+        for log_id in log_ids:
+            prim = stage.GetPrimAtPath(f"/World/Logs/{log_id}")
+            self.assertTrue(prim.GetRelationship("material:binding:physics"))
+            bound, _ = UsdShade.MaterialBindingAPI(prim).ComputeBoundMaterial()
+            self.assertEqual(
+                str(bound.GetPath()), f"/World/Looks/WoodVisualV0/{log_id}"
+            )
+
+        rows = tuple(
+            campfire.app.ResidentPublishedRow(
+                temperature,
+                moisture,
+                dry,
+                char,
+                ash,
+                1.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+            )
+            for temperature, moisture, dry, char, ash in (
+                (420.0, 0.05, 1.0, 0.0, 0.0),
+                (420.0, 0.60, 1.0, 0.0, 0.0),
+                (900.0, 0.0, 0.25, 0.75, 0.0),
+                (1100.0, 0.0, 0.05, 0.10, 0.85),
+            )
+        )
+        snapshot = campfire.app.ResidentPublishedSnapshot(1, 1, log_ids, rows)
+        consumer = campfire.app.WoodVisualV0Consumer(stage, log_ids)
+        consumer.on_timeline_started()
+        first = consumer.publish(snapshot)
+        repeated = consumer.publish(snapshot)
+        self.assertEqual(first.status, "committed")
+        self.assertGreaterEqual(first.usd_set_count, 5)
+        self.assertEqual(repeated.status, "unchanged_revision")
+        self.assertEqual(repeated.usd_set_count, 0)
+        self.assertEqual(consumer.status()["revision"], 1)
+        self.assertEqual(consumer.status()["skip_count"], 1)
+        consumer.close()
+
+    async def test_wood_visual_v0_failure_restores_visual_without_touching_snapshot(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase3_scene(stage)
+        log_ids = ("Log_00", "Log_01")
+        campfire.app.preauthor_wood_visual_v0(stage, log_ids)
+
+        def fail_first_write(index, _log_id, _name):
+            if index == 1:
+                raise RuntimeError("injected visual failure")
+
+        consumer = campfire.app.WoodVisualV0Consumer(
+            stage, log_ids, write_observer=fail_first_write
+        )
+        consumer.on_timeline_started()
+        row = campfire.app.ResidentPublishedRow(
+            900.0, 0.0, 0.25, 0.75, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0
+        )
+        snapshot = campfire.app.ResidentPublishedSnapshot(
+            1, 1, log_ids, (row, row)
+        )
+        before = UsdShade.Shader.Get(
+            stage, "/World/Looks/WoodVisualV0/Log_00/Shader"
+        ).GetInput("diffuseColor").Get()
+        with self.assertRaisesRegex(RuntimeError, "injected visual failure"):
+            consumer.publish(snapshot)
+        after = UsdShade.Shader.Get(
+            stage, "/World/Looks/WoodVisualV0/Log_00/Shader"
+        ).GetInput("diffuseColor").Get()
+        self.assertTrue(Gf.IsClose(before, after, 1.0e-7))
+        self.assertEqual(consumer.status()["revision"], 0)
+        self.assertEqual(consumer.status()["failure_count"], 1)
+        self.assertEqual(snapshot.revision, 1)
+        consumer.close()
 
     async def test_resident_point_application_scene_is_explicit_and_pre_authored(self):
         stage = Usd.Stage.CreateInMemory()

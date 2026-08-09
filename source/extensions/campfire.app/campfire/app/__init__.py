@@ -194,6 +194,17 @@ from .resident_point_continuity import (
     resident_point_group_centroids,
 )
 from .resident_stage_recovery import ResidentStageRecoveryOrchestrator
+from .wood_visual_v0 import (
+    WOOD_VISUAL_V0_INPUT_NAMES,
+    WOOD_VISUAL_V0_ROOT,
+    WOOD_VISUAL_V0_SETTING,
+    WoodVisualPublicationProfile,
+    WoodVisualUniform,
+    WoodVisualV0Consumer,
+    neutral_wood_visual_uniform,
+    preauthor_wood_visual_v0,
+    wood_visual_uniform_from_row,
+)
 from .wood import LogSpec, create_log, get_log_world_position, list_log_ids, move_log
 
 __all__ = [
@@ -269,6 +280,12 @@ __all__ = [
     "ResidentUsdTransactionProfile",
     "ResidentUsdLightweightTailProfile",
     "UsdResidentSnapshotAdapter",
+    "WOOD_VISUAL_V0_INPUT_NAMES",
+    "WOOD_VISUAL_V0_ROOT",
+    "WOOD_VISUAL_V0_SETTING",
+    "WoodVisualPublicationProfile",
+    "WoodVisualUniform",
+    "WoodVisualV0Consumer",
     "format_resident_point_command_result",
     "published_row_from_python_model",
     "summarize_timing_ms",
@@ -306,6 +323,8 @@ __all__ = [
     "populate_phase4_scene",
     "populate_phase5_scene",
     "populate_phase6_scene",
+    "preauthor_wood_visual_v0",
+    "neutral_wood_visual_uniform",
     "get_log_world_position",
     "list_log_ids",
     "load_model_from_prim",
@@ -338,6 +357,7 @@ __all__ = [
     "simulate_layered_coupon",
     "calibration_candidates",
     "update_flow_source",
+    "wood_visual_uniform_from_row",
     "temperature_adjusted_dry_wood_specific_heat_j_kg_k",
     "write_calibration_svg",
     "write_char_geometry_svg",

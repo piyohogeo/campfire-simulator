@@ -37,6 +37,7 @@ param(
     [switch]$ResidentSnapshotLightweightNoticeCoalescing,
     [switch]$ResidentSnapshotDisableLightweightNoticeCoalescing,
     [switch]$ResidentSnapshotLightweightNoticeTracking,
+    [switch]$WoodVisualV0,
     [switch]$ResidentNativeBackend,
     [string]$ResidentNativeLibraryPath = ""
 )
@@ -128,6 +129,9 @@ if ($ResidentSnapshotLightweightNoticeTracking.IsPresent -and -not (
 )) {
     throw "Resident snapshot lightweight notice tracking requires lightweight commit and handle cache."
 }
+if ($WoodVisualV0.IsPresent -and -not $ResidentSnapshotAdapter.IsPresent) {
+    throw "Wood visual V0 requires -ResidentSnapshotAdapter."
+}
 if ($ResidentNativeBackend.IsPresent -and -not $ResidentSnapshotAdapter.IsPresent) {
     throw "Resident native backend requires the resident snapshot adapter."
 }
@@ -187,6 +191,7 @@ $kitArgs = @(
     "--/exts/campfire.app/residentSnapshotLightweightTailTimingEnabled=$($ResidentSnapshotLightweightTailTiming.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentSnapshotLightweightNoticeCoalescingEnabled=$($useResidentSnapshotLightweightNoticeCoalescing.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentSnapshotLightweightNoticeTrackingEnabled=$($ResidentSnapshotLightweightNoticeTracking.IsPresent.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/woodVisualV0Enabled=$($WoodVisualV0.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentNativeBackendEnabled=$($ResidentNativeBackend.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentNativeLibraryPath=$ResidentNativeLibraryPath",
     "--/rtx/flow/enabled=true",
@@ -397,6 +402,34 @@ if ($ResidentSnapshotAdapter.IsPresent) {
             ($lightweightStatus.lightweight_write_count + $lightweightStatus.skipped_unchanged_write_count) -ne (239 * 19)) {
             throw "Resident snapshot unchanged-value skipping did not cover every steady-state attribute."
         }
+    }
+    $woodVisual = $result.scenario.wood_visual_v0
+    if ([bool]$woodVisual.enabled -ne $WoodVisualV0.IsPresent) {
+        throw "Phase 3 used an unexpected wood visual V0 setting."
+    }
+    if ($WoodVisualV0.IsPresent) {
+        if ($woodVisual.input -ne "ResidentPublishedSnapshot" -or
+            [bool]$woodVisual.status_after_timeline_stop.active -or
+            [bool]$woodVisual.status_after_timeline_stop.closed -or
+            $woodVisual.status_after_timeline_stop.revision -ne 1200 -or
+            $woodVisual.status_after_timeline_stop.publish_count -ne 240 -or
+            $woodVisual.status_after_timeline_stop.failure_count -ne 0 -or
+            $woodVisual.status_after_timeline_stop.recovery_count -ne 0 -or
+            @($woodVisual.errors).Count -ne 0) {
+            throw "Wood visual V0 did not preserve its expected lifecycle."
+        }
+        if ($woodVisual.publication_timing.sample_count -ne 239 -or
+            $woodVisual.usd_set_count -le 0 -or
+            $woodVisual.notice_count -ne 240) {
+            throw "Wood visual V0 publication profile is incomplete."
+        }
+    }
+    elseif ($null -ne $woodVisual.publication_timing -or
+        $null -ne $woodVisual.status_after_timeline_stop -or
+        $woodVisual.usd_set_count -ne 0 -or
+        $woodVisual.notice_count -ne 0 -or
+        @($woodVisual.errors).Count -ne 0) {
+        throw "Wood visual V0 produced output while disabled."
     }
 }
 foreach ($name in @("dry", "wet")) {

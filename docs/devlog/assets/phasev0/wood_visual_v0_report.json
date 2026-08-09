@@ -1,0 +1,229 @@
+{
+  "schema": "campfire.phasev0.wood_visual_report.v1",
+  "status": "ok",
+  "safe_start": {
+    "phase": "Phase 6DM",
+    "commit": "57fe3bc",
+    "production_layout_integration": "not modified by Phase V0"
+  },
+  "scope": {
+    "implemented": "Phase V0 per-log material only",
+    "feature_default": "off",
+    "input": "ResidentPublishedSnapshot",
+    "v1_v2_v3_implemented": false
+  },
+  "kit_flow_version": "110.0.0",
+  "material_selection": {
+    "display_color": "insufficient: base color only",
+    "selected": "pre-authored UsdPreviewSurface per log",
+    "live_prim_redefinition": false
+  },
+  "gates": {
+    "isolated_probe_all_passed": true,
+    "feature_off_is_inert": true,
+    "authority_exact_off_on": true,
+    "mass_balance_preserved": true,
+    "resident_revision_preserved": true,
+    "visual_revision_committed": true,
+    "visual_failure_free": true,
+    "flow_active_off_on": true,
+    "ignition_contract_preserved": true,
+    "timings_finite": true
+  },
+  "isolated_four_log_probe": {
+    "gate_count": 13,
+    "gate_pass_count": 13,
+    "uniforms": {
+      "Log_00": {
+        "base_color": [
+          0.27556390977443607,
+          0.113734335839599,
+          0.0456265664160401
+        ],
+        "roughness": 0.5961904761904762,
+        "emission_color": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "moisture_fraction": 0.047619047619047616,
+        "char_fraction": 0.0,
+        "ash_fraction": 0.0
+      },
+      "Log_01": {
+        "base_color": [
+          0.10756578947368423,
+          0.07065789473684211,
+          0.04993421052631579
+        ],
+        "roughness": 0.4325,
+        "emission_color": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "moisture_fraction": 0.37499999999999994,
+        "char_fraction": 0.0,
+        "ash_fraction": 0.0
+      },
+      "Log_02": {
+        "base_color": [
+          0.09375,
+          0.0465,
+          0.02625
+        ],
+        "roughness": 0.8,
+        "emission_color": [
+          1.9466666666666668,
+          0.48266666666666663,
+          0.06013333333333333
+        ],
+        "moisture_fraction": 0.0,
+        "char_fraction": 0.75,
+        "ash_fraction": 0.0
+      },
+      "Log_03": {
+        "base_color": [
+          0.6188750000000001,
+          0.5775300000000001,
+          0.533375
+        ],
+        "roughness": 0.9296,
+        "emission_color": [
+          0.7437000000000002,
+          0.30414000000000013,
+          0.07514700000000002
+        ],
+        "moisture_fraction": 0.0,
+        "char_fraction": 0.1,
+        "ash_fraction": 0.85
+      }
+    },
+    "publication": {
+      "initial": {
+        "revision": 1,
+        "status": "committed",
+        "total_ms": 3.055,
+        "value_generation_ms": 1.5219,
+        "usd_set_ms": 1.5331,
+        "usd_set_count": 11,
+        "skipped_set_count": 2,
+        "notice_count": 1
+      },
+      "unchanged_revision": {
+        "revision": 1,
+        "status": "unchanged_revision",
+        "total_ms": 0.0,
+        "value_generation_ms": 0.0,
+        "usd_set_ms": 0.0,
+        "usd_set_count": 0,
+        "skipped_set_count": 0,
+        "notice_count": 0
+      },
+      "timing": {
+        "samples": 75,
+        "mean_ms": 3.2426466666666665,
+        "p95_ms": 4.4895,
+        "maximum_ms": 5.6369
+      },
+      "usd_set_timing": {
+        "samples": 75,
+        "mean_ms": 1.605952,
+        "p95_ms": 2.251,
+        "maximum_ms": 3.3059
+      },
+      "set_count": 870,
+      "notice_count": 80,
+      "consumer_status": {
+        "enabled": true,
+        "active": true,
+        "closed": false,
+        "revision": 120,
+        "publish_count": 102,
+        "skip_count": 1,
+        "failure_count": 0,
+        "recovery_count": 0,
+        "usd_set_count": 951,
+        "notice_count": 102,
+        "log_ids": [
+          "Log_00",
+          "Log_01",
+          "Log_02",
+          "Log_03"
+        ]
+      },
+      "reference_budget_p95_ms": 1.0,
+      "reference_budget_met": false
+    },
+    "frame_timing": {
+      "off": {
+        "samples": 30,
+        "mean_ms": 27.686326668481342,
+        "p95_ms": 35.46970000024885,
+        "maximum_ms": 38.09640000690706
+      },
+      "on": {
+        "samples": 75,
+        "mean_ms": 25.375908001248416,
+        "p95_ms": 32.34810000867583,
+        "maximum_ms": 38.49010000703856
+      }
+    }
+  },
+  "production_two_log_off_on": {
+    "authority_sha256_equal": {
+      "dry": true,
+      "wet": true
+    },
+    "flow_active_blocks_peak": {
+      "off": 133,
+      "on": 135
+    },
+    "resident_revision": {
+      "off": 1200,
+      "on": 1200
+    },
+    "visual": {
+      "enabled": true,
+      "input": "ResidentPublishedSnapshot",
+      "status_after_timeline_stop": {
+        "enabled": true,
+        "active": false,
+        "closed": false,
+        "revision": 1200,
+        "publish_count": 240,
+        "skip_count": 0,
+        "failure_count": 0,
+        "recovery_count": 0,
+        "usd_set_count": 1255,
+        "notice_count": 240,
+        "log_ids": [
+          "Log_00",
+          "Log_01"
+        ]
+      },
+      "publication_timing": {
+        "sample_count": 239,
+        "warmup_samples_excluded": 1,
+        "total_ms": 103.7188,
+        "mean_ms": 0.434,
+        "p95_ms": 0.7652,
+        "max_ms": 1.3987
+      },
+      "usd_set_count": 1255,
+      "skipped_set_count": 425,
+      "notice_count": 240,
+      "errors": []
+    },
+    "update_frame_p95_ms": {
+      "off": 8.7928,
+      "on": 8.5964,
+      "interpretation": "sequential single runs; no speedup claim"
+    }
+  },
+  "limitations": [
+    "uniform state per log; no local hot spots or composition bands",
+    "four-log all-fields-changing p95 exceeds the 20-log 1 ms reference budget",
+    "diagnostic video uses fixed synthetic snapshots, not a combustion trajectory"
+  ]
+}

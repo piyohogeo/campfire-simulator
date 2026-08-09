@@ -1,5 +1,13 @@
 # Changelog
 
+- Added the independent, default-off Phase V0 per-log wood visual observer after completing and committing the Phase 6DM layout audit at `57fe3bc`.
+- Derived diffuse color, roughness, and emission only from existing immutable `ResidentPublishedSnapshot` aggregate values; wood authority, Flow, Emitter, collision, shape, Point payload, layout representation, schemas, and production defaults remain unchanged.
+- Selected pre-authored per-log `UsdPreviewSurface` materials after a Kit/Flow 110 probe showed that `displayColor` cannot represent roughness or emission; live updates reuse cached attributes and never create or delete Prims.
+- Passed all 13 four-log material gates, including deterministic finite values, distinct dry/wet/char/ash states, preserved physics binding, zero Sets for an unchanged revision, no live Prim creation, and matched OFF/ON captures.
+- Completed paired Resident-native Phase 3 runs through revision 1200 with exact ON/OFF authoritative-state SHA-256 values, Flow active blocks, zero visual failures, and unchanged ignition/mass-conservation results.
+- Measured the two-log production visual observer at 0.4340 ms mean and 0.7652 ms p95 over 239 post-warmup updates; update-frame p95 was 8.7928 ms OFF and 8.5964 ms ON in separate sequential runs.
+- Recorded the scalability limit: the four-log all-fields-changing probe measured 4.4895 ms publication p95, so the proposed 1.0 ms reference budget for 20 logs is not qualified; V1 bands and V2/V3 surface payload/texture work remain unimplemented pending approval.
+- Added three focused V0 lifecycle/mapping tests and re-ran the complete eight-process suite with 62 / 62 cases passing in 368.8 s, including 210.7 s of collapse coverage.
 - Added Phase 6DM's static AST/source compatibility audit for a future immutable Point layout-representation field without changing production code.
 - Confirmed the current boundary precisely: 10 payload fields, two constructor sites, exact pending payload reuse, revision-safe consumer handoff, and five missing representation checks/identifiers.
 - Defined a five-area minimum production delta with a trailing legacy-default payload field, sidecar publish/status validation, pre-authored USD Token, pre-close consumer comparison, and owner shared-state propagation.
