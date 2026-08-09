@@ -13,6 +13,10 @@ import math
 from pxr import Gf, Sdf, Usd, UsdGeom, UsdShade, Vt
 
 from .flow_scene import FLOW_EMITTER_PATH, FLOW_SIMULATE_PATH
+from .resident_point_sidecar import (
+    RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
+    RESIDENT_POINT_LAYOUT_REPRESENTATIONS,
+)
 from .wood import get_log_dimensions, get_log_physics_transform
 
 
@@ -52,7 +56,12 @@ def resident_point_layout_for_logs(stage: Usd.Stage, log_ids) -> dict:
         axes.append(0 if absolute_x >= absolute_y else 1)
     if not origins:
         raise ValueError("Resident Point layout requires logs")
-    return {"revision": 1, "origins": tuple(origins), "axes": tuple(axes)}
+    return {
+        "revision": 1,
+        "origins": tuple(origins),
+        "axes": tuple(axes),
+        "representation": RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
+    }
 
 
 def preauthor_resident_snapshot_consumers(
@@ -120,6 +129,7 @@ def configure_resident_point_application_scene(
     positions,
     *,
     initial_revision: int = 0,
+    layout_representation: str = RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
 ) -> dict:
     """Add one fully-authored Point source while the stage is still offline.
 
@@ -137,6 +147,8 @@ def configure_resident_point_application_scene(
         or initial_revision < 0
     ):
         raise ValueError("Initial Resident Point revision must be non-negative")
+    if layout_representation not in RESIDENT_POINT_LAYOUT_REPRESENTATIONS:
+        raise ValueError("Resident Point layout representation is invalid")
 
     point_positions = _validated_positions(positions)
     point_count = len(point_positions)
@@ -223,6 +235,11 @@ def configure_resident_point_application_scene(
     )
     if not layout_revision.Set(1):
         raise RuntimeError("Unable to initialize Resident Point layout revision")
+    representation = emitter.CreateAttribute(
+        "campfire:layoutRepresentation", Sdf.ValueTypeNames.Token
+    )
+    if not representation.Set(layout_representation):
+        raise RuntimeError("Unable to initialize Resident Point layout representation")
 
     layer_data = dict(stage.GetRootLayer().customLayerData)
     layer_data.update(
@@ -231,6 +248,7 @@ def configure_resident_point_application_scene(
             "campfire:residentPointCount": point_count,
             "campfire:residentPointEmitterCount": 1,
             "campfire:residentPointStructuralAuthoring": "before-stage-connection",
+            "campfire:residentPointLayoutRepresentation": layout_representation,
         }
     )
     stage.GetRootLayer().customLayerData = layer_data
@@ -241,4 +259,5 @@ def configure_resident_point_application_scene(
         "source_path": str(RESIDENT_POINT_SOURCE_PATH),
         "emitter_path": str(RESIDENT_POINT_EMITTER_PATH),
         "fallback_sphere_path": str(FLOW_EMITTER_PATH),
+        "layout_representation": layout_representation,
     }

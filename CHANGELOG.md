@@ -1,5 +1,12 @@
 # Changelog
 
+- Resumed Phase 6DM as Phase 6DN and implemented the planned immutable Point layout-representation contract without changing wood authority, `ResidentPublishedSnapshot`, checkpoint v1, native ABI, Flow 110.0.0, physics, or production defaults.
+- Added stable `legacy_cardinal_axes_v1` and reserved `rigid_frame_v1` identifiers, included representation in the immutable surface-payload digest, and pre-authored one static `campfire:layoutRepresentation` Token before stage connection.
+- Rejected payload, stage, layout-refresh, and replacement-consumer representation mismatches before attempt accounting, USD writes, or old-consumer close; publication never rewrites the stage Token and live sessions cannot switch representation.
+- Qualified 14 / 14 source-contract gates and 13 / 13 real-Kit anonymous-USD runtime gates; the release build and expanded eight-process 75 / 75 standard suite passed in 460.9 seconds.
+- Kept the rigid-frame producer unconnected and Point default OFF; the next independent gate is rigid-frame byte/revision equivalence rather than an in-session migration.
+- Fixed V3T-C as the safe stop for further V3 optimization. The remaining bottleneck is the public CPU texture-upload boundary, and V3 work reopens only for a public direct-GPU update API, a Kit/Flow upgrade evaluation, or demonstrated operator impact.
+- Made the explicit V3 preset the default evidence path for future development-log videos and human wood-state inspection while keeping normal applications V3 default OFF.
 - Added Phase V3T-C's three alternating integrated V3 OFF/ON pairs with the same Resident-native producer, Flow/RTX scene, render hierarchy, camera, warmup, and two fixed captures per run.
 - Preserved both authoritative wood SHA-256 values, the metrics CSV SHA-256, zero mass-balance error, ignition times, Resident revision, Flow fuel input, and active Flow across all six runs.
 - Measured update-frame p95 medians of `7.9833 ms` OFF and `6.5593 ms` ON with zero 33.33/50 ms update frames in both groups; V3 publication p95 remained `36.1233 ms`, dominated by `35.4457 ms` CPU texture upload.

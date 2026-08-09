@@ -1447,6 +1447,10 @@ class TestScene(omni.kit.test.AsyncTestCase):
         campfire.app.preauthor_resident_snapshot_consumers(stage, log_ids)
 
         self.assertEqual(result["point_count"], 4)
+        self.assertEqual(
+            result["layout_representation"],
+            campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
+        )
         sphere = stage.GetPrimAtPath(campfire.app.FLOW_EMITTER_PATH)
         emitter = stage.GetPrimAtPath(campfire.app.RESIDENT_POINT_EMITTER_PATH)
         source = stage.GetPrimAtPath(campfire.app.RESIDENT_POINT_SOURCE_PATH)
@@ -1464,12 +1468,21 @@ class TestScene(omni.kit.test.AsyncTestCase):
             "pointSmokes",
             "campfire:residentRevision",
             "campfire:layoutRevision",
+            "campfire:layoutRepresentation",
         ):
             self.assertTrue(emitter.GetAttribute(name))
         self.assertEqual(len(emitter.GetAttribute("pointPositions").Get()), 4)
         self.assertEqual(len(UsdGeom.Points(source).GetPointsAttr().Get()), 4)
         self.assertEqual(emitter.GetAttribute("campfire:residentRevision").Get(), 0)
         self.assertEqual(emitter.GetAttribute("campfire:layoutRevision").Get(), 1)
+        self.assertEqual(
+            emitter.GetAttribute("campfire:layoutRepresentation").Get(),
+            campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
+        )
+        self.assertEqual(
+            emitter.GetAttribute("campfire:layoutRepresentation").GetTypeName(),
+            Sdf.ValueTypeNames.Token,
+        )
         sphere = stage.GetPrimAtPath(campfire.app.FLOW_EMITTER_PATH)
         self.assertEqual(sphere.GetAttribute("campfire:residentRevision").Get(), 0)
         for log_id in log_ids:
@@ -1485,6 +1498,78 @@ class TestScene(omni.kit.test.AsyncTestCase):
         layer_data = stage.GetRootLayer().customLayerData
         self.assertTrue(layer_data["campfire:residentPointApplication"])
         self.assertEqual(layer_data["campfire:residentPointEmitterCount"], 1)
+        self.assertEqual(
+            layer_data["campfire:residentPointLayoutRepresentation"],
+            campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
+        )
+
+    async def test_resident_point_sidecar_requires_matching_static_representation(self):
+        class Producer:
+            def __init__(self):
+                self.np = np
+                self.positions = np.zeros((1, 3), dtype=np.float32)
+                self.point_count = 1
+
+            def build_layout(self):
+                return self.point_count
+
+        def configured_stage(representation):
+            stage = Usd.Stage.CreateInMemory()
+            campfire.app.populate_phase3_scene(stage)
+            campfire.app.configure_resident_point_application_scene(
+                stage,
+                (Gf.Vec3f(0.0, 0.0, 0.4),),
+                layout_representation=representation,
+            )
+            return stage
+
+        legacy = campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY
+        rigid = campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME
+        stage = configured_stage(legacy)
+        layout = {
+            "revision": 1,
+            "origins": ((0.0, 0.0, 0.0),),
+            "axes": (0,),
+            "representation": legacy,
+        }
+        sidecar = campfire.app.ResidentPointSidecar(
+            object(),
+            stage,
+            campfire.app.RESIDENT_POINT_EMITTER_PATH,
+            lambda: stage,
+            initial_layout=layout,
+            producer=Producer(),
+            layout_representation=legacy,
+        )
+        self.assertEqual(sidecar.status()["layout_representation"], legacy)
+        self.assertTrue(sidecar.close())
+
+        mismatched_stage = configured_stage(rigid)
+        with self.assertRaisesRegex(ValueError, "representation does not match"):
+            campfire.app.ResidentPointSidecar(
+                object(),
+                mismatched_stage,
+                campfire.app.RESIDENT_POINT_EMITTER_PATH,
+                lambda: mismatched_stage,
+                initial_layout=layout,
+                producer=Producer(),
+                layout_representation=legacy,
+            )
+
+        missing_stage = configured_stage(legacy)
+        missing_stage.GetPrimAtPath(
+            campfire.app.RESIDENT_POINT_EMITTER_PATH
+        ).RemoveProperty("campfire:layoutRepresentation")
+        with self.assertRaisesRegex(RuntimeError, "pre-authored layout representation"):
+            campfire.app.ResidentPointSidecar(
+                object(),
+                missing_stage,
+                campfire.app.RESIDENT_POINT_EMITTER_PATH,
+                lambda: missing_stage,
+                initial_layout=layout,
+                producer=Producer(),
+                layout_representation=legacy,
+            )
 
     async def test_resident_point_layout_transaction_updates_and_rolls_back(self):
         class Producer:
@@ -1519,6 +1604,9 @@ class TestScene(omni.kit.test.AsyncTestCase):
         old_positions = producer.positions.tobytes(order="C")
         sidecar = object.__new__(campfire.app.ResidentPointSidecar)
         sidecar._producer = producer
+        sidecar._layout_representation = (
+            campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY
+        )
         sidecar._positions = old_positions
         sidecar._layout_revision = 1
         sidecar._committed_layout_revision = 1
@@ -1624,9 +1712,13 @@ class TestScene(omni.kit.test.AsyncTestCase):
             "revision": 1,
             "origins": tuple(tuple(value for value in row) for row in producer.origins),
             "axes": (0, 0),
+            "representation": campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
         }
         sidecar = object.__new__(campfire.app.ResidentPointSidecar)
         sidecar._producer = producer
+        sidecar._layout_representation = (
+            campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY
+        )
         sidecar._backend = Backend()
         sidecar._translation_provider = lambda: (
             (0.0, -0.26, 0.16),
@@ -1692,6 +1784,17 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(payload.layout_origins[0], (0.0, -0.26, 0.16))
         self.assertEqual(sidecar._layout_revision, 1)
         self.assertEqual(producer.origins[0].tolist(), [0.0, -0.3, 0.18])
+
+        mismatched = replace(
+            payload,
+            layout_representation=(
+                campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME
+            ),
+        )
+        with self.assertRaisesRegex(ValueError, "representation does not match"):
+            sidecar.publish(mismatched)
+        self.assertEqual(sidecar.attempt_payload_ids, [])
+        self.assertEqual(sidecar.attempt_payload_digests, [])
 
         sidecar.publish(payload)
         self.assertEqual(sidecar._attributes["layout_revision"].Get(), 2)
@@ -1871,13 +1974,36 @@ class TestScene(omni.kit.test.AsyncTestCase):
             layout_state=layout_state,
             log_ids=log_ids,
         )
-        self.assertFalse(layout_owner.refresh_layout(stage)["changed"])
+        unchanged_layout = layout_owner.refresh_layout(stage)
+        self.assertFalse(unchanged_layout["changed"])
+        self.assertEqual(
+            unchanged_layout["representation"],
+            campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
+        )
+        self.assertEqual(
+            layout_owner.status()["layout_representation"],
+            campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
+        )
+        with self.assertRaisesRegex(ValueError, "cannot change in a session"):
+            layout_owner.replace_layout(
+                {
+                    **layout_state,
+                    "revision": 2,
+                    "representation": (
+                        campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME
+                    ),
+                }
+            )
         shared_state_identity = id(layout_owner._layout_state)
         campfire.app.move_log(stage, log_ids[0], (0.03, 0.0, 0.2), 90.0)
         refreshed = layout_owner.refresh_layout(stage)
         self.assertTrue(refreshed["changed"])
         self.assertEqual(refreshed["revision"], 2)
         self.assertEqual(refreshed["axes"], (1, 0))
+        self.assertEqual(
+            refreshed["representation"],
+            campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
+        )
         self.assertEqual(id(layout_owner._layout_state), shared_state_identity)
         self.assertEqual(layout_owner.status()["layout_replace_count"], 1)
 
@@ -2410,7 +2536,10 @@ class TestScene(omni.kit.test.AsyncTestCase):
                 return True
 
         class Sidecar:
-            def __init__(self):
+            def __init__(
+                self,
+                representation=campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
+            ):
                 self.revision = 0
                 self.fail_revision = None
                 self.prepared = []
@@ -2418,6 +2547,7 @@ class TestScene(omni.kit.test.AsyncTestCase):
                 self.rollback_count = 0
                 self.layout = None
                 self.closed = False
+                self.representation = representation
 
             def prepare(self, snapshot):
                 payload = Payload(snapshot.revision)
@@ -2437,7 +2567,11 @@ class TestScene(omni.kit.test.AsyncTestCase):
                 self.rollback_count += 1
 
             def status(self):
-                return {"revision": self.revision, "closed": self.closed}
+                return {
+                    "revision": self.revision,
+                    "closed": self.closed,
+                    "layout_representation": self.representation,
+                }
 
             def replace_layout(self, layout):
                 self.layout = layout
@@ -2499,6 +2633,18 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertFalse(adapter.closed)
         self.assertFalse(sidecar.closed)
         self.assertEqual(session.status()["pending_revision"], 4)
+        representation_adapter = Adapter()
+        representation_adapter.revision = 3
+        representation_sidecar = Sidecar(
+            campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME
+        )
+        representation_sidecar.revision = 3
+        with self.assertRaisesRegex(ValueError, "representation does not match"):
+            session.replace_consumers(
+                representation_adapter, sidecar=representation_sidecar
+            )
+        self.assertFalse(adapter.closed)
+        self.assertFalse(sidecar.closed)
         replacement_adapter = Adapter()
         replacement_adapter.revision = 3
         replacement_sidecar = Sidecar()
@@ -2654,6 +2800,19 @@ class TestScene(omni.kit.test.AsyncTestCase):
         duplicate = replace(payload)
         self.assertEqual(payload, duplicate)
         self.assertEqual(payload.digest(), duplicate.digest())
+        self.assertEqual(
+            payload.layout_representation,
+            campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
+        )
+        rigid_frame = replace(
+            payload,
+            layout_representation=(
+                campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME
+            ),
+        )
+        self.assertNotEqual(payload.digest(), rigid_frame.digest())
+        with self.assertRaisesRegex(ValueError, "representation is invalid"):
+            replace(payload, layout_representation="unknown")
         with self.assertRaises((AttributeError, TypeError)):
             payload.revision = 5
         with self.assertRaisesRegex(ValueError, "position byte count"):

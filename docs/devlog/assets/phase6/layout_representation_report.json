@@ -1,0 +1,132 @@
+{
+  "schema": "campfire.phase6dn.layout_representation_report.v1",
+  "phase": "phase6dn",
+  "status": "qualified_default_off",
+  "resumes": "phase6dm minimum production delta",
+  "audit_gates": {
+    "passed": 14,
+    "total": 14,
+    "checks": {
+      "payload_field_appended": true,
+      "legacy_and_rigid_constants_stable": true,
+      "payload_digest_includes_representation": true,
+      "publish_rejects_before_attempt_accounting": true,
+      "sidecar_validates_static_usd_token": true,
+      "sidecar_status_exposes_representation": true,
+      "consumer_replacement_checks_before_close": true,
+      "scene_preauthors_token": true,
+      "owner_shared_state_carries_representation": true,
+      "constants_publicly_exported": true,
+      "resident_snapshot_schema_unchanged": true,
+      "wood_json_unchanged": true,
+      "checkpoint_v1_unchanged": true,
+      "point_and_v3_defaults_remain_off": true
+    }
+  },
+  "runtime_gates": {
+    "passed": 13,
+    "total": 13,
+    "checks": {
+      "token_is_preauthored_before_connection": true,
+      "token_type_is_token": true,
+      "legacy_default_is_explicit": true,
+      "sidecar_status_exposes_representation": true,
+      "payload_mismatch_rejected_before_attempt": true,
+      "matching_payload_publishes": true,
+      "publication_never_rewrites_token": true,
+      "stage_token_mismatch_fails_closed": true,
+      "legacy_stage_without_token_fails_closed": true,
+      "replacement_mismatch_preserves_old_consumers": true,
+      "matching_replacement_succeeds_before_retry": true,
+      "session_closes_cleanly": true,
+      "rigid_frame_remains_reserved_only": true
+    }
+  },
+  "representations": {
+    "default": "legacy_cardinal_axes_v1",
+    "reserved_unconnected": "rigid_frame_v1"
+  },
+  "runtime": {
+    "schema": "campfire.phase6dn.layout_representation_probe.v1",
+    "phase": "phase6dn",
+    "status": "ok",
+    "gates": {
+      "token_is_preauthored_before_connection": true,
+      "token_type_is_token": true,
+      "legacy_default_is_explicit": true,
+      "sidecar_status_exposes_representation": true,
+      "payload_mismatch_rejected_before_attempt": true,
+      "matching_payload_publishes": true,
+      "publication_never_rewrites_token": true,
+      "stage_token_mismatch_fails_closed": true,
+      "legacy_stage_without_token_fails_closed": true,
+      "replacement_mismatch_preserves_old_consumers": true,
+      "matching_replacement_succeeds_before_retry": true,
+      "session_closes_cleanly": true,
+      "rigid_frame_remains_reserved_only": true
+    },
+    "contract": {
+      "enabled": true,
+      "point_count": 1,
+      "emitter_count": 1,
+      "source_path": "/World/ResidentPointSource",
+      "emitter_path": "/World/Flow/ResidentPointEmitter",
+      "fallback_sphere_path": "/World/Flow/Emitter",
+      "layout_representation": "legacy_cardinal_axes_v1"
+    },
+    "representations": {
+      "active": "legacy_cardinal_axes_v1",
+      "reserved_unconnected": "rigid_frame_v1"
+    },
+    "publication": {
+      "attempt_count": 1,
+      "published_revision": 1,
+      "token_before": "legacy_cardinal_axes_v1",
+      "token_after": "legacy_cardinal_axes_v1"
+    },
+    "non_changes": {
+      "point_array_shape": true,
+      "resident_snapshot": true,
+      "wood_authority": true,
+      "flow": true,
+      "checkpoint_v1": true
+    }
+  },
+  "source_sha256": {
+    "source/extensions/campfire.app/campfire/app/resident_point_sidecar.py": "6ac3e5091dc3007410d5e2b0d5f70979d9d0fb9b35e23300948887ceec703295",
+    "source/extensions/campfire.app/campfire/app/resident_application_session.py": "575a5e53fbd6b7457e8fcbe259dc90ff498845cd291ec46d7904de38339a3480",
+    "source/extensions/campfire.app/campfire/app/resident_point_scene.py": "7a487daac92b4f8e460eb70788737a88b6572d5d1f87bffde8853ef4c3953c1c",
+    "source/extensions/campfire.app/campfire/app/resident_point_application_owner.py": "55684b44811effaab8d6e002f2cbb43e536d0abe4c7d192f945594b210f0205c",
+    "source/extensions/campfire.app/campfire/app/__init__.py": "0d42adde910bae71f69975502c69aa5d422aa077029a4979defaceefe5d5fcce",
+    "source/extensions/campfire.app/campfire/app/resident_snapshot.py": "c5a2327d700aeba44b6f51afd63d2ba79395230c73c6876640f36dc8738ccd8e",
+    "source/extensions/campfire.app/campfire/app/wood.py": "d65f720ad640949a313a627d44b68ba10e28032f6e1feafc7a04566f1acaf260",
+    "scripts/resident_checkpoint_package.py": "1cffc9c8df680ab10752a7e5bdb83a45f63aaca4dde0118910417f844d619428",
+    "source/apps/campfire.simulator.kit": "28cdd975c9bf661ef9df62f40b5b089bb5ba1b40b8adb57c92765dcb68cba9cf",
+    "source/apps/campfire.simulator.benchmark.kit": "62321330054fe81a1cff65053f24a4917f57a7de81e5018a0a33f1e9a0eaf55f"
+  },
+  "non_changes": {
+    "resident_snapshot_schema": true,
+    "wood_json_schema": true,
+    "checkpoint_v1": true,
+    "native_abi": true,
+    "flow_version": "110.0.0",
+    "point_default": false,
+    "v3_default": false,
+    "rigid_frame_producer_connected": false
+  },
+  "decision": {
+    "representation_contract_qualified": true,
+    "point_default_enabled": false,
+    "rigid_frame_producer_connected": false,
+    "v3tc_reopened": false,
+    "v3tc_safe_stop": true,
+    "visual_evidence_preset": "scripts/run_visual_v3_demo.ps1",
+    "v3_remaining_bottleneck": "public CPU texture upload boundary",
+    "v3_reopen_conditions": [
+      "public direct-GPU texture update API",
+      "Kit or Flow upgrade evaluation",
+      "demonstrated operator impact"
+    ],
+    "next_gate": "default-off rigid-frame producer with byte/revision equivalence"
+  }
+}

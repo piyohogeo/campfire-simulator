@@ -114,7 +114,8 @@ class ResidentApplicationSession:
             raise ValueError("Replacement Resident adapter revision does not match")
 
         if sidecar is not None:
-            committed_sidecar_revision = self._sidecar.status()["revision"]
+            previous_sidecar_status = self._sidecar.status()
+            committed_sidecar_revision = previous_sidecar_status["revision"]
             if committed_sidecar_revision != committed_revision:
                 raise RuntimeError("Existing Resident consumer revisions do not match")
             sidecar_status = sidecar.status()
@@ -122,6 +123,12 @@ class ResidentApplicationSession:
                 raise RuntimeError("Replacement Resident sidecar must be open")
             if sidecar_status.get("revision") != committed_sidecar_revision:
                 raise ValueError("Replacement Resident sidecar revision does not match")
+            if sidecar_status.get("layout_representation") != previous_sidecar_status.get(
+                "layout_representation"
+            ):
+                raise ValueError(
+                    "Replacement Resident sidecar representation does not match"
+                )
 
         previous_adapter = self._adapter
         previous_sidecar = self._sidecar

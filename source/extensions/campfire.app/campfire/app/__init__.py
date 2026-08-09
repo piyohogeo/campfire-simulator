@@ -170,6 +170,9 @@ from .resident_native_backend import ResidentNativeBackend, ResidentNativeStep
 from .resident_application_session import ResidentApplicationSession
 from .resident_point_sidecar import (
     ImmutableSurfacePayload,
+    RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
+    RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME,
+    RESIDENT_POINT_LAYOUT_REPRESENTATIONS,
     ResidentNativeSurfaceProducer,
     ResidentPointSidecar,
 )
@@ -322,6 +325,9 @@ __all__ = [
     "ResidentNativeStep",
     "ResidentApplicationSession",
     "ImmutableSurfacePayload",
+    "RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY",
+    "RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME",
+    "RESIDENT_POINT_LAYOUT_REPRESENTATIONS",
     "ResidentNativeSurfaceProducer",
     "ResidentPointSidecar",
     "ResidentPointApplicationOwner",

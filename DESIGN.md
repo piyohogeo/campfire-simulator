@@ -2628,4 +2628,16 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - RTX反映: provider upload完了から次のKit/RTX updateまではp95中央値`44.8087 ms`、最大1 render update、pending 0だった。60-frame・6-second actual trajectoryはcapture直前の完全再発行を使い、性能runから分離した。
 - 最終回帰: release build、Phase 0 RTX、Phase 2、Phase 3 V0 OFF/ON、V0 probe `13 / 13`、V1 `8 / 8`、V2 `8 / 8`、V3 Cylinder-only既知境界`6 / 9`、V3M-A `6 / 6`、V3M-B `10 / 10`、V3M-C `17 / 17`に合格または期待どおりの境界を確認した。標準suiteは8 process・`74 / 74`件、`365.7 s`で合格した。
 - 採否: 機能・authority・統合frame・200 ms反映gateは合格したが、20本isolated publication p95 `4.7540 ms`は参照目標`1.0 ms`未達である。通常`campfire.simulator.kit`とbenchmark appはV3既定OFFを維持する。単一commandの`.\scripts\run_visual_v3_demo.ps1`だけをopt-in presetとして提供し、必要な7設定とnative buildを一括化する。Point/V0/V1競合はfail closed、Cylinder-only fallbackは維持する。
-- 停止境界: V3T-Cで停止し、Mesh collider、deformation、shrink、crack、loss、V4、Phase 6DM再開、Point契約、wood authority、Flowは変更しない。次のtransport課題は公開API上のCPU upload stallであり、未所有GPU pointerやprivate APIは採用しない。
+- 停止境界: V3T-CをV3追加最適化の安全な停止点とする。Mesh collider、deformation、shrink、crack、loss、V4、Point payload、wood authority、Flowは変更しない。残存transport bottleneckは公開CPU texture upload境界として記録し、公開GPU直接更新APIの成立、Kit/Flow更新を伴う再評価、または実際の操作上の支障が確認された場合にだけV3最適化を再開する。未所有GPU pointerやprivate APIは採用しない。今後の開発日誌動画と薪状態の目視確認は、原則として明示preset `run_visual_v3_demo.ps1`を使用する。
+
+## Phase 6DN immutable layout representation production contract
+
+### 2026-08-09: Phase 6DMの最小差分をlegacy既定・Point既定OFFで接続する
+
+- payload identity: `ImmutableSurfacePayload`末尾へ既定値付き`layout_representation`を追加し、`legacy_cardinal_axes_v1`と予約済み`rigid_frame_v1`をstable constantとして公開した。representationはdigestへ含め、同じ数値配列でも異なるrepresentationを同一pending payloadとして扱わない。既存constructorの位置引数／keyword互換は維持する。
+- fail-closed publication: `ResidentPointSidecar`はsession中に1つのrepresentationだけを所有する。Point stageには接続前にToken `campfire:layoutRepresentation`をauthorし、sidecar constructionでmissing／mismatchを拒否する。payload mismatchはattempt ID／digest記録、変換、USD書込みより前に拒否し、publicationはTokenを書き換えない。
+- lifecycle/recovery: owner shared layout state、refresh、layout replacement、stage recovery consumer factoryへ同じrepresentationを伝播した。live session中のrepresentation変更は禁止する。`ResidentApplicationSession.replace_consumers()`はreplacement sidecarのrevisionに加えてrepresentationを比較し、不一致なら旧adapter／sidecarをcloseする前に拒否する。revision、pending exact retry、rollback、immutable snapshotの既存所有規則は変更しない。
+- compatibility: wood JSON、`ResidentPublishedSnapshot`、checkpoint schema v1、native ABI、Flow 110.0.0、物理式、Point配列形状、V3、production既定値は変更しない。tokenのない旧Point stageは実行中に推測・修復せずfail closedとし、offline再生成を要求する。`rigid_frame_v1`はidentifierだけを予約し、producerへは未接続である。
+- qualification: source／contract監査`14 / 14`、real-Kit anonymous-USD runtime probe `13 / 13`に合格した。legacy Tokenの型／値、matching publish、zero-attempt mismatch、missing/mismatch stage、pre-close replacement guard、matching replacement、clean closeを確認した。release buildは合格し、標準suiteは全8 process・`75 / 75`件を`460.9 s`で合格した。
+- 実機回帰の注意: portable test suiteは全合格した。一方、portable runnerを外して直接起動した追加Phase 6CJ診断はRTX cold path後のstage再接続でFabricが`pointTemperatures`を一時的に見失いsummary未生成となったため、Phase 6DNの合格根拠には含めない。これは既知のFlow場／映像seam未合格境界を更新せず、representation guardの成功をもってseamless continuityを主張しない。
+- 次: 次の独立gateは既定OFFのrigid-frame producerを同じPoint schemaへ接続し、legacy cardinal時のbyte／revision同値、任意rigid rotation、failure/retry/recoveryを検証する。V3T-Cは再開せず、薪状態の目視確認には明示V3 presetを使用する。

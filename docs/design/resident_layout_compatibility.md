@@ -1,6 +1,6 @@
 # Resident layout representation compatibility audit
 
-Status: Phase 6DM defines the minimum future production delta. It does not implement or qualify that delta.
+Status: Phase 6DN implements and qualifies Phase 6DM's minimum production delta for the existing default-off legacy Point path. The rigid-frame producer remains reserved and unconnected.
 
 ## Evidence from the current source
 
@@ -8,23 +8,23 @@ The static AST/source audit found ten fields on `ImmutableSurfacePayload` and ex
 
 `ResidentApplicationSession.retry_pending()` passes the stored sidecar payload back to `_publish_pair()` without reconstruction. `replace_consumers()` validates revision and consumer state before closing the old adapter and sidecar. This is the correct location for a future representation comparison.
 
-Five gaps are explicit:
+Phase 6DM identified five explicit gaps, all closed by Phase 6DN:
 
-- the immutable payload has no representation field;
-- sidecar publication and status expose no representation contract;
-- consumer replacement compares revision but not representation;
-- the pre-authored Point stage has layout and Resident revisions but no representation token;
-- owner shared layout state contains only revision, origins, and cardinal axes.
+- the immutable payload now has a trailing, legacy-default representation field and includes it in the digest;
+- sidecar publication and status expose one immutable representation and reject mismatch before attempt accounting or writes;
+- consumer replacement compares representation before closing either old consumer;
+- the pre-authored Point stage has the static `campfire:layoutRepresentation` Token;
+- owner shared layout state carries the same representation through refresh and stage recovery.
 
 ## Minimum first integration delta
 
-The first implementation should touch only five code/test areas:
+The first implementation touches only the five planned code/test areas:
 
-1. Append a defaulted `layout_representation` field after all existing payload fields, preserving current positional and keyword call sites. Include it in the payload digest.
-2. Give `ResidentPointSidecar` one immutable representation, publish it through `status()`, validate the pre-authored stage token at construction, and reject payload mismatch before attempt accounting, conversion, or USD writes.
-3. In `ResidentApplicationSession.replace_consumers()`, compare old and replacement sidecar representation before closing either old consumer.
-4. Pre-author `campfire:layoutRepresentation` as an `Sdf.ValueTypeNames.Token` before stage connection. The legacy default is `legacy_cardinal_axes_v1`; the future explicit opt-in is `rigid_frame_v1`. The token is never changed during a live session.
-5. Carry the representation in `ResidentPointApplicationOwner` shared layout state, export stable constants, and add constructor, mismatch, rollback, retry, and replacement-stage tests.
+1. `layout_representation` is appended after all existing payload fields with `legacy_cardinal_axes_v1` as its default, preserving current positional and keyword call sites and contributing to the payload digest.
+2. `ResidentPointSidecar` owns one immutable representation, publishes it through `status()`, validates the pre-authored stage token at construction, and rejects payload mismatch before attempt accounting, conversion, or USD writes.
+3. `ResidentApplicationSession.replace_consumers()` compares old and replacement sidecar representation before closing either old consumer.
+4. `campfire:layoutRepresentation` is pre-authored as an `Sdf.ValueTypeNames.Token` before stage connection. The legacy default is `legacy_cardinal_axes_v1`; the future explicit opt-in is `rigid_frame_v1`. Publication never rewrites the token.
+5. `ResidentPointApplicationOwner` carries the representation in shared layout state, exported constants keep identifiers stable, and focused tests cover construction, mismatch, layout refresh, publication, and replacement-stage handoff.
 
 ## Compatibility and persistence
 
@@ -36,8 +36,10 @@ USD stage export naturally preserves a pre-authored token, but a legacy Point st
 
 The existing stage recovery orchestrator does not need a new authority. Its consumer factory reconstructs the sidecar from shared layout state, and the session already owns the pre-close handoff validation. These are the two places that must agree before a retained pending payload is retried.
 
-## Qualification boundary
+## Phase 6DN qualification boundary
 
-The audit passed 19/19 gates and production extension hashes were unchanged. This qualifies the change plan only. It does not qualify production fields, the USD token, frame-mode publication, Point checkpoint persistence, or live legacy-to-frame migration.
+The original Phase 6DM audit passed 19/19 gates and qualified the change plan only. Phase 6DN then passed 14/14 source/contract gates and 13/13 real-Kit anonymous-USD runtime gates. The runtime probe verifies explicit legacy Token authoring, matching publication, zero-attempt mismatch rejection, missing/mismatched stage failure, pre-close replacement rejection, matching replacement, and clean close.
 
-The complete regression remained green: 8 test processes and 59/59 cases passed in 369.3 seconds, including 213.4 seconds of collapse coverage.
+The complete regression remains green after the production delta: 8 test processes and 75/75 cases passed in 460.9 seconds. The release build also passed. Point and V3 remain default OFF, Flow remains 110.0.0, and wood JSON, `ResidentPublishedSnapshot`, checkpoint v1, native ABI, physics, revision, rollback, and immutable-snapshot contracts are unchanged.
+
+This qualifies only the representation identity/compatibility guard on the existing legacy producer. It does not qualify `rigid_frame_v1` publication, live legacy-to-frame migration, Point checkpoint persistence, or seamless Flow/renderer recovery. The next independent gate is a default-off rigid-frame producer with byte/revision equivalence; representation must never change within a live session.

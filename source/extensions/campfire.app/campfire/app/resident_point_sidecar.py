@@ -17,6 +17,18 @@ from .performance import summarize_timing_ms
 
 FLOW_FUEL_FIELD = RESIDENT_PUBLISHED_FIELD_NAMES.index("flow_fuel")
 FLOW_SMOKE_FIELD = RESIDENT_PUBLISHED_FIELD_NAMES.index("flow_smoke")
+RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY = "legacy_cardinal_axes_v1"
+RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME = "rigid_frame_v1"
+RESIDENT_POINT_LAYOUT_REPRESENTATIONS = (
+    RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
+    RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME,
+)
+
+
+def _validated_layout_representation(value):
+    if not isinstance(value, str) or value not in RESIDENT_POINT_LAYOUT_REPRESENTATIONS:
+        raise ValueError("Resident Point layout representation is invalid")
+    return value
 
 
 @dataclass(frozen=True)
@@ -31,6 +43,7 @@ class ImmutableSurfacePayload:
     smokes: bytes
     layout_origins: tuple = ()
     layout_axes: tuple = ()
+    layout_representation: str = RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY
 
     def __post_init__(self):
         if any(
@@ -64,6 +77,7 @@ class ImmutableSurfacePayload:
             or type(self.layout_axes) is not tuple
         ):
             raise TypeError("Surface payload layout metadata must be immutable tuples")
+        _validated_layout_representation(self.layout_representation)
         if any(type(origin) is not tuple for origin in self.layout_origins):
             raise TypeError("Surface payload layout origins must be immutable tuples")
         if bool(self.layout_origins) != bool(self.layout_axes):
@@ -88,7 +102,15 @@ class ImmutableSurfacePayload:
     def digest(self):
         digest = hashlib.sha256()
         digest.update(str((self.revision, self.tick, self.layout_revision)).encode("ascii"))
-        digest.update(repr((self.layout_origins, self.layout_axes)).encode("ascii"))
+        digest.update(
+            repr(
+                (
+                    self.layout_origins,
+                    self.layout_axes,
+                    self.layout_representation,
+                )
+            ).encode("ascii")
+        )
         for value in (self.positions, self.fuels, self.temperatures, self.smokes):
             digest.update(value)
         return digest.hexdigest()
@@ -307,15 +329,26 @@ class ResidentPointSidecar:
         translation_provider=None,
         layout_state=None,
         skip_unchanged_translation_layout=False,
+        layout_representation=RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
     ):
         if stage is None or not callable(stage_provider):
             raise ValueError("Resident Point sidecar requires stage collaborators")
+        layout_representation = _validated_layout_representation(
+            layout_representation
+        )
         if initial_layout is not None:
             layout_revision = initial_layout["revision"]
             if isinstance(layout_revision, bool) or not isinstance(layout_revision, int):
                 raise ValueError("Resident Point layout revision must be an integer")
             origins = initial_layout["origins"]
             axes = initial_layout["axes"]
+            initial_representation = initial_layout.get(
+                "representation", layout_representation
+            )
+            if initial_representation != layout_representation:
+                raise ValueError(
+                    "Resident Point initial layout representation does not match"
+                )
         else:
             layout_revision = 1
         self._producer = producer or ResidentNativeSurfaceProducer(
@@ -333,6 +366,7 @@ class ResidentPointSidecar:
             skip_unchanged_translation_layout
         )
         self._layout_state = layout_state
+        self._layout_representation = layout_representation
         self._producer.build_layout()
         self._layout_revision = layout_revision
         if self._layout_revision <= 0:
@@ -386,6 +420,15 @@ class ResidentPointSidecar:
         points_prim = emitter.GetRelationship("pointsPrim")
         if not points_prim or not points_prim.GetTargets():
             raise RuntimeError("Point sidecar requires a pre-authored pointsPrim target")
+        layout_representation_attribute = emitter.GetAttribute(
+            "campfire:layoutRepresentation"
+        )
+        if not layout_representation_attribute:
+            raise RuntimeError(
+                "Point sidecar requires a pre-authored layout representation"
+            )
+        if layout_representation_attribute.Get() != self._layout_representation:
+            raise ValueError("Point sidecar layout representation does not match")
         self._attributes = {
             "positions": emitter.GetAttribute("pointPositions"),
             "fuels": emitter.GetAttribute("pointFuels"),
@@ -459,6 +502,7 @@ class ResidentPointSidecar:
             smokes=self._producer.smokes.tobytes(order="C"),
             layout_origins=layout_origins,
             layout_axes=layout_axes,
+            layout_representation=self._layout_representation,
         )
         self._prepare_count += 1
         return payload
@@ -497,6 +541,8 @@ class ResidentPointSidecar:
     def publish(self, payload):
         if self._closed:
             raise RuntimeError("Point sidecar is closed")
+        if payload.layout_representation != self._layout_representation:
+            raise ValueError("Point sidecar payload representation does not match")
         self.attempt_payload_ids.append(id(payload))
         self.attempt_payload_digests.append(payload.digest())
         if self._stage_provider() is not self._stage:
@@ -673,12 +719,18 @@ class ResidentPointSidecar:
                     for origin in self._producer.origins
                 ),
                 "axes": tuple(int(axis) for axis in self._producer.axes),
+                "representation": self._layout_representation,
             }
         )
 
     def replace_layout(self, layout):
         """Transactionally publish a stopped layout without advancing snapshot revision."""
 
+        representation = _validated_layout_representation(
+            layout.get("representation", self._layout_representation)
+        )
+        if representation != self._layout_representation:
+            raise ValueError("Point layout representation cannot change in a session")
         revision = layout["revision"]
         if isinstance(revision, bool) or not isinstance(revision, int):
             raise ValueError("Point layout revision must be an integer")
@@ -754,6 +806,7 @@ class ResidentPointSidecar:
         return {
             "revision": self._revision,
             "layout_revision": self._layout_revision,
+            "layout_representation": self._layout_representation,
             "committed_layout_revision": self._committed_layout_revision,
             "point_count": self._producer.point_count,
             "prepare_count": self._prepare_count,

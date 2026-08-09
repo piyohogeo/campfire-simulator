@@ -107,6 +107,10 @@ def _augment_stage(path, log_ids):
     for name in ("fuel", "temperature", "smoke", "coupleRateFuel", "coupleRateTemperature", "coupleRateSmoke"):
         core._set(emitter, name, 0.0)
     emitter.CreateAttribute("campfire:residentRevision", Sdf.ValueTypeNames.Int64).Set(0)
+    point_emitter = stage.GetPrimAtPath(handles[0]["path"])
+    point_emitter.CreateAttribute(
+        "campfire:layoutRepresentation", Sdf.ValueTypeNames.Token
+    ).Set(campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY)
     stage.GetRootLayer().customLayerData = {
         **stage.GetRootLayer().customLayerData,
         "campfire:phase": "phase6cd",

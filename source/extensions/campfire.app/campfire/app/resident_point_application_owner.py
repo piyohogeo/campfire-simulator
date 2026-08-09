@@ -9,7 +9,10 @@ from .resident_point_scene import (
     RESIDENT_POINT_EMITTER_PATH,
     resident_point_layout_for_logs,
 )
-from .resident_point_sidecar import ResidentPointSidecar
+from .resident_point_sidecar import (
+    RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
+    ResidentPointSidecar,
+)
 from .resident_snapshot_adapter import UsdResidentSnapshotAdapter
 from .resident_stage_recovery import ResidentStageRecoveryOrchestrator
 from .wood import get_log_world_position
@@ -44,6 +47,9 @@ class ResidentPointApplicationOwner:
         self._layout_replace_count = 0
         self._close_result = None
         self._layout_state = layout_state or {"revision": 1}
+        self._layout_state.setdefault(
+            "representation", RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY
+        )
         self._log_ids = tuple(log_ids)
         self._dynamic_translation_enabled = bool(dynamic_translation_enabled)
         self._skip_unchanged_translation_layout = bool(
@@ -79,6 +85,9 @@ class ResidentPointApplicationOwner:
             "revision": int(layout["revision"]),
             "origins": layout["origins"],
             "axes": layout["axes"],
+            "representation": layout.get(
+                "representation", RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY
+            ),
         }
 
         def make_consumers(target_stage, revision):
@@ -114,6 +123,7 @@ class ResidentPointApplicationOwner:
                     skip_unchanged_translation_layout=(
                         skip_unchanged_translation_layout
                     ),
+                    layout_representation=layout_state["representation"],
                 )
             except Exception:
                 adapter.close()
@@ -183,6 +193,13 @@ class ResidentPointApplicationOwner:
 
     def replace_layout(self, layout):
         self._require_owner()
+        representation = layout.get(
+            "representation", self._layout_state["representation"]
+        )
+        if representation != self._layout_state["representation"]:
+            raise ValueError(
+                "Resident Point layout representation cannot change in a session"
+            )
         revision = self._session.replace_sidecar_layout(layout)
         # Keep this object identity: the recovery consumer factory closes over
         # the same mapping and must see the latest stopped-owner layout.
@@ -192,6 +209,7 @@ class ResidentPointApplicationOwner:
                 "revision": revision,
                 "origins": tuple(layout["origins"]),
                 "axes": tuple(layout["axes"]),
+                "representation": representation,
             }
         )
         self._layout_replace_count += 1
@@ -208,6 +226,10 @@ class ResidentPointApplicationOwner:
         axes = tuple(candidate["axes"])
         previous_origins = tuple(self._layout_state.get("origins", ()))
         previous_axes = tuple(self._layout_state.get("axes", ()))
+        if candidate["representation"] != self._layout_state["representation"]:
+            raise ValueError(
+                "Resident Point refreshed layout representation does not match"
+            )
         origins_equal = len(origins) == len(previous_origins) and all(
             all(
                 abs(left - right) <= 1.0e-9
@@ -221,11 +243,13 @@ class ResidentPointApplicationOwner:
                 "revision": self._layout_state["revision"],
                 "origins": origins,
                 "axes": axes,
+                "representation": candidate["representation"],
             }
         layout = {
             "revision": int(self._layout_state["revision"]) + 1,
             "origins": origins,
             "axes": axes,
+            "representation": candidate["representation"],
         }
         revision = self.replace_layout(layout)
         return {
@@ -233,6 +257,7 @@ class ResidentPointApplicationOwner:
             "revision": revision,
             "origins": origins,
             "axes": axes,
+            "representation": candidate["representation"],
         }
 
     def observe_stage_event(self, event_name):
@@ -260,6 +285,7 @@ class ResidentPointApplicationOwner:
             "layout_revision": self._layout_state["revision"],
             "layout_origins": self._layout_state.get("origins"),
             "layout_axes": self._layout_state.get("axes"),
+            "layout_representation": self._layout_state["representation"],
             "log_ids": self._log_ids,
             "dynamic_translation_enabled": self._dynamic_translation_enabled,
             "skip_unchanged_translation_layout": (

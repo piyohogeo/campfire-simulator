@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v3tc">最新記録</a>
+        <a href="#phase-6dn">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v3tc">Phase V3T-Cを読む</a>
+        <a class="button primary" href="#phase-6dn">Phase 6DNを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V3T-C 完了</strong></div>
+        <div><span>現在地</span><strong>Phase 6DN 完了</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>74 / 74 passed</strong></div>
-        <div><span>判定</span><strong>統合合格 · CPU upload制約 · 明示presetのみ</strong></div>
+        <div><span>テスト</span><strong>75 / 75 passed</strong></div>
+        <div><span>判定</span><strong>layout identity合格 · legacy既定 · rigid予約</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,78 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-6dn" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number compact">6DN</span>
+          <p><time datetime="2026-08-09">2026.08.09</time></p>
+          <span class="pill current">Qualified · Point default OFF</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Phase 6DN · Immutable layout representation contract</p>
+            <h2>表現が違えば、<br>書く前・閉じる前に止める。</h2>
+            <p>Phase 6DMで限定した5領域だけへproduction差分を接続しました。既存のcardinal配列は明示的な<code>legacy_cardinal_axes_v1</code>として扱い、payload digest、Point stage Token、sidecar、owner、consumer replacementを同じrepresentationで固定します。将来用<code>rigid_frame_v1</code>はidentifierだけを予約し、producerにはまだ接続していません。</p>
+          </header>
+
+          <figure class="capture-card wide">
+            <a href="assets/phase6/layout_representation_report.svg" aria-label="Phase 6DN layout representation契約レポートを開く">
+              <img src="assets/phase6/layout_representation_report.svg" alt="Phase 6DNのsource gate、Kit runtime gate、互換性と次の境界を示す機械レポート" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>既存legacy経路を明示し、異種recoveryを原子的に拒否</strong><span>14 / 14 source · 13 / 13 Kit runtime · 75 / 75 regression</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3tc/visual_v3_actual.mp4" data-video-poster="assets/phasev3tc/visual_v3_actual_poster.png" data-video-title="Phase 6DN wood-state visual reference — V3 explicit preset" data-video-meta="Shared V3T-C explicit-preset recording for human wood-state context · Phase 6DN evidence itself is the machine report and tests · representation contract does not alter Flow, wood authority, Point arrays, or V3 · 60 frames · 6 seconds">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>薪状態の目視参照</strong><small>V3明示preset動画を再利用 · 6秒</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <div class="notes-grid">
+            <section class="note">
+              <p class="note-label">Fail-closed boundary</p>
+              <h3>attempt 0、USD write 0で拒否</h3>
+              <p>Tokenのmissing／mismatchはsidecar構築時に拒否し、payload mismatchはattempt記録・変換・USD書込みより前に拒否します。stage recoveryのreplacement mismatchも旧adapter／sidecarをcloseする前に止めます。live session中のrepresentation変更やToken書換えは行いません。</p>
+            </section>
+            <section class="note caution">
+              <p class="note-label">Compatibility boundary</p>
+              <h3>rigid-frame producerは未接続</h3>
+              <p>wood JSON、Resident snapshot、checkpoint v1、native ABI、Flow 110.0.0、Point配列、物理式、revision／rollbackは不変です。次は既定OFFの別Phaseでrigid-frame producerのbyte／revision同値性を検証し、live migrationは行いません。</p>
+            </section>
+          </div>
+
+          <section class="verification" aria-labelledby="phase6dn-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Verification</p>
+              <h3 id="phase6dn-verification-title">実装契約とKit runtimeを分離して合格。</h3>
+              <p>source監査14件とreal-Kit anonymous-USD probe 13件を機械レポートへ統合しました。release buildと標準8 process・75件も合格しています。追加の非portable Phase 6CJ直起動はstage再接続後にsummary未生成となったため合格根拠から除外し、既知のFlow場／映像seam未達を更新していません。</p>
+              <p><a href="assets/phase6/layout_representation_report.json">機械レポート</a> · <a href="../design/resident_layout_compatibility.md">互換設計</a></p>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase 6DN検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Source contract</strong><small>14 / 14 · five planned areas</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Kit runtime</strong><small>13 / 13 · Token / publish / replace</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Regression</strong><small>8 processes · 75 / 75 · 460.9 s</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Defaults</strong><small>Point OFF · V3 OFF · Sphere retained</small></p></div>
+              <div role="listitem"><span aria-hidden="true">◐</span><p><strong>Rigid producer</strong><small>identifier reserved · unconnected</small></p></div>
+            </div>
+          </section>
+
+          <div class="notes-grid">
+            <section class="note">
+              <p class="note-label">V3 evidence policy</p>
+              <h3>目視は明示V3 presetを原則に</h3>
+              <p>今後の開発日誌動画と薪状態の目視確認は、原則として<code>run_visual_v3_demo.ps1</code>を使います。通常appはV3既定OFFのままです。このカードの動画も外観参照であり、Phase 6DNの契約合格を映像だけで主張しません。</p>
+            </section>
+            <section class="note">
+              <p class="note-label">V3T-C stop boundary</p>
+              <h3>CPU texture uploadを残存境界として固定</h3>
+              <p>V3追加最適化は停止します。公開GPU直接更新API、Kit／Flow更新の再評価、または実操作上の支障が確認された場合だけ再開し、private APIや未所有GPU pointerは採用しません。</p>
+            </section>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v3tc" class="section entry-section phase-six">
@@ -2450,6 +2522,26 @@
             <p>productionを変更せずAST/source監査を行い、現行payload 10 field、constructor 2箇所（production 1、test 1）、pending payloadの既存exact retry、consumer close前の既存validation順を確認しました。欠けているのはpayload、sidecar publish/status、session rebind、Point USD token、owner shared stateの5境界です。将来の最小実装はpayload末尾へ既定legacy fieldを追加し、<code>campfire:layoutRepresentation</code> Tokenをstage接続前に1回だけauthoringし、payload writeとconsumer closeより前に表現不一致を拒否します。wood JSONとResident snapshotは木材権威状態なので変更しません。checkpoint v1もSphereだけを保存しPointをresumeしないため維持し、将来Point checkpointを導入する時だけ新versionにします。tokenのない旧Point stageは実行中に推測・修復せずoffline再生成します。Phase固有19/19 audit gateに合格しproduction extension SHAは不変です。標準suiteも全8 process・59/59件合格（369.3秒、collapse coverage 213.4秒）でした。production実装はまだ未合格です。次はこの最小差分を既定legacy・Point既定OFFで実装し、missing/mismatch token、zero-write拒否、rollback、replacement-stage retry、checkpoint v1非回帰を検証します。動画は現行cardinal経路の外観参照です。</p>
           </section>
 
+          <figure class="capture-card wide">
+            <h3 class="capture-phase-heading">Phase 6DN</h3>
+            <a href="assets/phase6/layout_representation_report.svg" aria-label="Phase 6DN immutable layout representation production契約レポートを開く">
+              <img src="assets/phase6/layout_representation_report.svg" alt="legacy表現Token、payload identity、pre-close replacement guard、互換非変更を示すPhase 6DNレポート" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>Phase 6DMの最小差分を、既存legacy経路へ接続</strong><span>14 / 14 source · 13 / 13 runtime · rigid producer unconnected</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3tc/visual_v3_actual.mp4" data-video-poster="assets/phasev3tc/visual_v3_actual_poster.png" data-video-title="Phase 6DN wood-state visual reference — V3 explicit preset" data-video-meta="Shared V3T-C explicit-preset recording for wood-state inspection · contract qualification comes from the Phase 6DN report and tests · no Point/V3 coupling · 60 frames · 6 seconds">
+                <span class="video-trigger-icon" aria-hidden="true">▶</span>
+                <span><strong>薪状態の目視参照</strong><small>V3明示preset動画を再利用 · 契約gateとは別証拠</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note" aria-labelledby="phase6dn-note-title">
+            <p class="note-label">2026-08-09 · Goal / identity / fail closed / recovery / compatibility / next</p>
+            <h3 id="phase6dn-note-title">representationをpayload・stage・consumer handoffで同一にした。</h3>
+            <p>既存cardinal producerを<code>legacy_cardinal_axes_v1</code>として明示し、将来用<code>rigid_frame_v1</code>は未接続identifierとして予約しました。payload digest、sidecar immutable state、owner shared layout state、stage接続前のToken、replacement consumerを同じ値へ固定します。payload mismatchはattempt記録とUSD write前、stage mismatch／missingはsidecar構築時、replacement mismatchは旧consumer close前に拒否します。publicationはTokenを書き換えず、live sessionのmode変更も拒否します。wood JSON、Resident snapshot、checkpoint v1、native ABI、Point配列、Flow 110.0.0、物理・revision・rollback・既定値は不変です。14/14 source gate、13/13 Kit runtime gate、release build、標準8 process・75/75件（460.9秒）に合格しました。rigid-frame publication、Point checkpoint、legacyからのlive migration、Flow場／映像のseamless recoveryは未合格です。次は既定OFFのrigid-frame producer byte／revision同値gateです。</p>
+          </section>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -2505,6 +2597,7 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DK transform/channel identity</strong><small>14 / 14 · frame exact · legacy Y temperature 360/360 mismatched</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DL immutable layout mode</strong><small>20 / 20 · exact retry · cross-mode recovery rejected</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DM compatibility audit</strong><small>19 / 19 · 5-area minimum diff · checkpoint v1 unchanged</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DN representation contract</strong><small>14/14 source · 13/13 Kit runtime · legacy explicit · rigid reserved</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6CI normal Point owner</strong><small>10 / 10 · 710 matched revisions · Point resync 0 · default OFF</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CJ layout + recovery</strong><small>consumer/revisionのみ合格 · Flow field復元と映像連続性は未達</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CK owner-thread commands</strong><small>command結果は合格 · 姿勢/炎の同時不連続は未解決</small></p></div>
