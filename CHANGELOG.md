@@ -1,5 +1,11 @@
 # Changelog
 
+- Completed the production-neutral Phase V3M-A Cylinder-root compatibility audit and isolated Xform/Collider/RenderSurface feasibility probe.
+- Enumerated 1,034 source/stage evidence lines, five canonical saved stages with Cylinder-root evidence, and fourteen checkpoint/recovery files; defined one six-helper resolution boundary for a future default-off hierarchy.
+- Qualified an isolated Xform root with RigidBody/Mass/damping, an invisible analytic Cylinder child with Collision/physics material, and a face-varying-UV Mesh child with no Physics/PhysX schemas.
+- Rendered a fixed dynamic RGBA8 checker across 72 side quads and both twelve-triangle caps, then preserved exact child world transforms, Prim paths, topology digest, and URI through rotation, translation and stage reload.
+- Passed all 14 isolated checks and all 6 combined V3M-A gates without modifying production scenes, settings, Flow/Point publication, checkpoint v1, V0/V1 defaults, V2 payload ownership, V3 integration state, or the held Phase 6DM work.
+- Re-ran the complete eight-process standard suite after V3M-A: all 66 / 66 cases passed in 349.9 seconds, including 207.5 seconds of collapse coverage.
 - Completed the fixed Kit/RTX Phase V3 feasibility probe and stopped before production integration because the required analytic Cylinder UV gate did not qualify.
 - Confirmed the public `omni.ui.DynamicTextureProvider` publishes a stable `dynamic://` URI; CPU RGBA8 pixel replacement reached an authored-UV RTX material after two frames while the USD asset path and live Prim paths remained unchanged through transform, timeline stop/start, and stage reload.
 - Confirmed CPU RGBA16F upload is accepted by the fixed API, while rendered RGBA16F quality and GPU-pointer upload remain unqualified; no safe public GPU pointer owner was introduced.

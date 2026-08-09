@@ -119,6 +119,7 @@ img { display: block; max-width: 100%; }
 .entry { display: grid; grid-template-columns: 140px 1fr; gap: 48px; }
 .entry-meta { padding-top: 7px; border-right: 1px solid rgba(24, 21, 18, 0.15); }
 .phase-number { display: block; color: rgba(24, 21, 18, 0.17); font-size: 76px; font-weight: 800; line-height: 1; letter-spacing: -0.07em; }
+.phase-number.compact { font-size: 34px; letter-spacing: -0.03em; white-space: nowrap; }
 .entry-meta p { margin: 22px 0 11px; font-size: 13px; font-weight: 700; }
 .pill { display: inline-flex; padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
 .pill.complete { background: #d8eadc; color: #235b36; }

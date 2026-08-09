@@ -1,0 +1,95 @@
+{
+  "schema": "campfire.phasev3ma.isolated_mesh_probe.v1",
+  "status": "qualified",
+  "kit_flow_version": "Kit 110.2 / Flow 110.0.0",
+  "scope": "isolated stage only; no production scene integration",
+  "hierarchy": {
+    "root": "/World/Logs/ProbeLog",
+    "collider": "/World/Logs/ProbeLog/Collider",
+    "render_surface": "/World/Logs/ProbeLog/RenderSurface",
+    "root_type": "Xform",
+    "collider_type": "Cylinder",
+    "render_type": "Mesh",
+    "world_transform_max_error": 0.0
+  },
+  "mesh": {
+    "axial_segments": 6,
+    "circumferential_segments": 12,
+    "point_count": 117,
+    "face_count": 96,
+    "face_vertex_count": 360,
+    "face_varying_uv_count": 360,
+    "topology_sha256": "2037a5c0e8e0d94cc22bdbe13f50d6fa0fae5ffe27b38fc8698f2fe1f32bd632",
+    "side_faces": 72,
+    "left_cap_faces": 12,
+    "right_cap_faces": 12,
+    "seam_vertices_duplicated": true
+  },
+  "texture": {
+    "uri": "dynamic://campfire_phasev3ma_mesh_checker",
+    "format": "RGBA8_UNORM",
+    "atlas_size": [
+      384,
+      128
+    ],
+    "regions": [
+      "side",
+      "left_cap",
+      "right_cap"
+    ],
+    "filter": "nearest"
+  },
+  "gates": {
+    "root_is_xform": true,
+    "root_owns_rigidbody_mass_damping": true,
+    "collider_is_analytic_x_cylinder": true,
+    "collider_only_owns_collision": true,
+    "collider_hidden_from_rtx": true,
+    "render_is_uv_mesh": true,
+    "render_has_no_physics_api": true,
+    "side_and_both_caps_authored": true,
+    "uv_cardinality_and_range_valid": true,
+    "checker_visible_on_side_and_caps": true,
+    "children_follow_root_transform": true,
+    "no_live_prim_or_topology_change": true,
+    "reload_preserves_hierarchy_and_uv": true,
+    "fixed_dynamic_uri_preserved": true
+  },
+  "captures": {
+    "right_cap": {
+      "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3ma\\captures\\mesh_checker_right_cap.png",
+      "bytes": 734933,
+      "sha256": "3623061f81e556fb064b7f40a99ebbcea17a7c3e9e9c552aa473b3076042d27d",
+      "roi_unique_colors_32": 141
+    },
+    "left_cap": {
+      "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3ma\\captures\\mesh_checker_left_cap.png",
+      "bytes": 814898,
+      "sha256": "66f052f69e53bf2d3751441c5832e5011a25d0d9c1e9105b428fe2b4f7d13718",
+      "roi_unique_colors_32": 154
+    },
+    "transformed": {
+      "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3ma\\captures\\mesh_checker_transformed.png",
+      "bytes": 767423,
+      "sha256": "d3300715108c0590ff3a7b3bb4f45a1612b7951f0d5c00638aa33cf67ecdd83c",
+      "roi_unique_colors_32": 76
+    },
+    "reloaded": {
+      "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3ma\\captures\\mesh_checker_reloaded.png",
+      "bytes": 723181,
+      "sha256": "228a2adf0743486231d50f15e7c5c927058daf205a8c886962f5197646584a56",
+      "roi_unique_colors_32": 71
+    },
+    "resolution": [
+      1280,
+      720
+    ],
+    "kind": "fixed checker diagnostic; not a combustion trajectory"
+  },
+  "decision": {
+    "isolated_mesh_qualified": true,
+    "production_integration_allowed_next": true,
+    "production_code_changed": false,
+    "phase6dm_resumed": false
+  }
+}
