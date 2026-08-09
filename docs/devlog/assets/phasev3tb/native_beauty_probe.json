@@ -1,0 +1,294 @@
+{
+  "schema": "campfire.phasev3tb.native_beauty.v1",
+  "status": "qualified",
+  "gates": {
+    "four_log_all_texels_match_reference": true,
+    "twenty_log_all_texels_match_reference": true,
+    "surface_permutation_changes_output": true,
+    "native_rejects_invalid_float_input": true,
+    "session_buffers_are_reused": true,
+    "unchanged_revision_is_noop": true,
+    "unchanged_quantized_atlases_skip_all_writes": true,
+    "base_and_emission_skip_independently": true,
+    "stale_revision_rejected": true,
+    "failure_retains_displayed_and_processed_revision": true,
+    "retry_after_failure_commits": true,
+    "reload_force_republishes_both_channels": true,
+    "camera_capture_force_republishes_both_channels": true,
+    "processed_and_displayed_revision_are_observable": true,
+    "adaptive_normal_delay_bounded_to_500ms": true,
+    "rapid_heat_keeps_5hz": true,
+    "rtx_output_changed": true
+  },
+  "reference_comparison": {
+    "four_logs": {
+      "logs": 4,
+      "surface_cells": 1440,
+      "all_texels_exact": true,
+      "permutation_visible": true,
+      "native_buffer_pointer_stable": true,
+      "native_session_allocation_count": 3,
+      "native_pack_count": 105,
+      "python_pack": {
+        "samples": 100,
+        "mean_ms": 0.475009,
+        "p50_ms": 0.3926,
+        "p95_ms": 0.7693,
+        "maximum_ms": 0.8164
+      },
+      "native_pack": {
+        "samples": 100,
+        "mean_ms": 0.40021999999999996,
+        "p50_ms": 0.3307,
+        "p95_ms": 0.6466,
+        "maximum_ms": 0.7399
+      }
+    },
+    "twenty_logs": {
+      "logs": 20,
+      "surface_cells": 7200,
+      "all_texels_exact": true,
+      "permutation_visible": true,
+      "native_buffer_pointer_stable": true,
+      "native_session_allocation_count": 3,
+      "native_pack_count": 105,
+      "python_pack": {
+        "samples": 100,
+        "mean_ms": 1.541332,
+        "p50_ms": 1.4816,
+        "p95_ms": 2.3398,
+        "maximum_ms": 2.69
+      },
+      "native_pack": {
+        "samples": 100,
+        "mean_ms": 2.494397,
+        "p50_ms": 1.4839,
+        "p95_ms": 2.7026,
+        "maximum_ms": 80.2394
+      }
+    }
+  },
+  "change_aware": {
+    "first": {
+      "revision": 1,
+      "status": "committed",
+      "total_ms": 10.2939,
+      "beauty_pack_ms": 1.0972,
+      "boundary_prepare_ms": 0.029,
+      "cpu_upload_ms": 8.3218,
+      "revision_commit_ms": 0.83,
+      "upload_count": 2,
+      "usd_set_count": 1,
+      "notice_count": 1,
+      "transferred_bytes": 57600,
+      "base_changed": true,
+      "emission_changed": true
+    },
+    "same_visual": {
+      "revision": 2,
+      "status": "unchanged_quantized",
+      "total_ms": 1.153,
+      "beauty_pack_ms": 1.1124,
+      "boundary_prepare_ms": 0.0267,
+      "cpu_upload_ms": 0.0,
+      "revision_commit_ms": 0.0,
+      "upload_count": 0,
+      "usd_set_count": 0,
+      "notice_count": 0,
+      "transferred_bytes": 0,
+      "base_changed": false,
+      "emission_changed": false
+    },
+    "base_only": {
+      "revision": 3,
+      "status": "committed",
+      "total_ms": 2.1124,
+      "beauty_pack_ms": 1.128,
+      "boundary_prepare_ms": 0.0448,
+      "cpu_upload_ms": 0.5705,
+      "revision_commit_ms": 0.355,
+      "upload_count": 1,
+      "usd_set_count": 1,
+      "notice_count": 1,
+      "transferred_bytes": 28800,
+      "base_changed": true,
+      "emission_changed": false
+    },
+    "emission_only": {
+      "revision": 4,
+      "status": "committed",
+      "total_ms": 2.2257,
+      "beauty_pack_ms": 1.0945,
+      "boundary_prepare_ms": 0.0246,
+      "cpu_upload_ms": 0.7228,
+      "revision_commit_ms": 0.371,
+      "upload_count": 1,
+      "usd_set_count": 1,
+      "notice_count": 1,
+      "transferred_bytes": 28800,
+      "base_changed": false,
+      "emission_changed": true
+    },
+    "changing_samples": 105,
+    "unchanged_samples": 105,
+    "unchanged_uploads": 0,
+    "unchanged_usd_sets": 0,
+    "changing_timing": {
+      "beauty_pack_ms": {
+        "samples": 100,
+        "mean_ms": 1.24711,
+        "p50_ms": 1.1646,
+        "p95_ms": 2.2045,
+        "maximum_ms": 2.3309
+      },
+      "boundary_prepare_ms": {
+        "samples": 100,
+        "mean_ms": 0.035896,
+        "p50_ms": 0.0279,
+        "p95_ms": 0.0845,
+        "maximum_ms": 0.1857
+      },
+      "cpu_upload_ms": {
+        "samples": 100,
+        "mean_ms": 1.363118,
+        "p50_ms": 1.2419,
+        "p95_ms": 2.3915,
+        "maximum_ms": 2.7794
+      },
+      "revision_commit_ms": {
+        "samples": 100,
+        "mean_ms": 0.491526,
+        "p50_ms": 0.4515,
+        "p95_ms": 0.7672,
+        "maximum_ms": 1.5449
+      },
+      "total_ms": {
+        "samples": 100,
+        "mean_ms": 3.1538619999999997,
+        "p50_ms": 2.8902,
+        "p95_ms": 4.754,
+        "maximum_ms": 5.4078
+      }
+    },
+    "changing_transferred_bytes": 6048000
+  },
+  "adaptive_schedule": {
+    "source_updates": 26,
+    "fixed_5hz_publications": 26,
+    "adaptive_publications": 13,
+    "effective_hz": 2.6,
+    "maximum_publish_interval_seconds": 0.40000000000000036,
+    "rapid_heat_keeps_5hz": true,
+    "normal_bound_seconds": 0.4
+  },
+  "consumer": {
+    "enabled": true,
+    "active": true,
+    "closed": false,
+    "revision": 215,
+    "processed_revision": 215,
+    "publish_count": 217,
+    "skip_count": 107,
+    "quantized_skip_count": 106,
+    "visual_commit_count": 111,
+    "base_skip_count": 107,
+    "emission_skip_count": 107,
+    "failure_count": 1,
+    "recovery_count": 1,
+    "upload_count": 220,
+    "usd_set_count": 111,
+    "notice_count": 111,
+    "log_ids": [
+      "Log_00",
+      "Log_01",
+      "Log_02",
+      "Log_03",
+      "Log_04",
+      "Log_05",
+      "Log_06",
+      "Log_07",
+      "Log_08",
+      "Log_09",
+      "Log_10",
+      "Log_11",
+      "Log_12",
+      "Log_13",
+      "Log_14",
+      "Log_15",
+      "Log_16",
+      "Log_17",
+      "Log_18",
+      "Log_19"
+    ],
+    "render_log_ids": [
+      "Log_00",
+      "Log_01",
+      "Log_02",
+      "Log_03",
+      "Log_04",
+      "Log_05",
+      "Log_06",
+      "Log_07",
+      "Log_08",
+      "Log_09",
+      "Log_10",
+      "Log_11",
+      "Log_12",
+      "Log_13",
+      "Log_14",
+      "Log_15",
+      "Log_16",
+      "Log_17",
+      "Log_18",
+      "Log_19"
+    ],
+    "atlas": [
+      120,
+      60
+    ],
+    "atlas_cell_stride_px": 1,
+    "bytes_per_revision": 57600,
+    "packer": "native",
+    "packer_allocation_count": 3,
+    "last_payload_revision": 215
+  },
+  "transport": {
+    "atlas": [
+      120,
+      60
+    ],
+    "bytes_two_rgba8": 57600,
+    "native_output_ownership": "session-owned NumPy uint8 arrays; C++ writes synchronously through ctypes and never retains pointers",
+    "provider_input_lifetime": "committed and work buffers remain alive until consumer close; public CPU raw upload remains the qualified boundary",
+    "gpu_pointer_used": false,
+    "asset_path_changes": false,
+    "live_prim_redefinition": false
+  },
+  "captures": {
+    "neutral": {
+      "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tb\\captures\\native_neutral.png",
+      "sha256": "85ecc6b6a88c183ef285a655d1093a4267b732b0a51818385a3caaa69e421994",
+      "mean_rgb": [
+        147.62142035590279,
+        128.7908474392361,
+        117.24090603298612
+      ]
+    },
+    "native_beauty": {
+      "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tb\\captures\\native_beauty.png",
+      "sha256": "51d970094fdd62bc0b799569044e2f5d57d5864b1a782c1994180c0eba2483dc",
+      "mean_rgb": [
+        157.7852712673611,
+        151.8818120659722,
+        147.9214507378472
+      ]
+    },
+    "kind": "fixed-state transport diagnostic; not a combustion trajectory"
+  },
+  "decision": {
+    "feature_default": false,
+    "v2_payload_changed": false,
+    "authority_flow_point_collision_changed": false,
+    "continue_to_integrated_v3tc": true
+  }
+}

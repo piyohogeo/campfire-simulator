@@ -125,6 +125,7 @@ from .wood_visual_v1 import WOOD_VISUAL_V1_SETTING
 from .wood_visual_surface import ResidentNativeWoodVisualSurfaceProducer
 from .wood_visual_v3 import (
     WOOD_VISUAL_V3_SETTING,
+    WoodVisualV3AdaptiveScheduler,
     WoodVisualV3Consumer,
     preauthor_wood_visual_v3,
 )
@@ -3004,6 +3005,8 @@ class CampfireAppExtension(omni.ext.IExt):
         wood_visual_status = None
         wood_visual_v3_producer = None
         wood_visual_v3_consumer = None
+        wood_visual_v3_scheduler = None
+        wood_visual_v3_schedule_decisions = []
         wood_visual_v3_surface_profiles = []
         wood_visual_v3_profiles = []
         wood_visual_v3_errors = []
@@ -3053,7 +3056,13 @@ class CampfireAppExtension(omni.ext.IExt):
                     resident_native_backend
                 )
                 wood_visual_v3_consumer = WoodVisualV3Consumer(
-                    stage, log_ids, track_notices=True
+                    stage,
+                    log_ids,
+                    track_notices=True,
+                    native_library=resident_native_backend._library,
+                )
+                wood_visual_v3_scheduler = WoodVisualV3AdaptiveScheduler(
+                    source_interval_seconds=PHASE3_MODEL_DT_SECONDS
                 )
                 self._wood_visual_v3_consumer = wood_visual_v3_consumer
         ignition_seconds = {"dry": None, "wet": None}
@@ -3170,21 +3179,50 @@ class CampfireAppExtension(omni.ext.IExt):
                         native_step.snapshot.revision, native_step.snapshot.tick
                     )
                     wood_visual_v3_surface_profiles.append(surface_profile)
-                    try:
-                        wood_visual_v3_profiles.append(
-                            wood_visual_v3_consumer.publish(visual_payload)
-                        )
-                    except Exception as visual_error:
-                        wood_visual_v3_errors.append(
-                            {
-                                "revision": visual_payload.revision,
-                                "error": str(visual_error),
-                            }
-                        )
-                        carb.log_error(
-                            "[campfire.app] Wood visual V3 publication failed "
-                            f"at revision {visual_payload.revision}: {visual_error}"
-                        )
+                    schedule = wood_visual_v3_scheduler.decide(
+                        visual_payload,
+                        visual_payload.tick * PHASE3_MODEL_DT_SECONDS,
+                        force=(
+                            step_index in PHASE3_CAPTURE_STEPS
+                            or (
+                                capture_video_frames
+                                and step_index % video_frame_interval_steps == 0
+                            )
+                        ),
+                    )
+                    wood_visual_v3_schedule_decisions.append(schedule)
+                    if schedule.publish:
+                        try:
+                            visual_profile = (
+                                wood_visual_v3_consumer.publish_for_capture(
+                                    visual_payload
+                                )
+                                if schedule.reason == "full_republish"
+                                and (
+                                    step_index in PHASE3_CAPTURE_STEPS
+                                    or (
+                                        capture_video_frames
+                                        and step_index % video_frame_interval_steps == 0
+                                    )
+                                )
+                                else wood_visual_v3_consumer.publish(visual_payload)
+                            )
+                            wood_visual_v3_profiles.append(visual_profile)
+                            wood_visual_v3_scheduler.committed(
+                                visual_payload,
+                                visual_payload.tick * PHASE3_MODEL_DT_SECONDS,
+                            )
+                        except Exception as visual_error:
+                            wood_visual_v3_errors.append(
+                                {
+                                    "revision": visual_payload.revision,
+                                    "error": str(visual_error),
+                                }
+                            )
+                            carb.log_error(
+                                "[campfire.app] Wood visual V3 publication failed "
+                                f"at revision {visual_payload.revision}: {visual_error}"
+                            )
                 model_step_times_ms.append(
                     (time.perf_counter() - model_started) * 1000.0
                 )
@@ -4106,6 +4144,40 @@ class CampfireAppExtension(omni.ext.IExt):
                         "enabled": wood_visual_v3_enabled,
                         "input": "ImmutableWoodVisualSurfacePayload",
                         "update_interval_seconds": PHASE3_MODEL_DT_SECONDS,
+                        "adaptive_schedule": {
+                            "source_hz": 1.0 / PHASE3_MODEL_DT_SECONDS,
+                            "normal_interval_seconds": (
+                                wood_visual_v3_scheduler.normal_interval_seconds
+                                if wood_visual_v3_scheduler is not None
+                                else None
+                            ),
+                            "published": sum(
+                                decision.publish
+                                for decision in wood_visual_v3_schedule_decisions
+                            ),
+                            "deferred": sum(
+                                not decision.publish
+                                for decision in wood_visual_v3_schedule_decisions
+                            ),
+                            "reasons": {
+                                reason: sum(
+                                    decision.reason == reason
+                                    for decision in wood_visual_v3_schedule_decisions
+                                )
+                                for reason in {
+                                    decision.reason
+                                    for decision in wood_visual_v3_schedule_decisions
+                                }
+                            },
+                            "maximum_observed_delay_seconds": max(
+                                (
+                                    decision.elapsed_since_publish_seconds
+                                    for decision in wood_visual_v3_schedule_decisions
+                                    if decision.publish
+                                ),
+                                default=0.0,
+                            ),
+                        },
                         "status_after_timeline_stop": wood_visual_v3_status,
                         "surface_extract_timing": (
                             {

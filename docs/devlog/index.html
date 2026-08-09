@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v3ta">最新記録</a>
+        <a href="#phase-v3tb">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v3ta">Phase V3T-Aを読む</a>
+        <a class="button primary" href="#phase-v3tb">Phase V3T-Bを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V3T-A 完了</strong></div>
+        <div><span>現在地</span><strong>Phase V3T-B 完了</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>73 / 73 passed</strong></div>
-        <div><span>判定</span><strong>16倍小型化 · 性能未達 · 既定OFF</strong></div>
+        <div><span>テスト</span><strong>74 / 74 passed</strong></div>
+        <div><span>判定</span><strong>skip成立 · native高速化せず · 既定OFF</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,87 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-v3tb" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number compact">V3T-B</span>
+          <p><time datetime="2026-08-09">2026.08.09</time></p>
+          <span class="pill current">Functional qualified · performance missed</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Phase V3T-B · Native beauty + change-aware publication</p>
+            <h2>変わらない外観には、<br>何も書かない。</h2>
+            <p>V2 payloadを保ったまま最終RGBA8 packをadditive C ABIへ移し、session所有bufferを再利用しました。baseとemissionを独立比較し、量子化後の見た目が同じならtexture uploadもUSD Setも行いません。17 / 17 gateは合格しましたが、native packは今回の単一runでNumPyより速くなく、V3は既定OFFを維持します。</p>
+          </header>
+
+          <div class="capture-pair" aria-label="native beauty実画面と性能レポート">
+            <figure class="capture-card">
+              <a href="assets/phasev3tb/native_beauty.png" aria-label="native beauty 20本表示を原寸で開く">
+                <img src="assets/phasev3tb/native_beauty.png" width="1280" height="720" alt="native packした局所base roughness emissionを20本の固定UV Mesh薪へ表示したKit RTX実測画像">
+              </a>
+              <figcaption>
+                <div><strong>20 logs · native RGBA8</strong><span>7,200 cells · all texels exact to NumPy reference</span></div>
+                <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3mc/wood_visual_v3_combustion.mp4" data-video-poster="assets/phasev3mc/wood_visual_v3_combustion_poster.png" data-video-title="V3 transport actual combustion trajectory" data-video-meta="Existing V3M-C Resident-native 240 s trajectory · transport appearance mapping unchanged · 6 s · not a V3T-B timing capture">
+                  <span class="video-trigger-icon" aria-hidden="true"></span>
+                  <span><strong>実燃焼動画</strong><small>6秒 · mapping共通</small></span>
+                </button>
+              </figcaption>
+            </figure>
+            <figure class="capture-card">
+              <a href="assets/phasev3tb/native_beauty_report.svg" aria-label="V3T-B性能レポートを開く">
+                <img src="assets/phasev3tb/native_beauty_report.svg" width="1200" height="680" alt="native pack、changing publication、unchanged skip、adaptive frequencyを示すV3T-B実測図">
+              </a>
+              <figcaption><div><strong>Functional gain, performance miss</strong><span>unchanged: 0 upload · changing p95: 4.7540 ms</span></div></figcaption>
+            </figure>
+          </div>
+
+          <div class="notes-grid">
+            <section class="note">
+              <p class="note-label">Stable native ownership</p>
+              <h3>3 allocationを105回再利用</h3>
+              <p>C++は入力pointerを呼出し中だけ借用し、出力はconsumer session所有の連続uint8 bufferへ直接書きます。4本と20本でbase／emission全texelがNumPy参照と一致し、surface-cell permutationもbytes差として検出できました。</p>
+            </section>
+            <section class="note">
+              <p class="note-label">Revision semantics</p>
+              <h3>processedとdisplayedを分ける</h3>
+              <p>同じRGBA8ならprocessed revisionだけを進め、表示revisionは据え置きます。105同一外観revisionはupload 0／Set 0、base-onlyとemission-onlyは各1 channel・28,800 Bでした。reloadでは最新processed payloadを2枚とも完全再発行します。</p>
+            </section>
+          </div>
+
+          <section class="verification" aria-labelledby="phasev3tb-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Measured boundary</p>
+              <h3 id="phasev3tb-verification-title">skipは有効、native化単独は高速化せず。</h3>
+              <p>20本・100 post-warmup sampleでnative pack p95 2.7026 ms、NumPy参照2.3398 ms、changing publication 4.7540 msでした。通常小変化は5 Hz sourceから0.4秒間隔（実効2.5 Hz）へ間引き、急熱とemission境界横断は0.2秒を維持します。camera capture直前は両atlasを強制再発行します。</p>
+              <code>.\scripts\run_phasev3tb_native_pack.ps1</code>
+              <p><a href="assets/phasev3tb/native_beauty_report.json">最終機械レポート</a> · <a href="assets/phasev3tb/native_beauty_probe.json">Kit/RTX probe</a> · <a href="../design/wood_visual_v3_transport_optimization.md">設計メモ</a></p>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase V3T-B検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Native probe</strong><small>17 / 17 · exact texels · fixed buffers</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Change-aware</strong><small>105 revisions · 0 uploads · 0 Sets</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Lifecycle</strong><small>failure · retry · reload · stale reject</small></p></div>
+              <div role="listitem"><span aria-hidden="true">!</span><p><strong>Performance</strong><small>4.7540 ms p95 · target missed</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Regression</strong><small>V3M-C 17 / 17 · suite 74 / 74</small></p></div>
+            </div>
+          </section>
+
+          <div class="notes-grid">
+            <section class="note caution">
+              <p class="note-label">Known limit</p>
+              <h3>CPU uploadとtail stallが残る</h3>
+              <p>native packはbuffer allocationを安定化しますが、このrunではNumPy p95を下回りませんでした。public CPU raw uploadだけがqualifiedで、安全なowned GPU pointer sourceは依然ありません。単一runだけで高速化を主張しません。</p>
+            </section>
+            <section class="note next">
+              <p class="note-label">Next gate</p>
+              <h3>V3T-Cで実アプリ交互比較</h3>
+              <p>同じscenario、camera、warmupでV3 OFF／ONを3組交互に測り、50 ms級stall、frame pacing、RTX反映遅延を分離します。既定ONや通常デモpresetの変更は、その結果がgateを満たす場合だけ検討します。</p>
+            </section>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v3ta" class="section entry-section phase-six">

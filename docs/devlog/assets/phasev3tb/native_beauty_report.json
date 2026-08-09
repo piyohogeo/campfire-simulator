@@ -1,0 +1,52 @@
+{
+  "schema": "campfire.phasev3tb.report.v1",
+  "status": "qualified_functionally_performance_target_missed",
+  "gates_passed": 17,
+  "gate_count": 17,
+  "v3mc_regression": {
+    "gates_passed": 17,
+    "gate_count": 17,
+    "consumer_revision": 107
+  },
+  "mapping": {
+    "rgba8_all_texels_exact": true,
+    "surface_permutation_visible": true,
+    "buffer_pointer_stable": true,
+    "session_allocation_count": 3
+  },
+  "performance": {
+    "native_pack_p95_ms": 2.7026,
+    "numpy_reference_pack_p95_ms": 2.3398,
+    "changing_publication_p95_ms": 4.754,
+    "cpu_upload_p95_ms": 2.3915,
+    "revision_commit_p95_ms": 0.7672,
+    "target_ms": 1.0,
+    "target_met": false
+  },
+  "change_aware": {
+    "unchanged_samples": 105,
+    "unchanged_uploads": 0,
+    "unchanged_usd_sets": 0,
+    "base_and_emission_independent": true,
+    "processed_and_displayed_revision_separate": true
+  },
+  "adaptive_schedule": {
+    "source_updates": 26,
+    "fixed_5hz_publications": 26,
+    "adaptive_publications": 13,
+    "effective_hz": 2.6,
+    "maximum_publish_interval_seconds": 0.40000000000000036,
+    "rapid_heat_keeps_5hz": true,
+    "normal_bound_seconds": 0.4
+  },
+  "comparison": {
+    "v3mc_guttered_p95_ms": 5.4135,
+    "v3ta_compact_p95_ms": 4.8254,
+    "note": "Single probes are not an adoption claim; integrated alternating runs are reserved for V3T-C."
+  },
+  "decision": {
+    "v3_default": false,
+    "continue_to_v3tc": true,
+    "production_scope_changed": false
+  }
+}

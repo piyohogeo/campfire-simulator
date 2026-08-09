@@ -1,5 +1,11 @@
 # Changelog
 
+- Added Phase V3T-B's additive native RGBA8 beauty packer while retaining the immutable V2 payload, stable surface identity, compact descriptor, and default-off V3 boundary.
+- Reused three session-owned native pack resources and matched every base/emission texel against the NumPy reference for four and twenty logs across 105 packs; invalid floats and surface permutations remain detectable.
+- Defined displayed versus processed revision semantics and skipped base/emission uploads independently; 105 identical quantized revisions issued zero texture uploads and zero USD Sets.
+- Added an adaptive visual scheduler that retains 5 Hz for rapid heat and threshold crossings while publishing small changes at a bounded 0.4-second cadence (2.5 Hz on the fixed 5 Hz source).
+- Qualified 17 / 17 V3T-B Kit/RTX gates, 17 / 17 V3M-C regression gates, the release build, Phase 0 RTX, and the expanded 74 / 74 eight-process suite; requested camera captures force both atlases to republish.
+- Recorded the unfavorable performance result: native 20-log pack p95 `2.7026 ms` versus NumPy `2.3398 ms`, and changing publication p95 `4.7540 ms`; V3 remains default-off pending integrated V3T-C measurement.
 - Added Phase V3T-A's session-stable compact atlas descriptor and changed the default V3 mapping from a guttered 4x4 pixel cell to one exact RGBA8 texel per surface cell without changing surface identity, Mesh topology, physics, Flow, or production defaults.
 - Qualified 12 / 12 Kit/RTX compact-atlas gates across four and twenty logs, encoded cell sampling, side/cap/seam mapping, transform, stage reload, managed paths, and nearest-sampled 1x1 versus 2x2 rendered equivalence.
 - Reduced the two-atlas 20-log transfer from `921,600` to `57,600 bytes` per revision (16x smaller); the four-log scene now authors a minimal `96x15` descriptor instead of reserving all twenty slots.

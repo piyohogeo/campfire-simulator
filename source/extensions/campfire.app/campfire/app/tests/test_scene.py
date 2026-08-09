@@ -1289,6 +1289,41 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertGreater(int(hot[0]), 200)
         self.assertGreater(int(hot[1]), 80)
 
+    async def test_wood_visual_v3_adaptive_scheduler_bounds_delay_and_keeps_heat(self):
+        log_ids = ("Log_00",)
+
+        def payload(revision, temperature):
+            count = 360
+            zero = np.zeros(count, dtype=np.float32).tobytes()
+            return campfire.app.ImmutableWoodVisualSurfacePayload(
+                revision,
+                revision,
+                log_ids,
+                360,
+                np.arange(360, dtype=np.uint32).tobytes(),
+                np.full(count, temperature, dtype=np.float32).tobytes(),
+                zero,
+                zero,
+                zero,
+            )
+
+        scheduler = campfire.app.WoodVisualV3AdaptiveScheduler()
+        decisions = []
+        for tick in range(5):
+            current = payload(tick + 1, 400.0 + tick)
+            decision = scheduler.decide(current, tick * 0.2)
+            decisions.append(decision)
+            if decision.publish:
+                scheduler.committed(current, tick * 0.2)
+        self.assertEqual([value.publish for value in decisions], [True, False, True, False, True])
+        self.assertLessEqual(
+            max(value.elapsed_since_publish_seconds for value in decisions if value.publish),
+            0.5,
+        )
+        rapid = scheduler.decide(payload(6, 700.0), 1.0)
+        self.assertTrue(rapid.publish)
+        self.assertEqual(rapid.reason, "rapid_heat")
+
     async def test_wood_visual_v3_revision_failure_reload_and_close_lifecycle(self):
         providers = []
 
@@ -1313,9 +1348,10 @@ class TestScene(omni.kit.test.AsyncTestCase):
             if point == failure["point"]:
                 raise RuntimeError("injected visual failure")
 
-        def payload(revision):
+        def payload(revision, state=1):
             count = len(log_ids) * 360
-            zero = np.zeros(count, dtype=np.float32).tobytes()
+            zero = np.zeros(count, dtype=np.float32)
+            moisture = np.full(count, 0.01 * state, dtype=np.float32)
             return campfire.app.ImmutableWoodVisualSurfacePayload(
                 revision,
                 revision,
@@ -1324,10 +1360,10 @@ class TestScene(omni.kit.test.AsyncTestCase):
                 np.tile(
                     np.arange(360, dtype=np.uint32), len(log_ids)
                 ).tobytes(),
-                np.full(count, 300.0 + revision, dtype=np.float32).tobytes(),
-                zero,
-                zero,
-                zero,
+                np.full(count, 650.0 + 100.0 * state, dtype=np.float32).tobytes(),
+                moisture.tobytes(),
+                zero.tobytes(),
+                zero.tobytes(),
             )
 
         stage = Usd.Stage.CreateInMemory()
@@ -1351,31 +1387,44 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(repeated.usd_set_count, 0)
         self.assertEqual(consumer.status()["atlas"], [96, 15])
         self.assertEqual(consumer.status()["bytes_per_revision"], 11_520)
+        unchanged = consumer.publish(payload(2))
+        self.assertEqual(unchanged.status, "unchanged_quantized")
+        self.assertEqual(unchanged.upload_count, 0)
+        self.assertEqual(unchanged.usd_set_count, 0)
+        self.assertEqual(consumer.status()["revision"], 1)
+        self.assertEqual(consumer.status()["processed_revision"], 2)
+        capture = consumer.publish_for_capture(payload(2))
+        self.assertEqual(capture.status, "capture_republish")
+        self.assertEqual(capture.upload_count, 2)
+        self.assertEqual(capture.usd_set_count, 1)
+        self.assertEqual(consumer.status()["revision"], 2)
+        self.assertEqual(consumer.status()["processed_revision"], 2)
         failure["point"] = "after_base"
         with self.assertRaisesRegex(RuntimeError, "injected"):
-            consumer.publish(payload(2))
-        self.assertEqual(consumer.status()["revision"], 1)
+            consumer.publish(payload(3, state=2))
+        self.assertEqual(consumer.status()["revision"], 2)
+        self.assertEqual(consumer.status()["processed_revision"], 2)
         self.assertEqual(consumer.status()["failure_count"], 1)
         self.assertEqual(consumer.status()["recovery_count"], 1)
         failure["point"] = None
-        consumer.publish(payload(2))
+        consumer.publish(payload(3, state=2))
 
         reloaded = Usd.Stage.CreateInMemory()
         campfire.app.populate_phase3_scene(reloaded, render_hierarchy=True)
         campfire.app.preauthor_wood_visual_v3(reloaded, log_ids)
-        profile = consumer.on_stage_reloaded(reloaded, payload(2))
+        profile = consumer.on_stage_reloaded(reloaded, payload(3, state=2))
         self.assertEqual(profile.status, "reloaded")
         self.assertEqual(
             reloaded.GetPrimAtPath(campfire.app.WOOD_VISUAL_V3_ROOT)
             .GetAttribute("campfire:committedRevision")
             .Get(),
-            2,
+            3,
         )
         with self.assertRaisesRegex(RuntimeError, "monotonically"):
-            consumer.publish(payload(1))
+            consumer.publish(payload(2))
         consumer.on_timeline_stopped()
         with self.assertRaisesRegex(RuntimeError, "active timeline"):
-            consumer.publish(payload(3))
+            consumer.publish(payload(4, state=3))
         self.assertTrue(consumer.close())
         self.assertFalse(consumer.close())
         self.assertTrue(all(provider.destroyed for provider in providers))

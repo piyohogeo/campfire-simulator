@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import ctypes
 import hashlib
 import json
 import statistics
@@ -244,6 +245,7 @@ async def _run(arguments):
             log_ids,
             track_notices=True,
             failure_injector=inject,
+            native_library=ctypes.CDLL(str(arguments["native_library"].resolve())),
         )
         consumer.on_timeline_started()
         viewport = await _viewport()
@@ -359,8 +361,14 @@ async def _run(arguments):
         gates = {
             "twenty_logs_7200_surface_cells": len(log_ids) == 20,
             "fixed_two_atlas_resources": material["upload_count_per_revision"] == 2,
-            "rgba8_raw_uploads_succeeded": all(value.upload_count == 2 for value in profiles),
-            "one_revision_set_per_update": all(value.usd_set_count == 1 for value in profiles),
+            "change_aware_raw_uploads_succeeded": (
+                sum(value.upload_count == 2 for value in profiles) == 2
+                and all(value.upload_count in (0, 2) for value in profiles)
+            ),
+            "revision_sets_follow_visual_changes": all(
+                value.usd_set_count == (1 if value.upload_count else 0)
+                for value in profiles
+            ),
             "unchanged_revision_is_noop": repeated.upload_count == repeated.usd_set_count == 0,
             "stale_revision_rejected": stale_rejected,
             "failure_is_visual_only_and_recovers_previous_revision": failure_rejected,

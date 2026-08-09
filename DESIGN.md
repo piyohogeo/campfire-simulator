@@ -2606,3 +2606,13 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - RTX比較: 同一checkerを1×1、2×2、4×4で描画し、1×1対2×2の1280×720画像差はmean `0.1008`、p95 `1 / 255`、max `9 / 255`だった。4本／20本、side、両cap、seam、overlap、移動、回転、reloadを含む`12 / 12` gateに合格し、nearest samplingと全face vertex同一texel中心でpadding不要と判断した。
 - transport: 20本2×RGBA8は`921,600 → 57,600 B/revision`で16分の1になった。100 post-warmup sampleのisolated publication p95は`5.4135 → 4.8254 ms`、beauty packは`2.7769 → 1.8627 ms`、CPU uploadは`2.4774 → 2.2883 ms`だった。参考目標`1.0 ms`は未達で、compact化だけで実アプリstall解消とは判定しない。
 - 回帰と境界: release build、Phase 0 RTX、V3M-B `10 / 10`、V3M-C `17 / 17`、標準suite全8 process・`73 / 73`件（`365.0 s`）に合格した。V3は既定OFF、物理Cylinder、wood authority、Flow、Point、revision／rollback／reload／owner lifecycleを維持する。Mesh collider、変形、V4、Phase 6DMへ進まず、次はV3T-Bのnative beauty packとchange-aware publicationだけを評価する。
+
+## Phase V3T-B native beauty pack and change-aware publication
+
+### 2026-08-09: 最終RGBA8をnativeでpackし、同一外観のUSD発行を省く
+
+- native boundary: V2 immutable payloadは維持し、float32のtemperature／moisture／char／ashとstable render slotをadditive C ABIへ渡す。C++はcompact atlasの最終RGBA8へ直接書き、pointerを保持しない。session所有work buffer 2枚とslot配列の3 allocationを105 packで再利用し、4本／20本の全base・emission texelがNumPy参照と完全一致した。
+- revision semantics: `campfire:committedRevision`は最後に表示が変化したpayloadを示し、`processed_revision`はconsumerが正常処理した最新payloadを示す。量子化後に両atlasが同じなら0 upload／0 Set、片方だけ変わればその1 channelだけを転送する。reloadは最新processed payloadを完全再発行し、failureは両revisionを進めずvisualだけを復旧する。
+- scheduling: sourceは5 Hzを維持し、最初・reload・force・25 K以上の急熱・emission境界横断は5 Hz、通常小変化は0.4 s間隔とした。5 Hz離散tickで500 ms上限を守るため実効2.5 Hzであり、probeは26 update／13 publish／最大0.4 s、急熱0.2 sを確認した。
+- 実測: Kit/RTX `17 / 17`、V3M-C `17 / 17`、release build、Phase 0 RTX、標準8 process・`74 / 74`件（`359.8 s`）に合格した。20本native pack p95 `2.7026 ms`はNumPy参照`2.3398 ms`より遅く、changing publication p95 `4.7540 ms`も1 ms未達だった。一方105 unchanged revisionはupload 0／Set 0で、base-only／emission-onlyは各28,800 B転送になった。要求されたcamera capture直前は同一revisionでも両atlasを強制再発行し、間引きによる古い表示を撮影しない。
+- 判断: 機能とlifecycleはqualifiedだが、native化単独の性能改善は主張しない。V3既定OFFと全production契約を維持し、V3T-CのOFF／ON交互3組、frame stall、RTX反映遅延で利用presetと採否を決める。Mesh collider、変形、V4、Phase 6DM、Point／Flow変更には進まない。

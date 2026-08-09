@@ -68,6 +68,68 @@ class WoodVisualV3PublicationProfile:
     usd_set_count: int
     notice_count: int
     transferred_bytes: int
+    base_changed: bool
+    emission_changed: bool
+
+
+@dataclass(frozen=True)
+class WoodVisualV3ScheduleDecision:
+    publish: bool
+    reason: str
+    elapsed_since_publish_seconds: float
+
+
+class WoodVisualV3AdaptiveScheduler:
+    """Bound small-change latency while retaining 5 Hz rapid heat updates."""
+
+    def __init__(
+        self,
+        *,
+        source_interval_seconds=0.2,
+        normal_interval_seconds=0.4,
+        rapid_temperature_delta_k=25.0,
+    ):
+        if source_interval_seconds <= 0.0:
+            raise ValueError("Wood visual source interval must be positive")
+        if not source_interval_seconds <= normal_interval_seconds <= 0.5:
+            raise ValueError("Wood visual normal interval must be within 0.5 seconds")
+        self.source_interval_seconds = float(source_interval_seconds)
+        self.normal_interval_seconds = float(normal_interval_seconds)
+        self.rapid_temperature_delta_k = float(rapid_temperature_delta_k)
+        self._last_payload = None
+        self._last_publish_seconds = None
+
+    def decide(self, payload, model_seconds, *, force=False):
+        if not isinstance(payload, ImmutableWoodVisualSurfacePayload):
+            raise TypeError("Wood visual scheduler requires the V2 immutable payload")
+        model_seconds = float(model_seconds)
+        if force or self._last_payload is None:
+            return WoodVisualV3ScheduleDecision(True, "full_republish", 0.0)
+        elapsed = model_seconds - self._last_publish_seconds
+        if elapsed < 0.0:
+            raise RuntimeError("Wood visual schedule time must increase monotonically")
+        if elapsed + 1.0e-9 < self.source_interval_seconds:
+            return WoodVisualV3ScheduleDecision(False, "source_interval", elapsed)
+        previous = np.frombuffer(self._last_payload.temperatures, dtype=np.float32)
+        current = np.frombuffer(payload.temperatures, dtype=np.float32)
+        delta = float(np.max(np.abs(current - previous)))
+        crossed = any(
+            np.any((previous < threshold) & (current >= threshold))
+            for threshold in (650.0, 800.0, 1000.0)
+        )
+        if crossed or delta >= self.rapid_temperature_delta_k:
+            return WoodVisualV3ScheduleDecision(True, "rapid_heat", elapsed)
+        if elapsed + 1.0e-9 >= self.normal_interval_seconds:
+            return WoodVisualV3ScheduleDecision(True, "normal_bound", elapsed)
+        return WoodVisualV3ScheduleDecision(False, "small_change_deferred", elapsed)
+
+    def committed(self, payload, model_seconds):
+        self._last_payload = payload
+        self._last_publish_seconds = float(model_seconds)
+
+    def reset(self):
+        self._last_payload = None
+        self._last_publish_seconds = None
 
 
 def _texture_shader(stage, path, uri):
@@ -315,6 +377,88 @@ class WoodVisualV3AtlasPacker:
         )
 
 
+class WoodVisualV3NativeAtlasPacker:
+    """Pack final RGBA8 texels into two session-owned reusable arrays."""
+
+    def __init__(self, library, log_ids, *, descriptor=None, log_slots=None):
+        if library is None:
+            raise ValueError("Native wood visual packer requires a loaded library")
+        reference = WoodVisualV3AtlasPacker(
+            log_ids, descriptor=descriptor, log_slots=log_slots
+        )
+        self.library = library
+        self.log_ids = reference.log_ids
+        self.descriptor = reference.descriptor
+        self.log_slots = reference.log_slots
+        self._render_slots = np.asarray(self.log_slots, dtype=np.uint32)
+        shape = (self.descriptor.height_px, self.descriptor.width_px, 4)
+        self._base_rgba8 = np.empty(shape, dtype=np.uint8)
+        self._emission_rgba8 = np.empty(shape, dtype=np.uint8)
+        self.allocation_count = 3
+        self.pack_count = 0
+        self._neutral = reference.neutral_atlases()
+        self._configure()
+
+    def _configure(self):
+        fp = ctypes.POINTER(ctypes.c_float)
+        up = ctypes.POINTER(ctypes.c_uint32)
+        bp = ctypes.POINTER(ctypes.c_uint8)
+        self.library.campfire_native_wood_visual_rgba8_pack.argtypes = (
+            [fp] * 4
+            + [ctypes.c_size_t] * 2
+            + [up]
+            + [ctypes.c_size_t] * 3
+            + [bp, ctypes.c_size_t, bp, ctypes.c_size_t]
+        )
+        self.library.campfire_native_wood_visual_rgba8_pack.restype = ctypes.c_int32
+
+    def neutral_atlases(self):
+        return tuple(value.copy() for value in self._neutral)
+
+    def pack(self, payload: ImmutableWoodVisualSurfacePayload) -> WoodVisualV3AtlasPack:
+        if not isinstance(payload, ImmutableWoodVisualSurfacePayload):
+            raise TypeError("Wood visual V3 requires an immutable V2 surface payload")
+        if payload.log_ids != self.log_ids:
+            raise ValueError("Wood visual V3 payload log order does not match")
+        if payload.points_per_log != WOOD_SURFACE_CELLS_PER_LOG:
+            raise ValueError("Wood visual V3 requires 360 surface states per log")
+        started = time.perf_counter_ns()
+        fp = ctypes.POINTER(ctypes.c_float)
+        up = ctypes.POINTER(ctypes.c_uint32)
+        bp = ctypes.POINTER(ctypes.c_uint8)
+        channels = tuple(
+            np.frombuffer(value, dtype=np.float32)
+            for value in (
+                payload.temperatures,
+                payload.moistures,
+                payload.chars,
+                payload.ashes,
+            )
+        )
+        result = self.library.campfire_native_wood_visual_rgba8_pack(
+            *(value.ctypes.data_as(fp) for value in channels),
+            len(self.log_ids),
+            payload.points_per_log,
+            self._render_slots.ctypes.data_as(up),
+            self.descriptor.slot_capacity,
+            self.descriptor.tile_columns,
+            self.descriptor.tile_rows,
+            self._base_rgba8.ctypes.data_as(bp),
+            self._base_rgba8.nbytes,
+            self._emission_rgba8.ctypes.data_as(bp),
+            self._emission_rgba8.nbytes,
+        )
+        if result != 0:
+            raise RuntimeError(f"Native wood visual beauty pack failed with code {result}")
+        self.pack_count += 1
+        return WoodVisualV3AtlasPack(
+            payload.revision,
+            self._base_rgba8,
+            self._emission_rgba8,
+            (time.perf_counter_ns() - started) / 1_000_000.0,
+        )
+
+
 def _pointer_capsule(array):
     capsule_new = ctypes.pythonapi.PyCapsule_New
     capsule_new.argtypes = (ctypes.c_void_p, ctypes.c_char_p, ctypes.c_void_p)
@@ -334,6 +478,7 @@ class WoodVisualV3Consumer:
         provider_factory=None,
         texture_format=None,
         failure_injector=None,
+        native_library=None,
     ):
         self._owner = threading.get_ident()
         self._stage = stage
@@ -345,8 +490,13 @@ class WoodVisualV3Consumer:
         self._active = False
         self._closed = False
         self._revision = 0
+        self._processed_revision = 0
         self._publish_count = 0
         self._skip_count = 0
+        self._quantized_skip_count = 0
+        self._visual_commit_count = 0
+        self._base_skip_count = 0
+        self._emission_skip_count = 0
         self._failure_count = 0
         self._recovery_count = 0
         self._upload_count = 0
@@ -360,11 +510,19 @@ class WoodVisualV3Consumer:
         self._revision_attr = None
         self._listener = None
         self._bind_stage(stage, track_notices)
-        self._packer = WoodVisualV3AtlasPacker(
+        packer_type = (
+            WoodVisualV3AtlasPacker
+            if native_library is None
+            else WoodVisualV3NativeAtlasPacker
+        )
+        packer_args = () if native_library is None else (native_library,)
+        self._packer = packer_type(
+            *packer_args,
             self._log_ids,
             descriptor=self._atlas_descriptor,
             log_slots=self._log_slots,
         )
+        self._packer_kind = "numpy" if native_library is None else "native"
         self._create_providers()
         self._last_base, self._last_emission = self._packer.neutral_atlases()
         self._upload_pair(self._last_base, self._last_emission)
@@ -486,49 +644,93 @@ class WoodVisualV3Consumer:
     def publish(self, payload: ImmutableWoodVisualSurfacePayload):
         return self._publish(payload, force=False, status="committed")
 
+    def publish_for_capture(self, payload: ImmutableWoodVisualSurfacePayload):
+        """Force both atlases immediately before a requested camera capture."""
+
+        return self._publish(payload, force=True, status="capture_republish")
+
     def _publish(self, payload, *, force, status):
         self._require_owner()
         if self._closed or not self._active:
             raise RuntimeError("Wood visual V3 requires an active timeline")
         if payload.log_ids != self._log_ids:
             raise ValueError("Wood visual V3 payload log order does not match")
-        if not force and payload.revision == self._revision:
+        if not force and payload.revision == self._processed_revision:
             self._skip_count += 1
             profile = WoodVisualV3PublicationProfile(
-                payload.revision, "unchanged_revision", 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0
+                payload.revision, "unchanged_revision", 0.0, 0.0, 0.0, 0.0,
+                0.0, 0, 0, 0, 0, False, False
             )
             self._profiles.append(profile)
             return profile
-        if payload.revision < self._revision:
+        if payload.revision < self._processed_revision:
             raise RuntimeError("Wood visual V3 revision must increase monotonically")
 
         started = time.perf_counter_ns()
         packed = self._packer.pack(payload)
         packed_at = time.perf_counter_ns()
-        base_capsule = _pointer_capsule(packed.base_rgba8)
-        emission_capsule = _pointer_capsule(packed.emission_rgba8)
+        base_changed = force or not np.array_equal(packed.base_rgba8, self._last_base)
+        emission_changed = force or not np.array_equal(
+            packed.emission_rgba8, self._last_emission
+        )
         boundary_at = time.perf_counter_ns()
+        if not base_changed and not emission_changed:
+            finished = time.perf_counter_ns()
+            self._processed_revision = payload.revision
+            self._last_payload = payload
+            self._publish_count += 1
+            self._skip_count += 1
+            self._quantized_skip_count += 1
+            self._base_skip_count += 1
+            self._emission_skip_count += 1
+            profile = WoodVisualV3PublicationProfile(
+                payload.revision,
+                "unchanged_quantized",
+                (finished - started) / 1_000_000.0,
+                packed.pack_ms,
+                (boundary_at - packed_at) / 1_000_000.0,
+                0.0,
+                0.0,
+                0,
+                0,
+                0,
+                0,
+                False,
+                False,
+            )
+            self._profiles.append(profile)
+            return profile
+        base_capsule = _pointer_capsule(packed.base_rgba8) if base_changed else None
+        emission_capsule = (
+            _pointer_capsule(packed.emission_rgba8) if emission_changed else None
+        )
         notice_before = self._notice_count
         uploads = 0
         sets = 0
+        base_uploaded = False
+        emission_uploaded = False
         self._notice_active = True
         try:
-            self._inject("before_base", payload.revision)
-            self._base_provider.set_raw_bytes_data(
-                base_capsule,
-                [self._atlas_descriptor.width_px, self._atlas_descriptor.height_px],
-                self._texture_format,
-                strict=True,
-            )
-            uploads += 1
-            self._inject("after_base", payload.revision)
-            self._emission_provider.set_raw_bytes_data(
-                emission_capsule,
-                [self._atlas_descriptor.width_px, self._atlas_descriptor.height_px],
-                self._texture_format,
-                strict=True,
-            )
-            uploads += 1
+            if base_changed:
+                self._inject("before_base", payload.revision)
+                self._base_provider.set_raw_bytes_data(
+                    base_capsule,
+                    [self._atlas_descriptor.width_px, self._atlas_descriptor.height_px],
+                    self._texture_format,
+                    strict=True,
+                )
+                uploads += 1
+                base_uploaded = True
+                self._inject("after_base", payload.revision)
+            if emission_changed:
+                self._emission_provider.set_raw_bytes_data(
+                    emission_capsule,
+                    [self._atlas_descriptor.width_px, self._atlas_descriptor.height_px],
+                    self._texture_format,
+                    strict=True,
+                )
+                uploads += 1
+                emission_uploaded = True
             uploaded_at = time.perf_counter_ns()
             self._inject("after_emission", payload.revision)
             if not self._revision_attr.Set(payload.revision):
@@ -538,7 +740,10 @@ class WoodVisualV3Consumer:
         except Exception:
             self._failure_count += 1
             try:
-                self._upload_pair(self._last_base, self._last_emission)
+                if base_uploaded:
+                    self._upload(self._base_provider, self._last_base)
+                if emission_uploaded:
+                    self._upload(self._emission_provider, self._last_emission)
                 self._revision_attr.Set(self._revision)
                 self._recovery_count += 1
             finally:
@@ -547,11 +752,19 @@ class WoodVisualV3Consumer:
         finally:
             self._notice_active = False
         finished = time.perf_counter_ns()
-        self._last_base = packed.base_rgba8
-        self._last_emission = packed.emission_rgba8
+        if base_changed:
+            np.copyto(self._last_base, packed.base_rgba8)
+        else:
+            self._base_skip_count += 1
+        if emission_changed:
+            np.copyto(self._last_emission, packed.emission_rgba8)
+        else:
+            self._emission_skip_count += 1
         self._last_payload = payload
         self._revision = payload.revision
+        self._processed_revision = payload.revision
         self._publish_count += 1
+        self._visual_commit_count += 1
         self._upload_count += uploads
         self._usd_set_count += sets
         notice_count = self._notice_count - notice_before
@@ -566,7 +779,9 @@ class WoodVisualV3Consumer:
             uploads,
             sets,
             notice_count,
-            packed.base_rgba8.nbytes + packed.emission_rgba8.nbytes,
+            uploads * self._atlas_descriptor.bytes_per_rgba8_atlas,
+            base_changed,
+            emission_changed,
         )
         self._profiles.append(profile)
         return profile
@@ -581,6 +796,7 @@ class WoodVisualV3Consumer:
         self._bind_stage(stage, self._listener is not None)
         self._create_providers()
         self._revision = int(self._revision_attr.Get() or 0)
+        self._processed_revision = self._revision
         self._active = True
         try:
             return self._publish(latest_payload, force=True, status="reloaded")
@@ -598,8 +814,13 @@ class WoodVisualV3Consumer:
             "active": self._active,
             "closed": self._closed,
             "revision": self._revision,
+            "processed_revision": self._processed_revision,
             "publish_count": self._publish_count,
             "skip_count": self._skip_count,
+            "quantized_skip_count": self._quantized_skip_count,
+            "visual_commit_count": self._visual_commit_count,
+            "base_skip_count": self._base_skip_count,
+            "emission_skip_count": self._emission_skip_count,
             "failure_count": self._failure_count,
             "recovery_count": self._recovery_count,
             "upload_count": self._upload_count,
@@ -614,6 +835,8 @@ class WoodVisualV3Consumer:
             "atlas_cell_stride_px": self._atlas_descriptor.cell_stride_px,
             "bytes_per_revision": 2
             * self._atlas_descriptor.bytes_per_rgba8_atlas,
+            "packer": self._packer_kind,
+            "packer_allocation_count": getattr(self._packer, "allocation_count", None),
             "last_payload_revision": (
                 self._last_payload.revision if self._last_payload is not None else None
             ),
