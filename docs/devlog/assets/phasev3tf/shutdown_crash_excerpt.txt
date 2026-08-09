@@ -1,0 +1,17 @@
+2026-08-09T13:20:44Z [754ms] [Info] [omni.ext.plugin] [ext: omni.kit.loop-default-0.2.2] Starting ext::IExt in 'c:/users/junic/src/campfire-simulator/_build/windows-x86_64/release/extscache/omni.kit.loop-default-0.2.2+698af100.wx64.r/bin/omni.kit.loop-default.plugin.dll'
+2026-08-09T13:20:45Z [1,650ms] [Info] [omni.ext.plugin] [ext: omni.timeline-1.1.0] Starting ext::IExt in 'c:/users/junic/src/campfire-simulator/_build/windows-x86_64/release/extscache/omni.timeline-1.1.0+698af100.wx64.r.cp312/bin/omni.timeline.plugin.dll'
+2026-08-09T13:21:22Z [29,528ms] [Fatal] [carb.crashreporter-breakpad.plugin] [crash] Thread 19184 backtrace follows:
+2026-08-09T13:21:22Z [29,529ms] [Fatal] [carb.crashreporter-breakpad.plugin] 000: usd_usdGeom.dll!pxrInternal_v0_25_11__pxrReserved__::UsdGeomCylinder_1::ComputeExtent+0x32987 ***
+2026-08-09T13:21:22Z [29,531ms] [Fatal] [carb.crashreporter-breakpad.plugin] 001: usd_usdGeom.dll!pxrInternal_v0_25_11__pxrReserved__::UsdGeomCylinder_1::ComputeExtent+0x329b7 ***
+2026-08-09T13:21:22Z [29,532ms] [Fatal] [carb.crashreporter-breakpad.plugin] 002: usd_usdGeom.dll!pxrInternal_v0_25_11__pxrReserved__::UsdGeomCylinder_1::ComputeExtent+0x4cdb5 ***
+2026-08-09T13:21:22Z [29,533ms] [Fatal] [carb.crashreporter-breakpad.plugin] 003: omni.usd.dll!omni::usd::UsdContext::unregisterViewOverrideToHydraEngines+0x10e0 ***
+2026-08-09T13:21:22Z [29,536ms] [Fatal] [carb.crashreporter-breakpad.plugin] 004: carb.eventdispatcher.plugin.dll!+0x11abe ***
+2026-08-09T13:21:22Z [29,540ms] [Fatal] [carb.crashreporter-breakpad.plugin] 005: carb.eventdispatcher.plugin.dll!+0x11f51 ***
+2026-08-09T13:21:22Z [29,543ms] [Fatal] [carb.crashreporter-breakpad.plugin] 006: omni.timeline.plugin.dll!+0x62cb ***
+2026-08-09T13:21:22Z [29,545ms] [Fatal] [carb.crashreporter-breakpad.plugin] 007: omni.timeline.plugin.dll!+0x1ab95 ***
+2026-08-09T13:21:22Z [29,548ms] [Fatal] [carb.crashreporter-breakpad.plugin] 008: carb.eventdispatcher.plugin.dll!+0x11abe ***
+2026-08-09T13:21:22Z [29,552ms] [Fatal] [carb.crashreporter-breakpad.plugin] 009: carb.eventdispatcher.plugin.dll!+0x11f51 ***
+2026-08-09T13:21:22Z [29,555ms] [Fatal] [carb.crashreporter-breakpad.plugin] 010: omni.kit.loop-default.plugin.dll!+0x16d48 ***
+2026-08-09T13:21:22Z [29,557ms] [Fatal] [carb.crashreporter-breakpad.plugin] 011: omni.kit.app.plugin.dll!+0x236df ***
+2026-08-09T13:21:22Z [29,558ms] [Fatal] [carb.crashreporter-breakpad.plugin] 012: omni.kit.app.plugin.dll!carbOnPluginQuickShutdown+0x7629 ***
+2026-08-09T13:21:22Z [29,573ms] [Warning] [carb.crashreporter-breakpad.plugin] terminating this process with exit code 3221225477.

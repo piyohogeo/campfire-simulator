@@ -2706,3 +2706,18 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 回帰: release buildは`9.28 s`で成功し、Phase 0実機起動も成功した。標準suite全8 process・`77 / 77`件を`379.5 s`で合格した。
 - 非変更: wood authority、物理式、wood JSON、`ResidentPublishedSnapshot`、checkpoint v1、Flow 110.0.0、Point/Sphere schema、collision、rollback／revision、V3T-C safe stopは不変。Pointとrigid layoutは既定OFF、Sphereはproduction既定である。
 - 次: normal app専用の既定OFF scenarioで、offline authoring前に1本を任意角へ配置し、通常transform observerから停止中refresh、revision継続、stage replacementを検証する。live representation migrationは引き続き実装しない。
+
+## Phase V3T-F GPU-source production candidate rejection
+
+### 2026-08-09: setter性能条件は合格したがshutdown crashにより統合撤回
+
+- 開始境界: HEAD／master／origin/master `c5cbb4a`とclean treeを確認して開始した。Phase V3T-Eの結果を根拠に、V3表示だけをeventually consistent best-effort observerとし、各base／emission Providerへ3個の永続Warp GPU source bufferを循環させる候補を一時的に実装した。wood authority、Flow入力、物理、checkpoint、serialization、Resident revision／rollbackへ表示revisionを混入させていない。
+- performance: 20本・120×60 RGBA8・base＋emission・Flow＋RTXで3独立run、各mode warmup 20＋測定120、合計720 sampleを取得した。全run Provider setter p95はCPU `29.8788 ms`、GPU ring3 `0.2531 ms`、GPU source-ready待ち`0.6105 ms`。GPU setterの5 ms超は0で、CPU-sourceの約28～35 ms tailは再発しなかった。
+- end-to-end: 次requested RTX frame p95はCPU `72.3302 ms`、GPU `56.8542 ms`、Kit update p95はCPU `21.5407 ms`、GPU `23.4482 ms`。owner-thread publication stallの改善とFlow＋RTX frame latencyを分離し、GPU transportが後者を解決したとは扱わない。
+- pre-crash lifecycle: 初期化失敗からCPU fallback、途中publication例外から次の完全なCPU pair、timeline STOP／再開、stage replacement、Provider再生成、1,200連続更新、bounded convergenceを個別に観測した。一方、RTX exposure／temporal rendering後の色をrevisionへ逆分類するclassifierは探索run間で安定せず、pixel safetyのproduction gateとは扱わない。
+- stopping failure: 最終隔離lifecycle processはKit shutdown中にexit `3221225477`（`0xC0000005`）で停止した。logは`UsdGeomCylinder_1::ComputeExtent`→`UsdContext::unregisterViewOverrideToHydraEngines`→event dispatcher→timeline→Kit shutdownを示す。CUDA illegal address／device lostの明示logはないが、low-confidence frameを含み、根本原因は未確認である。
+- lifetime判断: 公開`set_bytes_data_from_gpu()`にはProvider source消費完了fence、消費stream、GPU pointer再利用可能時点の契約がない。三重ringと低頻度更新はbest effortであり、API保証ではない。shutdown crashとの因果は断定も反証もできないため、ユーザー指定のcrash停止条件を適用した。
+- 採否: 候補production差分、`woodVisualV3GpuTransportEnabled`相当の設定、V3 demo preset変更、テスト追加をすべて撤回した。最終productionはV3既定OFF＋CPU-sourceのままで、Point／rigid既定OFF、Sphere production既定、Flow 110.0.0も不変。GPU経路を「安全」「原子的」「tearing-free」とは表現しない。
+- 成果物: 最終不採用report／720 raw sample／crash前探索report／shutdown抜粋／SVGを`docs/devlog/assets/phasev3tf/`へ固定した。runtime runnerは安全基準点でfail closedし、`-AnalyzeRetainedEvidence`だけが候補を再実行せずreportを再生成する。詳細は`docs/design/wood_visual_v3_gpu_transport_production_candidate.md`。
+- 再開条件: 公開source-consumed fenceまたはdocumented lifetime契約、隔離Kit／renderer更新での反復crash-free lifecycle、または実操作上の明確な支障のいずれかが成立したときだけ独立Phaseで再評価する。
+- 最終回帰: production候補を撤回した状態でrelease build `8.89 s`、Phase 0 RTX exit 0（`21.6 s`）、標準8 process・`77 / 77`（`406.8 s`、collapse `249.2 s`）に合格した。隔離V3T-Cは6/6 run・機能10/10 gate、OFF/ON update-frame p95中央値`8.1824 / 7.1067 ms`、RTX反映最大1 update。隔離Phase 6DQは`11 / 11` gate、revision `710`、consumer 3者一致、active block peak `402`、60/60 unique frame、clean shutdownだった。

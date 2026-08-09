@@ -1,0 +1,901 @@
+{
+  "schema": "campfire.phasev3tf.production_gpu_ring.rejection.v1",
+  "status": "not_qualified",
+  "decision": "production_integration_reverted",
+  "baseline": "c5cbb4a",
+  "environment": {
+    "kit": "110.2",
+    "flow": "110.0.0",
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "atlas": [
+      120,
+      60
+    ],
+    "textures": [
+      "base",
+      "emission"
+    ]
+  },
+  "population": {
+    "runs": 3,
+    "warmup_per_mode_per_run": 20,
+    "samples_per_mode_per_run": 120,
+    "retained_samples": 720,
+    "bytes_per_publication": 57600,
+    "api_calls_per_publication": 2
+  },
+  "performance": {
+    "cpu_reference": {
+      "all_runs": {
+        "pattern_generation_ms": {
+          "samples": 360,
+          "p50_ms": 1.0899,
+          "mean_ms": 1.3756,
+          "p95_ms": 2.3709,
+          "p99_ms": 2.515,
+          "max_ms": 2.7348,
+          "over_5_ms": 0,
+          "over_16_67_ms": 0,
+          "over_33_33_ms": 0,
+          "over_50_ms": 0
+        },
+        "gpu_staging_prepare_ms": {
+          "samples": 360,
+          "p50_ms": 0.0,
+          "mean_ms": 0.0,
+          "p95_ms": 0.0,
+          "p99_ms": 0.0,
+          "max_ms": 0.0,
+          "over_5_ms": 0,
+          "over_16_67_ms": 0,
+          "over_33_33_ms": 0,
+          "over_50_ms": 0
+        },
+        "h2d_enqueue_ms": {
+          "samples": 360,
+          "p50_ms": 0.0,
+          "mean_ms": 0.0,
+          "p95_ms": 0.0,
+          "p99_ms": 0.0,
+          "max_ms": 0.0,
+          "over_5_ms": 0,
+          "over_16_67_ms": 0,
+          "over_33_33_ms": 0,
+          "over_50_ms": 0
+        },
+        "source_ready_wait_ms": {
+          "samples": 360,
+          "p50_ms": 0.0,
+          "mean_ms": 0.0,
+          "p95_ms": 0.0,
+          "p99_ms": 0.0,
+          "max_ms": 0.0,
+          "over_5_ms": 0,
+          "over_16_67_ms": 0,
+          "over_33_33_ms": 0,
+          "over_50_ms": 0
+        },
+        "provider_setter_ms": {
+          "samples": 360,
+          "p50_ms": 24.1722,
+          "mean_ms": 18.9907,
+          "p95_ms": 29.8788,
+          "p99_ms": 31.6494,
+          "max_ms": 35.4891,
+          "over_5_ms": 309,
+          "over_16_67_ms": 193,
+          "over_33_33_ms": 1,
+          "over_50_ms": 0
+        },
+        "publication_to_next_rtx_frame_ms": {
+          "samples": 360,
+          "p50_ms": 48.3522,
+          "mean_ms": 52.2434,
+          "p95_ms": 72.3302,
+          "p99_ms": 74.1631,
+          "max_ms": 80.1644,
+          "over_5_ms": 360,
+          "over_16_67_ms": 360,
+          "over_33_33_ms": 341,
+          "over_50_ms": 143
+        },
+        "kit_update_ms": {
+          "samples": 360,
+          "p50_ms": 9.7559,
+          "mean_ms": 11.504,
+          "p95_ms": 21.5407,
+          "p99_ms": 23.0075,
+          "max_ms": 23.5464,
+          "over_5_ms": 360,
+          "over_16_67_ms": 59,
+          "over_33_33_ms": 0,
+          "over_50_ms": 0
+        },
+        "publication_total_ms": {
+          "samples": 360,
+          "p50_ms": 26.1694,
+          "mean_ms": 21.133,
+          "p95_ms": 31.7981,
+          "p99_ms": 33.3118,
+          "max_ms": 38.5644,
+          "over_5_ms": 319,
+          "over_16_67_ms": 213,
+          "over_33_33_ms": 3,
+          "over_50_ms": 0
+        }
+      },
+      "runs": {
+        "1": {
+          "pattern_generation_ms": {
+            "samples": 120,
+            "p50_ms": 1.1183,
+            "mean_ms": 1.4374,
+            "p95_ms": 2.3802,
+            "p99_ms": 2.5924,
+            "max_ms": 2.7348,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "gpu_staging_prepare_ms": {
+            "samples": 120,
+            "p50_ms": 0.0,
+            "mean_ms": 0.0,
+            "p95_ms": 0.0,
+            "p99_ms": 0.0,
+            "max_ms": 0.0,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "h2d_enqueue_ms": {
+            "samples": 120,
+            "p50_ms": 0.0,
+            "mean_ms": 0.0,
+            "p95_ms": 0.0,
+            "p99_ms": 0.0,
+            "max_ms": 0.0,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "source_ready_wait_ms": {
+            "samples": 120,
+            "p50_ms": 0.0,
+            "mean_ms": 0.0,
+            "p95_ms": 0.0,
+            "p99_ms": 0.0,
+            "max_ms": 0.0,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "provider_setter_ms": {
+            "samples": 120,
+            "p50_ms": 24.3575,
+            "mean_ms": 19.2663,
+            "p95_ms": 29.514,
+            "p99_ms": 30.5563,
+            "max_ms": 31.1766,
+            "over_5_ms": 106,
+            "over_16_67_ms": 66,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "publication_to_next_rtx_frame_ms": {
+            "samples": 120,
+            "p50_ms": 47.9611,
+            "mean_ms": 51.6511,
+            "p95_ms": 72.2623,
+            "p99_ms": 73.2827,
+            "max_ms": 75.2473,
+            "over_5_ms": 120,
+            "over_16_67_ms": 120,
+            "over_33_33_ms": 114,
+            "over_50_ms": 39
+          },
+          "kit_update_ms": {
+            "samples": 120,
+            "p50_ms": 9.8607,
+            "mean_ms": 11.4973,
+            "p95_ms": 21.5815,
+            "p99_ms": 22.0213,
+            "max_ms": 22.3857,
+            "over_5_ms": 120,
+            "over_16_67_ms": 17,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "publication_total_ms": {
+            "samples": 120,
+            "p50_ms": 26.3611,
+            "mean_ms": 21.4636,
+            "p95_ms": 31.4919,
+            "p99_ms": 32.5311,
+            "max_ms": 33.1901,
+            "over_5_ms": 111,
+            "over_16_67_ms": 72,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          }
+        },
+        "2": {
+          "pattern_generation_ms": {
+            "samples": 120,
+            "p50_ms": 1.0852,
+            "mean_ms": 1.3429,
+            "p95_ms": 2.3648,
+            "p99_ms": 2.4825,
+            "max_ms": 2.515,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "gpu_staging_prepare_ms": {
+            "samples": 120,
+            "p50_ms": 0.0,
+            "mean_ms": 0.0,
+            "p95_ms": 0.0,
+            "p99_ms": 0.0,
+            "max_ms": 0.0,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "h2d_enqueue_ms": {
+            "samples": 120,
+            "p50_ms": 0.0,
+            "mean_ms": 0.0,
+            "p95_ms": 0.0,
+            "p99_ms": 0.0,
+            "max_ms": 0.0,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "source_ready_wait_ms": {
+            "samples": 120,
+            "p50_ms": 0.0,
+            "mean_ms": 0.0,
+            "p95_ms": 0.0,
+            "p99_ms": 0.0,
+            "max_ms": 0.0,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "provider_setter_ms": {
+            "samples": 120,
+            "p50_ms": 23.9101,
+            "mean_ms": 18.9103,
+            "p95_ms": 30.3368,
+            "p99_ms": 32.2306,
+            "max_ms": 35.4891,
+            "over_5_ms": 99,
+            "over_16_67_ms": 61,
+            "over_33_33_ms": 1,
+            "over_50_ms": 0
+          },
+          "publication_to_next_rtx_frame_ms": {
+            "samples": 120,
+            "p50_ms": 48.7997,
+            "mean_ms": 53.6757,
+            "p95_ms": 72.3302,
+            "p99_ms": 74.1631,
+            "max_ms": 76.4497,
+            "over_5_ms": 120,
+            "over_16_67_ms": 120,
+            "over_33_33_ms": 115,
+            "over_50_ms": 56
+          },
+          "kit_update_ms": {
+            "samples": 120,
+            "p50_ms": 9.8975,
+            "mean_ms": 11.7815,
+            "p95_ms": 21.3403,
+            "p99_ms": 23.3779,
+            "max_ms": 23.5464,
+            "over_5_ms": 120,
+            "over_16_67_ms": 24,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "publication_total_ms": {
+            "samples": 120,
+            "p50_ms": 26.9803,
+            "mean_ms": 21.0358,
+            "p95_ms": 32.3216,
+            "p99_ms": 34.0431,
+            "max_ms": 38.5644,
+            "over_5_ms": 101,
+            "over_16_67_ms": 70,
+            "over_33_33_ms": 2,
+            "over_50_ms": 0
+          }
+        },
+        "3": {
+          "pattern_generation_ms": {
+            "samples": 120,
+            "p50_ms": 1.0782,
+            "mean_ms": 1.3465,
+            "p95_ms": 2.3594,
+            "p99_ms": 2.452,
+            "max_ms": 2.5023,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "gpu_staging_prepare_ms": {
+            "samples": 120,
+            "p50_ms": 0.0,
+            "mean_ms": 0.0,
+            "p95_ms": 0.0,
+            "p99_ms": 0.0,
+            "max_ms": 0.0,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "h2d_enqueue_ms": {
+            "samples": 120,
+            "p50_ms": 0.0,
+            "mean_ms": 0.0,
+            "p95_ms": 0.0,
+            "p99_ms": 0.0,
+            "max_ms": 0.0,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "source_ready_wait_ms": {
+            "samples": 120,
+            "p50_ms": 0.0,
+            "mean_ms": 0.0,
+            "p95_ms": 0.0,
+            "p99_ms": 0.0,
+            "max_ms": 0.0,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "provider_setter_ms": {
+            "samples": 120,
+            "p50_ms": 23.0456,
+            "mean_ms": 18.7955,
+            "p95_ms": 29.9461,
+            "p99_ms": 30.3652,
+            "max_ms": 32.2831,
+            "over_5_ms": 104,
+            "over_16_67_ms": 66,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "publication_to_next_rtx_frame_ms": {
+            "samples": 120,
+            "p50_ms": 48.4809,
+            "mean_ms": 51.4033,
+            "p95_ms": 72.4578,
+            "p99_ms": 74.1566,
+            "max_ms": 80.1644,
+            "over_5_ms": 120,
+            "over_16_67_ms": 120,
+            "over_33_33_ms": 112,
+            "over_50_ms": 48
+          },
+          "kit_update_ms": {
+            "samples": 120,
+            "p50_ms": 9.5615,
+            "mean_ms": 11.2332,
+            "p95_ms": 21.7425,
+            "p99_ms": 22.9152,
+            "max_ms": 23.0075,
+            "over_5_ms": 120,
+            "over_16_67_ms": 18,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "publication_total_ms": {
+            "samples": 120,
+            "p50_ms": 25.9829,
+            "mean_ms": 20.8996,
+            "p95_ms": 31.931,
+            "p99_ms": 32.5107,
+            "max_ms": 34.0892,
+            "over_5_ms": 107,
+            "over_16_67_ms": 71,
+            "over_33_33_ms": 1,
+            "over_50_ms": 0
+          }
+        }
+      }
+    },
+    "gpu_ring3": {
+      "all_runs": {
+        "pattern_generation_ms": {
+          "samples": 360,
+          "p50_ms": 1.105,
+          "mean_ms": 1.3466,
+          "p95_ms": 2.4027,
+          "p99_ms": 2.6072,
+          "max_ms": 3.4323,
+          "over_5_ms": 0,
+          "over_16_67_ms": 0,
+          "over_33_33_ms": 0,
+          "over_50_ms": 0
+        },
+        "gpu_staging_prepare_ms": {
+          "samples": 360,
+          "p50_ms": 0.0185,
+          "mean_ms": 0.021,
+          "p95_ms": 0.0384,
+          "p99_ms": 0.0533,
+          "max_ms": 0.0675,
+          "over_5_ms": 0,
+          "over_16_67_ms": 0,
+          "over_33_33_ms": 0,
+          "over_50_ms": 0
+        },
+        "h2d_enqueue_ms": {
+          "samples": 360,
+          "p50_ms": 0.3758,
+          "mean_ms": 0.401,
+          "p95_ms": 0.6046,
+          "p99_ms": 0.8051,
+          "max_ms": 1.0861,
+          "over_5_ms": 0,
+          "over_16_67_ms": 0,
+          "over_33_33_ms": 0,
+          "over_50_ms": 0
+        },
+        "source_ready_wait_ms": {
+          "samples": 360,
+          "p50_ms": 0.275,
+          "mean_ms": 0.2905,
+          "p95_ms": 0.6105,
+          "p99_ms": 0.9388,
+          "max_ms": 1.1704,
+          "over_5_ms": 0,
+          "over_16_67_ms": 0,
+          "over_33_33_ms": 0,
+          "over_50_ms": 0
+        },
+        "provider_setter_ms": {
+          "samples": 360,
+          "p50_ms": 0.1584,
+          "mean_ms": 0.1679,
+          "p95_ms": 0.2531,
+          "p99_ms": 0.3471,
+          "max_ms": 0.4561,
+          "over_5_ms": 0,
+          "over_16_67_ms": 0,
+          "over_33_33_ms": 0,
+          "over_50_ms": 0
+        },
+        "publication_to_next_rtx_frame_ms": {
+          "samples": 360,
+          "p50_ms": 41.6713,
+          "mean_ms": 43.1014,
+          "p95_ms": 56.8542,
+          "p99_ms": 60.012,
+          "max_ms": 64.0728,
+          "over_5_ms": 360,
+          "over_16_67_ms": 360,
+          "over_33_33_ms": 358,
+          "over_50_ms": 46
+        },
+        "kit_update_ms": {
+          "samples": 360,
+          "p50_ms": 20.5564,
+          "mean_ms": 20.6306,
+          "p95_ms": 23.4482,
+          "p99_ms": 24.6949,
+          "max_ms": 25.4903,
+          "over_5_ms": 360,
+          "over_16_67_ms": 358,
+          "over_33_33_ms": 0,
+          "over_50_ms": 0
+        },
+        "publication_total_ms": {
+          "samples": 360,
+          "p50_ms": 2.9849,
+          "mean_ms": 3.1668,
+          "p95_ms": 4.5846,
+          "p99_ms": 4.9724,
+          "max_ms": 6.1967,
+          "over_5_ms": 2,
+          "over_16_67_ms": 0,
+          "over_33_33_ms": 0,
+          "over_50_ms": 0
+        }
+      },
+      "runs": {
+        "1": {
+          "pattern_generation_ms": {
+            "samples": 120,
+            "p50_ms": 1.0995,
+            "mean_ms": 1.3348,
+            "p95_ms": 2.3711,
+            "p99_ms": 2.4696,
+            "max_ms": 2.6243,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "gpu_staging_prepare_ms": {
+            "samples": 120,
+            "p50_ms": 0.0184,
+            "mean_ms": 0.0206,
+            "p95_ms": 0.0372,
+            "p99_ms": 0.0422,
+            "max_ms": 0.0473,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "h2d_enqueue_ms": {
+            "samples": 120,
+            "p50_ms": 0.3875,
+            "mean_ms": 0.4055,
+            "p95_ms": 0.6138,
+            "p99_ms": 0.7575,
+            "max_ms": 0.8051,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "source_ready_wait_ms": {
+            "samples": 120,
+            "p50_ms": 0.279,
+            "mean_ms": 0.3081,
+            "p95_ms": 0.6797,
+            "p99_ms": 0.9895,
+            "max_ms": 1.1704,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "provider_setter_ms": {
+            "samples": 120,
+            "p50_ms": 0.1623,
+            "mean_ms": 0.1708,
+            "p95_ms": 0.2539,
+            "p99_ms": 0.3471,
+            "max_ms": 0.3574,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "publication_to_next_rtx_frame_ms": {
+            "samples": 120,
+            "p50_ms": 41.6713,
+            "mean_ms": 43.1833,
+            "p95_ms": 57.87,
+            "p99_ms": 59.7848,
+            "max_ms": 62.7968,
+            "over_5_ms": 120,
+            "over_16_67_ms": 120,
+            "over_33_33_ms": 120,
+            "over_50_ms": 17
+          },
+          "kit_update_ms": {
+            "samples": 120,
+            "p50_ms": 20.347,
+            "mean_ms": 20.4753,
+            "p95_ms": 23.1743,
+            "p99_ms": 23.6272,
+            "max_ms": 23.6372,
+            "over_5_ms": 120,
+            "over_16_67_ms": 120,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "publication_total_ms": {
+            "samples": 120,
+            "p50_ms": 3.0262,
+            "mean_ms": 3.2039,
+            "p95_ms": 4.722,
+            "p99_ms": 4.9724,
+            "max_ms": 4.9886,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          }
+        },
+        "2": {
+          "pattern_generation_ms": {
+            "samples": 120,
+            "p50_ms": 1.0937,
+            "mean_ms": 1.3563,
+            "p95_ms": 2.4757,
+            "p99_ms": 2.7884,
+            "max_ms": 3.4323,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "gpu_staging_prepare_ms": {
+            "samples": 120,
+            "p50_ms": 0.0182,
+            "mean_ms": 0.021,
+            "p95_ms": 0.0399,
+            "p99_ms": 0.0623,
+            "max_ms": 0.0675,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "h2d_enqueue_ms": {
+            "samples": 120,
+            "p50_ms": 0.3657,
+            "mean_ms": 0.3927,
+            "p95_ms": 0.5954,
+            "p99_ms": 0.7984,
+            "max_ms": 1.0861,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "source_ready_wait_ms": {
+            "samples": 120,
+            "p50_ms": 0.2329,
+            "mean_ms": 0.2678,
+            "p95_ms": 0.697,
+            "p99_ms": 0.8998,
+            "max_ms": 0.9265,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "provider_setter_ms": {
+            "samples": 120,
+            "p50_ms": 0.1557,
+            "mean_ms": 0.1657,
+            "p95_ms": 0.2562,
+            "p99_ms": 0.2976,
+            "max_ms": 0.3206,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "publication_to_next_rtx_frame_ms": {
+            "samples": 120,
+            "p50_ms": 41.9289,
+            "mean_ms": 43.1521,
+            "p95_ms": 56.4869,
+            "p99_ms": 58.1138,
+            "max_ms": 60.7403,
+            "over_5_ms": 120,
+            "over_16_67_ms": 120,
+            "over_33_33_ms": 118,
+            "over_50_ms": 15
+          },
+          "kit_update_ms": {
+            "samples": 120,
+            "p50_ms": 20.7571,
+            "mean_ms": 20.7752,
+            "p95_ms": 23.722,
+            "p99_ms": 24.9155,
+            "max_ms": 24.9848,
+            "over_5_ms": 120,
+            "over_16_67_ms": 118,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "publication_total_ms": {
+            "samples": 120,
+            "p50_ms": 2.8413,
+            "mean_ms": 3.1066,
+            "p95_ms": 4.7447,
+            "p99_ms": 5.8843,
+            "max_ms": 6.1967,
+            "over_5_ms": 2,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          }
+        },
+        "3": {
+          "pattern_generation_ms": {
+            "samples": 120,
+            "p50_ms": 1.15,
+            "mean_ms": 1.3486,
+            "p95_ms": 2.4315,
+            "p99_ms": 2.455,
+            "max_ms": 2.6072,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "gpu_staging_prepare_ms": {
+            "samples": 120,
+            "p50_ms": 0.0193,
+            "mean_ms": 0.0214,
+            "p95_ms": 0.038,
+            "p99_ms": 0.053,
+            "max_ms": 0.066,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "h2d_enqueue_ms": {
+            "samples": 120,
+            "p50_ms": 0.3835,
+            "mean_ms": 0.4047,
+            "p95_ms": 0.6322,
+            "p99_ms": 0.876,
+            "max_ms": 0.9445,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "source_ready_wait_ms": {
+            "samples": 120,
+            "p50_ms": 0.2966,
+            "mean_ms": 0.2957,
+            "p95_ms": 0.5254,
+            "p99_ms": 0.6873,
+            "max_ms": 0.9569,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "provider_setter_ms": {
+            "samples": 120,
+            "p50_ms": 0.1586,
+            "mean_ms": 0.1671,
+            "p95_ms": 0.2525,
+            "p99_ms": 0.4082,
+            "max_ms": 0.4561,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "publication_to_next_rtx_frame_ms": {
+            "samples": 120,
+            "p50_ms": 41.3396,
+            "mean_ms": 42.9689,
+            "p95_ms": 57.8076,
+            "p99_ms": 60.012,
+            "max_ms": 64.0728,
+            "over_5_ms": 120,
+            "over_16_67_ms": 120,
+            "over_33_33_ms": 120,
+            "over_50_ms": 14
+          },
+          "kit_update_ms": {
+            "samples": 120,
+            "p50_ms": 20.5724,
+            "mean_ms": 20.6413,
+            "p95_ms": 23.2957,
+            "p99_ms": 24.4772,
+            "max_ms": 25.4903,
+            "over_5_ms": 120,
+            "over_16_67_ms": 120,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          },
+          "publication_total_ms": {
+            "samples": 120,
+            "p50_ms": 3.0674,
+            "mean_ms": 3.1899,
+            "p95_ms": 4.5238,
+            "p99_ms": 4.6656,
+            "max_ms": 4.8663,
+            "over_5_ms": 0,
+            "over_16_67_ms": 0,
+            "over_33_33_ms": 0,
+            "over_50_ms": 0
+          }
+        }
+      }
+    }
+  },
+  "candidate_contract_tested": {
+    "provider_count": 2,
+    "source_slots_per_texture": 3,
+    "persistent_probe_owned_warp_allocations": true,
+    "source_ready_event_before_setter": true,
+    "provider_source_consumed_fence_available": false,
+    "lifetime_contract": "best effort only; not guaranteed by the public API",
+    "eventual_consistency_only": true,
+    "wood_or_flow_authority_changed": false
+  },
+  "precrash_observations": {
+    "performance_gate": "passed",
+    "injected_initialization_failure_cpu_fallback": true,
+    "injected_mid_publication_fault_next_complete_cpu_fallback": true,
+    "timeline_stop_resume_exercised": true,
+    "stage_replacement_and_provider_recreation_exercised": true,
+    "continuous_updates": 1200,
+    "long_run_checkpoints_latest_complete": true,
+    "bounded_convergence_observed": true,
+    "readback_classifier_qualified": false,
+    "readback_note": "RTX exposure and temporal rendering made inverse revision classification unstable. The retained pre-crash report is exploratory evidence, not a production pixel-safety qualification."
+  },
+  "stopping_failure": {
+    "observed": true,
+    "process_exit_decimal": 3221225477,
+    "process_exit_hex": "0xC0000005",
+    "phase": "isolated lifecycle process shutdown",
+    "backtrace_excerpt": [
+      "2026-08-09T13:20:44Z [754ms] [Info] [omni.ext.plugin] [ext: omni.kit.loop-default-0.2.2] Starting ext::IExt in 'c:/users/junic/src/campfire-simulator/_build/windows-x86_64/release/extscache/omni.kit.loop-default-0.2.2+698af100.wx64.r/bin/omni.kit.loop-default.plugin.dll'",
+      "2026-08-09T13:20:45Z [1,650ms] [Info] [omni.ext.plugin] [ext: omni.timeline-1.1.0] Starting ext::IExt in 'c:/users/junic/src/campfire-simulator/_build/windows-x86_64/release/extscache/omni.timeline-1.1.0+698af100.wx64.r.cp312/bin/omni.timeline.plugin.dll'",
+      "2026-08-09T13:21:22Z [29,528ms] [Fatal] [carb.crashreporter-breakpad.plugin] [crash] Thread 19184 backtrace follows:",
+      "2026-08-09T13:21:22Z [29,529ms] [Fatal] [carb.crashreporter-breakpad.plugin] 000: usd_usdGeom.dll!pxrInternal_v0_25_11__pxrReserved__::UsdGeomCylinder_1::ComputeExtent+0x32987 ***",
+      "2026-08-09T13:21:22Z [29,531ms] [Fatal] [carb.crashreporter-breakpad.plugin] 001: usd_usdGeom.dll!pxrInternal_v0_25_11__pxrReserved__::UsdGeomCylinder_1::ComputeExtent+0x329b7 ***",
+      "2026-08-09T13:21:22Z [29,532ms] [Fatal] [carb.crashreporter-breakpad.plugin] 002: usd_usdGeom.dll!pxrInternal_v0_25_11__pxrReserved__::UsdGeomCylinder_1::ComputeExtent+0x4cdb5 ***",
+      "2026-08-09T13:21:22Z [29,533ms] [Fatal] [carb.crashreporter-breakpad.plugin] 003: omni.usd.dll!omni::usd::UsdContext::unregisterViewOverrideToHydraEngines+0x10e0 ***",
+      "2026-08-09T13:21:22Z [29,536ms] [Fatal] [carb.crashreporter-breakpad.plugin] 004: carb.eventdispatcher.plugin.dll!+0x11abe ***",
+      "2026-08-09T13:21:22Z [29,540ms] [Fatal] [carb.crashreporter-breakpad.plugin] 005: carb.eventdispatcher.plugin.dll!+0x11f51 ***",
+      "2026-08-09T13:21:22Z [29,543ms] [Fatal] [carb.crashreporter-breakpad.plugin] 006: omni.timeline.plugin.dll!+0x62cb ***",
+      "2026-08-09T13:21:22Z [29,545ms] [Fatal] [carb.crashreporter-breakpad.plugin] 007: omni.timeline.plugin.dll!+0x1ab95 ***",
+      "2026-08-09T13:21:22Z [29,548ms] [Fatal] [carb.crashreporter-breakpad.plugin] 008: carb.eventdispatcher.plugin.dll!+0x11abe ***",
+      "2026-08-09T13:21:22Z [29,552ms] [Fatal] [carb.crashreporter-breakpad.plugin] 009: carb.eventdispatcher.plugin.dll!+0x11f51 ***",
+      "2026-08-09T13:21:22Z [29,555ms] [Fatal] [carb.crashreporter-breakpad.plugin] 010: omni.kit.loop-default.plugin.dll!+0x16d48 ***",
+      "2026-08-09T13:21:22Z [29,557ms] [Fatal] [carb.crashreporter-breakpad.plugin] 011: omni.kit.app.plugin.dll!+0x236df ***",
+      "2026-08-09T13:21:22Z [29,558ms] [Fatal] [carb.crashreporter-breakpad.plugin] 012: omni.kit.app.plugin.dll!carbOnPluginQuickShutdown+0x7629 ***",
+      "2026-08-09T13:21:22Z [29,573ms] [Warning] [carb.crashreporter-breakpad.plugin] terminating this process with exit code 3221225477."
+    ],
+    "cuda_illegal_address_logged": false,
+    "device_lost_logged": false,
+    "causal_attribution": "unconfirmed",
+    "reason_for_rejection": "A shutdown crash is an explicit rejection condition, and the public API exposes no source-consumed fence with which to exclude GPU source lifetime from the cause."
+  },
+  "observed_facts": [
+    "GPU ring3 removed the approximately 30 ms CPU-source Provider setter tail in the retained timing population.",
+    "Flow plus RTX next-frame latency remained tens of milliseconds and is a separate boundary.",
+    "A later isolated lifecycle process terminated with 0xC0000005 during Kit shutdown.",
+    "The candidate production changes were fully reverted before final regression."
+  ],
+  "strong_inferences": [
+    "GPU-source publication is promising for owner-thread latency but not adoptable in the fixed environment without a stable shutdown and a public consumption/lifetime boundary."
+  ],
+  "unconfirmed": [
+    "Whether DynamicTextureProvider source reuse contributed to the shutdown crash.",
+    "Whether the low-confidence UsdGeom frames identify the root cause rather than shutdown fallout.",
+    "The renderer-side GPU source-consumption completion point.",
+    "Atomicity or tearing-free behavior across base and emission textures."
+  ],
+  "final_production_state": {
+    "gpu_transport_setting_added": false,
+    "v3_demo_preset_changed": false,
+    "production_modules_changed": false,
+    "cpu_source_v3_retained": true,
+    "v3_default_off": true,
+    "point_and_rigid_default_off": true,
+    "sphere_production_default": true
+  },
+  "resume_conditions": [
+    "A public source-consumed fence or documented GPU pointer reuse/lifetime contract becomes available.",
+    "An isolated Kit/renderer update demonstrates repeated crash-free lifecycle closure and full regression.",
+    "A real operational need justifies reopening this display-only optimization."
+  ]
+}

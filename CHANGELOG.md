@@ -1,5 +1,13 @@
 # Changelog
 
+- Evaluated the Phase V3T-F triple GPU-source ring as a temporary production candidate, then fully reverted the candidate after the isolated lifecycle process crashed during Kit shutdown with Windows exit `0xC0000005`.
+- Retained 720 Flow+RTX timing samples for 20 logs, 120×60 RGBA8 base+emission, three independent runs, 20 warmup and 120 measured publications per transport.
+- Reduced the all-run Provider setter p95 from `29.8788 ms` on the CPU-source reference to `0.2531 ms` on GPU ring3; GPU source-ready wait p95 was `0.6105 ms`, with no 5 ms setter samples.
+- Kept end-to-end latency separate: publication-to-next-RTX-frame p95 remained `56.8542 ms` for GPU ring3 versus `72.3302 ms` for CPU reference, so the transport is not claimed to solve Flow+RTX frame latency.
+- Exercised pre-crash initialization fallback, mid-publication fault fallback, timeline restart, stage replacement, Provider recreation, bounded convergence, and 1,200 continuous GPU publications, but did not promote those observations past the mandatory crash-free lifecycle gate.
+- Recorded that the public `DynamicTextureProvider` API exposes no source-consumed fence or guaranteed GPU-pointer reuse point; the exact relationship between that missing lifetime boundary and the shutdown backtrace remains unconfirmed.
+- Left production modules, normal/benchmark app settings, the V3 demo preset, CPU-source V3, V3 default OFF, Point/rigid default OFF, Sphere default, Flow 110.0.0, wood authority, physics, checkpoint, revision, rollback, Mesh, and collision unchanged.
+- Requalified the reverted baseline with release build `8.89 s`, Phase 0 RTX exit 0 in `21.6 s`, all eight standard processes and `77 / 77` tests in `406.8 s`, V3T-C 6 / 6 runs and 10 / 10 functional gates, and Phase 6DQ `11 / 11` gates at revision `710`.
 - Added the production-neutral Phase V3T-E GPU-source ring, RTX pixel-readback, fault, long-run, and actual extension-manager lifecycle probe without changing V3T-C, Phase 6DQ, production modules, or defaults.
 - Compared CPU reference, fully synchronized single GPU source, double ring, and triple ring for 96×15 and 120×60 RGBA8 base＋emission across six matrix processes, three rotated independent runs, 20 warmup and 120 measured publications per mode, totaling 2,880 performance samples.
 - Reduced the 120×60 explicit source-ready wait p95 from `0.7911 ms` for the single synchronized GPU buffer to `0.0599 / 0.0689 ms` for double/triple rings while retaining Provider setter p95 `0.2008 / 0.2193 ms`.

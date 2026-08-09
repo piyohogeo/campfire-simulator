@@ -1,0 +1,75 @@
+{
+  "schema": "campfire.phasev3tf.regression.v1",
+  "status": "passed_after_candidate_revert",
+  "production_candidate_adopted": false,
+  "release_build": {
+    "passed": true,
+    "seconds": 8.89,
+    "version_baseline": "c5cbb4a"
+  },
+  "phase0_rtx": {
+    "passed": true,
+    "process_exit": 0,
+    "wall_seconds": 21.6,
+    "known_fabric_version_warning": true
+  },
+  "standard_suite": {
+    "passed": true,
+    "processes_passed": 8,
+    "processes_total": 8,
+    "tests_passed": 77,
+    "tests_total": 77,
+    "wall_seconds": 406.8,
+    "collapse_coverage_seconds": 249.2
+  },
+  "phasev3tc": {
+    "passed": true,
+    "status": "qualified_functionally_explicit_preset_only",
+    "runs_passed": 6,
+    "runs_total": 6,
+    "functional_gates_passed": 10,
+    "functional_gates_total": 10,
+    "authority_gates_passed": 6,
+    "authority_gates_total": 6,
+    "off_update_frame_p95_ms_median": 8.1824,
+    "on_update_frame_p95_ms_median": 7.1067,
+    "rtx_reflection_max_updates": 1,
+    "cpu_source_publication_p95_ms_median": 34.8882,
+    "cpu_source_provider_call_p95_ms_median": 34.268
+  },
+  "phase6dq": {
+    "passed": true,
+    "gates_passed": 11,
+    "gates_total": 11,
+    "revision": 710,
+    "consumer_revisions": [710, 710, 710],
+    "point_count": 720,
+    "active_blocks_peak": 402,
+    "unique_video_frames": 60,
+    "video_frame_count": 60,
+    "clean_shutdown": true
+  },
+  "devlog_browser": {
+    "rendered": true,
+    "phase_card_visible": true,
+    "report_svg_visible": true,
+    "video_modal_visible": true,
+    "video_source": "assets/phasev3tc/visual_v3_actual.mp4",
+    "video_is_labeled_cpu_reference_only": true
+  },
+  "archived_probe": {
+    "runtime_fails_closed_without_candidate": true,
+    "analysis_only_regeneration_passed": true
+  },
+  "final_contract": {
+    "production_source_diff_from_baseline": false,
+    "normal_app_diff_from_baseline": false,
+    "benchmark_app_diff_from_baseline": false,
+    "v3_demo_preset_diff_from_baseline": false,
+    "v3_default_off": true,
+    "gpu_transport_setting_present": false,
+    "point_default_off": true,
+    "rigid_layout_default_off": true,
+    "sphere_production_default": true
+  }
+}

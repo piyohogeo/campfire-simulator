@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v3te">最新記録</a>
+        <a href="#phase-v3tf">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v3te">Phase V3T-Eを読む</a>
+        <a class="button primary" href="#phase-v3tf">Phase V3T-Fを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V3T-E 安全停止</strong></div>
+        <div><span>現在地</span><strong>Phase V3T-F 統合撤回</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>測定</span><strong>2,880 timing · 240 pixel readback</strong></div>
-        <div><span>判定</span><strong>ring高速化 · pixel/lifetime未達 · 非採用</strong></div>
+        <div><span>測定</span><strong>720 timing · 1,200-update pre-crash</strong></div>
+        <div><span>判定</span><strong>setter高速化 · shutdown crash · 統合撤回</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,72 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-v3tf" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number compact">V3T-F</span>
+          <p><time datetime="2026-08-09">2026.08.09</time></p>
+          <span class="pill current">Measured · integration reverted</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Phase V3T-F · production GPU transport candidate</p>
+            <h2>setterは速くなった。<br>しかし終了時crashで採用を撤回した。</h2>
+            <p>Phase V3T-Eの三重GPU-source ringをV3の既定OFF production候補として一時接続し、20本・base＋emission・Flow＋RTXで実測しました。GPU setter p95は0.2531 msまで下がりましたが、最終lifecycle processがKit終了中に<code>0xC0000005</code>で停止しました。明示された不合格条件に従い、設定、consumer、demo presetを含む候補差分をすべて戻しています。</p>
+          </header>
+
+          <figure class="capture-card wide">
+            <a href="assets/phasev3tf/production_gpu_ring_report.svg" aria-label="Phase V3T-F不採用レポートを開く">
+              <img src="assets/phasev3tf/production_gpu_ring_report.svg" alt="CPUとGPU ring3のsetter、次RTX frame、shutdown crashと統合撤回を示すPhase V3T-F実測図" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>720 timing samples · 1,200-update pre-crash run</strong><span>3 runs · 20 warmup + 120 measured / transport · shutdown crash 0xC0000005</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3tc/visual_v3_actual.mp4" data-video-poster="assets/phasev3tc/visual_v3_actual_poster.png" data-video-title="Phase V3T-F visual context · retained CPU V3 preset" data-video-meta="Existing V3T-C CPU-source recording · visual context only · GPU production candidate was reverted · not GPU timing or crash evidence · 60 frames · 6 seconds">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>現行CPU V3の外観参照</strong><small>既存V3T-C動画 · GPU候補の成功動画ではない</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <div class="notes-grid">
+            <section class="note"><p class="note-label">Observed performance</p><h3>setter p95 29.8788 → 0.2531 ms</h3><p>GPU source-ready待ちp95は0.6105 msで、GPU setter 360 sampleの5 ms超は0件でした。CPU-source publication tailのowner-thread改善候補は確認できました。</p></section>
+            <section class="note caution"><p class="note-label">Mandatory lifecycle gate</p><h3>shutdown access violation</h3><p><code>UsdGeom ComputeExtent</code>、<code>UsdContext unregisterViewOverride</code>、timeline／Kit shutdown境界でprocessが停止しました。low-confidence frameを含むため原因は断定しません。</p></section>
+          </div>
+
+          <figure class="capture-card wide">
+            <a href="assets/phasev3tf/production_gpu_ring_readback.png" aria-label="crash前の1,200回更新後RTX readbackを原寸で開く">
+              <img src="assets/phasev3tf/production_gpu_ring_readback.png" alt="Phase V3T-Fの1,200回連続更新後に取得したactual RTX viewport readback" loading="lazy">
+            </a>
+            <figcaption><div><strong>Pre-crash actual RTX readback</strong><span>1,200 updates後 · probe用revision macroblock · crash-free終了の証拠ではない</span></div></figcaption>
+          </figure>
+
+          <section class="verification" aria-labelledby="phasev3tf-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Decision</p>
+              <h3 id="phasev3tf-verification-title">性能合格、lifecycle不合格。production変更なし。</h3>
+              <p>公開APIにはProviderのGPU source消費完了fenceがありません。crashとの因果は未確認ですが、安全を反証できないため統合を戻しました。V3は既定OFF＋CPU-source、Point／rigidは既定OFF、Sphereがproduction既定のままです。</p>
+              <code>.\scripts\run_phasev3tf_production_gpu.ps1 -AnalyzeRetainedEvidence</code>
+              <p><a href="assets/phasev3tf/production_gpu_ring_report.json">最終採否JSON</a> · <a href="assets/phasev3tf/production_gpu_ring_samples.json">720 sample JSON</a> · <a href="assets/phasev3tf/production_gpu_ring_precrash_report.json">crash前探索report</a> · <a href="assets/phasev3tf/shutdown_crash_excerpt.txt">shutdown抜粋</a> · <a href="assets/phasev3tf/regression_report.json">最終回帰JSON</a> · <a href="../design/wood_visual_v3_gpu_transport_production_candidate.md">設計・採否メモ</a></p>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase V3T-F検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Setter performance</strong><small>GPU p95 0.2531 ms · 5 ms超 0 / 360</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Fallback probes</strong><small>初期化失敗 · 途中例外 · 次pairでCPU</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Long run</strong><small>1,200 updates · bounded convergence observed</small></p></div>
+              <div role="listitem"><span aria-hidden="true">!</span><p><strong>End-to-end</strong><small>GPU次RTX frame p95 56.8542 ms</small></p></div>
+              <div role="listitem"><span aria-hidden="true">×</span><p><strong>Shutdown</strong><small>0xC0000005 · production reject condition</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Final regression</strong><small>77/77 · V3T-C 10/10 · 6DQ 11/11</small></p></div>
+              <div role="listitem"><span aria-hidden="true">—</span><p><strong>Production</strong><small>candidate fully reverted · defaults unchanged</small></p></div>
+            </div>
+          </section>
+
+          <div class="notes-grid">
+            <section class="note caution"><p class="note-label">Not guaranteed</p><h3>best-effort lifetime</h3><p>三重ringは再利用間隔を増やしますが、source-consumed fenceの代替ではありません。原子的、tearing-free、完全に安全とは主張しません。</p></section>
+            <section class="note next"><p class="note-label">Resume only when</p><h3>公開契約か隔離更新があるとき</h3><p>documented lifetime／fence、Kit・renderer更新での反復crash-free確認、または実操作上の支障が確認された場合だけ独立Phaseで再開します。</p></section>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v3te" class="section entry-section phase-six">

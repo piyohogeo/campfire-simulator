@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="700" viewBox="0 0 1240 700" role="img" aria-labelledby="title desc">
+<title id="title">Phase V3T-F GPU ring production candidate rejected</title>
+<desc id="desc">GPU publication removed the CPU setter tail but a shutdown access violation caused the production integration to be reverted.</desc>
+<rect width="1240" height="700" fill="#07111f"/>
+<g font-family="Segoe UI, sans-serif">
+<text x="70" y="56" fill="#93c5fd" font-size="17" font-weight="700" letter-spacing="3">PHASE V3T-F · PRODUCTION CANDIDATE</text>
+<text x="70" y="105" fill="#f8fafc" font-size="37" font-weight="800">Fast setter, failed lifecycle gate.</text>
+<text x="70" y="140" fill="#a7b2c2" font-size="17">20 logs · 120×60 RGBA8 · base + emission · Flow + RTX · 3 runs × 120 samples per transport</text>
+<text x="70" y="200" fill="#dbeafe" font-size="18" font-weight="700">All-run p95 (ms)</text>
+<text x="70" y="248" fill="#cbd5e1" font-size="15">CPU Provider setter</text><rect x="280" y="228" width="418.3" height="26" rx="6" fill="#f59e0b"/><text x="713.3" y="248" fill="#fef3c7" font-size="15">29.8788</text>
+<text x="70" y="296" fill="#cbd5e1" font-size="15">GPU Provider setter</text><rect x="280" y="276" width="6" height="26" rx="3" fill="#22c55e"/><text x="302" y="296" fill="#dcfce7" font-size="15">0.2531</text>
+<text x="70" y="344" fill="#cbd5e1" font-size="15">GPU source-ready wait</text><rect x="280" y="324" width="8.5" height="26" rx="6" fill="#38bdf8"/><text x="303.5" y="344" fill="#dbeafe" font-size="15">0.6105</text>
+<rect x="70" y="392" width="1100" height="88" rx="16" fill="#0f2537" stroke="#28445d"/>
+<text x="96" y="428" fill="#dbeafe" font-size="17" font-weight="700">End-to-end remains separate</text>
+<text x="96" y="459" fill="#cbd5e1" font-size="15">Next RTX frame p95: CPU 72.3302 ms · GPU 56.8542 ms. GPU transport does not solve Flow + RTX latency.</text>
+<rect x="70" y="512" width="1100" height="112" rx="18" fill="#3a1118" stroke="#fb7185" stroke-width="2"/>
+<text x="98" y="550" fill="#fecdd3" font-size="19" font-weight="800">REJECTED · shutdown access violation 0xC0000005</text>
+<text x="98" y="582" fill="#fda4af" font-size="15">Crash boundary: UsdGeom ComputeExtent → UsdContext unregisterViewOverride → timeline / Kit shutdown.</text>
+<text x="98" y="607" fill="#fda4af" font-size="15">No public Provider source-consumed fence. Candidate integration reverted; CPU V3 and all defaults remain unchanged.</text>
+<text x="70" y="670" fill="#94a3b8" font-size="14">Observed performance benefit is retained as probe evidence; it is not a safety, atomicity, or tearing-free claim.</text>
+</g></svg>
