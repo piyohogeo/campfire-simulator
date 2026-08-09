@@ -2721,3 +2721,14 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 成果物: 最終不採用report／720 raw sample／crash前探索report／shutdown抜粋／SVGを`docs/devlog/assets/phasev3tf/`へ固定した。runtime runnerは安全基準点でfail closedし、`-AnalyzeRetainedEvidence`だけが候補を再実行せずreportを再生成する。詳細は`docs/design/wood_visual_v3_gpu_transport_production_candidate.md`。
 - 再開条件: 公開source-consumed fenceまたはdocumented lifetime契約、隔離Kit／renderer更新での反復crash-free lifecycle、または実操作上の明確な支障のいずれかが成立したときだけ独立Phaseで再評価する。
 - 最終回帰: production候補を撤回した状態でrelease build `8.89 s`、Phase 0 RTX exit 0（`21.6 s`）、標準8 process・`77 / 77`（`406.8 s`、collapse `249.2 s`）に合格した。隔離V3T-Cは6/6 run・機能10/10 gate、OFF/ON update-frame p95中央値`8.1824 / 7.1067 ms`、RTX反映最大1 update。隔離Phase 6DQは`11 / 11` gate、revision `710`、consumer 3者一致、active block peak `402`、60/60 unique frame、clean shutdownだった。
+
+## Phase V3T-G DynamicTextureProvider shutdown isolation
+
+### 2026-08-10: 78 processで単発access violationを再現できず、原因未確認のまま停止
+
+- 固定条件: Kit 110.2、Flow 110.0.0、RTX 3090、20本、1280×720、120×60 RGBA8 base＋emission、warmup 20、120 publication、同一stage/camera/Flow/RTX設定を各独立processで再構築した。production moduleと既定値は変更していない。
+- 再現対照: CPU-source/AとGPU ring3/Aを順序回転し各10回実行した。両方とも`10 / 10` normal exit、`0xC0000005`は0だった。Provider-only、Warp-only、single GPU＋完全同期、allocation保持、Provider保持、stage-firstは各3回すべてnormal exitだった。
+- shutdown比較: AはGPU対照10回、B～Eは各10回実行し、全50回がnormal exitだった。全78 processでtimeout、CUDA illegal address、device lost、invalid pointerを観測せず、fsync済みboundary markerとexplicit extension disableの`on_shutdown begin/end`を回収した。
+- 判定: Phase V3T-Fの単発crashは本matrixで再現しなかった。したがってProvider／Warp／USD-Hydra／Flowのどれにも原因を分類できず、root causeとGPU lifetime安全性は未確認のままである。0 crashを安全証明や修正完了へ読み替えない。
+- 採否: 公開Provider source-consumed fenceは引き続き存在しない。stage replacement、Provider再生成、extension disable、通常Kit quitを含む選択済み最終sequence 20回という再採用gateも未実施なので、GPU production候補は復元しない。V3は既定OFF＋CPU-source、Point／rigidは既定OFF、Sphereはproduction既定のままである。
+- 成果物: 再現runner、全process summary＋marker JSON、集計JSON、SVG、空のcrash index、設計メモを追加した。詳細は`docs/design/wood_visual_v3_shutdown_isolation.md`。次のV3T-Hでは安全gate未達のためGPU条件をskipし、通常連続render FPSのCPU条件1～3だけを測る。

@@ -1,0 +1,185 @@
+{
+  "schema": "campfire.phasev3tg.shutdown-report.v1",
+  "status": "ok",
+  "observed": {
+    "processes": 78,
+    "access_violations": 0,
+    "groups": [
+      {
+        "mode": "cpu_reference",
+        "sequence": "A",
+        "runs": 10,
+        "normal": 10,
+        "access_violations": 0,
+        "timeouts": 0,
+        "other_nonzero": 0,
+        "last_markers": [
+          "quit_posted"
+        ]
+      },
+      {
+        "mode": "gpu_ring3_keep_allocations",
+        "sequence": "E",
+        "runs": 3,
+        "normal": 3,
+        "access_violations": 0,
+        "timeouts": 0,
+        "other_nonzero": 0,
+        "last_markers": [
+          "quit_posted"
+        ]
+      },
+      {
+        "mode": "gpu_ring3_keep_providers",
+        "sequence": "E",
+        "runs": 3,
+        "normal": 3,
+        "access_violations": 0,
+        "timeouts": 0,
+        "other_nonzero": 0,
+        "last_markers": [
+          "quit_posted"
+        ]
+      },
+      {
+        "mode": "gpu_ring3_normal",
+        "sequence": "A",
+        "runs": 10,
+        "normal": 10,
+        "access_violations": 0,
+        "timeouts": 0,
+        "other_nonzero": 0,
+        "last_markers": [
+          "quit_posted"
+        ]
+      },
+      {
+        "mode": "gpu_ring3_normal",
+        "sequence": "B",
+        "runs": 10,
+        "normal": 10,
+        "access_violations": 0,
+        "timeouts": 0,
+        "other_nonzero": 0,
+        "last_markers": [
+          "quit_posted"
+        ]
+      },
+      {
+        "mode": "gpu_ring3_normal",
+        "sequence": "C",
+        "runs": 10,
+        "normal": 10,
+        "access_violations": 0,
+        "timeouts": 0,
+        "other_nonzero": 0,
+        "last_markers": [
+          "quit_posted"
+        ]
+      },
+      {
+        "mode": "gpu_ring3_normal",
+        "sequence": "D",
+        "runs": 10,
+        "normal": 10,
+        "access_violations": 0,
+        "timeouts": 0,
+        "other_nonzero": 0,
+        "last_markers": [
+          "quit_posted"
+        ]
+      },
+      {
+        "mode": "gpu_ring3_normal",
+        "sequence": "E",
+        "runs": 10,
+        "normal": 10,
+        "access_violations": 0,
+        "timeouts": 0,
+        "other_nonzero": 0,
+        "last_markers": [
+          "quit_posted"
+        ]
+      },
+      {
+        "mode": "gpu_ring3_stage_first",
+        "sequence": "D",
+        "runs": 3,
+        "normal": 3,
+        "access_violations": 0,
+        "timeouts": 0,
+        "other_nonzero": 0,
+        "last_markers": [
+          "quit_posted"
+        ]
+      },
+      {
+        "mode": "gpu_single_sync",
+        "sequence": "A",
+        "runs": 3,
+        "normal": 3,
+        "access_violations": 0,
+        "timeouts": 0,
+        "other_nonzero": 0,
+        "last_markers": [
+          "quit_posted"
+        ]
+      },
+      {
+        "mode": "provider_only",
+        "sequence": "A",
+        "runs": 3,
+        "normal": 3,
+        "access_violations": 0,
+        "timeouts": 0,
+        "other_nonzero": 0,
+        "last_markers": [
+          "quit_posted"
+        ]
+      },
+      {
+        "mode": "warp_only",
+        "sequence": "A",
+        "runs": 3,
+        "normal": 3,
+        "access_violations": 0,
+        "timeouts": 0,
+        "other_nonzero": 0,
+        "last_markers": [
+          "quit_posted"
+        ]
+      }
+    ]
+  },
+  "classification": "not reproduced in this matrix; root cause and GPU lifetime safety remain unconfirmed",
+  "inference_strength": "observed exit codes only; internal cause unconfirmed",
+  "re_adoption_qualified": false,
+  "reason": "This isolation phase never integrates production; final 20-run lifecycle qualification was not claimed.",
+  "production_changed": false,
+  "controls": {
+    "cpu_A": {
+      "mode": "cpu_reference",
+      "sequence": "A",
+      "runs": 10,
+      "normal": 10,
+      "access_violations": 0,
+      "timeouts": 0,
+      "other_nonzero": 0,
+      "last_markers": [
+        "quit_posted"
+      ]
+    },
+    "gpu_ring3_A": {
+      "mode": "gpu_ring3_normal",
+      "sequence": "A",
+      "runs": 10,
+      "normal": 10,
+      "access_violations": 0,
+      "timeouts": 0,
+      "other_nonzero": 0,
+      "last_markers": [
+        "quit_posted"
+      ]
+    }
+  }
+}

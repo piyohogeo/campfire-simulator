@@ -1,0 +1,14 @@
+[package]
+title = "Campfire Phase V3T-G shutdown probe"
+version = "0.1.0"
+category = "Simulation"
+
+[core]
+reloadable = false
+
+[dependencies]
+"omni.kit.uiapp" = {}
+
+[[python.module]]
+name = "omni.campfire.phasev3tg_shutdown"
+

@@ -1,5 +1,9 @@
 # Changelog
 
+- Added the production-neutral Phase V3T-G shutdown-isolation probe and ran 78 independent Kit 110.2 / Flow 110.0.0 / RTX processes for CPU-source, Provider-only, Warp-only, synchronized GPU, GPU ring3, retained-resource, stage-first, and shutdown A–E boundaries.
+- Observed 78/78 normal `0x00000000` exits with no timeout, `0xC0000005`, CUDA illegal-address, device-lost, or invalid-pointer report; each process retained fsync'd boundary markers and an explicit extension `on_shutdown` begin/end record.
+- Classified the V3T-F crash as not reproduced rather than solved: no resource or shutdown-order condition produced a positive discriminator, the public Provider source-consumed fence remains unavailable, and GPU lifetime/root cause remain unconfirmed.
+- Kept the GPU production candidate absent, CPU-source V3 and V3 default OFF unchanged, and declined re-adoption because the required 20-run selected lifecycle sequence including stage replacement and Provider recreation was not performed by this isolation phase.
 - Evaluated the Phase V3T-F triple GPU-source ring as a temporary production candidate, then fully reverted the candidate after the isolated lifecycle process crashed during Kit shutdown with Windows exit `0xC0000005`.
 - Retained 720 Flow+RTX timing samples for 20 logs, 120×60 RGBA8 base+emission, three independent runs, 20 warmup and 120 measured publications per transport.
 - Reduced the all-run Provider setter p95 from `29.8788 ms` on the CPU-source reference to `0.2531 ms` on GPU ring3; GPU source-ready wait p95 was `0.6105 ms`, with no 5 ms setter samples.

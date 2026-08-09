@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v3tf">最新記録</a>
+        <a href="#phase-v3tg">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v3tf">Phase V3T-Fを読む</a>
+        <a class="button primary" href="#phase-v3tg">Phase V3T-Gを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V3T-F 統合撤回</strong></div>
+        <div><span>現在地</span><strong>Phase V3T-G shutdown隔離</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>測定</span><strong>720 timing · 1,200-update pre-crash</strong></div>
-        <div><span>判定</span><strong>setter高速化 · shutdown crash · 統合撤回</strong></div>
+        <div><span>測定</span><strong>78 independent Kit processes</strong></div>
+        <div><span>判定</span><strong>78/78 normal · crash非再現 · 原因未確認</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,60 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-v3tg" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number compact">V3T-G</span>
+          <p><time datetime="2026-08-10">2026.08.10</time></p>
+          <span class="pill current">Measured · not reproduced</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Phase V3T-G · shutdown crash isolation</p>
+            <h2>78回は正常終了した。<br>だからこそ、原因は未確認とする。</h2>
+            <p>Phase V3T-Fで1回発生した<code>0xC0000005</code>を、CPU、Provider、Warp、GPU pointer publication、保持期間、stage close順序へ分解しました。同じ20本・Flow＋RTX・120×60 base＋emissionを各processでcold startし、native exitとfsync済みmarkerを親runnerから判定しました。</p>
+          </header>
+
+          <figure class="capture-card wide">
+            <a href="assets/phasev3tg/shutdown_report.svg" aria-label="Phase V3T-G shutdown matrixを開く">
+              <img src="assets/phasev3tg/shutdown_report.svg" alt="CPU、Provider、Warp、GPU ring3、shutdown AからEの78 process終了結果を示すPhase V3T-G図" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>78 / 78 normal exits</strong><span>CPU/GPU対照 各10 · resource境界 各3 · shutdown A–E 各10</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3tc/visual_v3_actual.mp4" data-video-poster="assets/phasev3tc/visual_v3_actual_poster.png" data-video-title="Phase V3T-G visual context · retained CPU V3 preset" data-video-meta="既存V3T-C CPU-source動画 · shutdown性能母集団外 · GPU production経路は復元していない · 60 frames · 6 seconds">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>現行CPU V3の外観参照</strong><small>既存動画 · shutdown証拠ではない</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <div class="notes-grid">
+            <section class="note"><p class="note-label">Observed</p><h3>0xC0000005: 0 / 78</h3><p>timeout、CUDA illegal address、device lost、invalid pointerも0でした。全processでexplicit extension disableの<code>on_shutdown begin/end</code>まで記録しました。</p></section>
+            <section class="note caution"><p class="note-label">Not established</p><h3>root causeもlifetime安全性も未確認</h3><p>failureが再現しないため、Provider、Warp、USD/Hydra、Flowのどこにも原因を割り当てられません。0 crashは安全証明ではありません。</p></section>
+          </div>
+
+          <section class="verification" aria-labelledby="phasev3tg-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Decision</p>
+              <h3 id="phasev3tg-verification-title">production GPU候補は復元しない。</h3>
+              <p>公開source-consumed fenceは依然なく、stage replacement／Provider再生成を含む選択済みsequence 20回の再採用gateも未達です。V3は既定OFF＋CPU-source、Point／rigidは既定OFF、Sphereがproduction既定のままです。</p>
+              <code>.\scripts\run_phasev3tg_shutdown_matrix.ps1</code>
+              <p><a href="assets/phasev3tg/shutdown_report.json">集計JSON</a> · <a href="assets/phasev3tg/shutdown_samples.json">全process＋marker JSON</a> · <a href="assets/phasev3tg/crash_log_index.json">crash index</a> · <a href="../design/wood_visual_v3_shutdown_isolation.md">設計メモ</a></p>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase V3T-G検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>CPU / GPU A</strong><small>10 / 10 + 10 / 10 normal</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Shutdown B–E</strong><small>各10 / 10 normal</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Resource modes</strong><small>6条件 · 各3 / 3 normal</small></p></div>
+              <div role="listitem"><span aria-hidden="true">!</span><p><strong>Cause</strong><small>non-reproducible · unconfirmed</small></p></div>
+              <div role="listitem"><span aria-hidden="true">×</span><p><strong>Re-adoption</strong><small>20-run final lifecycle gate未実施</small></p></div>
+            </div>
+          </section>
+
+          <section class="note next"><p class="note-label">Next</p><h3>通常連続render FPSを受動計測する</h3><p>V3T-HではGPU条件をskipし、Flow OFF/V3 OFF、Flow ON/V3 OFF、Flow ON/V3 CPU-sourceを比較します。requested-frame latencyをFPSへ換算しません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v3tf" class="section entry-section phase-six">
