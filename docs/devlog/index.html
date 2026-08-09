@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6do">最新記録</a>
+        <a href="#phase-6dp">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6do">Phase 6DOを読む</a>
+        <a class="button primary" href="#phase-6dp">Phase 6DPを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6DO 完了</strong></div>
+        <div><span>現在地</span><strong>Phase 6DP 完了</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>76 / 76 passed</strong></div>
-        <div><span>判定</span><strong>rigid producer 15 / 15 · Point既定OFF</strong></div>
+        <div><span>判定</span><strong>rigid owner 11 / 11 · Point既定OFF</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,53 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-6dp" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number compact">6DP</span>
+          <p><time datetime="2026-08-09">2026.08.09</time></p>
+          <span class="pill current">Qualified · Point default OFF</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Phase 6DP · Rigid-frame application owner</p>
+            <h2>新しいrigid sessionを、<br>stage交換の向こうまで保つ。</h2>
+            <p>Phase 6DOのproducerを既存production owner compositionへ渡し、real Kitのclose／attach／consumer rebuild／shutdownを通しました。normal appの選択settingはまだ増やさず、PointとV3は既定OFF、Sphereはproduction既定のままです。</p>
+          </header>
+
+          <figure class="capture-card wide">
+            <a href="assets/phase6/rigid_owner_report.svg" aria-label="Phase 6DP rigid owner lifecycleレポートを開く">
+              <img src="assets/phase6/rigid_owner_report.svg" alt="Phase 6DPのowner、回転refresh、stage replacement、revision継続、shutdownを示す機械レポート" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>37°→53° refresh後も、replacementを越えてrevision 3へ</strong><span>11 / 11 real Kit · layout revision 2 · consumer replacement 1</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3tc/visual_v3_actual.mp4" data-video-poster="assets/phasev3tc/visual_v3_actual_poster.png" data-video-title="Phase 6DP wood-state visual reference — V3 explicit preset" data-video-meta="Shared V3T-C explicit-preset recording for human wood-state context · Phase 6DP evidence is the owner lifecycle report · rigid Point remains default OFF · 60 frames · 6 seconds">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>薪状態の目視参照</strong><small>V3明示preset動画を再利用 · 6秒</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <div class="notes-grid">
+            <section class="note"><p class="note-label">Owner lifecycle</p><h3>同じproduction compositionを使用</h3><p>native backend、snapshot adapter、Point sidecar、session、recovery orchestratorを既存ownerから生成しました。revision 1と2を発行後、replacement consumerをrevision 2で再構築し、次のstepをrevision 3として整合させました。</p></section>
+            <section class="note caution"><p class="note-label">Immutable mode</p><h3>running writeとlive migrationを拒否</h3><p>停止中の任意回転refreshだけを許し、同じtransformはskipします。running中のlayout replacementとrigid→legacy変更は拒否し、通常appにmode選択settingを追加する作業は次の独立gateへ残しました。</p></section>
+          </div>
+
+          <section class="verification" aria-labelledby="phase6dp-verification-title">
+            <div class="verification-copy"><p class="section-kicker">Verification</p><h3 id="phase6dp-verification-title">実stage lifecycleを11 gateで確認。</h3><p>37°初期authoring、revision 1、53°refresh、unchanged skip、revision 2、close／attachの4 event、consumer rebuild、revision 3、全owner close、idempotent shutdownを機械判定しました。</p><p><a href="assets/phase6/rigid_owner_report.json">機械レポート</a> · <a href="../design/resident_rigid_owner.md">設計メモ</a></p></div>
+            <div class="check-list" role="list" aria-label="Phase 6DP検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Owner lifecycle</strong><small>11 / 11 real Kit gates</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Transform</strong><small>37° → 53° · unchanged skip</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Recovery</strong><small>4 events · consumer replacement 1</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Revision</strong><small>1 → 2 → 3 aligned</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Regression</strong><small>8 processes · 76 / 76 · 382.6 s</small></p></div>
+              <div role="listitem"><span aria-hidden="true">○</span><p><strong>Normal app setting</strong><small>next default-off gate</small></p></div>
+            </div>
+          </section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6do" class="section entry-section phase-six">

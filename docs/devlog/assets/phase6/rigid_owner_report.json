@@ -1,0 +1,49 @@
+{
+  "schema": "campfire.phase6dp.rigid_owner_report.v1",
+  "phase": "phase6dp",
+  "status": "qualified_default_off",
+  "gates": {
+    "passed": 11,
+    "total": 11,
+    "checks": {
+      "new_owner_starts_rigid_and_default_off": true,
+      "first_step_commits_existing_snapshot_schema": true,
+      "stopped_arbitrary_transform_refreshes_atomically": true,
+      "unchanged_transform_skips_layout_publication": true,
+      "running_layout_replacement_is_rejected": true,
+      "second_step_keeps_revision_alignment": true,
+      "live_representation_migration_is_rejected": true,
+      "stage_replacement_rebuilds_matching_rigid_consumers": true,
+      "post_recovery_step_commits_revision_three": true,
+      "shutdown_is_idempotent_and_closes_all_owners": true,
+      "production_contracts_remain_unchanged": true
+    }
+  },
+  "layout": {
+    "representation": "rigid_frame_v1",
+    "initial_rotation_degrees": 37.0,
+    "refreshed_rotation_degrees": 53.0,
+    "layout_revision": 2
+  },
+  "publication": {
+    "revision": 3,
+    "step_count": 3,
+    "consumer_replace_count": 1,
+    "recovery_success_count": 1
+  },
+  "non_changes": {
+    "point_default": false,
+    "v3_default": false,
+    "sphere_production_default": true,
+    "resident_snapshot": true,
+    "checkpoint_v1": true,
+    "flow_version": "110.0.0"
+  },
+  "decision": {
+    "production_owner_composition_qualified": true,
+    "normal_app_rigid_setting_exposed": false,
+    "point_default_enabled": false,
+    "live_representation_migration": false,
+    "next_gate": "explicit default-off normal-app rigid-session setting"
+  }
+}

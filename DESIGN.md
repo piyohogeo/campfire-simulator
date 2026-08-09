@@ -2655,3 +2655,15 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 互換境界: legacy-Yはcross-sectionを反転する歴史的mappingなので、右手系rigid frameとのbyte同値を主張しない。identity-Xだけを旧経路byte-equivalence gateとする。この差は許容誤差ではなくreflection契約である。
 - 非変更: wood authority、物理式、wood JSON、`ResidentPublishedSnapshot`、checkpoint v1、Flow 110.0.0、Sphere/Point Emitter schema、collision、revision-last、rollback/retry、V3T-C safe stop、production既定は不変。Point/V3は既定OFFでSphereがproduction既定である。
 - 次: 新規生成したrigid sessionを既存application ownerへ既定OFFで接続し、transform refresh、stage replacement、shutdownを検証する。live migrationは実装しない。V3動画は引き続き明示presetを外観参照に使い、Phase 6DOの合格根拠は機械reportとtestとする。
+
+## Phase 6DP rigid-frame application-owner lifecycle
+
+### 2026-08-09: production owner compositionをreal Kit stage lifecycleで検証
+
+- 構成: productionの`ResidentPointApplicationOwner.compose()`からnative backend、snapshot adapter、Point sidecar、session、stage recovery orchestratorを生成した。test専用ownerや別revision authorityは追加していない。offline stageは37度の`rigid_frame_v1`として接続前に完全authoringし、normal appの選択settingはまだ追加しない。
+- refresh: revision 1を既存snapshot schemaへpublish後にownerを停止し、対象薪を37度から53度、新originへ変更した。`refresh_layout()`はlayout revision 2をatomic commitし、同じtransformの再refreshはlayout replacement 0でskipした。running中のlayout replacementとrigidからlegacyへのlive migrationはstateを進めず拒否した。
+- recovery: revision 2をpublishして停止し、現在stageをexport/openしたreplacementへreal Kit contextでclose／attachした。4 lifecycle eventと4 update drain後、matching rigid consumerをcommitted revision 2で再構築し、post-recovery stepはadapter／sidecarともrevision 3へ進んだ。
+- shutdown: native backend、adapter、sidecarを1回目closeで解放し、2回目closeをidempotentに処理した。Phase固有probeは`11 / 11` gate合格である。
+- 回帰: Python／PowerShell／JSON／SVG／HTML参照検査とブラウザ実描画・動画modalを確認し、標準suite全8 process・`76 / 76`件を`382.6 s`で合格した。
+- 非変更: Point/V3既定OFF、Sphere production既定、wood authority、物理式、wood JSON、`ResidentPublishedSnapshot`、checkpoint v1、Flow 110.0.0、Emitter schema、collision、rollback／revision、V3T-C safe stopは不変。Flow場と映像seamの既知未達を更新しない。
+- 次: normal extensionのoffline stage authoring前にだけ選べる明示的な既定OFF rigid settingを追加し、legacy fallbackと矛盾setting拒否を含めて通常初期化経路を検証する。live sessionのrepresentation切替は実装しない。

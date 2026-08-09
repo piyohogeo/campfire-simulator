@@ -1,5 +1,9 @@
 # Changelog
 
+- Added Phase 6DP's real-Kit rigid-frame application-owner probe without exposing a new normal-app setting or changing any production default.
+- Qualified 11 / 11 gates across rigid owner composition, revision 1 publication, 37-to-53-degree stopped refresh, unchanged-layout skip, running-write rejection, live-migration rejection, real stage close/attach/rebuild, revision 3 continuation, and idempotent shutdown.
+- Requalified the complete eight-process 76 / 76 standard suite in 382.6 seconds after adding the isolated owner probe and report tooling.
+- Kept Point and V3 default OFF, Sphere as the production fallback, and the existing wood authority, snapshot, checkpoint v1, Flow 110.0.0, collision, revision, and rollback contracts unchanged.
 - Added Phase 6DO's default-off rigid-frame native producer and connected arbitrary right-handed log transforms to the existing immutable `ResidentPublishedSnapshot`/Point schema without changing wood authority, checkpoint v1, Flow 110.0.0, or production defaults.
 - Kept the legacy native layout export unchanged and added `campfire_native_surface_layout_frames`; legacy producers do not resolve the new symbol, while rigid producers validate finite right-handed orthonormal frames before writing scratch positions.
 - Extended immutable layout payloads and owner state with mutually exclusive cardinal axes or rigid frames; representation remains fixed for a session, participates in the retry digest, and cannot migrate live.
