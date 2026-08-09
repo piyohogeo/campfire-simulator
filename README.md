@@ -147,6 +147,17 @@ Phase 6検証は[NISTIR 7094](https://tsapps.nist.gov/publication/get_pdf.cfm?pu
 
 表示される一覧から `campfire.simulator.kit` を選びます。既定でPhase 6の校正結果シーンが開きます。
 
+### 最適化済みV3薪表示デモ（明示的opt-in）
+
+V3は通常appでは既定OFFです。render hierarchy、Resident snapshot adapter、native backend、V3 texture表示を個別に切り替えず、次の単一presetで固定Phase 3デモを実行できます。
+
+```powershell
+.\scripts\run_visual_v3_demo.ps1
+.\scripts\run_visual_v3_demo.ps1 -CaptureVideo
+```
+
+結果は既定で`artifacts/visual-v3/latest/`へ出力されます。20本isolated publication p95が1 ms目標を満たしていないため通常デモの既定にはしていません。Point application、V0、V1との同時有効化はfail closedで、従来のCylinder-only表示は引き続き既定経路です。
+
 ## 主な構成
 
 - `source/apps/campfire.simulator.kit`: アプリ定義、固定依存バージョン、既定Phase

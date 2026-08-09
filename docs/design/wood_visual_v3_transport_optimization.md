@@ -76,3 +76,41 @@ Kit/RTX probeは`17 / 17`、変更後V3M-C regressionは`17 / 17`、標準suite�
 このPhaseではnative boundary、固定buffer、個別skipを機能qualifiedとするが、性能採用は判断しない。単一probeのnative p95悪化と依然残るCPU upload stallを保留し、V3T-CのOFF／ON交互3組と実アプリframe pacingで採否を決める。V3は既定OFF、Cylinder collider、V0/V1 fallback、Flow／Point／authority契約は不変である。
 
 機械レポート: [native_beauty_report.json](../devlog/assets/phasev3tb/native_beauty_report.json)、[Kit/RTX probe](../devlog/assets/phasev3tb/native_beauty_probe.json)。
+
+## Phase V3T-C: 実アプリ統合計測と利用境界
+
+### 交互計測
+
+Resident adapter、handle cache、lightweight commit、unchanged derived skip、Resident native backend、render hierarchy、Flow、RTX、camera、warmup、1280×720 captureを固定し、pair 1をOFF→ON、pair 2をON→OFF、pair 3をOFF→ONの順で独立process実行した。各runは240秒・1,200 stepの同じPhase 3で、固定時刻2枚を撮影した。update frame、visual publication、CPU upload、GPU、authorityを同じ`summary.json`から集計した。
+
+| 指標（3 run中央値または合計） | V3 OFF | V3 ON |
+| --- | ---: | ---: |
+| update frame p50 | 6.4895 ms | 4.9647 ms |
+| update frame p95 | 7.9833 ms | 6.5593 ms |
+| update frame max | 9.2552 ms | 9.4021 ms |
+| 16.67 / 33.33 / 50 ms超過 | 0 / 0 / 0 | 0 / 0 / 0 |
+| GPU utilization mean | 19.870% | 35.750% |
+| GPU memory max | 7,731 MiB | 7,793 MiB |
+| visual publication p50 / p95 / max | — | 2.5241 / 36.1233 / 79.2889 ms |
+| CPU upload p50 / p95 / max | — | 1.7373 / 35.4457 / 78.6662 ms |
+
+V3 ONのupdate-frame p95はOFFより`1.4240 ms`低く、この交互runではframe pacing悪化は観測されなかった。ただしvisual publication p95の`36.1233 ms`は消えておらず、`35.4457 ms`がpublic CPU texture uploadである。uploadは`next_update_async`前に同期実行されるため、update-frame区間だけを見てstall解消と判断してはならない。3 ON runの転送合計は`14,999,040 B`、1 runあたり`4,999,680 B`だった。
+
+provider upload完了から次のKit/RTX update完了まではp95中央値`44.8087 ms`、最大render update数`1`で、200 ms gateを満たした。これはpixelの全frame readbackではなく、同じowner threadで完了したpublicationが次のrenderer updateへ渡った境界の計測である。動画capture runは60回の強制再発行を含むためperformance母集団から外し、外観trajectoryの根拠だけに使用する。
+
+最終回帰ではrelease build、Phase 0 RTX、Phase 2、Phase 3 V0 OFF/ON、V0 `13 / 13`、V1 `8 / 8`、V2 `8 / 8`、V3M-A `6 / 6`、V3M-B `10 / 10`、V3M-C `17 / 17`を確認した。旧Cylinder-only V3 probeはUV制約を示す既知の`6 / 9`非適格のままであり、Mesh経路への退行ではない。標準suiteは8 process・`74 / 74`件を`365.7 s`で完了した。
+
+### 正しさと採否
+
+6 runすべてでdry/wet authority SHA-256、metrics CSV SHA-256、mass balance error `0`、ignition `66.2 / 166.4 s`、Resident revision `1200`、Flow peak fuel `1.0`が一致し、Flow active blockは全runでnonzeroだった。20本・7,200 surface identity、reload完全再発行、visual-only failure recoveryはV3M-C `17 / 17`で再確認する。modeled logは2本、残り2本のrender logはneutral woodのままで、架空状態を与えない。
+
+機能・正しさ、統合frame pacing、RTX反映境界は合格したが、20本isolated publication p95 `4.7540 ms`は参照目標`1.0 ms`を満たさない。したがって通常appとbenchmark appの`woodVisualV3Enabled`は`false`を維持し、標準デモ既定ONにはしない。一方、最適化済みV3を明示的に試せる単一command presetを提供する。
+
+```powershell
+.\scripts\run_visual_v3_demo.ps1
+.\scripts\run_visual_v3_demo.ps1 -CaptureVideo
+```
+
+このpresetはrender hierarchy、Resident adapter、handle cache、lightweight commit、unchanged skip、Resident native backend、V3を一括で有効化する。Point application、V0、V1との競合は既存validationでfail closedとなる。従来Cylinder-only表示は設定OFFで選択でき、safe fallbackを削除しない。native libraryは同じcommand内でrelease buildする。
+
+機械レポート: [integrated_report.json](../devlog/assets/phasev3tc/integrated_report.json)、[matrix manifest](../devlog/assets/phasev3tc/matrix_manifest.json)、[actual trajectory summary](../devlog/assets/phasev3tc/visual_v3_demo_summary.json)。

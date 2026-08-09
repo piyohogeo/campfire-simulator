@@ -458,21 +458,28 @@ if ($WoodVisualV3.IsPresent) {
         [bool]$woodVisualV3Result.status_after_timeline_stop.active -or
         [bool]$woodVisualV3Result.status_after_timeline_stop.closed -or
         $woodVisualV3Result.status_after_timeline_stop.revision -ne 1200 -or
-        $woodVisualV3Result.status_after_timeline_stop.publish_count -ne 1200 -or
+        $woodVisualV3Result.status_after_timeline_stop.processed_revision -ne 1200 -or
+        $woodVisualV3Result.status_after_timeline_stop.publish_count -ne $woodVisualV3Result.adaptive_schedule.published -or
         $woodVisualV3Result.status_after_timeline_stop.failure_count -ne 0 -or
         $woodVisualV3Result.status_after_timeline_stop.recovery_count -ne 0 -or
         (@($woodVisualV3Result.status_after_timeline_stop.atlas) -join ',') -ne '96,15' -or
         $woodVisualV3Result.status_after_timeline_stop.atlas_cell_stride_px -ne 1 -or
         $woodVisualV3Result.status_after_timeline_stop.bytes_per_revision -ne 11520 -or
         $woodVisualV3Result.surface_extract_timing.total_ms.sample_count -ne 1195 -or
-        $woodVisualV3Result.publication_timing.total_ms.sample_count -ne 1195 -or
-        $woodVisualV3Result.upload_count -ne 2400 -or
-        $woodVisualV3Result.usd_set_count -ne 1200 -or
+        $woodVisualV3Result.publication_timing.total_ms.sample_count -ne ($woodVisualV3Result.adaptive_schedule.published - 5) -or
+        ($woodVisualV3Result.adaptive_schedule.published + $woodVisualV3Result.adaptive_schedule.deferred) -ne 1200 -or
+        $woodVisualV3Result.adaptive_schedule.maximum_observed_delay_seconds -gt 0.400001 -or
+        $woodVisualV3Result.upload_count -le 0 -or
+        $woodVisualV3Result.upload_count -gt (2 * $woodVisualV3Result.adaptive_schedule.published) -or
+        $woodVisualV3Result.usd_set_count -ne $woodVisualV3Result.status_after_timeline_stop.visual_commit_count -or
         $woodVisualV3Result.transferred_bytes -ne (
-            1200 * $woodVisualV3Result.status_after_timeline_stop.bytes_per_revision
+            $woodVisualV3Result.upload_count *
+            ($woodVisualV3Result.status_after_timeline_stop.bytes_per_revision / 2)
         ) -or
+        $woodVisualV3Result.rtx_reflection.maximum_render_frame_updates -gt 1 -or
+        $woodVisualV3Result.rtx_reflection.pending_at_stop -ne 0 -or
         @($woodVisualV3Result.errors).Count -ne 0) {
-        throw "Wood visual V3 did not preserve its expected 5 Hz lifecycle."
+        throw "Wood visual V3 did not preserve its adaptive change-aware lifecycle."
     }
 }
 elseif ($null -ne $woodVisualV3Result.surface_extract_timing -or

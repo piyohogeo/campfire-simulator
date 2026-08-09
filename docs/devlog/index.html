@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v3tb">最新記録</a>
+        <a href="#phase-v3tc">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v3tb">Phase V3T-Bを読む</a>
+        <a class="button primary" href="#phase-v3tc">Phase V3T-Cを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V3T-B 完了</strong></div>
+        <div><span>現在地</span><strong>Phase V3T-C 完了</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>74 / 74 passed</strong></div>
-        <div><span>判定</span><strong>skip成立 · native高速化せず · 既定OFF</strong></div>
+        <div><span>判定</span><strong>統合合格 · CPU upload制約 · 明示presetのみ</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,103 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-v3tc" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number compact">V3T-C</span>
+          <p><time datetime="2026-08-09">2026.08.09</time></p>
+          <span class="pill current">Functional qualified · explicit preset only</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Phase V3T-C · Integrated adoption boundary</p>
+            <h2>正しさとframe pacingは合格。<br>CPU upload制約は残った。</h2>
+            <p>Resident native・Flow・RTX・同一cameraを固定し、V3 OFF／ONを3組6 processで交互比較しました。wood authority、CSV、mass、ignition、revision、Flow fuelは完全一致し、update-frame p95も悪化しませんでした。一方、visual publication p95は36.1233 msで、35.4457 msをCPU texture uploadが占めます。通常appは既定OFFのまま、最適化済みV3を1 commandで試せる明示presetだけを追加しました。</p>
+          </header>
+
+          <div class="capture-pair" aria-label="V3 OFFとONの同一条件比較">
+            <figure class="capture-card">
+              <a href="assets/phasev3tc/visual_v3_off.png" aria-label="V3 OFFの固定時刻画像を原寸で開く">
+                <img src="assets/phasev3tc/visual_v3_off.png" width="1280" height="720" alt="同一Phase 3最終時刻をV3 OFFで撮影したKit RTX画面">
+              </a>
+              <figcaption><div><strong>V3 OFF · same authority</strong><span>uniform render wood · update p95 median 7.9833 ms</span></div></figcaption>
+            </figure>
+            <figure class="capture-card">
+              <a href="assets/phasev3tc/visual_v3_on.png" aria-label="V3 ONの固定時刻画像を原寸で開く">
+                <img src="assets/phasev3tc/visual_v3_on.png" width="1280" height="720" alt="同一Phase 3最終時刻をV3 ONで撮影し局所的な炭化と赤熱を表示したKit RTX画面">
+              </a>
+              <figcaption>
+                <div><strong>V3 ON · local state visible</strong><span>modeled 2 logs · neutral 2 logs · authority unchanged</span></div>
+                <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3tc/visual_v3_actual.mp4" data-video-poster="assets/phasev3tc/visual_v3_actual_poster.png" data-video-title="V3T-C actual combustion trajectory" data-video-meta="Resident-native Phase 3 · optimized adaptive/change-aware V3 · 60 frames · 6 seconds · capture run excluded from performance matrix">
+                  <span class="video-trigger-icon" aria-hidden="true"></span>
+                  <span><strong>実燃焼動画</strong><small>6秒 · 60 frames</small></span>
+                </button>
+              </figcaption>
+            </figure>
+          </div>
+
+          <div class="capture-pair" aria-label="V3T-C統合レポートと実燃焼終端">
+            <figure class="capture-card">
+              <a href="assets/phasev3tc/integrated_report.svg" aria-label="V3T-C統合性能レポートを開く">
+                <img src="assets/phasev3tc/integrated_report.svg" width="1200" height="680" alt="3組のOFF ON update frameとauthority、採用判断を示すV3T-C実測図">
+              </a>
+              <figcaption><div><strong>3 alternating pairs</strong><span>OFF / ON p95: 7.9833 / 6.5593 ms</span></div></figcaption>
+            </figure>
+            <figure class="capture-card">
+              <a href="assets/phasev3tc/visual_v3_actual.png" aria-label="実燃焼trajectory終端画像を原寸で開く">
+                <img src="assets/phasev3tc/visual_v3_actual.png" width="1280" height="720" alt="最適化済みV3を使った240秒実燃焼trajectory終端のKit RTX画面">
+              </a>
+              <figcaption><div><strong>Actual 240 s trajectory</strong><span>capture force-republish · performanceとは別run</span></div></figcaption>
+            </figure>
+          </div>
+
+          <div class="notes-grid">
+            <section class="note">
+              <p class="note-label">Correctness</p>
+              <h3>6 runでauthority完全一致</h3>
+              <p>dry／wet SHA-256とmetrics CSV SHA-256は全runで一致し、mass balance error 0、ignition 66.2／166.4 s、Resident revision 1200、Flow peak fuel 1.0を維持しました。Flow active blockは全runでnonzeroです。</p>
+            </section>
+            <section class="note caution">
+              <p class="note-label">Honest bottleneck</p>
+              <h3>同期CPU uploadが残る</h3>
+              <p>ON publication p50／p95／maxは2.5241／36.1233／79.2889 ms、CPU uploadは1.7373／35.4457／78.6662 msでした。next update区間だけなら33.33 ms超過0でも、upload stallが消えたとは扱いません。</p>
+            </section>
+          </div>
+
+          <section class="verification" aria-labelledby="phasev3tc-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Adoption decision</p>
+              <h3 id="phasev3tc-verification-title">通常既定はOFF、試用は1 command。</h3>
+              <p>20本isolated p95 4.7540 msが1.0 ms目標未達なので通常appは変更しません。opt-in presetはrender hierarchy、Resident adapter、native backend、V3を一括で有効化し、Point／V0／V1競合はfail closedです。</p>
+              <code>.\scripts\run_visual_v3_demo.ps1 -CaptureVideo</code>
+              <p><a href="assets/phasev3tc/integrated_report.json">最終機械レポート</a> · <a href="assets/phasev3tc/matrix_manifest.json">6-run manifest</a> · <a href="assets/phasev3tc/visual_v3_demo_summary.json">trajectory summary</a> · <a href="../design/wood_visual_v3_transport_optimization.md">設計メモ</a></p>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase V3T-C検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Authority</strong><small>SHA / CSV identical · mass error 0</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Frame pacing</strong><small>3 pairs · 33 / 50 ms count 0</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>RTX reflection</strong><small>44.8087 ms p95 · 1 update</small></p></div>
+              <div role="listitem"><span aria-hidden="true">!</span><p><strong>20-log target</strong><small>4.7540 ms p95 · 1 ms missed</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Fallback</strong><small>normal default OFF · Cylinder retained</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Final regression</strong><small>74 / 74 · V3M-A 6/6 · B 10/10 · C 17/17</small></p></div>
+            </div>
+          </section>
+
+          <div class="notes-grid">
+            <section class="note">
+              <p class="note-label">Usage boundary</p>
+              <h3>明示presetのみ</h3>
+              <p>通常appとbenchmark appのV3設定はfalseのままです。presetはnative libraryも同じcommandでbuildし、必要設定を個別操作させません。Cylinder-only safe fallbackも削除しません。</p>
+            </section>
+            <section class="note">
+              <p class="note-label">Stop boundary</p>
+              <h3>V3T-Cで停止</h3>
+              <p>Mesh collider、deformation、shrink、crack、loss、V4、Phase 6DM、Point契約、wood authority、Flowには進んでいません。次に残るtransport課題は公開API上のCPU upload stallです。</p>
+            </section>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v3tb" class="section entry-section phase-six">

@@ -1,5 +1,13 @@
 # Changelog
 
+- Added Phase V3T-C's three alternating integrated V3 OFF/ON pairs with the same Resident-native producer, Flow/RTX scene, render hierarchy, camera, warmup, and two fixed captures per run.
+- Preserved both authoritative wood SHA-256 values, the metrics CSV SHA-256, zero mass-balance error, ignition times, Resident revision, Flow fuel input, and active Flow across all six runs.
+- Measured update-frame p95 medians of `7.9833 ms` OFF and `6.5593 ms` ON with zero 33.33/50 ms update frames in both groups; V3 publication p95 remained `36.1233 ms`, dominated by `35.4457 ms` CPU texture upload.
+- Measured publication-to-next-RTX-update reflection at p95 `44.8087 ms` and one render update, and recorded whole-GPU utilization/memory separately from provider-owned memory.
+- Added the single-command `run_visual_v3_demo.ps1` opt-in preset, which enables the render hierarchy, Resident adapter, native backend, and V3 together while existing Point/V0/V1 conflicts fail closed.
+- Kept both normal Kit apps and production V3 default OFF because the isolated 20-log publication p95 remains `4.7540 ms` against the `1.0 ms` reference target; Cylinder fallback, Flow, Point, wood authority, and Phase 6DM remain unchanged.
+- Captured a new 60-frame/6-second actual-combustion V3 trajectory and same-camera OFF/ON images, and published the compact machine-readable V3T-C report.
+- Requalified the release build, Phase 0 RTX, Phase 2, V0 OFF/ON and 13/13 probe, V1 8/8, V2 8/8, the expected Cylinder-only V3 boundary at 6/9, V3M-A 6/6, V3M-B 10/10, V3M-C 17/17, and the expanded 74/74 eight-process suite in 365.7 seconds.
 - Added Phase V3T-B's additive native RGBA8 beauty packer while retaining the immutable V2 payload, stable surface identity, compact descriptor, and default-off V3 boundary.
 - Reused three session-owned native pack resources and matched every base/emission texel against the NumPy reference for four and twenty logs across 105 packs; invalid floats and surface permutations remain detectable.
 - Defined displayed versus processed revision semantics and skipped base/emission uploads independently; 105 identical quantized revisions issued zero texture uploads and zero USD Sets.

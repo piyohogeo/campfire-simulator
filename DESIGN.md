@@ -2616,3 +2616,16 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - scheduling: sourceは5 Hzを維持し、最初・reload・force・25 K以上の急熱・emission境界横断は5 Hz、通常小変化は0.4 s間隔とした。5 Hz離散tickで500 ms上限を守るため実効2.5 Hzであり、probeは26 update／13 publish／最大0.4 s、急熱0.2 sを確認した。
 - 実測: Kit/RTX `17 / 17`、V3M-C `17 / 17`、release build、Phase 0 RTX、標準8 process・`74 / 74`件（`359.8 s`）に合格した。20本native pack p95 `2.7026 ms`はNumPy参照`2.3398 ms`より遅く、changing publication p95 `4.7540 ms`も1 ms未達だった。一方105 unchanged revisionはupload 0／Set 0で、base-only／emission-onlyは各28,800 B転送になった。要求されたcamera capture直前は同一revisionでも両atlasを強制再発行し、間引きによる古い表示を撮影しない。
 - 判断: 機能とlifecycleはqualifiedだが、native化単独の性能改善は主張しない。V3既定OFFと全production契約を維持し、V3T-CのOFF／ON交互3組、frame stall、RTX反映遅延で利用presetと採否を決める。Mesh collider、変形、V4、Phase 6DM、Point／Flow変更には進まない。
+
+## Phase V3T-C integrated adoption boundary
+
+### 2026-08-09: authorityとframe pacingは合格、CPU upload制約により明示presetのみ
+
+- 計測構成: Resident adapter、handle cache、lightweight commit、unchanged skip、Resident native backend、render hierarchy、Flow、RTX、camera、warmup、2固定captureを同一にし、pair 1 OFF→ON、pair 2 ON→OFF、pair 3 OFF→ONの6独立processを実行した。各runはPhase 3の240秒・1,200 stepである。
+- 正しさ: dry/wet authoritative SHA-256とmetrics CSV SHA-256は6 run完全一致、mass balance errorは0、ignitionは`66.2 / 166.4 s`、Resident revisionは`1200`、Flow peak fuelは`1.0`で一致し、全runでactive blockを観測した。V3はwood authority、Flow source、collision、Point payloadを変更しない。
+- frame pacing: update-frame p50/p95/max中央値はOFF `6.4895 / 7.9833 / 9.2552 ms`、ON `4.9647 / 6.5593 / 9.4021 ms`で、16.67/33.33/50 ms超過は双方0だった。ON p95差は`-1.4240 ms`で統合frame gateは合格した。
+- 残存cost: ON visual publication p50/p95/max中央値は`2.5241 / 36.1233 / 79.2889 ms`、CPU texture uploadは`1.7373 / 35.4457 / 78.6662 ms`だった。update-frame timerはupload直後の`next_update_async`だけなので、後者の同期stallを隠さず別指標として残す。GPU utilization mean中央値はOFF/ON `19.870 / 35.750%`、max memory中央値は`7,731 / 7,793 MiB`である。
+- RTX反映: provider upload完了から次のKit/RTX updateまではp95中央値`44.8087 ms`、最大1 render update、pending 0だった。60-frame・6-second actual trajectoryはcapture直前の完全再発行を使い、性能runから分離した。
+- 最終回帰: release build、Phase 0 RTX、Phase 2、Phase 3 V0 OFF/ON、V0 probe `13 / 13`、V1 `8 / 8`、V2 `8 / 8`、V3 Cylinder-only既知境界`6 / 9`、V3M-A `6 / 6`、V3M-B `10 / 10`、V3M-C `17 / 17`に合格または期待どおりの境界を確認した。標準suiteは8 process・`74 / 74`件、`365.7 s`で合格した。
+- 採否: 機能・authority・統合frame・200 ms反映gateは合格したが、20本isolated publication p95 `4.7540 ms`は参照目標`1.0 ms`未達である。通常`campfire.simulator.kit`とbenchmark appはV3既定OFFを維持する。単一commandの`.\scripts\run_visual_v3_demo.ps1`だけをopt-in presetとして提供し、必要な7設定とnative buildを一括化する。Point/V0/V1競合はfail closed、Cylinder-only fallbackは維持する。
+- 停止境界: V3T-Cで停止し、Mesh collider、deformation、shrink、crack、loss、V4、Phase 6DM再開、Point契約、wood authority、Flowは変更しない。次のtransport課題は公開API上のCPU upload stallであり、未所有GPU pointerやprivate APIは採用しない。

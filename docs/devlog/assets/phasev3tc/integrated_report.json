@@ -1,0 +1,663 @@
+{
+  "schema": "campfire.phasev3tc.report.v1",
+  "status": "qualified_functionally_explicit_preset_only",
+  "matrix": {
+    "run_count": 6,
+    "pair_count": 3,
+    "order": "pair1 OFF/ON, pair2 ON/OFF, pair3 OFF/ON",
+    "same_camera_warmup_capture": true
+  },
+  "runs": [
+    {
+      "sequence": 1,
+      "pair": 1,
+      "mode": "off",
+      "summary": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tc\\integrated\\pair_1_off\\summary.json",
+      "authority_sha256": {
+        "dry": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+        "wet": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9"
+      },
+      "metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759",
+      "mass_balance_error_kg": {
+        "dry": 0.0,
+        "wet": 0.0
+      },
+      "ignition_seconds": {
+        "dry": 66.2,
+        "wet": 166.4
+      },
+      "flow": {
+        "input_owner": "wood thermal model",
+        "active_blocks_final": 132,
+        "active_blocks_peak": 132,
+        "peak_fuel_input": 1.0
+      },
+      "resident_revision": 1200,
+      "frame": {
+        "sample_count": 236,
+        "warmup_samples_excluded": 4,
+        "total_ms": 1546.9925,
+        "mean_ms": 6.5551,
+        "p50_ms": 6.5926,
+        "p95_ms": 7.9414,
+        "max_ms": 10.1142,
+        "over_16_67_ms": 0,
+        "over_33_33_ms": 0,
+        "over_50_ms": 0
+      },
+      "visual_publication": null,
+      "visual_transferred_bytes": 0,
+      "visual_upload_count": 0,
+      "visual_schedule": {
+        "source_hz": 5.0,
+        "normal_interval_seconds": null,
+        "published": 0,
+        "deferred": 0,
+        "reasons": {},
+        "maximum_observed_delay_seconds": 0.0
+      },
+      "rtx_reflection": null,
+      "gpu": {
+        "sample_count": 76,
+        "interval_ms": 250,
+        "utilization_mean_percent": 19.118,
+        "utilization_max_percent": 99,
+        "memory_min_mib": 4082,
+        "memory_max_mib": 7729,
+        "memory_span_mib": 3647,
+        "method": "Whole-GPU nvidia-smi samples; memory is not provider-scoped."
+      },
+      "runner_wall_seconds": 19.636
+    },
+    {
+      "sequence": 2,
+      "pair": 1,
+      "mode": "on",
+      "summary": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tc\\integrated\\pair_1_on\\summary.json",
+      "authority_sha256": {
+        "dry": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+        "wet": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9"
+      },
+      "metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759",
+      "mass_balance_error_kg": {
+        "dry": 0.0,
+        "wet": 0.0
+      },
+      "ignition_seconds": {
+        "dry": 66.2,
+        "wet": 166.4
+      },
+      "flow": {
+        "input_owner": "wood thermal model",
+        "active_blocks_final": 246,
+        "active_blocks_peak": 318,
+        "peak_fuel_input": 1.0
+      },
+      "resident_revision": 1200,
+      "frame": {
+        "sample_count": 236,
+        "warmup_samples_excluded": 4,
+        "total_ms": 1206.209,
+        "mean_ms": 5.1111,
+        "p50_ms": 4.9647,
+        "p95_ms": 6.5593,
+        "max_ms": 9.4971,
+        "over_16_67_ms": 0,
+        "over_33_33_ms": 0,
+        "over_50_ms": 0
+      },
+      "visual_publication": {
+        "beauty_pack_ms": {
+          "sample_count": 599,
+          "warmup_samples_excluded": 5,
+          "total_ms": 70.4305,
+          "mean_ms": 0.1176,
+          "p50_ms": 0.0999,
+          "p95_ms": 0.2264,
+          "max_ms": 0.5824
+        },
+        "boundary_prepare_ms": {
+          "sample_count": 599,
+          "warmup_samples_excluded": 5,
+          "total_ms": 10.5251,
+          "mean_ms": 0.0176,
+          "p50_ms": 0.0146,
+          "p95_ms": 0.0343,
+          "max_ms": 0.1364
+        },
+        "cpu_upload_ms": {
+          "sample_count": 599,
+          "warmup_samples_excluded": 5,
+          "total_ms": 7059.332,
+          "mean_ms": 11.7852,
+          "p50_ms": 1.7373,
+          "p95_ms": 34.1074,
+          "max_ms": 65.4376
+        },
+        "revision_commit_ms": {
+          "sample_count": 599,
+          "warmup_samples_excluded": 5,
+          "total_ms": 252.787,
+          "mean_ms": 0.422,
+          "p50_ms": 0.4556,
+          "p95_ms": 0.7546,
+          "max_ms": 1.1796
+        },
+        "total_ms": {
+          "sample_count": 599,
+          "warmup_samples_excluded": 5,
+          "total_ms": 7396.5113,
+          "mean_ms": 12.3481,
+          "p50_ms": 2.5241,
+          "p95_ms": 34.6777,
+          "max_ms": 66.7384
+        }
+      },
+      "visual_transferred_bytes": 4999680,
+      "visual_upload_count": 868,
+      "visual_schedule": {
+        "source_hz": 5.0,
+        "normal_interval_seconds": 0.4,
+        "published": 604,
+        "deferred": 596,
+        "reasons": {
+          "full_republish": 3,
+          "normal_bound": 589,
+          "rapid_heat": 12,
+          "small_change_deferred": 596
+        },
+        "maximum_observed_delay_seconds": 0.4000000000000057
+      },
+      "rtx_reflection": {
+        "timing": {
+          "sample_count": 505,
+          "warmup_samples_excluded": 0,
+          "total_ms": 9757.0455,
+          "mean_ms": 19.3209,
+          "p50_ms": 8.4409,
+          "p95_ms": 43.4504,
+          "max_ms": 49.1081
+        },
+        "maximum_render_frame_updates": 1,
+        "pending_at_stop": 0,
+        "sample_count": 505
+      },
+      "gpu": {
+        "sample_count": 108,
+        "interval_ms": 250,
+        "utilization_mean_percent": 34.241,
+        "utilization_max_percent": 100,
+        "memory_min_mib": 4029,
+        "memory_max_mib": 7761,
+        "memory_span_mib": 3732,
+        "method": "Whole-GPU nvidia-smi samples; memory is not provider-scoped."
+      },
+      "runner_wall_seconds": 28.289
+    },
+    {
+      "sequence": 3,
+      "pair": 2,
+      "mode": "on",
+      "summary": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tc\\integrated\\pair_2_on\\summary.json",
+      "authority_sha256": {
+        "dry": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+        "wet": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9"
+      },
+      "metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759",
+      "mass_balance_error_kg": {
+        "dry": 0.0,
+        "wet": 0.0
+      },
+      "ignition_seconds": {
+        "dry": 66.2,
+        "wet": 166.4
+      },
+      "flow": {
+        "input_owner": "wood thermal model",
+        "active_blocks_final": 335,
+        "active_blocks_peak": 337,
+        "peak_fuel_input": 1.0
+      },
+      "resident_revision": 1200,
+      "frame": {
+        "sample_count": 236,
+        "warmup_samples_excluded": 4,
+        "total_ms": 1260.394,
+        "mean_ms": 5.3407,
+        "p50_ms": 5.1491,
+        "p95_ms": 6.8625,
+        "max_ms": 9.4021,
+        "over_16_67_ms": 0,
+        "over_33_33_ms": 0,
+        "over_50_ms": 0
+      },
+      "visual_publication": {
+        "beauty_pack_ms": {
+          "sample_count": 599,
+          "warmup_samples_excluded": 5,
+          "total_ms": 75.4373,
+          "mean_ms": 0.1259,
+          "p50_ms": 0.1042,
+          "p95_ms": 0.2298,
+          "max_ms": 0.4449
+        },
+        "boundary_prepare_ms": {
+          "sample_count": 599,
+          "warmup_samples_excluded": 5,
+          "total_ms": 11.4246,
+          "mean_ms": 0.0191,
+          "p50_ms": 0.0155,
+          "p95_ms": 0.0355,
+          "max_ms": 0.1014
+        },
+        "cpu_upload_ms": {
+          "sample_count": 599,
+          "warmup_samples_excluded": 5,
+          "total_ms": 7272.6313,
+          "mean_ms": 12.1413,
+          "p50_ms": 1.7821,
+          "p95_ms": 35.6799,
+          "max_ms": 94.7734
+        },
+        "revision_commit_ms": {
+          "sample_count": 599,
+          "warmup_samples_excluded": 5,
+          "total_ms": 267.3612,
+          "mean_ms": 0.4463,
+          "p50_ms": 0.4661,
+          "p95_ms": 0.8071,
+          "max_ms": 1.4372
+        },
+        "total_ms": {
+          "sample_count": 599,
+          "warmup_samples_excluded": 5,
+          "total_ms": 7630.3879,
+          "mean_ms": 12.7385,
+          "p50_ms": 2.617,
+          "p95_ms": 36.259,
+          "max_ms": 95.4564
+        }
+      },
+      "visual_transferred_bytes": 4999680,
+      "visual_upload_count": 868,
+      "visual_schedule": {
+        "source_hz": 5.0,
+        "normal_interval_seconds": 0.4,
+        "published": 604,
+        "deferred": 596,
+        "reasons": {
+          "full_republish": 3,
+          "normal_bound": 589,
+          "rapid_heat": 12,
+          "small_change_deferred": 596
+        },
+        "maximum_observed_delay_seconds": 0.4000000000000057
+      },
+      "rtx_reflection": {
+        "timing": {
+          "sample_count": 505,
+          "warmup_samples_excluded": 0,
+          "total_ms": 10077.4451,
+          "mean_ms": 19.9553,
+          "p50_ms": 8.8246,
+          "p95_ms": 45.755,
+          "max_ms": 51.0256
+        },
+        "maximum_render_frame_updates": 1,
+        "pending_at_stop": 0,
+        "sample_count": 505
+      },
+      "gpu": {
+        "sample_count": 108,
+        "interval_ms": 250,
+        "utilization_mean_percent": 35.75,
+        "utilization_max_percent": 100,
+        "memory_min_mib": 4014,
+        "memory_max_mib": 7793,
+        "memory_span_mib": 3779,
+        "method": "Whole-GPU nvidia-smi samples; memory is not provider-scoped."
+      },
+      "runner_wall_seconds": 28.26
+    },
+    {
+      "sequence": 4,
+      "pair": 2,
+      "mode": "off",
+      "summary": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tc\\integrated\\pair_2_off\\summary.json",
+      "authority_sha256": {
+        "dry": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+        "wet": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9"
+      },
+      "metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759",
+      "mass_balance_error_kg": {
+        "dry": 0.0,
+        "wet": 0.0
+      },
+      "ignition_seconds": {
+        "dry": 66.2,
+        "wet": 166.4
+      },
+      "flow": {
+        "input_owner": "wood thermal model",
+        "active_blocks_final": 131,
+        "active_blocks_peak": 131,
+        "peak_fuel_input": 1.0
+      },
+      "resident_revision": 1200,
+      "frame": {
+        "sample_count": 236,
+        "warmup_samples_excluded": 4,
+        "total_ms": 1536.237,
+        "mean_ms": 6.5095,
+        "p50_ms": 6.4895,
+        "p95_ms": 7.9833,
+        "max_ms": 8.8111,
+        "over_16_67_ms": 0,
+        "over_33_33_ms": 0,
+        "over_50_ms": 0
+      },
+      "visual_publication": null,
+      "visual_transferred_bytes": 0,
+      "visual_upload_count": 0,
+      "visual_schedule": {
+        "source_hz": 5.0,
+        "normal_interval_seconds": null,
+        "published": 0,
+        "deferred": 0,
+        "reasons": {},
+        "maximum_observed_delay_seconds": 0.0
+      },
+      "rtx_reflection": null,
+      "gpu": {
+        "sample_count": 79,
+        "interval_ms": 250,
+        "utilization_mean_percent": 22.696,
+        "utilization_max_percent": 100,
+        "memory_min_mib": 4090,
+        "memory_max_mib": 7731,
+        "memory_span_mib": 3641,
+        "method": "Whole-GPU nvidia-smi samples; memory is not provider-scoped."
+      },
+      "runner_wall_seconds": 20.647
+    },
+    {
+      "sequence": 5,
+      "pair": 3,
+      "mode": "off",
+      "summary": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tc\\integrated\\pair_3_off\\summary.json",
+      "authority_sha256": {
+        "dry": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+        "wet": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9"
+      },
+      "metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759",
+      "mass_balance_error_kg": {
+        "dry": 0.0,
+        "wet": 0.0
+      },
+      "ignition_seconds": {
+        "dry": 66.2,
+        "wet": 166.4
+      },
+      "flow": {
+        "input_owner": "wood thermal model",
+        "active_blocks_final": 136,
+        "active_blocks_peak": 136,
+        "peak_fuel_input": 1.0
+      },
+      "resident_revision": 1200,
+      "frame": {
+        "sample_count": 236,
+        "warmup_samples_excluded": 4,
+        "total_ms": 1532.345,
+        "mean_ms": 6.493,
+        "p50_ms": 6.4395,
+        "p95_ms": 8.0492,
+        "max_ms": 9.2552,
+        "over_16_67_ms": 0,
+        "over_33_33_ms": 0,
+        "over_50_ms": 0
+      },
+      "visual_publication": null,
+      "visual_transferred_bytes": 0,
+      "visual_upload_count": 0,
+      "visual_schedule": {
+        "source_hz": 5.0,
+        "normal_interval_seconds": null,
+        "published": 0,
+        "deferred": 0,
+        "reasons": {},
+        "maximum_observed_delay_seconds": 0.0
+      },
+      "rtx_reflection": null,
+      "gpu": {
+        "sample_count": 77,
+        "interval_ms": 250,
+        "utilization_mean_percent": 19.87,
+        "utilization_max_percent": 100,
+        "memory_min_mib": 4081,
+        "memory_max_mib": 7766,
+        "memory_span_mib": 3685,
+        "method": "Whole-GPU nvidia-smi samples; memory is not provider-scoped."
+      },
+      "runner_wall_seconds": 20.118
+    },
+    {
+      "sequence": 6,
+      "pair": 3,
+      "mode": "on",
+      "summary": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tc\\integrated\\pair_3_on\\summary.json",
+      "authority_sha256": {
+        "dry": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+        "wet": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9"
+      },
+      "metrics_csv_sha256": "01aaf0c659fbf9d402b536ccbc71405f5a51af7fbd5f450cdca608bc915b7759",
+      "mass_balance_error_kg": {
+        "dry": 0.0,
+        "wet": 0.0
+      },
+      "ignition_seconds": {
+        "dry": 66.2,
+        "wet": 166.4
+      },
+      "flow": {
+        "input_owner": "wood thermal model",
+        "active_blocks_final": 335,
+        "active_blocks_peak": 337,
+        "peak_fuel_input": 1.0
+      },
+      "resident_revision": 1200,
+      "frame": {
+        "sample_count": 236,
+        "warmup_samples_excluded": 4,
+        "total_ms": 1182.1396,
+        "mean_ms": 5.0091,
+        "p50_ms": 4.8685,
+        "p95_ms": 6.1953,
+        "max_ms": 8.2487,
+        "over_16_67_ms": 0,
+        "over_33_33_ms": 0,
+        "over_50_ms": 0
+      },
+      "visual_publication": {
+        "beauty_pack_ms": {
+          "sample_count": 599,
+          "warmup_samples_excluded": 5,
+          "total_ms": 68.7573,
+          "mean_ms": 0.1148,
+          "p50_ms": 0.1001,
+          "p95_ms": 0.2249,
+          "max_ms": 0.2616
+        },
+        "boundary_prepare_ms": {
+          "sample_count": 599,
+          "warmup_samples_excluded": 5,
+          "total_ms": 10.8198,
+          "mean_ms": 0.0181,
+          "p50_ms": 0.0149,
+          "p95_ms": 0.0327,
+          "max_ms": 0.1649
+        },
+        "cpu_upload_ms": {
+          "sample_count": 599,
+          "warmup_samples_excluded": 5,
+          "total_ms": 7133.2375,
+          "mean_ms": 11.9086,
+          "p50_ms": 1.6432,
+          "p95_ms": 35.4457,
+          "max_ms": 78.6662
+        },
+        "revision_commit_ms": {
+          "sample_count": 599,
+          "warmup_samples_excluded": 5,
+          "total_ms": 248.1288,
+          "mean_ms": 0.4142,
+          "p50_ms": 0.4527,
+          "p95_ms": 0.7399,
+          "max_ms": 1.1354
+        },
+        "total_ms": {
+          "sample_count": 599,
+          "warmup_samples_excluded": 5,
+          "total_ms": 7464.3294,
+          "mean_ms": 12.4613,
+          "p50_ms": 2.4091,
+          "p95_ms": 36.1233,
+          "max_ms": 79.2889
+        }
+      },
+      "visual_transferred_bytes": 4999680,
+      "visual_upload_count": 868,
+      "visual_schedule": {
+        "source_hz": 5.0,
+        "normal_interval_seconds": 0.4,
+        "published": 604,
+        "deferred": 596,
+        "reasons": {
+          "full_republish": 3,
+          "normal_bound": 589,
+          "rapid_heat": 12,
+          "small_change_deferred": 596
+        },
+        "maximum_observed_delay_seconds": 0.4000000000000057
+      },
+      "rtx_reflection": {
+        "timing": {
+          "sample_count": 505,
+          "warmup_samples_excluded": 0,
+          "total_ms": 9899.329,
+          "mean_ms": 19.6026,
+          "p50_ms": 8.4023,
+          "p95_ms": 44.8087,
+          "max_ms": 50.9519
+        },
+        "maximum_render_frame_updates": 1,
+        "pending_at_stop": 0,
+        "sample_count": 505
+      },
+      "gpu": {
+        "sample_count": 105,
+        "interval_ms": 250,
+        "utilization_mean_percent": 36.01,
+        "utilization_max_percent": 99,
+        "memory_min_mib": 4095,
+        "memory_max_mib": 7798,
+        "memory_span_mib": 3703,
+        "method": "Whole-GPU nvidia-smi samples; memory is not provider-scoped."
+      },
+      "runner_wall_seconds": 27.596
+    }
+  ],
+  "aggregate": {
+    "off": {
+      "run_count": 3,
+      "update_frame_p50_ms_median": 6.4895,
+      "update_frame_p95_ms_median": 7.9833,
+      "update_frame_max_ms_median": 9.2552,
+      "over_16_67_ms_total": 0,
+      "over_33_33_ms_total": 0,
+      "over_50_ms_total": 0,
+      "gpu_utilization_mean_percent_median": 19.87,
+      "gpu_memory_max_mib_median": 7731.0,
+      "runner_wall_seconds_median": 20.118
+    },
+    "on": {
+      "run_count": 3,
+      "update_frame_p50_ms_median": 4.9647,
+      "update_frame_p95_ms_median": 6.5593,
+      "update_frame_max_ms_median": 9.4021,
+      "over_16_67_ms_total": 0,
+      "over_33_33_ms_total": 0,
+      "over_50_ms_total": 0,
+      "gpu_utilization_mean_percent_median": 35.75,
+      "gpu_memory_max_mib_median": 7793.0,
+      "runner_wall_seconds_median": 28.26,
+      "visual_publication_p50_ms_median": 2.5241,
+      "visual_publication_p95_ms_median": 36.1233,
+      "visual_publication_max_ms_median": 79.2889,
+      "cpu_upload_p50_ms_median": 1.7373,
+      "cpu_upload_p95_ms_median": 35.4457,
+      "cpu_upload_max_ms_median": 78.6662,
+      "rtx_reflection_p95_ms_median": 44.8087,
+      "rtx_reflection_max_frame_updates": 1,
+      "transferred_bytes_total": 14999040
+    }
+  },
+  "paired_effect": {
+    "update_frame_p95_delta_ms": -1.424,
+    "update_frame_p95_delta_percent": -17.837
+  },
+  "authority": {
+    "wood_sha256_identical": true,
+    "metrics_csv_sha256_identical": true,
+    "mass_balance_error_zero": true,
+    "resident_revision_identical": true,
+    "ignition_identical": true,
+    "flow_input_identical_and_active": true
+  },
+  "functional_gates": {
+    "wood_sha256_identical": true,
+    "metrics_csv_sha256_identical": true,
+    "mass_balance_error_zero": true,
+    "resident_revision_identical": true,
+    "ignition_identical": true,
+    "flow_input_identical_and_active": true,
+    "surface_identity_complete": true,
+    "reload_and_failure_recovery": true,
+    "rtx_reflection_within_one_update": true,
+    "actual_trajectory_captured": true
+  },
+  "adoption_gates": {
+    "functional": true,
+    "isolated_20_log_p95_at_most_1_ms": false,
+    "update_frame_p95_delta_within_2_ms_or_10_percent": true,
+    "over_33_ms_not_increased": true,
+    "rtx_reflection_wall_p95_at_most_200_ms": true
+  },
+  "isolated": {
+    "logs": 20,
+    "surface_cells": 7200,
+    "publication_p95_ms": 4.754,
+    "target_ms": 1.0,
+    "target_met": false
+  },
+  "usage": {
+    "normal_app_default": false,
+    "explicit_visual_v3_preset": true,
+    "command": ".\\scripts\\run_visual_v3_demo.ps1",
+    "known_limit": "The isolated 20-log publication p95 remains above 1 ms.",
+    "fail_closed_conflicts": [
+      "Point Emitter",
+      "V0",
+      "V1"
+    ],
+    "cylinder_fallback_preserved": true
+  },
+  "non_changes": {
+    "flow": true,
+    "point_contract": true,
+    "wood_authority": true,
+    "collider": true,
+    "shape_deformation": true,
+    "normal_default": true
+  }
+}

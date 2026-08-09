@@ -3011,6 +3011,8 @@ class CampfireAppExtension(omni.ext.IExt):
         wood_visual_v3_profiles = []
         wood_visual_v3_errors = []
         wood_visual_v3_status = None
+        wood_visual_v3_pending_reflections = []
+        wood_visual_v3_reflections = []
         if resident_snapshot_adapter_enabled:
             resident_timeline = omni.timeline.get_timeline_interface()
             resident_timeline_was_playing = bool(resident_timeline.is_playing())
@@ -3208,6 +3210,18 @@ class CampfireAppExtension(omni.ext.IExt):
                                 else wood_visual_v3_consumer.publish(visual_payload)
                             )
                             wood_visual_v3_profiles.append(visual_profile)
+                            if visual_profile.upload_count > 0:
+                                wood_visual_v3_pending_reflections.append(
+                                    {
+                                        "revision": visual_profile.revision,
+                                        "publish_step": step_index,
+                                        "publish_perf": time.perf_counter(),
+                                        "capture_republish": (
+                                            visual_profile.status
+                                            == "capture_republish"
+                                        ),
+                                    }
+                                )
                             wood_visual_v3_scheduler.committed(
                                 visual_payload,
                                 visual_payload.tick * PHASE3_MODEL_DT_SECONDS,
@@ -3447,6 +3461,37 @@ class CampfireAppExtension(omni.ext.IExt):
                     update_times_ms.append(
                         (time.perf_counter() - update_started) * 1000.0
                     )
+                    if wood_visual_v3_pending_reflections:
+                        reflected_perf = time.perf_counter()
+                        for pending in wood_visual_v3_pending_reflections:
+                            wood_visual_v3_reflections.append(
+                                {
+                                    "revision": pending["revision"],
+                                    "publication_step": pending["publish_step"],
+                                    "render_step": step_index,
+                                    "render_frame_updates": 1,
+                                    "model_delay_seconds": round(
+                                        (
+                                            step_index
+                                            - pending["publish_step"]
+                                        )
+                                        * PHASE3_MODEL_DT_SECONDS,
+                                        6,
+                                    ),
+                                    "wall_ms": round(
+                                        (
+                                            reflected_perf
+                                            - pending["publish_perf"]
+                                        )
+                                        * 1000.0,
+                                        4,
+                                    ),
+                                    "capture_republish": pending[
+                                        "capture_republish"
+                                    ],
+                                }
+                            )
+                        wood_visual_v3_pending_reflections.clear()
                     active_block_query_started = time.perf_counter()
                     active_block_count = int(flow_interface.get_active_block_count())
                     active_block_query_times_ms.append(
@@ -3957,6 +4002,48 @@ class CampfireAppExtension(omni.ext.IExt):
                     active_block_query_times_ms, flow_warmup_samples
                 ),
                 "viewport_capture": summarize_timing_ms(capture_times_ms),
+                "frame_pacing": {
+                    "update_frame": {
+                        **summarize_timing_ms(
+                            update_times_ms, flow_warmup_samples
+                        ),
+                        "over_16_67_ms": sum(
+                            value > 16.67
+                            for value in update_times_ms[flow_warmup_samples:]
+                        ),
+                        "over_33_33_ms": sum(
+                            value > 33.33
+                            for value in update_times_ms[flow_warmup_samples:]
+                        ),
+                        "over_50_ms": sum(
+                            value > 50.0
+                            for value in update_times_ms[flow_warmup_samples:]
+                        ),
+                    },
+                    "simulation_step": {
+                        **summarize_timing_ms(
+                            step_loop_times_ms, step_warmup_samples
+                        ),
+                        "over_16_67_ms": sum(
+                            value > 16.67
+                            for value in step_loop_times_ms[
+                                step_warmup_samples:
+                            ]
+                        ),
+                        "over_33_33_ms": sum(
+                            value > 33.33
+                            for value in step_loop_times_ms[
+                                step_warmup_samples:
+                            ]
+                        ),
+                        "over_50_ms": sum(
+                            value > 50.0
+                            for value in step_loop_times_ms[
+                                step_warmup_samples:
+                            ]
+                        ),
+                    },
+                },
             }
             wood_internal_timing = {
                 segment: summarize_timing_ms(values, step_warmup_samples)
@@ -4032,6 +4119,7 @@ class CampfireAppExtension(omni.ext.IExt):
                             "warmup_samples_excluded": 0,
                             "total_ms": 0.0,
                             "mean_ms": 0.0,
+                            "p50_ms": 0.0,
                             "p95_ms": 0.0,
                             "max_ms": 0.0,
                         }
@@ -4164,10 +4252,10 @@ class CampfireAppExtension(omni.ext.IExt):
                                     decision.reason == reason
                                     for decision in wood_visual_v3_schedule_decisions
                                 )
-                                for reason in {
+                                for reason in sorted({
                                     decision.reason
                                     for decision in wood_visual_v3_schedule_decisions
-                                }
+                                })
                             },
                             "maximum_observed_delay_seconds": max(
                                 (
@@ -4224,6 +4312,26 @@ class CampfireAppExtension(omni.ext.IExt):
                         ),
                         "transferred_bytes": sum(
                             profile.transferred_bytes for profile in wood_visual_v3_profiles
+                        ),
+                        "rtx_reflection": (
+                            {
+                                "timing": summarize_timing_ms(
+                                    [
+                                        sample["wall_ms"]
+                                        for sample in wood_visual_v3_reflections
+                                    ]
+                                ),
+                                "maximum_render_frame_updates": max(
+                                    sample["render_frame_updates"]
+                                    for sample in wood_visual_v3_reflections
+                                ),
+                                "samples": wood_visual_v3_reflections,
+                                "pending_at_stop": len(
+                                    wood_visual_v3_pending_reflections
+                                ),
+                            }
+                            if wood_visual_v3_reflections
+                            else None
                         ),
                         "errors": wood_visual_v3_errors,
                     },

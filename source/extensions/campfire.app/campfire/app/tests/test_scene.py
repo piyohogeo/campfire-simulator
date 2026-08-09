@@ -19,6 +19,7 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(summary["warmup_samples_excluded"], 1)
         self.assertEqual(summary["total_ms"], 6.0)
         self.assertEqual(summary["mean_ms"], 2.0)
+        self.assertEqual(summary["p50_ms"], 2.0)
         self.assertEqual(summary["p95_ms"], 3.0)
         self.assertEqual(summary["max_ms"], 3.0)
 

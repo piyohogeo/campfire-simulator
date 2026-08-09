@@ -1,0 +1,50 @@
+{
+    "schema":  "campfire.phasev3tc.matrix.v1",
+    "order":  "pair1 OFF/ON, pair2 ON/OFF, pair3 OFF/ON",
+    "capture_conditions":  "two fixed 1280x720 captures per run",
+    "native_library":  "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tc\\integrated\\native-build\\campfire_wood_native.dll",
+    "runs":  [
+                 {
+                     "sequence":  1,
+                     "pair":  1,
+                     "mode":  "off",
+                     "summary":  "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tc\\integrated\\pair_1_off\\summary.json",
+                     "summary_sha256":  "67437d0077be2d1b9cf8f55a75061c9692c88a197d9131962066f67427a0d5e1"
+                 },
+                 {
+                     "sequence":  2,
+                     "pair":  1,
+                     "mode":  "on",
+                     "summary":  "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tc\\integrated\\pair_1_on\\summary.json",
+                     "summary_sha256":  "3b84035856fd019c59b65b9c16bfc54c4263a4f51b5e9a8f3d829f956e057639"
+                 },
+                 {
+                     "sequence":  3,
+                     "pair":  2,
+                     "mode":  "on",
+                     "summary":  "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tc\\integrated\\pair_2_on\\summary.json",
+                     "summary_sha256":  "aeec57f733e89ed5031c0a7021648ea987001473add6839fdf7d758f5f5cee30"
+                 },
+                 {
+                     "sequence":  4,
+                     "pair":  2,
+                     "mode":  "off",
+                     "summary":  "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tc\\integrated\\pair_2_off\\summary.json",
+                     "summary_sha256":  "4ae77927ab0c365246f2ecdd30d315fbc8f835f0af42a6a6bfc2a4c30024c3bc"
+                 },
+                 {
+                     "sequence":  5,
+                     "pair":  3,
+                     "mode":  "off",
+                     "summary":  "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tc\\integrated\\pair_3_off\\summary.json",
+                     "summary_sha256":  "3530862c015b03f56a82a388516755e4267fcbb91ef8b0e4f499e1ddb3c66221"
+                 },
+                 {
+                     "sequence":  6,
+                     "pair":  3,
+                     "mode":  "on",
+                     "summary":  "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tc\\integrated\\pair_3_on\\summary.json",
+                     "summary_sha256":  "b01f17baf48c15d324fdab3489d61d5e899b42e02e974e9ec07c56b506f6f02b"
+                 }
+             ]
+}

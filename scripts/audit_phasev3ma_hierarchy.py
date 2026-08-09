@@ -67,9 +67,9 @@ REQUIRED_EVIDENCE = {
         "source/extensions/campfire.app/campfire/app/support.py",
         r"UsdGeom\.Cylinder\(prim\)\.GetRadiusAttr",
     ),
-    "resident_point_requires_cylinder": (
+    "resident_point_uses_shared_log_boundary": (
         "source/extensions/campfire.app/campfire/app/resident_point_scene.py",
-        r"IsA\(UsdGeom\.Cylinder\)",
+        r"from \.wood import get_log_dimensions, get_log_physics_transform",
     ),
     "v0_binds_log_root": (
         "source/extensions/campfire.app/campfire/app/wood_visual_v0.py",
