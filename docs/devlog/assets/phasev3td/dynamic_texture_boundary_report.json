@@ -1,0 +1,3941 @@
+{
+  "schema": "campfire.phasev3td.report.v1",
+  "status": "measurement_complete_no_production_change",
+  "matrix": {
+    "warmup_per_case": 20,
+    "samples_per_case": 120,
+    "independent_runs": 3,
+    "same_gpu": true,
+    "process_count": 42,
+    "measured_sample_count": 25920,
+    "provider_only_no_rtx_processes": 18,
+    "editor_rtx_processes": 24,
+    "measurement_topology_stable_processes": 42,
+    "flow_active_processes": 12
+  },
+  "api": {
+    "dynamic_texture_provider_doc": "Image provider backed by a named dynamic GPU texture resource.\n\n``DynamicTextureProvider`` is a :class:`ByteImageProvider` that, in addition to\ndisplaying its pixel data inside an :class:`ImageWithProvider` widget, publishes\nthe data to the renderer's resource manager under a stable dynamic texture URI\nof the form ``dynamic://<texture_name>``. Materials, shaders, or any other\nsubsystem that references that URI will receive the latest pixels uploaded to\nthis provider, making it the canonical way to feed CPU- or GPU-generated images\ninto RTX materials at runtime.\n\nPixel data is supplied through the inherited\n:meth:`ByteImageProvider.set_bytes_data`,\n:meth:`ByteImageProvider.set_raw_bytes_data`, and\n:meth:`ByteImageProvider.set_bytes_data_from_gpu` methods. Each upload replaces\nthe contents of the named texture and is broadcast to every GPU device by\ndefault. Reusing the same ``texture_name`` from anywhere in the application\ntargets the same underlying texture resource.\n\nExample::\n\n    import omni.ui as ui\n\n    # 2x2 RGBA8 checkerboard published as ``dynamic://my_texture``.\n    pixels = [0, 0, 0, 255, 255, 0, 0, 255,\n              0, 255, 0, 255, 0, 0, 255, 255]\n    provider = ui.DynamicTextureProvider(\"my_texture\")\n    provider.set_bytes_data(pixels, [2, 2])\n\n    with ui.Window(\"Dynamic Texture\").frame:\n        ui.ImageWithProvider(provider, fill_policy=ui.IwpFillPolicy.IWP_STRETCH)\n\n    # A USD/MDL material whose diffuse input is set to\n    # ``dynamic://my_texture`` will now sample these pixels.\n",
+    "set_raw_bytes_data_doc": "set_raw_bytes_data(self: omni.ui._ui.ByteImageProvider, raw_bytes: capsule, sizes: List[int], format: omni.gpu_foundation_factory._gpu_foundation_factory.TextureFormat = <TextureFormat.RGBA8_UNORM: 11>, stride: int = -1, strict: bool = False) -> None\n\nSets byte data that the image provider will turn raw pointer array into an image.\n",
+    "set_bytes_data_from_gpu_available": true,
+    "set_bytes_data_from_gpu_doc": "set_bytes_data_from_gpu(self: omni.ui._ui.ByteImageProvider, gpu_bytes: int, sizes: List[int], format: omni.gpu_foundation_factory._gpu_foundation_factory.TextureFormat = <TextureFormat.RGBA8_UNORM: 11>, stride: int = -1, strict: bool = False) -> None\n\nSets byte data from a copy of gpu memory at gpuBytes.\n",
+    "get_managed_resource_available": true,
+    "get_managed_resource_doc": "get_managed_resource(self: omni.ui._ui.ImageProvider) -> omni.gpu_foundation_factory._gpu_foundation_factory.RpResource\n",
+    "managed_resource_inspection_attempted": false,
+    "managed_resource_cached": false
+  },
+  "gpu_source_contract": {
+    "imported": true,
+    "safe_owner_available": true,
+    "source_sync": "warp.synchronize_device after every host-to-device copy",
+    "device": "cuda:0",
+    "allocation_lifetime": "providers destroyed before probe-owned arrays are released",
+    "device_ordinal": 0,
+    "pointer_attribute_doc": "warp.array public ptr attribute"
+  },
+  "aggregate": [
+    {
+      "mode": "cpu_connected_no_rtx",
+      "atlas": "120x60",
+      "case": "base_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.7585,
+        "mean_ms_median": 0.7786,
+        "p95_ms_median": 1.2258,
+        "p99_ms_median": 1.5401,
+        "max_ms_median": 1.6509,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0846,
+        "mean_ms_median": 0.0873,
+        "p95_ms_median": 0.1141,
+        "p99_ms_median": 0.1481,
+        "max_ms_median": 0.2095
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 117,
+        "utilization_mean_percent_median": 3.513,
+        "utilization_max_percent_median": 11.0,
+        "memory_mean_mib_median": 2906.41,
+        "memory_max_mib_median": 3012.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_connected_no_rtx",
+      "atlas": "120x60",
+      "case": "base_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.735,
+        "mean_ms_median": 0.7908,
+        "p95_ms_median": 1.2708,
+        "p99_ms_median": 1.5374,
+        "max_ms_median": 1.7949,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0004,
+        "mean_ms_median": 0.0005,
+        "p95_ms_median": 0.0009,
+        "p99_ms_median": 0.0026,
+        "max_ms_median": 0.0038
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 117,
+        "utilization_mean_percent_median": 3.513,
+        "utilization_max_percent_median": 11.0,
+        "memory_mean_mib_median": 2906.41,
+        "memory_max_mib_median": 3012.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_connected_no_rtx",
+      "atlas": "120x60",
+      "case": "both_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 1.1964,
+        "mean_ms_median": 1.268,
+        "p95_ms_median": 1.8089,
+        "p99_ms_median": 2.2916,
+        "max_ms_median": 2.3299,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.1418,
+        "mean_ms_median": 0.1476,
+        "p95_ms_median": 0.2015,
+        "p99_ms_median": 0.2475,
+        "max_ms_median": 0.3153
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 57600,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 117,
+        "utilization_mean_percent_median": 3.513,
+        "utilization_max_percent_median": 11.0,
+        "memory_mean_mib_median": 2906.41,
+        "memory_max_mib_median": 3012.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_connected_no_rtx",
+      "atlas": "120x60",
+      "case": "both_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 1.1922,
+        "mean_ms_median": 1.2505,
+        "p95_ms_median": 1.7909,
+        "p99_ms_median": 2.0622,
+        "max_ms_median": 2.5272,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0004,
+        "mean_ms_median": 0.0005,
+        "p95_ms_median": 0.0009,
+        "p99_ms_median": 0.0013,
+        "max_ms_median": 0.0051
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 57600,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 117,
+        "utilization_mean_percent_median": 3.513,
+        "utilization_max_percent_median": 11.0,
+        "memory_mean_mib_median": 2906.41,
+        "memory_max_mib_median": 3012.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_connected_no_rtx",
+      "atlas": "120x60",
+      "case": "emission_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.7188,
+        "mean_ms_median": 0.7533,
+        "p95_ms_median": 1.0736,
+        "p99_ms_median": 1.7117,
+        "max_ms_median": 2.3175,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0827,
+        "mean_ms_median": 0.085,
+        "p95_ms_median": 0.1136,
+        "p99_ms_median": 0.135,
+        "max_ms_median": 0.1422
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 117,
+        "utilization_mean_percent_median": 3.513,
+        "utilization_max_percent_median": 11.0,
+        "memory_mean_mib_median": 2906.41,
+        "memory_max_mib_median": 3012.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_connected_no_rtx",
+      "atlas": "120x60",
+      "case": "emission_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.7694,
+        "mean_ms_median": 0.8163,
+        "p95_ms_median": 1.2698,
+        "p99_ms_median": 1.5606,
+        "max_ms_median": 1.6347,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0004,
+        "mean_ms_median": 0.0005,
+        "p95_ms_median": 0.0009,
+        "p99_ms_median": 0.003,
+        "max_ms_median": 0.0044
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 117,
+        "utilization_mean_percent_median": 3.513,
+        "utilization_max_percent_median": 11.0,
+        "memory_mean_mib_median": 2906.41,
+        "memory_max_mib_median": 3012.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_connected_no_rtx",
+      "atlas": "96x15",
+      "case": "base_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.7083,
+        "mean_ms_median": 0.7514,
+        "p95_ms_median": 1.0352,
+        "p99_ms_median": 1.6408,
+        "max_ms_median": 1.7568,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0413,
+        "mean_ms_median": 0.0413,
+        "p95_ms_median": 0.054,
+        "p99_ms_median": 0.0743,
+        "max_ms_median": 0.0913
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 118,
+        "utilization_mean_percent_median": 3.179,
+        "utilization_max_percent_median": 5.0,
+        "memory_mean_mib_median": 2912.282,
+        "memory_max_mib_median": 3026.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_connected_no_rtx",
+      "atlas": "96x15",
+      "case": "base_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.8166,
+        "mean_ms_median": 0.8418,
+        "p95_ms_median": 1.1766,
+        "p99_ms_median": 1.4425,
+        "max_ms_median": 1.5568,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0004,
+        "mean_ms_median": 0.0005,
+        "p95_ms_median": 0.0009,
+        "p99_ms_median": 0.0036,
+        "max_ms_median": 0.0044
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 118,
+        "utilization_mean_percent_median": 3.179,
+        "utilization_max_percent_median": 5.0,
+        "memory_mean_mib_median": 2912.282,
+        "memory_max_mib_median": 3026.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_connected_no_rtx",
+      "atlas": "96x15",
+      "case": "both_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 1.2108,
+        "mean_ms_median": 1.2331,
+        "p95_ms_median": 1.7971,
+        "p99_ms_median": 1.9535,
+        "max_ms_median": 2.4152,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0557,
+        "mean_ms_median": 0.0568,
+        "p95_ms_median": 0.0799,
+        "p99_ms_median": 0.1008,
+        "max_ms_median": 0.1197
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 11520,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 118,
+        "utilization_mean_percent_median": 3.179,
+        "utilization_max_percent_median": 5.0,
+        "memory_mean_mib_median": 2912.282,
+        "memory_max_mib_median": 3026.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_connected_no_rtx",
+      "atlas": "96x15",
+      "case": "both_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 1.1648,
+        "mean_ms_median": 1.2873,
+        "p95_ms_median": 1.8666,
+        "p99_ms_median": 1.9892,
+        "max_ms_median": 2.1779,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0004,
+        "mean_ms_median": 0.0005,
+        "p95_ms_median": 0.0009,
+        "p99_ms_median": 0.0016,
+        "max_ms_median": 0.0058
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 11520,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 118,
+        "utilization_mean_percent_median": 3.179,
+        "utilization_max_percent_median": 5.0,
+        "memory_mean_mib_median": 2912.282,
+        "memory_max_mib_median": 3026.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_connected_no_rtx",
+      "atlas": "96x15",
+      "case": "emission_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.7163,
+        "mean_ms_median": 0.7483,
+        "p95_ms_median": 1.0699,
+        "p99_ms_median": 1.2224,
+        "max_ms_median": 1.3421,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.041,
+        "mean_ms_median": 0.0428,
+        "p95_ms_median": 0.0597,
+        "p99_ms_median": 0.1025,
+        "max_ms_median": 0.1097
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 118,
+        "utilization_mean_percent_median": 3.179,
+        "utilization_max_percent_median": 5.0,
+        "memory_mean_mib_median": 2912.282,
+        "memory_max_mib_median": 3026.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_connected_no_rtx",
+      "atlas": "96x15",
+      "case": "emission_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.7604,
+        "mean_ms_median": 0.793,
+        "p95_ms_median": 1.1194,
+        "p99_ms_median": 1.4294,
+        "max_ms_median": 1.5841,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0004,
+        "mean_ms_median": 0.0005,
+        "p95_ms_median": 0.0008,
+        "p99_ms_median": 0.0028,
+        "max_ms_median": 0.0047
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 118,
+        "utilization_mean_percent_median": 3.179,
+        "utilization_max_percent_median": 5.0,
+        "memory_mean_mib_median": 2912.282,
+        "memory_max_mib_median": 3026.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_off",
+      "atlas": "120x60",
+      "case": "base_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.9543,
+        "mean_ms_median": 1.2765,
+        "p95_ms_median": 2.4696,
+        "p99_ms_median": 4.1436,
+        "max_ms_median": 5.3106,
+        "over_5_ms_median": 1,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 3,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.1036,
+        "mean_ms_median": 0.1138,
+        "p95_ms_median": 0.1629,
+        "p99_ms_median": 0.2033,
+        "max_ms_median": 0.2195
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 7.4306,
+        "mean_ms_median": 7.429,
+        "p95_ms_median": 8.7189,
+        "p99_ms_median": 13.7732,
+        "max_ms_median": 14.8899
+      },
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 299,
+        "utilization_mean_percent_median": 13.939,
+        "utilization_max_percent_median": 72.0,
+        "memory_mean_mib_median": 3218.12,
+        "memory_max_mib_median": 3881.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_off",
+      "atlas": "120x60",
+      "case": "base_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.9466,
+        "mean_ms_median": 1.0431,
+        "p95_ms_median": 1.397,
+        "p99_ms_median": 1.8433,
+        "max_ms_median": 1.8638,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 2,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0005,
+        "p95_ms_median": 0.0009,
+        "p99_ms_median": 0.0012,
+        "max_ms_median": 0.0012
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 7.537,
+        "mean_ms_median": 7.5495,
+        "p95_ms_median": 8.8799,
+        "p99_ms_median": 9.4779,
+        "max_ms_median": 10.0777
+      },
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 299,
+        "utilization_mean_percent_median": 13.939,
+        "utilization_max_percent_median": 72.0,
+        "memory_mean_mib_median": 3218.12,
+        "memory_max_mib_median": 3881.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_off",
+      "atlas": "120x60",
+      "case": "both_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 1.5573,
+        "mean_ms_median": 1.5865,
+        "p95_ms_median": 2.1147,
+        "p99_ms_median": 2.2999,
+        "max_ms_median": 2.6253,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.1626,
+        "mean_ms_median": 0.1777,
+        "p95_ms_median": 0.2591,
+        "p99_ms_median": 0.2814,
+        "max_ms_median": 0.3532
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 6.7721,
+        "mean_ms_median": 6.7605,
+        "p95_ms_median": 7.7727,
+        "p99_ms_median": 8.288,
+        "max_ms_median": 8.45
+      },
+      "bytes_per_publication": 57600,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 299,
+        "utilization_mean_percent_median": 13.939,
+        "utilization_max_percent_median": 72.0,
+        "memory_mean_mib_median": 3218.12,
+        "memory_max_mib_median": 3881.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_off",
+      "atlas": "120x60",
+      "case": "both_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 2.4542,
+        "mean_ms_median": 3.0782,
+        "p95_ms_median": 6.4497,
+        "p99_ms_median": 7.2797,
+        "max_ms_median": 7.4465,
+        "over_5_ms_median": 25,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 72,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0006,
+        "p95_ms_median": 0.0009,
+        "p99_ms_median": 0.0012,
+        "max_ms_median": 0.0013
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 6.3606,
+        "mean_ms_median": 7.0184,
+        "p95_ms_median": 14.3158,
+        "p99_ms_median": 15.6021,
+        "max_ms_median": 16.2729
+      },
+      "bytes_per_publication": 57600,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 299,
+        "utilization_mean_percent_median": 13.939,
+        "utilization_max_percent_median": 72.0,
+        "memory_mean_mib_median": 3218.12,
+        "memory_max_mib_median": 3881.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_off",
+      "atlas": "120x60",
+      "case": "emission_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.9806,
+        "mean_ms_median": 1.0242,
+        "p95_ms_median": 1.389,
+        "p99_ms_median": 1.6048,
+        "max_ms_median": 1.7636,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 1,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0994,
+        "mean_ms_median": 0.11,
+        "p95_ms_median": 0.1606,
+        "p99_ms_median": 0.1815,
+        "max_ms_median": 0.2105
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 7.4539,
+        "mean_ms_median": 7.4093,
+        "p95_ms_median": 8.6133,
+        "p99_ms_median": 9.5533,
+        "max_ms_median": 10.2162
+      },
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 299,
+        "utilization_mean_percent_median": 13.939,
+        "utilization_max_percent_median": 72.0,
+        "memory_mean_mib_median": 3218.12,
+        "memory_max_mib_median": 3881.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_off",
+      "atlas": "120x60",
+      "case": "emission_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.9325,
+        "mean_ms_median": 1.1646,
+        "p95_ms_median": 2.1672,
+        "p99_ms_median": 4.2309,
+        "max_ms_median": 4.6209,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 1,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0005,
+        "p95_ms_median": 0.0009,
+        "p99_ms_median": 0.001,
+        "max_ms_median": 0.0013
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 7.6217,
+        "mean_ms_median": 7.5947,
+        "p95_ms_median": 9.1986,
+        "p99_ms_median": 13.5332,
+        "max_ms_median": 16.1686
+      },
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 299,
+        "utilization_mean_percent_median": 13.939,
+        "utilization_max_percent_median": 72.0,
+        "memory_mean_mib_median": 3218.12,
+        "memory_max_mib_median": 3881.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_off",
+      "atlas": "96x15",
+      "case": "base_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.9608,
+        "mean_ms_median": 1.1257,
+        "p95_ms_median": 2.0776,
+        "p99_ms_median": 3.7818,
+        "max_ms_median": 4.1244,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 1,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.053,
+        "mean_ms_median": 0.0592,
+        "p95_ms_median": 0.0883,
+        "p99_ms_median": 0.1382,
+        "max_ms_median": 0.1593
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 7.4839,
+        "mean_ms_median": 7.4104,
+        "p95_ms_median": 8.5678,
+        "p99_ms_median": 9.16,
+        "max_ms_median": 15.5083
+      },
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 299,
+        "utilization_mean_percent_median": 13.687,
+        "utilization_max_percent_median": 72.0,
+        "memory_mean_mib_median": 3210.3,
+        "memory_max_mib_median": 3867.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_off",
+      "atlas": "96x15",
+      "case": "base_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.9333,
+        "mean_ms_median": 0.9852,
+        "p95_ms_median": 1.3536,
+        "p99_ms_median": 1.619,
+        "max_ms_median": 1.8677,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 1,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0006,
+        "p95_ms_median": 0.0008,
+        "p99_ms_median": 0.0012,
+        "max_ms_median": 0.0012
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 7.5831,
+        "mean_ms_median": 7.5327,
+        "p95_ms_median": 8.6513,
+        "p99_ms_median": 9.1568,
+        "max_ms_median": 9.3537
+      },
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 299,
+        "utilization_mean_percent_median": 13.687,
+        "utilization_max_percent_median": 72.0,
+        "memory_mean_mib_median": 3210.3,
+        "memory_max_mib_median": 3867.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_off",
+      "atlas": "96x15",
+      "case": "both_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 1.5172,
+        "mean_ms_median": 1.5641,
+        "p95_ms_median": 1.942,
+        "p99_ms_median": 2.3483,
+        "max_ms_median": 2.5971,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0672,
+        "mean_ms_median": 0.0724,
+        "p95_ms_median": 0.1092,
+        "p99_ms_median": 0.1262,
+        "max_ms_median": 0.1673
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 6.8819,
+        "mean_ms_median": 6.8874,
+        "p95_ms_median": 8.0734,
+        "p99_ms_median": 8.7431,
+        "max_ms_median": 9.0357
+      },
+      "bytes_per_publication": 11520,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 299,
+        "utilization_mean_percent_median": 13.687,
+        "utilization_max_percent_median": 72.0,
+        "memory_mean_mib_median": 3210.3,
+        "memory_max_mib_median": 3867.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_off",
+      "atlas": "96x15",
+      "case": "both_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 2.4778,
+        "mean_ms_median": 3.069,
+        "p95_ms_median": 6.5786,
+        "p99_ms_median": 7.0519,
+        "max_ms_median": 7.0774,
+        "over_5_ms_median": 23,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 71,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0006,
+        "p95_ms_median": 0.0008,
+        "p99_ms_median": 0.0011,
+        "max_ms_median": 0.0011
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 6.4681,
+        "mean_ms_median": 7.3501,
+        "p95_ms_median": 14.5788,
+        "p99_ms_median": 15.7476,
+        "max_ms_median": 16.0088
+      },
+      "bytes_per_publication": 11520,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 299,
+        "utilization_mean_percent_median": 13.687,
+        "utilization_max_percent_median": 72.0,
+        "memory_mean_mib_median": 3210.3,
+        "memory_max_mib_median": 3867.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_off",
+      "atlas": "96x15",
+      "case": "emission_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.9283,
+        "mean_ms_median": 0.9705,
+        "p95_ms_median": 1.1911,
+        "p99_ms_median": 1.543,
+        "max_ms_median": 1.7683,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 2,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0515,
+        "mean_ms_median": 0.0556,
+        "p95_ms_median": 0.076,
+        "p99_ms_median": 0.1003,
+        "max_ms_median": 0.1186
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 7.5048,
+        "mean_ms_median": 7.5551,
+        "p95_ms_median": 8.5697,
+        "p99_ms_median": 9.3405,
+        "max_ms_median": 9.921
+      },
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 299,
+        "utilization_mean_percent_median": 13.687,
+        "utilization_max_percent_median": 72.0,
+        "memory_mean_mib_median": 3210.3,
+        "memory_max_mib_median": 3867.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_off",
+      "atlas": "96x15",
+      "case": "emission_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.9207,
+        "mean_ms_median": 1.0859,
+        "p95_ms_median": 1.9435,
+        "p99_ms_median": 2.532,
+        "max_ms_median": 4.3991,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0006,
+        "p95_ms_median": 0.0009,
+        "p99_ms_median": 0.0012,
+        "max_ms_median": 0.0013
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 7.5661,
+        "mean_ms_median": 7.5485,
+        "p95_ms_median": 8.8376,
+        "p99_ms_median": 9.6624,
+        "max_ms_median": 14.3139
+      },
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 299,
+        "utilization_mean_percent_median": 13.687,
+        "utilization_max_percent_median": 72.0,
+        "memory_mean_mib_median": 3210.3,
+        "memory_max_mib_median": 3867.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_on",
+      "atlas": "120x60",
+      "case": "base_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 10.8036,
+        "mean_ms_median": 10.8868,
+        "p95_ms_median": 12.3545,
+        "p99_ms_median": 13.1808,
+        "max_ms_median": 14.5698,
+        "over_5_ms_median": 120,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 359,
+        "over_16_67_ms_total": 1,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.1053,
+        "mean_ms_median": 0.116,
+        "p95_ms_median": 0.1724,
+        "p99_ms_median": 0.1826,
+        "max_ms_median": 0.1875
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 7.4268,
+        "mean_ms_median": 7.5132,
+        "p95_ms_median": 8.9544,
+        "p99_ms_median": 10.4545,
+        "max_ms_median": 11.1481
+      },
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 455,
+        "utilization_mean_percent_median": 48.166,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4452.755,
+        "memory_max_mib_median": 5693.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_on",
+      "atlas": "120x60",
+      "case": "base_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 11.1251,
+        "mean_ms_median": 11.1472,
+        "p95_ms_median": 12.6103,
+        "p99_ms_median": 13.7783,
+        "max_ms_median": 13.8464,
+        "over_5_ms_median": 120,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 355,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 2
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0006,
+        "p95_ms_median": 0.001,
+        "p99_ms_median": 0.0013,
+        "max_ms_median": 0.0013
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 7.382,
+        "mean_ms_median": 7.4956,
+        "p95_ms_median": 8.7628,
+        "p99_ms_median": 9.5529,
+        "max_ms_median": 10.7117
+      },
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 455,
+        "utilization_mean_percent_median": 48.166,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4452.755,
+        "memory_max_mib_median": 5693.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_on",
+      "atlas": "120x60",
+      "case": "both_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 10.4631,
+        "mean_ms_median": 13.6859,
+        "p95_ms_median": 28.8968,
+        "p99_ms_median": 31.2646,
+        "max_ms_median": 32.1847,
+        "over_5_ms_median": 67,
+        "over_16_67_ms_median": 53,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 1,
+        "over_5_ms_total": 200,
+        "over_16_67_ms_total": 158,
+        "over_33_33_ms_total": 1,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 4
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.1711,
+        "mean_ms_median": 0.1858,
+        "p95_ms_median": 0.2708,
+        "p99_ms_median": 0.2868,
+        "max_ms_median": 0.3093
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 8.2325,
+        "mean_ms_median": 17.763,
+        "p95_ms_median": 32.771,
+        "p99_ms_median": 46.3282,
+        "max_ms_median": 47.4361
+      },
+      "bytes_per_publication": 57600,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 455,
+        "utilization_mean_percent_median": 48.166,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4452.755,
+        "memory_max_mib_median": 5693.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_on",
+      "atlas": "120x60",
+      "case": "both_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 8.7673,
+        "mean_ms_median": 13.6082,
+        "p95_ms_median": 28.4733,
+        "p99_ms_median": 30.3113,
+        "max_ms_median": 32.6019,
+        "over_5_ms_median": 66,
+        "over_16_67_ms_median": 52,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 1,
+        "over_5_ms_total": 201,
+        "over_16_67_ms_total": 156,
+        "over_33_33_ms_total": 4,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 5
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0006,
+        "p95_ms_median": 0.0009,
+        "p99_ms_median": 0.0012,
+        "max_ms_median": 0.0013
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 8.7673,
+        "mean_ms_median": 17.9838,
+        "p95_ms_median": 32.6223,
+        "p99_ms_median": 34.3181,
+        "max_ms_median": 48.9251
+      },
+      "bytes_per_publication": 57600,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 455,
+        "utilization_mean_percent_median": 48.166,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4452.755,
+        "memory_max_mib_median": 5693.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_on",
+      "atlas": "120x60",
+      "case": "emission_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 11.0959,
+        "mean_ms_median": 11.0861,
+        "p95_ms_median": 12.8349,
+        "p99_ms_median": 13.6279,
+        "max_ms_median": 13.8596,
+        "over_5_ms_median": 120,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 360,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 1
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.1047,
+        "mean_ms_median": 0.1141,
+        "p95_ms_median": 0.1631,
+        "p99_ms_median": 0.2011,
+        "max_ms_median": 0.4473
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 7.218,
+        "mean_ms_median": 7.3563,
+        "p95_ms_median": 8.9356,
+        "p99_ms_median": 9.5162,
+        "max_ms_median": 10.462
+      },
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 455,
+        "utilization_mean_percent_median": 48.166,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4452.755,
+        "memory_max_mib_median": 5693.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_on",
+      "atlas": "120x60",
+      "case": "emission_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 10.7256,
+        "mean_ms_median": 10.7638,
+        "p95_ms_median": 12.4277,
+        "p99_ms_median": 13.3575,
+        "max_ms_median": 13.7404,
+        "over_5_ms_median": 119,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 356,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 1
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0006,
+        "p95_ms_median": 0.0011,
+        "p99_ms_median": 0.0013,
+        "max_ms_median": 0.0014
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 7.3679,
+        "mean_ms_median": 7.8575,
+        "p95_ms_median": 9.5151,
+        "p99_ms_median": 11.5146,
+        "max_ms_median": 50.4627
+      },
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 455,
+        "utilization_mean_percent_median": 48.166,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4452.755,
+        "memory_max_mib_median": 5693.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_on",
+      "atlas": "96x15",
+      "case": "base_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 10.7234,
+        "mean_ms_median": 10.7023,
+        "p95_ms_median": 12.3754,
+        "p99_ms_median": 14.0615,
+        "max_ms_median": 15.7578,
+        "over_5_ms_median": 120,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 1,
+        "over_5_ms_total": 359,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 3
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0541,
+        "mean_ms_median": 0.0593,
+        "p95_ms_median": 0.0834,
+        "p99_ms_median": 0.1084,
+        "max_ms_median": 0.1584
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 7.3751,
+        "mean_ms_median": 7.5573,
+        "p95_ms_median": 8.857,
+        "p99_ms_median": 9.9169,
+        "max_ms_median": 11.0825
+      },
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 451,
+        "utilization_mean_percent_median": 47.625,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4442.154,
+        "memory_max_mib_median": 5696.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_on",
+      "atlas": "96x15",
+      "case": "base_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 10.773,
+        "mean_ms_median": 10.9426,
+        "p95_ms_median": 12.4593,
+        "p99_ms_median": 14.6783,
+        "max_ms_median": 15.1578,
+        "over_5_ms_median": 120,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 357,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 2
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0007,
+        "p95_ms_median": 0.0011,
+        "p99_ms_median": 0.0015,
+        "max_ms_median": 0.0018
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 7.4646,
+        "mean_ms_median": 7.9804,
+        "p95_ms_median": 9.4849,
+        "p99_ms_median": 10.8898,
+        "max_ms_median": 12.5123
+      },
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 451,
+        "utilization_mean_percent_median": 47.625,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4442.154,
+        "memory_max_mib_median": 5696.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_on",
+      "atlas": "96x15",
+      "case": "both_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 8.1973,
+        "mean_ms_median": 13.7735,
+        "p95_ms_median": 28.6312,
+        "p99_ms_median": 31.1072,
+        "max_ms_median": 34.4309,
+        "over_5_ms_median": 66,
+        "over_16_67_ms_median": 54,
+        "over_33_33_ms_median": 1,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 1,
+        "over_5_ms_total": 197,
+        "over_16_67_ms_total": 161,
+        "over_33_33_ms_total": 4,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 3
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0717,
+        "mean_ms_median": 0.0796,
+        "p95_ms_median": 0.1232,
+        "p99_ms_median": 0.1449,
+        "max_ms_median": 0.1697
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 8.181,
+        "mean_ms_median": 17.7677,
+        "p95_ms_median": 32.7193,
+        "p99_ms_median": 43.1257,
+        "max_ms_median": 47.7111
+      },
+      "bytes_per_publication": 11520,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 451,
+        "utilization_mean_percent_median": 47.625,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4442.154,
+        "memory_max_mib_median": 5696.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_on",
+      "atlas": "96x15",
+      "case": "both_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 8.0895,
+        "mean_ms_median": 12.9513,
+        "p95_ms_median": 28.9321,
+        "p99_ms_median": 31.3169,
+        "max_ms_median": 31.8088,
+        "over_5_ms_median": 68,
+        "over_16_67_ms_median": 50,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 203,
+        "over_16_67_ms_total": 149,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 1
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0006,
+        "p95_ms_median": 0.001,
+        "p99_ms_median": 0.0013,
+        "max_ms_median": 0.0014
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 9.4969,
+        "mean_ms_median": 17.8961,
+        "p95_ms_median": 32.8705,
+        "p99_ms_median": 43.6495,
+        "max_ms_median": 47.6588
+      },
+      "bytes_per_publication": 11520,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 451,
+        "utilization_mean_percent_median": 47.625,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4442.154,
+        "memory_max_mib_median": 5696.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_on",
+      "atlas": "96x15",
+      "case": "emission_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 10.8937,
+        "mean_ms_median": 10.8768,
+        "p95_ms_median": 12.2225,
+        "p99_ms_median": 13.9559,
+        "max_ms_median": 14.8221,
+        "over_5_ms_median": 120,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 359,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.053,
+        "mean_ms_median": 0.0584,
+        "p95_ms_median": 0.0892,
+        "p99_ms_median": 0.1017,
+        "max_ms_median": 0.1258
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 7.3718,
+        "mean_ms_median": 7.5116,
+        "p95_ms_median": 9.4322,
+        "p99_ms_median": 10.2378,
+        "max_ms_median": 10.5855
+      },
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 451,
+        "utilization_mean_percent_median": 47.625,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4442.154,
+        "memory_max_mib_median": 5696.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_rtx_flow_on",
+      "atlas": "96x15",
+      "case": "emission_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 10.6123,
+        "mean_ms_median": 10.4593,
+        "p95_ms_median": 12.9844,
+        "p99_ms_median": 15.0907,
+        "max_ms_median": 15.6721,
+        "over_5_ms_median": 118,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 1,
+        "over_5_ms_total": 355,
+        "over_16_67_ms_total": 1,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 3
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0006,
+        "p95_ms_median": 0.0011,
+        "p99_ms_median": 0.0013,
+        "max_ms_median": 0.0013
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 7.5256,
+        "mean_ms_median": 8.3923,
+        "p95_ms_median": 9.2699,
+        "p99_ms_median": 16.2445,
+        "max_ms_median": 47.0358
+      },
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 451,
+        "utilization_mean_percent_median": 47.625,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4442.154,
+        "memory_max_mib_median": 5696.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_unconnected_changing",
+      "atlas": "120x60",
+      "case": "base_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.7133,
+        "mean_ms_median": 0.7857,
+        "p95_ms_median": 1.2177,
+        "p99_ms_median": 1.4978,
+        "max_ms_median": 1.6626,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0859,
+        "mean_ms_median": 0.0897,
+        "p95_ms_median": 0.1131,
+        "p99_ms_median": 0.1906,
+        "max_ms_median": 0.2488
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 76,
+        "utilization_mean_percent_median": 2.923,
+        "utilization_max_percent_median": 6.0,
+        "memory_mean_mib_median": 2866.08,
+        "memory_max_mib_median": 3003.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_unconnected_changing",
+      "atlas": "120x60",
+      "case": "both_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 1.16,
+        "mean_ms_median": 1.2375,
+        "p95_ms_median": 1.8164,
+        "p99_ms_median": 2.3136,
+        "max_ms_median": 2.7258,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.1407,
+        "mean_ms_median": 0.1499,
+        "p95_ms_median": 0.1858,
+        "p99_ms_median": 0.2927,
+        "max_ms_median": 0.4516
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 57600,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 76,
+        "utilization_mean_percent_median": 2.923,
+        "utilization_max_percent_median": 6.0,
+        "memory_mean_mib_median": 2866.08,
+        "memory_max_mib_median": 3003.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_unconnected_changing",
+      "atlas": "120x60",
+      "case": "emission_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.7427,
+        "mean_ms_median": 0.7848,
+        "p95_ms_median": 1.179,
+        "p99_ms_median": 1.5306,
+        "max_ms_median": 1.5718,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.084,
+        "mean_ms_median": 0.0871,
+        "p95_ms_median": 0.1119,
+        "p99_ms_median": 0.1504,
+        "max_ms_median": 0.1726
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 76,
+        "utilization_mean_percent_median": 2.923,
+        "utilization_max_percent_median": 6.0,
+        "memory_mean_mib_median": 2866.08,
+        "memory_max_mib_median": 3003.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_unconnected_changing",
+      "atlas": "96x15",
+      "case": "base_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.7328,
+        "mean_ms_median": 0.7688,
+        "p95_ms_median": 1.1098,
+        "p99_ms_median": 1.2736,
+        "max_ms_median": 1.4245,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0404,
+        "mean_ms_median": 0.0431,
+        "p95_ms_median": 0.0606,
+        "p99_ms_median": 0.0862,
+        "max_ms_median": 0.1734
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 78,
+        "utilization_mean_percent_median": 2.885,
+        "utilization_max_percent_median": 6.0,
+        "memory_mean_mib_median": 2849.346,
+        "memory_max_mib_median": 2991.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_unconnected_changing",
+      "atlas": "96x15",
+      "case": "both_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 1.1713,
+        "mean_ms_median": 1.2497,
+        "p95_ms_median": 1.8914,
+        "p99_ms_median": 2.2883,
+        "max_ms_median": 2.3722,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0566,
+        "mean_ms_median": 0.0575,
+        "p95_ms_median": 0.0781,
+        "p99_ms_median": 0.1148,
+        "max_ms_median": 0.1386
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 11520,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 78,
+        "utilization_mean_percent_median": 2.885,
+        "utilization_max_percent_median": 6.0,
+        "memory_mean_mib_median": 2849.346,
+        "memory_max_mib_median": 2991.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_unconnected_changing",
+      "atlas": "96x15",
+      "case": "emission_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.7541,
+        "mean_ms_median": 0.7934,
+        "p95_ms_median": 1.1424,
+        "p99_ms_median": 1.4058,
+        "max_ms_median": 1.7841,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0415,
+        "mean_ms_median": 0.0443,
+        "p95_ms_median": 0.066,
+        "p99_ms_median": 0.1008,
+        "max_ms_median": 0.1569
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 78,
+        "utilization_mean_percent_median": 2.885,
+        "utilization_max_percent_median": 6.0,
+        "memory_mean_mib_median": 2849.346,
+        "memory_max_mib_median": 2991.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_unconnected_fixed",
+      "atlas": "120x60",
+      "case": "base_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.7826,
+        "mean_ms_median": 0.8089,
+        "p95_ms_median": 1.2108,
+        "p99_ms_median": 1.3873,
+        "max_ms_median": 1.6492,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0004,
+        "mean_ms_median": 0.0004,
+        "p95_ms_median": 0.0008,
+        "p99_ms_median": 0.001,
+        "max_ms_median": 0.0014
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 76,
+        "utilization_mean_percent_median": 3.5,
+        "utilization_max_percent_median": 6.0,
+        "memory_mean_mib_median": 2873.48,
+        "memory_max_mib_median": 3007.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_unconnected_fixed",
+      "atlas": "120x60",
+      "case": "both_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 1.186,
+        "mean_ms_median": 1.2496,
+        "p95_ms_median": 1.7855,
+        "p99_ms_median": 2.2006,
+        "max_ms_median": 2.3426,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0004,
+        "mean_ms_median": 0.0004,
+        "p95_ms_median": 0.0006,
+        "p99_ms_median": 0.0008,
+        "max_ms_median": 0.0009
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 57600,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 76,
+        "utilization_mean_percent_median": 3.5,
+        "utilization_max_percent_median": 6.0,
+        "memory_mean_mib_median": 2873.48,
+        "memory_max_mib_median": 3007.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_unconnected_fixed",
+      "atlas": "120x60",
+      "case": "emission_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.7418,
+        "mean_ms_median": 0.7611,
+        "p95_ms_median": 1.0889,
+        "p99_ms_median": 1.3719,
+        "max_ms_median": 1.9641,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0004,
+        "mean_ms_median": 0.0004,
+        "p95_ms_median": 0.0008,
+        "p99_ms_median": 0.0009,
+        "max_ms_median": 0.0012
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 76,
+        "utilization_mean_percent_median": 3.5,
+        "utilization_max_percent_median": 6.0,
+        "memory_mean_mib_median": 2873.48,
+        "memory_max_mib_median": 3007.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_unconnected_fixed",
+      "atlas": "96x15",
+      "case": "base_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.7569,
+        "mean_ms_median": 0.8017,
+        "p95_ms_median": 1.2467,
+        "p99_ms_median": 1.4611,
+        "max_ms_median": 1.9177,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0004,
+        "mean_ms_median": 0.0005,
+        "p95_ms_median": 0.0009,
+        "p99_ms_median": 0.0015,
+        "max_ms_median": 0.002
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 77,
+        "utilization_mean_percent_median": 3.16,
+        "utilization_max_percent_median": 7.0,
+        "memory_mean_mib_median": 2862.731,
+        "memory_max_mib_median": 3037.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_unconnected_fixed",
+      "atlas": "96x15",
+      "case": "both_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 1.1619,
+        "mean_ms_median": 1.2362,
+        "p95_ms_median": 1.8133,
+        "p99_ms_median": 2.0206,
+        "max_ms_median": 2.2454,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0004,
+        "mean_ms_median": 0.0004,
+        "p95_ms_median": 0.0007,
+        "p99_ms_median": 0.0009,
+        "max_ms_median": 0.0009
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 11520,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 77,
+        "utilization_mean_percent_median": 3.16,
+        "utilization_max_percent_median": 7.0,
+        "memory_mean_mib_median": 2862.731,
+        "memory_max_mib_median": 3037.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "cpu_unconnected_fixed",
+      "atlas": "96x15",
+      "case": "emission_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.7859,
+        "mean_ms_median": 0.852,
+        "p95_ms_median": 1.2048,
+        "p99_ms_median": 1.5784,
+        "max_ms_median": 1.6837,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0004,
+        "mean_ms_median": 0.0004,
+        "p95_ms_median": 0.0008,
+        "p99_ms_median": 0.0011,
+        "max_ms_median": 0.0014
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.0,
+        "mean_ms_median": 0.0,
+        "p95_ms_median": 0.0,
+        "p99_ms_median": 0.0,
+        "max_ms_median": 0.0
+      },
+      "publication_to_next_render": null,
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 77,
+        "utilization_mean_percent_median": 3.16,
+        "utilization_max_percent_median": 7.0,
+        "memory_mean_mib_median": 2862.731,
+        "memory_max_mib_median": 3037.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_off",
+      "atlas": "120x60",
+      "case": "base_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.0619,
+        "mean_ms_median": 0.0687,
+        "p95_ms_median": 0.117,
+        "p99_ms_median": 0.1468,
+        "max_ms_median": 0.1857,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.1056,
+        "mean_ms_median": 0.1149,
+        "p95_ms_median": 0.1548,
+        "p99_ms_median": 0.1782,
+        "max_ms_median": 0.1942
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.2429,
+        "mean_ms_median": 0.2755,
+        "p95_ms_median": 0.4293,
+        "p99_ms_median": 0.6902,
+        "max_ms_median": 0.774
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 8.105,
+        "mean_ms_median": 8.1046,
+        "p95_ms_median": 9.3793,
+        "p99_ms_median": 10.0644,
+        "max_ms_median": 10.1803
+      },
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 296,
+        "utilization_mean_percent_median": 14.765,
+        "utilization_max_percent_median": 75.0,
+        "memory_mean_mib_median": 3252.214,
+        "memory_max_mib_median": 3914.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_off",
+      "atlas": "120x60",
+      "case": "base_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.0643,
+        "mean_ms_median": 0.0687,
+        "p95_ms_median": 0.1034,
+        "p99_ms_median": 0.1335,
+        "max_ms_median": 0.156,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0006,
+        "p95_ms_median": 0.001,
+        "p99_ms_median": 0.0012,
+        "max_ms_median": 0.0014
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.2552,
+        "mean_ms_median": 0.2731,
+        "p95_ms_median": 0.4081,
+        "p99_ms_median": 0.5981,
+        "max_ms_median": 0.6756
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 8.2076,
+        "mean_ms_median": 8.1964,
+        "p95_ms_median": 9.2488,
+        "p99_ms_median": 10.1119,
+        "max_ms_median": 10.5161
+      },
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 296,
+        "utilization_mean_percent_median": 14.765,
+        "utilization_max_percent_median": 75.0,
+        "memory_mean_mib_median": 3252.214,
+        "memory_max_mib_median": 3914.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_off",
+      "atlas": "120x60",
+      "case": "both_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.1142,
+        "mean_ms_median": 0.1222,
+        "p95_ms_median": 0.1935,
+        "p99_ms_median": 0.2332,
+        "max_ms_median": 0.2539,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.1646,
+        "mean_ms_median": 0.1898,
+        "p95_ms_median": 0.2733,
+        "p99_ms_median": 0.3688,
+        "max_ms_median": 0.4456
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.2752,
+        "mean_ms_median": 0.2986,
+        "p95_ms_median": 0.5067,
+        "p99_ms_median": 0.6599,
+        "max_ms_median": 0.9057
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 7.9379,
+        "mean_ms_median": 7.9224,
+        "p95_ms_median": 8.9804,
+        "p99_ms_median": 9.4486,
+        "max_ms_median": 9.9264
+      },
+      "bytes_per_publication": 57600,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 296,
+        "utilization_mean_percent_median": 14.765,
+        "utilization_max_percent_median": 75.0,
+        "memory_mean_mib_median": 3252.214,
+        "memory_max_mib_median": 3914.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_off",
+      "atlas": "120x60",
+      "case": "both_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.1195,
+        "mean_ms_median": 0.1228,
+        "p95_ms_median": 0.1806,
+        "p99_ms_median": 0.2496,
+        "max_ms_median": 0.2997,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0006,
+        "p95_ms_median": 0.001,
+        "p99_ms_median": 0.0012,
+        "max_ms_median": 0.0013
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.2576,
+        "mean_ms_median": 0.2804,
+        "p95_ms_median": 0.4115,
+        "p99_ms_median": 0.6199,
+        "max_ms_median": 0.7029
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 8.1142,
+        "mean_ms_median": 8.184,
+        "p95_ms_median": 9.458,
+        "p99_ms_median": 10.0262,
+        "max_ms_median": 14.6632
+      },
+      "bytes_per_publication": 57600,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 296,
+        "utilization_mean_percent_median": 14.765,
+        "utilization_max_percent_median": 75.0,
+        "memory_mean_mib_median": 3252.214,
+        "memory_max_mib_median": 3914.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_off",
+      "atlas": "120x60",
+      "case": "emission_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.0619,
+        "mean_ms_median": 0.0677,
+        "p95_ms_median": 0.0982,
+        "p99_ms_median": 0.1217,
+        "max_ms_median": 0.1241,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0994,
+        "mean_ms_median": 0.1087,
+        "p95_ms_median": 0.1654,
+        "p99_ms_median": 0.1892,
+        "max_ms_median": 0.2174
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.2623,
+        "mean_ms_median": 0.267,
+        "p95_ms_median": 0.3355,
+        "p99_ms_median": 0.4425,
+        "max_ms_median": 0.4541
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 8.0877,
+        "mean_ms_median": 8.0779,
+        "p95_ms_median": 9.0267,
+        "p99_ms_median": 9.5939,
+        "max_ms_median": 9.8721
+      },
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 296,
+        "utilization_mean_percent_median": 14.765,
+        "utilization_max_percent_median": 75.0,
+        "memory_mean_mib_median": 3252.214,
+        "memory_max_mib_median": 3914.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_off",
+      "atlas": "120x60",
+      "case": "emission_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.0614,
+        "mean_ms_median": 0.0674,
+        "p95_ms_median": 0.1041,
+        "p99_ms_median": 0.125,
+        "max_ms_median": 0.1375,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0006,
+        "p95_ms_median": 0.001,
+        "p99_ms_median": 0.0011,
+        "max_ms_median": 0.0012
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.247,
+        "mean_ms_median": 0.2751,
+        "p95_ms_median": 0.4056,
+        "p99_ms_median": 0.561,
+        "max_ms_median": 0.5923
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 8.1947,
+        "mean_ms_median": 8.1917,
+        "p95_ms_median": 9.3845,
+        "p99_ms_median": 10.2384,
+        "max_ms_median": 10.5987
+      },
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 296,
+        "utilization_mean_percent_median": 14.765,
+        "utilization_max_percent_median": 75.0,
+        "memory_mean_mib_median": 3252.214,
+        "memory_max_mib_median": 3914.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_off",
+      "atlas": "96x15",
+      "case": "base_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.0624,
+        "mean_ms_median": 0.0678,
+        "p95_ms_median": 0.1042,
+        "p99_ms_median": 0.1242,
+        "max_ms_median": 0.1256,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0523,
+        "mean_ms_median": 0.0578,
+        "p95_ms_median": 0.0837,
+        "p99_ms_median": 0.1236,
+        "max_ms_median": 0.1776
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.2518,
+        "mean_ms_median": 0.2717,
+        "p95_ms_median": 0.3841,
+        "p99_ms_median": 0.6921,
+        "max_ms_median": 0.9116
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 8.1388,
+        "mean_ms_median": 8.2042,
+        "p95_ms_median": 9.4025,
+        "p99_ms_median": 10.5947,
+        "max_ms_median": 16.123
+      },
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 298,
+        "utilization_mean_percent_median": 15.11,
+        "utilization_max_percent_median": 76.0,
+        "memory_mean_mib_median": 3242.08,
+        "memory_max_mib_median": 3902.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_off",
+      "atlas": "96x15",
+      "case": "base_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.061,
+        "mean_ms_median": 0.064,
+        "p95_ms_median": 0.1015,
+        "p99_ms_median": 0.1293,
+        "max_ms_median": 0.1365,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0006,
+        "p95_ms_median": 0.001,
+        "p99_ms_median": 0.0012,
+        "max_ms_median": 0.0014
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.2599,
+        "mean_ms_median": 0.2655,
+        "p95_ms_median": 0.3404,
+        "p99_ms_median": 0.5401,
+        "max_ms_median": 0.5951
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 8.181,
+        "mean_ms_median": 8.2349,
+        "p95_ms_median": 9.2585,
+        "p99_ms_median": 9.6762,
+        "max_ms_median": 10.1841
+      },
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 298,
+        "utilization_mean_percent_median": 15.11,
+        "utilization_max_percent_median": 76.0,
+        "memory_mean_mib_median": 3242.08,
+        "memory_max_mib_median": 3902.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_off",
+      "atlas": "96x15",
+      "case": "both_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.1111,
+        "mean_ms_median": 0.1137,
+        "p95_ms_median": 0.166,
+        "p99_ms_median": 0.2276,
+        "max_ms_median": 0.2851,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.069,
+        "mean_ms_median": 0.0738,
+        "p95_ms_median": 0.1059,
+        "p99_ms_median": 0.1408,
+        "max_ms_median": 0.1699
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.2709,
+        "mean_ms_median": 0.2789,
+        "p95_ms_median": 0.3999,
+        "p99_ms_median": 0.4912,
+        "max_ms_median": 0.6261
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 8.061,
+        "mean_ms_median": 8.0541,
+        "p95_ms_median": 9.5111,
+        "p99_ms_median": 9.9384,
+        "max_ms_median": 10.5667
+      },
+      "bytes_per_publication": 11520,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 298,
+        "utilization_mean_percent_median": 15.11,
+        "utilization_max_percent_median": 76.0,
+        "memory_mean_mib_median": 3242.08,
+        "memory_max_mib_median": 3902.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_off",
+      "atlas": "96x15",
+      "case": "both_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.1249,
+        "mean_ms_median": 0.1232,
+        "p95_ms_median": 0.1805,
+        "p99_ms_median": 0.227,
+        "max_ms_median": 0.2599,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0006,
+        "p95_ms_median": 0.0009,
+        "p99_ms_median": 0.0011,
+        "max_ms_median": 0.0015
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.256,
+        "mean_ms_median": 0.2729,
+        "p95_ms_median": 0.3977,
+        "p99_ms_median": 0.5703,
+        "max_ms_median": 0.6008
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 8.075,
+        "mean_ms_median": 8.1971,
+        "p95_ms_median": 9.4134,
+        "p99_ms_median": 9.7177,
+        "max_ms_median": 16.1376
+      },
+      "bytes_per_publication": 11520,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 298,
+        "utilization_mean_percent_median": 15.11,
+        "utilization_max_percent_median": 76.0,
+        "memory_mean_mib_median": 3242.08,
+        "memory_max_mib_median": 3902.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_off",
+      "atlas": "96x15",
+      "case": "emission_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.0633,
+        "mean_ms_median": 0.0693,
+        "p95_ms_median": 0.1103,
+        "p99_ms_median": 0.1418,
+        "max_ms_median": 0.2613,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0522,
+        "mean_ms_median": 0.0556,
+        "p95_ms_median": 0.076,
+        "p99_ms_median": 0.0982,
+        "max_ms_median": 0.1007
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.2574,
+        "mean_ms_median": 0.2661,
+        "p95_ms_median": 0.3401,
+        "p99_ms_median": 0.5094,
+        "max_ms_median": 0.5748
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 8.1514,
+        "mean_ms_median": 8.1394,
+        "p95_ms_median": 9.1059,
+        "p99_ms_median": 9.3948,
+        "max_ms_median": 9.515
+      },
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 298,
+        "utilization_mean_percent_median": 15.11,
+        "utilization_max_percent_median": 76.0,
+        "memory_mean_mib_median": 3242.08,
+        "memory_max_mib_median": 3902.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_off",
+      "atlas": "96x15",
+      "case": "emission_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.0638,
+        "mean_ms_median": 0.0695,
+        "p95_ms_median": 0.1057,
+        "p99_ms_median": 0.1359,
+        "max_ms_median": 0.1574,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0006,
+        "p95_ms_median": 0.001,
+        "p99_ms_median": 0.0011,
+        "max_ms_median": 0.0012
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.2555,
+        "mean_ms_median": 0.2666,
+        "p95_ms_median": 0.372,
+        "p99_ms_median": 0.4825,
+        "max_ms_median": 0.7614
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 8.2181,
+        "mean_ms_median": 8.2186,
+        "p95_ms_median": 9.315,
+        "p99_ms_median": 9.6785,
+        "max_ms_median": 9.922
+      },
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 298,
+        "utilization_mean_percent_median": 15.11,
+        "utilization_max_percent_median": 76.0,
+        "memory_mean_mib_median": 3242.08,
+        "memory_max_mib_median": 3902.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_on",
+      "atlas": "120x60",
+      "case": "base_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.0842,
+        "mean_ms_median": 0.0874,
+        "p95_ms_median": 0.1291,
+        "p99_ms_median": 0.1421,
+        "max_ms_median": 0.1796,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.1085,
+        "mean_ms_median": 0.1229,
+        "p95_ms_median": 0.1792,
+        "p99_ms_median": 0.218,
+        "max_ms_median": 0.2257
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.8388,
+        "mean_ms_median": 0.857,
+        "p95_ms_median": 1.3546,
+        "p99_ms_median": 1.533,
+        "max_ms_median": 1.5679
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 15.9972,
+        "mean_ms_median": 17.9537,
+        "p95_ms_median": 31.5919,
+        "p99_ms_median": 32.1338,
+        "max_ms_median": 32.6287
+      },
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 421,
+        "utilization_mean_percent_median": 46.711,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4368.162,
+        "memory_max_mib_median": 5761.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_on",
+      "atlas": "120x60",
+      "case": "base_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.0813,
+        "mean_ms_median": 0.0861,
+        "p95_ms_median": 0.1432,
+        "p99_ms_median": 0.1602,
+        "max_ms_median": 0.1928,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0006,
+        "p95_ms_median": 0.001,
+        "p99_ms_median": 0.0014,
+        "max_ms_median": 0.0018
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.8037,
+        "mean_ms_median": 0.824,
+        "p95_ms_median": 1.3913,
+        "p99_ms_median": 1.5332,
+        "max_ms_median": 1.5959
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 16.1349,
+        "mean_ms_median": 18.2716,
+        "p95_ms_median": 32.0171,
+        "p99_ms_median": 33.0257,
+        "max_ms_median": 33.5584
+      },
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 421,
+        "utilization_mean_percent_median": 46.711,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4368.162,
+        "memory_max_mib_median": 5761.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_on",
+      "atlas": "120x60",
+      "case": "both_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.1226,
+        "mean_ms_median": 0.1289,
+        "p95_ms_median": 0.2021,
+        "p99_ms_median": 0.2767,
+        "max_ms_median": 0.3503,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.1762,
+        "mean_ms_median": 0.1927,
+        "p95_ms_median": 0.2868,
+        "p99_ms_median": 0.3362,
+        "max_ms_median": 0.3563
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.8459,
+        "mean_ms_median": 0.8505,
+        "p95_ms_median": 1.4223,
+        "p99_ms_median": 1.5388,
+        "max_ms_median": 1.597
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 15.9892,
+        "mean_ms_median": 18.2574,
+        "p95_ms_median": 31.4113,
+        "p99_ms_median": 32.5358,
+        "max_ms_median": 32.6918
+      },
+      "bytes_per_publication": 57600,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 421,
+        "utilization_mean_percent_median": 46.711,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4368.162,
+        "memory_max_mib_median": 5761.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_on",
+      "atlas": "120x60",
+      "case": "both_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.1187,
+        "mean_ms_median": 0.1258,
+        "p95_ms_median": 0.2002,
+        "p99_ms_median": 0.2981,
+        "max_ms_median": 0.3166,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0006,
+        "mean_ms_median": 0.0006,
+        "p95_ms_median": 0.001,
+        "p99_ms_median": 0.0014,
+        "max_ms_median": 0.0019
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.8762,
+        "mean_ms_median": 0.8545,
+        "p95_ms_median": 1.3926,
+        "p99_ms_median": 1.4782,
+        "max_ms_median": 1.5904
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 16.0889,
+        "mean_ms_median": 18.1415,
+        "p95_ms_median": 31.6427,
+        "p99_ms_median": 33.0288,
+        "max_ms_median": 33.1392
+      },
+      "bytes_per_publication": 57600,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 421,
+        "utilization_mean_percent_median": 46.711,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4368.162,
+        "memory_max_mib_median": 5761.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_on",
+      "atlas": "120x60",
+      "case": "emission_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.0822,
+        "mean_ms_median": 0.0853,
+        "p95_ms_median": 0.1363,
+        "p99_ms_median": 0.1724,
+        "max_ms_median": 0.2161,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.1064,
+        "mean_ms_median": 0.1183,
+        "p95_ms_median": 0.1697,
+        "p99_ms_median": 0.219,
+        "max_ms_median": 0.2493
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.8583,
+        "mean_ms_median": 0.8559,
+        "p95_ms_median": 1.3798,
+        "p99_ms_median": 1.527,
+        "max_ms_median": 1.6359
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 15.909,
+        "mean_ms_median": 18.0629,
+        "p95_ms_median": 31.4376,
+        "p99_ms_median": 32.5211,
+        "max_ms_median": 32.8762
+      },
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 421,
+        "utilization_mean_percent_median": 46.711,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4368.162,
+        "memory_max_mib_median": 5761.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_on",
+      "atlas": "120x60",
+      "case": "emission_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.0839,
+        "mean_ms_median": 0.088,
+        "p95_ms_median": 0.1332,
+        "p99_ms_median": 0.1667,
+        "max_ms_median": 0.2036,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0006,
+        "mean_ms_median": 0.0007,
+        "p95_ms_median": 0.0011,
+        "p99_ms_median": 0.0013,
+        "max_ms_median": 0.0015
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.9299,
+        "mean_ms_median": 0.8555,
+        "p95_ms_median": 1.4151,
+        "p99_ms_median": 1.5338,
+        "max_ms_median": 1.6734
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 16.0844,
+        "mean_ms_median": 18.1515,
+        "p95_ms_median": 31.5334,
+        "p99_ms_median": 32.6176,
+        "max_ms_median": 33.6369
+      },
+      "bytes_per_publication": 28800,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 421,
+        "utilization_mean_percent_median": 46.711,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4368.162,
+        "memory_max_mib_median": 5761.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_on",
+      "atlas": "96x15",
+      "case": "base_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.0786,
+        "mean_ms_median": 0.0828,
+        "p95_ms_median": 0.1318,
+        "p99_ms_median": 0.1454,
+        "max_ms_median": 0.1603,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0553,
+        "mean_ms_median": 0.0613,
+        "p95_ms_median": 0.091,
+        "p99_ms_median": 0.1124,
+        "max_ms_median": 0.1875
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.86,
+        "mean_ms_median": 0.8658,
+        "p95_ms_median": 1.368,
+        "p99_ms_median": 1.5206,
+        "max_ms_median": 1.6697
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 16.0354,
+        "mean_ms_median": 17.9508,
+        "p95_ms_median": 31.5292,
+        "p99_ms_median": 32.1862,
+        "max_ms_median": 33.3973
+      },
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 419,
+        "utilization_mean_percent_median": 47.014,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4372.115,
+        "memory_max_mib_median": 5765.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_on",
+      "atlas": "96x15",
+      "case": "base_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.0793,
+        "mean_ms_median": 0.0849,
+        "p95_ms_median": 0.1337,
+        "p99_ms_median": 0.1546,
+        "max_ms_median": 0.1795,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0005,
+        "p95_ms_median": 0.0009,
+        "p99_ms_median": 0.0013,
+        "max_ms_median": 0.0017
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.7296,
+        "mean_ms_median": 0.8306,
+        "p95_ms_median": 1.3291,
+        "p99_ms_median": 1.5428,
+        "max_ms_median": 1.6633
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 16.2409,
+        "mean_ms_median": 18.6274,
+        "p95_ms_median": 31.7277,
+        "p99_ms_median": 33.4967,
+        "max_ms_median": 33.8529
+      },
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 419,
+        "utilization_mean_percent_median": 47.014,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4372.115,
+        "memory_max_mib_median": 5765.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_on",
+      "atlas": "96x15",
+      "case": "both_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.1237,
+        "mean_ms_median": 0.1304,
+        "p95_ms_median": 0.2008,
+        "p99_ms_median": 0.2836,
+        "max_ms_median": 0.3656,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0733,
+        "mean_ms_median": 0.0856,
+        "p95_ms_median": 0.1309,
+        "p99_ms_median": 0.2002,
+        "max_ms_median": 0.2743
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.8262,
+        "mean_ms_median": 0.8345,
+        "p95_ms_median": 1.3706,
+        "p99_ms_median": 1.5088,
+        "max_ms_median": 1.9891
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 16.0849,
+        "mean_ms_median": 18.4515,
+        "p95_ms_median": 31.2978,
+        "p99_ms_median": 32.3577,
+        "max_ms_median": 32.9324
+      },
+      "bytes_per_publication": 11520,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 419,
+        "utilization_mean_percent_median": 47.014,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4372.115,
+        "memory_max_mib_median": 5765.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_on",
+      "atlas": "96x15",
+      "case": "both_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.1225,
+        "mean_ms_median": 0.1313,
+        "p95_ms_median": 0.2035,
+        "p99_ms_median": 0.2379,
+        "max_ms_median": 0.3055,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0005,
+        "mean_ms_median": 0.0006,
+        "p95_ms_median": 0.001,
+        "p99_ms_median": 0.0013,
+        "max_ms_median": 0.0016
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.8124,
+        "mean_ms_median": 0.8434,
+        "p95_ms_median": 1.3695,
+        "p99_ms_median": 1.4775,
+        "max_ms_median": 1.5807
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 16.1567,
+        "mean_ms_median": 18.0538,
+        "p95_ms_median": 31.5122,
+        "p99_ms_median": 32.8648,
+        "max_ms_median": 34.3482
+      },
+      "bytes_per_publication": 11520,
+      "api_calls_per_publication": 2,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 419,
+        "utilization_mean_percent_median": 47.014,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4372.115,
+        "memory_max_mib_median": 5765.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_on",
+      "atlas": "96x15",
+      "case": "emission_changing",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.0804,
+        "mean_ms_median": 0.0835,
+        "p95_ms_median": 0.1234,
+        "p99_ms_median": 0.1754,
+        "max_ms_median": 0.2046,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0545,
+        "mean_ms_median": 0.0623,
+        "p95_ms_median": 0.1004,
+        "p99_ms_median": 0.1267,
+        "max_ms_median": 0.1797
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.8871,
+        "mean_ms_median": 0.8656,
+        "p95_ms_median": 1.3888,
+        "p99_ms_median": 1.4861,
+        "max_ms_median": 1.5791
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 15.9091,
+        "mean_ms_median": 17.9845,
+        "p95_ms_median": 31.511,
+        "p99_ms_median": 32.7062,
+        "max_ms_median": 33.7533
+      },
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 419,
+        "utilization_mean_percent_median": 47.014,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4372.115,
+        "memory_max_mib_median": 5765.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    },
+    {
+      "mode": "gpu_rtx_flow_on",
+      "atlas": "96x15",
+      "case": "emission_fixed",
+      "run_count": 3,
+      "provider_setter": {
+        "p50_ms_median": 0.0761,
+        "mean_ms_median": 0.0814,
+        "p95_ms_median": 0.1247,
+        "p99_ms_median": 0.1707,
+        "max_ms_median": 0.198,
+        "over_5_ms_median": 0,
+        "over_16_67_ms_median": 0,
+        "over_33_33_ms_median": 0,
+        "over_50_ms_median": 0,
+        "near_16_67ms_multiple_median": 0,
+        "over_5_ms_total": 0,
+        "over_16_67_ms_total": 0,
+        "over_33_33_ms_total": 0,
+        "over_50_ms_total": 0,
+        "near_16_67ms_multiple_total": 0
+      },
+      "source_prepare": {
+        "p50_ms_median": 0.0006,
+        "mean_ms_median": 0.0007,
+        "p95_ms_median": 0.001,
+        "p99_ms_median": 0.0013,
+        "max_ms_median": 0.0014
+      },
+      "cpu_to_gpu_staging": {
+        "p50_ms_median": 0.8494,
+        "mean_ms_median": 0.8293,
+        "p95_ms_median": 1.3119,
+        "p99_ms_median": 1.4747,
+        "max_ms_median": 1.6828
+      },
+      "publication_to_next_render": {
+        "p50_ms_median": 16.2081,
+        "mean_ms_median": 18.0705,
+        "p95_ms_median": 31.7619,
+        "p99_ms_median": 32.9993,
+        "max_ms_median": 33.1529
+      },
+      "bytes_per_publication": 5760,
+      "api_calls_per_publication": 1,
+      "whole_gpu": {
+        "available": true,
+        "sample_count_total": 419,
+        "utilization_mean_percent_median": 47.014,
+        "utilization_max_percent_median": 99.0,
+        "memory_mean_mib_median": 4372.115,
+        "memory_max_mib_median": 5765.0,
+        "scope": "whole GPU process observation; not provider-owned allocation"
+      }
+    }
+  ],
+  "conclusion_table": [
+    {
+      "mode": "cpu_unconnected_changing",
+      "source": "cpu_raw_pointer",
+      "rtx": false,
+      "flow": false,
+      "provider_setter_p95_ms": 1.8164,
+      "cpu_to_gpu_staging_p95_ms": 0.0,
+      "publication_to_next_requested_rtx_frame_p95_ms": null,
+      "render_updates_per_sample": 0,
+      "interpretation": "no Hydra/RTX viewport in the provider-only Kit root"
+    },
+    {
+      "mode": "cpu_connected_no_rtx",
+      "source": "cpu_raw_pointer",
+      "rtx": false,
+      "flow": false,
+      "provider_setter_p95_ms": 1.8089,
+      "cpu_to_gpu_staging_p95_ms": 0.0,
+      "publication_to_next_requested_rtx_frame_p95_ms": null,
+      "render_updates_per_sample": 0,
+      "interpretation": "no Hydra/RTX viewport in the provider-only Kit root"
+    },
+    {
+      "mode": "cpu_rtx_flow_off",
+      "source": "cpu_raw_pointer",
+      "rtx": true,
+      "flow": false,
+      "provider_setter_p95_ms": 2.1147,
+      "cpu_to_gpu_staging_p95_ms": 0.0,
+      "publication_to_next_requested_rtx_frame_p95_ms": 7.7727,
+      "render_updates_per_sample": 1,
+      "interpretation": "reflection timing is completion of the next explicitly requested viewport frame; per-sample pixel identity was not read back"
+    },
+    {
+      "mode": "cpu_rtx_flow_on",
+      "source": "cpu_raw_pointer",
+      "rtx": true,
+      "flow": true,
+      "provider_setter_p95_ms": 28.8968,
+      "cpu_to_gpu_staging_p95_ms": 0.0,
+      "publication_to_next_requested_rtx_frame_p95_ms": 32.771,
+      "render_updates_per_sample": 1,
+      "interpretation": "reflection timing is completion of the next explicitly requested viewport frame; per-sample pixel identity was not read back"
+    },
+    {
+      "mode": "gpu_rtx_flow_off",
+      "source": "gpu",
+      "rtx": true,
+      "flow": false,
+      "provider_setter_p95_ms": 0.1935,
+      "cpu_to_gpu_staging_p95_ms": 0.5067,
+      "publication_to_next_requested_rtx_frame_p95_ms": 8.9804,
+      "render_updates_per_sample": 1,
+      "interpretation": "reflection timing is completion of the next explicitly requested viewport frame; per-sample pixel identity was not read back"
+    },
+    {
+      "mode": "gpu_rtx_flow_on",
+      "source": "gpu",
+      "rtx": true,
+      "flow": true,
+      "provider_setter_p95_ms": 0.2021,
+      "cpu_to_gpu_staging_p95_ms": 1.4223,
+      "publication_to_next_requested_rtx_frame_p95_ms": 31.4113,
+      "render_updates_per_sample": 1,
+      "interpretation": "reflection timing is completion of the next explicitly requested viewport frame; per-sample pixel identity was not read back"
+    }
+  ],
+  "classifications": {
+    "provider_or_resource_manager_candidate": false,
+    "renderer_resource_sync_candidate": false,
+    "flow_gpu_or_scheduler_contention_candidate": true,
+    "cpu_source_path_primary_candidate": true,
+    "destination_or_renderer_fence_candidate": false,
+    "bandwidth_dominant_not_supported": true,
+    "frame_quantization_candidate": false
+  },
+  "interpretation_guardrails": {
+    "observed": "timings, thresholds, atlas byte counts, runtime API/docstrings, and whole-GPU telemetry",
+    "strong_inference": "classification booleans are boundary candidates, not internal implementation proof",
+    "unconfirmed": "provider internals, exact renderer fences, and provider-owned memory",
+    "v3tc_cpu_upload_ms_reading": "DynamicTextureProvider CPU-source publication call; not a measured raw memcpy bandwidth"
+  },
+  "production": {
+    "modified": false,
+    "v3_integrated": false,
+    "defaults_changed": false
+  }
+}

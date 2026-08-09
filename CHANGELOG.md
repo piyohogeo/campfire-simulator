@@ -1,5 +1,13 @@
 # Changelog
 
+- Added the independent Phase V3T-D DynamicTextureProvider boundary probe without changing the production V3 consumer, V3T-C, Phase 6DQ, or any default.
+- Measured 42 separate processes, 20 warmup publications per case, 120 measured samples per case, three independent runs, two RGBA8 atlas sizes, base/emission/both, fixed/changing content, CPU/GPU source, RTX, and Flow for 25,920 retained samples.
+- Classified the V3T-C `cpu_upload_ms` field as a `DynamicTextureProvider` CPU-source publication call rather than raw memcpy bandwidth: 20-log two-texture p95 was `1.8164 ms` unconnected, `1.8089 ms` Mesh-connected without RTX rendering, `2.1147 ms` under RTX with Flow OFF, and `28.8968 ms` under RTX plus Flow.
+- Qualified a synchronized, probe-owned Warp GPU baseline at setter p95 `0.2021 ms` plus explicit CPU-to-GPU staging p95 `1.4223 ms` under Flow, while the next requested RTX frame remained `31.4113 ms`; GPU publication is therefore not a production integration decision or an end-to-end frame-latency fix.
+- Measured source preparation separately at p95 `0.2708 ms` for CPU-source and `0.2868 ms` for GPU-source in the 20-log, two-texture changing case, confirming that source generation is not the observed 28.8968 ms publication tail.
+- Preserved all Prim paths, material bindings, asset paths, and USD revisions throughout every measured population; all Flow runs had active blocks, and GPU telemetry remains explicitly whole-process rather than provider-owned.
+- Recorded that fixed and changing content behaved alike, 96×15 and 120×60 behaved alike, and 16.67 ms quantization was weak; Flow-time CPU-source synchronization is the strong boundary candidate, while the exact provider/resource/fence implementation remains unconfirmed.
+- Requalified the release build in `9.02 s`, Phase 0 with RTX ready in `162.1 s`, all eight standard processes and `77 / 77` tests in `417.4 s`, all six V3T-C OFF/ON runs with authority and reflection gates intact, and Phase 6DQ at `11 / 11` gates without rewriting its committed evidence.
 - Added Phase 6DQ's explicit `residentPointRigidLayoutEnabled=false` setting and selected `rigid_frame_v1` exactly once before offline Point stage authoring and Kit context connection.
 - Preserved the legacy cardinal fallback and rejected rigid/legacy-qualification contradictions, orphaned qualification settings, and invalid translation-skip combinations before stage construction.
 - Qualified the normal extension path on Flow 110.0.0 with 11 / 11 gates, 720 points, revision 710, 391 peak active blocks, 58 / 60 unique frames, zero Point resyncs, and clean shutdown.
@@ -24,7 +32,7 @@
 - Made the explicit V3 preset the default evidence path for future development-log videos and human wood-state inspection while keeping normal applications V3 default OFF.
 - Added Phase V3T-C's three alternating integrated V3 OFF/ON pairs with the same Resident-native producer, Flow/RTX scene, render hierarchy, camera, warmup, and two fixed captures per run.
 - Preserved both authoritative wood SHA-256 values, the metrics CSV SHA-256, zero mass-balance error, ignition times, Resident revision, Flow fuel input, and active Flow across all six runs.
-- Measured update-frame p95 medians of `7.9833 ms` OFF and `6.5593 ms` ON with zero 33.33/50 ms update frames in both groups; V3 publication p95 remained `36.1233 ms`, dominated by `35.4457 ms` CPU texture upload.
+- Measured update-frame p95 medians of `7.9833 ms` OFF and `6.5593 ms` ON with zero 33.33/50 ms update frames in both groups; V3 publication p95 remained `36.1233 ms`, dominated by a `35.4457 ms` DynamicTextureProvider CPU-source publication call (historical field name `cpu_upload_ms`).
 - Measured publication-to-next-RTX-update reflection at p95 `44.8087 ms` and one render update, and recorded whole-GPU utilization/memory separately from provider-owned memory.
 - Added the single-command `run_visual_v3_demo.ps1` opt-in preset, which enables the render hierarchy, Resident adapter, native backend, and V3 together while existing Point/V0/V1 conflicts fail closed.
 - Kept both normal Kit apps and production V3 default OFF because the isolated 20-log publication p95 remains `4.7540 ms` against the `1.0 ms` reference target; Cylinder fallback, Flow, Point, wood authority, and Phase 6DM remain unchanged.

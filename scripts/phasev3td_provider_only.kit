@@ -1,0 +1,22 @@
+[package]
+title = "Campfire Phase V3T-D Provider-Only Probe"
+version = "0.1.0"
+description = "Independent non-rendering DynamicTextureProvider boundary probe."
+
+[dependencies]
+"omni.ui" = {}
+"omni.usd" = {}
+"omni.warp.core" = {}
+
+[settings]
+app.window.enabled = false
+app.useFabricSceneDelegate = false
+app.settings.persistent = false
+app.settings.loadUserConfig = false
+telemetry.disableInternalSessionCheck = true
+
+[settings.app.exts]
+folders.'++' = [
+    "${app}/../_build/windows-x86_64/release/exts",
+    "${app}/../_build/windows-x86_64/release/extscache"
+]

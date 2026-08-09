@@ -81,7 +81,7 @@ Kit/RTX probeは`17 / 17`、変更後V3M-C regressionは`17 / 17`、標準suite�
 
 ### 交互計測
 
-Resident adapter、handle cache、lightweight commit、unchanged derived skip、Resident native backend、render hierarchy、Flow、RTX、camera、warmup、1280×720 captureを固定し、pair 1をOFF→ON、pair 2をON→OFF、pair 3をOFF→ONの順で独立process実行した。各runは240秒・1,200 stepの同じPhase 3で、固定時刻2枚を撮影した。update frame、visual publication、CPU upload、GPU、authorityを同じ`summary.json`から集計した。
+Resident adapter、handle cache、lightweight commit、unchanged derived skip、Resident native backend、render hierarchy、Flow、RTX、camera、warmup、1280×720 captureを固定し、pair 1をOFF→ON、pair 2をON→OFF、pair 3をOFF→ONの順で独立process実行した。各runは240秒・1,200 stepの同じPhase 3で、固定時刻2枚を撮影した。update frame、visual publication、DynamicTextureProvider CPU-source publication call（歴史的フィールド名`cpu_upload_ms`）、GPU、authorityを同じ`summary.json`から集計した。
 
 | 指標（3 run中央値または合計） | V3 OFF | V3 ON |
 | --- | ---: | ---: |
@@ -92,9 +92,9 @@ Resident adapter、handle cache、lightweight commit、unchanged derived skip、
 | GPU utilization mean | 19.870% | 35.750% |
 | GPU memory max | 7,731 MiB | 7,793 MiB |
 | visual publication p50 / p95 / max | — | 2.5241 / 36.1233 / 79.2889 ms |
-| CPU upload p50 / p95 / max | — | 1.7373 / 35.4457 / 78.6662 ms |
+| CPU-source provider call p50 / p95 / max | — | 1.7373 / 35.4457 / 78.6662 ms |
 
-V3 ONのupdate-frame p95はOFFより`1.4240 ms`低く、この交互runではframe pacing悪化は観測されなかった。ただしvisual publication p95の`36.1233 ms`は消えておらず、`35.4457 ms`がpublic CPU texture uploadである。uploadは`next_update_async`前に同期実行されるため、update-frame区間だけを見てstall解消と判断してはならない。3 ON runの転送合計は`14,999,040 B`、1 runあたり`4,999,680 B`だった。
+V3 ONのupdate-frame p95はOFFより`1.4240 ms`低く、この交互runではframe pacing悪化は観測されなかった。ただしvisual publication p95の`36.1233 ms`は消えておらず、`35.4457 ms`は`DynamicTextureProvider.set_raw_bytes_data()`のCPU-source publication callである。Phase V3T-Dによりraw memcpy帯域ではないことを確認した。callは`next_update_async`前に同期実行されるため、update-frame区間だけを見てstall解消と判断してはならない。3 ON runの転送合計は`14,999,040 B`、1 runあたり`4,999,680 B`だった。
 
 provider upload完了から次のKit/RTX update完了まではp95中央値`44.8087 ms`、最大render update数`1`で、200 ms gateを満たした。これはpixelの全frame readbackではなく、同じowner threadで完了したpublicationが次のrenderer updateへ渡った境界の計測である。動画capture runは60回の強制再発行を含むためperformance母集団から外し、外観trajectoryの根拠だけに使用する。
 

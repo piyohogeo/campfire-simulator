@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6dq">最新記録</a>
+        <a href="#phase-v3td">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6dq">Phase 6DQを読む</a>
+        <a class="button primary" href="#phase-v3td">Phase V3T-Dを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6DQ 完了</strong></div>
+        <div><span>現在地</span><strong>Phase V3T-D 測定完了</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>77 / 77 passed</strong></div>
-        <div><span>判定</span><strong>normal rigid 11 / 11 · Point既定OFF</strong></div>
+        <div><span>測定</span><strong>42 process · 25,920 samples</strong></div>
+        <div><span>判定</span><strong>Flow中CPU-source同期 · production不変更</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,65 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-v3td" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number compact">V3T-D</span>
+          <p><time datetime="2026-08-09">2026.08.09</time></p>
+          <span class="pill current">Measured · no production change</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Phase V3T-D · DynamicTextureProvider boundary</p>
+            <h2>35 msは単純なcopyではない。<br>Flow中のCPU-source発行で再現した。</h2>
+            <p>V3T-Cの歴史的フィールド名<code>cpu_upload_ms</code>を、raw memcpyではなく<code>DynamicTextureProvider</code> CPU-source publication callとして分解しました。20本相当・base＋emission変更のp95は、未接続1.8164 ms、Mesh接続・RTX描画なし1.8089 ms、RTX・Flow OFF 2.1147 msに対し、RTX＋Flowだけ28.8968 msでした。</p>
+          </header>
+
+          <figure class="capture-card wide">
+            <a href="assets/phasev3td/dynamic_texture_boundary_report.svg" aria-label="Phase V3T-D DynamicTextureProvider境界レポートを開く">
+              <img src="assets/phasev3td/dynamic_texture_boundary_report.svg" alt="CPUとGPU source、RTXとFlow、2つのatlasサイズについて2枚連続発行のp95を比較するPhase V3T-D実測図" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>42 process · 25,920 samples · topology 42 / 42 stable</strong><span>20 warmup / case · 120 measured / case · 3 independent runs</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3tc/visual_v3_actual.mp4" data-video-poster="assets/phasev3tc/visual_v3_actual_poster.png" data-video-title="Phase V3T-D wood-state visual reference · V3 explicit preset" data-video-meta="Shared V3T-C explicit-preset recording · visual context only, not V3T-D timing evidence · capture excluded from measured populations · 60 frames · 6 seconds">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>薪状態の目視参照</strong><small>V3明示preset動画を再利用 · 性能証拠ではない</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <div class="notes-grid">
+            <section class="note"><p class="note-label">Observed</p><h3>Flow ONだけCPU setter tail</h3><p>120×60の2枚変更はCPU RTX＋Flowでp50／p95／p99 10.4631／28.8968／31.2646 msでした。96×15もp95 28.6312 ms、固定内容も28.4733 msで、byte量や画像内容に追従しません。</p></section>
+            <section class="note"><p class="note-label">GPU baseline</p><h3>setterは0.2021 ms、frame待ちは残る</h3><p>同期済みWarp所有bufferではsource準備／CPU→GPU staging／setter p95が0.2868／1.4223／0.2021 msでした。ただし次requested RTX frameは31.4113 msで、GPU-sourceはend-to-end Flow/render latencyを解決しません。</p></section>
+          </div>
+
+          <section class="verification" aria-labelledby="phasev3td-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Classification</p>
+              <h3 id="phasev3td-verification-title">CPU-source provider経路が同期tailの主因候補。</h3>
+              <p>未接続、material接続だけ、RTX Flow OFFでは大tailがなく、GPU-sourceではFlow ONでもsetter tailが消えました。Flow GPU競合、scheduler、interop/fence境界は強い候補ですが、正確な内部実装は未確認です。</p>
+              <code>.\scripts\run_phasev3td_dynamic_texture_boundary.ps1</code>
+              <p><a href="assets/phasev3td/dynamic_texture_boundary_report.json">集計JSON</a> · <a href="assets/phasev3td/dynamic_texture_boundary_samples.json">全sample JSON</a> · <a href="../design/wood_visual_v3_dynamic_texture_boundary.md">設計・安全性メモ</a></p>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase V3T-D検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Matrix</strong><small>42 / 42 process · 25,920 samples</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Static stage</strong><small>Prim / binding / URI / revision changes 0</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Flow</strong><small>12 / 12 active-block processes</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>GPU ownership</strong><small>Warp-owned · synchronized · lifetime held</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Regression</strong><small>build · Phase 0 · 77/77 · V3T-C 6/6 · 6DQ 11/11</small></p></div>
+              <div role="listitem"><span aria-hidden="true">!</span><p><strong>Public contract</strong><small>device / stream / fence details absent</small></p></div>
+              <div role="listitem"><span aria-hidden="true">—</span><p><strong>Production integration</strong><small>not attempted · defaults unchanged</small></p></div>
+            </div>
+          </section>
+
+          <div class="notes-grid">
+            <section class="note caution"><p class="note-label">Unconfirmed</p><h3>内部fenceとpixel反映identity</h3><p><code>get_managed_resource()</code>は寿命契約不足のため呼び出しもcacheもしていません。次viewport frame完了を反映proxyにしましたが、全sampleのpixel readbackは行っていません。whole-GPU memoryはprovider所有量ではありません。</p></section>
+            <section class="note next"><p class="note-label">Stop boundary</p><h3>V3T-Cを置換しない</h3><p>GPU-sourceは将来の独立Phase候補に留めます。公開device／stream／fence／lifetime契約、または実操作上の支障が確認されるまで、production V3統合、二重buffer、既定値変更には進みません。</p></section>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6dq" class="section entry-section phase-six">
@@ -282,7 +341,7 @@
             </section>
             <section class="note">
               <p class="note-label">V3T-C stop boundary</p>
-              <h3>CPU texture uploadを残存境界として固定</h3>
+              <h3>CPU-source provider publicationを残存境界として固定</h3>
               <p>V3追加最適化は停止します。公開GPU直接更新API、Kit／Flow更新の再評価、または実操作上の支障が確認された場合だけ再開し、private APIや未所有GPU pointerは採用しません。</p>
             </section>
           </div>
@@ -300,8 +359,8 @@
         <div class="entry-body">
           <header class="entry-header">
             <p class="section-kicker">Phase V3T-C · Integrated adoption boundary</p>
-            <h2>正しさとframe pacingは合格。<br>CPU upload制約は残った。</h2>
-            <p>Resident native・Flow・RTX・同一cameraを固定し、V3 OFF／ONを3組6 processで交互比較しました。wood authority、CSV、mass、ignition、revision、Flow fuelは完全一致し、update-frame p95も悪化しませんでした。一方、visual publication p95は36.1233 msで、35.4457 msをCPU texture uploadが占めます。通常appは既定OFFのまま、最適化済みV3を1 commandで試せる明示presetだけを追加しました。</p>
+            <h2>正しさとframe pacingは合格。<br>CPU-source publication制約は残った。</h2>
+            <p>Resident native・Flow・RTX・同一cameraを固定し、V3 OFF／ONを3組6 processで交互比較しました。wood authority、CSV、mass、ignition、revision、Flow fuelは完全一致し、update-frame p95も悪化しませんでした。一方、visual publication p95は36.1233 msで、歴史的フィールド名<code>cpu_upload_ms</code>の35.4457 msはDynamicTextureProvider CPU-source publication callです。通常appは既定OFFのまま、最適化済みV3を1 commandで試せる明示presetだけを追加しました。</p>
           </header>
 
           <div class="capture-pair" aria-label="V3 OFFとONの同一条件比較">
@@ -348,8 +407,8 @@
             </section>
             <section class="note caution">
               <p class="note-label">Honest bottleneck</p>
-              <h3>同期CPU uploadが残る</h3>
-              <p>ON publication p50／p95／maxは2.5241／36.1233／79.2889 ms、CPU uploadは1.7373／35.4457／78.6662 msでした。next update区間だけなら33.33 ms超過0でも、upload stallが消えたとは扱いません。</p>
+              <h3>同期CPU-source provider callが残る</h3>
+              <p>ON publication p50／p95／maxは2.5241／36.1233／79.2889 ms、CPU-source provider callは1.7373／35.4457／78.6662 msでした。next update区間だけなら33.33 ms超過0でも、publication stallが消えたとは扱いません。</p>
             </section>
           </div>
 
@@ -380,7 +439,7 @@
             <section class="note">
               <p class="note-label">Stop boundary</p>
               <h3>V3T-Cで停止</h3>
-              <p>Mesh collider、deformation、shrink、crack、loss、V4、Phase 6DM、Point契約、wood authority、Flowには進んでいません。次に残るtransport課題は公開API上のCPU upload stallです。</p>
+              <p>Mesh collider、deformation、shrink、crack、loss、V4、Phase 6DM、Point契約、wood authority、Flowには進んでいません。次に残るtransport課題は公開API上のCPU-source DynamicTextureProvider publication stallです。</p>
             </section>
           </div>
         </div>

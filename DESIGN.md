@@ -2619,16 +2619,30 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 
 ## Phase V3T-C integrated adoption boundary
 
-### 2026-08-09: authorityとframe pacingは合格、CPU upload制約により明示presetのみ
+### 2026-08-09: authorityとframe pacingは合格、CPU-source publication制約により明示presetのみ
 
 - 計測構成: Resident adapter、handle cache、lightweight commit、unchanged skip、Resident native backend、render hierarchy、Flow、RTX、camera、warmup、2固定captureを同一にし、pair 1 OFF→ON、pair 2 ON→OFF、pair 3 OFF→ONの6独立processを実行した。各runはPhase 3の240秒・1,200 stepである。
 - 正しさ: dry/wet authoritative SHA-256とmetrics CSV SHA-256は6 run完全一致、mass balance errorは0、ignitionは`66.2 / 166.4 s`、Resident revisionは`1200`、Flow peak fuelは`1.0`で一致し、全runでactive blockを観測した。V3はwood authority、Flow source、collision、Point payloadを変更しない。
 - frame pacing: update-frame p50/p95/max中央値はOFF `6.4895 / 7.9833 / 9.2552 ms`、ON `4.9647 / 6.5593 / 9.4021 ms`で、16.67/33.33/50 ms超過は双方0だった。ON p95差は`-1.4240 ms`で統合frame gateは合格した。
-- 残存cost: ON visual publication p50/p95/max中央値は`2.5241 / 36.1233 / 79.2889 ms`、CPU texture uploadは`1.7373 / 35.4457 / 78.6662 ms`だった。update-frame timerはupload直後の`next_update_async`だけなので、後者の同期stallを隠さず別指標として残す。GPU utilization mean中央値はOFF/ON `19.870 / 35.750%`、max memory中央値は`7,731 / 7,793 MiB`である。
+- 残存cost: ON visual publication p50/p95/max中央値は`2.5241 / 36.1233 / 79.2889 ms`、歴史的フィールド名`cpu_upload_ms`は`1.7373 / 35.4457 / 78.6662 ms`だった。これはraw memcpy帯域ではなく`DynamicTextureProvider.set_raw_bytes_data()`のCPU-source publication call時間として読む。update-frame timerはpublication直後の`next_update_async`だけなので、後者の同期stallを隠さず別指標として残す。GPU utilization mean中央値はOFF/ON `19.870 / 35.750%`、max memory中央値は`7,731 / 7,793 MiB`である。
 - RTX反映: provider upload完了から次のKit/RTX updateまではp95中央値`44.8087 ms`、最大1 render update、pending 0だった。60-frame・6-second actual trajectoryはcapture直前の完全再発行を使い、性能runから分離した。
 - 最終回帰: release build、Phase 0 RTX、Phase 2、Phase 3 V0 OFF/ON、V0 probe `13 / 13`、V1 `8 / 8`、V2 `8 / 8`、V3 Cylinder-only既知境界`6 / 9`、V3M-A `6 / 6`、V3M-B `10 / 10`、V3M-C `17 / 17`に合格または期待どおりの境界を確認した。標準suiteは8 process・`74 / 74`件、`365.7 s`で合格した。
 - 採否: 機能・authority・統合frame・200 ms反映gateは合格したが、20本isolated publication p95 `4.7540 ms`は参照目標`1.0 ms`未達である。通常`campfire.simulator.kit`とbenchmark appはV3既定OFFを維持する。単一commandの`.\scripts\run_visual_v3_demo.ps1`だけをopt-in presetとして提供し、必要な7設定とnative buildを一括化する。Point/V0/V1競合はfail closed、Cylinder-only fallbackは維持する。
-- 停止境界: V3T-CをV3追加最適化の安全な停止点とする。Mesh collider、deformation、shrink、crack、loss、V4、Point payload、wood authority、Flowは変更しない。残存transport bottleneckは公開CPU texture upload境界として記録し、公開GPU直接更新APIの成立、Kit/Flow更新を伴う再評価、または実際の操作上の支障が確認された場合にだけV3最適化を再開する。未所有GPU pointerやprivate APIは採用しない。今後の開発日誌動画と薪状態の目視確認は、原則として明示preset `run_visual_v3_demo.ps1`を使用する。
+- 停止境界: V3T-CをV3追加最適化の安全な停止点とする。Mesh collider、deformation、shrink、crack、loss、V4、Point payload、wood authority、Flowは変更しない。残存transport bottleneckは公開DynamicTextureProvider CPU-source publication境界として記録し、公開GPU直接更新APIの成立、Kit/Flow更新を伴う再評価、または実際の操作上の支障が確認された場合にだけV3最適化を再開する。未所有GPU pointerやprivate APIは採用しない。今後の開発日誌動画と薪状態の目視確認は、原則として明示preset `run_visual_v3_demo.ps1`を使用する。
+
+## Phase V3T-D DynamicTextureProvider publication boundary
+
+### 2026-08-09: Flow実行中のCPU-source同期を原因境界として分離
+
+- 独立性: HEAD `656812f`を安全な区切りとし、production V3 moduleをimportしないprobeだけを追加した。V3T-C、Phase 6DQ、wood authority、物理式、Flow 110.0.0、Resident snapshot/checkpoint/revision/rollback、Mesh/UV/collision、Sphere既定、Point/rigid/V3既定OFFは変更していない。
+- matrix: 96×15と120×60のRGBA8 base/emissionを使い、未接続固定、未接続変更、Mesh接続・RTX描画なし、RTX Flow OFF/ON、同期済みprobe所有Warp GPU-source Flow OFF/ONを42別processで測った。各caseはwarmup 20、120 sample、3 runで、合計25,920 sample。測定中のPrim/material/URI/revision変更は0で、Prim path不変42/42、Flow active block 12/12だった。
+- 主要観測: 20本・2枚変更のCPU setter p95は未接続`1.8164 ms`、Mesh接続・RTXなし`1.8089 ms`、RTX Flow OFF`2.1147 ms`、RTX＋Flow`28.8968 ms`。GPU-sourceはsetter`0.2021 ms`、明示staging`1.4223 ms`だが、次requested RTX frameは`31.4113 ms`残った。V3T-Cの`cpu_upload_ms`約35 msはraw memcpyではなく、Flow負荷中のCPU-source publication call同期として再現した。
+- timer分離: 同じ20本・2枚変更のsource準備p95はCPU `0.2708 ms`、GPU `0.2868 ms`。GPU staging `1.4223 ms`は`warp.copy`と明示device同期を含み、setterと次requested RTX frameから分離した。したがって28.8968 msをsource生成時間や単純copy帯域とは扱わない。
+- 反証: 固定/変更は同等、11,520 Bと57,600 Bもほぼ同等、16.67 ms整数倍は4/360であった。未接続、Mesh接続だけ、RTX Flow OFFでは大tailがない。したがって画像変換量、帯域、provider固定費、通常のRTX resource使用単独は主因として支持されない。
+- API安全性: `set_bytes_data_from_gpu()`のruntime存在とdocstringを記録し、Warp 1.14.0の所有device array、公開`ptr`、`warp.copy`、`warp.synchronize_device`だけを使った。source bufferは次render update後まで保持した。一方docstringはdevice/stream/fence/multi-GPU契約を規定しないためproduction ABIは未qualifiedで、二重/三重bufferは試していない。`get_managed_resource()`は寿命契約不足により呼び出しもcacheもしていない。
+- 判定: 観測事実はFlow中CPU-source setter tailとGPU-sourceでの消失である。Flow GPU競合、scheduler、interop/fence同期は強い候補だが、正確な内部主体はprofiler/公開資料がなく未確認。次requested viewport frameは反映proxyで、全sample pixel readbackはしていない。詳細と結論表は`docs/design/wood_visual_v3_dynamic_texture_boundary.md`に固定する。
+- 回帰: release build `9.02 s`、Phase 0（cold RTX ready `162.1 s`）、標準8 process・`77 / 77`（`417.4 s`）に合格した。隔離V3T-Cは6/6 runとauthority/Flow/reflection 7/7 gate、隔離Phase 6DQは11/11 gate、revision 710、active blocks 384、58/60 unique frameを再確認した。既存V3T-C/6DQ成果物は上書きしていない。
+- 停止: 結果が良好でもproduction V3へ統合せず、V3T-Cを置換せず、既定値を変えない。GPU-sourceは将来の独立Phase候補として提案だけを残し、公開device/stream/fence/lifetime契約または実操作上の支障が確認されるまで追加最適化を再開しない。
 
 ## Phase 6DN immutable layout representation production contract
 
