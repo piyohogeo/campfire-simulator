@@ -1,0 +1,181 @@
+{
+  "schema": "campfire.phasev1.wood_visual_band_probe.v1",
+  "status": "ok",
+  "scope": {
+    "purpose": "local-state visual probe and fallback",
+    "production_candidate": false,
+    "fixed_snapshot_not_burn_trajectory": true,
+    "physical_cylinder_split": false,
+    "flow_or_collision_changed": false
+  },
+  "gates": {
+    "feature_default_off": true,
+    "v0_v1_same_camera_and_resolution": true,
+    "fixed_snapshot_images_differ": true,
+    "eight_bands_per_log": true,
+    "physical_logs_preserved": true,
+    "render_bands_have_no_physics": true,
+    "unchanged_revision_sets_zero": true,
+    "twenty_log_set_growth_measured": true
+  },
+  "four_log": {
+    "v0_profile": {
+      "revision": 1,
+      "status": "committed",
+      "total_ms": 2.0196,
+      "value_generation_ms": 1.2442,
+      "usd_set_ms": 0.7754,
+      "usd_set_count": 11,
+      "skipped_set_count": 2,
+      "notice_count": 0
+    },
+    "v1_profile": {
+      "revision": 1,
+      "status": "committed",
+      "total_ms": 11.0436,
+      "value_generation_ms": 8.9249,
+      "usd_set_ms": 2.1187,
+      "usd_set_count": 83,
+      "skipped_set_count": 14
+    },
+    "captures": {
+      "v0": {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\wood_visual_v0.png",
+        "bytes": 724794,
+        "sha256": "00574b1e3fb50ffd952caa4d6fe0f3ab2566807b258fcd6c7c027f3043d2c315"
+      },
+      "v1": {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\wood_visual_v1.png",
+        "bytes": 720950,
+        "sha256": "d3596e38c23021f59db1a3610dca36477a9fa6f758a62bccf451166f0f3cadc3"
+      }
+    },
+    "video_frames": [
+      {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\frame_0001.png",
+        "bytes": 737050,
+        "sha256": "bde68ef2e0f86c4e91833b0c83c377cee58a73104189a9239c914afaf5135d44"
+      },
+      {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\frame_0002.png",
+        "bytes": 754065,
+        "sha256": "fe30174af99699d3f449e221ea2c2f388212a0dfb8159a7ea1875663d2c3b538"
+      },
+      {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\frame_0003.png",
+        "bytes": 762973,
+        "sha256": "a85fb958719ade5322273bcde1598edf1429f1e5c0a2399592c2fb7dfad21872"
+      },
+      {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\frame_0004.png",
+        "bytes": 769611,
+        "sha256": "07d882820b180d5931a47e3b47d3693acfb445c1fae56d083ee3b3efac8e4ac9"
+      },
+      {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\frame_0005.png",
+        "bytes": 781720,
+        "sha256": "a0ae446db49bdd8679ed8bd963e51ad94179d2fd32c3589c47421115e887a64c"
+      },
+      {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\frame_0006.png",
+        "bytes": 782527,
+        "sha256": "f16ede0574cbd1e9124c5b7988f48e37df3d259bd32dbd6a59557c7a5aec6884"
+      },
+      {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\frame_0007.png",
+        "bytes": 787677,
+        "sha256": "c1e413020f2c5b1cbb189038999b674c6b48bb91d2f68ed854c3682ec1289aab"
+      },
+      {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\frame_0008.png",
+        "bytes": 798952,
+        "sha256": "67f38d0d3dc43bd8dee77c579afedab57867df98f7707f6bb13088d83f42af8a"
+      },
+      {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\frame_0009.png",
+        "bytes": 798472,
+        "sha256": "53464e1f0164676956d6eb4ddac1ebf853146b7badc50a6d8cbc56943d047ea2"
+      },
+      {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\frame_0010.png",
+        "bytes": 795280,
+        "sha256": "10d62e987406ce8c14dec2974d1e84b29bea989799add86fd8be8095f5f94273"
+      },
+      {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\frame_0011.png",
+        "bytes": 737834,
+        "sha256": "e73ac9c30d97b8c650d5389e2b72f83662ba80c3ec5c9496cb67265836605011"
+      },
+      {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\frame_0012.png",
+        "bytes": 750274,
+        "sha256": "9de4252a247729a5caa276db352419924f907dbd8a252eb521885952e5db362e"
+      },
+      {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\frame_0013.png",
+        "bytes": 759091,
+        "sha256": "77de607b4c408119c94ab27ea4c45896532eb244a22ac3cc907db28f168142b8"
+      },
+      {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\frame_0014.png",
+        "bytes": 763521,
+        "sha256": "85035f0caf22c70a8fbe75bd036579cef15e5f087c7728dc87027c179db8efec"
+      },
+      {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\frame_0015.png",
+        "bytes": 772298,
+        "sha256": "bde238a03b791908a155108dda58880eb8fda3aca683b495aa0e603ad4d98c21"
+      },
+      {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\frame_0016.png",
+        "bytes": 776618,
+        "sha256": "a9dd434729c1244708c4849f1bfe0d0f80b4b4cc48e690fc927ba9b21bb55615"
+      },
+      {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\frame_0017.png",
+        "bytes": 781030,
+        "sha256": "2fdea7d8a613096d89ccd6d5f3a8a16baa187f17644faa67d3fe66672fcde327"
+      },
+      {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\frame_0018.png",
+        "bytes": 787035,
+        "sha256": "179065fdf48742694460ba7d7501aec970a25735e741a5c55e41b622d29dd86a"
+      },
+      {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\frame_0019.png",
+        "bytes": 788503,
+        "sha256": "4519e4a8cb8599512fa0243225717e7a50aa8b38a4fcae342f8264bebd6f1bc4"
+      },
+      {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev1\\captures\\frame_0020.png",
+        "bytes": 793594,
+        "sha256": "291057f525174af75f1430a22fef96ceb262e3e80b6799cc387eed2a12b66164"
+      }
+    ]
+  },
+  "twenty_log": {
+    "timing": {
+      "samples": 80,
+      "mean_ms": 44.6917825,
+      "p95_ms": 52.4202,
+      "maximum_ms": 145.3226
+    },
+    "usd_set_timing": {
+      "samples": 80,
+      "mean_ms": 3.4491675,
+      "p95_ms": 4.8859,
+      "maximum_ms": 6.1226
+    },
+    "maximum_attribute_sets_per_revision": 481,
+    "observed_maximum_sets": 411,
+    "unchanged_revision_sets": 0,
+    "render_prim_count": 160,
+    "reference_budget_p95_ms": 1.0,
+    "production_candidate": false
+  },
+  "limitations": [
+    "V1 authors 8 render-only cylinders and 24 shader inputs per modeled log.",
+    "USD Set count grows with log count and is not the V3 production transport.",
+    "Comparison frames show one fixed diagnostic snapshot, not combustion time evolution."
+  ]
+}

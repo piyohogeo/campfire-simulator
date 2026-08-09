@@ -205,6 +205,16 @@ from .wood_visual_v0 import (
     preauthor_wood_visual_v0,
     wood_visual_uniform_from_row,
 )
+from .wood_visual_v1 import (
+    WOOD_VISUAL_V1_BAND_COUNT,
+    WOOD_VISUAL_V1_ROOT,
+    WOOD_VISUAL_V1_SETTING,
+    WoodVisualBandPublicationProfile,
+    WoodVisualBandSnapshot,
+    WoodVisualV1Consumer,
+    aggregate_model_into_visual_bands,
+    preauthor_wood_visual_v1,
+)
 from .wood import LogSpec, create_log, get_log_world_position, list_log_ids, move_log
 
 __all__ = [
@@ -283,9 +293,15 @@ __all__ = [
     "WOOD_VISUAL_V0_INPUT_NAMES",
     "WOOD_VISUAL_V0_ROOT",
     "WOOD_VISUAL_V0_SETTING",
+    "WOOD_VISUAL_V1_BAND_COUNT",
+    "WOOD_VISUAL_V1_ROOT",
+    "WOOD_VISUAL_V1_SETTING",
     "WoodVisualPublicationProfile",
     "WoodVisualUniform",
     "WoodVisualV0Consumer",
+    "WoodVisualBandPublicationProfile",
+    "WoodVisualBandSnapshot",
+    "WoodVisualV1Consumer",
     "format_resident_point_command_result",
     "published_row_from_python_model",
     "summarize_timing_ms",
@@ -324,6 +340,7 @@ __all__ = [
     "populate_phase5_scene",
     "populate_phase6_scene",
     "preauthor_wood_visual_v0",
+    "preauthor_wood_visual_v1",
     "neutral_wood_visual_uniform",
     "get_log_world_position",
     "list_log_ids",
@@ -358,6 +375,7 @@ __all__ = [
     "calibration_candidates",
     "update_flow_source",
     "wood_visual_uniform_from_row",
+    "aggregate_model_into_visual_bands",
     "temperature_adjusted_dry_wood_specific_heat_j_kg_k",
     "write_calibration_svg",
     "write_char_geometry_svg",

@@ -997,6 +997,77 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(snapshot.revision, 1)
         consumer.close()
 
+    async def test_wood_visual_v1_uses_stable_eight_band_identity(self):
+        model = campfire.app.create_cylindrical_wood_model(
+            "Log_00", 0.16, 1.8, 0.12
+        )
+        cells_per_axial = (
+            model.spec.circumferential_cells * model.spec.radial_cells
+        )
+        for axial in range(model.spec.axial_cells):
+            for local in range(cells_per_axial):
+                cell = model.cells[axial * cells_per_axial + local]
+                if cell.surface_exposure > 0.0:
+                    cell.temperature_k = 400.0 + axial * 20.0
+                    cell.char_mass_kg = cell.dry_wood_mass_kg * axial / 24.0
+        first = campfire.app.aggregate_model_into_visual_bands(model)
+        second = campfire.app.aggregate_model_into_visual_bands(model)
+        self.assertEqual(first, second)
+        self.assertEqual(len(first), 8)
+        self.assertLess(
+            first[0].surface_mean_temperature_k,
+            first[-1].surface_mean_temperature_k,
+        )
+        self.assertLess(first[0].char_mass_kg, first[-1].char_mass_kg)
+
+    async def test_wood_visual_v1_is_render_only_and_skips_same_revision(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase3_scene(stage)
+        log_ids = ("Log_00", "Log_01", "Log_02", "Log_03")
+        physical_paths = tuple(f"/World/Logs/{value}" for value in log_ids)
+        before = {
+            path: (
+                stage.GetPrimAtPath(path).HasAPI(UsdPhysics.CollisionAPI),
+                stage.GetPrimAtPath(path).HasAPI(UsdPhysics.RigidBodyAPI),
+            )
+            for path in physical_paths
+        }
+        contract = campfire.app.preauthor_wood_visual_v1(stage, log_ids)
+        self.assertFalse(contract["physical_cylinder_split"])
+        self.assertEqual(len(contract["render_prim_paths"]), 32)
+        self.assertEqual(
+            before,
+            {
+                path: (
+                    stage.GetPrimAtPath(path).HasAPI(UsdPhysics.CollisionAPI),
+                    stage.GetPrimAtPath(path).HasAPI(UsdPhysics.RigidBodyAPI),
+                )
+                for path in physical_paths
+            },
+        )
+        for path in contract["render_prim_paths"]:
+            prim = stage.GetPrimAtPath(path)
+            self.assertFalse(prim.HasAPI(UsdPhysics.CollisionAPI))
+            self.assertTrue(prim.GetAttribute("campfire:renderOnly").Get())
+        models = tuple(
+            campfire.app.create_cylindrical_wood_model(log_id, 0.16, 1.8, 0.12)
+            for log_id in log_ids
+        )
+        rows = tuple(
+            row
+            for model in models
+            for row in campfire.app.aggregate_model_into_visual_bands(model)
+        )
+        snapshot = campfire.app.WoodVisualBandSnapshot(1, log_ids, rows)
+        consumer = campfire.app.WoodVisualV1Consumer(stage, log_ids)
+        consumer.on_timeline_started()
+        first = consumer.publish(snapshot)
+        repeated = consumer.publish(snapshot)
+        self.assertEqual(first.status, "committed")
+        self.assertEqual(repeated.status, "unchanged_revision")
+        self.assertEqual(repeated.usd_set_count, 0)
+        consumer.close()
+
     async def test_resident_point_application_scene_is_explicit_and_pre_authored(self):
         stage = Usd.Stage.CreateInMemory()
         campfire.app.populate_phase3_scene(stage)

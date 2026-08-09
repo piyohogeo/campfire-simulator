@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v0">最新記録</a>
+        <a href="#phase-v1">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v0">Phase V0を読む</a>
+        <a class="button primary" href="#phase-v1">Phase V1を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V0 完了判定</strong></div>
+        <div><span>現在地</span><strong>Phase V1 完了判定</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>62 / 62 passed</strong></div>
-        <div><span>次の焦点</span><strong>Phase 6へ復帰 · V1は未承認</strong></div>
+        <div><span>テスト</span><strong>64 / 64 passed</strong></div>
+        <div><span>次の焦点</span><strong>Phase V2 · visual surface payload</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,86 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-v1" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number">V1</span>
+          <p><time datetime="2026-08-09">2026.08.09</time></p>
+          <span class="pill current">Probe only</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Phase V1 · Eight axial bands</p>
+            <h2>平均色では消えていた局所差を、<br>8 bandで可視化する。</h2>
+            <p>V0を残したまま、stableなlocal cell indexから1本を軸方向8領域へ決定論的に集約しました。元の物理Cylinder、collision、Flow sourceは変更せず、専用stageでだけ同じtransformを持つrender-only Cylinderを事前作成しています。</p>
+          </header>
+
+          <div class="capture-pair" aria-label="同じ固定snapshotを使ったPhase V0とV1の比較">
+            <figure class="capture-card">
+              <a href="assets/phasev1/wood_visual_v0.png" aria-label="Phase V0一様表示画像を原寸で開く">
+                <img src="assets/phasev1/wood_visual_v0.png" width="1280" height="720" alt="固定snapshotを薪単位の一様材質で表示したPhase V0比較画像">
+              </a>
+              <figcaption><div><strong>V0 uniform</strong><span>薪ごとの平均状態 · 局所差は見えない</span></div></figcaption>
+            </figure>
+            <figure class="capture-card">
+              <a href="assets/phasev1/wood_visual_v1.png" aria-label="Phase V1八band表示画像を原寸で開く">
+                <img src="assets/phasev1/wood_visual_v1.png" width="1280" height="720" alt="同じ固定snapshotを軸方向8bandに分け、局所赤熱や組成差を表示したPhase V1画像">
+              </a>
+              <figcaption>
+                <div><strong>V1 eight bands</strong><span>軸方向のwet／char／ash／赤熱分布を識別</span></div>
+                <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev1/wood_visual_v0_v1_fixed_snapshot.mp4" data-video-poster="assets/phasev1/wood_visual_v1.png" data-video-title="Phase V0 / V1 fixed-snapshot comparison" data-video-meta="Dedicated fixed-snapshot diagnostic · first V0, then V1 · not a combustion trajectory · 4 s · 5 fps">
+                  <span class="video-trigger-icon" aria-hidden="true"></span>
+                  <span><strong>比較動画</strong><small>4秒 · 固定snapshot</small></span>
+                </button>
+              </figcaption>
+            </figure>
+          </div>
+
+          <div class="notes-grid">
+            <section class="note">
+              <p class="note-label">Visual result</p>
+              <h3>局所性は明確に改善</h3>
+              <p>同じCamera、light、1280×720、同じ4本の固定snapshotで比較しました。V0では一様だった薪に、V1では局所赤熱、湿りの勾配、char／ash分布が軸方向に現れます。動画は燃焼時間発展ではなく、V0を2秒、V1を2秒表示する固定状態比較です。</p>
+            </section>
+            <section class="note caution">
+              <p class="note-label">Performance boundary</p>
+              <h3>20本p95 52.4202 ms</h3>
+              <p>20本では160 render Prim、最大481 attribute Set／revisionとなります。実測publicationはmean 44.6918 ms、p95 52.4202 ms、USD Set区間p95 4.8859 msでした。同一revisionはSet 0ですが、更新時コストは薪数に比例するためproduction候補ではありません。</p>
+            </section>
+          </div>
+
+          <section class="verification" aria-labelledby="phasev1-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Measured boundary</p>
+              <h3 id="phasev1-verification-title">視認性probeとして合格、transportとして不採用。</h3>
+              <p>8 / 8 gateに合格し、物理CylinderのAPIは保持、band側にphysics APIはなく、production既定はOFFです。局所表示の価値は確認できましたが、V1を拡張してV3にはしません。</p>
+              <code>.\scripts\run_phasev1_wood_visual.ps1</code>
+              <p><a href="assets/phasev1/wood_visual_band_probe.json">機械可読レポートを開く</a></p>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase V1検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Visual probe</strong><small>8 / 8 gates · same camera · fixed snapshot</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Physical contract</strong><small>original Cylinder retained · render bands have no physics</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>No-op</strong><small>unchanged revision · USD Set 0</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Regression</strong><small>8 processes · 64 / 64 · 350.1 s</small></p></div>
+            </div>
+          </section>
+
+          <div class="notes-grid">
+            <section class="note caution">
+              <p class="note-label">Known limits</p>
+              <h3>軸方向だけの粗い診断</h3>
+              <p>周方向分布、end cap、木目、亀裂は表せません。元Cylinderを不可視にするのも専用診断stageだけです。未モデル化薪へ架空の状態を与えるproduction経路は追加していません。</p>
+            </section>
+            <section class="note next">
+              <p class="note-label">Next</p>
+              <h3>V2 bulk payloadへ進む</h3>
+              <p>次はV1 geometryを拡張せず、Point payloadと独立したimmutable visual surface payloadをnative SoAから一括packし、2本720セルと20本7,200セルで順序・digest・性能を検証します。</p>
+            </section>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v0" class="section entry-section phase-six">

@@ -2524,3 +2524,15 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 合格と制限: mapping、failure、revision、OFF既定、Flow／collision／Resident回帰、4本識別、OFF/ON実測をV0範囲でqualifiedとする。表示は薪全体一様で、surface平均温度しか使わず、局所赤熱、亀裂、木目、形状変化は表さない。専用4本動画は固定snapshot表示診断であり、燃焼時間発展ではない。標準suiteは3件追加後に全8 process・`62 / 62`件が`368.8 s`で合格し、collapse coverageは`210.7 s`で完了した。開発日誌のin-app Browser確認は`file://` URL policyで拒否されたため、417個のローカル参照実在、HTMLのV0／modal属性、PNG寸法、MP4 codec・寸法・fps・duration、JSON gateを機械検査し、ON画像を直接目視した。
 - 停止点: V0で薪単位の状態差はデモ動画から読み取れるため、ここで停止する。V1の8 band、V2のsurface-cell visual payload、V3のdynamic textureは実装しない。次はPhase 6のResident／layout representation作業へ戻り、V1以降はUSD Set数と20本性能を満たす具体案を提示し、承認を得た場合だけ別Phaseで開始する。
 - 非変更: 木材権威状態、物理式、wood JSON、Resident snapshot schema、Point payload、layout representation、Flow 110.0.0、Sphere／Point Emitter、collision、Cylinder形状、checkpoint、serialization、rollback、revision、immutable snapshot、production既定は不変である。
+
+## Phase V1 軸方向8 band表示probe
+
+### 2026-08-09: 局所状態の視認性とUSD更新方式の採用可否を分離する
+
+- 境界: Phase V0 commit `49599d7`のclean stateから開始し、Phase 6DMのproduction integrationはcommit `57fe3bc`で保留したままにした。V1は既定OFFの独立visual diagnosticであり、V0、wood authority／式／JSON、Resident snapshot、Point payload／sidecar、layout representation、Flow 110.0.0、Emitter、checkpoint、revision／rollback／retry／owner lifecycle、production既定を変更しない。
+- stable aggregation: 24×12×4 cellのlocal index順を`axial → circumferential → radial`として保持し、3 axial sectionずつ8 bandへ固定した。各bandは露出cellだけを使い、温度はexternal surface area加重、moisture／dry wood／char／ashはband表面cell質量の和とする。同一modelは同じ8 `ResidentPublishedRow`を生成し、V0のdry／wet／char／ash／emission写像を再利用する。
+- render-only stage: production物理Cylinderは分割せず、専用diagnostic stageでだけ元Cylinderのlocal transformを行列としてコピーした8個のrender-only Cylinderを事前作成する。bandにはcollision、RigidBody、Flow relationを付けない。元Cylinderの不可視化もこの専用stage限定であり、live Prim追加／削除／再定義はしない。
+- lifecycle: visual専用`WoodVisualBandSnapshot`はrevision、固定log順、log-major／band-minorのrow順を検証する。consumerはowner threadとactive timelineを要求し、全uniform生成後に`Sdf.ChangeBlock`で既存shader inputだけを更新し、revisionを最後にcommitする。同一revisionはUSD Set 0、失敗時はvisual値とvisual revisionだけを戻し、木材step／Resident／Flowを巻き戻さない。
+- 実機視認性: 同じCamera、light、1280×720、同じ4本の固定snapshotをV0とV1で描画した。V0では薪全体が一様だったが、V1では局所赤熱、湿り勾配、char／ashの軸方向差を識別でき、8 / 8 gateに合格した。比較MP4はV0静止状態2秒とV1静止状態2秒を連結した表示診断で、燃焼trajectoryではない。
+- 性能境界: 20本では160 render Prim、480 shader input＋1 revisionの最大481 Set／revisionとなる。85 sampleからwarmup 5を除いたpublicationはmean `44.6918 ms`、p95 `52.4202 ms`、max `145.3226 ms`、USD Set区間p95 `4.8859 ms`で、観測最大Setは411だった。同一revisionはSet 0だが、更新コストとPrim数は薪数に比例し、1.0 ms参考予算を大幅に超える。したがってV1は視認性probe／fallbackとしてqualified、20本production transportとしてrejectedとする。
+- 回帰と次: release buildに成功し、V1 test 2件を加えた標準suiteは全8 process・`64 / 64`件が`350.1 s`で合格した。次はV1を拡張せず、Point payload／session consumer数から独立したV2 immutable visual surface payloadをnative SoAから一括packし、2本720セルと20本7,200セルの全要素順序・digest・native pack／boundary copy／digest／total性能を検証する。

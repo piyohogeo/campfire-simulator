@@ -1,5 +1,11 @@
 # Changelog
 
+- Added the independent, default-off Phase V1 eight-band visual probe without resuming or changing the held Phase 6DM layout production work.
+- Aggregated stable local wood-cell identity into eight axial surface bands and reused V0 dry/wet/char/ash/emission semantics; the physical Cylinder, collision, Flow source, authority, schemas, and production defaults remain unchanged.
+- Pre-authored 8 render-only diagnostic Cylinders per log in a dedicated stage, kept all physics APIs on the original logs, and skipped all USD writes for an unchanged revision.
+- Captured same-camera, same-light, fixed-snapshot V0/V1 images and a four-second comparison video; the evidence is explicitly not a combustion trajectory and shows materially improved axial locality.
+- Passed all 8 V1 gates and the complete 8-process regression with 64 / 64 cases in 350.1 s.
+- Measured the 20-log V1 fallback at 160 render Prims, at most 481 attribute Sets per revision, 44.6918 ms mean and 52.4202 ms p95 publication; V1 is not a production transport and does not meet the 1.0 ms reference budget.
 - Added the independent, default-off Phase V0 per-log wood visual observer after completing and committing the Phase 6DM layout audit at `57fe3bc`.
 - Derived diffuse color, roughness, and emission only from existing immutable `ResidentPublishedSnapshot` aggregate values; wood authority, Flow, Emitter, collision, shape, Point payload, layout representation, schemas, and production defaults remain unchanged.
 - Selected pre-authored per-log `UsdPreviewSurface` materials after a Kit/Flow 110 probe showed that `displayColor` cannot represent roughness or emission; live updates reuse cached attributes and never create or delete Prims.
