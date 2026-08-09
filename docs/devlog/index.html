@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v2">最新記録</a>
+        <a href="#phase-v3">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v2">Phase V2を読む</a>
+        <a class="button primary" href="#phase-v3">Phase V3を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V2 完了判定</strong></div>
+        <div><span>現在地</span><strong>Phase V3 feasibility 完了</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>66 / 66 passed</strong></div>
-        <div><span>次の焦点</span><strong>Phase V3 · dynamic texture feasibility</strong></div>
+        <div><span>判定</span><strong>Transport可 · Cylinder UV不可</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,88 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-v3" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number">V3</span>
+          <p><time datetime="2026-08-09">2026.08.09</time></p>
+          <span class="pill current">Not qualified</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Phase V3 · Dynamic texture feasibility</p>
+            <h2>固定URIの更新は届く。<br>しかしCylinderに貼る座標がない。</h2>
+            <p>Kit 110.2 / Flow 110.0.0の公開<code>DynamicTextureProvider</code>を使い、<code>dynamic://campfire_phasev3_surface_probe</code>をUsdPreviewSurfaceから参照しました。authored UV付き診断quadでは同じURIの内容更新がRTXへ反映されましたが、既存analytic <code>UsdGeom.Cylinder</code>は制御可能な<code>st</code>を公開せず、一様fallbackになります。</p>
+          </header>
+
+          <div class="capture-pair" aria-label="固定URI dynamic textureの更新前後とCylinder UV境界">
+            <figure class="capture-card">
+              <a href="assets/phasev3/dynamic_checker_initial.png" aria-label="赤青checkerの初期captureを原寸で開く">
+                <img src="assets/phasev3/dynamic_checker_initial.png" width="1280" height="720" alt="authored UV付きquadに赤青checkerが表示され、左のanalytic Cylinderは一様白色fallbackになった初期capture">
+              </a>
+              <figcaption><div><strong>Initial upload</strong><span>quad: red / blue checker · Cylinder: uniform fallback</span></div></figcaption>
+            </figure>
+            <figure class="capture-card">
+              <a href="assets/phasev3/dynamic_checker_updated.png" aria-label="緑紫checkerへ更新後のcaptureを原寸で開く">
+                <img src="assets/phasev3/dynamic_checker_updated.png" width="1280" height="720" alt="同じdynamic URIの内容だけを緑紫checkerへ更新し、quadは変化したがCylinderは一様のままのcapture">
+              </a>
+              <figcaption>
+                <div><strong>Same URI, new pixels</strong><span>quadは2 frame後に更新 · Cylinderは一様のまま</span></div>
+                <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3/dynamic_texture_feasibility.mp4" data-video-poster="assets/phasev3/dynamic_checker_updated.png" data-video-title="Phase V3 dynamic texture feasibility" data-video-meta="Static checker feasibility probe · upload / transform / reload · not a combustion trajectory · 3.5 s · 2 fps">
+                  <span class="video-trigger-icon" aria-hidden="true"></span>
+                  <span><strong>実測動画</strong><small>3.5秒 · checker probe</small></span>
+                </button>
+              </figcaption>
+            </figure>
+          </div>
+
+          <div class="notes-grid">
+            <section class="note">
+              <p class="note-label">Transport qualified</p>
+              <h3>asset pathとtopologyは固定</h3>
+              <p>CPU RGBA8はRTX materialへ反映され、初回変化はupload後2 frameで観測しました。RGBA16FのCPU uploadもAPIに受理されました。stage reloadとtimeline stop/start後も同じURIを再取得し、live Prim path集合とasset pathは不変でした。</p>
+            </section>
+            <section class="note caution">
+              <p class="note-label">Required gate failed</p>
+              <h3>analytic Cylinderにstなし</h3>
+              <p>CylinderのprimvarはdisplayColor／displayOpacityだけで、<code>UsdPrimvarReader_float2(st)</code>はfallback (0,0)を返します。したがって側面24×12とend capのsurface identityをatlasへ安定配置できず、seam、上下反転、回転後object-local対応もqualifiedにできません。</p>
+            </section>
+          </div>
+
+          <section class="verification" aria-labelledby="phasev3-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Stop boundary</p>
+              <h3 id="phasev3-verification-title">V3 integrationは実装せず停止。</h3>
+              <p>dynamic resource transportは成立しましたが、必須Cylinder UV gateが不成立です。物理CylinderをMeshへ置換せず、V4相当の形状変更、20本atlas integration、V3 feature flag、default ON化には進みません。V0とV1を既定OFFの比較／fallbackとして残します。</p>
+              <code>.\scripts\run_phasev3_dynamic_texture.ps1</code>
+              <p><a href="assets/phasev3/phasev3_final_report.json">最終機械レポートを開く</a> · <a href="assets/phasev3/dynamic_texture_feasibility.json">feasibility詳細</a> · <a href="assets/phasev3/texture_api.json">runtime API一覧</a></p>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase V3検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Final gates</strong><small>12 / 12 · required failure boundary included</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Fixed URI</strong><small>CPU RGBA8 · change observed after 2 frames</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>RGBA16F API</strong><small>CPU upload accepted · rendered quality not qualified</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Lifecycle</strong><small>reload · stop/start · stable Prim paths</small></p></div>
+              <div role="listitem"><span aria-hidden="true">×</span><p><strong>Cylinder UV</strong><small>no authored st · 360-cell mapping unavailable</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Regression</strong><small>build · Phase 0 RTX · 66 / 66 · Phase 3 OFF/ON</small></p></div>
+            </div>
+          </section>
+
+          <div class="notes-grid">
+            <section class="note caution">
+              <p class="note-label">Unqualified items</p>
+              <h3>GPU uploadとbeauty shader</h3>
+              <p>GPU pointer upload APIは存在しますが、V2 payloadから安全に所有できる公開GPU pointer sourceがないため呼び出していません。RGBA16Fはupload受理まででRTX品質比較は未実施です。state shader、beauty atlas、split atlas、20本更新性能もCylinder UV gateより後なので未実装です。</p>
+            </section>
+            <section class="note next">
+              <p class="note-label">Future choices</p>
+              <h3>次は形状契約の判断が必要</h3>
+              <p>候補は、render-only UV meshを物理Cylinderへ追従させるV4、専用shaderでprocedural local coordinateを生成する方法、またはV1 band fallbackの維持です。いずれも現行形状／shader契約を広げるため、承認なしには進めません。Phase 6DMも引き続き保留です。</p>
+            </section>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v2" class="section entry-section phase-six">

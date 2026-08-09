@@ -1,5 +1,12 @@
 # Changelog
 
+- Completed the fixed Kit/RTX Phase V3 feasibility probe and stopped before production integration because the required analytic Cylinder UV gate did not qualify.
+- Confirmed the public `omni.ui.DynamicTextureProvider` publishes a stable `dynamic://` URI; CPU RGBA8 pixel replacement reached an authored-UV RTX material after two frames while the USD asset path and live Prim paths remained unchanged through transform, timeline stop/start, and stage reload.
+- Confirmed CPU RGBA16F upload is accepted by the fixed API, while rendered RGBA16F quality and GPU-pointer upload remain unqualified; no safe public GPU pointer owner was introduced.
+- Demonstrated with paired captures that an authored-UV diagnostic quad changes from red/blue to green/magenta while the same material on the existing analytic `UsdGeom.Cylinder` remains a uniform `(0,0)` fallback.
+- Recorded the precise blocking boundary: the Cylinder exposes no controllable `st` primvar, so side, end caps, seam, inversion, and object-local 360-cell atlas mapping cannot be qualified without expanding the shape or shader contract.
+- Did not implement the 20-log atlas, V3 observer/flag, shader alternatives, Mesh substitution, V4, default changes, V0 removal, or Phase 6DM resumption; V0 and V1 remain default-off fallback/comparison paths.
+- Passed all 12 V3 final gates, the release build, Phase 0 RTX regression, the 66 / 66 eight-process suite, and paired Resident-native Phase 3 V0 OFF/ON runs through revision 1200 with exact authoritative-state SHA-256 parity, zero mass-balance error, active Flow, and zero visual errors.
 - Added Phase V2's independent `ImmutableWoodVisualSurfacePayload` and native bulk producer for temperature, moisture, char, ash, and stable local-surface identity without modifying Point payloads, sidecars, session consumers, layouts, physics, Flow, or defaults.
 - Added the audited MSVC bulk pack entry point to the existing native library; it traverses the resident SoA in log-major/local-cell order, rejects invalid values before completion, and creates no per-cell Python objects.
 - Compared every channel and identity element against an independent reference for 720 and 7,200 surface cells and proved that a two-cell permutation with the same value multiset is not hidden by aggregate statistics.

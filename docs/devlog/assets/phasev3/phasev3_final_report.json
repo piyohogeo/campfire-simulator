@@ -1,0 +1,219 @@
+{
+  "schema": "campfire.phasev3.final_report.v1",
+  "status": "ok",
+  "gates": {
+    "feasibility_completed_without_error": true,
+    "dynamic_transport_qualified": true,
+    "required_cylinder_uv_gate_failed": true,
+    "production_integration_not_implemented": true,
+    "phase0_rtx_passed": true,
+    "phase3_off_on_passed": true,
+    "authority_sha256_exact": true,
+    "mass_balance_exact": true,
+    "ignition_and_wet_delay_preserved": true,
+    "flow_active_and_fueled": true,
+    "resident_revision_preserved": true,
+    "v0_fallback_failure_free": true
+  },
+  "decision": {
+    "dynamic_transport": "qualified for authored-UV diagnostic geometry",
+    "analytic_cylinder_uv": "not qualified",
+    "v3_production_integration": "not implemented",
+    "stop_boundary": "analytic Cylinder exposes no authored controllable st primvar for stable side/end-cap surface-cell atlas mapping",
+    "v0_v1_default_off_fallbacks_retained": true,
+    "phase6dm_resumed": false
+  },
+  "feasibility": {
+    "schema": "campfire.phasev3.dynamic_texture_feasibility.v1",
+    "status": "not_qualified",
+    "kit_flow_version": "Kit 110.2 / Flow 110.0.0",
+    "transport": {
+      "uri": "dynamic://campfire_phasev3_surface_probe",
+      "cpu_rgba8": "accepted_and_rendered",
+      "cpu_rgba16f": {
+        "available": true,
+        "succeeded": true
+      },
+      "gpu_upload_api_available": true,
+      "gpu_upload_qualified": false,
+      "gpu_upload_reason": "no owned public GPU pointer source in this visual payload probe",
+      "first_observed_changed_frame": 2
+    },
+    "uv": {
+      "analytic_prim": "UsdGeom.Cylinder",
+      "authored_primvars": [
+        "displayColor",
+        "displayOpacity"
+      ],
+      "reader": "UsdPrimvarReader_float2(st)",
+      "fallback": [
+        0.0,
+        0.0
+      ],
+      "maps_360_surface_cells": false,
+      "failure_boundary": "analytic Cylinder exposes no authored controllable st primvar for stable side/end-cap surface-cell atlas mapping"
+    },
+    "gates": {
+      "dynamic_provider_available": true,
+      "fixed_dynamic_uri_preserved": true,
+      "cpu_rgba8_upload_visible": true,
+      "rgba16f_upload_accepted": true,
+      "no_live_prim_topology_change": true,
+      "stage_reload_reacquires_resource": true,
+      "analytic_cylinder_uv_maps_360_cells": false,
+      "side_cap_seam_orientation_qualified": false,
+      "object_local_mapping_after_transform": false
+    },
+    "captures": {
+      "initial": {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3\\captures\\dynamic_checker_initial.png",
+        "bytes": 706037,
+        "sha256": "5e2d83d39369d4dc7b90443448d1dd1b903e2d77a9074ff4572a523c012bc644",
+        "roi_quantized_unique_colors": 121,
+        "roi_rgb_mean": [
+          162.57417483660132,
+          165.10505310457518,
+          164.76218545751635
+        ]
+      },
+      "latency": [
+        {
+          "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3\\captures\\dynamic_checker_update_1.png",
+          "bytes": 718161,
+          "sha256": "082774d9b31ec3f6992c402886115cfb90f994ab05b34555b6e6538f0403de9a",
+          "roi_quantized_unique_colors": 122,
+          "roi_rgb_mean": [
+            162.57270833333334,
+            165.10805964052287,
+            164.77060049019607
+          ]
+        },
+        {
+          "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3\\captures\\dynamic_checker_update_2.png",
+          "bytes": 728606,
+          "sha256": "d139b60994a4c0c56a19c14522002d3610c47030378cf26dfc5402815fbd3a8b",
+          "roi_quantized_unique_colors": 106,
+          "roi_rgb_mean": [
+            163.28845179738562,
+            171.80079248366013,
+            167.96504084967322
+          ]
+        },
+        {
+          "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3\\captures\\dynamic_checker_update_3.png",
+          "bytes": 742500,
+          "sha256": "0b6e7d42d110a1f78c1fc0d04e9af11f632fb63a7c1d723239c434db4ed5b71d",
+          "roi_quantized_unique_colors": 107,
+          "roi_rgb_mean": [
+            163.15622140522876,
+            171.96670343137254,
+            168.06526552287582
+          ]
+        },
+        {
+          "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3\\captures\\dynamic_checker_update_4.png",
+          "bytes": 745062,
+          "sha256": "8f500da9e9e4365578cb70545254d6af939ce2194e04230a8ab721d46222fb85",
+          "roi_quantized_unique_colors": 108,
+          "roi_rgb_mean": [
+            163.07839460784314,
+            172.05041666666668,
+            168.1193341503268
+          ]
+        }
+      ],
+      "updated": {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3\\captures\\dynamic_checker_update_4.png",
+        "bytes": 745062,
+        "sha256": "8f500da9e9e4365578cb70545254d6af939ce2194e04230a8ab721d46222fb85",
+        "roi_quantized_unique_colors": 108,
+        "roi_rgb_mean": [
+          163.07839460784314,
+          172.05041666666668,
+          168.1193341503268
+        ]
+      },
+      "transformed": {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3\\captures\\dynamic_checker_transformed.png",
+        "bytes": 728989,
+        "sha256": "ca34640a6853bf5839b1479d5d5a1024ad57b0ca5d85f8a7fe208789eb215434",
+        "roi_quantized_unique_colors": 111,
+        "roi_rgb_mean": [
+          157.41087009803923,
+          165.88177696078432,
+          163.33879084967322
+        ]
+      },
+      "reloaded": {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3\\captures\\dynamic_checker_reloaded.png",
+        "bytes": 669966,
+        "sha256": "be2dbd201ba77b43f9ddfc1e1b2aebf4f7d9c37ad5ed3f6fa5f603a4927612af",
+        "roi_quantized_unique_colors": 116,
+        "roi_rgb_mean": [
+          162.8305637254902,
+          172.20355800653596,
+          168.164681372549
+        ]
+      },
+      "resolution": [
+        1280,
+        720
+      ]
+    },
+    "decision": {
+      "production_integration_attempted": false,
+      "production_integration_implemented": false,
+      "stop_reason": "required analytic Cylinder UV gate did not qualify; Mesh/shape/V4 expansion forbidden",
+      "v0_retained": true,
+      "v1_fallback_retained": true,
+      "feature_default_changed": false
+    }
+  },
+  "regression": {
+    "release_build": "succeeded",
+    "standard_suite": {
+      "processes": 8,
+      "passed": 66,
+      "failed": 0,
+      "seconds": 350.2
+    },
+    "phase0": {
+      "status": "ok",
+      "phase": "phase0"
+    },
+    "phase3": {
+      "authority": {
+        "dry": {
+          "off": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+          "on": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+          "equal": true
+        },
+        "wet": {
+          "off": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+          "on": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+          "equal": true
+        }
+      },
+      "resident_revision": {
+        "off": 1200,
+        "on": 1200
+      },
+      "flow_active_blocks_peak": {
+        "off": 136,
+        "on": 134
+      },
+      "flow_peak_fuel": {
+        "off": 1.0,
+        "on": 1.0
+      },
+      "v0_visual_errors": []
+    }
+  },
+  "unmeasured_after_failed_gate": [
+    "20-log texture atlas upload and revision commit",
+    "state shader versus beauty atlas versus split atlas",
+    "GPU upload from an owned visual payload resource",
+    "V3 publication, notice, and update-frame timing",
+    "V3 failure injection, retry, and observer rebind"
+  ]
+}
