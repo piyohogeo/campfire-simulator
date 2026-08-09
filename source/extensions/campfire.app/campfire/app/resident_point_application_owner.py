@@ -7,10 +7,12 @@ import threading
 from .resident_application_session import ResidentApplicationSession
 from .resident_point_scene import (
     RESIDENT_POINT_EMITTER_PATH,
+    resident_point_frame_layout_for_logs,
     resident_point_layout_for_logs,
 )
 from .resident_point_sidecar import (
     RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
+    RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME,
     ResidentPointSidecar,
 )
 from .resident_snapshot_adapter import UsdResidentSnapshotAdapter
@@ -84,7 +86,8 @@ class ResidentPointApplicationOwner:
         layout_state = {
             "revision": int(layout["revision"]),
             "origins": layout["origins"],
-            "axes": layout["axes"],
+            "axes": layout.get("axes", ()),
+            "frames": layout.get("frames", ()),
             "representation": layout.get(
                 "representation", RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY
             ),
@@ -208,7 +211,8 @@ class ResidentPointApplicationOwner:
             {
                 "revision": revision,
                 "origins": tuple(layout["origins"]),
-                "axes": tuple(layout["axes"]),
+                "axes": tuple(layout.get("axes", ())),
+                "frames": tuple(layout.get("frames", ())),
                 "representation": representation,
             }
         )
@@ -221,11 +225,24 @@ class ResidentPointApplicationOwner:
         self._require_owner()
         if not self._log_ids:
             raise RuntimeError("Resident Point owner has no application logs")
-        candidate = resident_point_layout_for_logs(stage, self._log_ids)
+        if (
+            self._layout_state["representation"]
+            == RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY
+        ):
+            candidate = resident_point_layout_for_logs(stage, self._log_ids)
+            orientation_key = "axes"
+        elif (
+            self._layout_state["representation"]
+            == RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME
+        ):
+            candidate = resident_point_frame_layout_for_logs(stage, self._log_ids)
+            orientation_key = "frames"
+        else:
+            raise ValueError("Resident Point owner layout representation is invalid")
         origins = tuple(candidate["origins"])
-        axes = tuple(candidate["axes"])
+        orientation = tuple(candidate[orientation_key])
         previous_origins = tuple(self._layout_state.get("origins", ()))
-        previous_axes = tuple(self._layout_state.get("axes", ()))
+        previous_orientation = tuple(self._layout_state.get(orientation_key, ()))
         if candidate["representation"] != self._layout_state["representation"]:
             raise ValueError(
                 "Resident Point refreshed layout representation does not match"
@@ -237,27 +254,27 @@ class ResidentPointApplicationOwner:
             )
             for current, previous in zip(origins, previous_origins)
         )
-        if origins_equal and axes == previous_axes:
+        result = {
+            "origins": origins,
+            "axes": tuple(candidate.get("axes", ())),
+            "frames": tuple(candidate.get("frames", ())),
+            "representation": candidate["representation"],
+        }
+        if origins_equal and orientation == previous_orientation:
             return {
+                **result,
                 "changed": False,
                 "revision": self._layout_state["revision"],
-                "origins": origins,
-                "axes": axes,
-                "representation": candidate["representation"],
             }
         layout = {
+            **result,
             "revision": int(self._layout_state["revision"]) + 1,
-            "origins": origins,
-            "axes": axes,
-            "representation": candidate["representation"],
         }
         revision = self.replace_layout(layout)
         return {
+            **result,
             "changed": True,
             "revision": revision,
-            "origins": origins,
-            "axes": axes,
-            "representation": candidate["representation"],
         }
 
     def observe_stage_event(self, event_name):
@@ -285,6 +302,7 @@ class ResidentPointApplicationOwner:
             "layout_revision": self._layout_state["revision"],
             "layout_origins": self._layout_state.get("origins"),
             "layout_axes": self._layout_state.get("axes"),
+            "layout_frames": self._layout_state.get("frames"),
             "layout_representation": self._layout_state["representation"],
             "log_ids": self._log_ids,
             "dynamic_translation_enabled": self._dynamic_translation_enabled,

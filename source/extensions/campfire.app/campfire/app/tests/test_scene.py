@@ -1787,6 +1787,9 @@ class TestScene(omni.kit.test.AsyncTestCase):
 
         mismatched = replace(
             payload,
+            layout_origins=(),
+            layout_axes=(),
+            layout_frames=(),
             layout_representation=(
                 campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME
             ),
@@ -1866,6 +1869,38 @@ class TestScene(omni.kit.test.AsyncTestCase):
         campfire.app.move_log(stage, log_ids[0], (0.1, -0.2, 0.3), 45.0)
         with self.assertRaisesRegex(ValueError, "cardinal XY"):
             campfire.app.resident_point_layout_for_logs(stage, log_ids)
+
+    async def test_resident_point_frame_layout_accepts_arbitrary_rigid_rotation(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase3_scene(stage)
+        log_ids = (campfire.app.PHASE3_DRY_LOG_ID, campfire.app.PHASE3_WET_LOG_ID)
+        campfire.app.move_log(stage, log_ids[0], (0.1, -0.2, 0.3), 37.0)
+
+        layout = campfire.app.resident_point_frame_layout_for_logs(stage, log_ids)
+
+        self.assertEqual(
+            layout["representation"],
+            campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME,
+        )
+        self.assertEqual(layout["axes"], ())
+        self.assertEqual(layout["origins"][0], (0.1, -0.2, 0.3))
+        self.assertEqual(len(layout["frames"]), 2)
+        frame = layout["frames"][0]
+        self.assertEqual(len(frame), 9)
+        radians = math.radians(37.0)
+        expected = (
+            math.cos(radians),
+            math.sin(radians),
+            0.0,
+            -math.sin(radians),
+            math.cos(radians),
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+        )
+        for actual, reference in zip(frame, expected):
+            self.assertAlmostEqual(actual, reference, delta=1.0e-6)
 
     async def test_resident_point_continuity_measures_complete_log_groups(self):
         stage = Usd.Stage.CreateInMemory()
@@ -2831,6 +2866,23 @@ class TestScene(omni.kit.test.AsyncTestCase):
             layout_axes=(0,),
         )
         self.assertNotEqual(payload.digest(), moved.digest())
+        rigid_moved = replace(
+            payload,
+            layout_origins=((0.0, 0.0, 0.1),),
+            layout_axes=(),
+            layout_frames=((1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0),),
+            layout_representation=(
+                campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME
+            ),
+        )
+        self.assertNotEqual(payload.digest(), rigid_moved.digest())
+        with self.assertRaisesRegex(ValueError, "requires only frames"):
+            replace(rigid_moved, layout_axes=(0,))
+        with self.assertRaisesRegex(ValueError, "frames are invalid"):
+            replace(
+                rigid_moved,
+                layout_frames=((1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 1.0),),
+            )
         with self.assertRaisesRegex(ValueError, "metadata must be paired"):
             replace(payload, layout_origins=((0.0, 0.0, 0.1),))
         with self.assertRaisesRegex(ValueError, "layout axes are invalid"):

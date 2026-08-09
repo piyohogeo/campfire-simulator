@@ -183,6 +183,7 @@ from .resident_point_scene import (
     configure_resident_point_application_scene,
     preauthor_resident_snapshot_consumers,
     resident_point_application_enabled,
+    resident_point_frame_layout_for_logs,
     resident_point_layout_for_logs,
 )
 from .resident_point_application_owner import ResidentPointApplicationOwner
@@ -446,6 +447,7 @@ __all__ = [
     "log_cabin_placements",
     "run_stack_air_comparison",
     "resident_point_application_enabled",
+    "resident_point_frame_layout_for_logs",
     "resident_point_layout_for_logs",
     "run_collapse_reignition_scenario",
     "run_nist_plywood_calibration",

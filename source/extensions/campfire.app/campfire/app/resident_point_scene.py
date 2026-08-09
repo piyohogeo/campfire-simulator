@@ -15,6 +15,7 @@ from pxr import Gf, Sdf, Usd, UsdGeom, UsdShade, Vt
 from .flow_scene import FLOW_EMITTER_PATH, FLOW_SIMULATE_PATH
 from .resident_point_sidecar import (
     RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
+    RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME,
     RESIDENT_POINT_LAYOUT_REPRESENTATIONS,
 )
 from .wood import get_log_dimensions, get_log_physics_transform
@@ -61,6 +62,71 @@ def resident_point_layout_for_logs(stage: Usd.Stage, log_ids) -> dict:
         "origins": tuple(origins),
         "axes": tuple(axes),
         "representation": RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
+    }
+
+
+def resident_point_frame_layout_for_logs(stage: Usd.Stage, log_ids) -> dict:
+    """Return one right-handed rigid frame per log from a single USD sample."""
+
+    origins = []
+    frames = []
+    for log_id in log_ids:
+        _radius_m, _length_m, axis = get_log_dimensions(stage, log_id)
+        if axis != str(UsdGeom.Tokens.x):
+            raise ValueError("Resident Point frame layout requires local-X logs")
+        transform = get_log_physics_transform(stage, log_id)
+        origin = transform.ExtractTranslation()
+        frame = []
+        for local_axis in (
+            Gf.Vec3d(1.0, 0.0, 0.0),
+            Gf.Vec3d(0.0, 1.0, 0.0),
+            Gf.Vec3d(0.0, 0.0, 1.0),
+        ):
+            transformed = transform.TransformDir(local_axis)
+            length = float(transformed.GetLength())
+            if not math.isfinite(length) or abs(length - 1.0) > 1.0e-6:
+                raise ValueError("Resident Point frame layout requires unit scale")
+            normalized = transformed / length
+            frame.extend(float(normalized[index]) for index in range(3))
+        axis_x, axis_y, axis_z = frame[0:3], frame[3:6], frame[6:9]
+
+        def dot(first, second):
+            return sum(left * right for left, right in zip(first, second))
+
+        determinant = (
+            axis_x[0] * (axis_y[1] * axis_z[2] - axis_y[2] * axis_z[1])
+            - axis_x[1] * (axis_y[0] * axis_z[2] - axis_y[2] * axis_z[0])
+            + axis_x[2] * (axis_y[0] * axis_z[1] - axis_y[1] * axis_z[0])
+        )
+        if (
+            any(
+                abs(dot(value, value) - 1.0) > 1.0e-6
+                for value in (axis_x, axis_y, axis_z)
+            )
+            or any(
+                abs(dot(first, second)) > 1.0e-6
+                for first, second in (
+                    (axis_x, axis_y),
+                    (axis_x, axis_z),
+                    (axis_y, axis_z),
+                )
+            )
+            or determinant <= 0.0
+            or abs(determinant - 1.0) > 4.0e-6
+        ):
+            raise ValueError(
+                "Resident Point frame layout requires a right-handed rigid transform"
+            )
+        origins.append(tuple(float(value) for value in origin))
+        frames.append(tuple(frame))
+    if not origins:
+        raise ValueError("Resident Point layout requires logs")
+    return {
+        "revision": 1,
+        "origins": tuple(origins),
+        "axes": (),
+        "frames": tuple(frames),
+        "representation": RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME,
     }
 
 

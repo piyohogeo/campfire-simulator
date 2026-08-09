@@ -1,0 +1,61 @@
+{
+  "schema": "campfire.phase6do.rigid_frame_producer_report.v1",
+  "phase": "phase6do",
+  "status": "qualified_default_off",
+  "gates": {
+    "passed": 15,
+    "total": 15,
+    "checks": {
+      "identity_x_positions_are_byte_identical": true,
+      "identity_x_channels_are_byte_identical": true,
+      "point_count_and_pointer_ownership_are_stable": true,
+      "arbitrary_rotation_matches_independent_reference": true,
+      "reflection_is_rejected_without_state_change": true,
+      "rigid_token_is_preauthored_and_static": true,
+      "first_rigid_snapshot_publishes_revision_one": true,
+      "injected_failure_restores_usd_and_native_state": true,
+      "exact_failed_payload_retry_commits": true,
+      "rollback_restores_revision_layout_and_representation": true,
+      "post_rollback_same_payload_republishes": true,
+      "export_open_reconstructs_matching_rigid_consumer": true,
+      "cross_representation_recovery_fails_closed": true,
+      "legacy_y_reflection_is_not_claimed_equivalent": true,
+      "wood_snapshot_flow_checkpoint_and_v3_are_unchanged": true
+    }
+  },
+  "layout": {
+    "representation": "rigid_frame_v1",
+    "point_count": 720,
+    "position_bytes": 8640,
+    "identity_sha256": "23404b58c71fc6f54caf1c65f5fe04b0b2ed1bca404f8fe513cb4c73742f068c",
+    "legacy_identity_sha256": "23404b58c71fc6f54caf1c65f5fe04b0b2ed1bca404f8fe513cb4c73742f068c",
+    "arbitrary_rotation_max_error_m": 0.0,
+    "legacy_y_equivalence": "explicitly excluded: legacy Y is a reflection"
+  },
+  "publication": {
+    "published_revision": 2,
+    "layout_revision": 2,
+    "representation": "rigid_frame_v1",
+    "payload2_digest": "61746a0269f4952624b3c6e787460cd8bb0c1dde0478b5a48ed1e6d8001240b5",
+    "attempt_count": 4,
+    "publish_count": 3,
+    "rollback_count": 1
+  },
+  "non_changes": {
+    "point_default": false,
+    "v3_default": false,
+    "flow_version": "110.0.0",
+    "wood_json": true,
+    "resident_snapshot": true,
+    "checkpoint_v1": true
+  },
+  "decision": {
+    "rigid_frame_producer_connected": true,
+    "point_default_enabled": false,
+    "live_representation_migration": false,
+    "legacy_y_byte_equivalence_claimed": false,
+    "v3tc_reopened": false,
+    "visual_evidence_preset": "scripts/run_visual_v3_demo.ps1",
+    "next_gate": "default-off rigid-frame session orchestration under the existing Point application owner"
+  }
+}

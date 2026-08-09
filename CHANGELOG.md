@@ -1,5 +1,12 @@
 # Changelog
 
+- Added Phase 6DO's default-off rigid-frame native producer and connected arbitrary right-handed log transforms to the existing immutable `ResidentPublishedSnapshot`/Point schema without changing wood authority, checkpoint v1, Flow 110.0.0, or production defaults.
+- Kept the legacy native layout export unchanged and added `campfire_native_surface_layout_frames`; legacy producers do not resolve the new symbol, while rigid producers validate finite right-handed orthonormal frames before writing scratch positions.
+- Extended immutable layout payloads and owner state with mutually exclusive cardinal axes or rigid frames; representation remains fixed for a session, participates in the retry digest, and cannot migrate live.
+- Qualified 15 / 15 real native/Kit gates: identity-X positions and channels are byte-identical, 37-degree rotation has `0.0 m` maximum reference error, reflection fails closed, and injected publication failure restores USD/native state before exact retry.
+- Verified explicit rollback/republish, export/open reconstruction, and cross-representation recovery rejection; historical legacy-Y byte equivalence remains explicitly excluded because it is a reflection.
+- Requalified the release build, the focused three-test Kit boundary, and the complete eight-process 76 / 76 standard suite in 328.8 seconds.
+- Kept Point and V3 default OFF and Sphere as the production emitter; the next independent gate is opt-in rigid-session application-owner orchestration.
 - Resumed Phase 6DM as Phase 6DN and implemented the planned immutable Point layout-representation contract without changing wood authority, `ResidentPublishedSnapshot`, checkpoint v1, native ABI, Flow 110.0.0, physics, or production defaults.
 - Added stable `legacy_cardinal_axes_v1` and reserved `rigid_frame_v1` identifiers, included representation in the immutable surface-payload digest, and pre-authored one static `campfire:layoutRepresentation` Token before stage connection.
 - Rejected payload, stage, layout-refresh, and replacement-consumer representation mismatches before attempt accounting, USD writes, or old-consumer close; publication never rewrites the stage Token and live sessions cannot switch representation.

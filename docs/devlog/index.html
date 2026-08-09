@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6dn">最新記録</a>
+        <a href="#phase-6do">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6dn">Phase 6DNを読む</a>
+        <a class="button primary" href="#phase-6do">Phase 6DOを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6DN 完了</strong></div>
+        <div><span>現在地</span><strong>Phase 6DO 完了</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>75 / 75 passed</strong></div>
-        <div><span>判定</span><strong>layout identity合格 · legacy既定 · rigid予約</strong></div>
+        <div><span>テスト</span><strong>76 / 76 passed</strong></div>
+        <div><span>判定</span><strong>rigid producer 15 / 15 · Point既定OFF</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,79 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-6do" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number compact">6DO</span>
+          <p><time datetime="2026-08-09">2026.08.09</time></p>
+          <span class="pill current">Qualified · Point default OFF</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Phase 6DO · Default-off rigid-frame producer</p>
+            <h2>任意回転の薪を、<br>既存snapshot契約へ接続。</h2>
+            <p>Phase 6DNで固定したimmutable representation契約の上に、右手系rigid frameを受け取るadditive native producerを接続しました。旧cardinal kernelは変更せず、Point、V3、production既定もOFFのままです。representationはsession生成時に固定し、live migrationは行いません。</p>
+          </header>
+
+          <figure class="capture-card wide">
+            <a href="assets/phase6/rigid_frame_producer_report.svg" aria-label="Phase 6DO rigid-frame producerレポートを開く">
+              <img src="assets/phase6/rigid_frame_producer_report.svg" alt="Phase 6DOのbyte同値、任意回転、rollback、recovery結果を示す機械レポート" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>identity-Xはbyte一致、37度回転は独立参照と一致</strong><span>15 / 15 real native + Kit · 720 points · max error 0.0 m</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3tc/visual_v3_actual.mp4" data-video-poster="assets/phasev3tc/visual_v3_actual_poster.png" data-video-title="Phase 6DO wood-state visual reference — V3 explicit preset" data-video-meta="Shared V3T-C explicit-preset recording for human wood-state context · Phase 6DO evidence is the native/Kit report and tests · rigid-frame Point remains default OFF · 60 frames · 6 seconds">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>薪状態の目視参照</strong><small>V3明示preset動画を再利用 · 6秒</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <div class="notes-grid">
+            <section class="note">
+              <p class="note-label">Transactional boundary</p>
+              <h3>scratch生成後にだけcommit</h3>
+              <p>frameからのpositionsはproducer-owned scratch arrayへ生成します。失敗注入ではUSD配列、committed revision、native positions、origin/frameを完全復元し、同じimmutable payloadをそのままretryできました。明示rollback後の再publishとexport/open復元も合格しています。</p>
+            </section>
+            <section class="note caution">
+              <p class="note-label">Compatibility boundary</p>
+              <h3>legacy-Yのbyte同値は主張しない</h3>
+              <p>歴史的legacy-Y mappingはcross-sectionを反転するため、右手系frameと同じにはできません。identity-Xだけを旧経路とのbyte-equivalence gateとし、representation変更はlive switchではなくsession停止・再構築で扱います。</p>
+            </section>
+          </div>
+
+          <section class="verification" aria-labelledby="phase6do-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Verification</p>
+              <h3 id="phase6do-verification-title">native kernelとrevision lifecycleを同時検証。</h3>
+              <p>production native DLLとreal Kitで、byte identity、37度回転、invalid frame、revision-last publication、失敗復元、exact retry、rollback、export/open、cross-representation recoveryを独立gateとして計測しました。Flow場や映像seamの既知未達を更新する試験ではありません。</p>
+              <p><a href="assets/phase6/rigid_frame_producer_report.json">機械レポート</a> · <a href="../design/resident_rigid_frame_producer.md">設計メモ</a></p>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase 6DO検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Native + Kit</strong><small>15 / 15 gates</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Legacy identity-X</strong><small>positions + 3 channels byte exact</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Rigid rotation</strong><small>37° · 720 points · 0.0 m error</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Failure lifecycle</strong><small>restore · retry · rollback · reopen</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Regression</strong><small>8 processes · 76 / 76 · 328.8 s</small></p></div>
+              <div role="listitem"><span aria-hidden="true">○</span><p><strong>Application owner</strong><small>next default-off gate</small></p></div>
+            </div>
+          </section>
+
+          <div class="notes-grid">
+            <section class="note">
+              <p class="note-label">Defaults</p>
+              <h3>Point/V3 OFF、Sphereを維持</h3>
+              <p>wood authority、物理式、JSON、Resident snapshot、checkpoint v1、Flow 110.0.0、collision、Emitter schemaは変更していません。V3T-Cもsafe stopのままで、動画は外観参照に限定します。</p>
+            </section>
+            <section class="note">
+              <p class="note-label">Next</p>
+              <h3>新規rigid sessionのowner orchestration</h3>
+              <p>次は既定OFFのままapplication ownerへ新規rigid sessionを接続し、transform refresh、stage replacement、shutdownを検証します。既存sessionを途中で変換するmigrationは実装しません。</p>
+            </section>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6dn" class="section entry-section phase-six">
@@ -2542,6 +2615,26 @@
             <p>既存cardinal producerを<code>legacy_cardinal_axes_v1</code>として明示し、将来用<code>rigid_frame_v1</code>は未接続identifierとして予約しました。payload digest、sidecar immutable state、owner shared layout state、stage接続前のToken、replacement consumerを同じ値へ固定します。payload mismatchはattempt記録とUSD write前、stage mismatch／missingはsidecar構築時、replacement mismatchは旧consumer close前に拒否します。publicationはTokenを書き換えず、live sessionのmode変更も拒否します。wood JSON、Resident snapshot、checkpoint v1、native ABI、Point配列、Flow 110.0.0、物理・revision・rollback・既定値は不変です。14/14 source gate、13/13 Kit runtime gate、release build、標準8 process・75/75件（460.9秒）に合格しました。rigid-frame publication、Point checkpoint、legacyからのlive migration、Flow場／映像のseamless recoveryは未合格です。次は既定OFFのrigid-frame producer byte／revision同値gateです。</p>
           </section>
 
+          <figure class="capture-card wide">
+            <h3 class="capture-phase-heading">Phase 6DO</h3>
+            <a href="assets/phase6/rigid_frame_producer_report.svg" aria-label="Phase 6DO default-off rigid-frame producerレポートを開く">
+              <img src="assets/phase6/rigid_frame_producer_report.svg" alt="旧identity-Xとのbyte同値、37度回転、rollback、recoveryを示すPhase 6DOレポート" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>rigid-frame producerを既存Point snapshot schemaへ接続</strong><span>15 / 15 native + Kit · Point default OFF · no live migration</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3tc/visual_v3_actual.mp4" data-video-poster="assets/phasev3tc/visual_v3_actual_poster.png" data-video-title="Phase 6DO wood-state visual reference — V3 explicit preset" data-video-meta="Shared V3T-C explicit-preset recording for wood-state inspection · Phase 6DO qualification comes from the native/Kit report and tests · Point remains default OFF · 60 frames · 6 seconds">
+                <span class="video-trigger-icon" aria-hidden="true">▶</span>
+                <span><strong>薪状態の目視参照</strong><small>V3明示preset動画を再利用 · producer gateとは別証拠</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <section class="note" aria-labelledby="phase6do-note-title">
+            <p class="note-label">2026-08-09 · Rigid transform / byte identity / rollback / recovery</p>
+            <h3 id="phase6do-note-title">任意回転を接続し、representationはsession単位で固定した。</h3>
+            <p>右手系frame用additive native kernelを追加し、legacy identity-Xではpositionsとfuel・temperature・smokeがbyte一致、37度回転・720点では独立参照との最大誤差0.0 mを確認しました。invalid reflectionはstateを変えず拒否し、失敗注入後のUSD/native復元、exact retry、rollback、republish、export/open復元、cross-representation recovery拒否も合格しました。標準suiteは8 process・76/76件（328.8秒）合格です。歴史的legacy-Yはreflectionなのでbyte同値対象から明示除外します。wood authority、snapshot、checkpoint v1、Flow 110.0.0、Point/V3既定OFF、Sphere既定は不変です。次は新規rigid sessionのapplication-owner orchestrationであり、live migrationは行いません。</p>
+          </section>
+
           <div class="story-grid">
             <section class="story-card"><span class="card-index">01</span><h3>3経路を同じ順序で移す</h3><ul><li>gas・tar・char競合反応</li><li>二次tar 773–1073 K</li><li>5生成物すべて正量</li><li>常駐p95 2.2923 ms</li></ul></section>
             <section class="story-card warm"><span class="card-index">02</span><h3>指数関数差を隠さない</h3><ul><li>ΔT 0 K・相差0</li><li>Δmass ≤ 1.39e-17 kg</li><li>出力差 ≤ 1.04e-15 kg</li><li>SHA不一致・許容差合格</li></ul></section>
@@ -2598,6 +2691,7 @@
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DL immutable layout mode</strong><small>20 / 20 · exact retry · cross-mode recovery rejected</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DM compatibility audit</strong><small>19 / 19 · 5-area minimum diff · checkpoint v1 unchanged</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DN representation contract</strong><small>14/14 source · 13/13 Kit runtime · legacy explicit · rigid reserved</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6DO rigid-frame producer</strong><small>15/15 native + Kit · 76/76 regression · rotation · rollback · reopen</small></p></div>
               <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Phase 6CI normal Point owner</strong><small>10 / 10 · 710 matched revisions · Point resync 0 · default OFF</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CJ layout + recovery</strong><small>consumer/revisionのみ合格 · Flow field復元と映像連続性は未達</small></p></div>
               <div role="listitem"><span aria-hidden="true">!</span><p><strong>Phase 6CK owner-thread commands</strong><small>command結果は合格 · 姿勢/炎の同時不連続は未解決</small></p></div>

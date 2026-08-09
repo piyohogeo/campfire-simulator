@@ -31,6 +31,45 @@ def _validated_layout_representation(value):
     return value
 
 
+def _rigid_frame_is_valid(
+    frame, tolerance=1.0e-6, determinant_tolerance=4.0e-6
+):
+    if type(frame) is not tuple or len(frame) != 9:
+        return False
+    if not all(
+        isinstance(value, (int, float)) and math.isfinite(value) for value in frame
+    ):
+        return False
+    axis_x, axis_y, axis_z = frame[0:3], frame[3:6], frame[6:9]
+
+    def dot(first, second):
+        return sum(
+            float(left) * float(right) for left, right in zip(first, second)
+        )
+
+    determinant = (
+        axis_x[0] * (axis_y[1] * axis_z[2] - axis_y[2] * axis_z[1])
+        - axis_x[1] * (axis_y[0] * axis_z[2] - axis_y[2] * axis_z[0])
+        + axis_x[2] * (axis_y[0] * axis_z[1] - axis_y[1] * axis_z[0])
+    )
+    return (
+        all(
+            abs(dot(axis, axis) - 1.0) <= tolerance
+            for axis in (axis_x, axis_y, axis_z)
+        )
+        and all(
+            abs(dot(first, second)) <= tolerance
+            for first, second in (
+                (axis_x, axis_y),
+                (axis_x, axis_z),
+                (axis_y, axis_z),
+            )
+        )
+        and determinant > 0.0
+        and abs(determinant - 1.0) <= determinant_tolerance
+    )
+
+
 @dataclass(frozen=True)
 class ImmutableSurfacePayload:
     revision: int
@@ -44,6 +83,7 @@ class ImmutableSurfacePayload:
     layout_origins: tuple = ()
     layout_axes: tuple = ()
     layout_representation: str = RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY
+    layout_frames: tuple = ()
 
     def __post_init__(self):
         if any(
@@ -72,32 +112,54 @@ class ImmutableSurfacePayload:
             for value in (self.fuels, self.temperatures, self.smokes)
         ):
             raise ValueError("Surface channel byte count is invalid")
-        if (
-            type(self.layout_origins) is not tuple
-            or type(self.layout_axes) is not tuple
+        if any(
+            type(value) is not tuple
+            for value in (
+                self.layout_origins,
+                self.layout_axes,
+                self.layout_frames,
+            )
         ):
             raise TypeError("Surface payload layout metadata must be immutable tuples")
-        _validated_layout_representation(self.layout_representation)
+        representation = _validated_layout_representation(
+            self.layout_representation
+        )
         if any(type(origin) is not tuple for origin in self.layout_origins):
             raise TypeError("Surface payload layout origins must be immutable tuples")
-        if bool(self.layout_origins) != bool(self.layout_axes):
-            raise ValueError("Surface payload layout metadata must be paired")
         if self.layout_origins:
-            if len(self.layout_origins) != len(self.layout_axes):
-                raise ValueError("Surface payload layout metadata count is invalid")
             if any(
                 len(origin) != 3
                 or not all(math.isfinite(float(component)) for component in origin)
                 for origin in self.layout_origins
             ):
                 raise ValueError("Surface payload layout origins are invalid")
-            if any(
-                isinstance(axis, bool)
-                or not isinstance(axis, int)
-                or axis not in (0, 1)
-                for axis in self.layout_axes
-            ):
-                raise ValueError("Surface payload layout axes are invalid")
+            if representation == RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY:
+                if self.layout_frames:
+                    raise ValueError(
+                        "Legacy surface payload requires only cardinal axes"
+                    )
+                if len(self.layout_origins) != len(self.layout_axes):
+                    raise ValueError(
+                        "Surface payload layout metadata must be paired"
+                    )
+                if any(
+                    isinstance(axis, bool)
+                    or not isinstance(axis, int)
+                    or axis not in (0, 1)
+                    for axis in self.layout_axes
+                ):
+                    raise ValueError("Surface payload layout axes are invalid")
+            else:
+                if self.layout_axes or len(self.layout_origins) != len(
+                    self.layout_frames
+                ):
+                    raise ValueError("Rigid surface payload requires only frames")
+                if not all(
+                    _rigid_frame_is_valid(frame) for frame in self.layout_frames
+                ):
+                    raise ValueError("Surface payload layout frames are invalid")
+        elif self.layout_axes or self.layout_frames:
+            raise ValueError("Surface payload layout metadata is incomplete")
 
     def digest(self):
         digest = hashlib.sha256()
@@ -108,6 +170,7 @@ class ImmutableSurfacePayload:
                     self.layout_origins,
                     self.layout_axes,
                     self.layout_representation,
+                    self.layout_frames,
                 )
             ).encode("ascii")
         )
@@ -119,7 +182,15 @@ class ImmutableSurfacePayload:
 class ResidentNativeSurfaceProducer:
     """Build fixed-layout Point arrays directly from one Resident native SoA."""
 
-    def __init__(self, backend, origins, axes):
+    def __init__(
+        self,
+        backend,
+        origins,
+        axes=None,
+        *,
+        frames=None,
+        layout_representation=RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
+    ):
         if backend is None:
             raise ValueError("Resident surface producer requires a backend")
         self.backend = backend
@@ -128,17 +199,29 @@ class ResidentNativeSurfaceProducer:
         self.log_count = len(backend.models)
         self.cells_per_log = len(backend.models[0].cells)
         self.published_field_count = len(RESIDENT_PUBLISHED_FIELD_NAMES)
+        self.layout_representation = _validated_layout_representation(
+            layout_representation
+        )
         self._validate_geometry()
         self.origins = self.np.asarray(origins, dtype=self.np.float64).copy(order="C")
-        self.axes = self.np.asarray(axes, dtype=self.np.uint32).copy(order="C")
         if self.origins.shape != (self.log_count, 3):
             raise ValueError("Resident Point origins must have shape (log_count, 3)")
-        if self.axes.shape != (self.log_count,):
-            raise ValueError("Resident Point axes must have shape (log_count,)")
         if not self.np.isfinite(self.origins).all():
             raise ValueError("Resident Point origins must be finite")
-        if not self.np.isin(self.axes, (0, 1)).all():
-            raise ValueError("Resident Point axes must contain only 0 or 1")
+        if self.layout_representation == RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY:
+            if frames is not None and self.np.asarray(frames).size:
+                raise ValueError("Legacy Resident Point layout cannot contain frames")
+            self.axes = self.np.asarray(axes, dtype=self.np.uint32).copy(order="C")
+            self.frames = None
+            self._validated_layout(self.origins, self.axes)
+        else:
+            if axes is not None and self.np.asarray(axes).size:
+                raise ValueError("Rigid Resident Point layout cannot contain axes")
+            self.axes = None
+            self.frames = self.np.asarray(frames, dtype=self.np.float64).copy(
+                order="C"
+            )
+            self._validated_layout(self.origins, self.frames)
         surface = backend._arrays["surface_exposure"]
         self.point_count = int(self.np.count_nonzero(surface > 0.0))
         if self.point_count <= 0:
@@ -183,6 +266,19 @@ class ResidentNativeSurfaceProducer:
             + [dp, up, fp, ctypes.c_size_t, sizep]
         )
         self.library.campfire_native_surface_layout.restype = ctypes.c_int32
+        if (
+            self.layout_representation
+            == RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME
+        ):
+            self.library.campfire_native_surface_layout_frames.argtypes = (
+                [dp]
+                + [ctypes.c_size_t] * 5
+                + [ctypes.c_double] * 2
+                + [dp, dp, fp, ctypes.c_size_t, sizep]
+            )
+            self.library.campfire_native_surface_layout_frames.restype = (
+                ctypes.c_int32
+            )
         self.library.campfire_native_surface_channels.argtypes = (
             [dp, dp, dp]
             + [ctypes.c_size_t] * 5
@@ -199,26 +295,45 @@ class ResidentNativeSurfaceProducer:
             "smokes": int(self.smokes.ctypes.data),
         }
 
-    def _validated_layout(self, origins, axes):
+    def _validated_layout(self, origins, orientation):
         origins = self.np.asarray(origins, dtype=self.np.float64)
-        axes = self.np.asarray(axes, dtype=self.np.uint32)
         if origins.shape != (self.log_count, 3):
             raise ValueError("Resident Point origins must have shape (log_count, 3)")
-        if axes.shape != (self.log_count,):
-            raise ValueError("Resident Point axes must have shape (log_count,)")
         if not self.np.isfinite(origins).all():
             raise ValueError("Resident Point origins must be finite")
-        if not self.np.isin(axes, (0, 1)).all():
-            raise ValueError("Resident Point axes must contain only 0 or 1")
-        return origins, axes
+        if self.layout_representation == RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY:
+            orientation = self.np.asarray(orientation, dtype=self.np.uint32)
+            if orientation.shape != (self.log_count,):
+                raise ValueError("Resident Point axes must have shape (log_count,)")
+            if not self.np.isin(orientation, (0, 1)).all():
+                raise ValueError("Resident Point axes must contain only 0 or 1")
+        else:
+            orientation = self.np.asarray(orientation, dtype=self.np.float64)
+            if orientation.shape != (self.log_count, 9):
+                raise ValueError(
+                    "Resident Point frames must have shape (log_count, 9)"
+                )
+            immutable_frames = tuple(
+                tuple(float(component) for component in frame)
+                for frame in orientation
+            )
+            if not all(_rigid_frame_is_valid(frame) for frame in immutable_frames):
+                raise ValueError(
+                    "Resident Point frames must be right-handed and orthonormal"
+                )
+        return origins, orientation
 
-    def _build_layout_into(self, origins, axes, positions):
+    @property
+    def orientation(self):
+        return self.axes if self.axes is not None else self.frames
+
+    def _build_layout_into(self, origins, orientation, positions):
         dp = ctypes.POINTER(ctypes.c_double)
         fp = ctypes.POINTER(ctypes.c_float)
         up = ctypes.POINTER(ctypes.c_uint32)
         count = ctypes.c_size_t()
         spec = self.backend.models[0].spec
-        result = self.library.campfire_native_surface_layout(
+        arguments = (
             self.backend._arrays["surface_exposure"].ctypes.data_as(dp),
             self.log_count,
             self.cells_per_log,
@@ -228,11 +343,23 @@ class ResidentNativeSurfaceProducer:
             spec.radius_m,
             spec.length_m,
             origins.ctypes.data_as(dp),
-            axes.ctypes.data_as(up),
-            positions.ctypes.data_as(fp),
-            self.point_count,
-            ctypes.byref(count),
         )
+        if self.layout_representation == RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY:
+            result = self.library.campfire_native_surface_layout(
+                *arguments,
+                orientation.ctypes.data_as(up),
+                positions.ctypes.data_as(fp),
+                self.point_count,
+                ctypes.byref(count),
+            )
+        else:
+            result = self.library.campfire_native_surface_layout_frames(
+                *arguments,
+                orientation.ctypes.data_as(dp),
+                positions.ctypes.data_as(fp),
+                self.point_count,
+                ctypes.byref(count),
+            )
         if result != 0 or count.value != self.point_count:
             raise RuntimeError(
                 f"Native surface layout failed: code={result}, points={count.value}"
@@ -240,37 +367,48 @@ class ResidentNativeSurfaceProducer:
         return count.value
 
     def build_layout(self):
-        return self._build_layout_into(self.origins, self.axes, self.positions)
+        return self._build_layout_into(
+            self.origins, self.orientation, self.positions
+        )
 
-    def build_layout_candidate(self, origins, axes):
+    def build_layout_candidate(self, origins, orientation):
         """Build an immutable candidate without mutating the committed arrays."""
 
-        origins, axes = self._validated_layout(origins, axes)
+        origins, orientation = self._validated_layout(origins, orientation)
         candidate = self.np.empty_like(self.positions)
-        self._build_layout_into(origins, axes, candidate)
-        return {
+        self._build_layout_into(origins, orientation, candidate)
+        result = {
             "origins": tuple(
                 tuple(float(component) for component in origin) for origin in origins
             ),
-            "axes": tuple(int(axis) for axis in axes),
             "positions": candidate.tobytes(order="C"),
         }
+        if self.layout_representation == RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY:
+            result["axes"] = tuple(int(axis) for axis in orientation)
+            result["frames"] = ()
+        else:
+            result["axes"] = ()
+            result["frames"] = tuple(
+                tuple(float(component) for component in frame)
+                for frame in orientation
+            )
+        return result
 
     def layout_origins_changed(self, origins, tolerance=1.0e-9):
         """Check translations without allocating or running the native layout kernel."""
 
-        origins, _ = self._validated_layout(origins, self.axes)
+        origins, _ = self._validated_layout(origins, self.orientation)
         return bool(self.np.any(self.np.abs(origins - self.origins) > tolerance))
 
-    def commit_layout_candidate(self, origins, axes, positions):
+    def commit_layout_candidate(self, origins, orientation, positions):
         """Commit a previously built candidate without rerunning the native kernel."""
 
-        origins, axes = self._validated_layout(origins, axes)
+        origins, orientation = self._validated_layout(origins, orientation)
         converted = self.np.frombuffer(positions, dtype=self.np.float32)
         if converted.size != self.positions.size:
             raise ValueError("Resident Point candidate position count is invalid")
         self.origins[:] = origins
-        self.axes[:] = axes
+        self.orientation[:] = orientation
         self.positions[:] = converted.reshape(self.positions.shape)
 
     def build_channels(self):
@@ -313,6 +451,12 @@ class ResidentNativeSurfaceProducer:
 class ResidentPointSidecar:
     """Publish one immutable native surface payload beside a primary snapshot."""
 
+    def _producer_orientation(self):
+        orientation = getattr(self._producer, "orientation", None)
+        if orientation is None:
+            orientation = self._producer.axes
+        return orientation
+
     def __init__(
         self,
         backend,
@@ -321,6 +465,7 @@ class ResidentPointSidecar:
         stage_provider,
         origins=None,
         axes=None,
+        frames=None,
         write_observer=None,
         *,
         initial_revision=0,
@@ -341,7 +486,8 @@ class ResidentPointSidecar:
             if isinstance(layout_revision, bool) or not isinstance(layout_revision, int):
                 raise ValueError("Resident Point layout revision must be an integer")
             origins = initial_layout["origins"]
-            axes = initial_layout["axes"]
+            axes = initial_layout.get("axes", ())
+            frames = initial_layout.get("frames", ())
             initial_representation = initial_layout.get(
                 "representation", layout_representation
             )
@@ -352,8 +498,17 @@ class ResidentPointSidecar:
         else:
             layout_revision = 1
         self._producer = producer or ResidentNativeSurfaceProducer(
-            backend, origins, axes
+            backend,
+            origins,
+            axes,
+            frames=frames,
+            layout_representation=layout_representation,
         )
+        producer_representation = getattr(
+            self._producer, "layout_representation", layout_representation
+        )
+        if producer_representation != layout_representation:
+            raise ValueError("Resident Point producer representation does not match")
         self._backend = backend
         self._stage = stage
         self._stage_provider = stage_provider
@@ -457,6 +612,7 @@ class ResidentPointSidecar:
         positions = self._positions
         layout_origins = ()
         layout_axes = ()
+        layout_frames = ()
         if self._translation_provider is not None:
             provider_start = time.perf_counter_ns()
             origins = self._translation_provider()
@@ -471,7 +627,7 @@ class ResidentPointSidecar:
             if build_candidate:
                 candidate_start = time.perf_counter_ns()
                 candidate = self._producer.build_layout_candidate(
-                    origins, self._producer.axes
+                    origins, self._producer_orientation()
                 )
                 self._live_translation_timing_ms["candidate_build"].append(
                     (time.perf_counter_ns() - candidate_start) / 1_000_000.0
@@ -488,6 +644,7 @@ class ResidentPointSidecar:
                 positions = candidate["positions"]
                 layout_origins = candidate["origins"]
                 layout_axes = candidate["axes"]
+                layout_frames = candidate.get("frames", ())
                 self._live_translation_prepare_count += 1
             else:
                 self._live_translation_unchanged_count += 1
@@ -503,6 +660,7 @@ class ResidentPointSidecar:
             layout_origins=layout_origins,
             layout_axes=layout_axes,
             layout_representation=self._layout_representation,
+            layout_frames=layout_frames,
         )
         self._prepare_count += 1
         return payload
@@ -575,7 +733,7 @@ class ResidentPointSidecar:
             "last_snapshot": self._last_snapshot,
             "values": previous,
             "origins": self._producer.origins.copy(order="C"),
-            "axes": self._producer.axes.copy(order="C"),
+            "orientation": self._producer_orientation().copy(order="C"),
             "positions": self._positions,
         }
         write_index = 0
@@ -668,7 +826,14 @@ class ResidentPointSidecar:
         if has_layout:
             producer_commit_start = time.perf_counter_ns()
             self._producer.commit_layout_candidate(
-                payload.layout_origins, payload.layout_axes, payload.positions
+                payload.layout_origins,
+                (
+                    payload.layout_axes
+                    if self._layout_representation
+                    == RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY
+                    else payload.layout_frames
+                ),
+                payload.positions,
             )
             self._positions = payload.positions
             self._layout_revision = payload.layout_revision
@@ -692,7 +857,7 @@ class ResidentPointSidecar:
                 self._attributes[name].Set(value)
         self._producer.commit_layout_candidate(
             previous_state["origins"],
-            previous_state["axes"],
+            previous_state["orientation"],
             previous_state["positions"],
         )
         self._positions = previous_state["positions"]
@@ -711,17 +876,24 @@ class ResidentPointSidecar:
         if layout_state is None:
             return
         layout_state.clear()
-        layout_state.update(
-            {
-                "revision": self._layout_revision,
-                "origins": tuple(
-                    tuple(float(component) for component in origin)
-                    for origin in self._producer.origins
-                ),
-                "axes": tuple(int(axis) for axis in self._producer.axes),
-                "representation": self._layout_representation,
-            }
-        )
+        value = {
+            "revision": self._layout_revision,
+            "origins": tuple(
+                tuple(float(component) for component in origin)
+                for origin in self._producer.origins
+            ),
+            "representation": self._layout_representation,
+        }
+        if self._layout_representation == RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY:
+            value["axes"] = tuple(int(axis) for axis in self._producer.axes)
+            value["frames"] = ()
+        else:
+            value["axes"] = ()
+            value["frames"] = tuple(
+                tuple(float(component) for component in frame)
+                for frame in self._producer.frames
+            )
+        layout_state.update(value)
 
     def replace_layout(self, layout):
         """Transactionally publish a stopped layout without advancing snapshot revision."""
@@ -737,15 +909,31 @@ class ResidentPointSidecar:
         origins = self._producer.np.asarray(
             layout["origins"], dtype=self._producer.np.float64
         )
-        axes = self._producer.np.asarray(layout["axes"], dtype=self._producer.np.uint32)
+        orientation_key = (
+            "axes"
+            if self._layout_representation
+            == RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY
+            else "frames"
+        )
+        orientation_dtype = (
+            self._producer.np.uint32
+            if orientation_key == "axes"
+            else self._producer.np.float64
+        )
+        orientation = self._producer.np.asarray(
+            layout[orientation_key], dtype=orientation_dtype
+        )
         if revision <= self._layout_revision:
             raise ValueError("Point layout revision must increase")
-        if origins.shape != self._producer.origins.shape or axes.shape != self._producer.axes.shape:
+        if (
+            origins.shape != self._producer.origins.shape
+            or orientation.shape != self._producer_orientation().shape
+        ):
             raise ValueError("Point layout shape changed structurally")
         if not self._producer.np.isfinite(origins).all():
             raise ValueError("Point layout origins must be finite")
         previous_origins = self._producer.origins.copy(order="C")
-        previous_axes = self._producer.axes.copy(order="C")
+        previous_orientation = self._producer_orientation().copy(order="C")
         previous_positions = self._positions
         previous_layout_revision = self._layout_revision
         previous_committed_layout_revision = self._committed_layout_revision
@@ -755,7 +943,7 @@ class ResidentPointSidecar:
         block.__enter__()
         try:
             self._producer.origins[:] = origins
-            self._producer.axes[:] = axes
+            self._producer_orientation()[:] = orientation
             self._producer.build_layout()
             candidate_positions = self._producer.positions.tobytes(order="C")
             converted_positions = Vt.Vec3fArray.FromNumpy(
@@ -769,7 +957,7 @@ class ResidentPointSidecar:
                 raise RuntimeError("Point sidecar layout revision Set failed")
         except Exception:
             self._producer.origins[:] = previous_origins
-            self._producer.axes[:] = previous_axes
+            self._producer_orientation()[:] = previous_orientation
             self._producer.build_layout()
             self._positions = previous_positions
             self._layout_revision = previous_layout_revision

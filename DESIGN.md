@@ -2641,3 +2641,17 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - qualification: source／contract監査`14 / 14`、real-Kit anonymous-USD runtime probe `13 / 13`に合格した。legacy Tokenの型／値、matching publish、zero-attempt mismatch、missing/mismatch stage、pre-close replacement guard、matching replacement、clean closeを確認した。release buildは合格し、標準suiteは全8 process・`75 / 75`件を`460.9 s`で合格した。
 - 実機回帰の注意: portable test suiteは全合格した。一方、portable runnerを外して直接起動した追加Phase 6CJ診断はRTX cold path後のstage再接続でFabricが`pointTemperatures`を一時的に見失いsummary未生成となったため、Phase 6DNの合格根拠には含めない。これは既知のFlow場／映像seam未合格境界を更新せず、representation guardの成功をもってseamless continuityを主張しない。
 - 次: 次の独立gateは既定OFFのrigid-frame producerを同じPoint schemaへ接続し、legacy cardinal時のbyte／revision同値、任意rigid rotation、failure/retry/recoveryを検証する。V3T-Cは再開せず、薪状態の目視確認には明示V3 presetを使用する。
+
+## Phase 6DO default-off rigid-frame producer
+
+### 2026-08-09: 任意rigid rotationを既存snapshot schemaへ接続
+
+- production差分: 既存`campfire_native_surface_layout`を変更せず、有限・右手系・正規直交frameを受け取るadditive export `campfire_native_surface_layout_frames`を追加した。`ResidentNativeSurfaceProducer`はsession生成時に固定したrepresentationで旧axisまたは新frame kernelを選ぶ。legacy pathは新symbolを解決しないため、既存legacy-only DLLとの境界も維持する。
+- authority/lifecycle: `ImmutableSurfacePayload`へ末尾既定値の`layout_frames`を追加し、legacyはorigins+axesのみ、rigidはorigins+framesのみを許す。representationとframeはdigestへ含める。candidateはscratch arrayで生成し、USD transaction成功後だけnative positionとlayout metadataをcommitする。live representation switchは禁止し、変更にはsession／consumerの停止・再構築を要する。
+- USD transform接続: log physics transformを1 sampleで読み、originとlocal X/Y/Z world directionから右手系frameを作る。非unit scale、reflection、非有限値はpublication前にfail closedとする。Point stage Tokenは接続前authoringのまま静的であり、セル単位Prim、Point payload schema、Emitter属性集合は変えない。
+- 実測: production native DLLとreal Kitを使うPhase固有probeは`15 / 15` gate合格。identity-Xのlegacy/rigid positions SHA-256は一致し、fuel/temperature/smokeもbyte一致した。37度回転・720点は独立float32参照との最大誤差`0.0 m`、pointerは安定した。reflectionはcommitted stateを変えず拒否した。
+- 回帰: release build、focused Kit `3 / 3`、標準suite全8 process・`76 / 76`件を`328.8 s`で合格した。初回suiteで新規frame tolerance、旧fake producer返却値、意図的mismatch payloadの3件を検出し、production契約を緩めずtest互換を調整して再実行した。
+- revision/recovery: rigid snapshot revision 1、layout revision 2の失敗注入、USD/native復元、同一payload retry、明示rollback、同一payload再publish、export/open復元、cross-representation recovery拒否を確認した。最終attempt/publish/rollback countは`4 / 3 / 1`である。
+- 互換境界: legacy-Yはcross-sectionを反転する歴史的mappingなので、右手系rigid frameとのbyte同値を主張しない。identity-Xだけを旧経路byte-equivalence gateとする。この差は許容誤差ではなくreflection契約である。
+- 非変更: wood authority、物理式、wood JSON、`ResidentPublishedSnapshot`、checkpoint v1、Flow 110.0.0、Sphere/Point Emitter schema、collision、revision-last、rollback/retry、V3T-C safe stop、production既定は不変。Point/V3は既定OFFでSphereがproduction既定である。
+- 次: 新規生成したrigid sessionを既存application ownerへ既定OFFで接続し、transform refresh、stage replacement、shutdownを検証する。live migrationは実装しない。V3動画は引き続き明示presetを外観参照に使い、Phase 6DOの合格根拠は機械reportとtestとする。

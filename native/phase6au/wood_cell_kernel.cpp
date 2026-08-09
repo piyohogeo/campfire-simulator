@@ -2,6 +2,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <limits>
 
 #if defined(_WIN32) && defined(CAMPFIRE_NATIVE_EXPORTS)
 #define CAMPFIRE_API extern "C" __declspec(dllexport)
