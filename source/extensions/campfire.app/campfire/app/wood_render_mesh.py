@@ -17,8 +17,8 @@ WOOD_ATLAS_TILE_COLUMNS = 5
 WOOD_ATLAS_TILE_ROWS = 4
 WOOD_ATLAS_CELL_COLUMNS = 24
 WOOD_ATLAS_CELL_ROWS = 15
-WOOD_ATLAS_CELL_STRIDE_PX = 4
-WOOD_ATLAS_GUTTER_PX = 1
+WOOD_ATLAS_CELL_STRIDE_PX = 1
+WOOD_ATLAS_GUTTER_PX = 0
 WOOD_ATLAS_WIDTH_PX = (
     WOOD_ATLAS_TILE_COLUMNS * WOOD_ATLAS_CELL_COLUMNS * WOOD_ATLAS_CELL_STRIDE_PX
 )
@@ -35,6 +35,63 @@ class WoodRenderMeshData:
     face_surface_indices: tuple[int, ...]
     face_varying_surface_indices: tuple[int, ...]
     face_varying_uvs: tuple
+
+
+@dataclass(frozen=True)
+class WoodAtlasDescriptor:
+    """Session-stable atlas layout authored before stage connection."""
+
+    render_log_count: int
+    tile_columns: int
+    tile_rows: int
+    cell_stride_px: int = WOOD_ATLAS_CELL_STRIDE_PX
+
+    def __post_init__(self):
+        if not 1 <= self.render_log_count <= WOOD_RENDER_MAX_LOGS:
+            raise ValueError("Wood atlas requires 1..20 render logs")
+        if not 1 <= self.tile_columns <= WOOD_ATLAS_TILE_COLUMNS:
+            raise ValueError("Wood atlas tile column count is invalid")
+        if self.tile_rows <= 0:
+            raise ValueError("Wood atlas tile row count is invalid")
+        if self.tile_columns * self.tile_rows < self.render_log_count:
+            raise ValueError("Wood atlas does not contain every render log slot")
+        if self.cell_stride_px <= 0:
+            raise ValueError("Wood atlas cell stride must be positive")
+
+    @property
+    def slot_capacity(self) -> int:
+        return self.tile_columns * self.tile_rows
+
+    @property
+    def width_px(self) -> int:
+        return self.tile_columns * WOOD_ATLAS_CELL_COLUMNS * self.cell_stride_px
+
+    @property
+    def height_px(self) -> int:
+        return self.tile_rows * WOOD_ATLAS_CELL_ROWS * self.cell_stride_px
+
+    @property
+    def bytes_per_rgba8_atlas(self) -> int:
+        return self.width_px * self.height_px * 4
+
+
+def compact_atlas_descriptor(
+    render_log_count: int, *, cell_stride_px: int = WOOD_ATLAS_CELL_STRIDE_PX
+) -> WoodAtlasDescriptor:
+    """Return the smallest stable row-major descriptor with at most five columns."""
+
+    render_log_count = int(render_log_count)
+    tile_columns = min(WOOD_ATLAS_TILE_COLUMNS, render_log_count)
+    tile_rows = int(math.ceil(render_log_count / tile_columns))
+    return WoodAtlasDescriptor(
+        render_log_count,
+        tile_columns,
+        tile_rows,
+        int(cell_stride_px),
+    )
+
+
+WOOD_ATLAS_MAX_DESCRIPTOR = compact_atlas_descriptor(WOOD_RENDER_MAX_LOGS)
 
 
 def local_cell_index(axial: int, circumferential: int, radial: int) -> int:
@@ -61,41 +118,48 @@ def surface_cell_ordinal_map() -> dict[int, int]:
     return result
 
 
-def atlas_uv(log_slot: int, local_surface_index: int) -> Gf.Vec2f:
-    """Return the centre of one fixed, guttered surface-state texel."""
+def atlas_uv(
+    log_slot: int,
+    local_surface_index: int,
+    descriptor: WoodAtlasDescriptor | None = None,
+) -> Gf.Vec2f:
+    """Return the centre of one immutable surface-state texel."""
 
-    if not 0 <= log_slot < WOOD_RENDER_MAX_LOGS:
-        raise ValueError("Wood render log slot is outside the 20-log atlas")
+    descriptor = WOOD_ATLAS_MAX_DESCRIPTOR if descriptor is None else descriptor
+    if not 0 <= log_slot < descriptor.render_log_count:
+        raise ValueError("Wood render log slot is outside the atlas descriptor")
     if not 0 <= local_surface_index < WOOD_SURFACE_CELLS_PER_LOG:
         raise ValueError("Wood render surface index is outside 0..359")
-    tile_x = log_slot % WOOD_ATLAS_TILE_COLUMNS
-    tile_y = log_slot // WOOD_ATLAS_TILE_COLUMNS
+    tile_x = log_slot % descriptor.tile_columns
+    tile_y = log_slot // descriptor.tile_columns
     cell_x = local_surface_index % WOOD_ATLAS_CELL_COLUMNS
     cell_y = local_surface_index // WOOD_ATLAS_CELL_COLUMNS
     pixel_x = (
-        (tile_x * WOOD_ATLAS_CELL_COLUMNS + cell_x) * WOOD_ATLAS_CELL_STRIDE_PX
-        + WOOD_ATLAS_GUTTER_PX
-        + 1.0
+        (tile_x * WOOD_ATLAS_CELL_COLUMNS + cell_x) * descriptor.cell_stride_px
+        + 0.5 * descriptor.cell_stride_px
     )
     pixel_y = (
-        (tile_y * WOOD_ATLAS_CELL_ROWS + cell_y) * WOOD_ATLAS_CELL_STRIDE_PX
-        + WOOD_ATLAS_GUTTER_PX
-        + 1.0
+        (tile_y * WOOD_ATLAS_CELL_ROWS + cell_y) * descriptor.cell_stride_px
+        + 0.5 * descriptor.cell_stride_px
     )
     return Gf.Vec2f(
-        pixel_x / WOOD_ATLAS_WIDTH_PX,
-        pixel_y / WOOD_ATLAS_HEIGHT_PX,
+        pixel_x / descriptor.width_px,
+        pixel_y / descriptor.height_px,
     )
 
 
 def build_wood_render_mesh_data(
-    radius_m: float, length_m: float, log_slot: int
+    radius_m: float,
+    length_m: float,
+    log_slot: int,
+    descriptor: WoodAtlasDescriptor | None = None,
 ) -> WoodRenderMeshData:
     """Build fixed topology for 24x12x4 surface state, local X axial."""
 
     if radius_m <= 0.0 or length_m <= 0.0:
         raise ValueError("Wood render dimensions must be positive")
-    atlas_uv(log_slot, 0)
+    descriptor = WOOD_ATLAS_MAX_DESCRIPTOR if descriptor is None else descriptor
+    atlas_uv(log_slot, 0, descriptor)
     ordinal_by_cell = surface_cell_ordinal_map()
     points = []
     counts = []
@@ -168,7 +232,7 @@ def build_wood_render_mesh_data(
         for _ in range(count)
     )
     face_varying_uvs = tuple(
-        atlas_uv(log_slot, surface_index)
+        atlas_uv(log_slot, surface_index, descriptor)
         for surface_index in face_varying_surface_indices
     )
     if len(set(face_surface_indices)) != WOOD_SURFACE_CELLS_PER_LOG:
@@ -184,11 +248,17 @@ def build_wood_render_mesh_data(
 
 
 def author_wood_render_mesh(
-    mesh: UsdGeom.Mesh, radius_m: float, length_m: float, log_slot: int
+    mesh: UsdGeom.Mesh,
+    radius_m: float,
+    length_m: float,
+    log_slot: int,
+    descriptor: WoodAtlasDescriptor | None = None,
 ) -> WoodRenderMeshData:
     """Author topology and immutable face-varying lookup primvars once."""
 
-    data = build_wood_render_mesh_data(radius_m, length_m, log_slot)
+    data = build_wood_render_mesh_data(
+        radius_m, length_m, log_slot, descriptor=descriptor
+    )
     mesh.CreatePointsAttr(Vt.Vec3fArray(data.points))
     mesh.CreateFaceVertexCountsAttr(Vt.IntArray(data.face_vertex_counts))
     mesh.CreateFaceVertexIndicesAttr(Vt.IntArray(data.face_vertex_indices))
@@ -204,3 +274,26 @@ def author_wood_render_mesh(
     )
     surface_index.Set(Vt.IntArray(data.face_surface_indices))
     return data
+
+
+def author_wood_render_mesh_uv(
+    mesh: UsdGeom.Mesh,
+    log_slot: int,
+    descriptor: WoodAtlasDescriptor,
+) -> tuple:
+    """Re-author only immutable lookup UVs before a stage is connected."""
+
+    counts = tuple(int(value) for value in mesh.GetFaceVertexCountsAttr().Get())
+    primvars = UsdGeom.PrimvarsAPI(mesh.GetPrim())
+    surface_indices = tuple(
+        int(value) for value in primvars.GetPrimvar("surfaceIndex").Get()
+    )
+    if len(counts) != len(surface_indices):
+        raise ValueError("Wood render Mesh surface identity is malformed")
+    face_varying_uvs = tuple(
+        atlas_uv(log_slot, surface_index, descriptor)
+        for count, surface_index in zip(counts, surface_indices)
+        for _ in range(count)
+    )
+    primvars.GetPrimvar("st").Set(Vt.Vec2fArray(face_varying_uvs))
+    return face_varying_uvs

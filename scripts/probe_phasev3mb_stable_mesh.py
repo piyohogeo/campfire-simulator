@@ -34,8 +34,9 @@ def _arguments():
 
 
 def _surface_id_atlas():
-    height = campfire.app.WOOD_ATLAS_HEIGHT_PX
-    width = campfire.app.WOOD_ATLAS_WIDTH_PX
+    descriptor = campfire.app.WOOD_ATLAS_MAX_DESCRIPTOR
+    height = descriptor.height_px
+    width = descriptor.width_px
     image = np.zeros((height, width, 4), dtype=np.uint8)
     image[..., 3] = 255
     bases = np.array(
@@ -43,13 +44,13 @@ def _surface_id_atlas():
         dtype=np.uint8,
     )
     for log_slot in range(campfire.app.WOOD_RENDER_MAX_LOGS):
-        tile_x = log_slot % 5
-        tile_y = log_slot // 5
+        tile_x = log_slot % descriptor.tile_columns
+        tile_y = log_slot // descriptor.tile_columns
         for surface_index in range(campfire.app.WOOD_SURFACE_CELLS_PER_LOG):
             cell_x = surface_index % 24
             cell_y = surface_index // 24
-            x = (tile_x * 24 + cell_x) * 4
-            y = (tile_y * 15 + cell_y) * 4
+            x = (tile_x * 24 + cell_x) * descriptor.cell_stride_px
+            y = (tile_y * 15 + cell_y) * descriptor.cell_stride_px
             base = bases[log_slot % len(bases)].astype(np.int16)
             checker = 30 if (cell_x + cell_y) % 2 else -20
             identity = np.array(
@@ -57,7 +58,11 @@ def _surface_id_atlas():
                 dtype=np.int16,
             )
             color = np.clip(base + checker + identity, 0, 255).astype(np.uint8)
-            image[y + 1 : y + 3, x + 1 : x + 3, :3] = color
+            image[
+                y : y + descriptor.cell_stride_px,
+                x : x + descriptor.cell_stride_px,
+                :3,
+            ] = color
     return image
 
 
@@ -389,8 +394,8 @@ async def _run(arguments):
                 "logs": 20,
                 "surface_cells_per_log": 360,
                 "unique_samples": len(all_uvs),
-                "cell_stride_px": 4,
-                "gutter_px": 1,
+                "cell_stride_px": campfire.app.WOOD_ATLAS_MAX_DESCRIPTOR.cell_stride_px,
+                "gutter_px": 0,
                 "uri": TEXTURE_URI,
             },
             "physics_contract": physics_contract,

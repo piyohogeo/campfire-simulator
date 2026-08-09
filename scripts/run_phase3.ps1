@@ -461,11 +461,16 @@ if ($WoodVisualV3.IsPresent) {
         $woodVisualV3Result.status_after_timeline_stop.publish_count -ne 1200 -or
         $woodVisualV3Result.status_after_timeline_stop.failure_count -ne 0 -or
         $woodVisualV3Result.status_after_timeline_stop.recovery_count -ne 0 -or
+        (@($woodVisualV3Result.status_after_timeline_stop.atlas) -join ',') -ne '96,15' -or
+        $woodVisualV3Result.status_after_timeline_stop.atlas_cell_stride_px -ne 1 -or
+        $woodVisualV3Result.status_after_timeline_stop.bytes_per_revision -ne 11520 -or
         $woodVisualV3Result.surface_extract_timing.total_ms.sample_count -ne 1195 -or
         $woodVisualV3Result.publication_timing.total_ms.sample_count -ne 1195 -or
         $woodVisualV3Result.upload_count -ne 2400 -or
         $woodVisualV3Result.usd_set_count -ne 1200 -or
-        $woodVisualV3Result.transferred_bytes -ne (1200 * 921600) -or
+        $woodVisualV3Result.transferred_bytes -ne (
+            1200 * $woodVisualV3Result.status_after_timeline_stop.bytes_per_revision
+        ) -or
         @($woodVisualV3Result.errors).Count -ne 0) {
         throw "Wood visual V3 did not preserve its expected 5 Hz lifecycle."
     }

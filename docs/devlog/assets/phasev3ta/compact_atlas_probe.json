@@ -1,0 +1,288 @@
+{
+  "schema": "campfire.phasev3ta.compact_atlas_probe.v1",
+  "status": "qualified",
+  "gates": {
+    "one_texel_four_log_descriptor_is_minimal": true,
+    "one_texel_twenty_log_descriptor_is_120x60": true,
+    "twenty_log_two_atlas_transfer_is_57600_bytes": true,
+    "all_four_log_uvs_are_unique_centres": true,
+    "all_twenty_log_uvs_are_unique_centres": true,
+    "encoded_surface_samples_are_exact": true,
+    "one_texel_and_two_texel_rtx_are_equivalent": true,
+    "four_log_checker_is_visible": true,
+    "twenty_log_checker_is_visible": true,
+    "transform_and_reload_preserve_topology_uv": true,
+    "managed_paths_are_stable": true,
+    "one_texel_reduces_twenty_log_bytes_by_16x": true
+  },
+  "variants_four_logs": {
+    "1": {
+      "descriptor": {
+        "render_log_count": 4,
+        "tile_columns": 4,
+        "tile_rows": 1,
+        "cell_stride_px": 1,
+        "width_px": 96,
+        "height_px": 15,
+        "bytes_two_rgba8": 11520
+      },
+      "unique_uv_samples": 1440,
+      "all_uvs_are_texel_centres": true,
+      "encoded_samples_exact": true,
+      "log_tile_first_samples": [
+        [
+          77,
+          113,
+          149
+        ],
+        [
+          197,
+          193,
+          189
+        ],
+        [
+          117,
+          73,
+          229
+        ],
+        [
+          237,
+          153,
+          69
+        ]
+      ],
+      "transformed_capture": {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3ta\\compact-atlas\\captures\\compact_stride_1_transformed.png",
+        "sha256": "beea6084878abb5bba1fe18ee64c240798d10fd332ca0ca64698f22737c8d220",
+        "quantized_colors": 411
+      },
+      "reloaded_capture": {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3ta\\compact-atlas\\captures\\compact_stride_1_reloaded.png",
+        "sha256": "93af2dd73da81341ada8544034e91a29fcd599b4771b0104c9f4cc20651bda43",
+        "quantized_colors": 416
+      },
+      "managed_paths_stable": true,
+      "capture": {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3ta\\compact-atlas\\captures\\compact_stride_1_four_logs.png",
+        "sha256": "8d627e3d3e4a33f83aebe2bf6ad3a5e3f4a09c63408146aa36d743b8295775e1",
+        "quantized_colors": 436
+      }
+    },
+    "2": {
+      "descriptor": {
+        "render_log_count": 4,
+        "tile_columns": 4,
+        "tile_rows": 1,
+        "cell_stride_px": 2,
+        "width_px": 192,
+        "height_px": 30,
+        "bytes_two_rgba8": 46080
+      },
+      "unique_uv_samples": 1440,
+      "all_uvs_are_texel_centres": true,
+      "encoded_samples_exact": true,
+      "log_tile_first_samples": [
+        [
+          77,
+          113,
+          149
+        ],
+        [
+          197,
+          193,
+          189
+        ],
+        [
+          117,
+          73,
+          229
+        ],
+        [
+          237,
+          153,
+          69
+        ]
+      ],
+      "capture": {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3ta\\compact-atlas\\captures\\compact_stride_2_four_logs.png",
+        "sha256": "923d4539a4efeb40fba2ec3a28f1ba38bc4af85e56a23ce4d1b7b97b5724098a",
+        "quantized_colors": 435
+      }
+    },
+    "4": {
+      "descriptor": {
+        "render_log_count": 4,
+        "tile_columns": 4,
+        "tile_rows": 1,
+        "cell_stride_px": 4,
+        "width_px": 384,
+        "height_px": 60,
+        "bytes_two_rgba8": 184320
+      },
+      "unique_uv_samples": 1440,
+      "all_uvs_are_texel_centres": true,
+      "encoded_samples_exact": true,
+      "log_tile_first_samples": [
+        [
+          77,
+          113,
+          149
+        ],
+        [
+          197,
+          193,
+          189
+        ],
+        [
+          117,
+          73,
+          229
+        ],
+        [
+          237,
+          153,
+          69
+        ]
+      ],
+      "capture": {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3ta\\compact-atlas\\captures\\compact_stride_4_four_logs.png",
+        "sha256": "6f6c5a27a7997c5873603a276facd8025aa680a703e66d82ce26b65bc2343462",
+        "quantized_colors": 437
+      }
+    }
+  },
+  "twenty_logs": {
+    "descriptor": {
+      "render_log_count": 20,
+      "tile_columns": 5,
+      "tile_rows": 4,
+      "cell_stride_px": 1,
+      "width_px": 120,
+      "height_px": 60,
+      "bytes_two_rgba8": 57600
+    },
+    "unique_uv_samples": 7200,
+    "all_uvs_are_texel_centres": true,
+    "encoded_samples_exact": true,
+    "log_tile_first_samples": [
+      [
+        77,
+        113,
+        149
+      ],
+      [
+        197,
+        193,
+        189
+      ],
+      [
+        117,
+        73,
+        229
+      ],
+      [
+        237,
+        153,
+        69
+      ],
+      [
+        157,
+        233,
+        109
+      ],
+      [
+        77,
+        113,
+        149
+      ],
+      [
+        197,
+        193,
+        189
+      ],
+      [
+        117,
+        73,
+        229
+      ],
+      [
+        237,
+        153,
+        69
+      ],
+      [
+        157,
+        233,
+        109
+      ],
+      [
+        77,
+        113,
+        149
+      ],
+      [
+        197,
+        193,
+        189
+      ],
+      [
+        117,
+        73,
+        229
+      ],
+      [
+        237,
+        153,
+        69
+      ],
+      [
+        157,
+        233,
+        109
+      ],
+      [
+        77,
+        113,
+        149
+      ],
+      [
+        197,
+        193,
+        189
+      ],
+      [
+        117,
+        73,
+        229
+      ],
+      [
+        237,
+        153,
+        69
+      ],
+      [
+        157,
+        233,
+        109
+      ]
+    ],
+    "capture": {
+      "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3ta\\compact-atlas\\captures\\compact_stride_1_twenty_logs.png",
+      "sha256": "44aa3238f541f657940c1233a1997ae377a8204073e3585eb16bd637adb4a066",
+      "quantized_colors": 512
+    }
+  },
+  "rtx_stride_1_vs_2": {
+    "mean_absolute": 0.10084382233796296,
+    "p95_absolute": 1.0,
+    "maximum_absolute": 9
+  },
+  "sampler": {
+    "min_filter": "nearest",
+    "mag_filter": "nearest",
+    "face_uv_rule": "all face vertices use one texel centre",
+    "runtime_uv_changes": 0,
+    "runtime_topology_changes": 0
+  },
+  "decision": "adopt one texel per surface cell"
+}

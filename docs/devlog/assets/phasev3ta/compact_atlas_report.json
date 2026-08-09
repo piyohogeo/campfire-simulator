@@ -1,0 +1,92 @@
+{
+  "schema": "campfire.phasev3ta.final_report.v1",
+  "status": "qualified",
+  "gates": {
+    "compact_probe_qualified": true,
+    "all_compact_gates_passed": true,
+    "twenty_log_atlas_is_120x60": true,
+    "two_atlas_transfer_is_57600_bytes": true,
+    "v3mb_regression_qualified": true,
+    "v3mc_regression_qualified": true,
+    "release_build_passed": true,
+    "phase0_rtx_passed": true,
+    "standard_suite_73_of_73": true,
+    "feature_remains_default_off": true
+  },
+  "atlas": {
+    "surface_cells_per_log": 360,
+    "max_render_logs": 20,
+    "modeled_logs_are_distinct_from_render_logs": true,
+    "session_descriptor_is_immutable": true,
+    "dynamic_resize": false,
+    "twenty_logs": {
+      "render_log_count": 20,
+      "tile_columns": 5,
+      "tile_rows": 4,
+      "cell_stride_px": 1,
+      "width_px": 120,
+      "height_px": 60,
+      "bytes_two_rgba8": 57600
+    },
+    "four_logs": {
+      "render_log_count": 4,
+      "tile_columns": 4,
+      "tile_rows": 1,
+      "cell_stride_px": 1,
+      "width_px": 96,
+      "height_px": 15,
+      "bytes_two_rgba8": 11520
+    },
+    "unmodeled_render_logs": "neutral wood"
+  },
+  "transport": {
+    "before_bytes_per_revision": 921600,
+    "after_bytes_per_revision": 57600,
+    "reduction_ratio": 16.0
+  },
+  "rtx": {
+    "stride_1_vs_2": {
+      "mean_absolute": 0.10084382233796296,
+      "p95_absolute": 1.0,
+      "maximum_absolute": 9
+    },
+    "nearest_sampling": true,
+    "all_face_vertices_use_one_texel_center": true,
+    "transform_reload_topology_uv_stable": true
+  },
+  "isolated_performance": {
+    "samples": 100,
+    "before_publication_p95_ms": 5.4135,
+    "after_publication_p95_ms": 4.8254,
+    "after_beauty_pack_p95_ms": 1.8627,
+    "after_cpu_upload_p95_ms": 2.2883,
+    "after_revision_commit_p95_ms": 1.1126,
+    "reference_target_p95_ms": 1.0,
+    "target_met": false
+  },
+  "regression": {
+    "release_build": "passed",
+    "phase0_rtx": "passed",
+    "standard_test_processes": 8,
+    "standard_test_cases": 73,
+    "standard_test_cases_passed": 73,
+    "v3mb_gates": [
+      10,
+      10
+    ],
+    "v3mc_gates": [
+      17,
+      17
+    ]
+  },
+  "decision": "adopt compact atlas and continue to V3T-B native beauty pack",
+  "stop_boundary": [
+    "mesh collider",
+    "deformation",
+    "V4",
+    "Phase 6DM",
+    "Point Emitter contract",
+    "wood authority",
+    "Flow"
+  ]
+}

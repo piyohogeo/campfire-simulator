@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+<rect width="1200" height="680" fill="#101317"/><text x="70" y="76" fill="#f2f5f7" font-family="Segoe UI,sans-serif" font-size="34" font-weight="700">Phase V3T-A · compact one-texel atlas</text>
+<text x="70" y="112" fill="#9aa7b3" font-family="Segoe UI,sans-serif" font-size="19">20 logs · 7,200 surface cells · two RGBA8 atlases · Kit/RTX measured</text>
+<text x="70" y="188" fill="#dce4ea" font-family="Segoe UI,sans-serif" font-size="24" font-weight="600">Transfer bytes / revision</text>
+<rect x="330" y="155" width="760" height="42" rx="8" fill="#813b48"/><text x="345" y="184" fill="white" font-family="Segoe UI,sans-serif" font-size="19">before 921,600 B</text>
+<rect x="330" y="215" width="47.5" height="42" rx="8" fill="#31b38a"/><text x="345" y="244" fill="white" font-family="Segoe UI,sans-serif" font-size="19">compact 57,600 B</text>
+<text x="70" y="330" fill="#dce4ea" font-family="Segoe UI,sans-serif" font-size="24" font-weight="600">Isolated publication p95</text>
+<rect x="330" y="297" width="760" height="42" rx="8" fill="#813b48"/><text x="345" y="326" fill="white" font-family="Segoe UI,sans-serif" font-size="19">before 5.4135 ms</text>
+<rect x="330" y="357" width="677.4" height="42" rx="8" fill="#d8a83e"/><text x="345" y="386" fill="#17130a" font-family="Segoe UI,sans-serif" font-size="19">compact 4.8254 ms</text>
+<rect x="70" y="460" width="1060" height="145" rx="18" fill="#171c22" stroke="#2b343d"/><text x="100" y="505" fill="#31b38a" font-family="Segoe UI,sans-serif" font-size="25" font-weight="700">12 / 12 compact-atlas gates passed</text>
+<text x="100" y="545" fill="#dce4ea" font-family="Segoe UI,sans-serif" font-size="19">1×1 vs 2×2 RTX image: mean abs 0.1008 · p95 1 / 255</text>
+<text x="100" y="578" fill="#9aa7b3" font-family="Segoe UI,sans-serif" font-size="18">Functional mapping qualified; 1 ms publication target still not met. Continue to native pack.</text>
+</svg>

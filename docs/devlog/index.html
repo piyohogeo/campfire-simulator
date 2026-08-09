@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v3mc">最新記録</a>
+        <a href="#phase-v3ta">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v3mc">Phase V3M-Cを読む</a>
+        <a class="button primary" href="#phase-v3ta">Phase V3T-Aを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V3M-C 完了</strong></div>
+        <div><span>現在地</span><strong>Phase V3T-A 完了</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
         <div><span>テスト</span><strong>73 / 73 passed</strong></div>
-        <div><span>判定</span><strong>機能合格 · 性能未達 · 既定OFF</strong></div>
+        <div><span>判定</span><strong>16倍小型化 · 性能未達 · 既定OFF</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,102 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-v3ta" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number compact">V3T-A</span>
+          <p><time datetime="2026-08-09">2026.08.09</time></p>
+          <span class="pill current">Qualified · default OFF</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Phase V3T-A · Compact one-texel atlas</p>
+            <h2>1セルを1 texelへ縮め、<br>転送量を16分の1にした。</h2>
+            <p>V3M-Cの4×4 pixel cellを、nearest samplingで中心を正確に指す1×1 texelへ置き換えました。360 surface identity、Mesh topology、物理、Flow、Resident authorityは不変です。20本では2枚合計921,600 Bから57,600 Bへ縮小しましたが、発行p95は4.8254 msで1.0 ms目標には未達のため、V3は既定OFFのままです。</p>
+          </header>
+
+          <div class="capture-pair" aria-label="compact atlasの4本・20本実機表示">
+            <figure class="capture-card">
+              <a href="assets/phasev3ta/compact_stride_1_four_logs.png" aria-label="4本compact atlas checkerを原寸で開く">
+                <img src="assets/phasev3ta/compact_stride_1_four_logs.png" width="1280" height="720" alt="4本のMesh薪に1 texel atlasのsurface identity checkerを表示したKit RTX実測画像">
+              </a>
+              <figcaption>
+                <div><strong>4 logs · 96×15 atlas</strong><span>1,440 unique texel centres · side / caps / seam</span></div>
+                <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3ta/compact_atlas_checker.mp4" data-video-poster="assets/phasev3ta/compact_stride_1_four_logs.png" data-video-title="Phase V3T-A compact atlas checker" data-video-meta="Fixed diagnostic montage · 1x1 / 2x2 / 20 logs / transform / reload · about 5 s · not a combustion trajectory">
+                  <span class="video-trigger-icon" aria-hidden="true"></span>
+                  <span><strong>実測動画</strong><small>約5秒 · atlas checker</small></span>
+                </button>
+              </figcaption>
+            </figure>
+            <figure class="capture-card">
+              <a href="assets/phasev3ta/compact_stride_1_twenty_logs.png" aria-label="20本compact atlas checkerを原寸で開く">
+                <img src="assets/phasev3ta/compact_stride_1_twenty_logs.png" width="1280" height="720" alt="20本7200 surface cellを単一texelで識別したKit RTX実測画像">
+              </a>
+              <figcaption><div><strong>20 logs · 120×60 atlas</strong><span>7,200 unique texel centres · 57,600 B / revision</span></div></figcaption>
+            </figure>
+          </div>
+
+          <div class="notes-grid">
+            <section class="note">
+              <p class="note-label">Session-stable descriptor</p>
+              <h3>実際のrender log数だけ確保</h3>
+              <p>4本デモは20 slotを予約せず96×15を事前authoringします。render slot、寸法、strideはstage接続前に固定し、transformとreload後もUV、topology、managed pathが変わらないことを確認しました。未モデル化のrender logはneutral表示のままです。</p>
+            </section>
+            <section class="note">
+              <p class="note-label">RTX equivalence</p>
+              <h3>1×1と2×2を同じ見え方で採用</h3>
+              <p>固定nearest samplerで1×1と2×2を同条件描画し、8-bit画像差はmean 0.1008、p95 1、max 9でした。encoded cell sampleは完全一致し、side、両cap、seam、20本の識別性も実画面で確認しています。</p>
+            </section>
+          </div>
+
+          <section class="verification" aria-labelledby="phasev3ta-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Measured boundary</p>
+              <h3 id="phasev3ta-verification-title">転送量は解決、Python packとuploadは残る。</h3>
+              <p>20本・100 post-warmup sampleでbeauty pack p95 1.8627 ms、boundary 0.0741 ms、CPU upload 2.2883 ms、revision commit 1.1126 ms、合計4.8254 msでした。次の独立Phase V3T-Bでnative beauty packとchange-aware publicationを検証します。</p>
+              <code>.\scripts\run_phasev3ta_compact_atlas.ps1</code>
+              <p><a href="assets/phasev3ta/compact_atlas_report.json">最終機械レポート</a> · <a href="assets/phasev3ta/compact_atlas_probe.json">Kit/RTX probe</a> · <a href="../design/wood_visual_v3_transport_optimization.md">設計メモ</a></p>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase V3T-A検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Compact probe</strong><small>12 / 12 · 4 / 20 logs · reload</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Transfer bytes</strong><small>921,600 → 57,600 · 16× smaller</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Lifecycle</strong><small>topology · UV · path stable</small></p></div>
+              <div role="listitem"><span aria-hidden="true">!</span><p><strong>Performance</strong><small>4.8254 ms p95 · 1.0 ms target missed</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Regression</strong><small>Release · Phase 0 · 73 / 73</small></p></div>
+            </div>
+          </section>
+
+          <div class="capture-pair" aria-label="compact atlas performanceとreload実測">
+            <figure class="capture-card">
+              <a href="assets/phasev3ta/compact_atlas_performance.svg" aria-label="compact atlas performance reportを開く">
+                <img src="assets/phasev3ta/compact_atlas_performance.svg" width="1200" height="680" alt="旧4x4 atlasとcompact 1x1 atlasの転送量とpublication p95を比較した実測図">
+              </a>
+              <figcaption><div><strong>Measured reduction</strong><span>bytes 16× smaller · total p95 5.4135 → 4.8254 ms</span></div></figcaption>
+            </figure>
+            <figure class="capture-card">
+              <a href="assets/phasev3ta/compact_stride_1_reloaded.png" aria-label="stage reload後のcompact atlasを開く">
+                <img src="assets/phasev3ta/compact_stride_1_reloaded.png" width="1280" height="720" alt="stage reload後にも同じcompact atlas mappingを維持したKit RTX実測画像">
+              </a>
+              <figcaption><div><strong>Reload republish</strong><span>descriptor · UV · topology · managed paths stable</span></div></figcaption>
+            </figure>
+          </div>
+
+          <div class="notes-grid">
+            <section class="note caution">
+              <p class="note-label">Known limit</p>
+              <h3>小型化だけでは1 msへ届かない</h3>
+              <p>現在はNumPy beauty packとrevisionごとの2 atlas uploadを続けています。compact化は転送量を減らしますが、native pack、同一量子化結果のskip、GPU ownershipを解決しません。GPU uploadは引き続き未qualifiedです。</p>
+            </section>
+            <section class="note next">
+              <p class="note-label">Stop boundary</p>
+              <h3>V3T-B以外のscopeへ進まない</h3>
+              <p>V3既定OFF、Cylinder collider、V0/V1 fallback、Point/Flow契約を維持します。Mesh collider、変形、収縮、亀裂、欠損、V4、Phase 6DM再開は行っていません。</p>
+            </section>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v3mc" class="section entry-section phase-six">

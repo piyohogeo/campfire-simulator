@@ -235,15 +235,19 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertTrue(added.IsA(UsdGeom.Xform))
         self.assertEqual(added.GetAttribute("campfire:renderAtlasSlot").Get(), 4)
 
-    async def test_wood_render_atlas_tiles_are_fixed_and_guttered(self):
-        self.assertEqual(campfire.app.WOOD_ATLAS_WIDTH_PX, 480)
-        self.assertEqual(campfire.app.WOOD_ATLAS_HEIGHT_PX, 240)
+    async def test_wood_render_atlas_uses_one_texel_centres(self):
+        self.assertEqual(campfire.app.WOOD_ATLAS_WIDTH_PX, 120)
+        self.assertEqual(campfire.app.WOOD_ATLAS_HEIGHT_PX, 60)
         samples = {
             campfire.app.atlas_uv(log_slot, surface_index)
             for log_slot in range(20)
             for surface_index in range(360)
         }
         self.assertEqual(len(samples), 7200)
+        self.assertEqual(campfire.app.atlas_uv(0, 0), Gf.Vec2f(0.5 / 120.0, 0.5 / 60.0))
+        four_logs = campfire.app.compact_atlas_descriptor(4)
+        self.assertEqual((four_logs.width_px, four_logs.height_px), (96, 15))
+        self.assertEqual(2 * four_logs.bytes_per_rgba8_atlas, 11_520)
         with self.assertRaises(ValueError):
             campfire.app.atlas_uv(20, 0)
         with self.assertRaises(ValueError):
@@ -1229,7 +1233,10 @@ class TestScene(omni.kit.test.AsyncTestCase):
         campfire.app.populate_phase3_scene(stage, render_hierarchy=True)
         log_ids = tuple(campfire.app.list_log_ids(stage))
         contract = campfire.app.preauthor_wood_visual_v3(stage, log_ids)
-        self.assertEqual(contract["atlas"], [480, 240])
+        self.assertEqual(contract["atlas"], [96, 15])
+        self.assertEqual(contract["atlas_descriptor"]["cell_stride_px"], 1)
+        self.assertEqual(contract["atlas_descriptor"]["render_log_count"], 4)
+        self.assertEqual(contract["atlas_descriptor"]["bytes_per_rgba8_atlas"], 5_760)
         self.assertEqual(contract["upload_count_per_revision"], 2)
         self.assertEqual(
             contract["base_uri"], campfire.app.WOOD_VISUAL_V3_BASE_TEXTURE_URI
@@ -1267,14 +1274,15 @@ class TestScene(omni.kit.test.AsyncTestCase):
             ash.tobytes(),
         )
         packed = campfire.app.WoodVisualV3AtlasPacker(log_ids).pack(payload)
-        self.assertEqual(packed.base_rgba8.shape, (240, 480, 4))
-        self.assertEqual(packed.emission_rgba8.shape, (240, 480, 4))
+        self.assertEqual(packed.base_rgba8.shape, (60, 120, 4))
+        self.assertEqual(packed.emission_rgba8.shape, (60, 120, 4))
+        self.assertEqual(packed.base_rgba8.nbytes + packed.emission_rgba8.nbytes, 57_600)
         self.assertTrue(packed.base_rgba8.flags.c_contiguous)
         self.assertTrue(packed.emission_rgba8.flags.c_contiguous)
-        wet = packed.base_rgba8[2, 2, :3]
-        charred = packed.base_rgba8[2, 6, :3]
-        ashed = packed.base_rgba8[2, 10, :3]
-        hot = packed.emission_rgba8[2, 14, :3]
+        wet = packed.base_rgba8[0, 0, :3]
+        charred = packed.base_rgba8[0, 1, :3]
+        ashed = packed.base_rgba8[0, 2, :3]
+        hot = packed.emission_rgba8[0, 3, :3]
         self.assertLess(int(wet.sum()), int(np.array((77, 31, 11)).sum()))
         self.assertLess(int(charred.max()), 10)
         self.assertGreater(int(ashed.min()), 150)
@@ -1341,6 +1349,8 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(repeated.status, "unchanged_revision")
         self.assertEqual(repeated.upload_count, 0)
         self.assertEqual(repeated.usd_set_count, 0)
+        self.assertEqual(consumer.status()["atlas"], [96, 15])
+        self.assertEqual(consumer.status()["bytes_per_revision"], 11_520)
         failure["point"] = "after_base"
         with self.assertRaisesRegex(RuntimeError, "injected"):
             consumer.publish(payload(2))

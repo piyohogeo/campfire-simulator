@@ -5,7 +5,11 @@ from dataclasses import dataclass
 
 from pxr import Gf, PhysxSchema, Sdf, Usd, UsdGeom, UsdPhysics, UsdShade
 
-from .wood_render_mesh import WOOD_RENDER_MAX_LOGS, author_wood_render_mesh
+from .wood_render_mesh import (
+    WOOD_RENDER_MAX_LOGS,
+    WoodAtlasDescriptor,
+    author_wood_render_mesh,
+)
 
 
 LOGS_PATH = Sdf.Path("/World/Logs")
@@ -100,6 +104,7 @@ def create_log(
     *,
     render_hierarchy: bool = False,
     render_log_slot: int | None = None,
+    render_atlas_descriptor: WoodAtlasDescriptor | None = None,
 ) -> Usd.Prim:
     """Create one cylindrical log with identity, mass, collider and rigid body."""
 
@@ -142,7 +147,13 @@ def create_log(
         render = UsdGeom.Mesh.Define(
             stage, path.AppendChild(WOOD_RENDER_SURFACE_NAME)
         )
-        author_wood_render_mesh(render, spec.radius_m, spec.length_m, render_log_slot)
+        author_wood_render_mesh(
+            render,
+            spec.radius_m,
+            spec.length_m,
+            render_log_slot,
+            descriptor=render_atlas_descriptor,
+        )
         render.CreateDisplayColorAttr([Gf.Vec3f(0.30, 0.12, 0.045)])
     else:
         log = UsdGeom.Cylinder.Define(stage, path)

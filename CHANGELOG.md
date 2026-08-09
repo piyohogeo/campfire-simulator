@@ -1,5 +1,12 @@
 # Changelog
 
+- Added Phase V3T-A's session-stable compact atlas descriptor and changed the default V3 mapping from a guttered 4x4 pixel cell to one exact RGBA8 texel per surface cell without changing surface identity, Mesh topology, physics, Flow, or production defaults.
+- Qualified 12 / 12 Kit/RTX compact-atlas gates across four and twenty logs, encoded cell sampling, side/cap/seam mapping, transform, stage reload, managed paths, and nearest-sampled 1x1 versus 2x2 rendered equivalence.
+- Reduced the two-atlas 20-log transfer from `921,600` to `57,600 bytes` per revision (16x smaller); the four-log scene now authors a minimal `96x15` descriptor instead of reserving all twenty slots.
+- Measured the compact 20-log isolated publication at p95 `1.8627 ms` beauty packing, `0.0741 ms` boundary work, `2.2883 ms` upload, `1.1126 ms` revision commit, and `4.8254 ms` total over 100 post-warmup samples.
+- Kept V3 default-off because the `1.0 ms` reference publication target remains unmet; native beauty packing and change-aware publication are reserved for the independent V3T-B commit.
+- Requalified the release build, Phase 0 RTX scene, V3M-B 10 / 10 probe, V3M-C 17 / 17 probe, and complete eight-process 73 / 73 standard suite after compact-atlas integration.
+
 - Added Phase V3M-C's default-off V2 surface-payload consumer for the stable V3M-B render Mesh using two fixed 480×240 RGBA8 dynamic textures and one revision-last USD Set per update.
 - Added vectorized moisture/char/ash/temperature beauty packing for 20 logs × 360 stable surface identities without Python cell loops, per-cell USD attributes, live Prim creation, Point payload changes, or authority coupling.
 - Qualified 17 / 17 Kit/RTX lifecycle gates including raw pointer upload, changed-frame visibility, unchanged-revision no-op, stale rejection, injected visual-only recovery, timeline restart, stage reload republish, provider close, stable managed paths, and stable Mesh topology digests.

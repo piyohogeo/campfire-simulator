@@ -14,13 +14,11 @@ from .wood import get_log_render_surface
 from .wood_render_mesh import (
     WOOD_ATLAS_CELL_COLUMNS,
     WOOD_ATLAS_CELL_ROWS,
-    WOOD_ATLAS_CELL_STRIDE_PX,
-    WOOD_ATLAS_HEIGHT_PX,
-    WOOD_ATLAS_TILE_COLUMNS,
-    WOOD_ATLAS_TILE_ROWS,
-    WOOD_ATLAS_WIDTH_PX,
     WOOD_RENDER_MAX_LOGS,
     WOOD_SURFACE_CELLS_PER_LOG,
+    WoodAtlasDescriptor,
+    author_wood_render_mesh_uv,
+    compact_atlas_descriptor,
 )
 from .wood_visual_surface import ImmutableWoodVisualSurfacePayload
 
@@ -28,6 +26,11 @@ from .wood_visual_surface import ImmutableWoodVisualSurfacePayload
 WOOD_VISUAL_V3_SETTING = "/exts/campfire.app/woodVisualV3Enabled"
 WOOD_VISUAL_V3_ROOT = Sdf.Path("/World/Looks/WoodVisualV3")
 WOOD_VISUAL_V3_REVISION_ATTRIBUTE = "campfire:committedRevision"
+WOOD_VISUAL_V3_RENDER_LOG_IDS_ATTRIBUTE = "campfire:renderLogIds"
+WOOD_VISUAL_V3_ATLAS_LOG_COUNT_ATTRIBUTE = "campfire:atlasRenderLogCount"
+WOOD_VISUAL_V3_ATLAS_TILE_COLUMNS_ATTRIBUTE = "campfire:atlasTileColumns"
+WOOD_VISUAL_V3_ATLAS_TILE_ROWS_ATTRIBUTE = "campfire:atlasTileRows"
+WOOD_VISUAL_V3_ATLAS_CELL_STRIDE_ATTRIBUTE = "campfire:atlasCellStridePx"
 WOOD_VISUAL_V3_BASE_TEXTURE_NAME = "campfire_wood_visual_v3_base"
 WOOD_VISUAL_V3_EMISSION_TEXTURE_NAME = "campfire_wood_visual_v3_emission"
 WOOD_VISUAL_V3_BASE_TEXTURE_URI = f"dynamic://{WOOD_VISUAL_V3_BASE_TEXTURE_NAME}"
@@ -89,6 +92,7 @@ def preauthor_wood_visual_v3(stage: Usd.Stage, log_ids) -> dict:
         raise ValueError("Wood visual V3 requires a stage and unique logs")
     if len(log_ids) > WOOD_RENDER_MAX_LOGS:
         raise ValueError("Wood visual V3 supports at most 20 logs")
+    descriptor = compact_atlas_descriptor(len(log_ids))
     if not stage.GetPrimAtPath("/World/Looks"):
         UsdGeom.Scope.Define(stage, "/World/Looks")
     material = UsdShade.Material.Define(stage, WOOD_VISUAL_V3_ROOT)
@@ -96,6 +100,21 @@ def preauthor_wood_visual_v3(stage: Usd.Stage, log_ids) -> dict:
     root.CreateAttribute(
         WOOD_VISUAL_V3_REVISION_ATTRIBUTE, Sdf.ValueTypeNames.Int64
     ).Set(0)
+    root.CreateAttribute(
+        WOOD_VISUAL_V3_RENDER_LOG_IDS_ATTRIBUTE, Sdf.ValueTypeNames.StringArray
+    ).Set(list(log_ids))
+    root.CreateAttribute(
+        WOOD_VISUAL_V3_ATLAS_LOG_COUNT_ATTRIBUTE, Sdf.ValueTypeNames.Int
+    ).Set(descriptor.render_log_count)
+    root.CreateAttribute(
+        WOOD_VISUAL_V3_ATLAS_TILE_COLUMNS_ATTRIBUTE, Sdf.ValueTypeNames.Int
+    ).Set(descriptor.tile_columns)
+    root.CreateAttribute(
+        WOOD_VISUAL_V3_ATLAS_TILE_ROWS_ATTRIBUTE, Sdf.ValueTypeNames.Int
+    ).Set(descriptor.tile_rows)
+    root.CreateAttribute(
+        WOOD_VISUAL_V3_ATLAS_CELL_STRIDE_ATTRIBUTE, Sdf.ValueTypeNames.Int
+    ).Set(descriptor.cell_stride_px)
     surface = UsdShade.Shader.Define(stage, WOOD_VISUAL_V3_ROOT.AppendChild("Surface"))
     surface.CreateIdAttr("UsdPreviewSurface")
     reader = UsdShade.Shader.Define(
@@ -130,17 +149,30 @@ def preauthor_wood_visual_v3(stage: Usd.Stage, log_ids) -> dict:
     )
     material.CreateSurfaceOutput().ConnectToSource(surface.ConnectableAPI(), "surface")
     bindings = {}
-    for log_id in log_ids:
+    for expected_slot, log_id in enumerate(log_ids):
         render = get_log_render_surface(stage, log_id)
         if not render.IsA(UsdGeom.Mesh):
             raise ValueError(f"Wood visual V3 requires the render Mesh: {log_id}")
+        root_prim = stage.GetPrimAtPath(f"/World/Logs/{log_id}")
+        actual_slot = int(root_prim.GetAttribute("campfire:renderAtlasSlot").Get())
+        if actual_slot != expected_slot:
+            raise ValueError("Wood visual V3 requires contiguous stable render log slots")
+        author_wood_render_mesh_uv(UsdGeom.Mesh(render), actual_slot, descriptor)
         UsdShade.MaterialBindingAPI.Apply(render).Bind(material)
         bindings[log_id] = str(render.GetPath())
     return {
         "root": str(WOOD_VISUAL_V3_ROOT),
         "log_ids": list(log_ids),
         "bindings": bindings,
-        "atlas": [WOOD_ATLAS_WIDTH_PX, WOOD_ATLAS_HEIGHT_PX],
+        "atlas": [descriptor.width_px, descriptor.height_px],
+        "atlas_descriptor": {
+            "render_log_count": descriptor.render_log_count,
+            "slot_capacity": descriptor.slot_capacity,
+            "tile_columns": descriptor.tile_columns,
+            "tile_rows": descriptor.tile_rows,
+            "cell_stride_px": descriptor.cell_stride_px,
+            "bytes_per_rgba8_atlas": descriptor.bytes_per_rgba8_atlas,
+        },
         "base_uri": WOOD_VISUAL_V3_BASE_TEXTURE_URI,
         "emission_uri": WOOD_VISUAL_V3_EMISSION_TEXTURE_URI,
         "upload_count_per_revision": 2,
@@ -155,35 +187,55 @@ def _mix(left, right, amount):
 class WoodVisualV3AtlasPacker:
     """Vectorized beauty pack; never iterates over 7,200 cells in Python."""
 
-    def __init__(self, log_ids):
+    def __init__(self, log_ids, *, descriptor=None, log_slots=None):
         self.log_ids = tuple(str(value) for value in log_ids)
         if not self.log_ids or len(set(self.log_ids)) != len(self.log_ids):
             raise ValueError("Wood visual V3 atlas packer requires unique logs")
         if len(self.log_ids) > WOOD_RENDER_MAX_LOGS:
             raise ValueError("Wood visual V3 atlas supports at most 20 logs")
-
-    @staticmethod
-    def _atlas_from_tiles(tiles):
-        pixels = np.repeat(
-            np.repeat(tiles, WOOD_ATLAS_CELL_STRIDE_PX, axis=1),
-            WOOD_ATLAS_CELL_STRIDE_PX,
-            axis=2,
+        self.descriptor = (
+            compact_atlas_descriptor(len(self.log_ids))
+            if descriptor is None
+            else descriptor
         )
+        if not isinstance(self.descriptor, WoodAtlasDescriptor):
+            raise TypeError("Wood visual V3 requires a WoodAtlasDescriptor")
+        self.log_slots = tuple(range(len(self.log_ids))) if log_slots is None else tuple(
+            int(value) for value in log_slots
+        )
+        if len(self.log_slots) != len(self.log_ids) or len(set(self.log_slots)) != len(
+            self.log_slots
+        ):
+            raise ValueError("Wood visual V3 requires one unique slot per modeled log")
+        if any(
+            slot < 0 or slot >= self.descriptor.render_log_count
+            for slot in self.log_slots
+        ):
+            raise ValueError("Wood visual V3 modeled log slot is outside the descriptor")
+
+    def _atlas_from_tiles(self, tiles):
+        pixels = tiles
+        if self.descriptor.cell_stride_px > 1:
+            pixels = np.repeat(
+                np.repeat(tiles, self.descriptor.cell_stride_px, axis=1),
+                self.descriptor.cell_stride_px,
+                axis=2,
+            )
         return np.ascontiguousarray(
             pixels.reshape(
-                WOOD_ATLAS_TILE_ROWS,
-                WOOD_ATLAS_TILE_COLUMNS,
-                WOOD_ATLAS_CELL_ROWS * WOOD_ATLAS_CELL_STRIDE_PX,
-                WOOD_ATLAS_CELL_COLUMNS * WOOD_ATLAS_CELL_STRIDE_PX,
+                self.descriptor.tile_rows,
+                self.descriptor.tile_columns,
+                WOOD_ATLAS_CELL_ROWS * self.descriptor.cell_stride_px,
+                WOOD_ATLAS_CELL_COLUMNS * self.descriptor.cell_stride_px,
                 4,
             )
             .transpose(0, 2, 1, 3, 4)
-            .reshape(WOOD_ATLAS_HEIGHT_PX, WOOD_ATLAS_WIDTH_PX, 4)
+            .reshape(self.descriptor.height_px, self.descriptor.width_px, 4)
         )
 
     def neutral_atlases(self):
         base = np.empty(
-            (WOOD_RENDER_MAX_LOGS, WOOD_ATLAS_CELL_ROWS, WOOD_ATLAS_CELL_COLUMNS, 4),
+            (self.descriptor.slot_capacity, WOOD_ATLAS_CELL_ROWS, WOOD_ATLAS_CELL_COLUMNS, 4),
             dtype=np.uint8,
         )
         base[..., :3] = np.rint(_DRY_COLOR * 255.0).astype(np.uint8)
@@ -240,17 +292,17 @@ class WoodVisualV3AtlasPacker:
         emission *= (1.0 - 0.85 * ash_amount)[..., None]
 
         base_tiles = np.empty(
-            (WOOD_RENDER_MAX_LOGS, WOOD_ATLAS_CELL_ROWS, WOOD_ATLAS_CELL_COLUMNS, 4),
+            (self.descriptor.slot_capacity, WOOD_ATLAS_CELL_ROWS, WOOD_ATLAS_CELL_COLUMNS, 4),
             dtype=np.uint8,
         )
         base_tiles[..., :3] = np.rint(_DRY_COLOR * 255.0).astype(np.uint8)
         base_tiles[..., 3] = int(round(0.62 * 255.0))
         emission_tiles = np.zeros_like(base_tiles)
         emission_tiles[..., 3] = 255
-        count = len(self.log_ids)
-        base_tiles[:count, ..., :3] = np.rint(np.clip(color, 0.0, 1.0) * 255.0).astype(np.uint8)
-        base_tiles[:count, ..., 3] = np.rint(np.clip(roughness, 0.0, 1.0) * 255.0).astype(np.uint8)
-        emission_tiles[:count, ..., :3] = np.rint(
+        slots = np.asarray(self.log_slots, dtype=np.intp)
+        base_tiles[slots, ..., :3] = np.rint(np.clip(color, 0.0, 1.0) * 255.0).astype(np.uint8)
+        base_tiles[slots, ..., 3] = np.rint(np.clip(roughness, 0.0, 1.0) * 255.0).astype(np.uint8)
+        emission_tiles[slots, ..., :3] = np.rint(
             np.clip(emission, 0.0, 1.0) * 255.0
         ).astype(np.uint8)
         base_atlas = self._atlas_from_tiles(base_tiles)
@@ -286,7 +338,7 @@ class WoodVisualV3Consumer:
         self._owner = threading.get_ident()
         self._stage = stage
         self._log_ids = tuple(str(value) for value in log_ids)
-        self._packer = WoodVisualV3AtlasPacker(self._log_ids)
+        self._packer = None
         self._provider_factory = provider_factory
         self._texture_format = texture_format
         self._failure_injector = failure_injector
@@ -308,6 +360,11 @@ class WoodVisualV3Consumer:
         self._revision_attr = None
         self._listener = None
         self._bind_stage(stage, track_notices)
+        self._packer = WoodVisualV3AtlasPacker(
+            self._log_ids,
+            descriptor=self._atlas_descriptor,
+            log_slots=self._log_slots,
+        )
         self._create_providers()
         self._last_base, self._last_emission = self._packer.neutral_atlases()
         self._upload_pair(self._last_base, self._last_emission)
@@ -325,6 +382,28 @@ class WoodVisualV3Consumer:
         revision = root.GetAttribute(WOOD_VISUAL_V3_REVISION_ATTRIBUTE)
         if not revision:
             raise ValueError("Wood visual V3 revision marker is unavailable")
+        render_log_ids = tuple(
+            str(value)
+            for value in root.GetAttribute(WOOD_VISUAL_V3_RENDER_LOG_IDS_ATTRIBUTE).Get()
+        )
+        descriptor = WoodAtlasDescriptor(
+            int(root.GetAttribute(WOOD_VISUAL_V3_ATLAS_LOG_COUNT_ATTRIBUTE).Get()),
+            int(root.GetAttribute(WOOD_VISUAL_V3_ATLAS_TILE_COLUMNS_ATTRIBUTE).Get()),
+            int(root.GetAttribute(WOOD_VISUAL_V3_ATLAS_TILE_ROWS_ATTRIBUTE).Get()),
+            int(root.GetAttribute(WOOD_VISUAL_V3_ATLAS_CELL_STRIDE_ATTRIBUTE).Get()),
+        )
+        if len(render_log_ids) != descriptor.render_log_count:
+            raise ValueError("Wood visual V3 render log descriptor is malformed")
+        try:
+            log_slots = tuple(render_log_ids.index(log_id) for log_id in self._log_ids)
+        except ValueError as exc:
+            raise ValueError("Wood visual V3 modeled log is not renderable") from exc
+        previous_descriptor = getattr(self, "_atlas_descriptor", None)
+        previous_render_logs = getattr(self, "_render_log_ids", None)
+        if previous_descriptor is not None and (
+            descriptor != previous_descriptor or render_log_ids != previous_render_logs
+        ):
+            raise ValueError("Wood visual V3 atlas descriptor changed across reload")
         base_uri = (
             stage.GetPrimAtPath(WOOD_VISUAL_V3_ROOT.AppendChild("BaseTexture"))
             .GetAttribute("inputs:file")
@@ -344,6 +423,9 @@ class WoodVisualV3Consumer:
             raise ValueError("Wood visual V3 dynamic texture URI changed")
         self._stage = stage
         self._revision_attr = revision
+        self._atlas_descriptor = descriptor
+        self._render_log_ids = render_log_ids
+        self._log_slots = log_slots
         if self._listener is not None:
             self._listener.Revoke()
         self._listener = (
@@ -374,7 +456,7 @@ class WoodVisualV3Consumer:
     def _upload(self, provider, atlas):
         provider.set_raw_bytes_data(
             _pointer_capsule(atlas),
-            [WOOD_ATLAS_WIDTH_PX, WOOD_ATLAS_HEIGHT_PX],
+            [self._atlas_descriptor.width_px, self._atlas_descriptor.height_px],
             self._texture_format,
             strict=True,
         )
@@ -434,7 +516,7 @@ class WoodVisualV3Consumer:
             self._inject("before_base", payload.revision)
             self._base_provider.set_raw_bytes_data(
                 base_capsule,
-                [WOOD_ATLAS_WIDTH_PX, WOOD_ATLAS_HEIGHT_PX],
+                [self._atlas_descriptor.width_px, self._atlas_descriptor.height_px],
                 self._texture_format,
                 strict=True,
             )
@@ -442,7 +524,7 @@ class WoodVisualV3Consumer:
             self._inject("after_base", payload.revision)
             self._emission_provider.set_raw_bytes_data(
                 emission_capsule,
-                [WOOD_ATLAS_WIDTH_PX, WOOD_ATLAS_HEIGHT_PX],
+                [self._atlas_descriptor.width_px, self._atlas_descriptor.height_px],
                 self._texture_format,
                 strict=True,
             )
@@ -524,6 +606,14 @@ class WoodVisualV3Consumer:
             "usd_set_count": self._usd_set_count,
             "notice_count": self._notice_count,
             "log_ids": list(self._log_ids),
+            "render_log_ids": list(self._render_log_ids),
+            "atlas": [
+                self._atlas_descriptor.width_px,
+                self._atlas_descriptor.height_px,
+            ],
+            "atlas_cell_stride_px": self._atlas_descriptor.cell_stride_px,
+            "bytes_per_revision": 2
+            * self._atlas_descriptor.bytes_per_rgba8_atlas,
             "last_payload_revision": (
                 self._last_payload.revision if self._last_payload is not None else None
             ),

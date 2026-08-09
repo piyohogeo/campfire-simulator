@@ -249,12 +249,16 @@ from .wood import (
     move_log,
 )
 from .wood_render_mesh import (
+    WOOD_ATLAS_MAX_DESCRIPTOR,
     WOOD_ATLAS_HEIGHT_PX,
     WOOD_ATLAS_WIDTH_PX,
     WOOD_RENDER_MAX_LOGS,
     WOOD_SURFACE_CELLS_PER_LOG,
+    WoodAtlasDescriptor,
     atlas_uv,
+    author_wood_render_mesh_uv,
     build_wood_render_mesh_data,
+    compact_atlas_descriptor,
     surface_cell_ordinal_map,
 )
 
@@ -349,6 +353,8 @@ __all__ = [
     "WOOD_SURFACE_CELLS_PER_LOG",
     "WOOD_ATLAS_WIDTH_PX",
     "WOOD_ATLAS_HEIGHT_PX",
+    "WOOD_ATLAS_MAX_DESCRIPTOR",
+    "WoodAtlasDescriptor",
     "WoodVisualPublicationProfile",
     "WoodVisualUniform",
     "WoodVisualV0Consumer",
@@ -369,7 +375,9 @@ __all__ = [
     "apply_phase6_calibration",
     "create_log",
     "atlas_uv",
+    "author_wood_render_mesh_uv",
     "build_wood_render_mesh_data",
+    "compact_atlas_descriptor",
     "surface_cell_ordinal_map",
     "create_equivalent_coupon",
     "create_layered_coupon",

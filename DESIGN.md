@@ -2597,3 +2597,12 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - production trajectory: Resident-native Phase 3で0.2 s刻み／5 Hz、1,200 revision、2,400 upload、1,200 revision Set、転送合計`1,105,920,000 bytes`、failure 0を確認し、60-frame／6-secondの実燃焼MP4を生成した。capture／Flow同時実行時のpublication p95はCPU upload stallにより`59.6170 ms`で、isolated probeより厳しい制約として残す。固定状態診断と実燃焼trajectoryは明示的に区別する。
 - OFF／ON回帰: 現在コードのpaired runでdry SHA `0dec57f3…be10`、wet SHA `148585f8…20c9`が完全一致し、着火dry `66.2 s`／wet `166.4 s`、mass balance error `0.0 kg`、peak fuel `1.0`、Resident revision `1200`を維持した。Flow active blocksはOFF peak 148／ON peak 394で双方nonzeroだが、texture CPU stallがwall-frame pacingを変えるためfield完全同値は主張しない。
 - 回帰と停止: V3 mapping／material／lifecycle test 3件を含む標準suiteは全8 process・`73 / 73`件が`368.9 s`で合格した。production既定ON、旧Cylinder-only／V0／V1削除、Mesh collider、points変形、収縮／ひび／崩落／欠損、V4、Phase 6DM再開には進まない。次は承認後にbeauty packとCPU uploadの削減案を独立Phaseで評価する。
+
+## Phase V3T-A compact one-texel atlas
+
+### 2026-08-09: gutterを除き、face全頂点を1 texel中心へ固定する
+
+- descriptor: stage接続前のrender log数からsession固定atlasを作る。4本は4×1 tile／`96×15`、20本は5×4 tile／`120×60`で、1 tileは24×15 texel、1 texelは1つの`log_id + local_surface_index`を表す。dynamic resize、runtime UV／topology変更は行わない。modeled logとrender logを分け、未モデル化のrender logはneutral woodとする。
+- RTX比較: 同一checkerを1×1、2×2、4×4で描画し、1×1対2×2の1280×720画像差はmean `0.1008`、p95 `1 / 255`、max `9 / 255`だった。4本／20本、side、両cap、seam、overlap、移動、回転、reloadを含む`12 / 12` gateに合格し、nearest samplingと全face vertex同一texel中心でpadding不要と判断した。
+- transport: 20本2×RGBA8は`921,600 → 57,600 B/revision`で16分の1になった。100 post-warmup sampleのisolated publication p95は`5.4135 → 4.8254 ms`、beauty packは`2.7769 → 1.8627 ms`、CPU uploadは`2.4774 → 2.2883 ms`だった。参考目標`1.0 ms`は未達で、compact化だけで実アプリstall解消とは判定しない。
+- 回帰と境界: release build、Phase 0 RTX、V3M-B `10 / 10`、V3M-C `17 / 17`、標準suite全8 process・`73 / 73`件（`365.0 s`）に合格した。V3は既定OFF、物理Cylinder、wood authority、Flow、Point、revision／rollback／reload／owner lifecycleを維持する。Mesh collider、変形、V4、Phase 6DMへ進まず、次はV3T-Bのnative beauty packとchange-aware publicationだけを評価する。
