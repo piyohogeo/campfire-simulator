@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v3td">最新記録</a>
+        <a href="#phase-v3te">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v3td">Phase V3T-Dを読む</a>
+        <a class="button primary" href="#phase-v3te">Phase V3T-Eを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V3T-D 測定完了</strong></div>
+        <div><span>現在地</span><strong>Phase V3T-E 安全停止</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>測定</span><strong>42 process · 25,920 samples</strong></div>
-        <div><span>判定</span><strong>Flow中CPU-source同期 · production不変更</strong></div>
+        <div><span>測定</span><strong>2,880 timing · 240 pixel readback</strong></div>
+        <div><span>判定</span><strong>ring高速化 · pixel/lifetime未達 · 非採用</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,66 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-v3te" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number compact">V3T-E</span>
+          <p><time datetime="2026-08-09">2026.08.09</time></p>
+          <span class="pill current">Measured · production rejected</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Phase V3T-E · GPU-source ring qualification</p>
+            <h2>待ち時間は消えた。<br>でも、安全契約はまだ足りない。</h2>
+            <p>20本相当のbase＋emissionで、単一同期GPU buffer、2重ring、3重ringを同じ固定stageで比較しました。ringはsource-ready待ちをp95約0.06 msへ減らし、Provider setterも約0.2 msを維持しましたが、実RTX pixelの混在と公開source-consumed fence不足によりproduction採用は見送りました。</p>
+          </header>
+
+          <figure class="capture-card wide">
+            <a href="assets/phasev3te/gpu_ring_report.svg" aria-label="Phase V3T-E GPU-source ring比較レポートを開く">
+              <img src="assets/phasev3te/gpu_ring_report.svg" alt="CPU、単一同期GPU、2重ring、3重ringのsetter、同期、次RTX frame、pixel readback、lifecycle採否を比較するPhase V3T-E実測図" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>6 matrix process · 2,880 timing samples · 240 RTX readbacks</strong><span>20 warmup · 120 measured / mode · 3 rotated runs · 1,200-update lifecycle</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3tc/visual_v3_actual.mp4" data-video-poster="assets/phasev3tc/visual_v3_actual_poster.png" data-video-title="Phase V3T-E wood-state visual reference · V3 explicit preset" data-video-meta="Shared V3T-C explicit-preset recording · visual context only, not V3T-E timing or pixel-identity evidence · capture excluded from measured populations · 60 frames · 6 seconds">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>薪状態の目視参照</strong><small>V3明示preset動画を再利用 · 計測証拠ではない</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <div class="notes-grid">
+            <section class="note"><p class="note-label">Owner-thread boundary</p><h3>同期p95 0.7911 → 0.0599 ms</h3><p>120×60・2枚ではsingle GPU同期0.7911 msに対し、ring2／ring3は0.0599／0.0689 ms。setterは0.2008／0.2193 msで、CPU referenceの27.5362 ms tailを回避しました。</p></section>
+            <section class="note caution"><p class="note-label">End-to-end</p><h3>次frameは約31 msのまま</h3><p>ring2／ring3の次requested RTX frame p95は31.6607／31.5550 msでした。transport setterの改善をFlow solver・RTX描画全体の改善とは扱いません。</p></section>
+          </div>
+
+          <section class="verification" aria-labelledby="phasev3te-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Qualification</p>
+              <h3 id="phasev3te-verification-title">画素206 / 240完全、34 / 240混在。production非採用。</h3>
+              <p>CPU／single／ring2／ring3の混在は8／9／9／8件でring固有の悪化は見えませんが、原因推定で合格へ読み替えません。公開APIにもProvider source消費完了fenceと再利用寿命契約がありません。</p>
+              <code>.\scripts\run_phasev3te_gpu_ring.ps1</code>
+              <p><a href="assets/phasev3te/gpu_ring_report.json">集計JSON</a> · <a href="assets/phasev3te/gpu_ring_samples.json">全sample JSON</a> · <a href="assets/phasev3te/regression_report.json">最終回帰JSON</a> · <a href="assets/phasev3te/gpu_ring3_pixel_readback.png">実RTX readback</a> · <a href="../design/wood_visual_v3_gpu_ring_qualification.md">設計・採否メモ</a></p>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase V3T-E検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Performance matrix</strong><small>2 atlases · 3 runs · 2,880 samples</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Ring transport</strong><small>setter p95 ≈ 0.2 ms · sync ≈ 0.06 ms</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Long run</strong><small>1,200 updates · 7 / 7 latest checkpoints</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Actual extension close</strong><small>Provider before allocation · fatal pointer warning 0</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Final regression</strong><small>77 / 77 · V3T-C 7 / 7 · Phase 6DQ 11 / 11</small></p></div>
+              <div role="listitem"><span aria-hidden="true">!</span><p><strong>Pixel identity</strong><small>206 latest · 34 mixed · invalid 0</small></p></div>
+              <div role="listitem"><span aria-hidden="true">!</span><p><strong>Lifecycle</strong><small>10 / 12 · startup/fault fallback pixel未達</small></p></div>
+              <div role="listitem"><span aria-hidden="true">—</span><p><strong>Production integration</strong><small>not attempted · defaults unchanged</small></p></div>
+            </div>
+          </section>
+
+          <div class="notes-grid">
+            <section class="note caution"><p class="note-label">Observed / inferred</p><h3>混在はringだけの現象ではない</h3><p>CPU referenceにも8 / 60件あり、2枚の逐次publicationとrenderer/capture反映境界が強い候補です。ただしProvider内部fence、renderer stream、96×15の大きなtailは未確認です。</p></section>
+            <section class="note next"><p class="note-label">Safe stop</p><h3>V3T-CとCPU fallbackを維持</h3><p>公開source-consumed fence／documented lifetimeを持つAPI、隔離Kit更新、または具体的な操作支障が現れるまで再開しません。wood authority、Flow、Point、collision、revision／rollbackは不変です。</p></section>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v3td" class="section entry-section phase-six">

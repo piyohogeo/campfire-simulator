@@ -2644,6 +2644,19 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 回帰: release build `9.02 s`、Phase 0（cold RTX ready `162.1 s`）、標準8 process・`77 / 77`（`417.4 s`）に合格した。隔離V3T-Cは6/6 runとauthority/Flow/reflection 7/7 gate、隔離Phase 6DQは11/11 gate、revision 710、active blocks 384、58/60 unique frameを再確認した。既存V3T-C/6DQ成果物は上書きしていない。
 - 停止: 結果が良好でもproduction V3へ統合せず、V3T-Cを置換せず、既定値を変えない。GPU-sourceは将来の独立Phase候補として提案だけを残し、公開device/stream/fence/lifetime契約または実操作上の支障が確認されるまで追加最適化を再開しない。
 
+## Phase V3T-E GPU-source ring qualification
+
+### 2026-08-09: source-ready待ちは削減したがpixel/lifetime gate未達でproduction非採用
+
+- 独立性: HEAD `e8bd9f2`を基準に、production V3 moduleをimportしないprobeとtest-only extensionだけを追加した。V3T-C consumer、Phase 6DQ、wood authority、物理式、Flow 110.0.0、Resident snapshot/checkpoint/revision/rollback、Mesh/UV/collision、Sphere既定、Point/rigid/V3既定OFFは変更していない。
+- 構成: Kit 110.2、RTX 3090、Flow ON、96×15／120×60 RGBA8 base＋emissionで、CPU reference、単一Warp GPU buffer＋毎回device同期、2重ring、3重ringを比較した。Provider 2個、dynamic URI、USD Prim、UV Mesh、material binding、asset pathは測定中固定し、USD revision Setとcaptureを性能区間から除外した。
+- 性能: 2 atlas×3独立run、各mode warmup 20＋120 sample、合計`2,880` sample。120×60でsingle／ring2／ring3の明示同期p95は`0.7911 / 0.0599 / 0.0689 ms`、setter p95は`0.2152 / 0.2008 / 0.2193 ms`だった。CPU setter p95は`27.5362 ms`、GPU次requested RTX frame p95は`30.7357–31.6607 ms`であり、ringはowner-thread source-ready待ちを減らすがFlow＋RTX frame latencyを解決しない。
+- 画素: revision識別macroblockを公開RTX viewport PNGで24明示frame後にreadbackした。全240件は最新完全206、複数revision混在34、invalid 0。CPU／single／ring2／ring3の混在は`8 / 9 / 9 / 8`件でring固有悪化は観測しないが、原因推定でpixel gate合格へ読み替えない。即時再利用stressはproduction候補外とした。
+- lifecycle: timeline STOP／再開、stage reload／replacement、Provider再生成、GPU生成失敗のCPU fallback、1,200連続更新、実extension manager disable、Provider→allocation close順、fatal pointer warning 0は合格した。startup readbackとpartial-publication例外後fallback readbackが混在し、全体`10 / 12` gateである。
+- API/lifetime: probe所有Warp arrayはsession中永続、source生成は公開Warp Eventでsetter前に完了させた。一方`set_bytes_data_from_gpu()`はProvider source消費完了event/fence、使用stream、device identity、再利用可能時点を公開しない。ring spacingはbest effortでありproduction ABI/lifetime保証ではない。WarpはRTX 3090 `cuda:0`を報告したがrenderer device identityの公開照合は未確認である。
+- 回帰: release build `8.34 s`、Phase 0 RTX ready `16.423 s`、標準suite全8 process・`77 / 77`件（`385.0 s`、collapse `227.4 s`）に合格した。隔離V3T-Cは6/6 run、authority／Flow／RTX `7 / 7` gate、OFF/ON update-frame p95中央値`8.9032 / 7.4781 ms`を再確認した。隔離Phase 6DQも`11 / 11` gate、revision `710`、active blocks peak `397`、`59 / 60` unique frameで合格した。既存V3T-C／Phase 6DQ成果物は上書きしていない。
+- 採否: pixel correctness、lifecycle、安全な公開reuse lifetimeの全条件を満たさないためproduction統合は行わない。CPU reference/fallback、production既定値、V3T-Cを維持し、GPU ringを安全なprobe停止点とする。詳細は`docs/design/wood_visual_v3_gpu_ring_qualification.md`、再現は`run_phasev3te_gpu_ring.ps1`、成果物は`docs/devlog/assets/phasev3te/gpu_ring_*`に固定する。
+
 ## Phase 6DN immutable layout representation production contract
 
 ### 2026-08-09: Phase 6DMの最小差分をlegacy既定・Point既定OFFで接続する

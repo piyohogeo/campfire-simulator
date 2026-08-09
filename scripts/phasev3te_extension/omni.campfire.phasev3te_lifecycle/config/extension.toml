@@ -1,0 +1,11 @@
+[package]
+version = "0.1.0"
+title = "Campfire Phase V3T-E isolated lifecycle probe"
+description = "Test-only extension-close owner for Phase V3T-E."
+category = "Internal"
+
+[dependencies]
+"omni.kit.uiapp" = {}
+
+[[python.module]]
+name = "omni.campfire.phasev3te_lifecycle"

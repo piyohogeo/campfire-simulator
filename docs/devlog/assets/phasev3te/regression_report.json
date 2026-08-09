@@ -1,0 +1,69 @@
+{
+  "schema": "campfire.phasev3te.regression.v1",
+  "baseline": {
+    "head": "e8bd9f2",
+    "branch": "master",
+    "origin_master_matched": true,
+    "worktree_clean_before_phase": true
+  },
+  "release_build": {
+    "passed": true,
+    "reported_seconds": 8.34
+  },
+  "phase0_rtx": {
+    "passed": true,
+    "rtx_ready_seconds": 16.423,
+    "gpu": "NVIDIA GeForce RTX 3090"
+  },
+  "standard_suite": {
+    "passed": true,
+    "processes_passed": 8,
+    "processes_total": 8,
+    "tests_passed": 77,
+    "tests_total": 77,
+    "total_seconds": 385.0,
+    "collapse_coverage_seconds": 227.4
+  },
+  "phasev3tc": {
+    "passed": true,
+    "runs_passed": 6,
+    "runs_total": 6,
+    "status": "qualified_functionally_explicit_preset_only",
+    "authority_flow_rtx_gates_passed": 7,
+    "authority_flow_rtx_gates_total": 7,
+    "wood_authority_sha256_identical": true,
+    "metrics_csv_sha256_identical": true,
+    "mass_balance_error_zero": true,
+    "ignition_identical": true,
+    "resident_revision_identical": true,
+    "flow_input_identical_and_active": true,
+    "rtx_reflection_within_one_update": true,
+    "off_update_frame_p95_ms_median": 8.9032,
+    "on_update_frame_p95_ms_median": 7.4781,
+    "isolated_output": "artifacts/phasev3te/regression_v3tc"
+  },
+  "phase6dq": {
+    "passed": true,
+    "gates_passed": 11,
+    "gates_total": 11,
+    "layout_representation": "rigid_frame_v1",
+    "revision": 710,
+    "active_blocks_peak": 397,
+    "unique_video_frames": 59,
+    "video_frame_count": 60,
+    "isolated_output": "artifacts/phasev3te/regression_phase6dq"
+  },
+  "excluded_attempts": [
+    {
+      "scope": "standard_suite",
+      "reason": "outer command timeout at 120 seconds before suite completion",
+      "result_used": false
+    }
+  ],
+  "production_artifacts_preserved": {
+    "phasev3tc_committed_evidence_rewritten": false,
+    "phase6dq_committed_evidence_rewritten": false,
+    "production_module_modified": false,
+    "defaults_changed": false
+  }
+}
