@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v3ma">最新記録</a>
+        <a href="#phase-v3mb">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v3ma">Phase V3M-Aを読む</a>
+        <a class="button primary" href="#phase-v3mb">Phase V3M-Bを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V3M-A 完了</strong></div>
+        <div><span>現在地</span><strong>Phase V3M-B 完了</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>66 / 66 passed</strong></div>
-        <div><span>判定</span><strong>隔離Mesh可 · production未接続</strong></div>
+        <div><span>テスト</span><strong>70 / 70 passed</strong></div>
+        <div><span>判定</span><strong>既定OFF Mesh · 物理同値</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,87 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-v3mb" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number compact">V3M-B</span>
+          <p><time datetime="2026-08-09">2026.08.09</time></p>
+          <span class="pill current">Default-off qualified</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Phase V3M-B · Stable 360-cell render Mesh</p>
+            <h2>360の表面状態を、<br>衝突形状を変えずに貼る。</h2>
+            <p>側面288面と両端96面をV2の360 surface identityへ決定論的に対応させました。物理は従来と同じanalytic Cylinder、表示だけがUV付きMeshです。既定はOFFで、OFF時は従来のCylinder-root stageをそのまま生成します。</p>
+          </header>
+
+          <div class="capture-pair" aria-label="360-cell surface ID checkerとPhase 2 OFF ON比較">
+            <figure class="capture-card">
+              <a href="assets/phasev3mb/surface_ids_four_logs.png" aria-label="4本のsurface ID checkerを原寸で開く">
+                <img src="assets/phasev3mb/surface_ids_four_logs.png" width="1280" height="720" alt="赤、青、緑、紫の4本の薪に24×12側面セルと4×12端面セルがchecker状に表示された実機RTX画像">
+              </a>
+              <figcaption>
+                <div><strong>Four-log surface IDs</strong><span>24×12 side · 4×12 caps · fixed atlas slots</span></div>
+                <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3mb/stable_mesh_checker.mp4" data-video-poster="assets/phasev3mb/surface_ids_four_logs.png" data-video-title="Phase V3M-B stable Mesh checker" data-video-meta="Surface-ID diagnostic · initial / transform / stage reload · not a combustion trajectory · 3 s · 1 fps">
+                  <span class="video-trigger-icon" aria-hidden="true"></span>
+                  <span><strong>実測動画</strong><small>3秒 · ID checker</small></span>
+                </button>
+              </figcaption>
+            </figure>
+            <figure class="capture-card">
+              <a href="assets/phasev3mb/phase2_on_frame_0600.png" aria-label="Hierarchy ONのPhase 2最終frameを原寸で開く">
+                <img src="assets/phasev3mb/phase2_on_frame_0600.png" width="1280" height="720" alt="analytic Cylinder colliderへ追従した12角形のrender Mesh薪が石組み内で静止し、Flowの炎が立ち上がるPhase 2実機画像">
+              </a>
+              <figcaption><div><strong>Phase 2 · hierarchy ON</strong><span>analytic colliderのみが接触 · Meshはrender-only</span></div></figcaption>
+            </figure>
+          </div>
+
+          <div class="notes-grid">
+            <section class="note">
+              <p class="note-label">Stable mapping</p>
+              <h3>384 face、360 state</h3>
+              <p>両端外周24 faceは側面端部と同じcellを参照します。stateを重複させず、360 identityを保ちます。20本×360 sampleのUVは7,200点すべてuniqueで、4×4 pixel cellに1 pixel gutterを設けました。</p>
+            </section>
+            <section class="note">
+              <p class="note-label">Physics boundary</p>
+              <h3>接触はCylinderだけ</h3>
+              <p>mass、density、friction、restitution、radius、length、axis、damping、初期transformはOFF／ON完全一致です。RenderSurfaceにはPhysics APIがなく、Resident Point layoutも同じdescriptorになりました。</p>
+            </section>
+          </div>
+
+          <section class="verification" aria-labelledby="phasev3mb-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Measured equivalence</p>
+              <h3 id="phasev3mb-verification-title">見た目を足しても、木材と衝突は同じ。</h3>
+              <p>Phase 2では位置差1.06 cm、姿勢差0.042 radで事前許容値内でした。接触eventは1,063／1,018、Flow peak blockは224／215です。Resident-native Phase 3はauthority SHA-256、着火、mass balance、revision、fuel、supportが一致しました。</p>
+              <code>.\scripts\run_phasev3mb_stable_mesh.ps1</code>
+              <p><a href="assets/phasev3mb/phasev3mb_final_report.json">最終機械レポート</a> · <a href="assets/phasev3mb/stable_mesh_probe.json">Mesh probe</a> · <a href="../design/wood_render_mesh_topology.md">topology設計</a></p>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase V3M-B検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Mesh probe</strong><small>10 / 10 · 4 logs · 7,200 samples</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Combined gates</strong><small>13 / 13 · predeclared tolerances</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Contact</strong><small>1,063 / 1,018 events · both settled</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Resident</strong><small>exact authority SHA · revision 1,200</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Regression</strong><small>Release · 8 processes · 70 / 70</small></p></div>
+            </div>
+          </section>
+
+          <div class="notes-grid">
+            <section class="note caution">
+              <p class="note-label">Known limits</p>
+              <h3>まだ状態textureは流していない</h3>
+              <p>checkerはUV／identity診断で、燃焼trajectoryではありません。Meshは12角形でpoints固定です。収縮、亀裂、欠損、Mesh collider、質量に応じた形状更新は実装していません。V0／V1も既定OFFのfallbackとして残ります。</p>
+            </section>
+            <section class="note next">
+              <p class="note-label">Next gate</p>
+              <h3>V2 payloadを固定atlasへ接続</h3>
+              <p>V3M-Cではdynamic textureをbest-effort observerとして接続し、同一revision no-op、failure保持、reload再発行、close、20本5 Hz性能、そして固定snapshotではない実燃焼動画を検証します。Phase 6DMは引き続き保留です。</p>
+            </section>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v3ma" class="section entry-section phase-six">

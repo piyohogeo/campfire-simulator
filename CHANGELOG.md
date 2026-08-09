@@ -1,5 +1,12 @@
 # Changelog
 
+- Added Phase V3M-B's default-off Xform/analytic-Cylinder/UV-Mesh production candidate while preserving the legacy Cylinder path as the default and rejecting V0/V1 conflicts.
+- Authored a fixed 384-face Mesh that maps 288 side faces and 96 cap faces onto exactly 360 V2 surface identities; 24 side/cap corner faces deliberately reuse one state, and face-varying UVs sample guttered texel centres in a fixed 20-log atlas.
+- Added representation-neutral root, collider, render-surface, dimension, transform, and material-target helpers; Resident snapshot display color and Resident Point layout now resolve through those helpers while diagnostic values and revision remain on the stable root.
+- Qualified the final Mesh checker in Kit/RTX with 10 / 10 gates, including four distinct logs, 7,200 unique atlas samples, transform/reload persistence, no live structural change, exact authored physics parity, and exact Resident Point layout parity.
+- Measured Phase 2 OFF/ON drop equivalence within the predeclared 0.02 m / 0.05 rad tolerances: 0.010646 m final-position error, 0.042244 rad orientation error, contact events 1,063 / 1,018, contact points 1,061 / 1,017, and Flow peak blocks 224 / 215.
+- Measured Resident-native Phase 3 OFF/ON with exact dry/wet authority SHA-256, ignition 66.2 / 166.4 s, mass-balance error 0, revision 1,200, equal fuel and support values; all 13 combined V3M-B gates passed.
+- Kept the feature default-off, the analytic Cylinder as the only collider, Mesh points immutable, V0/V1 available, V2 payload unconsumed, dynamic texture publication unintegrated, and Phase 6DM held.
 - Completed the production-neutral Phase V3M-A Cylinder-root compatibility audit and isolated Xform/Collider/RenderSurface feasibility probe.
 - Enumerated 1,034 source/stage evidence lines, five canonical saved stages with Cylinder-root evidence, and fourteen checkpoint/recovery files; defined one six-helper resolution boundary for a future default-off hierarchy.
 - Qualified an isolated Xform root with RigidBody/Mass/damping, an invisible analytic Cylinder child with Collision/physics material, and a face-varying-UV Mesh child with no Physics/PhysX schemas.

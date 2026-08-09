@@ -11,7 +11,13 @@ from .flow_scene import (
     populate_flow_scene,
 )
 from .scene import CAMERA_PATH, export_stage
-from .wood import LogSpec, create_log, get_log_world_position
+from .wood import (
+    LogSpec,
+    WOOD_RENDER_REPRESENTATION_MESH,
+    WOOD_RENDER_REPRESENTATION_ATTRIBUTE,
+    create_log,
+    get_log_world_position,
+)
 
 
 PHASE2_ADDED_LOG_ID = "Log_04"
@@ -31,7 +37,9 @@ INITIAL_LOG_SPECS = (
 ADDED_LOG_SPEC = LogSpec(PHASE2_ADDED_LOG_ID, PHASE2_SPAWN_POSITION_M, 25.0)
 
 
-def populate_phase2_scene(stage: Usd.Stage) -> Usd.Stage:
+def populate_phase2_scene(
+    stage: Usd.Stage, *, render_hierarchy: bool = False
+) -> Usd.Stage:
     """Create four dynamic logs; the scenario adds a fifth at runtime."""
 
     populate_flow_scene(stage)
@@ -40,8 +48,13 @@ def populate_phase2_scene(stage: Usd.Stage) -> Usd.Stage:
 
     for stone in stage.GetPrimAtPath("/World/Stones").GetChildren():
         UsdPhysics.CollisionAPI.Apply(stone)
-    for spec in INITIAL_LOG_SPECS:
-        create_log(stage, spec)
+    for slot, spec in enumerate(INITIAL_LOG_SPECS):
+        create_log(
+            stage,
+            spec,
+            render_hierarchy=render_hierarchy,
+            render_log_slot=slot,
+        )
 
     # Phase 2 does not consume local fields, so avoid the Phase 1 CPU copy.
     stage.GetPrimAtPath(
@@ -66,6 +79,7 @@ def populate_phase2_scene(stage: Usd.Stage) -> Usd.Stage:
         "campfire:phase": "phase2",
         "campfire:scene": "dynamic_log_mvp",
         "campfire:fixedDtSeconds": PHASE2_FIXED_DT_SECONDS,
+        "campfire:woodRenderHierarchy": bool(render_hierarchy),
     }
     return stage
 
@@ -73,7 +87,14 @@ def populate_phase2_scene(stage: Usd.Stage) -> Usd.Stage:
 def add_scenario_log(stage: Usd.Stage) -> Usd.Prim:
     """The deterministic add-log operation used by UI and headless scenario."""
 
-    return create_log(stage, ADDED_LOG_SPEC)
+    layer_data = stage.GetRootLayer().customLayerData
+    render_hierarchy = bool(layer_data.get("campfire:woodRenderHierarchy", False))
+    return create_log(
+        stage,
+        ADDED_LOG_SPEC,
+        render_hierarchy=render_hierarchy,
+        render_log_slot=len(INITIAL_LOG_SPECS),
+    )
 
 
 def set_emitter_follow(stage: Usd.Stage, log_id: str) -> Gf.Vec3f:

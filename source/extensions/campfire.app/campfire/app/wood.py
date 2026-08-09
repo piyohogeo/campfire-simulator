@@ -5,6 +5,8 @@ from dataclasses import dataclass
 
 from pxr import Gf, PhysxSchema, Sdf, Usd, UsdGeom, UsdPhysics, UsdShade
 
+from .wood_render_mesh import WOOD_RENDER_MAX_LOGS, author_wood_render_mesh
+
 
 LOGS_PATH = Sdf.Path("/World/Logs")
 WOOD_MATERIAL_PATH = Sdf.Path("/World/PhysicsMaterials/Wood")
@@ -12,6 +14,13 @@ WOOD_DENSITY_KG_M3 = 520.0
 WOOD_STATIC_FRICTION = 0.70
 WOOD_DYNAMIC_FRICTION = 0.55
 WOOD_RESTITUTION = 0.10
+WOOD_RENDER_HIERARCHY_SETTING = "/exts/campfire.app/woodRenderHierarchyEnabled"
+WOOD_RENDER_REPRESENTATION_ATTRIBUTE = "campfire:renderRepresentation"
+WOOD_RENDER_REPRESENTATION_LEGACY = "legacy_cylinder_v1"
+WOOD_RENDER_REPRESENTATION_MESH = "uv_mesh_v1"
+WOOD_RENDER_ATLAS_SLOT_ATTRIBUTE = "campfire:renderAtlasSlot"
+WOOD_COLLIDER_NAME = "Collider"
+WOOD_RENDER_SURFACE_NAME = "RenderSurface"
 
 
 @dataclass(frozen=True)
@@ -48,29 +57,7 @@ def define_wood_physics_material(stage: Usd.Stage) -> UsdShade.Material:
     return material
 
 
-def create_log(stage: Usd.Stage, spec: LogSpec) -> Usd.Prim:
-    """Create one cylindrical log with identity, mass, collider and rigid body."""
-
-    if not stage.GetPrimAtPath(LOGS_PATH):
-        UsdGeom.Xform.Define(stage, LOGS_PATH)
-    if not stage.GetPrimAtPath(WOOD_MATERIAL_PATH):
-        define_wood_physics_material(stage)
-
-    path = LOGS_PATH.AppendChild(spec.log_id)
-    if stage.GetPrimAtPath(path):
-        raise ValueError(f"Log ID already exists: {spec.log_id}")
-
-    log = UsdGeom.Cylinder.Define(stage, path)
-    log.CreateAxisAttr(UsdGeom.Tokens.x)
-    log.CreateRadiusAttr(spec.radius_m)
-    log.CreateHeightAttr(spec.length_m)
-    log.CreateDisplayColorAttr([Gf.Vec3f(0.30, 0.12, 0.045)])
-    log.AddTranslateOp().Set(Gf.Vec3d(*spec.position_m))
-    log.AddOrientOp(UsdGeom.XformOp.PrecisionFloat).Set(
-        _orientation_z(spec.rotation_z_deg)
-    )
-
-    prim = log.GetPrim()
+def _author_log_metadata(prim: Usd.Prim, spec: LogSpec) -> None:
     prim.CreateAttribute("campfire:logId", Sdf.ValueTypeNames.String).Set(spec.log_id)
     prim.CreateAttribute("campfire:radiusM", Sdf.ValueTypeNames.Double).Set(
         spec.radius_m
@@ -85,29 +72,149 @@ def create_log(stage: Usd.Stage, spec: LogSpec) -> Usd.Prim:
         spec.mass_kg
     )
 
-    UsdPhysics.CollisionAPI.Apply(prim)
+
+def _apply_log_rigid_body(prim: Usd.Prim, spec: LogSpec) -> None:
     rigid_body = UsdPhysics.RigidBodyAPI.Apply(prim)
     rigid_body.CreateRigidBodyEnabledAttr(True)
     rigid_body.CreateKinematicEnabledAttr(False)
     rigid_body.CreateVelocityAttr(Gf.Vec3f(0.0))
     rigid_body.CreateAngularVelocityAttr(Gf.Vec3f(0.0))
-
-    mass = UsdPhysics.MassAPI.Apply(prim)
-    mass.CreateMassAttr(spec.mass_kg)
-
-    # Mild damping suppresses long-lived numerical jitter without constraining
-    # the drop.  Values are dimensionless PhysX coefficients.
+    UsdPhysics.MassAPI.Apply(prim).CreateMassAttr(spec.mass_kg)
     physx_body = PhysxSchema.PhysxRigidBodyAPI.Apply(prim)
     physx_body.CreateLinearDampingAttr(0.05)
     physx_body.CreateAngularDampingAttr(0.20)
 
+
+def _bind_wood_physics_material(stage: Usd.Stage, prim: Usd.Prim) -> None:
     binding = UsdShade.MaterialBindingAPI.Apply(prim)
     binding.Bind(
         UsdShade.Material(stage.GetPrimAtPath(WOOD_MATERIAL_PATH)),
         UsdShade.Tokens.weakerThanDescendants,
         "physics",
     )
+
+
+def create_log(
+    stage: Usd.Stage,
+    spec: LogSpec,
+    *,
+    render_hierarchy: bool = False,
+    render_log_slot: int | None = None,
+) -> Usd.Prim:
+    """Create one cylindrical log with identity, mass, collider and rigid body."""
+
+    if not stage.GetPrimAtPath(LOGS_PATH):
+        UsdGeom.Xform.Define(stage, LOGS_PATH)
+    if not stage.GetPrimAtPath(WOOD_MATERIAL_PATH):
+        define_wood_physics_material(stage)
+
+    path = LOGS_PATH.AppendChild(spec.log_id)
+    if stage.GetPrimAtPath(path):
+        raise ValueError(f"Log ID already exists: {spec.log_id}")
+
+    if render_hierarchy:
+        if render_log_slot is None:
+            render_log_slot = len(list_log_ids(stage))
+        if not 0 <= render_log_slot < WOOD_RENDER_MAX_LOGS:
+            raise ValueError("Wood render hierarchy supports at most 20 log slots")
+        root = UsdGeom.Xform.Define(stage, path)
+        root.AddTranslateOp().Set(Gf.Vec3d(*spec.position_m))
+        root.AddOrientOp(UsdGeom.XformOp.PrecisionFloat).Set(
+            _orientation_z(spec.rotation_z_deg)
+        )
+        prim = root.GetPrim()
+        prim.CreateAttribute(
+            WOOD_RENDER_REPRESENTATION_ATTRIBUTE, Sdf.ValueTypeNames.Token
+        ).Set(WOOD_RENDER_REPRESENTATION_MESH)
+        prim.CreateAttribute(
+            WOOD_RENDER_ATLAS_SLOT_ATTRIBUTE, Sdf.ValueTypeNames.Int
+        ).Set(render_log_slot)
+        collider = UsdGeom.Cylinder.Define(
+            stage, path.AppendChild(WOOD_COLLIDER_NAME)
+        )
+        collider.CreateAxisAttr(UsdGeom.Tokens.x)
+        collider.CreateRadiusAttr(spec.radius_m)
+        collider.CreateHeightAttr(spec.length_m)
+        collider.CreateVisibilityAttr(UsdGeom.Tokens.invisible)
+        collider_prim = collider.GetPrim()
+        UsdPhysics.CollisionAPI.Apply(collider_prim)
+        _bind_wood_physics_material(stage, collider_prim)
+        render = UsdGeom.Mesh.Define(
+            stage, path.AppendChild(WOOD_RENDER_SURFACE_NAME)
+        )
+        author_wood_render_mesh(render, spec.radius_m, spec.length_m, render_log_slot)
+        render.CreateDisplayColorAttr([Gf.Vec3f(0.30, 0.12, 0.045)])
+    else:
+        log = UsdGeom.Cylinder.Define(stage, path)
+        log.CreateAxisAttr(UsdGeom.Tokens.x)
+        log.CreateRadiusAttr(spec.radius_m)
+        log.CreateHeightAttr(spec.length_m)
+        log.CreateDisplayColorAttr([Gf.Vec3f(0.30, 0.12, 0.045)])
+        log.AddTranslateOp().Set(Gf.Vec3d(*spec.position_m))
+        log.AddOrientOp(UsdGeom.XformOp.PrecisionFloat).Set(
+            _orientation_z(spec.rotation_z_deg)
+        )
+        prim = log.GetPrim()
+        UsdPhysics.CollisionAPI.Apply(prim)
+
+    _author_log_metadata(prim, spec)
+    _apply_log_rigid_body(prim, spec)
+    if not render_hierarchy:
+        # Preserve the legacy API-schema authoring order exactly when the
+        # render hierarchy is disabled.
+        _bind_wood_physics_material(stage, prim)
     return prim
+
+
+def get_log_root(stage: Usd.Stage, log_id: str) -> Usd.Prim:
+    prim = stage.GetPrimAtPath(LOGS_PATH.AppendChild(log_id))
+    if not prim or prim.GetAttribute("campfire:logId").Get() != log_id:
+        raise ValueError(f"Unknown log ID: {log_id}")
+    return prim
+
+
+def get_log_collider(stage: Usd.Stage, log_id: str) -> Usd.Prim:
+    root = get_log_root(stage, log_id)
+    if root.GetAttribute(WOOD_RENDER_REPRESENTATION_ATTRIBUTE).Get() == WOOD_RENDER_REPRESENTATION_MESH:
+        collider = root.GetChild(WOOD_COLLIDER_NAME)
+        if not collider or not collider.IsA(UsdGeom.Cylinder):
+            raise RuntimeError(f"Wood hierarchy collider is invalid: {log_id}")
+        return collider
+    if not root.IsA(UsdGeom.Cylinder):
+        raise RuntimeError(f"Legacy wood collider is invalid: {log_id}")
+    return root
+
+
+def get_log_render_surface(stage: Usd.Stage, log_id: str) -> Usd.Prim:
+    root = get_log_root(stage, log_id)
+    if root.GetAttribute(WOOD_RENDER_REPRESENTATION_ATTRIBUTE).Get() == WOOD_RENDER_REPRESENTATION_MESH:
+        render = root.GetChild(WOOD_RENDER_SURFACE_NAME)
+        if not render or not render.IsA(UsdGeom.Mesh):
+            raise RuntimeError(f"Wood hierarchy render surface is invalid: {log_id}")
+        return render
+    if not root.IsA(UsdGeom.Cylinder):
+        raise RuntimeError(f"Legacy wood render surface is invalid: {log_id}")
+    return root
+
+
+def get_log_dimensions(stage: Usd.Stage, log_id: str) -> tuple[float, float, str]:
+    root = get_log_root(stage, log_id)
+    collider = UsdGeom.Cylinder(get_log_collider(stage, log_id))
+    return (
+        float(collider.GetRadiusAttr().Get()),
+        float(collider.GetHeightAttr().Get()),
+        str(collider.GetAxisAttr().Get()),
+    )
+
+
+def get_log_physics_transform(stage: Usd.Stage, log_id: str) -> Gf.Matrix4d:
+    return UsdGeom.Xformable(get_log_root(stage, log_id)).ComputeLocalToWorldTransform(
+        Usd.TimeCode.Default()
+    )
+
+
+def get_log_material_target(stage: Usd.Stage, log_id: str) -> Usd.Prim:
+    return get_log_render_surface(stage, log_id)
 
 
 def move_log(
@@ -118,9 +225,7 @@ def move_log(
 ) -> Usd.Prim:
     """Headless/UI shared operation corresponding to grabbing a log."""
 
-    prim = stage.GetPrimAtPath(LOGS_PATH.AppendChild(log_id))
-    if not prim:
-        raise ValueError(f"Unknown log ID: {log_id}")
+    prim = get_log_root(stage, log_id)
     prim.GetAttribute("xformOp:translate").Set(Gf.Vec3d(*position_m))
     prim.GetAttribute("xformOp:orient").Set(_orientation_z(rotation_z_deg))
     UsdPhysics.RigidBodyAPI(prim).GetVelocityAttr().Set(Gf.Vec3f(0.0))
@@ -129,12 +234,7 @@ def move_log(
 
 
 def get_log_world_position(stage: Usd.Stage, log_id: str) -> Gf.Vec3d:
-    prim = stage.GetPrimAtPath(LOGS_PATH.AppendChild(log_id))
-    if not prim:
-        raise ValueError(f"Unknown log ID: {log_id}")
-    return UsdGeom.Xformable(prim).ComputeLocalToWorldTransform(
-        Usd.TimeCode.Default()
-    ).ExtractTranslation()
+    return get_log_physics_transform(stage, log_id).ExtractTranslation()
 
 
 def list_log_ids(stage: Usd.Stage) -> list[str]:

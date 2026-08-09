@@ -21,7 +21,7 @@ import omni.usd
 from omni.flowusd import _flowusd
 from omni.physx import get_physx_simulation_interface
 from omni.physx.bindings._physx import SETTING_UPDATE_TO_USD
-from pxr import Gf, Tf, Usd, UsdPhysics, UsdUtils
+from pxr import Gf, PhysxSchema, Tf, Usd, UsdPhysics, UsdUtils
 
 from .controls import CampfireControlWindow, ResidentPointControlWindow
 from .flow_scene import (
@@ -109,12 +109,19 @@ from .resident_point_scene import (
     resident_point_layout_for_logs,
 )
 from .resident_point_sidecar import ResidentNativeSurfaceProducer
-from .wood import get_log_world_position, list_log_ids, move_log
+from .wood import (
+    WOOD_RENDER_HIERARCHY_SETTING,
+    get_log_root,
+    get_log_world_position,
+    list_log_ids,
+    move_log,
+)
 from .wood_visual_v0 import (
     WOOD_VISUAL_V0_SETTING,
     WoodVisualV0Consumer,
     preauthor_wood_visual_v0,
 )
+from .wood_visual_v1 import WOOD_VISUAL_V1_SETTING
 from .char_depth_experiment import (
     create_char_depth_dry_run_package,
     evaluate_char_depth_dry_run_package,
@@ -264,6 +271,9 @@ class CampfireAppExtension(omni.ext.IExt):
         quit_after_capture = settings.get_as_bool(f"{SETTINGS_ROOT}/quitAfterCapture")
         phase = settings.get_as_string(f"{SETTINGS_ROOT}/phase") or "phase0"
         point_application_enabled = resident_point_application_enabled(settings)
+        render_hierarchy_enabled = settings.get_as_bool(
+            WOOD_RENDER_HIERARCHY_SETTING
+        )
         try:
             if point_application_enabled and phase != "phase3":
                 raise ValueError(
@@ -274,6 +284,17 @@ class CampfireAppExtension(omni.ext.IExt):
             ):
                 raise ValueError(
                     "Wood visual V0 is isolated from the Resident Point application"
+                )
+            if render_hierarchy_enabled and phase not in ("phase2", "phase3"):
+                raise ValueError(
+                    "Wood render hierarchy is available only for Phase 2 and Phase 3"
+                )
+            if render_hierarchy_enabled and (
+                settings.get_as_bool(WOOD_VISUAL_V0_SETTING)
+                or settings.get_as_bool(WOOD_VISUAL_V1_SETTING)
+            ):
+                raise ValueError(
+                    "Wood render hierarchy is mutually exclusive with V0 and V1"
                 )
             scene_setup_started = time.perf_counter()
             context = omni.usd.get_context()
@@ -318,9 +339,12 @@ class CampfireAppExtension(omni.ext.IExt):
                         context,
                         phase3_scene_dir / "phase3_point_application.usda",
                         capture_requested=capture_requested,
+                        render_hierarchy=render_hierarchy_enabled,
                     )
                 else:
-                    populate_phase3_scene(stage)
+                    populate_phase3_scene(
+                        stage, render_hierarchy=render_hierarchy_enabled
+                    )
                     if settings.get_as_bool(WOOD_VISUAL_V0_SETTING):
                         preauthor_wood_visual_v0(stage, list_log_ids(stage))
                     scene_path = export_phase3_stage(
@@ -328,7 +352,9 @@ class CampfireAppExtension(omni.ext.IExt):
                     )
             elif phase == "phase2":
                 settings.set("/rtx/flow/enabled", True)
-                populate_phase2_scene(stage)
+                populate_phase2_scene(
+                    stage, render_hierarchy=render_hierarchy_enabled
+                )
                 scene_path = export_phase2_stage(
                     stage, repo_root / "assets" / "scenes" / "phase2_rigid.usda"
                 )
@@ -406,7 +432,12 @@ class CampfireAppExtension(omni.ext.IExt):
                 omni.kit.app.get_app().post_uncancellable_quit(1)
 
     async def _initialize_resident_point_stage(
-        self, context, scene_path: Path, *, capture_requested: bool
+        self,
+        context,
+        scene_path: Path,
+        *,
+        capture_requested: bool,
+        render_hierarchy: bool = False,
     ):
         """Build the complete opt-in Point stage before connecting it to Kit."""
 
@@ -424,7 +455,9 @@ class CampfireAppExtension(omni.ext.IExt):
         offline_stage = Usd.Stage.CreateNew(str(scene_path))
         backend = None
         try:
-            populate_phase3_scene(offline_stage)
+            populate_phase3_scene(
+                offline_stage, render_hierarchy=render_hierarchy
+            )
             log_ids = (PHASE3_DRY_LOG_ID, PHASE3_WET_LOG_ID)
             models = tuple(
                 load_model_from_prim(
@@ -2520,6 +2553,19 @@ class CampfireAppExtension(omni.ext.IExt):
         active_block_counts = []
         images = []
         added_ids_before = list_log_ids(stage)
+        contact_report_event_count = 0
+        contact_point_count = 0
+
+        def observe_contacts(contact_headers, _contact_data):
+            nonlocal contact_report_event_count, contact_point_count
+            contact_report_event_count += len(contact_headers)
+            contact_point_count += sum(
+                int(header.num_contact_data) for header in contact_headers
+            )
+
+        contact_subscription = physics.subscribe_contact_report_events(
+            observe_contacts
+        )
 
         try:
             settings.set(SETTING_UPDATE_TO_USD, True)
@@ -2532,6 +2578,10 @@ class CampfireAppExtension(omni.ext.IExt):
                 if frame == PHASE2_ADD_FRAME:
                     physics.detach_stage()
                     add_scenario_log(stage)
+                    report_api = PhysxSchema.PhysxContactReportAPI.Apply(
+                        get_log_root(stage, PHASE2_ADDED_LOG_ID)
+                    )
+                    report_api.CreateThresholdAttr(0.0)
                     physics.attach_stage(stage_id)
 
                 physics_started = time.perf_counter()
@@ -2605,6 +2655,9 @@ class CampfireAppExtension(omni.ext.IExt):
                 "final_stage": str(final_stage_path),
                 "camera": str(CAMERA_PATH),
                 "resolution": list(CAPTURE_RESOLUTION),
+                "wood_render_hierarchy_enabled": settings.get_as_bool(
+                    WOOD_RENDER_HIERARCHY_SETTING
+                ),
                 "images": images,
                 "logs": {
                     "ids_before_add": added_ids_before,
@@ -2629,6 +2682,8 @@ class CampfireAppExtension(omni.ext.IExt):
                     "settled": settled_displacement < 0.03,
                     "inside_stone_ring": horizontal_radius < 1.30,
                     "resting_above_ground": final_position[2] > 0.15,
+                    "contact_report_events": contact_report_event_count,
+                    "contact_points": contact_point_count,
                 },
                 "emitter_follow": {
                     "samples": len(emitter_errors_m),
@@ -2673,6 +2728,7 @@ class CampfireAppExtension(omni.ext.IExt):
             settings.set(SETTING_UPDATE_TO_USD, previous_update_to_usd)
             settings.set("/physics/fabricEnabled", previous_fabric)
             _flowusd.release_flowusd_interface(flow_interface)
+            contact_subscription = None
 
     async def _run_phase3(self, viewport, stage, scene_path: Path):
         """Compare dry/wet wood and drive Flow from released volatile mass."""
@@ -3868,6 +3924,9 @@ class CampfireAppExtension(omni.ext.IExt):
                 },
                 "startup": startup_timing,
                 "scenario": {
+                    "wood_render_hierarchy_enabled": settings.get_as_bool(
+                        WOOD_RENDER_HIERARCHY_SETTING
+                    ),
                     "wood_array_backend": array_backend,
                     "wood_internal_timing_enabled": profile_wood_internals,
                     "wood_sensible_heat_timing_enabled": profile_sensible_heat,

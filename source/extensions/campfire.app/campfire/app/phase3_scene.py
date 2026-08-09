@@ -12,6 +12,7 @@ from .combustion import (
 )
 from .flow_scene import FLOW_EMITTER_PATH
 from .phase2_scene import export_phase2_stage, populate_phase2_scene, set_emitter_follow
+from .wood import get_log_render_surface
 
 
 PHASE3_DRY_LOG_ID = "Log_00"
@@ -100,7 +101,8 @@ def apply_model_visual_state(
     ember = Gf.Vec3f(0.55, 0.075, 0.015)
     color = wood * (1.0 - char_fraction) + char * char_fraction
     color = color * (1.0 - 0.35 * heat_fraction) + ember * (0.35 * heat_fraction)
-    UsdGeom.Gprim(prim).GetDisplayColorAttr().Set([color])
+    render_prim = get_log_render_surface(prim.GetStage(), str(prim.GetAttribute("campfire:logId").Get()))
+    UsdGeom.Gprim(render_prim).GetDisplayColorAttr().Set([color])
     prim.CreateAttribute("campfire:surfaceTemperatureK", Sdf.ValueTypeNames.Double).Set(
         metrics["surface_mean_temperature_k"]
     )
@@ -109,8 +111,10 @@ def apply_model_visual_state(
     )
 
 
-def populate_phase3_scene(stage: Usd.Stage) -> Usd.Stage:
-    populate_phase2_scene(stage)
+def populate_phase3_scene(
+    stage: Usd.Stage, *, render_hierarchy: bool = False
+) -> Usd.Stage:
+    populate_phase2_scene(stage, render_hierarchy=render_hierarchy)
     models = create_phase3_models(stage)
     for log_id, model in models.items():
         apply_model_visual_state(stage.GetPrimAtPath(f"/World/Logs/{log_id}"), model)

@@ -13,6 +13,7 @@ import math
 from pxr import Gf, Sdf, Usd, UsdGeom, UsdShade, Vt
 
 from .flow_scene import FLOW_EMITTER_PATH, FLOW_SIMULATE_PATH
+from .wood import get_log_dimensions, get_log_physics_transform
 
 
 RESIDENT_POINT_APPLICATION_SETTING = (
@@ -35,15 +36,10 @@ def resident_point_layout_for_logs(stage: Usd.Stage, log_ids) -> dict:
     origins = []
     axes = []
     for log_id in log_ids:
-        prim = stage.GetPrimAtPath(f"/World/Logs/{log_id}")
-        if not prim or not prim.IsA(UsdGeom.Cylinder):
-            raise RuntimeError(f"Resident Point log is not a cylinder: {log_id}")
-        cylinder = UsdGeom.Cylinder(prim)
-        if cylinder.GetAxisAttr().Get() != UsdGeom.Tokens.x:
+        _radius_m, _length_m, axis = get_log_dimensions(stage, log_id)
+        if axis != str(UsdGeom.Tokens.x):
             raise ValueError("Resident Point native layout requires local-X logs")
-        transform = UsdGeom.Xformable(prim).ComputeLocalToWorldTransform(
-            Usd.TimeCode.Default()
-        )
+        transform = get_log_physics_transform(stage, log_id)
         origin = transform.ExtractTranslation()
         axial = transform.TransformDir(Gf.Vec3d(1.0, 0.0, 0.0)).GetNormalized()
         if abs(float(axial[2])) > 1.0e-5:

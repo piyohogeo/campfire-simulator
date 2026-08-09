@@ -1,5 +1,6 @@
 param(
-    [string]$OutputDir = ""
+    [string]$OutputDir = "",
+    [switch]$WoodRenderHierarchy
 )
 
 $ErrorActionPreference = "Stop"
@@ -26,6 +27,7 @@ $kitArgs = @(
     "--/app/settings/loadUserConfig=0",
     "--/exts/campfire.app/autoCreateScene=true",
     "--/exts/campfire.app/phase=phase2",
+    "--/exts/campfire.app/woodRenderHierarchyEnabled=$($WoodRenderHierarchy.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/captureOnStartup=true",
     "--/exts/campfire.app/quitAfterCapture=true",
     "--/exts/campfire.app/outputDir=$OutputDir",
@@ -50,6 +52,9 @@ if (-not (Test-Path -LiteralPath $summary)) {
 $result = Get-Content -LiteralPath $summary -Raw | ConvertFrom-Json
 if ($result.status -ne "ok" -or $result.phase -ne "phase2") {
     throw "Phase 2 summary reported a failure or unexpected phase: $summary"
+}
+if ([bool]$result.wood_render_hierarchy_enabled -ne $WoodRenderHierarchy.IsPresent) {
+    throw "Phase 2 used an unexpected wood render representation."
 }
 if ($result.logs.count_before_add -ne 4 -or $result.logs.count_after_add -ne 5) {
     throw "Phase 2 did not preserve four logs and add exactly one log."

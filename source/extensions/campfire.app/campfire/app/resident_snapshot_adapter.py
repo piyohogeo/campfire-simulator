@@ -15,6 +15,7 @@ from .resident_snapshot import (
     ResidentPublishedSnapshot,
     published_row_from_python_model,
 )
+from .wood import get_log_render_surface
 
 
 @dataclass
@@ -550,7 +551,8 @@ class UsdResidentSnapshotAdapter:
             if profile is not None:
                 self._add_elapsed(profile, "payload_preparation_ms", started)
                 started = time.perf_counter_ns()
-            display_color = UsdGeom.Gprim(prim).GetDisplayColorAttr()
+            render_prim = get_log_render_surface(prim.GetStage(), log_id)
+            display_color = UsdGeom.Gprim(render_prim).GetDisplayColorAttr()
             if not display_color:
                 raise RuntimeError(f"Log {log_id} has no displayColor attribute")
             if profile is not None:
@@ -569,7 +571,7 @@ class UsdResidentSnapshotAdapter:
             if profile is not None:
                 self._add_elapsed(profile, "payload_preparation_ms", started)
             write_index = self._set_derived_attribute_lightweight(
-                prim,
+                render_prim,
                 display_color.GetName(),
                 display_color.GetTypeName(),
                 color,
@@ -1049,13 +1051,14 @@ class UsdResidentSnapshotAdapter:
                 if profile is not None:
                     self._add_elapsed(profile, "payload_preparation_ms", started)
                     started = time.perf_counter_ns()
-                display_color = UsdGeom.Gprim(prim).GetDisplayColorAttr()
+                render_prim = get_log_render_surface(prim.GetStage(), log_id)
+                display_color = UsdGeom.Gprim(render_prim).GetDisplayColorAttr()
                 if not display_color:
                     raise RuntimeError(f"Log {log_id} has no displayColor attribute")
                 if profile is not None:
                     self._add_elapsed(profile, "attribute_lookup_ms", started)
                 self._set_attribute(
-                    prim,
+                    render_prim,
                     display_color.GetName(),
                     display_color.GetTypeName(),
                     [color],

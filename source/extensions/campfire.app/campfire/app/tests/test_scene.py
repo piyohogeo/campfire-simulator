@@ -133,6 +133,122 @@ class TestScene(omni.kit.test.AsyncTestCase):
         with self.assertRaises(ValueError):
             campfire.app.add_scenario_log(stage)
 
+    async def test_default_off_wood_render_hierarchy_preserves_legacy_cylinders(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase2_scene(stage)
+        for log_id in campfire.app.list_log_ids(stage):
+            root = campfire.app.get_log_root(stage, log_id)
+            self.assertTrue(root.IsA(UsdGeom.Cylinder))
+            self.assertEqual(campfire.app.get_log_collider(stage, log_id), root)
+            self.assertEqual(campfire.app.get_log_render_surface(stage, log_id), root)
+            self.assertTrue(root.HasAPI(UsdPhysics.CollisionAPI))
+
+    async def test_wood_render_hierarchy_has_stable_360_cell_mesh_and_roles(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase2_scene(stage, render_hierarchy=True)
+        self.assertTrue(stage.GetRootLayer().customLayerData["campfire:woodRenderHierarchy"])
+        for slot, log_id in enumerate(campfire.app.list_log_ids(stage)):
+            root = campfire.app.get_log_root(stage, log_id)
+            collider = campfire.app.get_log_collider(stage, log_id)
+            render = campfire.app.get_log_render_surface(stage, log_id)
+            self.assertTrue(root.IsA(UsdGeom.Xform))
+            self.assertTrue(root.HasAPI(UsdPhysics.RigidBodyAPI))
+            self.assertTrue(root.HasAPI(UsdPhysics.MassAPI))
+            self.assertFalse(root.HasAPI(UsdPhysics.CollisionAPI))
+            self.assertTrue(collider.IsA(UsdGeom.Cylinder))
+            self.assertTrue(collider.HasAPI(UsdPhysics.CollisionAPI))
+            self.assertFalse(collider.HasAPI(UsdPhysics.RigidBodyAPI))
+            self.assertEqual(
+                UsdGeom.Imageable(collider).GetVisibilityAttr().Get(),
+                UsdGeom.Tokens.invisible,
+            )
+            self.assertTrue(render.IsA(UsdGeom.Mesh))
+            self.assertFalse(render.HasAPI(UsdPhysics.CollisionAPI))
+            self.assertFalse(render.HasAPI(UsdPhysics.RigidBodyAPI))
+            self.assertEqual(root.GetAttribute("campfire:renderAtlasSlot").Get(), slot)
+            mesh = UsdGeom.Mesh(render)
+            counts = tuple(mesh.GetFaceVertexCountsAttr().Get())
+            self.assertEqual(len(mesh.GetPointsAttr().Get()), 431)
+            self.assertEqual(len(counts), 384)
+            self.assertEqual(counts.count(3), 24)
+            self.assertEqual(counts.count(4), 360)
+            surface = tuple(
+                UsdGeom.PrimvarsAPI(render)
+                .GetPrimvar("surfaceIndex")
+                .Get()
+            )
+            self.assertEqual(len(surface), 384)
+            self.assertEqual(set(surface), set(range(360)))
+            for circumferential in range(12):
+                self.assertEqual(
+                    surface[circumferential], surface[324 + circumferential]
+                )
+                self.assertEqual(
+                    surface[276 + circumferential], surface[372 + circumferential]
+                )
+            st = tuple(UsdGeom.PrimvarsAPI(render).GetPrimvar("st").Get())
+            self.assertEqual(len(st), sum(counts))
+            cursor = 0
+            for count in counts:
+                self.assertEqual(len(set(st[cursor : cursor + count])), 1)
+                cursor += count
+
+    async def test_wood_render_hierarchy_preserves_physics_and_point_layout_contract(self):
+        legacy = Usd.Stage.CreateInMemory()
+        hierarchy = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase2_scene(legacy)
+        campfire.app.populate_phase2_scene(hierarchy, render_hierarchy=True)
+        log_ids = campfire.app.list_log_ids(legacy)
+        self.assertEqual(log_ids, campfire.app.list_log_ids(hierarchy))
+        for log_id in log_ids:
+            legacy_root = campfire.app.get_log_root(legacy, log_id)
+            hierarchy_root = campfire.app.get_log_root(hierarchy, log_id)
+            self.assertEqual(
+                campfire.app.get_log_dimensions(legacy, log_id),
+                campfire.app.get_log_dimensions(hierarchy, log_id),
+            )
+            for name in (
+                "campfire:initialMassKg",
+                "physics:mass",
+                "physxRigidBody:linearDamping",
+                "physxRigidBody:angularDamping",
+                "physics:rigidBodyEnabled",
+                "physics:kinematicEnabled",
+            ):
+                self.assertEqual(
+                    legacy_root.GetAttribute(name).Get(),
+                    hierarchy_root.GetAttribute(name).Get(),
+                )
+            self.assertTrue(
+                Gf.IsClose(
+                    campfire.app.get_log_physics_transform(legacy, log_id),
+                    campfire.app.get_log_physics_transform(hierarchy, log_id),
+                    1.0e-9,
+                )
+            )
+        self.assertEqual(
+            campfire.app.resident_point_layout_for_logs(legacy, log_ids),
+            campfire.app.resident_point_layout_for_logs(hierarchy, log_ids),
+        )
+        campfire.app.add_scenario_log(hierarchy)
+        added = campfire.app.get_log_root(hierarchy, campfire.app.PHASE2_ADDED_LOG_ID)
+        self.assertTrue(added.IsA(UsdGeom.Xform))
+        self.assertEqual(added.GetAttribute("campfire:renderAtlasSlot").Get(), 4)
+
+    async def test_wood_render_atlas_tiles_are_fixed_and_guttered(self):
+        self.assertEqual(campfire.app.WOOD_ATLAS_WIDTH_PX, 480)
+        self.assertEqual(campfire.app.WOOD_ATLAS_HEIGHT_PX, 240)
+        samples = {
+            campfire.app.atlas_uv(log_slot, surface_index)
+            for log_slot in range(20)
+            for surface_index in range(360)
+        }
+        self.assertEqual(len(samples), 7200)
+        with self.assertRaises(ValueError):
+            campfire.app.atlas_uv(20, 0)
+        with self.assertRaises(ValueError):
+            campfire.app.atlas_uv(0, 360)
+
     async def test_wood_grid_uses_dry_basis_moisture_and_si_mass(self):
         model = campfire.app.create_cylindrical_wood_model(
             "TestLog", 0.16, 1.8, moisture_ratio_dry_basis=0.20

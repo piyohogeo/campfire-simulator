@@ -1,0 +1,492 @@
+{
+  "schema": "campfire.phasev3mb.final_report.v1",
+  "status": "qualified",
+  "tolerances_defined_before_final_evaluation": {
+    "position_m": 0.02,
+    "orientation_rad": 0.05,
+    "contact_and_flow_count_relative": 0.1
+  },
+  "gates": {
+    "mesh_probe_qualified": true,
+    "default_off_preserved": true,
+    "phase2_hierarchy_opt_in": true,
+    "drop_and_settle_preserved": true,
+    "final_position_within_2cm": true,
+    "final_orientation_within_0_05rad": true,
+    "contact_reports_preserved": true,
+    "flow_source_and_blocks_preserved": true,
+    "authority_sha256_exact": true,
+    "mass_balance_and_ignition_exact": true,
+    "flow_fuel_exact_and_blocks_preserved": true,
+    "resident_revision_exact": true,
+    "support_decision_exact": true
+  },
+  "mesh": {
+    "schema": "campfire.phasev3mb.stable_mesh_probe.v1",
+    "status": "qualified",
+    "gates": {
+      "four_log_checker_visible": true,
+      "final_face_layout_is_288_side_96_caps": true,
+      "all_360_identities_referenced": true,
+      "corner_overlap_reuses_state": true,
+      "twenty_log_atlas_has_7200_unique_samples": true,
+      "no_live_structure_or_topology_change": true,
+      "reload_preserves_fixed_dynamic_uri": true,
+      "authored_physics_values_equal": true,
+      "render_role_separated": true,
+      "resident_point_layout_equal": true
+    },
+    "mesh": {
+      "points": 431,
+      "faces": 384,
+      "unique_surface_identities": 360,
+      "side_faces": 288,
+      "cap_faces": 96,
+      "overlapping_corner_faces": 24,
+      "topology_sha256": {
+        "Log_00": "20fc332b68143f5a81cd8f01f0bb7c97d0cc448a85695e82ec94cdc8c6c5ad19",
+        "Log_01": "c769775276d810f523aa17af571361fcaf6d51a5f56827536f622eca3c9a16a9",
+        "Log_02": "e18a1f31a4de6d0c14fb4cb49f65a17c0301060f24e9440fe5be62c26c8a8681",
+        "Log_03": "b60e3becf94b2bb23cbf1c61951c543ae59ba324ee5651196d77f1c93d9c52a6"
+      }
+    },
+    "atlas": {
+      "size": [
+        480,
+        240
+      ],
+      "logs": 20,
+      "surface_cells_per_log": 360,
+      "unique_samples": 7200,
+      "cell_stride_px": 4,
+      "gutter_px": 1,
+      "uri": "dynamic://campfire_phasev3mb_surface_id_atlas"
+    },
+    "physics_contract": {
+      "records": {
+        "off": {
+          "transform": [
+            -3.422854177870249e-08,
+            0.9999999999999993,
+            0.0,
+            0.0,
+            -0.9999999999999993,
+            -3.422854177870249e-08,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.35,
+            -0.2,
+            1.1,
+            1.0
+          ],
+          "dimensions": [
+            0.16,
+            1.8,
+            "X"
+          ],
+          "mass_kg": 75.277587890625,
+          "density_kg_m3": 520.0,
+          "rigid_body_enabled": true,
+          "kinematic_enabled": false,
+          "linear_damping": 0.05000000074505806,
+          "angular_damping": 0.20000000298023224,
+          "static_friction": 0.699999988079071,
+          "dynamic_friction": 0.550000011920929,
+          "restitution": 0.10000000149011612,
+          "collider_has_collision": true,
+          "render_has_physics": true
+        },
+        "on": {
+          "transform": [
+            -3.422854177870249e-08,
+            0.9999999999999993,
+            0.0,
+            0.0,
+            -0.9999999999999993,
+            -3.422854177870249e-08,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.35,
+            -0.2,
+            1.1,
+            1.0
+          ],
+          "dimensions": [
+            0.16,
+            1.8,
+            "X"
+          ],
+          "mass_kg": 75.277587890625,
+          "density_kg_m3": 520.0,
+          "rigid_body_enabled": true,
+          "kinematic_enabled": false,
+          "linear_damping": 0.05000000074505806,
+          "angular_damping": 0.20000000298023224,
+          "static_friction": 0.699999988079071,
+          "dynamic_friction": 0.550000011920929,
+          "restitution": 0.10000000149011612,
+          "collider_has_collision": true,
+          "render_has_physics": false
+        }
+      },
+      "resident_point_layout": {
+        "off": {
+          "revision": 1,
+          "origins": [
+            [
+              0.35,
+              -0.2,
+              1.1
+            ]
+          ],
+          "axes": [
+            1
+          ]
+        },
+        "on": {
+          "revision": 1,
+          "origins": [
+            [
+              0.35,
+              -0.2,
+              1.1
+            ]
+          ],
+          "axes": [
+            1
+          ]
+        }
+      },
+      "equal_fields": [
+        "transform",
+        "dimensions",
+        "mass_kg",
+        "density_kg_m3",
+        "rigid_body_enabled",
+        "kinematic_enabled",
+        "linear_damping",
+        "angular_damping",
+        "static_friction",
+        "dynamic_friction",
+        "restitution",
+        "collider_has_collision"
+      ],
+      "all_values_equal": true,
+      "render_role_separated": true,
+      "point_layout_equal": true
+    },
+    "captures": {
+      "initial": {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3mb\\mesh\\captures\\surface_ids_four_logs.png",
+        "sha256": "db372482156a903c0b0bd19aea18c0a5386b672c4c2e224f3592da3fd2437e3e",
+        "quantized_colors": 329
+      },
+      "transformed": {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3mb\\mesh\\captures\\surface_ids_transformed.png",
+        "sha256": "3a53367f2b77c0455229a55903ce9b4915af4156a89d0585b31505a371c78351",
+        "quantized_colors": 347
+      },
+      "reloaded": {
+        "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3mb\\mesh\\captures\\surface_ids_reloaded.png",
+        "sha256": "86c62378fe9ec2616b5804882ecdd141a6fd7cdc5be0660c0f46fb9287e310a6",
+        "quantized_colors": 351
+      },
+      "kind": "surface-ID checker diagnostic; not combustion"
+    }
+  },
+  "physics_equivalence": {
+    "final_position_error_m": 0.010646090503090781,
+    "final_orientation_error_rad": 0.042244001673731865,
+    "contact_event_relative_difference": 0.04233301975540922,
+    "contact_point_relative_difference": 0.04147031102733271,
+    "flow_active_block_relative_difference": 0.03879310344827586,
+    "off": {
+      "status": "ok",
+      "phase": "phase2",
+      "timestamp_utc": "2026-08-09T01:55:24.120432+00:00",
+      "scene": "C:\\Users\\junic\\src\\campfire-simulator\\assets\\scenes\\phase2_rigid.usda",
+      "final_stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3mb\\phase2_off\\final_stage.usda",
+      "camera": "/World/Camera",
+      "resolution": [
+        1280,
+        720
+      ],
+      "wood_render_hierarchy_enabled": false,
+      "images": [
+        {
+          "frame": 45,
+          "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3mb\\phase2_off\\frame_0045.png",
+          "resolution": [
+            1280,
+            720
+          ],
+          "added_log_position_m": [
+            0.0,
+            0.0,
+            2.231247
+          ]
+        },
+        {
+          "frame": 600,
+          "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3mb\\phase2_off\\frame_0600.png",
+          "resolution": [
+            1280,
+            720
+          ],
+          "added_log_position_m": [
+            -0.449834,
+            0.851133,
+            0.678702
+          ]
+        }
+      ],
+      "logs": {
+        "ids_before_add": [
+          "Log_00",
+          "Log_01",
+          "Log_02",
+          "Log_03"
+        ],
+        "ids_after_add": [
+          "Log_00",
+          "Log_01",
+          "Log_02",
+          "Log_03",
+          "Log_04"
+        ],
+        "count_before_add": 4,
+        "count_after_add": 5,
+        "added_log_id": "Log_04",
+        "identity_preserved": true
+      },
+      "rigid_body": {
+        "fixed_dt_seconds": 0.016666666666666666,
+        "simulation_steps": 600,
+        "simulation_wall_seconds": 14.1305,
+        "spawn_position_m": [
+          0.0,
+          0.0,
+          2.6
+        ],
+        "final_position_m": [
+          -0.449834,
+          0.851133,
+          0.678702
+        ],
+        "dropped_distance_m": 1.921298,
+        "settled_displacement_last_second_m": 0.0,
+        "settled": true,
+        "inside_stone_ring": true,
+        "resting_above_ground": true,
+        "contact_report_events": 1063,
+        "contact_points": 1061
+      },
+      "emitter_follow": {
+        "samples": 571,
+        "offset_m": [
+          0.0,
+          0.0,
+          0.12
+        ],
+        "max_error_m": 0.0,
+        "followed": true
+      },
+      "flow": {
+        "active_blocks_final": 164,
+        "active_blocks_peak": 232
+      },
+      "timing": {
+        "warmup_steps_excluded": 30,
+        "physics_mean_ms": 14.6114,
+        "physics_p95_ms": 24.2035,
+        "physics_simulate_mean_ms": 0.1418,
+        "physics_fetch_mean_ms": 14.4697,
+        "flow_and_render_update_mean_ms": 6.7871,
+        "flow_and_render_update_p95_ms": 9.03
+      },
+      "runner_wall_seconds": 32.422
+    },
+    "on": {
+      "status": "ok",
+      "phase": "phase2",
+      "timestamp_utc": "2026-08-09T01:56:05.489930+00:00",
+      "scene": "C:\\Users\\junic\\src\\campfire-simulator\\assets\\scenes\\phase2_rigid.usda",
+      "final_stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3mb\\phase2_on\\final_stage.usda",
+      "camera": "/World/Camera",
+      "resolution": [
+        1280,
+        720
+      ],
+      "wood_render_hierarchy_enabled": true,
+      "images": [
+        {
+          "frame": 45,
+          "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3mb\\phase2_on\\frame_0045.png",
+          "resolution": [
+            1280,
+            720
+          ],
+          "added_log_position_m": [
+            0.0,
+            0.0,
+            2.231247
+          ]
+        },
+        {
+          "frame": 600,
+          "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3mb\\phase2_on\\frame_0600.png",
+          "resolution": [
+            1280,
+            720
+          ],
+          "added_log_position_m": [
+            -0.453679,
+            0.85183,
+            0.668799
+          ]
+        }
+      ],
+      "logs": {
+        "ids_before_add": [
+          "Log_00",
+          "Log_01",
+          "Log_02",
+          "Log_03"
+        ],
+        "ids_after_add": [
+          "Log_00",
+          "Log_01",
+          "Log_02",
+          "Log_03",
+          "Log_04"
+        ],
+        "count_before_add": 4,
+        "count_after_add": 5,
+        "added_log_id": "Log_04",
+        "identity_preserved": true
+      },
+      "rigid_body": {
+        "fixed_dt_seconds": 0.016666666666666666,
+        "simulation_steps": 600,
+        "simulation_wall_seconds": 13.7574,
+        "spawn_position_m": [
+          0.0,
+          0.0,
+          2.6
+        ],
+        "final_position_m": [
+          -0.453679,
+          0.85183,
+          0.668799
+        ],
+        "dropped_distance_m": 1.931201,
+        "settled_displacement_last_second_m": 0.0,
+        "settled": true,
+        "inside_stone_ring": true,
+        "resting_above_ground": true,
+        "contact_report_events": 1018,
+        "contact_points": 1017
+      },
+      "emitter_follow": {
+        "samples": 571,
+        "offset_m": [
+          0.0,
+          0.0,
+          0.12
+        ],
+        "max_error_m": 0.0,
+        "followed": true
+      },
+      "flow": {
+        "active_blocks_final": 186,
+        "active_blocks_peak": 241
+      },
+      "timing": {
+        "warmup_steps_excluded": 30,
+        "physics_mean_ms": 13.8834,
+        "physics_p95_ms": 24.0343,
+        "physics_simulate_mean_ms": 0.135,
+        "physics_fetch_mean_ms": 13.7484,
+        "flow_and_render_update_mean_ms": 6.7864,
+        "flow_and_render_update_p95_ms": 8.6139
+      },
+      "runner_wall_seconds": 32.021
+    }
+  },
+  "resident_equivalence": {
+    "authority_sha256": {
+      "off": {
+        "dry": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+        "wet": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9"
+      },
+      "on": {
+        "dry": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+        "wet": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9"
+      }
+    },
+    "revision": {
+      "off": 1200,
+      "on": 1200
+    },
+    "ignition_seconds": {
+      "off": {
+        "dry": 66.2,
+        "wet": 166.4
+      },
+      "on": {
+        "dry": 66.2,
+        "wet": 166.4
+      }
+    },
+    "mass_balance_error_kg": {
+      "off": {
+        "dry": 0.0,
+        "wet": 0.0
+      },
+      "on": {
+        "dry": 0.0,
+        "wet": 0.0
+      }
+    },
+    "flow": {
+      "off": {
+        "input_owner": "wood thermal model",
+        "active_blocks_final": 134,
+        "active_blocks_peak": 134,
+        "peak_fuel_input": 1.0
+      },
+      "on": {
+        "input_owner": "wood thermal model",
+        "active_blocks_final": 133,
+        "active_blocks_peak": 134,
+        "peak_fuel_input": 1.0
+      }
+    },
+    "support": {
+      "off": {
+        "Log_00": 0.5975330244846861,
+        "Log_01": 0.9999999999999999
+      },
+      "on": {
+        "Log_00": 0.5975330244846861,
+        "Log_01": 0.9999999999999999
+      }
+    }
+  },
+  "decision": {
+    "phasev3mb_qualified": true,
+    "phasev3mc_may_start": true,
+    "production_default_changed": false,
+    "mesh_collider_used": false,
+    "points_deformed": false,
+    "phase6dm_resumed": false
+  }
+}

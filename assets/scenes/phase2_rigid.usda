@@ -5,6 +5,7 @@
         string "campfire:flowVersion" = "110.0.0"
         string "campfire:phase" = "phase2"
         string "campfire:scene" = "dynamic_log_mvp"
+        bool "campfire:woodRenderHierarchy" = 0
         dictionary renderSettings = {
             bool "rtx:flow:enabled" = 1
             bool "rtx:flow:pathTracingEnabled" = 1

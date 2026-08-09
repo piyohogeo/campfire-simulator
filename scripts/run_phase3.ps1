@@ -38,6 +38,7 @@ param(
     [switch]$ResidentSnapshotDisableLightweightNoticeCoalescing,
     [switch]$ResidentSnapshotLightweightNoticeTracking,
     [switch]$WoodVisualV0,
+    [switch]$WoodRenderHierarchy,
     [switch]$ResidentNativeBackend,
     [string]$ResidentNativeLibraryPath = ""
 )
@@ -132,6 +133,9 @@ if ($ResidentSnapshotLightweightNoticeTracking.IsPresent -and -not (
 if ($WoodVisualV0.IsPresent -and -not $ResidentSnapshotAdapter.IsPresent) {
     throw "Wood visual V0 requires -ResidentSnapshotAdapter."
 }
+if ($WoodVisualV0.IsPresent -and $WoodRenderHierarchy.IsPresent) {
+    throw "Wood visual V0 and the V3 Mesh render hierarchy are mutually exclusive."
+}
 if ($ResidentNativeBackend.IsPresent -and -not $ResidentSnapshotAdapter.IsPresent) {
     throw "Resident native backend requires the resident snapshot adapter."
 }
@@ -192,6 +196,7 @@ $kitArgs = @(
     "--/exts/campfire.app/residentSnapshotLightweightNoticeCoalescingEnabled=$($useResidentSnapshotLightweightNoticeCoalescing.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentSnapshotLightweightNoticeTrackingEnabled=$($ResidentSnapshotLightweightNoticeTracking.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/woodVisualV0Enabled=$($WoodVisualV0.IsPresent.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/woodRenderHierarchyEnabled=$($WoodRenderHierarchy.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentNativeBackendEnabled=$($ResidentNativeBackend.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentNativeLibraryPath=$ResidentNativeLibraryPath",
     "--/rtx/flow/enabled=true",
@@ -218,6 +223,9 @@ if ($result.status -ne "ok" -or $result.phase -ne "phase3") {
 }
 if ($result.scenario.wood_array_backend -ne $ArrayBackend) {
     throw "Phase 3 used an unexpected wood array backend."
+}
+if ([bool]$result.scenario.wood_render_hierarchy_enabled -ne $WoodRenderHierarchy.IsPresent) {
+    throw "Phase 3 used an unexpected wood render representation."
 }
 if ([bool]$result.scenario.wood_internal_timing_enabled -ne $ProfileWoodInternals.IsPresent) {
     throw "Phase 3 used an unexpected wood internal timing setting."
