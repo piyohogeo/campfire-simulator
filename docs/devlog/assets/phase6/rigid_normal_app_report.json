@@ -1,0 +1,54 @@
+{
+  "schema": "campfire.phase6dq.rigid_normal_app_report.v1",
+  "phase": "phase6dq",
+  "status": "qualified_default_off",
+  "qualification": {
+    "gates": {
+      "passed": 11,
+      "total": 11,
+      "checks": {
+        "explicit_setting_enabled": true,
+        "normal_extension_owner_composed": true,
+        "complete_schema_connected": true,
+        "selected_layout_representation_matches_stage_and_owner": true,
+        "only_existing_point_properties_changed_live": true,
+        "consumer_revisions_match": true,
+        "final_revision_matches_steps": true,
+        "flow_core_active": true,
+        "fuel_temperature_smoke_present": true,
+        "continuous_video": true,
+        "clean_shutdown": true
+      }
+    },
+    "normal_application": true,
+    "stage_built_before_connection": true,
+    "layout_representation": "rigid_frame_v1"
+  },
+  "publication": {
+    "revision": 710,
+    "consumer_revisions": [
+      710,
+      710,
+      710
+    ],
+    "point_resync_count": 0,
+    "layout_revision": 1,
+    "layout_replace_count": 0
+  },
+  "flow": {
+    "version": "110.0.0",
+    "point_count": 720,
+    "active_blocks_peak": 391,
+    "unique_video_frames": 58,
+    "video_frame_count": 60
+  },
+  "decision": {
+    "point_default_enabled": false,
+    "rigid_layout_default_enabled": false,
+    "sphere_production_default": true,
+    "legacy_fallback_preserved": true,
+    "legacy_qualification_mix_rejected_before_authoring": true,
+    "live_representation_migration": false,
+    "next_gate": "interactive arbitrary-transform refresh through normal app"
+  }
+}

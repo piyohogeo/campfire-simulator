@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6dp">最新記録</a>
+        <a href="#phase-6dq">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6dp">Phase 6DPを読む</a>
+        <a class="button primary" href="#phase-6dq">Phase 6DQを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6DP 完了</strong></div>
+        <div><span>現在地</span><strong>Phase 6DQ 完了</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>76 / 76 passed</strong></div>
-        <div><span>判定</span><strong>rigid owner 11 / 11 · Point既定OFF</strong></div>
+        <div><span>テスト</span><strong>77 / 77 passed</strong></div>
+        <div><span>判定</span><strong>normal rigid 11 / 11 · Point既定OFF</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,53 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-6dq" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number compact">6DQ</span>
+          <p><time datetime="2026-08-09">2026.08.09</time></p>
+          <span class="pill current">Qualified · rigid default OFF</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Phase 6DQ · Normal-app rigid selection</p>
+            <h2>任意姿勢の入口を、<br>stage接続前に一度だけ選ぶ。</h2>
+            <p>通常extensionへ単一の既定OFF settingを追加し、rigid frame、native producer、Point schema、application ownerを同じrepresentationで構成してからKitへ接続しました。無指定時のlegacy fallbackとSphere production既定は変えていません。</p>
+          </header>
+
+          <figure class="capture-card wide">
+            <a href="assets/phase6/rigid_normal_app_report.svg" aria-label="Phase 6DQ normal-app rigid settingレポートを開く">
+              <img src="assets/phase6/rigid_normal_app_report.svg" alt="Phase 6DQの既定OFF設定、offline authoring、normal extension、Flow実測を示す機械レポート" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>setting → rigid_frame_v1 → 720点 → normal owner</strong><span>11 / 11 real Kit · revision 710 · Point resync 0</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3tc/visual_v3_actual.mp4" data-video-poster="assets/phasev3tc/visual_v3_actual_poster.png" data-video-title="Phase 6DQ wood-state visual reference — V3 explicit preset" data-video-meta="Shared V3T-C explicit-preset recording for human wood-state review · Phase 6DQ evidence is the normal-app machine report · Point and rigid layout remain default OFF · 60 frames · 6 seconds">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>薪状態の目視参照</strong><small>V3明示preset動画を再利用 · 6秒</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <div class="notes-grid">
+            <section class="note"><p class="note-label">Selection boundary</p><h3>offline stage authoring前に固定</h3><p>`residentPointRigidLayoutEnabled`はPoint opt-inと同時にだけ有効です。frame抽出、native配列、USD token、ownerへ同じ`rigid_frame_v1`を渡し、接続後のrepresentation変更は行いません。</p></section>
+            <section class="note caution"><p class="note-label">Fail closed</p><h3>旧qualificationとの混在を拒否</h3><p>rigid単独、Pointなしqualification、複数primary mode、依存関係のないtranslation／skip、rigidと旧legacy診断の混在はstage生成前に停止します。既存legacy fallbackはそのまま残ります。</p></section>
+          </div>
+
+          <section class="verification" aria-labelledby="phase6dq-verification-title">
+            <div class="verification-copy"><p class="section-kicker">Verification</p><h3 id="phase6dq-verification-title">通常extensionとFlow 110.0.0で11 gate合格。</h3><p>720点、revision 710、consumer一致、active block peak 391、60 frame中58 unique、Point resync 0、layout replacement 0、clean shutdownを実測しました。</p><p><a href="assets/phase6/rigid_normal_app_report.json">機械レポート</a> · <a href="../design/resident_rigid_normal_app.md">設計メモ</a></p></div>
+            <div class="check-list" role="list" aria-label="Phase 6DQ検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Normal app</strong><small>11 / 11 real Kit gates</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Representation</strong><small>rigid_frame_v1 · 720 points</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Publication</strong><small>revision 710 · resync 0</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Flow / RTX</strong><small>391 blocks · 58 / 60 unique</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Regression</strong><small>8 processes · 77 / 77 · 379.5 s</small></p></div>
+              <div role="listitem"><span aria-hidden="true">○</span><p><strong>Arbitrary transform</strong><small>next normal-app scenario</small></p></div>
+            </div>
+          </section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6dp" class="section entry-section phase-six">

@@ -101,14 +101,18 @@ from .resident_point_commands import (
 )
 from .resident_point_continuity import measure_resident_point_log_alignment
 from .resident_point_scene import (
-    RESIDENT_POINT_APPLICATION_SETTING,
     RESIDENT_POINT_EMITTER_PATH,
     configure_resident_point_application_scene,
     preauthor_resident_snapshot_consumers,
+    resident_point_application_configuration,
     resident_point_application_enabled,
+    resident_point_frame_layout_for_logs,
     resident_point_layout_for_logs,
 )
-from .resident_point_sidecar import ResidentNativeSurfaceProducer
+from .resident_point_sidecar import (
+    RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME,
+    ResidentNativeSurfaceProducer,
+)
 from .wood import (
     WOOD_RENDER_HIERARCHY_SETTING,
     get_log_root,
@@ -286,12 +290,13 @@ class CampfireAppExtension(omni.ext.IExt):
         capture_requested = settings.get_as_bool(f"{SETTINGS_ROOT}/captureOnStartup")
         quit_after_capture = settings.get_as_bool(f"{SETTINGS_ROOT}/quitAfterCapture")
         phase = settings.get_as_string(f"{SETTINGS_ROOT}/phase") or "phase0"
-        point_application_enabled = resident_point_application_enabled(settings)
-        render_hierarchy_enabled = settings.get_as_bool(
-            WOOD_RENDER_HIERARCHY_SETTING
-        )
-        wood_visual_v3_enabled = settings.get_as_bool(WOOD_VISUAL_V3_SETTING)
         try:
+            point_configuration = resident_point_application_configuration(settings)
+            point_application_enabled = point_configuration["enabled"]
+            render_hierarchy_enabled = settings.get_as_bool(
+                WOOD_RENDER_HIERARCHY_SETTING
+            )
+            wood_visual_v3_enabled = settings.get_as_bool(WOOD_VISUAL_V3_SETTING)
             if point_application_enabled and phase != "phase3":
                 raise ValueError(
                     "Resident Point application is available only for Phase 3"
@@ -368,6 +373,9 @@ class CampfireAppExtension(omni.ext.IExt):
                         phase3_scene_dir / "phase3_point_application.usda",
                         capture_requested=capture_requested,
                         render_hierarchy=render_hierarchy_enabled,
+                        layout_representation=point_configuration[
+                            "layout_representation"
+                        ],
                     )
                 else:
                     populate_phase3_scene(
@@ -467,6 +475,7 @@ class CampfireAppExtension(omni.ext.IExt):
         scene_path: Path,
         *,
         capture_requested: bool,
+        layout_representation: str,
         render_hierarchy: bool = False,
     ):
         """Build the complete opt-in Point stage before connecting it to Kit."""
@@ -501,13 +510,27 @@ class CampfireAppExtension(omni.ext.IExt):
                 dt_seconds=PHASE3_MODEL_DT_SECONDS,
                 heat_flux_w_m2=PHASE3_EXTERNAL_HEAT_FLUX_W_M2,
             )
-            layout = resident_point_layout_for_logs(offline_stage, log_ids)
+            if (
+                layout_representation
+                == RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME
+            ):
+                layout = resident_point_frame_layout_for_logs(
+                    offline_stage, log_ids
+                )
+            else:
+                layout = resident_point_layout_for_logs(offline_stage, log_ids)
             producer = ResidentNativeSurfaceProducer(
-                backend, layout["origins"], layout["axes"]
+                backend,
+                layout["origins"],
+                layout.get("axes"),
+                frames=layout.get("frames"),
+                layout_representation=layout["representation"],
             )
             producer.build_layout()
             scene_contract = configure_resident_point_application_scene(
-                offline_stage, producer.positions
+                offline_stage,
+                producer.positions,
+                layout_representation=layout["representation"],
             )
             preauthor_resident_snapshot_consumers(offline_stage, log_ids)
             point_settings = carb.settings.get_settings()
@@ -536,7 +559,10 @@ class CampfireAppExtension(omni.ext.IExt):
                 f"{SETTINGS_ROOT}/residentPointSkipUnchangedTranslationLayoutQualificationEnabled"
             )
             point_phase = (
-                "phase6co"
+                "phase6dq"
+                if layout_representation
+                == RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME
+                else "phase6co"
                 if timeline_continuity_qualification
                 else "phase6cn"
                 if continuity_fix_qualification
@@ -909,7 +935,10 @@ class CampfireAppExtension(omni.ext.IExt):
         ) > 1:
             raise ValueError("Resident Point qualifications are mutually exclusive")
         phase_name = (
-            "phase6co"
+            "phase6dq"
+            if owner.status()["layout_representation"]
+            == RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME
+            else "phase6co"
             if timeline_continuity_qualification
             else "phase6cn"
             if continuity_fix_qualification
@@ -1562,6 +1591,15 @@ class CampfireAppExtension(omni.ext.IExt):
                     and point_prim.GetAttribute("campfire:layoutRevision").Get()
                     >= 1
                 ),
+                "selected_layout_representation_matches_stage_and_owner": (
+                    point_prim.GetAttribute(
+                        "campfire:layoutRepresentation"
+                    ).Get()
+                    == stopped_status["layout_representation"]
+                    == resident_point_application_configuration(
+                        carb.settings.get_settings()
+                    )["layout_representation"]
+                ),
                 "only_existing_point_properties_changed_live": (
                     not point_resyncs and not unexpected_point_changes
                 ),
@@ -1811,6 +1849,9 @@ class CampfireAppExtension(omni.ext.IExt):
                     "default_off": True,
                     "normal_application": True,
                     "stage_built_before_connection": True,
+                    "layout_representation": stopped_status[
+                        "layout_representation"
+                    ],
                     "layout_recovery_qualification": recovery_qualification,
                     "command_queue_qualification": command_qualification,
                     "transform_notice_qualification": transform_qualification,

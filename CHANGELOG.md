@@ -1,5 +1,9 @@
 # Changelog
 
+- Added Phase 6DQ's explicit `residentPointRigidLayoutEnabled=false` setting and selected `rigid_frame_v1` exactly once before offline Point stage authoring and Kit context connection.
+- Preserved the legacy cardinal fallback and rejected rigid/legacy-qualification contradictions, orphaned qualification settings, and invalid translation-skip combinations before stage construction.
+- Qualified the normal extension path on Flow 110.0.0 with 11 / 11 gates, 720 points, revision 710, 391 peak active blocks, 58 / 60 unique frames, zero Point resyncs, and clean shutdown.
+- Requalified release build, Phase 0, and the complete eight-process 77 / 77 standard suite in 379.5 seconds; Point and rigid layout remain default OFF and Sphere remains the production default.
 - Added Phase 6DP's real-Kit rigid-frame application-owner probe without exposing a new normal-app setting or changing any production default.
 - Qualified 11 / 11 gates across rigid owner composition, revision 1 publication, 37-to-53-degree stopped refresh, unchanged-layout skip, running-write rejection, live-migration rejection, real stage close/attach/rebuild, revision 3 continuation, and idempotent shutdown.
 - Requalified the complete eight-process 76 / 76 standard suite in 382.6 seconds after adding the isolated owner probe and report tooling.

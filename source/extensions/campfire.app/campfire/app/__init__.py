@@ -179,9 +179,11 @@ from .resident_point_sidecar import (
 from .resident_point_scene import (
     RESIDENT_POINT_APPLICATION_SETTING,
     RESIDENT_POINT_EMITTER_PATH,
+    RESIDENT_POINT_RIGID_LAYOUT_SETTING,
     RESIDENT_POINT_SOURCE_PATH,
     configure_resident_point_application_scene,
     preauthor_resident_snapshot_consumers,
+    resident_point_application_configuration,
     resident_point_application_enabled,
     resident_point_frame_layout_for_logs,
     resident_point_layout_for_logs,

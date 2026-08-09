@@ -1503,6 +1503,68 @@ class TestScene(omni.kit.test.AsyncTestCase):
             campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY,
         )
 
+    async def test_resident_point_rigid_layout_setting_is_explicit_and_validated(self):
+        class Settings:
+            def __init__(self, enabled=()):
+                self.enabled = set(enabled)
+
+            def get_as_bool(self, path):
+                return path in self.enabled
+
+        application = campfire.app.RESIDENT_POINT_APPLICATION_SETTING
+        rigid = campfire.app.RESIDENT_POINT_RIGID_LAYOUT_SETTING
+        legacy = campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY
+        rigid_representation = (
+            campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME
+        )
+        timeline = (
+            "/exts/campfire.app/"
+            "residentPointTimelineContinuityQualificationEnabled"
+        )
+        dynamic = (
+            "/exts/campfire.app/"
+            "residentPointDynamicTranslationQualificationEnabled"
+        )
+        skip = (
+            "/exts/campfire.app/"
+            "residentPointSkipUnchangedTranslationLayoutQualificationEnabled"
+        )
+
+        default = campfire.app.resident_point_application_configuration(Settings())
+        self.assertFalse(default["enabled"])
+        self.assertEqual(default["layout_representation"], legacy)
+        legacy_enabled = campfire.app.resident_point_application_configuration(
+            Settings((application,))
+        )
+        self.assertEqual(legacy_enabled["layout_representation"], legacy)
+        rigid_enabled = campfire.app.resident_point_application_configuration(
+            Settings((application, rigid))
+        )
+        self.assertEqual(
+            rigid_enabled["layout_representation"], rigid_representation
+        )
+        legacy_translation = campfire.app.resident_point_application_configuration(
+            Settings((application, timeline, dynamic, skip))
+        )
+        self.assertTrue(legacy_translation["dynamic_translation_qualification"])
+        self.assertTrue(
+            legacy_translation["skip_unchanged_translation_qualification"]
+        )
+        with self.assertRaisesRegex(ValueError, "require.*ApplicationEnabled"):
+            campfire.app.resident_point_application_configuration(Settings((rigid,)))
+        with self.assertRaisesRegex(ValueError, "isolated"):
+            campfire.app.resident_point_application_configuration(
+                Settings((application, rigid, timeline))
+            )
+        with self.assertRaisesRegex(ValueError, "requires timeline"):
+            campfire.app.resident_point_application_configuration(
+                Settings((application, dynamic))
+            )
+        with self.assertRaisesRegex(ValueError, "requires dynamic"):
+            campfire.app.resident_point_application_configuration(
+                Settings((application, skip))
+            )
+
     async def test_resident_point_sidecar_requires_matching_static_representation(self):
         class Producer:
             def __init__(self):

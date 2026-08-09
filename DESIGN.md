@@ -2667,3 +2667,15 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 回帰: Python／PowerShell／JSON／SVG／HTML参照検査とブラウザ実描画・動画modalを確認し、標準suite全8 process・`76 / 76`件を`382.6 s`で合格した。
 - 非変更: Point/V3既定OFF、Sphere production既定、wood authority、物理式、wood JSON、`ResidentPublishedSnapshot`、checkpoint v1、Flow 110.0.0、Emitter schema、collision、rollback／revision、V3T-C safe stopは不変。Flow場と映像seamの既知未達を更新しない。
 - 次: normal extensionのoffline stage authoring前にだけ選べる明示的な既定OFF rigid settingを追加し、legacy fallbackと矛盾setting拒否を含めて通常初期化経路を検証する。live sessionのrepresentation切替は実装しない。
+
+## Phase 6DQ normal-app rigid layout selection
+
+### 2026-08-09: 明示settingをoffline authoring境界へ接続
+
+- 選択: `/exts/campfire.app/residentPointRigidLayoutEnabled`をproduction appとbenchmark appへ追加し、既定値を`false`とした。Point application自体も既定OFFのままで、setting未指定時は既存`legacy_cardinal_axes_v1`を選ぶ。
+- fail closed: rigid settingだけを単独で有効化する構成、Point applicationなしのqualification、複数primary qualification、timeline continuityなしのdynamic translation、dynamic translationなしのunchanged skip、rigidと旧qualificationの混在をstage authoring前に拒否する。既存のlegacy timeline＋dynamic＋skip構成は許可する。
+- offline boundary: normal extensionはsettingを一度解決し、`resident_point_frame_layout_for_logs()`、native frame producer、Point schemaの`layoutRepresentation`、application ownerへ同じ`rigid_frame_v1`を渡してからstageをKit contextへ接続する。runtime中のrepresentation変更は追加しない。
+- 実測: Flow 110.0.0のnormal extension captureで`11 / 11` gate、720点、owner／stage／settingのrepresentation一致、revision `710`、consumer revision 3者一致、Point resync `0`、layout replacement `0`、active block peak `391`、60 frame中58 unique、clean shutdownを確認した。
+- 回帰: release buildは`9.28 s`で成功し、Phase 0実機起動も成功した。標準suite全8 process・`77 / 77`件を`379.5 s`で合格した。
+- 非変更: wood authority、物理式、wood JSON、`ResidentPublishedSnapshot`、checkpoint v1、Flow 110.0.0、Point/Sphere schema、collision、rollback／revision、V3T-C safe stopは不変。Pointとrigid layoutは既定OFF、Sphereはproduction既定である。
+- 次: normal app専用の既定OFF scenarioで、offline authoring前に1本を任意角へ配置し、通常transform observerから停止中refresh、revision継続、stage replacementを検証する。live representation migrationは引き続き実装しない。

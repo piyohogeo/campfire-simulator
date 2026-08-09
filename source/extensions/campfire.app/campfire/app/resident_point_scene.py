@@ -24,6 +24,24 @@ from .wood import get_log_dimensions, get_log_physics_transform
 RESIDENT_POINT_APPLICATION_SETTING = (
     "/exts/campfire.app/residentPointApplicationEnabled"
 )
+RESIDENT_POINT_RIGID_LAYOUT_SETTING = (
+    "/exts/campfire.app/residentPointRigidLayoutEnabled"
+)
+RESIDENT_POINT_PRIMARY_QUALIFICATION_SETTINGS = (
+    "/exts/campfire.app/residentPointRecoveryQualificationEnabled",
+    "/exts/campfire.app/residentPointCommandQualificationEnabled",
+    "/exts/campfire.app/residentPointTransformQualificationEnabled",
+    "/exts/campfire.app/residentPointContinuityQualificationEnabled",
+    "/exts/campfire.app/residentPointContinuityFixQualificationEnabled",
+    "/exts/campfire.app/residentPointTimelineContinuityQualificationEnabled",
+)
+RESIDENT_POINT_DYNAMIC_TRANSLATION_SETTING = (
+    "/exts/campfire.app/residentPointDynamicTranslationQualificationEnabled"
+)
+RESIDENT_POINT_SKIP_UNCHANGED_TRANSLATION_SETTING = (
+    "/exts/campfire.app/"
+    "residentPointSkipUnchangedTranslationLayoutQualificationEnabled"
+)
 RESIDENT_POINT_SOURCE_PATH = Sdf.Path("/World/ResidentPointSource")
 RESIDENT_POINT_EMITTER_PATH = Sdf.Path("/World/Flow/ResidentPointEmitter")
 RESIDENT_POINT_MATERIAL_PATH = Sdf.Path("/World/Materials/ResidentPointSource")
@@ -33,6 +51,60 @@ def resident_point_application_enabled(settings) -> bool:
     """Return the single explicit opt-in controlling the application spike."""
 
     return bool(settings.get_as_bool(RESIDENT_POINT_APPLICATION_SETTING))
+
+
+def resident_point_application_configuration(settings) -> dict:
+    """Validate Point opt-in settings before any offline stage authoring."""
+
+    enabled = resident_point_application_enabled(settings)
+    rigid_layout = bool(settings.get_as_bool(RESIDENT_POINT_RIGID_LAYOUT_SETTING))
+    primary = tuple(
+        path
+        for path in RESIDENT_POINT_PRIMARY_QUALIFICATION_SETTINGS
+        if settings.get_as_bool(path)
+    )
+    dynamic_translation = bool(
+        settings.get_as_bool(RESIDENT_POINT_DYNAMIC_TRANSLATION_SETTING)
+    )
+    skip_unchanged_translation = bool(
+        settings.get_as_bool(RESIDENT_POINT_SKIP_UNCHANGED_TRANSLATION_SETTING)
+    )
+    qualification_enabled = bool(
+        primary or dynamic_translation or skip_unchanged_translation
+    )
+    if (rigid_layout or qualification_enabled) and not enabled:
+        raise ValueError(
+            "Resident Point layout and qualification settings require "
+            "residentPointApplicationEnabled"
+        )
+    if len(primary) > 1:
+        raise ValueError("Resident Point qualifications are mutually exclusive")
+    timeline_setting = RESIDENT_POINT_PRIMARY_QUALIFICATION_SETTINGS[-1]
+    if dynamic_translation and timeline_setting not in primary:
+        raise ValueError(
+            "Resident Point dynamic translation qualification requires timeline "
+            "continuity qualification"
+        )
+    if skip_unchanged_translation and not dynamic_translation:
+        raise ValueError(
+            "Resident Point unchanged-translation skip qualification requires "
+            "dynamic translation qualification"
+        )
+    if rigid_layout and qualification_enabled:
+        raise ValueError(
+            "Resident Point rigid layout is isolated from legacy qualification modes"
+        )
+    return {
+        "enabled": enabled,
+        "layout_representation": (
+            RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME
+            if rigid_layout
+            else RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY
+        ),
+        "primary_qualification_settings": primary,
+        "dynamic_translation_qualification": dynamic_translation,
+        "skip_unchanged_translation_qualification": skip_unchanged_translation,
+    }
 
 
 def resident_point_layout_for_logs(stage: Usd.Stage, log_ids) -> dict:
