@@ -1,0 +1,291 @@
+{
+    "schema":  "campfire.phasev3mc.dynamic_mesh_probe.v1",
+    "status":  "qualified",
+    "gates":  {
+                  "twenty_logs_7200_surface_cells":  true,
+                  "fixed_two_atlas_resources":  true,
+                  "rgba8_raw_uploads_succeeded":  true,
+                  "one_revision_set_per_update":  true,
+                  "unchanged_revision_is_noop":  true,
+                  "stale_revision_rejected":  true,
+                  "failure_is_visual_only_and_recovers_previous_revision":  true,
+                  "timeline_restart_commits":  true,
+                  "reload_force_republishes_latest":  true,
+                  "managed_prim_path_set_stable":  true,
+                  "mesh_topology_digest_stable":  true,
+                  "render_mesh_has_no_physics":  true,
+                  "analytic_collider_retained":  true,
+                  "state_capture_has_visual_range":  true,
+                  "dynamic_update_visible_within_four_probe_frames":  true,
+                  "reload_capture_preserves_result":  true,
+                  "consumer_revision_matches":  true
+              },
+    "transport":  {
+                      "format":  "RGBA8_UNORM",
+                      "atlas_count":  2,
+                      "atlas_size":  [
+                                         480,
+                                         240
+                                     ],
+                      "bytes_per_revision":  921600,
+                      "asset_paths_change_per_frame":  false,
+                      "prim_redefinition_per_frame":  false,
+                      "first_observed_changed_probe_frame":  2,
+                      "frame_latency_note":  "Each file capture waits two completion frames; this is an upper-bound observation, not a single-frame fence.",
+                      "gpu_upload_api_qualified":  false,
+                      "gpu_upload_reason":  "No owned public GPU pointer source exists at the immutable V2 payload boundary",
+                      "gpu_memory_bytes":  null,
+                      "gpu_memory_reason":  "Kit 110 exposes no allocation query scoped to DynamicTextureProvider"
+                  },
+    "shader_decision":  {
+                            "selected":  "two fixed beauty atlases: base RGB + roughness A, emission RGB",
+                            "state_atlas_only":  "UsdPreviewSurface cannot express the required nonlinear moisture/char/ash/temperature mapping",
+                            "single_beauty_atlas":  "cannot independently supply base/roughness and emissive channels",
+                            "unverified_mdl_not_adopted":  true
+                        },
+    "structure":  {
+                      "managed_prim_path_set_stable":  true,
+                      "managed_prefixes":  [
+                                               "/World/Logs",
+                                               "/World/Looks/WoodVisualV3"
+                                           ],
+                      "prim_count_before":  86,
+                      "prim_count_after":  88,
+                      "managed_added_paths":  [
+
+                                              ],
+                      "managed_removed_paths":  [
+
+                                                ],
+                      "unmanaged_added_paths":  [
+                                                    "/World/Camera/OmniverseKitViewportCameraMesh",
+                                                    "/World/Camera/OmniverseKitViewportCameraMesh/CameraModel"
+                                                ],
+                      "unmanaged_removed_paths":  [
+
+                                                  ],
+                      "mesh_topology_digest_stable":  true,
+                      "changed_topology_logs":  [
+
+                                                ]
+                  },
+    "performance":  {
+                        "frequency_hz":  5,
+                        "visual_publication":  {
+                                                   "beauty_pack_ms":  {
+                                                                          "samples":  100,
+                                                                          "mean_ms":  1.592783,
+                                                                          "p95_ms":  2.7769,
+                                                                          "maximum_ms":  2.8857
+                                                                      },
+                                                   "boundary_prepare_ms":  {
+                                                                               "samples":  100,
+                                                                               "mean_ms":  0.039963,
+                                                                               "p95_ms":  0.0598,
+                                                                               "maximum_ms":  0.0679
+                                                                           },
+                                                   "cpu_upload_ms":  {
+                                                                         "samples":  100,
+                                                                         "mean_ms":  1.721615,
+                                                                         "p95_ms":  2.4774,
+                                                                         "maximum_ms":  3.2631
+                                                                     },
+                                                   "revision_commit_ms":  {
+                                                                              "samples":  100,
+                                                                              "mean_ms":  0.613224,
+                                                                              "p95_ms":  1.0142,
+                                                                              "maximum_ms":  1.2478
+                                                                          },
+                                                   "total_ms":  {
+                                                                    "samples":  100,
+                                                                    "mean_ms":  3.988616,
+                                                                    "p95_ms":  5.4135,
+                                                                    "maximum_ms":  6.1078
+                                                                }
+                                               },
+                        "v2_native_extraction":  {
+                                                     "logs":  20,
+                                                     "surface_cells":  7200,
+                                                     "payload_bytes":  144000,
+                                                     "timing":  {
+                                                                    "native_pack_ms":  {
+                                                                                           "samples":  100,
+                                                                                           "mean_ms":  0.166496,
+                                                                                           "p95_ms":  0.2455,
+                                                                                           "maximum_ms":  0.4444
+                                                                                       },
+                                                                    "boundary_copy_ms":  {
+                                                                                             "samples":  100,
+                                                                                             "mean_ms":  0.040536,
+                                                                                             "p95_ms":  0.0637,
+                                                                                             "maximum_ms":  0.1278
+                                                                                         },
+                                                                    "validation_ms":  {
+                                                                                          "samples":  100,
+                                                                                          "mean_ms":  0.268476,
+                                                                                          "p95_ms":  0.402,
+                                                                                          "maximum_ms":  0.5586
+                                                                                      },
+                                                                    "digest_ms":  {
+                                                                                      "samples":  100,
+                                                                                      "mean_ms":  0.09114000000000001,
+                                                                                      "p95_ms":  0.1132,
+                                                                                      "maximum_ms":  0.3153
+                                                                                  },
+                                                                    "total_ms":  {
+                                                                                     "samples":  100,
+                                                                                     "mean_ms":  0.566648,
+                                                                                     "p95_ms":  0.788,
+                                                                                     "maximum_ms":  1.0457
+                                                                                 }
+                                                                }
+                                                 },
+                        "update_frame_ms":  {
+                                                "samples":  10,
+                                                "mean_ms":  16.71077,
+                                                "p95_ms":  26.4666,
+                                                "maximum_ms":  26.4666
+                                            },
+                        "stage_reload_first_republish_ms":  5.9032,
+                        "reference_target_p95_ms":  1.0,
+                        "target_met":  false
+                    },
+    "consumer":  {
+                     "enabled":  true,
+                     "active":  true,
+                     "closed":  false,
+                     "revision":  107,
+                     "publish_count":  107,
+                     "skip_count":  1,
+                     "failure_count":  1,
+                     "recovery_count":  1,
+                     "upload_count":  214,
+                     "usd_set_count":  107,
+                     "notice_count":  106,
+                     "log_ids":  [
+                                     "Log_00",
+                                     "Log_01",
+                                     "Log_02",
+                                     "Log_03",
+                                     "Log_04",
+                                     "Log_05",
+                                     "Log_06",
+                                     "Log_07",
+                                     "Log_08",
+                                     "Log_09",
+                                     "Log_10",
+                                     "Log_11",
+                                     "Log_12",
+                                     "Log_13",
+                                     "Log_14",
+                                     "Log_15",
+                                     "Log_16",
+                                     "Log_17",
+                                     "Log_18",
+                                     "Log_19"
+                                 ],
+                     "last_payload_revision":  107
+                 },
+    "captures":  {
+                     "neutral":  {
+                                     "path":  "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3mc\\captures\\surface_states_neutral.png",
+                                     "sha256":  "5878b0a30bfce777f93d046c42912e740c73a2f797bad33d6d096969158afb46",
+                                     "rgb_mean":  [
+                                                      119.14482015669516,
+                                                      93.81130341880342,
+                                                      78.50722756410256
+                                                  ],
+                                     "quantized_colors":  88
+                                 },
+                     "latency":  [
+                                     {
+                                         "path":  "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3mc\\captures\\surface_states_update_1.png",
+                                         "sha256":  "bd267e7cf091f7574a26e0dd72db41b8607718bc4db88e5d7e9fef061cc9993b",
+                                         "rgb_mean":  [
+                                                          119.1911680911681,
+                                                          93.85173254985754,
+                                                          78.54180199430199
+                                                      ],
+                                         "quantized_colors":  88
+                                     },
+                                     {
+                                         "path":  "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3mc\\captures\\surface_states_update_2.png",
+                                         "sha256":  "08e63b0d52b0f4277d8a350485861db1686e48eb0ab28749706b1e4b9df82ff6",
+                                         "rgb_mean":  [
+                                                          119.84175925925926,
+                                                          96.74013532763533,
+                                                          82.606525997151
+                                                      ],
+                                         "quantized_colors":  100
+                                     },
+                                     {
+                                         "path":  "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3mc\\captures\\surface_states_update_3.png",
+                                         "sha256":  "595f173799790d5c8783c1c0c95c76dd50c9194c98ac0a48723bf8ea84c64674",
+                                         "rgb_mean":  [
+                                                          119.73673433048432,
+                                                          96.7554594017094,
+                                                          82.78732015669516
+                                                      ],
+                                         "quantized_colors":  99
+                                     },
+                                     {
+                                         "path":  "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3mc\\captures\\surface_states_update_4.png",
+                                         "sha256":  "ef8f02b94283b7423f9e5203fa372e93c3d7b0a31dffba661e064464ca2e5134",
+                                         "rgb_mean":  [
+                                                          119.62526531339032,
+                                                          96.76281695156695,
+                                                          82.97336894586894
+                                                      ],
+                                         "quantized_colors":  94
+                                     }
+                                 ],
+                     "initial":  {
+                                     "path":  "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3mc\\captures\\surface_states_update_4.png",
+                                     "sha256":  "ef8f02b94283b7423f9e5203fa372e93c3d7b0a31dffba661e064464ca2e5134",
+                                     "rgb_mean":  [
+                                                      119.62526531339032,
+                                                      96.76281695156695,
+                                                      82.97336894586894
+                                                  ],
+                                     "quantized_colors":  94
+                                 },
+                     "transformed":  {
+                                         "path":  "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3mc\\captures\\surface_states_transformed.png",
+                                         "sha256":  "5f7f8dbac0938c9bccb853b1f1ecb2c30fd9498e88a000b5c06132e5d2ee2e36",
+                                         "rgb_mean":  [
+                                                          126.32765135327635,
+                                                          117.43840099715099,
+                                                          113.23871260683761
+                                                      ],
+                                         "quantized_colors":  162
+                                     },
+                     "reloaded":  {
+                                      "path":  "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3mc\\captures\\surface_states_reloaded.png",
+                                      "sha256":  "7e09109f7be85fa59235cff64450974b85a50be25c753d7da74565659dff8b95",
+                                      "rgb_mean":  [
+                                                       113.9879504985755,
+                                                       93.17728276353276,
+                                                       81.62225605413106
+                                                   ],
+                                      "quantized_colors":  98
+                                  },
+                     "kind":  "fixed-state Mesh diagnostic; not combustion trajectory"
+                 },
+    "decision":  {
+                     "feature_default":  false,
+                     "production_default_changed":  false,
+                     "authority_flow_point_collision_unchanged":  true,
+                     "v4_or_deformation_implemented":  false,
+                     "phase6dm_resumed":  false
+                 },
+    "runner_gpu":  {
+                       "samples":  96,
+                       "interval_ms":  250,
+                       "max_utilization_percent":  99,
+                       "mean_utilization_percent":  10.03,
+                       "min_memory_used_mib":  2970,
+                       "max_memory_used_mib":  5725,
+                       "memory_span_mib":  2755,
+                       "method":  "Whole-GPU nvidia-smi sampling; the memory span is not a provider-scoped allocation."
+                   }
+}

@@ -39,6 +39,7 @@ param(
     [switch]$ResidentSnapshotLightweightNoticeTracking,
     [switch]$WoodVisualV0,
     [switch]$WoodRenderHierarchy,
+    [switch]$WoodVisualV3,
     [switch]$ResidentNativeBackend,
     [string]$ResidentNativeLibraryPath = ""
 )
@@ -136,6 +137,13 @@ if ($WoodVisualV0.IsPresent -and -not $ResidentSnapshotAdapter.IsPresent) {
 if ($WoodVisualV0.IsPresent -and $WoodRenderHierarchy.IsPresent) {
     throw "Wood visual V0 and the V3 Mesh render hierarchy are mutually exclusive."
 }
+if ($WoodVisualV3.IsPresent -and -not (
+    $WoodRenderHierarchy.IsPresent -and
+    $ResidentSnapshotAdapter.IsPresent -and
+    $ResidentNativeBackend.IsPresent
+)) {
+    throw "Wood visual V3 requires the render hierarchy, Resident adapter, and native backend."
+}
 if ($ResidentNativeBackend.IsPresent -and -not $ResidentSnapshotAdapter.IsPresent) {
     throw "Resident native backend requires the resident snapshot adapter."
 }
@@ -197,6 +205,7 @@ $kitArgs = @(
     "--/exts/campfire.app/residentSnapshotLightweightNoticeTrackingEnabled=$($ResidentSnapshotLightweightNoticeTracking.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/woodVisualV0Enabled=$($WoodVisualV0.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/woodRenderHierarchyEnabled=$($WoodRenderHierarchy.IsPresent.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/woodVisualV3Enabled=$($WoodVisualV3.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentNativeBackendEnabled=$($ResidentNativeBackend.IsPresent.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/residentNativeLibraryPath=$ResidentNativeLibraryPath",
     "--/rtx/flow/enabled=true",
@@ -439,6 +448,36 @@ if ($ResidentSnapshotAdapter.IsPresent) {
         @($woodVisual.errors).Count -ne 0) {
         throw "Wood visual V0 produced output while disabled."
     }
+}
+$woodVisualV3Result = $result.scenario.wood_visual_v3
+if ([bool]$woodVisualV3Result.enabled -ne $WoodVisualV3.IsPresent) {
+    throw "Phase 3 used an unexpected wood visual V3 setting."
+}
+if ($WoodVisualV3.IsPresent) {
+    if ($woodVisualV3Result.input -ne "ImmutableWoodVisualSurfacePayload" -or
+        [bool]$woodVisualV3Result.status_after_timeline_stop.active -or
+        [bool]$woodVisualV3Result.status_after_timeline_stop.closed -or
+        $woodVisualV3Result.status_after_timeline_stop.revision -ne 1200 -or
+        $woodVisualV3Result.status_after_timeline_stop.publish_count -ne 1200 -or
+        $woodVisualV3Result.status_after_timeline_stop.failure_count -ne 0 -or
+        $woodVisualV3Result.status_after_timeline_stop.recovery_count -ne 0 -or
+        $woodVisualV3Result.surface_extract_timing.total_ms.sample_count -ne 1195 -or
+        $woodVisualV3Result.publication_timing.total_ms.sample_count -ne 1195 -or
+        $woodVisualV3Result.upload_count -ne 2400 -or
+        $woodVisualV3Result.usd_set_count -ne 1200 -or
+        $woodVisualV3Result.transferred_bytes -ne (1200 * 921600) -or
+        @($woodVisualV3Result.errors).Count -ne 0) {
+        throw "Wood visual V3 did not preserve its expected 5 Hz lifecycle."
+    }
+}
+elseif ($null -ne $woodVisualV3Result.surface_extract_timing -or
+    $null -ne $woodVisualV3Result.publication_timing -or
+    $null -ne $woodVisualV3Result.status_after_timeline_stop -or
+    $woodVisualV3Result.upload_count -ne 0 -or
+    $woodVisualV3Result.usd_set_count -ne 0 -or
+    $woodVisualV3Result.transferred_bytes -ne 0 -or
+    @($woodVisualV3Result.errors).Count -ne 0) {
+    throw "Wood visual V3 produced output while disabled."
 }
 foreach ($name in @("dry", "wet")) {
     if ($result.scenario.zero_area_cell_count.$name -ne 792) {

@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v3mb">最新記録</a>
+        <a href="#phase-v3mc">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v3mb">Phase V3M-Bを読む</a>
+        <a class="button primary" href="#phase-v3mc">Phase V3M-Cを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V3M-B 完了</strong></div>
+        <div><span>現在地</span><strong>Phase V3M-C 完了</strong></div>
         <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>テスト</span><strong>70 / 70 passed</strong></div>
-        <div><span>判定</span><strong>既定OFF Mesh · 物理同値</strong></div>
+        <div><span>テスト</span><strong>73 / 73 passed</strong></div>
+        <div><span>判定</span><strong>機能合格 · 性能未達 · 既定OFF</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,102 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-v3mc" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number compact">V3M-C</span>
+          <p><time datetime="2026-08-09">2026.08.09</time></p>
+          <span class="pill current">Qualified · default OFF</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Phase V3M-C · V2 surface payload → stable Mesh texture</p>
+            <h2>局所状態は表示できた。<br>ただし1 msには届かない。</h2>
+            <p>V2のimmutable surface payloadを、V3M-Bのrender-only Meshへ接続しました。20本×360セルを2枚の固定RGBA8 atlasへまとめ、1 revisionあたりraw upload 2回とUSD revision Set 1回だけを行います。17 / 17の実機gateは合格しましたが、20本の発行p95は5.4135 msで参考目標1.0 msを超えたため、production既定はOFFのままです。</p>
+          </header>
+
+          <div class="capture-pair" aria-label="20本の局所状態診断と性能内訳">
+            <figure class="capture-card">
+              <a href="assets/phasev3mc/surface_states_20_logs.png" aria-label="20本の局所状態診断を原寸で開く">
+                <img src="assets/phasev3mc/surface_states_20_logs.png" width="1280" height="720" alt="20本のUV Mesh薪のうち湿潤、炭化、灰化、高温発光の局所状態が異なる外観として見えるKit RTX実測画像">
+              </a>
+              <figcaption>
+                <div><strong>20-log fixed-state diagnostic</strong><span>wet · char · ash · local heat · 7,200 cells</span></div>
+                <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3mc/wood_visual_v3_combustion.mp4" data-video-poster="assets/phasev3mc/wood_visual_v3_combustion_poster.png" data-video-title="Phase V3M-C actual combustion trajectory" data-video-meta="Resident-native 240 s trajectory · 1,200 visual revisions · 60 RTX frames · 6 s · 10 fps · not a fixed-snapshot montage">
+                  <span class="video-trigger-icon" aria-hidden="true"></span>
+                  <span><strong>実燃焼動画</strong><small>6秒 · 240秒trajectory</small></span>
+                </button>
+              </figcaption>
+            </figure>
+            <figure class="capture-card">
+              <a href="assets/phasev3mc/wood_visual_v3_performance.svg" aria-label="V3M-C性能内訳を原寸で開く">
+                <img src="assets/phasev3mc/wood_visual_v3_performance.svg" width="1200" height="680" alt="V2 native抽出、beauty pack、CPU upload、表示発行全体のp95を示し、1 ms目標未達を示す実測図">
+              </a>
+              <figcaption><div><strong>20-log publication profile</strong><span>V2 extract 0.7880 ms · V3 total 5.4135 ms p95</span></div></figcaption>
+            </figure>
+          </div>
+
+          <div class="notes-grid">
+            <section class="note">
+              <p class="note-label">Stable transport</p>
+              <h3>2 atlas + 1 revision Set</h3>
+              <p>base color＋roughnessとemissionを480×240の固定atlasへ分離しました。1本1texture、cellごとのPrim／Material／USD属性は作りません。asset path、Mesh topology、UV、bindingは実行中に変えず、同じrevisionはupload 0／Set 0です。</p>
+            </section>
+            <section class="note">
+              <p class="note-label">Best-effort observer</p>
+              <h3>表示失敗は燃焼を戻さない</h3>
+              <p>base upload後のfailure injectionでは前の正常atlasとvisual revisionへ復帰し、retryに成功しました。wood authority、Flow、Pointはrollbackしません。timeline restart、stage reloadの最新payload再発行、provider closeも実機で確認しました。</p>
+            </section>
+          </div>
+
+          <div class="capture-pair" aria-label="V0薪単位表示とV3 Mesh局所表示のPhase 3比較">
+            <figure class="capture-card">
+              <a href="assets/phasev3mc/v0_phase3_reference.png" aria-label="V0 Phase 3最終frameを原寸で開く">
+                <img src="assets/phasev3mc/v0_phase3_reference.png" width="1280" height="720" alt="V0ではモデル化された薪全体が一様な黄白色emissionとなる同カメラのPhase 3実測画像">
+              </a>
+              <figcaption><div><strong>V0 · per-log uniform</strong><span>薪全体が同じ色とemission</span></div></figcaption>
+            </figure>
+            <figure class="capture-card">
+              <a href="assets/phasev3mc/v3_phase3_mesh.png" aria-label="V3 Mesh Phase 3最終frameを原寸で開く">
+                <img src="assets/phasev3mc/v3_phase3_mesh.png" width="1280" height="720" alt="V3 Meshでは局所surface payloadを使い、未モデル化の薪を中立木材表示に保った同カメラのPhase 3実測画像">
+              </a>
+              <figcaption><div><strong>V3 · per-surface Mesh</strong><span>モデル化2本だけ更新 · 未モデル化薪はneutral</span></div></figcaption>
+            </figure>
+          </div>
+
+          <section class="verification" aria-labelledby="phasev3mc-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Measured boundary</p>
+              <h3 id="phasev3mc-verification-title">機能は合格、性能理由でOFFを維持。</h3>
+              <p>現在コードのV3 OFF／ON paired runでdry／wet authority SHA-256、着火66.2／166.4秒、mass balance 0、peak fuel 1.0、Resident revision 1,200が一致しました。Flow active blocksは双方nonzeroですが、texture CPU stallがwall-frame pacingを変えるためfield完全同値は主張しません。</p>
+              <code>.\scripts\run_phasev3mc_dynamic_mesh.ps1</code>
+              <p><a href="assets/phasev3mc/wood_visual_v3_report.json">最終機械レポート</a> · <a href="assets/phasev3mc/dynamic_mesh_probe.json">実機probe</a> · <a href="../design/wood_visual_v3_mesh_integration.md">設計メモ</a></p>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase V3M-C検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Functional probe</strong><small>17 / 17 · raw upload · reload · recovery</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Actual trajectory</strong><small>1,200 revisions · 60 frames · failure 0</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Authority</strong><small>dry / wet SHA exact · mass error 0</small></p></div>
+              <div role="listitem"><span aria-hidden="true">!</span><p><strong>Performance</strong><small>5.4135 ms p95 · 1.0 ms target missed</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Regression</strong><small>Release · 8 processes · 73 / 73</small></p></div>
+            </div>
+          </section>
+
+          <div class="notes-grid">
+            <section class="note caution">
+              <p class="note-label">Known limits</p>
+              <h3>実アプリCPU uploadはさらに重い</h3>
+              <p>Flow／capture同時実行では2本でもpublication p95が59.6170 msまで上がりました。GPU uploadは安全なowned pointer sourceがなく未qualifiedです。production Phase 3でモデル化される2本は上段のneutral薪に一部隠れるため、trajectoryでは局所差が診断画像ほど見えません。</p>
+            </section>
+            <section class="note next">
+              <p class="note-label">Stop boundary</p>
+              <h3>V4とPhase 6DMへ進まない</h3>
+              <p>production既定ON、旧Cylinder／V0／V1削除、Mesh collider、points変形、収縮、ひび、崩落、欠損、V4、Phase 6DM再開は行っていません。次の候補はbeauty packとCPU uploadの削減で、承認後の独立Phaseに限定します。</p>
+            </section>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v3mb" class="section entry-section phase-six">

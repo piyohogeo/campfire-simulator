@@ -122,6 +122,12 @@ from .wood_visual_v0 import (
     preauthor_wood_visual_v0,
 )
 from .wood_visual_v1 import WOOD_VISUAL_V1_SETTING
+from .wood_visual_surface import ResidentNativeWoodVisualSurfaceProducer
+from .wood_visual_v3 import (
+    WOOD_VISUAL_V3_SETTING,
+    WoodVisualV3Consumer,
+    preauthor_wood_visual_v3,
+)
 from .char_depth_experiment import (
     create_char_depth_dry_run_package,
     evaluate_char_depth_dry_run_package,
@@ -191,6 +197,7 @@ class CampfireAppExtension(omni.ext.IExt):
         self._resident_point_control_window = None
         self._resident_snapshot_adapter = None
         self._wood_visual_v0_consumer = None
+        self._wood_visual_v3_consumer = None
         self._resident_point_owner = None
         self._resident_point_command_queue = None
         self._resident_point_transform_observer = None
@@ -254,6 +261,14 @@ class CampfireAppExtension(omni.ext.IExt):
                     f"[campfire.app] Wood visual V0 shutdown failed: {exc}"
                 )
             self._wood_visual_v0_consumer = None
+        if self._wood_visual_v3_consumer is not None:
+            try:
+                self._wood_visual_v3_consumer.close()
+            except Exception as exc:
+                carb.log_error(
+                    f"[campfire.app] Wood visual V3 shutdown failed: {exc}"
+                )
+            self._wood_visual_v3_consumer = None
         if self._control_window is not None:
             self._control_window.destroy()
             self._control_window = None
@@ -274,6 +289,7 @@ class CampfireAppExtension(omni.ext.IExt):
         render_hierarchy_enabled = settings.get_as_bool(
             WOOD_RENDER_HIERARCHY_SETTING
         )
+        wood_visual_v3_enabled = settings.get_as_bool(WOOD_VISUAL_V3_SETTING)
         try:
             if point_application_enabled and phase != "phase3":
                 raise ValueError(
@@ -295,6 +311,17 @@ class CampfireAppExtension(omni.ext.IExt):
             ):
                 raise ValueError(
                     "Wood render hierarchy is mutually exclusive with V0 and V1"
+                )
+            if wood_visual_v3_enabled and (
+                phase != "phase3"
+                or not render_hierarchy_enabled
+                or point_application_enabled
+                or settings.get_as_bool(WOOD_VISUAL_V0_SETTING)
+                or settings.get_as_bool(WOOD_VISUAL_V1_SETTING)
+            ):
+                raise ValueError(
+                    "Wood visual V3 requires Phase 3 render hierarchy and excludes "
+                    "the Resident Point application and V0/V1"
                 )
             scene_setup_started = time.perf_counter()
             context = omni.usd.get_context()
@@ -347,6 +374,8 @@ class CampfireAppExtension(omni.ext.IExt):
                     )
                     if settings.get_as_bool(WOOD_VISUAL_V0_SETTING):
                         preauthor_wood_visual_v0(stage, list_log_ids(stage))
+                    if wood_visual_v3_enabled:
+                        preauthor_wood_visual_v3(stage, list_log_ids(stage))
                     scene_path = export_phase3_stage(
                         stage, phase3_scene_dir / "phase3_thermal.usda"
                     )
@@ -2820,6 +2849,7 @@ class CampfireAppExtension(omni.ext.IExt):
             f"{SETTINGS_ROOT}/residentNativeLibraryPath"
         )
         wood_visual_v0_enabled = settings.get_as_bool(WOOD_VISUAL_V0_SETTING)
+        wood_visual_v3_enabled = settings.get_as_bool(WOOD_VISUAL_V3_SETTING)
         video_frame_interval_steps = settings.get_as_int(
             f"{SETTINGS_ROOT}/videoFrameIntervalSteps"
         )
@@ -2924,6 +2954,14 @@ class CampfireAppExtension(omni.ext.IExt):
             raise ValueError(
                 "Wood visual V0 requires the immutable Resident snapshot adapter"
             )
+        if wood_visual_v3_enabled and not (
+            resident_snapshot_adapter_enabled
+            and resident_native_backend_enabled
+            and settings.get_as_bool(WOOD_RENDER_HIERARCHY_SETTING)
+        ):
+            raise ValueError(
+                "Wood visual V3 requires render hierarchy, Resident adapter, and native backend"
+            )
         flow_interface = _flowusd.acquire_flowusd_interface()
         dry_prim = stage.GetPrimAtPath(f"/World/Logs/{PHASE3_DRY_LOG_ID}")
         wet_prim = stage.GetPrimAtPath(f"/World/Logs/{PHASE3_WET_LOG_ID}")
@@ -2964,6 +3002,12 @@ class CampfireAppExtension(omni.ext.IExt):
         wood_visual_profiles = []
         wood_visual_errors = []
         wood_visual_status = None
+        wood_visual_v3_producer = None
+        wood_visual_v3_consumer = None
+        wood_visual_v3_surface_profiles = []
+        wood_visual_v3_profiles = []
+        wood_visual_v3_errors = []
+        wood_visual_v3_status = None
         if resident_snapshot_adapter_enabled:
             resident_timeline = omni.timeline.get_timeline_interface()
             resident_timeline_was_playing = bool(resident_timeline.is_playing())
@@ -3004,6 +3048,14 @@ class CampfireAppExtension(omni.ext.IExt):
                     stage, log_ids, track_notices=True
                 )
                 self._wood_visual_v0_consumer = wood_visual_consumer
+            if wood_visual_v3_enabled:
+                wood_visual_v3_producer = ResidentNativeWoodVisualSurfaceProducer(
+                    resident_native_backend
+                )
+                wood_visual_v3_consumer = WoodVisualV3Consumer(
+                    stage, log_ids, track_notices=True
+                )
+                self._wood_visual_v3_consumer = wood_visual_v3_consumer
         ignition_seconds = {"dry": None, "wet": None}
         peak_gas_rate_kg_s = {"dry": 0.0, "wet": 0.0}
         model_step_times_ms = []
@@ -3043,6 +3095,8 @@ class CampfireAppExtension(omni.ext.IExt):
                 resident_adapter.on_timeline_started()
                 if wood_visual_consumer is not None:
                     wood_visual_consumer.on_timeline_started()
+                if wood_visual_v3_consumer is not None:
+                    wood_visual_v3_consumer.on_timeline_started()
             extension_to_scenario_seconds = (
                 time.perf_counter() - self._extension_start_perf
             )
@@ -3111,6 +3165,26 @@ class CampfireAppExtension(omni.ext.IExt):
                             python_inline_homogeneous_sensible_heat_capacity_fast_path
                         ),
                     )
+                if wood_visual_v3_consumer is not None:
+                    visual_payload, surface_profile = wood_visual_v3_producer.pack(
+                        native_step.snapshot.revision, native_step.snapshot.tick
+                    )
+                    wood_visual_v3_surface_profiles.append(surface_profile)
+                    try:
+                        wood_visual_v3_profiles.append(
+                            wood_visual_v3_consumer.publish(visual_payload)
+                        )
+                    except Exception as visual_error:
+                        wood_visual_v3_errors.append(
+                            {
+                                "revision": visual_payload.revision,
+                                "error": str(visual_error),
+                            }
+                        )
+                        carb.log_error(
+                            "[campfire.app] Wood visual V3 publication failed "
+                            f"at revision {visual_payload.revision}: {visual_error}"
+                        )
                 model_step_times_ms.append(
                     (time.perf_counter() - model_started) * 1000.0
                 )
@@ -3413,6 +3487,9 @@ class CampfireAppExtension(omni.ext.IExt):
                 if wood_visual_consumer is not None:
                     wood_visual_consumer.on_timeline_stopped()
                     wood_visual_status = wood_visual_consumer.status()
+                if wood_visual_v3_consumer is not None:
+                    wood_visual_v3_consumer.on_timeline_stopped()
+                    wood_visual_v3_status = wood_visual_v3_consumer.status()
                 emitter = stage.GetPrimAtPath(FLOW_EMITTER_PATH)
                 resident_final_usd_state = {
                     "emitter": {
@@ -4025,6 +4102,59 @@ class CampfireAppExtension(omni.ext.IExt):
                         ),
                         "errors": wood_visual_errors,
                     },
+                    "wood_visual_v3": {
+                        "enabled": wood_visual_v3_enabled,
+                        "input": "ImmutableWoodVisualSurfacePayload",
+                        "update_interval_seconds": PHASE3_MODEL_DT_SECONDS,
+                        "status_after_timeline_stop": wood_visual_v3_status,
+                        "surface_extract_timing": (
+                            {
+                                name: summarize_timing_ms(
+                                    [getattr(profile, name) for profile in wood_visual_v3_surface_profiles],
+                                    min(5, len(wood_visual_v3_surface_profiles)),
+                                )
+                                for name in (
+                                    "native_pack_ms",
+                                    "boundary_copy_ms",
+                                    "validation_ms",
+                                    "digest_ms",
+                                    "total_ms",
+                                )
+                            }
+                            if wood_visual_v3_surface_profiles
+                            else None
+                        ),
+                        "publication_timing": (
+                            {
+                                name: summarize_timing_ms(
+                                    [getattr(profile, name) for profile in wood_visual_v3_profiles],
+                                    min(5, len(wood_visual_v3_profiles)),
+                                )
+                                for name in (
+                                    "beauty_pack_ms",
+                                    "boundary_prepare_ms",
+                                    "cpu_upload_ms",
+                                    "revision_commit_ms",
+                                    "total_ms",
+                                )
+                            }
+                            if wood_visual_v3_profiles
+                            else None
+                        ),
+                        "upload_count": sum(
+                            profile.upload_count for profile in wood_visual_v3_profiles
+                        ),
+                        "usd_set_count": sum(
+                            profile.usd_set_count for profile in wood_visual_v3_profiles
+                        ),
+                        "notice_count": sum(
+                            profile.notice_count for profile in wood_visual_v3_profiles
+                        ),
+                        "transferred_bytes": sum(
+                            profile.transferred_bytes for profile in wood_visual_v3_profiles
+                        ),
+                        "errors": wood_visual_v3_errors,
+                    },
                     "final_phase_refresh_seconds": round(
                         final_phase_refresh_seconds, 6
                     ),
@@ -4124,6 +4254,10 @@ class CampfireAppExtension(omni.ext.IExt):
                     wood_visual_consumer.on_timeline_stopped()
                     wood_visual_consumer.close()
                     self._wood_visual_v0_consumer = None
+                if wood_visual_v3_consumer is not None:
+                    wood_visual_v3_consumer.on_timeline_stopped()
+                    wood_visual_v3_consumer.close()
+                    self._wood_visual_v3_consumer = None
                 if resident_adapter is not None:
                     if not resident_adapter_stopped:
                         resident_adapter.on_timeline_stopped()

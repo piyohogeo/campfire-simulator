@@ -1,0 +1,278 @@
+{
+  "schema": "campfire.phasev3mc.final_report.v1",
+  "status": "qualified_default_off",
+  "gates": {
+    "dynamic_mesh_probe_qualified": true,
+    "all_probe_gates_passed": true,
+    "dry_authority_sha_exact": true,
+    "wet_authority_sha_exact": true,
+    "ignition_exact": true,
+    "mass_balance_zero": true,
+    "resident_revision_1200": true,
+    "flow_fuel_preserved": true,
+    "flow_active_blocks_nonzero": true,
+    "v3_lifecycle_complete": true,
+    "actual_trajectory_has_60_frames": true,
+    "feature_remains_default_off": true
+  },
+  "scope": {
+    "input": "ImmutableWoodVisualSurfacePayload",
+    "surface_identity": "log_id + local_surface_index",
+    "logs": 20,
+    "surface_cells": 7200,
+    "frequency_hz": 5,
+    "transport": "two fixed RGBA8 dynamic textures plus one USD revision Set",
+    "point_payload_modified": false,
+    "authority_modified": false,
+    "feature_default": false
+  },
+  "performance": {
+    "frequency_hz": 5,
+    "visual_publication": {
+      "beauty_pack_ms": {
+        "samples": 100,
+        "mean_ms": 1.592783,
+        "p95_ms": 2.7769,
+        "maximum_ms": 2.8857
+      },
+      "boundary_prepare_ms": {
+        "samples": 100,
+        "mean_ms": 0.039963,
+        "p95_ms": 0.0598,
+        "maximum_ms": 0.0679
+      },
+      "cpu_upload_ms": {
+        "samples": 100,
+        "mean_ms": 1.721615,
+        "p95_ms": 2.4774,
+        "maximum_ms": 3.2631
+      },
+      "revision_commit_ms": {
+        "samples": 100,
+        "mean_ms": 0.613224,
+        "p95_ms": 1.0142,
+        "maximum_ms": 1.2478
+      },
+      "total_ms": {
+        "samples": 100,
+        "mean_ms": 3.988616,
+        "p95_ms": 5.4135,
+        "maximum_ms": 6.1078
+      }
+    },
+    "v2_native_extraction": {
+      "logs": 20,
+      "surface_cells": 7200,
+      "payload_bytes": 144000,
+      "timing": {
+        "native_pack_ms": {
+          "samples": 100,
+          "mean_ms": 0.166496,
+          "p95_ms": 0.2455,
+          "maximum_ms": 0.4444
+        },
+        "boundary_copy_ms": {
+          "samples": 100,
+          "mean_ms": 0.040536,
+          "p95_ms": 0.0637,
+          "maximum_ms": 0.1278
+        },
+        "validation_ms": {
+          "samples": 100,
+          "mean_ms": 0.268476,
+          "p95_ms": 0.402,
+          "maximum_ms": 0.5586
+        },
+        "digest_ms": {
+          "samples": 100,
+          "mean_ms": 0.09114000000000001,
+          "p95_ms": 0.1132,
+          "maximum_ms": 0.3153
+        },
+        "total_ms": {
+          "samples": 100,
+          "mean_ms": 0.566648,
+          "p95_ms": 0.788,
+          "maximum_ms": 1.0457
+        }
+      }
+    },
+    "update_frame_ms": {
+      "samples": 10,
+      "mean_ms": 16.71077,
+      "p95_ms": 26.4666,
+      "maximum_ms": 26.4666
+    },
+    "stage_reload_first_republish_ms": 5.9032,
+    "reference_target_p95_ms": 1.0,
+    "target_met": false
+  },
+  "gpu": {
+    "samples": 96,
+    "interval_ms": 250,
+    "max_utilization_percent": 99,
+    "mean_utilization_percent": 10.03,
+    "min_memory_used_mib": 2970,
+    "max_memory_used_mib": 5725,
+    "memory_span_mib": 2755,
+    "method": "Whole-GPU nvidia-smi sampling; the memory span is not a provider-scoped allocation."
+  },
+  "performance_decision": {
+    "reference_p95_ms": 1.0,
+    "measured_p95_ms": 5.4135,
+    "target_met": false,
+    "decision": "retain default OFF; optimize beauty pack and CPU upload before reconsidering default ON"
+  },
+  "phase3_off_on": {
+    "dry_authority_sha256": {
+      "off": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+      "on": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10"
+    },
+    "wet_authority_sha256": {
+      "off": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+      "on": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9"
+    },
+    "ignition_seconds": {
+      "dry": {
+        "off": 66.2,
+        "on": 66.2
+      },
+      "wet": {
+        "off": 166.4,
+        "on": 166.4
+      }
+    },
+    "flow_active_blocks": {
+      "off_peak": 148,
+      "on_peak": 394,
+      "interpretation": "both remain active; exact Flow field equality is not claimed because DynamicTexture CPU stalls change wall-frame pacing"
+    },
+    "resident_revision": 1200,
+    "mass_balance_error_kg": 0.0
+  },
+  "lifecycle": {
+    "enabled": true,
+    "input": "ImmutableWoodVisualSurfacePayload",
+    "update_interval_seconds": 0.2,
+    "status_after_timeline_stop": {
+      "enabled": true,
+      "active": false,
+      "closed": false,
+      "revision": 1200,
+      "publish_count": 1200,
+      "skip_count": 0,
+      "failure_count": 0,
+      "recovery_count": 0,
+      "upload_count": 2400,
+      "usd_set_count": 1200,
+      "notice_count": 1200,
+      "log_ids": [
+        "Log_00",
+        "Log_01"
+      ],
+      "last_payload_revision": 1200
+    },
+    "surface_extract_timing": {
+      "native_pack_ms": {
+        "sample_count": 1195,
+        "warmup_samples_excluded": 5,
+        "total_ms": 60.3267,
+        "mean_ms": 0.0505,
+        "p95_ms": 0.094,
+        "max_ms": 0.2451
+      },
+      "boundary_copy_ms": {
+        "sample_count": 1195,
+        "warmup_samples_excluded": 5,
+        "total_ms": 10.785,
+        "mean_ms": 0.009,
+        "p95_ms": 0.0141,
+        "max_ms": 0.0761
+      },
+      "validation_ms": {
+        "sample_count": 1195,
+        "warmup_samples_excluded": 5,
+        "total_ms": 142.1596,
+        "mean_ms": 0.119,
+        "p95_ms": 0.2033,
+        "max_ms": 0.3541
+      },
+      "digest_ms": {
+        "sample_count": 1195,
+        "warmup_samples_excluded": 5,
+        "total_ms": 43.5678,
+        "mean_ms": 0.0365,
+        "p95_ms": 0.0507,
+        "max_ms": 0.2205
+      },
+      "total_ms": {
+        "sample_count": 1195,
+        "warmup_samples_excluded": 5,
+        "total_ms": 256.8391,
+        "mean_ms": 0.2149,
+        "p95_ms": 0.3618,
+        "max_ms": 0.5214
+      }
+    },
+    "publication_timing": {
+      "beauty_pack_ms": {
+        "sample_count": 1195,
+        "warmup_samples_excluded": 5,
+        "total_ms": 1030.7461,
+        "mean_ms": 0.8625,
+        "p95_ms": 1.664,
+        "max_ms": 2.2784
+      },
+      "boundary_prepare_ms": {
+        "sample_count": 1195,
+        "warmup_samples_excluded": 5,
+        "total_ms": 28.4217,
+        "mean_ms": 0.0238,
+        "p95_ms": 0.0387,
+        "max_ms": 0.2486
+      },
+      "cpu_upload_ms": {
+        "sample_count": 1195,
+        "warmup_samples_excluded": 5,
+        "total_ms": 11881.5888,
+        "mean_ms": 9.9428,
+        "p95_ms": 57.9584,
+        "max_ms": 108.8042
+      },
+      "revision_commit_ms": {
+        "sample_count": 1195,
+        "warmup_samples_excluded": 5,
+        "total_ms": 568.4099,
+        "mean_ms": 0.4757,
+        "p95_ms": 0.796,
+        "max_ms": 1.3644
+      },
+      "total_ms": {
+        "sample_count": 1195,
+        "warmup_samples_excluded": 5,
+        "total_ms": 13521.1978,
+        "mean_ms": 11.3148,
+        "p95_ms": 59.617,
+        "max_ms": 110.1993
+      }
+    },
+    "upload_count": 2400,
+    "usd_set_count": 1200,
+    "notice_count": 1200,
+    "transferred_bytes": 1105920000,
+    "errors": []
+  },
+  "known_limits": [
+    "The 1.0 ms publication p95 reference is not met.",
+    "GPU upload is not qualified because V2 owns CPU bytes and no owned public GPU pointer source exists.",
+    "Whole-GPU memory samples are not a DynamicTextureProvider-scoped allocation measurement.",
+    "The production trajectory models only Log_00 and Log_01; unmodeled logs intentionally remain neutral and partially occlude local state changes.",
+    "No deformation, shrinkage, cracking, collapse, mesh collider, V4, or Phase 6DM work is included."
+  ],
+  "regression": {
+    "release_build": "passed",
+    "test_processes": 8,
+    "test_cases": 73,
+    "test_cases_passed": 73
+  }
+}

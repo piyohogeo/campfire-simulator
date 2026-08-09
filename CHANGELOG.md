@@ -1,5 +1,14 @@
 # Changelog
 
+- Added Phase V3M-C's default-off V2 surface-payload consumer for the stable V3M-B render Mesh using two fixed 480×240 RGBA8 dynamic textures and one revision-last USD Set per update.
+- Added vectorized moisture/char/ash/temperature beauty packing for 20 logs × 360 stable surface identities without Python cell loops, per-cell USD attributes, live Prim creation, Point payload changes, or authority coupling.
+- Qualified 17 / 17 Kit/RTX lifecycle gates including raw pointer upload, changed-frame visibility, unchanged-revision no-op, stale rejection, injected visual-only recovery, timeline restart, stage reload republish, provider close, stable managed paths, and stable Mesh topology digests.
+- Measured the isolated 20-log path over 100 post-warmup samples: V2 native extraction p95 `0.7880 ms`, beauty pack p95 `2.7769 ms`, CPU upload p95 `2.4774 ms`, revision commit p95 `1.0142 ms`, and full visual publication p95 `5.4135 ms` for `921,600 bytes` per revision.
+- Kept V3 default-off because the `1.0 ms` reference publication target is not met; GPU upload and provider-scoped GPU memory remain unqualified under the public Kit 110 ownership/API boundary.
+- Recorded a real 240-second Resident-native combustion trajectory at 5 Hz with 1,200 visual revisions, 2,400 uploads, 1,200 USD revision commits, zero visual errors, 60 RTX frames, and a six-second MP4 distinct from the fixed-state diagnostic.
+- Verified current-code V3 OFF/ON dry and wet authority SHA-256 exact parity, ignition `66.2 / 166.4 s`, zero mass-balance error, peak fuel `1.0`, revision `1200`, and nonzero Flow active blocks; exact Flow field equality is not claimed because CPU texture stalls change wall-frame pacing.
+- Added three focused V3 mapping/lifecycle tests and passed the complete eight-process regression with 73 / 73 cases in 368.9 seconds.
+- Stopped at V3M-C without enabling production by default, removing legacy Cylinder/V0/V1 paths, changing the analytic collider, deforming Mesh points, implementing V4, or resuming Phase 6DM.
 - Added Phase V3M-B's default-off Xform/analytic-Cylinder/UV-Mesh production candidate while preserving the legacy Cylinder path as the default and rejecting V0/V1 conflicts.
 - Authored a fixed 384-face Mesh that maps 288 side faces and 96 cap faces onto exactly 360 V2 surface identities; 24 side/cap corner faces deliberately reuse one state, and face-varying UVs sample guttered texel centres in a fixed 20-log atlas.
 - Added representation-neutral root, collider, render-surface, dimension, transform, and material-target helpers; Resident snapshot display color and Resident Point layout now resolve through those helpers while diagnostic values and revision remain on the stable root.

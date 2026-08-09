@@ -1224,6 +1224,152 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertFalse(np.array_equal(values, permuted))
         self.assertNotEqual(values.tobytes(), permuted.tobytes())
 
+    async def test_wood_visual_v3_preauthors_fixed_mesh_material(self):
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase3_scene(stage, render_hierarchy=True)
+        log_ids = tuple(campfire.app.list_log_ids(stage))
+        contract = campfire.app.preauthor_wood_visual_v3(stage, log_ids)
+        self.assertEqual(contract["atlas"], [480, 240])
+        self.assertEqual(contract["upload_count_per_revision"], 2)
+        self.assertEqual(
+            contract["base_uri"], campfire.app.WOOD_VISUAL_V3_BASE_TEXTURE_URI
+        )
+        self.assertEqual(
+            contract["emission_uri"],
+            campfire.app.WOOD_VISUAL_V3_EMISSION_TEXTURE_URI,
+        )
+        for log_id in log_ids:
+            render = campfire.app.get_log_render_surface(stage, log_id)
+            self.assertTrue(render.IsA(UsdGeom.Mesh))
+            material, _ = UsdShade.MaterialBindingAPI(render).ComputeBoundMaterial()
+            self.assertEqual(material.GetPath(), campfire.app.WOOD_VISUAL_V3_ROOT)
+
+    async def test_wood_visual_v3_vectorized_atlas_maps_local_states(self):
+        log_ids = tuple(f"Log_{index:02d}" for index in range(20))
+        count = len(log_ids) * 360
+        temperature = np.full(count, 300.0, dtype=np.float32)
+        moisture = np.zeros(count, dtype=np.float32)
+        char = np.zeros(count, dtype=np.float32)
+        ash = np.zeros(count, dtype=np.float32)
+        moisture[0] = 0.03
+        char[1] = 0.015
+        ash[2] = 0.0015
+        temperature[3] = 1200.0
+        payload = campfire.app.ImmutableWoodVisualSurfacePayload(
+            1,
+            1,
+            log_ids,
+            360,
+            np.tile(np.arange(360, dtype=np.uint32), 20).tobytes(),
+            temperature.tobytes(),
+            moisture.tobytes(),
+            char.tobytes(),
+            ash.tobytes(),
+        )
+        packed = campfire.app.WoodVisualV3AtlasPacker(log_ids).pack(payload)
+        self.assertEqual(packed.base_rgba8.shape, (240, 480, 4))
+        self.assertEqual(packed.emission_rgba8.shape, (240, 480, 4))
+        self.assertTrue(packed.base_rgba8.flags.c_contiguous)
+        self.assertTrue(packed.emission_rgba8.flags.c_contiguous)
+        wet = packed.base_rgba8[2, 2, :3]
+        charred = packed.base_rgba8[2, 6, :3]
+        ashed = packed.base_rgba8[2, 10, :3]
+        hot = packed.emission_rgba8[2, 14, :3]
+        self.assertLess(int(wet.sum()), int(np.array((77, 31, 11)).sum()))
+        self.assertLess(int(charred.max()), 10)
+        self.assertGreater(int(ashed.min()), 150)
+        self.assertGreater(int(hot[0]), 200)
+        self.assertGreater(int(hot[1]), 80)
+
+    async def test_wood_visual_v3_revision_failure_reload_and_close_lifecycle(self):
+        providers = []
+
+        class FakeProvider:
+            def __init__(self, name):
+                self.name = name
+                self.uploads = 0
+                self.destroyed = False
+                providers.append(self)
+
+            def set_raw_bytes_data(self, _capsule, sizes, _format, strict=False):
+                self.assert_sizes = tuple(sizes)
+                self.assert_strict = strict
+                self.uploads += 1
+
+            def destroy(self):
+                self.destroyed = True
+
+        failure = {"point": None}
+
+        def inject(point, _revision):
+            if point == failure["point"]:
+                raise RuntimeError("injected visual failure")
+
+        def payload(revision):
+            count = len(log_ids) * 360
+            zero = np.zeros(count, dtype=np.float32).tobytes()
+            return campfire.app.ImmutableWoodVisualSurfacePayload(
+                revision,
+                revision,
+                log_ids,
+                360,
+                np.tile(
+                    np.arange(360, dtype=np.uint32), len(log_ids)
+                ).tobytes(),
+                np.full(count, 300.0 + revision, dtype=np.float32).tobytes(),
+                zero,
+                zero,
+                zero,
+            )
+
+        stage = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase3_scene(stage, render_hierarchy=True)
+        log_ids = tuple(campfire.app.list_log_ids(stage))
+        campfire.app.preauthor_wood_visual_v3(stage, log_ids)
+        consumer = campfire.app.WoodVisualV3Consumer(
+            stage,
+            log_ids,
+            provider_factory=FakeProvider,
+            texture_format=object(),
+            failure_injector=inject,
+        )
+        consumer.on_timeline_started()
+        first = consumer.publish(payload(1))
+        repeated = consumer.publish(payload(1))
+        self.assertEqual(first.upload_count, 2)
+        self.assertEqual(first.usd_set_count, 1)
+        self.assertEqual(repeated.status, "unchanged_revision")
+        self.assertEqual(repeated.upload_count, 0)
+        self.assertEqual(repeated.usd_set_count, 0)
+        failure["point"] = "after_base"
+        with self.assertRaisesRegex(RuntimeError, "injected"):
+            consumer.publish(payload(2))
+        self.assertEqual(consumer.status()["revision"], 1)
+        self.assertEqual(consumer.status()["failure_count"], 1)
+        self.assertEqual(consumer.status()["recovery_count"], 1)
+        failure["point"] = None
+        consumer.publish(payload(2))
+
+        reloaded = Usd.Stage.CreateInMemory()
+        campfire.app.populate_phase3_scene(reloaded, render_hierarchy=True)
+        campfire.app.preauthor_wood_visual_v3(reloaded, log_ids)
+        profile = consumer.on_stage_reloaded(reloaded, payload(2))
+        self.assertEqual(profile.status, "reloaded")
+        self.assertEqual(
+            reloaded.GetPrimAtPath(campfire.app.WOOD_VISUAL_V3_ROOT)
+            .GetAttribute("campfire:committedRevision")
+            .Get(),
+            2,
+        )
+        with self.assertRaisesRegex(RuntimeError, "monotonically"):
+            consumer.publish(payload(1))
+        consumer.on_timeline_stopped()
+        with self.assertRaisesRegex(RuntimeError, "active timeline"):
+            consumer.publish(payload(3))
+        self.assertTrue(consumer.close())
+        self.assertFalse(consumer.close())
+        self.assertTrue(all(provider.destroyed for provider in providers))
+
     async def test_resident_point_application_scene_is_explicit_and_pre_authored(self):
         stage = Usd.Stage.CreateInMemory()
         campfire.app.populate_phase3_scene(stage)
