@@ -55,3 +55,7 @@ runnerは`[crash] A crash has occurred`を即時fatalにし、Crash Reporter／d
 最終回帰はRelease build、Phase 0 RTX、標準suite 8/8 process・77/77 test、V3T-C 6/6 processが合格した。V3T-Cは全runでdry／wet authority SHA-256一致、mass balance error 0、Resident revision 1200、wood-owned Flow inputとactive block peak 138..318を確認した。正式30 processのKit logは対象fatal token 0である。
 
 機械可読値は`docs/devlog/assets/phasev3tl/lightweight_rtx_report.json`、`lightweight_rtx_samples.json`、`regression_report.json`に保存する。
+
+## 後続判断
+
+本Phaseの58 FPS gateと各測定値は当時の比較判定として保持する。Phase V3T-Nで今後の通常運用予算を45 FPS／22.222 ms目標、30 FPS／33.333 ms最低ラインへ定義したが、本結果を遡って合格へ読み替えない。

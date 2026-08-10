@@ -1,0 +1,31 @@
+{
+  "schema": "campfire.phasev3tn.frame-budget-policy.v1",
+  "phase": "V3T-N",
+  "status": "adopted",
+  "temporary_rendering_standard": "Candidate Performance",
+  "budgets": {
+    "normal_target": {"fps": 45.0, "frame_time_ms": 22.222},
+    "minimum": {"fps": 30.0, "frame_time_ms": 33.333},
+    "light_scene_ideal": {"fps": 60.0, "frame_time_ms": 16.667, "absolute_all_scene_gate": false}
+  },
+  "current_reference": {
+    "scene": "production-equivalent Flow simulation plus volume",
+    "metric": "average visible render counter",
+    "fps": 47.858,
+    "frame_time_ms": 20.9,
+    "margin_to_45_fps_ms": 1.322,
+    "margin_to_30_fps_ms": 12.433,
+    "display_present_fps": null,
+    "raw_frame_latency": null
+  },
+  "candidate_update_ranges_not_fixed_spec": {
+    "wood_state_texture_hz": [30, 60],
+    "fire_lighting_hz": [15, 30],
+    "wood_shape_hz": "single digits or deformation threshold",
+    "mesh_and_acceleration_structure": "only on actual geometry change",
+    "fire_light_representation": "compress voxels to a few representative or area lights"
+  },
+  "production_changed": false,
+  "historical_gate_meaning_changed": false
+}
+

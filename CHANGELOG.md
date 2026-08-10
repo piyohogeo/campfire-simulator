@@ -1,5 +1,7 @@
 # Changelog
 
+- Adopted the Phase V3T-N project frame-budget policy without rewriting historical gates: Candidate Performance remains temporary standard, 45 FPS / 22.222 ms is the normal target, 30 FPS / 33.333 ms is the minimum, and 60 FPS / 16.667 ms is a light-scene ideal. The existing 47.858 FPS / 20.90 ms Flow-volume reference leaves estimated average-visible-counter margins of 1.322 ms and 12.433 ms respectively.
+
 - Phase V3T-M reached a production-neutral partial safe stop: 33 qualified processes measured the Candidate Performance timeline/PhysX boundary, Flow-absent stage boundary, and an AutoBaseline reference, while repeated Flow stage-connection crashes were fail-fast isolated as `0xC0000005` reads at `omni.fabric.plugin.dll+0xD6960`. Sensitive dumps remain local and upload-disabled; no production setting was changed.
 
 - Adopted Phase V3T-L Candidate Performance as the temporary rendering standard for normal/benchmark startup, development videos, probes, and regressions: RTX Real-Time 2.0, DLSS Performance, and RTPT max bounces 2, with AO unchanged.

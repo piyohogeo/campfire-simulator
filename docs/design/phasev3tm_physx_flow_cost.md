@@ -63,6 +63,7 @@ dump、Kit log、解析raw JSONは機密情報を含む可能性があるGit管�
 - Phase V3T-Lの正常なproduction相当Flow＋volume 3 run（47.858 FPS / 20.90 ms）と、Phase V3T-MBの実燃焼回帰は有効な既存基準として維持する。
 - Flow component分解を再開する条件は、固定Flow/Kitでstage接続raceを回避できる公開された初期化契約、matching symbolを用いた原因特定、または隔離した新Flow版での再現性改善である。
 - production対策を推測で入れず、Flow stageの起動順序やroot-layer settingsをlive変更しない。
+- Phase V3T-N以降の通常運用は45 FPS／22.222 ms目標、30 FPS／33.333 ms最低ラインを用いるが、本Phaseの約60 FPS同期境界や過去gateの意味は変更しない。uncapped診断でも本Phaseで保留したFlow partial topologyを再利用しない。
 
 ## 最終回帰
 

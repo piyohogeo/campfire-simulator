@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v3tm">最新記録</a>
+        <a href="#phase-v3tn">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v3tm">Phase V3T-Mを読む</a>
+        <a class="button primary" href="#phase-v3tn">Phase V3T-Nを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V3T-M safe stop</strong></div>
-        <div><span>状態</span><strong>PhysX measured · Flow split held</strong></div>
-        <div><span>正式母集団</span><strong>33 processes · fatal/crash 0</strong></div>
-        <div><span>未達</span><strong>Flow stage connection race</strong></div>
+        <div><span>現在地</span><strong>Phase V3T-N frame budget</strong></div>
+        <div><span>通常目標</span><strong>45 FPS · 22.222 ms</strong></div>
+        <div><span>最低ライン</span><strong>30 FPS · 33.333 ms</strong></div>
+        <div><span>現行余裕</span><strong>1.322 ms to target</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,18 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-v3tn" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報"><span class="phase-number compact">V3T-N</span><p><time datetime="2026-08-10">2026.08.10</time></p><span class="pill current">Budget adopted</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase V3T-N · Rendering frame budget</p><h2>45 FPSを狙う。<br>将来の焚き火らしさへ、時間を残す。</h2><p>Candidate Performanceを暫定標準に維持し、今後の通常目標を45 FPS／22.222 ms、最低ラインを30 FPS／33.333 msとしました。60 FPSは軽量sceneの理想値として残し、過去gateの意味は書き換えません。</p></header>
+          <figure class="capture-card wide"><a href="assets/phasev3tn/frame_budget_policy.svg"><img src="assets/phasev3tn/frame_budget_policy.svg" alt="Candidate Performanceの現在frame timeと45 FPS、30 FPS予算の比較" loading="lazy"></a><figcaption><div><strong>20.90 ms current reference</strong><span>45 FPSへ1.322 ms · 30 FPSへ12.433 ms</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3tl/candidate_performance_motion.mp4" data-video-poster="assets/phasev3tl/candidate_performance.png" data-video-title="Phase V3T-N visual reference · Candidate Performance" data-video-meta="production相当Flow＋volumeと薪V3の既存外観 · 性能母集団外 · visible counter基準"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>基準外観</strong><small>Candidate Performance</small></span></button></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Normal target</p><h3>45 FPS · 22.222 ms</h3><p>現行Flow volumeは47.858 FPS／20.90 msです。形状変化、炎照明、表面表現が共有できる平均frame予算は約1.3 msと狭いため、更新頻度と描画frameを分離します。</p></section><section class="note caution"><p class="note-label">Metric boundary</p><h3>visible counterのみ</h3><p>余裕は平均visible render counterの差です。display-present FPS、raw frame latency、p95/p99、1% lowは取得しておらず、同じ余裕があるとは主張しません。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Update candidates</p><h3>低頻度化は仮説として測る</h3><p>薪texture 30～60 Hz、炎照明15～30 Hz＋補間、形状変形は数Hz／閾値更新、RTX構造は形状変化時だけ、を候補にします。まだ固定仕様ではありません。</p><p><a href="assets/phasev3tn/frame_budget_policy.json">方針JSON</a> · <a href="../design/frame_budget_policy.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Temporary standard</strong><small>Candidate Performance</small></p></div><div role="listitem"><span>✓</span><p><strong>Historical gates</strong><small>unchanged</small></p></div><div role="listitem"><span>✓</span><p><strong>Flow safe stop</strong><small>held conditions stay held</small></p></div><div role="listitem"><span>→</span><p><strong>Next diagnostic</strong><small>capped vs 240 Hz</small></p></div></div></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v3tm" class="section entry-section phase-six">

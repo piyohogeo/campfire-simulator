@@ -2830,3 +2830,12 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - Flow processに残っていたPhysX/Fabric live設定を除去するとfull volume単独probeは一度正常化したが、formal runで再発した。設定順序だけを原因とは断定せず、Fabric/Hydra stage接続・renderer初期化raceを強い候補、private-symbol unwindなしを未確認事項とする。
 - V3T-Mは`partial_safe_stop_not_complete`であり完成扱いにしない。Flow partial topologyとV3T-M Flow volumeの自動再実行を保留し、Phase V3T-Lの正常production相当3 runとV3T-MB実燃焼回帰を既存基準として維持する。production code、既定値、wood/Flow authority、Emitter、collision、rigid layout、checkpoint、serialization、V3既定OFFは不変。詳細は`docs/design/phasev3tm_physx_flow_cost.md`。
 - 最終回帰はRelease build 8.38秒、Phase 0 RTX、Phase 2 collision、標準suite 8/8 process・77/77 test（355.6秒）が合格した。Candidate Performance V3実燃焼は両mass error 0、revision 1200整合、Flow active block final/peak `231 / 303`、V3 failure 0、native backend closeを確認した。既存Phase V3T-J ordered teardown 24/24はproduction teardown非変更のためshutdown log gateとして維持する。
+
+## Phase V3T-N rendering frame-budget policy
+
+### 2026-08-10: FPSではなくframe timeで将来の外観機能へ予算を残す
+
+- Candidate Performanceを暫定標準として維持し、今後の通常目標を`45 FPS / 22.222 ms`、最低ラインを`30 FPS / 33.333 ms`とする。`60 FPS / 16.667 ms`は軽量sceneの理想値で、全sceneの絶対条件にはしない。過去の58/60 FPS gateは当時の判定として保持し、遡及変更しない。
+- production相当Flow＋volumeの既知基準`47.858 FPS / 20.90 ms`から、45 FPS枠まで`1.322 ms`、30 FPS枠まで`12.433 ms`の推定余裕がある。平均visible render counterの差であり、display-present FPS、raw frame latency、p95/p99の余裕ではない。
+- 薪状態texture 30～60 Hz／revision変化時、炎照明15～30 Hz＋補間、形状変形は数Hz／閾値超過時、Mesh／RTX acceleration structureは形状変化時だけ、炎voxelは少数代表lightへ圧縮、を将来の実測候補とする。固定仕様にはしない。
+- 通常体感測定と、main／render上限だけを240 Hzへ上げる別processの最適化診断を分離する。Power Limit 210 W、1280×720、camera、stage、presetを固定し、追加RenderProductを作らない。Phase V3T-MのFlow partial topology safe stopは維持する。詳細は`docs/design/frame_budget_policy.md`。

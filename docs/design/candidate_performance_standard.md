@@ -38,3 +38,7 @@ Performanceでは炎の時間方向ディテールが多少平滑化される。
 wood authority、Flow入力、Point／Sphere Emitter、collision、rigid layout、checkpoint、serialization、V3既定OFF、AO、Power Limitは変更しない。V3T-M以降の主要計測はCandidate Performanceを使い、各Phaseで代表条件のAutoBaselineも別processで測る。
 
 最終回帰はRelease build 8.21秒、Phase 0 RTX exit 0、標準suite 8/8 process・77/77 test（354.5秒）が合格した。
+
+## Phase V3T-N以降の運用予算
+
+Candidate Performanceの採用後、今後の通常目標は`45 FPS / 22.222 ms`、最低ラインは`30 FPS / 33.333 ms`とする。`60 FPS / 16.667 ms`は軽量sceneの理想値で、全sceneの絶対条件ではない。production相当Flow＋volumeの既知値`47.858 FPS / 20.90 ms`からの推定余裕は45 FPS枠へ`1.322 ms`、30 FPS枠へ`12.433 ms`である。これは平均visible counterの差であり、display-presentやraw latencyの余裕ではない。詳細は`frame_budget_policy.md`。
