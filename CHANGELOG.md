@@ -1,5 +1,7 @@
 # Changelog
 
+- Phase V3T-M reached a production-neutral partial safe stop: 33 qualified processes measured the Candidate Performance timeline/PhysX boundary, Flow-absent stage boundary, and an AutoBaseline reference, while repeated Flow stage-connection crashes were fail-fast isolated as `0xC0000005` reads at `omni.fabric.plugin.dll+0xD6960`. Sensitive dumps remain local and upload-disabled; no production setting was changed.
+
 - Adopted Phase V3T-L Candidate Performance as the temporary rendering standard for normal/benchmark startup, development videos, probes, and regressions: RTX Real-Time 2.0, DLSS Performance, and RTPT max bounces 2, with AO unchanged.
 - Verified the effective values in separate normal and benchmark processes at 1280×720, VSync OFF, 120 Hz main/render, 59 Hz present, and the unchanged 210 W power limit. AutoBaseline and Candidate Balanced remain explicit comparison presets; RTX Minimal and AO OFF are not production candidates.
 - Regressed the explicit V3 demo through the inherited standard: revision 1200, zero mass-balance error, Flow active-block final/peak 278/305, 505 V3 visual commits, 868 texture uploads, and zero V3 failures; the rendered frame retained flame/smoke, shadows, V3 surface texture, and hot emission.

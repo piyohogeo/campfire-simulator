@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="562" viewBox="0 0 1120 562">
+<rect width="100%" height="100%" fill="#111827"/>
+<style>text{font-family:Segoe UI,Arial,sans-serif;fill:#e5e7eb}.small{font-size:13px}.label{font-size:14px}.title{font-size:24px;font-weight:700}.muted{fill:#9ca3af}</style>
+<text x="28" y="38" class="title">Phase V3T-M · qualified visible viewport FPS</text>
+<text x="28" y="64" class="small muted">Performance formal runs; AutoBaseline representative shown separately · display-present FPS unavailable</text>
+<text x="28" y="107" class="label">physx_none_stop</text>
+<rect x="320" y="92" width="690.0" height="20" rx="3" fill="#e87722"/>
+<text x="1019.0" y="107" class="small">116.390 FPS · n=3</text>
+<text x="28" y="141" class="label">physx_none_play</text>
+<rect x="320" y="126" width="355.5" height="20" rx="3" fill="#e87722"/>
+<text x="684.5" y="141" class="small">59.973 FPS · n=3</text>
+<text x="28" y="175" class="label">physx_scene_only</text>
+<rect x="320" y="160" width="355.5" height="20" rx="3" fill="#e87722"/>
+<text x="684.5" y="175" class="small">59.974 FPS · n=3</text>
+<text x="28" y="209" class="label">physx_kinematic20</text>
+<rect x="320" y="194" width="355.6" height="20" rx="3" fill="#e87722"/>
+<text x="684.6" y="209" class="small">59.980 FPS · n=3</text>
+<text x="28" y="243" class="label">physx_dynamic20_sleep</text>
+<rect x="320" y="228" width="355.6" height="20" rx="3" fill="#e87722"/>
+<text x="684.6" y="243" class="small">59.977 FPS · n=3</text>
+<text x="28" y="277" class="label">physx_dynamic20_move_no_collision</text>
+<rect x="320" y="262" width="355.3" height="20" rx="3" fill="#e87722"/>
+<text x="684.3" y="277" class="small">59.940 FPS · n=3</text>
+<text x="28" y="311" class="label">physx_dynamic20_collision</text>
+<rect x="320" y="296" width="355.6" height="20" rx="3" fill="#e87722"/>
+<text x="684.6" y="311" class="small">59.987 FPS · n=3</text>
+<text x="28" y="345" class="label">physx_collapse20</text>
+<rect x="320" y="330" width="355.7" height="20" rx="3" fill="#e87722"/>
+<text x="684.7" y="345" class="small">59.998 FPS · n=3</text>
+<text x="28" y="379" class="label">flow_no_prims</text>
+<rect x="320" y="364" width="355.5" height="20" rx="3" fill="#e87722"/>
+<text x="684.5" y="379" class="small">59.960 FPS · n=3</text>
+<text x="28" y="413" class="label">flow_empty_xform</text>
+<rect x="320" y="398" width="355.6" height="20" rx="3" fill="#e87722"/>
+<text x="684.6" y="413" class="small">59.977 FPS · n=3</text>
+<text x="28" y="447" class="label">flow_no_prims · AutoBaseline</text>
+<rect x="320" y="432" width="278.2" height="20" rx="3" fill="#6b7280"/>
+<text x="607.2" y="447" class="small">46.933 FPS · n=3</text>
+<text x="28" y="500" class="small" fill="#fca5a5">Flow component decomposition held: repeated 0xC0000005 read 0x20 at omni.fabric.plugin.dll+0xD6960 during stage connection.</text>
+<text x="28" y="524" class="small muted">Crash dumps remain local sensitive artifacts; hashes and module offsets only are reported.</text>
+</svg>

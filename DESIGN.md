@@ -2818,3 +2818,15 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - Phase V3T-Lのproduction相当Flow＋volume `47.858 FPS / 20.90 ms`は既知基準であり、58 FPS gate合格ではない。visible render counterとdisplay-present FPSを混同しない。Performanceの炎時間方向ディテール平滑化は既知の許容事項である。
 - wood authority、Flow入力、Emitter、collision、rigid layout、checkpoint、serializationは不変。以後の主要測定はPerformance、各Phaseの代表条件1つはAutoBaselineを別processで測る。詳細は`docs/design/candidate_performance_standard.md`。
 - 最終回帰はRelease build 8.21秒、Phase 0 RTX exit 0、標準suite 8/8 process・77/77 test（354.5秒）が合格した。
+
+## Phase V3T-M PhysX / Flow cost decomposition safe stop
+
+### 2026-08-10: PhysX正式値を確定し、Flow stage接続raceで未完了停止
+
+- Candidate Performance、1280×720、210 W、既存visible viewportだけを使い、PhysX 8条件×3 run、Flowなし2条件×3 run、AutoBaseline代表1条件×3 runの合計33 processを正常母集団として確定した。追加RenderProduct、HydraTexture、capture、encode、測定中のstage変更はない。
+- timeline STOPのmean visible FPSは`116.390`、timeline PLAYだけで`59.973`となった。PhysX scene、kinematic、sleep候補、moving、collision、collapseは`59.940..59.998 FPS`に集中し、約60 FPSのupdate/present同期境界より細かい追加コストは本metricでは分離できなかった。
+- Flow PrimなしはPerformance `59.960 FPS`、空`/World/Flow` Xformは`59.977`、同じFlowなしsceneのAutoBaselineは`46.933 FPS`だった。空XformはFlow schema Prim存在コストではない。
+- Flow schemaを含むstageでは、全inactive、全active＋Emitter OFF、active-block-only、Offscreen-only、full volumeなどがstage接続中に非決定的native crashを起こした。関連8 dumpはすべて`0xC0000005` read `0x20`、`omni.fabric.plugin.dll+0xD6960`で、最終markerは`stage_connection_begin`、upload試行0だった。
+- Flow processに残っていたPhysX/Fabric live設定を除去するとfull volume単独probeは一度正常化したが、formal runで再発した。設定順序だけを原因とは断定せず、Fabric/Hydra stage接続・renderer初期化raceを強い候補、private-symbol unwindなしを未確認事項とする。
+- V3T-Mは`partial_safe_stop_not_complete`であり完成扱いにしない。Flow partial topologyとV3T-M Flow volumeの自動再実行を保留し、Phase V3T-Lの正常production相当3 runとV3T-MB実燃焼回帰を既存基準として維持する。production code、既定値、wood/Flow authority、Emitter、collision、rigid layout、checkpoint、serialization、V3既定OFFは不変。詳細は`docs/design/phasev3tm_physx_flow_cost.md`。
+- 最終回帰はRelease build 8.38秒、Phase 0 RTX、Phase 2 collision、標準suite 8/8 process・77/77 test（355.6秒）が合格した。Candidate Performance V3実燃焼は両mass error 0、revision 1200整合、Flow active block final/peak `231 / 303`、V3 failure 0、native backend closeを確認した。既存Phase V3T-J ordered teardown 24/24はproduction teardown非変更のためshutdown log gateとして維持する。

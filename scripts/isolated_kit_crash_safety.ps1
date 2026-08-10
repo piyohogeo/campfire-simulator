@@ -67,11 +67,21 @@ function Get-CampfireCrashDumpInventory {
     return @(Get-ChildItem -LiteralPath $DumpDir -File -Force | Where-Object {
         $_.Name -match '\.dmp(?:\.zip)?$|\.dmp\.toml$|\.dmp\.txt$'
     } | ForEach-Object {
+        $hash = $null
+        $readable = $false
+        try {
+            $hash = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256 -ErrorAction Stop).Hash
+            $readable = $true
+        } catch {
+            # Crash Reporter may still hold the archive while compressing it.
+            # Callers can poll again; a partially written archive is never treated as verified.
+        }
         [ordered]@{
             name = $_.Name
             path = $_.FullName
             bytes = $_.Length
-            sha256 = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash
+            sha256 = $hash
+            readable = $readable
             sensitive_local_artifact = $true
         }
     })

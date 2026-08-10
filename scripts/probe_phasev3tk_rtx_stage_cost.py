@@ -540,4 +540,5 @@ async def _run(arguments):
         app.post_uncancellable_quit(0 if report["status"] == "ok" else 1)
 
 
-asyncio.ensure_future(_run(_arguments()))
+if __name__ != "probe_phasev3tk_rtx_stage_cost":
+    asyncio.ensure_future(_run(_arguments()))

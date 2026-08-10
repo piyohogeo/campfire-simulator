@@ -1,0 +1,611 @@
+{
+  "schema": "campfire.phasev3tm.physx-flow-cost-report.v1",
+  "phase": "V3T-M",
+  "status": "partial_safe_stop_not_complete",
+  "production_changed": false,
+  "qualified_processes": 33,
+  "qualified_fatal_log_count": 0,
+  "qualified_crash_count": 0,
+  "qualified_automatic_upload_attempt_count": 0,
+  "condition_summary": {
+    "physx_none_stop": {
+      "condition": "physx_none_stop",
+      "preset": "Performance",
+      "visible_fps": {
+        "count": 3,
+        "p50": 116.394,
+        "mean": 116.39,
+        "min": 115.876,
+        "max": 116.899
+      },
+      "frame_time_ms": {
+        "count": 3,
+        "p50": 8.591,
+        "mean": 8.592,
+        "min": 8.554,
+        "max": 8.63
+      },
+      "gpu_utilization_percent": {
+        "count": 3,
+        "p50": 65.217,
+        "mean": 65.797,
+        "min": 65.0,
+        "max": 67.174
+      },
+      "power_w": {
+        "count": 3,
+        "p50": 209.31,
+        "mean": 209.263,
+        "min": 209.137,
+        "max": 209.343
+      },
+      "changed_transform_counts": [
+        0
+      ],
+      "contact_point_counts": [
+        0
+      ]
+    },
+    "physx_none_play": {
+      "condition": "physx_none_play",
+      "preset": "Performance",
+      "visible_fps": {
+        "count": 3,
+        "p50": 59.975,
+        "mean": 59.973,
+        "min": 59.964,
+        "max": 59.981
+      },
+      "frame_time_ms": {
+        "count": 3,
+        "p50": 16.674,
+        "mean": 16.674,
+        "min": 16.672,
+        "max": 16.677
+      },
+      "gpu_utilization_percent": {
+        "count": 3,
+        "p50": 36.087,
+        "mean": 36.261,
+        "min": 35.826,
+        "max": 36.87
+      },
+      "power_w": {
+        "count": 3,
+        "p50": 177.15,
+        "mean": 179.186,
+        "min": 172.398,
+        "max": 188.01
+      },
+      "changed_transform_counts": [
+        0
+      ],
+      "contact_point_counts": [
+        0
+      ]
+    },
+    "physx_scene_only": {
+      "condition": "physx_scene_only",
+      "preset": "Performance",
+      "visible_fps": {
+        "count": 3,
+        "p50": 59.976,
+        "mean": 59.974,
+        "min": 59.968,
+        "max": 59.979
+      },
+      "frame_time_ms": {
+        "count": 3,
+        "p50": 16.673,
+        "mean": 16.674,
+        "min": 16.672,
+        "max": 16.676
+      },
+      "gpu_utilization_percent": {
+        "count": 3,
+        "p50": 36.273,
+        "mean": 36.588,
+        "min": 36.174,
+        "max": 37.318
+      },
+      "power_w": {
+        "count": 3,
+        "p50": 172.817,
+        "mean": 174.556,
+        "min": 172.529,
+        "max": 178.321
+      },
+      "changed_transform_counts": [
+        0
+      ],
+      "contact_point_counts": [
+        0
+      ]
+    },
+    "physx_kinematic20": {
+      "condition": "physx_kinematic20",
+      "preset": "Performance",
+      "visible_fps": {
+        "count": 3,
+        "p50": 59.973,
+        "mean": 59.98,
+        "min": 59.972,
+        "max": 59.996
+      },
+      "frame_time_ms": {
+        "count": 3,
+        "p50": 16.674,
+        "mean": 16.672,
+        "min": 16.668,
+        "max": 16.674
+      },
+      "gpu_utilization_percent": {
+        "count": 3,
+        "p50": 36.478,
+        "mean": 36.696,
+        "min": 36.0,
+        "max": 37.609
+      },
+      "power_w": {
+        "count": 3,
+        "p50": 185.747,
+        "mean": 183.653,
+        "min": 172.978,
+        "max": 192.233
+      },
+      "changed_transform_counts": [
+        0
+      ],
+      "contact_point_counts": [
+        0
+      ]
+    },
+    "physx_dynamic20_sleep": {
+      "condition": "physx_dynamic20_sleep",
+      "preset": "Performance",
+      "visible_fps": {
+        "count": 3,
+        "p50": 59.98,
+        "mean": 59.977,
+        "min": 59.962,
+        "max": 59.99
+      },
+      "frame_time_ms": {
+        "count": 3,
+        "p50": 16.672,
+        "mean": 16.673,
+        "min": 16.669,
+        "max": 16.677
+      },
+      "gpu_utilization_percent": {
+        "count": 3,
+        "p50": 39.0,
+        "mean": 38.899,
+        "min": 37.87,
+        "max": 39.826
+      },
+      "power_w": {
+        "count": 3,
+        "p50": 206.711,
+        "mean": 205.058,
+        "min": 201.607,
+        "max": 206.856
+      },
+      "changed_transform_counts": [
+        0
+      ],
+      "contact_point_counts": [
+        0
+      ]
+    },
+    "physx_dynamic20_move_no_collision": {
+      "condition": "physx_dynamic20_move_no_collision",
+      "preset": "Performance",
+      "visible_fps": {
+        "count": 3,
+        "p50": 59.983,
+        "mean": 59.94,
+        "min": 59.831,
+        "max": 60.007
+      },
+      "frame_time_ms": {
+        "count": 3,
+        "p50": 16.671,
+        "mean": 16.683,
+        "min": 16.665,
+        "max": 16.714
+      },
+      "gpu_utilization_percent": {
+        "count": 3,
+        "p50": 38.565,
+        "mean": 38.377,
+        "min": 37.957,
+        "max": 38.609
+      },
+      "power_w": {
+        "count": 3,
+        "p50": 205.867,
+        "mean": 203.451,
+        "min": 196.427,
+        "max": 208.059
+      },
+      "changed_transform_counts": [
+        20
+      ],
+      "contact_point_counts": [
+        0
+      ]
+    },
+    "physx_dynamic20_collision": {
+      "condition": "physx_dynamic20_collision",
+      "preset": "Performance",
+      "visible_fps": {
+        "count": 3,
+        "p50": 59.981,
+        "mean": 59.987,
+        "min": 59.971,
+        "max": 60.009
+      },
+      "frame_time_ms": {
+        "count": 3,
+        "p50": 16.672,
+        "mean": 16.67,
+        "min": 16.664,
+        "max": 16.675
+      },
+      "gpu_utilization_percent": {
+        "count": 3,
+        "p50": 40.043,
+        "mean": 39.971,
+        "min": 38.913,
+        "max": 40.957
+      },
+      "power_w": {
+        "count": 3,
+        "p50": 208.073,
+        "mean": 208.079,
+        "min": 207.837,
+        "max": 208.326
+      },
+      "changed_transform_counts": [
+        4
+      ],
+      "contact_point_counts": [
+        0
+      ]
+    },
+    "physx_collapse20": {
+      "condition": "physx_collapse20",
+      "preset": "Performance",
+      "visible_fps": {
+        "count": 3,
+        "p50": 59.984,
+        "mean": 59.998,
+        "min": 59.981,
+        "max": 60.028
+      },
+      "frame_time_ms": {
+        "count": 3,
+        "p50": 16.671,
+        "mean": 16.667,
+        "min": 16.659,
+        "max": 16.672
+      },
+      "gpu_utilization_percent": {
+        "count": 3,
+        "p50": 39.522,
+        "mean": 39.831,
+        "min": 39.318,
+        "max": 40.652
+      },
+      "power_w": {
+        "count": 3,
+        "p50": 208.154,
+        "mean": 208.122,
+        "min": 207.984,
+        "max": 208.229
+      },
+      "changed_transform_counts": [
+        10
+      ],
+      "contact_point_counts": [
+        0
+      ]
+    },
+    "flow_no_prims": {
+      "condition": "flow_no_prims",
+      "preset": "Performance",
+      "visible_fps": {
+        "count": 3,
+        "p50": 59.958,
+        "mean": 59.96,
+        "min": 59.958,
+        "max": 59.965
+      },
+      "frame_time_ms": {
+        "count": 3,
+        "p50": 16.678,
+        "mean": 16.678,
+        "min": 16.676,
+        "max": 16.678
+      },
+      "gpu_utilization_percent": {
+        "count": 3,
+        "p50": 36.696,
+        "mean": 36.667,
+        "min": 36.522,
+        "max": 36.783
+      },
+      "power_w": {
+        "count": 3,
+        "p50": 173.105,
+        "mean": 172.677,
+        "min": 167.529,
+        "max": 177.396
+      },
+      "changed_transform_counts": [
+        0
+      ],
+      "contact_point_counts": [
+        0
+      ]
+    },
+    "flow_empty_xform": {
+      "condition": "flow_empty_xform",
+      "preset": "Performance",
+      "visible_fps": {
+        "count": 3,
+        "p50": 59.979,
+        "mean": 59.977,
+        "min": 59.972,
+        "max": 59.98
+      },
+      "frame_time_ms": {
+        "count": 3,
+        "p50": 16.672,
+        "mean": 16.673,
+        "min": 16.672,
+        "max": 16.674
+      },
+      "gpu_utilization_percent": {
+        "count": 3,
+        "p50": 35.565,
+        "mean": 35.782,
+        "min": 35.391,
+        "max": 36.391
+      },
+      "power_w": {
+        "count": 3,
+        "p50": 174.856,
+        "mean": 174.175,
+        "min": 168.282,
+        "max": 179.388
+      },
+      "changed_transform_counts": [
+        0
+      ],
+      "contact_point_counts": [
+        0
+      ]
+    },
+    "flow_no_prims · AutoBaseline": {
+      "condition": "flow_no_prims",
+      "preset": "AutoBaseline",
+      "visible_fps": {
+        "count": 3,
+        "p50": 47.158,
+        "mean": 46.933,
+        "min": 46.482,
+        "max": 47.159
+      },
+      "frame_time_ms": {
+        "count": 3,
+        "p50": 21.205,
+        "mean": 21.308,
+        "min": 21.205,
+        "max": 21.514
+      },
+      "gpu_utilization_percent": {
+        "count": 3,
+        "p50": 100.0,
+        "mean": 99.971,
+        "min": 99.913,
+        "max": 100.0
+      },
+      "power_w": {
+        "count": 3,
+        "p50": 209.641,
+        "mean": 209.653,
+        "min": 209.64,
+        "max": 209.678
+      },
+      "changed_transform_counts": [
+        0
+      ],
+      "contact_point_counts": [
+        0
+      ]
+    }
+  },
+  "crash_observations": [
+    {
+      "condition": "phasev3tm-flow-layer-translucency-crash",
+      "local_sensitive_artifact_directory": "artifacts/phasev3tm-flow-layer-translucency-crash",
+      "archive_sha256": "96FA74857F943E8CA3E5C59C907ECBFF423F06EDC4DC1E32AB31CA9A3B814FE0",
+      "archive_size": 1640942,
+      "exception_code": "0xC0000005",
+      "access": "read",
+      "target": "0x0000000000000020",
+      "fault_module": "omni.fabric.plugin.dll",
+      "fault_offset": "0xD6960",
+      "native_stack_status": "heuristic_module_address_scan_only",
+      "automatic_upload_attempt_count": 0,
+      "git_managed": false
+    },
+    {
+      "condition": "flow_offscreen_only",
+      "local_sensitive_artifact_directory": "artifacts/phasev3tm-formal-flow-performance-20260810/flow_offscreen_only_preset-performance_r1",
+      "archive_sha256": "ED9838DF6126EB5F2ABB4B8610129BDE7007CB8EFB6A689B237553D8C676042D",
+      "archive_size": 1520854,
+      "exception_code": "0xC0000005",
+      "access": "read",
+      "target": "0x0000000000000020",
+      "fault_module": "omni.fabric.plugin.dll",
+      "fault_offset": "0xD6960",
+      "native_stack_status": "heuristic_module_address_scan_only",
+      "automatic_upload_attempt_count": 0,
+      "git_managed": false
+    },
+    {
+      "condition": "flow_volume",
+      "local_sensitive_artifact_directory": "artifacts/phasev3tm-formal-flow-safe-performance-20260810/flow_volume_preset-performance_r1",
+      "archive_sha256": "D69E0861F90D3922C64375AEDDEF2430CA26236B30892991ACECEC11B819975D",
+      "archive_size": 1526914,
+      "exception_code": "0xC0000005",
+      "access": "read",
+      "target": "0x0000000000000020",
+      "fault_module": "omni.fabric.plugin.dll",
+      "fault_offset": "0xD6960",
+      "native_stack_status": "heuristic_module_address_scan_only",
+      "automatic_upload_attempt_count": 0,
+      "git_managed": false
+    },
+    {
+      "condition": "flow_simulation_active_blocks",
+      "local_sensitive_artifact_directory": "artifacts/phasev3tm-preflight-active-blocks-20260810/flow_simulation_active_blocks_preset-performance_r1",
+      "archive_sha256": "B3D1641F9CA1D20A363317AFAD7F99DC53EAA99B27A8C51C825DDD632CD8EA3E",
+      "archive_size": 1666913,
+      "exception_code": "0xC0000005",
+      "access": "read",
+      "target": "0x0000000000000020",
+      "fault_module": "omni.fabric.plugin.dll",
+      "fault_offset": "0xD6960",
+      "native_stack_status": "heuristic_module_address_scan_only",
+      "automatic_upload_attempt_count": 0,
+      "git_managed": false
+    },
+    {
+      "condition": "flow_global_on_emitter_off",
+      "local_sensitive_artifact_directory": "artifacts/phasev3tm-preflight-flow-components2-20260810/flow_global_on_emitter_off_preset-performance_r1",
+      "archive_sha256": "DFA7042315FEE8563B974334EAF598CB04BD7FE0B0F127672108D862F4BA0A65",
+      "archive_size": 1608404,
+      "exception_code": "0xC0000005",
+      "access": "read",
+      "target": "0x0000000000000020",
+      "fault_module": "omni.fabric.plugin.dll",
+      "fault_offset": "0xD6960",
+      "native_stack_status": "heuristic_module_address_scan_only",
+      "automatic_upload_attempt_count": 0,
+      "git_managed": false
+    },
+    {
+      "condition": "flow_volume",
+      "local_sensitive_artifact_directory": "artifacts/phasev3tm-preflight-flow-volume-20260810/flow_volume_preset-performance_r1",
+      "archive_sha256": "001C28009C1029D443D0AE1AEF0FB19EC413577E7D658DB7EE958F82A6BED423",
+      "archive_size": 1569343,
+      "exception_code": "0xC0000005",
+      "access": "read",
+      "target": "0x0000000000000020",
+      "fault_module": "omni.fabric.plugin.dll",
+      "fault_offset": "0xD6960",
+      "native_stack_status": "heuristic_module_address_scan_only",
+      "automatic_upload_attempt_count": 0,
+      "git_managed": false
+    },
+    {
+      "condition": "flow_all_inactive",
+      "local_sensitive_artifact_directory": "artifacts/phasev3tm-preflight-qualified-20260810/flow_all_inactive_preset-performance_r1",
+      "archive_sha256": "1208EC2726886D2BD3B268E4F19D50979F7ACE8B5B1A0DC636B4D0DDBADE34F5",
+      "archive_size": 1641010,
+      "exception_code": "0xC0000005",
+      "access": "read",
+      "target": "0x0000000000000020",
+      "fault_module": "omni.fabric.plugin.dll",
+      "fault_offset": "0xD6960",
+      "native_stack_status": "heuristic_module_address_scan_only",
+      "automatic_upload_attempt_count": 0,
+      "git_managed": false
+    },
+    {
+      "condition": "flow_all_inactive",
+      "local_sensitive_artifact_directory": "artifacts/phasev3tm-safe-order-flow-inactive2-20260810/flow_all_inactive_preset-performance_r1",
+      "archive_sha256": "7A058C6619DCEDD70ABC7AF0F1A38FB96E2BB617D9A9164167C1003AFC11AC1F",
+      "archive_size": 1569968,
+      "exception_code": "0xC0000005",
+      "access": "read",
+      "target": "0x0000000000000020",
+      "fault_module": "omni.fabric.plugin.dll",
+      "fault_offset": "0xD6960",
+      "native_stack_status": "heuristic_module_address_scan_only",
+      "automatic_upload_attempt_count": 0,
+      "git_managed": false
+    }
+  ],
+  "common_crash_signature": {
+    "count": 8,
+    "exception": "0xC0000005",
+    "access": "read",
+    "target": "0x20",
+    "fault_module": "omni.fabric.plugin.dll",
+    "fault_offset": "0xD6960",
+    "last_lifecycle_marker": "stage_connection_begin",
+    "cause": "unconfirmed; Fabric/Hydra stage-connection initialization race is a strong candidate"
+  },
+  "decisions": {
+    "candidate_performance_remains_temporary_standard": true,
+    "flow_partial_topology_formal_measurement_held": true,
+    "flow_volume_v3tm_formal_measurement_held": true,
+    "phase_complete": false,
+    "production_changes": false
+  },
+  "metric_contract": {
+    "visible_render_counter": "ViewportAPI.frame_info frame-number delta / wall time",
+    "hud_fps": "smoothed ViewportAPI.frame_info fps",
+    "display_present_fps_measured": false,
+    "raw_frame_p95_p99_measured": false
+  },
+  "limitations": [
+    "Flow Simulate, Offscreen, Render, shadow raymarch, active-block-only, and full-volume costs were not formally decomposed because isolated stage connection repeatedly crashed.",
+    "Contact report callbacks returned zero points in the diagnostic PhysX stages; collision correctness is verified by the existing Phase 2 regression, not inferred from this cost probe.",
+    "Values near 60 FPS are synchronized to the present/update boundary; no zero-cost claim is made for differences below this measurement resolution."
+  ],
+  "final_regression": {
+    "release_build": {
+      "status": "passed",
+      "wall_seconds": 8.38
+    },
+    "phase0_rtx": {
+      "status": "passed",
+      "exit_code": 0
+    },
+    "phase2_collision": {
+      "status": "passed",
+      "exit_code": 0
+    },
+    "standard_suite": {
+      "status": "passed",
+      "processes": "8/8",
+      "tests": "77/77",
+      "wall_seconds": 355.6
+    },
+    "candidate_performance_v3": {
+      "status": "ok",
+      "dry_authority_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+      "wet_authority_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "resident_revision": 1200,
+      "revision_consistent": true,
+      "flow_active_blocks_final": 231,
+      "flow_active_blocks_peak": 303,
+      "visual_processed_revision": 1200,
+      "visual_failure_count": 0,
+      "native_backend_closed": true
+    },
+    "shutdown_log_gate": {
+      "current_v3_normal_exit_and_native_backend_closed": true,
+      "existing_phase_v3tj_ordered_teardown_reference": "24/24",
+      "phase_v3tj_not_rerun_reason": "V3T-M changes only production-neutral measurement scripts and documents"
+    }
+  }
+}
