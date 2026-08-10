@@ -1,5 +1,10 @@
 # Changelog
 
+- Added the production-neutral, default-off Phase 6DS static Flow-collision probe with a complete offline-authored Flow 110.0.0 graph, public NanoVDB ROI sampling, and four conditions across 12 isolated Kit processes.
+- Measured the effective velocity cell at `0.050000 m`; the `0.25 m` Box was five velocity cells thick and the Emitter-to-Box gap was 4.5 cells. Aligned Collision ON retained inside-core / above-far OFF ratios of `1.008 / 1.001` for temperature, `1.001 / 1.011` for smoke, `1.004 / 0.996` for burn, and `0.996 / 1.000` for velocity magnitude.
+- Found no monotonic 0.5/1-cell position response; their aggregate ROI values were identical. Numeric readback and OFF/ON rendered captures both show continued passage, so Cylinder and dynamic-collider work were not started.
+- Preserved Phase V3T-R and V3T-M safe stops and every production default. All 12 processes completed safe shutdown with fatal/crash/dump/upload counts zero and unchanged production app hashes; the Release build succeeded in `8.75 s`, and a diagnostic comparison video was added without changing the latest-demo pointer.
+
 - Measured a production-neutral Phase V3T-R debug split candidate: debugger-free normal reached `50.231 FPS`, explicit developer `30.525 FPS`, and benchmark `50.488 FPS` across nine order-rotated processes while V3, Flow, authority hashes, and zero mass error were retained.
 - Verified that normal/benchmark loaded none of the nine developer extensions and opened no debugpy listener, while the explicit developer candidate loaded all nine and listened only on `127.0.0.1:3000`. Separate visible-window runs reproduced the performance classes.
 - Withheld the production dependency change after a non-formal explicit V3-OFF regression crashed during Kit quick shutdown (`0xC0000005`, `usd_usdGeom.dll+0x7A171`). The local dump was preserved outside Git, automatic upload remained zero, and the same condition was not automatically rerun.

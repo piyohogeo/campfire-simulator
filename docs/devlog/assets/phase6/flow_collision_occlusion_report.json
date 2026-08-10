@@ -1,0 +1,4113 @@
+{
+  "schema": "campfire.phase6ds.flow-collision-report.v1",
+  "phase": "phase6ds",
+  "status": "ok",
+  "default_off": true,
+  "production_code_changed": false,
+  "flow_version": "110.0.0",
+  "run_count": 12,
+  "effective_velocity_cell_size_m": 0.05000000074505806,
+  "shift_velocity_cells": {
+    "collision_off": 0.0,
+    "box_aligned": 0.0,
+    "box_shift_half": 0.5,
+    "box_shift_one": 1.0
+  },
+  "aggregates": {
+    "collision_off": {
+      "run_count": 3,
+      "channels": {
+        "temperature": {
+          "below": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.05516427683695053,
+              "p95": 0.0640421699936764,
+              "maximum": 0.0640421699936764,
+              "minimum": 0.045521309290130554
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.6901529947916667,
+              "p95": 0.97998046875,
+              "maximum": 0.97998046875,
+              "minimum": 0.3134765625
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.0,
+              "p95": 1.0,
+              "maximum": 1.0,
+              "minimum": 1.0
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 904.2666666666667,
+              "p95": 1153,
+              "maximum": 1153,
+              "minimum": 793
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "inside": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.04530089411032447,
+              "p95": 0.04955893837211263,
+              "maximum": 0.04955893837211263,
+              "minimum": 0.040169164262331726
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.29599609375,
+              "p95": 0.395751953125,
+              "maximum": 0.395751953125,
+              "minimum": 0.184814453125
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.0,
+              "p95": 1.0,
+              "maximum": 1.0,
+              "minimum": 1.0
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 2431.733333333333,
+              "p95": 2699,
+              "maximum": 2699,
+              "minimum": 2259
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 5290.0,
+              "p95": 5290,
+              "maximum": 5290,
+              "minimum": 5290
+            }
+          },
+          "inside_core": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.04127488626499332,
+              "p95": 0.05238076617451832,
+              "maximum": 0.05238076617451832,
+              "minimum": 0.029194067556601165
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.2533772786458333,
+              "p95": 0.47314453125,
+              "maximum": 0.47314453125,
+              "minimum": 0.11395263671875
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.0,
+              "p95": 1.0,
+              "maximum": 1.0,
+              "minimum": 1.0
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 1230.2666666666667,
+              "p95": 1341,
+              "maximum": 1341,
+              "minimum": 1141
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "above": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.04594374403742476,
+              "p95": 0.057062959133001266,
+              "maximum": 0.057062959133001266,
+              "minimum": 0.037786706366588575
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.32928873697916666,
+              "p95": 0.48681640625,
+              "maximum": 0.48681640625,
+              "minimum": 0.19921875
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.9902018229166667,
+              "p95": 1.0,
+              "maximum": 1.0,
+              "minimum": 0.974609375
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 2371.3333333333335,
+              "p95": 2471,
+              "maximum": 2471,
+              "minimum": 2214
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 4232.0,
+              "p95": 4232,
+              "maximum": 4232,
+              "minimum": 4232
+            }
+          },
+          "above_far": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.04291536559540507,
+              "p95": 0.05659708919120807,
+              "maximum": 0.05659708919120807,
+              "minimum": 0.0262592202774293
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.28466796875,
+              "p95": 0.429931640625,
+              "maximum": 0.429931640625,
+              "minimum": 0.1707763671875
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.9682942708333333,
+              "p95": 0.974609375,
+              "maximum": 0.974609375,
+              "minimum": 0.9501953125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 4651.733333333334,
+              "p95": 4833,
+              "maximum": 4833,
+              "minimum": 4428
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 7406.0,
+              "p95": 7406,
+              "maximum": 7406,
+              "minimum": 7406
+            }
+          }
+        },
+        "fuel": {
+          "below": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.0010151845851482351,
+              "p95": 0.001136786004771357,
+              "maximum": 0.001136786004771357,
+              "minimum": 0.0008312888992756661
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 1.7642974853515625e-05,
+              "p95": 3.886222839355469e-05,
+              "maximum": 3.886222839355469e-05,
+              "minimum": 7.748603820800781e-07
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.0605224609375,
+              "p95": 0.061553955078125,
+              "maximum": 0.061553955078125,
+              "minimum": 0.058868408203125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 969.1333333333333,
+              "p95": 987,
+              "maximum": 987,
+              "minimum": 953
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "inside": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 4.80178608861297e-05,
+              "p95": 6.19884474741714e-05,
+              "maximum": 6.19884474741714e-05,
+              "minimum": 2.6868872471252326e-05
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 3.735224405924479e-07,
+              "p95": 1.6689300537109375e-06,
+              "maximum": 1.6689300537109375e-06,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.028321329752604166,
+              "p95": 0.029815673828125,
+              "maximum": 0.029815673828125,
+              "minimum": 0.025543212890625
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 413.46666666666664,
+              "p95": 852,
+              "maximum": 852,
+              "minimum": 186
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 5290.0,
+              "p95": 5290,
+              "maximum": 5290,
+              "minimum": 5290
+            }
+          },
+          "inside_core": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 1.2714998032510392e-05,
+              "p95": 1.9726500844685028e-05,
+              "maximum": 1.9726500844685028e-05,
+              "minimum": 4.5069674688386107e-10
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 2.463658650716146e-07,
+              "p95": 7.748603820800781e-07,
+              "maximum": 7.748603820800781e-07,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.009389245510101318,
+              "p95": 0.01348876953125,
+              "maximum": 0.01348876953125,
+              "minimum": 5.960464477539063e-08
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 146.53333333333333,
+              "p95": 414,
+              "maximum": 414,
+              "minimum": 20
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "above": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 3.122389504349149e-08,
+              "p95": 1.2953306190908969e-07,
+              "maximum": 1.2953306190908969e-07,
+              "minimum": 0.0
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 3.973642985026042e-09,
+              "p95": 5.960464477539063e-08,
+              "maximum": 5.960464477539063e-08,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.415411631266276e-05,
+              "p95": 3.88026237487793e-05,
+              "maximum": 3.88026237487793e-05,
+              "minimum": 0.0
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 70.06666666666666,
+              "p95": 241,
+              "maximum": 241,
+              "minimum": 0
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 4232.0,
+              "p95": 4232,
+              "maximum": 4232,
+              "minimum": 4232
+            }
+          },
+          "above_far": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 6.888685158621301e-09,
+              "p95": 2.4466394830838172e-08,
+              "maximum": 2.4466394830838172e-08,
+              "minimum": 0.0
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 5.014737447102865e-06,
+              "p95": 2.187490463256836e-05,
+              "maximum": 2.187490463256836e-05,
+              "minimum": 0.0
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 54.666666666666664,
+              "p95": 161,
+              "maximum": 161,
+              "minimum": 0
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 7406.0,
+              "p95": 7406,
+              "maximum": 7406,
+              "minimum": 7406
+            }
+          }
+        },
+        "burn": {
+          "below": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.002556965064161141,
+              "p95": 0.0028475676682585805,
+              "maximum": 0.0028475676682585805,
+              "minimum": 0.002190778521373727
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.012373097737630208,
+              "p95": 0.0182037353515625,
+              "maximum": 0.0182037353515625,
+              "minimum": 0.0058135986328125
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.06329345703125,
+              "p95": 0.06329345703125,
+              "maximum": 0.06329345703125,
+              "minimum": 0.06329345703125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 1168.8,
+              "p95": 1180,
+              "maximum": 1180,
+              "minimum": 1148
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "inside": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.0008037918253972535,
+              "p95": 0.0010563854571776939,
+              "maximum": 0.0010563854571776939,
+              "minimum": 0.000640247325590743
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0011309146881103515,
+              "p95": 0.0020236968994140625,
+              "maximum": 0.0020236968994140625,
+              "minimum": 0.0002636909484863281
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.06329345703125,
+              "p95": 0.06329345703125,
+              "maximum": 0.06329345703125,
+              "minimum": 0.06329345703125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 2363.0,
+              "p95": 2427,
+              "maximum": 2427,
+              "minimum": 2278
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 5290.0,
+              "p95": 5290,
+              "maximum": 5290,
+              "minimum": 5290
+            }
+          },
+          "inside_core": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.0007169416796582709,
+              "p95": 0.0010115301901992193,
+              "maximum": 0.0010115301901992193,
+              "minimum": 0.000522195819645613
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0010890324910481771,
+              "p95": 0.0023651123046875,
+              "maximum": 0.0023651123046875,
+              "minimum": 0.00013267993927001953
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.06288045247395833,
+              "p95": 0.06329345703125,
+              "maximum": 0.06329345703125,
+              "minimum": 0.057098388671875
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 1193.2666666666667,
+              "p95": 1238,
+              "maximum": 1238,
+              "minimum": 1125
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "above": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.0004484232935277486,
+              "p95": 0.0005995536853325164,
+              "maximum": 0.0005995536853325164,
+              "minimum": 0.00031378324405908136
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0018974939982096355,
+              "p95": 0.0036029815673828125,
+              "maximum": 0.0036029815673828125,
+              "minimum": 0.0006566047668457031
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.038706461588541664,
+              "p95": 0.052978515625,
+              "maximum": 0.052978515625,
+              "minimum": 0.030517578125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 2456.0,
+              "p95": 2482,
+              "maximum": 2482,
+              "minimum": 2391
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 4232.0,
+              "p95": 4232,
+              "maximum": 4232,
+              "minimum": 4232
+            }
+          },
+          "above_far": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.0004570879749715655,
+              "p95": 0.0006596203707309469,
+              "maximum": 0.0006596203707309469,
+              "minimum": 0.00033611341679125193
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.002210044860839844,
+              "p95": 0.003917694091796875,
+              "maximum": 0.003917694091796875,
+              "minimum": 0.0013608932495117188
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.03344523111979167,
+              "p95": 0.052978515625,
+              "maximum": 0.052978515625,
+              "minimum": 0.0244903564453125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 4896.266666666666,
+              "p95": 5058,
+              "maximum": 5058,
+              "minimum": 4633
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 7406.0,
+              "p95": 7406,
+              "maximum": 7406,
+              "minimum": 7406
+            }
+          }
+        },
+        "smoke": {
+          "below": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.03081084482160543,
+              "p95": 0.03914698105453318,
+              "maximum": 0.03914698105453318,
+              "minimum": 0.0246495540741486
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.24711100260416666,
+              "p95": 0.5107421875,
+              "maximum": 0.5107421875,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.8829752604166666,
+              "p95": 0.94677734375,
+              "maximum": 0.94677734375,
+              "minimum": 0.77001953125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 158.93333333333334,
+              "p95": 190,
+              "maximum": 190,
+              "minimum": 129
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "inside": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.025130704349891602,
+              "p95": 0.03309655290920928,
+              "maximum": 0.03309655290920928,
+              "minimum": 0.021312734929735584
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.028946542739868165,
+              "p95": 0.1287841796875,
+              "maximum": 0.1287841796875,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.2166666666666666,
+              "p95": 1.2880859375,
+              "maximum": 1.2880859375,
+              "minimum": 1.1533203125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 329.6,
+              "p95": 395,
+              "maximum": 395,
+              "minimum": 247
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 5290.0,
+              "p95": 5290,
+              "maximum": 5290,
+              "minimum": 5290
+            }
+          },
+          "inside_core": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.022800222888410503,
+              "p95": 0.028434055378847176,
+              "maximum": 0.028434055378847176,
+              "minimum": 0.018639778640184602
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.022456538677215577,
+              "p95": 0.154296875,
+              "maximum": 0.154296875,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.1934895833333334,
+              "p95": 1.2646484375,
+              "maximum": 1.2646484375,
+              "minimum": 1.07421875
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 148.46666666666667,
+              "p95": 214,
+              "maximum": 214,
+              "minimum": 77
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "above": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.019084679967739628,
+              "p95": 0.024393952101300027,
+              "maximum": 0.024393952101300027,
+              "minimum": 0.01577310988042215
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.030605260531107584,
+              "p95": 0.135009765625,
+              "maximum": 0.135009765625,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.1850260416666667,
+              "p95": 1.244140625,
+              "maximum": 1.244140625,
+              "minimum": 1.078125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 261.1333333333333,
+              "p95": 353,
+              "maximum": 353,
+              "minimum": 171
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 4232.0,
+              "p95": 4232,
+              "maximum": 4232,
+              "minimum": 4232
+            }
+          },
+          "above_far": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.01597712658260523,
+              "p95": 0.022634113660671244,
+              "maximum": 0.022634113660671244,
+              "minimum": 0.00759697217990217
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.018314842383066812,
+              "p95": 0.09405517578125,
+              "maximum": 0.09405517578125,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.1740885416666667,
+              "p95": 1.2978515625,
+              "maximum": 1.2978515625,
+              "minimum": 1.078125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 386.0,
+              "p95": 542,
+              "maximum": 542,
+              "minimum": 204
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 7406.0,
+              "p95": 7406,
+              "maximum": 7406,
+              "minimum": 7406
+            }
+          }
+        },
+        "velocity": {
+          "below": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.3807574149965186,
+              "p95": 0.40428331145555035,
+              "maximum": 0.40428331145555035,
+              "minimum": 0.3568658688584046
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 1.8733411405208222,
+              "p95": 2.208384046931928,
+              "maximum": 2.208384046931928,
+              "minimum": 1.1678812383317514
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 5.846905000347109,
+              "p95": 6.311914232666399,
+              "maximum": 6.311914232666399,
+              "minimum": 5.023576517984699
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 242.0,
+              "p95": 242,
+              "maximum": 242,
+              "minimum": 242
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 242.0,
+              "p95": 242,
+              "maximum": 242,
+              "minimum": 242
+            }
+          },
+          "inside": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.5398710350385543,
+              "p95": 0.6000604903380825,
+              "maximum": 0.6000604903380825,
+              "minimum": 0.4651337393911443
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 2.4276712276873416,
+              "p95": 3.506767652585602,
+              "maximum": 3.506767652585602,
+              "minimum": 1.4991295705494372
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 7.995467683207104,
+              "p95": 9.114134509434706,
+              "maximum": 9.114134509434706,
+              "minimum": 6.216440203157952
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 605.0,
+              "p95": 605,
+              "maximum": 605,
+              "minimum": 605
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 605.0,
+              "p95": 605,
+              "maximum": 605,
+              "minimum": 605
+            }
+          },
+          "inside_core": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.5275001673170231,
+              "p95": 0.6034843862589069,
+              "maximum": 0.6034843862589069,
+              "minimum": 0.45026360080995737
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 2.3601844655716566,
+              "p95": 3.2276235410683243,
+              "maximum": 3.2276235410683243,
+              "minimum": 1.2155006570645577
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 7.579311098042613,
+              "p95": 8.54740944540452,
+              "maximum": 8.54740944540452,
+              "minimum": 6.216440203157952
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 363.0,
+              "p95": 363,
+              "maximum": 363,
+              "minimum": 363
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 363.0,
+              "p95": 363,
+              "maximum": 363,
+              "minimum": 363
+            }
+          },
+          "above": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.6992483994496589,
+              "p95": 0.9540802253814106,
+              "maximum": 0.9540802253814106,
+              "minimum": 0.5421332756809228
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 3.5848940184897065,
+              "p95": 5.891879173350978,
+              "maximum": 5.891879173350978,
+              "minimum": 2.643108757295671
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 8.708794793470386,
+              "p95": 9.705454204333172,
+              "maximum": 9.705454204333172,
+              "minimum": 6.968901531000383
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 484.0,
+              "p95": 484,
+              "maximum": 484,
+              "minimum": 484
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 484.0,
+              "p95": 484,
+              "maximum": 484,
+              "minimum": 484
+            }
+          },
+          "above_far": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.7832765536987039,
+              "p95": 1.0946382755792452,
+              "maximum": 1.0946382755792452,
+              "minimum": 0.5059236644185785
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 3.7346481547124446,
+              "p95": 5.855624532122414,
+              "maximum": 5.855624532122414,
+              "minimum": 2.5629572111555023
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 9.234798316159893,
+              "p95": 10.893211823748375,
+              "maximum": 10.893211823748375,
+              "minimum": 6.968901531000383
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 847.0,
+              "p95": 847,
+              "maximum": 847,
+              "minimum": 847
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 847.0,
+              "p95": 847,
+              "maximum": 847,
+              "minimum": 847
+            }
+          }
+        }
+      },
+      "active_blocks": {
+        "sample_count": 15,
+        "mean": 60.06666666666667,
+        "p95": 66,
+        "maximum": 66,
+        "minimum": 56
+      }
+    },
+    "box_aligned": {
+      "run_count": 3,
+      "channels": {
+        "temperature": {
+          "below": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.05537757063933567,
+              "p95": 0.0640421699936764,
+              "maximum": 0.0640421699936764,
+              "minimum": 0.045521309290130554
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.68994140625,
+              "p95": 0.97998046875,
+              "maximum": 0.97998046875,
+              "minimum": 0.3134765625
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.0,
+              "p95": 1.0,
+              "maximum": 1.0,
+              "minimum": 1.0
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 904.0,
+              "p95": 1145,
+              "maximum": 1145,
+              "minimum": 793
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "inside": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.0456990324136365,
+              "p95": 0.04955893837211263,
+              "maximum": 0.04955893837211263,
+              "minimum": 0.04063947899355104
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.3041178385416667,
+              "p95": 0.376953125,
+              "maximum": 0.376953125,
+              "minimum": 0.2059326171875
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.0,
+              "p95": 1.0,
+              "maximum": 1.0,
+              "minimum": 1.0
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 2430.6666666666665,
+              "p95": 2687,
+              "maximum": 2687,
+              "minimum": 2259
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 5290.0,
+              "p95": 5290,
+              "maximum": 5290,
+              "minimum": 5290
+            }
+          },
+          "inside_core": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.04162407792283066,
+              "p95": 0.05171369575597839,
+              "maximum": 0.05171369575597839,
+              "minimum": 0.03443708791624621
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.24667154947916667,
+              "p95": 0.43408203125,
+              "maximum": 0.43408203125,
+              "minimum": 0.11895751953125
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.0,
+              "p95": 1.0,
+              "maximum": 1.0,
+              "minimum": 1.0
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 1229.4666666666667,
+              "p95": 1336,
+              "maximum": 1336,
+              "minimum": 1141
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "above": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.04585803535913024,
+              "p95": 0.055499655199862157,
+              "maximum": 0.055499655199862157,
+              "minimum": 0.037786706366588575
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.32587890625,
+              "p95": 0.461181640625,
+              "maximum": 0.461181640625,
+              "minimum": 0.19921875
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.98876953125,
+              "p95": 1.0,
+              "maximum": 1.0,
+              "minimum": 0.974609375
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 2376.6666666666665,
+              "p95": 2471,
+              "maximum": 2471,
+              "minimum": 2214
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 4232.0,
+              "p95": 4232,
+              "maximum": 4232,
+              "minimum": 4232
+            }
+          },
+          "above_far": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.04296947567273414,
+              "p95": 0.05659708919120807,
+              "maximum": 0.05659708919120807,
+              "minimum": 0.029290519572257222
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.2826009114583333,
+              "p95": 0.3974609375,
+              "maximum": 0.3974609375,
+              "minimum": 0.175537109375
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.9690104166666667,
+              "p95": 0.974609375,
+              "maximum": 0.974609375,
+              "minimum": 0.9501953125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 4651.733333333334,
+              "p95": 4833,
+              "maximum": 4833,
+              "minimum": 4428
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 7406.0,
+              "p95": 7406,
+              "maximum": 7406,
+              "minimum": 7406
+            }
+          }
+        },
+        "fuel": {
+          "below": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.001013205934787743,
+              "p95": 0.001136786004771357,
+              "maximum": 0.001136786004771357,
+              "minimum": 0.0008312888992756661
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 1.7797946929931642e-05,
+              "p95": 3.886222839355469e-05,
+              "maximum": 3.886222839355469e-05,
+              "minimum": 7.748603820800781e-07
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.06069742838541667,
+              "p95": 0.061553955078125,
+              "maximum": 0.061553955078125,
+              "minimum": 0.05950927734375
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 970.2666666666667,
+              "p95": 987,
+              "maximum": 987,
+              "minimum": 953
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "inside": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 5.023464588677275e-05,
+              "p95": 6.19884474741714e-05,
+              "maximum": 6.19884474741714e-05,
+              "minimum": 3.537911999203082e-05
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 3.735224405924479e-07,
+              "p95": 1.6689300537109375e-06,
+              "maximum": 1.6689300537109375e-06,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.02861328125,
+              "p95": 0.029815673828125,
+              "maximum": 0.029815673828125,
+              "minimum": 0.0259552001953125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 413.46666666666664,
+              "p95": 852,
+              "maximum": 852,
+              "minimum": 197
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 5290.0,
+              "p95": 5290,
+              "maximum": 5290,
+              "minimum": 5290
+            }
+          },
+          "inside_core": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 1.2683459776485949e-05,
+              "p95": 1.8695171478790687e-05,
+              "maximum": 1.8695171478790687e-05,
+              "minimum": 9.1314090447525e-06
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 2.4239222208658853e-07,
+              "p95": 7.748603820800781e-07,
+              "maximum": 7.748603820800781e-07,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.009643046061197917,
+              "p95": 0.01348876953125,
+              "maximum": 0.01348876953125,
+              "minimum": 0.005401611328125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 146.66666666666666,
+              "p95": 414,
+              "maximum": 414,
+              "minimum": 23
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "above": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 3.3026682031026936e-08,
+              "p95": 1.2953306190908969e-07,
+              "maximum": 1.2953306190908969e-07,
+              "minimum": 0.0
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 3.973642985026042e-09,
+              "p95": 5.960464477539063e-08,
+              "maximum": 5.960464477539063e-08,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.3466676076253255e-05,
+              "p95": 3.88026237487793e-05,
+              "maximum": 3.88026237487793e-05,
+              "minimum": 0.0
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 71.46666666666667,
+              "p95": 241,
+              "maximum": 241,
+              "minimum": 0
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 4232.0,
+              "p95": 4232,
+              "maximum": 4232,
+              "minimum": 4232
+            }
+          },
+          "above_far": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 6.9509242331909764e-09,
+              "p95": 2.1496625195121302e-08,
+              "maximum": 2.1496625195121302e-08,
+              "minimum": 0.0
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 5.7220458984375e-06,
+              "p95": 2.187490463256836e-05,
+              "maximum": 2.187490463256836e-05,
+              "minimum": 0.0
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 54.4,
+              "p95": 157,
+              "maximum": 157,
+              "minimum": 0
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 7406.0,
+              "p95": 7406,
+              "maximum": 7406,
+              "minimum": 7406
+            }
+          }
+        },
+        "burn": {
+          "below": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.002551472135963272,
+              "p95": 0.0028475676682585805,
+              "maximum": 0.0028475676682585805,
+              "minimum": 0.002190778521373727
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.012395985921223958,
+              "p95": 0.0182037353515625,
+              "maximum": 0.0182037353515625,
+              "minimum": 0.0058135986328125
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.06329345703125,
+              "p95": 0.06329345703125,
+              "maximum": 0.06329345703125,
+              "minimum": 0.06329345703125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 1169.1333333333334,
+              "p95": 1180,
+              "maximum": 1180,
+              "minimum": 1148
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "inside": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.000818143830632893,
+              "p95": 0.0010563854571776939,
+              "maximum": 0.0010563854571776939,
+              "minimum": 0.0006450383784865612
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0011607170104980468,
+              "p95": 0.0020236968994140625,
+              "maximum": 0.0020236968994140625,
+              "minimum": 0.0002636909484863281
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.06329345703125,
+              "p95": 0.06329345703125,
+              "maximum": 0.06329345703125,
+              "minimum": 0.06329345703125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 2364.8,
+              "p95": 2427,
+              "maximum": 2427,
+              "minimum": 2303
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 5290.0,
+              "p95": 5290,
+              "maximum": 5290,
+              "minimum": 5290
+            }
+          },
+          "inside_core": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.0007198963213357523,
+              "p95": 0.0010115301901992193,
+              "maximum": 0.0010115301901992193,
+              "minimum": 0.000522195819645613
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0011121749877929688,
+              "p95": 0.0023651123046875,
+              "maximum": 0.0023651123046875,
+              "minimum": 0.00013267993927001953
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.06329345703125,
+              "p95": 0.06329345703125,
+              "maximum": 0.06329345703125,
+              "minimum": 0.06329345703125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 1195.9333333333334,
+              "p95": 1238,
+              "maximum": 1238,
+              "minimum": 1152
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "above": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.0004490663438903962,
+              "p95": 0.0005854441025532035,
+              "maximum": 0.0005854441025532035,
+              "minimum": 0.0003218689127094579
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0018351554870605468,
+              "p95": 0.0035858154296875,
+              "maximum": 0.0035858154296875,
+              "minimum": 0.0006566047668457031
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.039442952473958334,
+              "p95": 0.047210693359375,
+              "maximum": 0.047210693359375,
+              "minimum": 0.034759521484375
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 2457.266666666667,
+              "p95": 2476,
+              "maximum": 2476,
+              "minimum": 2405
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 4232.0,
+              "p95": 4232,
+              "maximum": 4232,
+              "minimum": 4232
+            }
+          },
+          "above_far": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.0004554015600302505,
+              "p95": 0.0006596203707309469,
+              "maximum": 0.0006596203707309469,
+              "minimum": 0.0003446796569443058
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0021921793619791665,
+              "p95": 0.003917694091796875,
+              "maximum": 0.003917694091796875,
+              "minimum": 0.0013608932495117188
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.032496134440104164,
+              "p95": 0.047210693359375,
+              "maximum": 0.047210693359375,
+              "minimum": 0.0244903564453125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 4899.466666666666,
+              "p95": 5058,
+              "maximum": 5058,
+              "minimum": 4681
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 7406.0,
+              "p95": 7406,
+              "maximum": 7406,
+              "minimum": 7406
+            }
+          }
+        },
+        "smoke": {
+          "below": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.031022962846317302,
+              "p95": 0.03914698105453318,
+              "maximum": 0.03914698105453318,
+              "minimum": 0.0246495540741486
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.25155436197916664,
+              "p95": 0.5107421875,
+              "maximum": 0.5107421875,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.87978515625,
+              "p95": 0.94677734375,
+              "maximum": 0.94677734375,
+              "minimum": 0.77001953125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 160.06666666666666,
+              "p95": 190,
+              "maximum": 190,
+              "minimum": 129
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "inside": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.025305870923893813,
+              "p95": 0.03309655290920928,
+              "maximum": 0.03309655290920928,
+              "minimum": 0.021312734929735584
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.03482261896133423,
+              "p95": 0.1287841796875,
+              "maximum": 0.1287841796875,
+              "minimum": 6.079673767089844e-06
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.2112630208333333,
+              "p95": 1.2880859375,
+              "maximum": 1.2880859375,
+              "minimum": 1.1533203125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 335.26666666666665,
+              "p95": 395,
+              "maximum": 395,
+              "minimum": 290
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 5290.0,
+              "p95": 5290,
+              "maximum": 5290,
+              "minimum": 5290
+            }
+          },
+          "inside_core": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.02282929401541928,
+              "p95": 0.028434055378847176,
+              "maximum": 0.028434055378847176,
+              "minimum": 0.019587858322662757
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.018489253520965577,
+              "p95": 0.10101318359375,
+              "maximum": 0.10101318359375,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.1958333333333333,
+              "p95": 1.2578125,
+              "maximum": 1.2578125,
+              "minimum": 1.1083984375
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 150.93333333333334,
+              "p95": 203,
+              "maximum": 203,
+              "minimum": 97
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "above": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.01912086055706189,
+              "p95": 0.023957204601827778,
+              "maximum": 0.023957204601827778,
+              "minimum": 0.01577310988042215
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.027726443608601888,
+              "p95": 0.127197265625,
+              "maximum": 0.127197265625,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.1900390625,
+              "p95": 1.2314453125,
+              "maximum": 1.2314453125,
+              "minimum": 1.078125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 260.1333333333333,
+              "p95": 353,
+              "maximum": 353,
+              "minimum": 189
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 4232.0,
+              "p95": 4232,
+              "maximum": 4232,
+              "minimum": 4232
+            }
+          },
+          "above_far": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.016150965573860875,
+              "p95": 0.022634113660671244,
+              "maximum": 0.022634113660671244,
+              "minimum": 0.010253169779322967
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.017736550172170004,
+              "p95": 0.09405517578125,
+              "maximum": 0.09405517578125,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.1748046875,
+              "p95": 1.263671875,
+              "maximum": 1.263671875,
+              "minimum": 1.078125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 387.06666666666666,
+              "p95": 542,
+              "maximum": 542,
+              "minimum": 239
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 7406.0,
+              "p95": 7406,
+              "maximum": 7406,
+              "minimum": 7406
+            }
+          }
+        },
+        "velocity": {
+          "below": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.38129326938067504,
+              "p95": 0.40428331145555035,
+              "maximum": 0.40428331145555035,
+              "minimum": 0.3568658688584046
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 1.909186871898737,
+              "p95": 2.208384046931928,
+              "maximum": 2.208384046931928,
+              "minimum": 1.1678812383317514
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 5.840587072817568,
+              "p95": 6.283303895358052,
+              "maximum": 6.283303895358052,
+              "minimum": 5.188286158727832
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 242.0,
+              "p95": 242,
+              "maximum": 242,
+              "minimum": 242
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 242.0,
+              "p95": 242,
+              "maximum": 242,
+              "minimum": 242
+            }
+          },
+          "inside": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.5394535616653459,
+              "p95": 0.6000604903380825,
+              "maximum": 0.6000604903380825,
+              "minimum": 0.4651337393911443
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 2.3195440173341315,
+              "p95": 3.506767652585602,
+              "maximum": 3.506767652585602,
+              "minimum": 1.4991295705494372
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 7.944066812035227,
+              "p95": 9.114134509434706,
+              "maximum": 9.114134509434706,
+              "minimum": 6.6078567564738995
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 605.0,
+              "p95": 605,
+              "maximum": 605,
+              "minimum": 605
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 605.0,
+              "p95": 605,
+              "maximum": 605,
+              "minimum": 605
+            }
+          },
+          "inside_core": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.5251431478813955,
+              "p95": 0.6034843862589069,
+              "maximum": 0.6034843862589069,
+              "minimum": 0.45026360080995737
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 2.2665325067875464,
+              "p95": 3.2276235410683243,
+              "maximum": 3.2276235410683243,
+              "minimum": 1.2644746417953923
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 7.631349589252234,
+              "p95": 8.54740944540452,
+              "maximum": 8.54740944540452,
+              "minimum": 6.6078567564738995
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 363.0,
+              "p95": 363,
+              "maximum": 363,
+              "minimum": 363
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 363.0,
+              "p95": 363,
+              "maximum": 363,
+              "minimum": 363
+            }
+          },
+          "above": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.7054446216992443,
+              "p95": 0.9540802253814106,
+              "maximum": 0.9540802253814106,
+              "minimum": 0.553198289640687
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 3.6867523599603444,
+              "p95": 5.891879173350978,
+              "maximum": 5.891879173350978,
+              "minimum": 2.643108757295671
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 8.78178033516564,
+              "p95": 9.705454204333172,
+              "maximum": 9.705454204333172,
+              "minimum": 7.192302161112219
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 484.0,
+              "p95": 484,
+              "maximum": 484,
+              "minimum": 484
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 484.0,
+              "p95": 484,
+              "maximum": 484,
+              "minimum": 484
+            }
+          },
+          "above_far": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.7832138010379441,
+              "p95": 1.0946382755792452,
+              "maximum": 1.0946382755792452,
+              "minimum": 0.5059236644185785
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 3.710208986994281,
+              "p95": 5.72923287324509,
+              "maximum": 5.72923287324509,
+              "minimum": 2.580372635631897
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 9.210287221916854,
+              "p95": 10.49413879894338,
+              "maximum": 10.49413879894338,
+              "minimum": 7.192302161112219
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 847.0,
+              "p95": 847,
+              "maximum": 847,
+              "minimum": 847
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 847.0,
+              "p95": 847,
+              "maximum": 847,
+              "minimum": 847
+            }
+          }
+        }
+      },
+      "active_blocks": {
+        "sample_count": 15,
+        "mean": 60.333333333333336,
+        "p95": 66,
+        "maximum": 66,
+        "minimum": 56
+      }
+    },
+    "box_shift_half": {
+      "run_count": 3,
+      "channels": {
+        "temperature": {
+          "below": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.05601384543290887,
+              "p95": 0.0640421699936764,
+              "maximum": 0.0640421699936764,
+              "minimum": 0.045521309290130554
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.71279296875,
+              "p95": 0.97998046875,
+              "maximum": 0.97998046875,
+              "minimum": 0.3134765625
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.0,
+              "p95": 1.0,
+              "maximum": 1.0,
+              "minimum": 1.0
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 919.6,
+              "p95": 1145,
+              "maximum": 1145,
+              "minimum": 804
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "inside": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.04550107836272631,
+              "p95": 0.04917453658152618,
+              "maximum": 0.04917453658152618,
+              "minimum": 0.04063947899355104
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.2997314453125,
+              "p95": 0.376953125,
+              "maximum": 0.376953125,
+              "minimum": 0.2059326171875
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.0,
+              "p95": 1.0,
+              "maximum": 1.0,
+              "minimum": 1.0
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 2432.6,
+              "p95": 2687,
+              "maximum": 2687,
+              "minimum": 2349
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 5290.0,
+              "p95": 5290,
+              "maximum": 5290,
+              "minimum": 5290
+            }
+          },
+          "inside_core": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.04197596603170009,
+              "p95": 0.05171369575597839,
+              "maximum": 0.05171369575597839,
+              "minimum": 0.03443708791624621
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.25218505859375,
+              "p95": 0.43408203125,
+              "maximum": 0.43408203125,
+              "minimum": 0.11895751953125
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.0,
+              "p95": 1.0,
+              "maximum": 1.0,
+              "minimum": 1.0
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 1229.0,
+              "p95": 1336,
+              "maximum": 1336,
+              "minimum": 1189
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "above": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.04733041199822056,
+              "p95": 0.055499655199862157,
+              "maximum": 0.055499655199862157,
+              "minimum": 0.040726092423969046
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.3465576171875,
+              "p95": 0.461181640625,
+              "maximum": 0.461181640625,
+              "minimum": 0.2252197265625
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.98984375,
+              "p95": 1.0,
+              "maximum": 1.0,
+              "minimum": 0.974609375
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 2400.2,
+              "p95": 2471,
+              "maximum": 2471,
+              "minimum": 2311
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 4232.0,
+              "p95": 4232,
+              "maximum": 4232,
+              "minimum": 4232
+            }
+          },
+          "above_far": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.0426217122719219,
+              "p95": 0.04965587153873861,
+              "maximum": 0.04965587153873861,
+              "minimum": 0.029290519572257222
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.28525390625,
+              "p95": 0.3974609375,
+              "maximum": 0.3974609375,
+              "minimum": 0.175537109375
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.9697265625,
+              "p95": 0.974609375,
+              "maximum": 0.974609375,
+              "minimum": 0.9501953125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 4666.8,
+              "p95": 4804,
+              "maximum": 4804,
+              "minimum": 4484
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 7406.0,
+              "p95": 7406,
+              "maximum": 7406,
+              "minimum": 7406
+            }
+          }
+        },
+        "fuel": {
+          "below": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.0010173104886521914,
+              "p95": 0.001136786004771357,
+              "maximum": 0.001136786004771357,
+              "minimum": 0.0008312888992756661
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 1.666545867919922e-05,
+              "p95": 3.159046173095703e-05,
+              "maximum": 3.159046173095703e-05,
+              "minimum": 7.748603820800781e-07
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.0606689453125,
+              "p95": 0.061492919921875,
+              "maximum": 0.061492919921875,
+              "minimum": 0.05950927734375
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 967.8,
+              "p95": 986,
+              "maximum": 986,
+              "minimum": 953
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "inside": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 5.138964869349575e-05,
+              "p95": 6.19884474741714e-05,
+              "maximum": 6.19884474741714e-05,
+              "minimum": 3.537911999203082e-05
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 2.1457672119140626e-07,
+              "p95": 8.344650268554688e-07,
+              "maximum": 8.344650268554688e-07,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.0283477783203125,
+              "p95": 0.029815673828125,
+              "maximum": 0.029815673828125,
+              "minimum": 0.0259552001953125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 352.4,
+              "p95": 575,
+              "maximum": 575,
+              "minimum": 197
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 5290.0,
+              "p95": 5290,
+              "maximum": 5290,
+              "minimum": 5290
+            }
+          },
+          "inside_core": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 1.1921357116987666e-05,
+              "p95": 1.639168294030462e-05,
+              "maximum": 1.639168294030462e-05,
+              "minimum": 9.1314090447525e-06
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 1.430511474609375e-07,
+              "p95": 5.364418029785156e-07,
+              "maximum": 5.364418029785156e-07,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.00938262939453125,
+              "p95": 0.01094818115234375,
+              "maximum": 0.01094818115234375,
+              "minimum": 0.005401611328125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 111.4,
+              "p95": 242,
+              "maximum": 242,
+              "minimum": 23
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "above": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 2.2115125998657456e-08,
+              "p95": 6.413978079090947e-08,
+              "maximum": 6.413978079090947e-08,
+              "minimum": 0.0
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 8.916854858398437e-06,
+              "p95": 2.4199485778808594e-05,
+              "maximum": 2.4199485778808594e-05,
+              "minimum": 0.0
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 52.0,
+              "p95": 146,
+              "maximum": 146,
+              "minimum": 0
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 4232.0,
+              "p95": 4232,
+              "maximum": 4232,
+              "minimum": 4232
+            }
+          },
+          "above_far": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 6.0844060829321245e-09,
+              "p95": 1.824517009260202e-08,
+              "maximum": 1.824517009260202e-08,
+              "minimum": 0.0
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 6.175041198730468e-06,
+              "p95": 2.187490463256836e-05,
+              "maximum": 2.187490463256836e-05,
+              "minimum": 0.0
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 47.6,
+              "p95": 157,
+              "maximum": 157,
+              "minimum": 0
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 7406.0,
+              "p95": 7406,
+              "maximum": 7406,
+              "minimum": 7406
+            }
+          }
+        },
+        "burn": {
+          "below": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.002572502292171543,
+              "p95": 0.0028475676682585805,
+              "maximum": 0.0028475676682585805,
+              "minimum": 0.002190778521373727
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.013092041015625,
+              "p95": 0.0182037353515625,
+              "maximum": 0.0182037353515625,
+              "minimum": 0.0058135986328125
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.06329345703125,
+              "p95": 0.06329345703125,
+              "maximum": 0.06329345703125,
+              "minimum": 0.06329345703125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 1170.0,
+              "p95": 1180,
+              "maximum": 1180,
+              "minimum": 1154
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "inside": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.0008078969989697289,
+              "p95": 0.0010563854571776939,
+              "maximum": 0.0010563854571776939,
+              "minimum": 0.0006450383784865612
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0011786460876464845,
+              "p95": 0.0020236968994140625,
+              "maximum": 0.0020236968994140625,
+              "minimum": 0.0002636909484863281
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.06329345703125,
+              "p95": 0.06329345703125,
+              "maximum": 0.06329345703125,
+              "minimum": 0.06329345703125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 2353.6,
+              "p95": 2398,
+              "maximum": 2398,
+              "minimum": 2303
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 5290.0,
+              "p95": 5290,
+              "maximum": 5290,
+              "minimum": 5290
+            }
+          },
+          "inside_core": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.0007166167783827321,
+              "p95": 0.0010115301901992193,
+              "maximum": 0.0010115301901992193,
+              "minimum": 0.000522195819645613
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0012434959411621095,
+              "p95": 0.0023651123046875,
+              "maximum": 0.0023651123046875,
+              "minimum": 0.00016164779663085938
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.06329345703125,
+              "p95": 0.06329345703125,
+              "maximum": 0.06329345703125,
+              "minimum": 0.06329345703125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 1189.6,
+              "p95": 1224,
+              "maximum": 1224,
+              "minimum": 1152
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "above": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.00047090441157551934,
+              "p95": 0.0005854441025532035,
+              "maximum": 0.0005854441025532035,
+              "minimum": 0.0003399702461545544
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0020589828491210938,
+              "p95": 0.0035858154296875,
+              "maximum": 0.0035858154296875,
+              "minimum": 0.0007276535034179688
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.040625,
+              "p95": 0.047210693359375,
+              "maximum": 0.047210693359375,
+              "minimum": 0.035491943359375
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 2459.4,
+              "p95": 2476,
+              "maximum": 2476,
+              "minimum": 2405
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 4232.0,
+              "p95": 4232,
+              "maximum": 4232,
+              "minimum": 4232
+            }
+          },
+          "above_far": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.00045835515340856046,
+              "p95": 0.0005742230432728255,
+              "maximum": 0.0005742230432728255,
+              "minimum": 0.0003446796569443058
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0022500991821289063,
+              "p95": 0.003376007080078125,
+              "maximum": 0.003376007080078125,
+              "minimum": 0.0015277862548828125
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.0341339111328125,
+              "p95": 0.047210693359375,
+              "maximum": 0.047210693359375,
+              "minimum": 0.0272216796875
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 4877.8,
+              "p95": 4975,
+              "maximum": 4975,
+              "minimum": 4681
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 7406.0,
+              "p95": 7406,
+              "maximum": 7406,
+              "minimum": 7406
+            }
+          }
+        },
+        "smoke": {
+          "below": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.031648895695439355,
+              "p95": 0.03914698105453318,
+              "maximum": 0.03914698105453318,
+              "minimum": 0.0246495540741486
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.2766357421875,
+              "p95": 0.5107421875,
+              "maximum": 0.5107421875,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.88544921875,
+              "p95": 0.94677734375,
+              "maximum": 0.94677734375,
+              "minimum": 0.77001953125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 162.0,
+              "p95": 190,
+              "maximum": 190,
+              "minimum": 129
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "inside": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.024989370702570464,
+              "p95": 0.03309655290920928,
+              "maximum": 0.03309655290920928,
+              "minimum": 0.021491954288320417
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.035189056396484376,
+              "p95": 0.1287841796875,
+              "maximum": 0.1287841796875,
+              "minimum": 6.079673767089844e-06
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.2212890625,
+              "p95": 1.2880859375,
+              "maximum": 1.2880859375,
+              "minimum": 1.1533203125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 328.2,
+              "p95": 395,
+              "maximum": 395,
+              "minimum": 290
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 5290.0,
+              "p95": 5290,
+              "maximum": 5290,
+              "minimum": 5290
+            }
+          },
+          "inside_core": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.022336384033210335,
+              "p95": 0.028434055378847176,
+              "maximum": 0.028434055378847176,
+              "minimum": 0.019587858322662757
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.026898193359375,
+              "p95": 0.10101318359375,
+              "maximum": 0.10101318359375,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.2046875,
+              "p95": 1.2578125,
+              "maximum": 1.2578125,
+              "minimum": 1.1533203125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 149.0,
+              "p95": 203,
+              "maximum": 203,
+              "minimum": 97
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "above": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.020391129146000837,
+              "p95": 0.023957204601827778,
+              "maximum": 0.023957204601827778,
+              "minimum": 0.01733114966147338
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.04007631540298462,
+              "p95": 0.127197265625,
+              "maximum": 0.127197265625,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.2046875,
+              "p95": 1.2314453125,
+              "maximum": 1.2314453125,
+              "minimum": 1.1328125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 263.0,
+              "p95": 353,
+              "maximum": 353,
+              "minimum": 189
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 4232.0,
+              "p95": 4232,
+              "maximum": 4232,
+              "minimum": 4232
+            }
+          },
+          "above_far": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.016219047491788027,
+              "p95": 0.020634047282633832,
+              "maximum": 0.020634047282633832,
+              "minimum": 0.010253169779322967
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.01719822883605957,
+              "p95": 0.0565185546875,
+              "maximum": 0.0565185546875,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.196484375,
+              "p95": 1.263671875,
+              "maximum": 1.263671875,
+              "minimum": 1.150390625
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 382.6,
+              "p95": 472,
+              "maximum": 472,
+              "minimum": 239
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 7406.0,
+              "p95": 7406,
+              "maximum": 7406,
+              "minimum": 7406
+            }
+          }
+        },
+        "velocity": {
+          "below": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.38120205840792937,
+              "p95": 0.39773627067729755,
+              "maximum": 0.39773627067729755,
+              "minimum": 0.3568658688584046
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 1.9590263598407198,
+              "p95": 2.208384046931928,
+              "maximum": 2.208384046931928,
+              "minimum": 1.1678812383317514
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 5.833743343473601,
+              "p95": 6.283303895358052,
+              "maximum": 6.283303895358052,
+              "minimum": 5.188286158727832
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 242.0,
+              "p95": 242,
+              "maximum": 242,
+              "minimum": 242
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 242.0,
+              "p95": 242,
+              "maximum": 242,
+              "minimum": 242
+            }
+          },
+          "inside": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.5278436704339422,
+              "p95": 0.5754316002520304,
+              "maximum": 0.5754316002520304,
+              "minimum": 0.4651337393911443
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 2.2081605197315866,
+              "p95": 2.6711068861828866,
+              "maximum": 2.6711068861828866,
+              "minimum": 1.4991295705494372
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 7.933900977003655,
+              "p95": 9.114134509434706,
+              "maximum": 9.114134509434706,
+              "minimum": 6.6078567564738995
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 605.0,
+              "p95": 605,
+              "maximum": 605,
+              "minimum": 605
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 605.0,
+              "p95": 605,
+              "maximum": 605,
+              "minimum": 605
+            }
+          },
+          "inside_core": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.5104138618760572,
+              "p95": 0.5582776434775897,
+              "maximum": 0.5582776434775897,
+              "minimum": 0.45026360080995737
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 2.2033193667509154,
+              "p95": 2.8535664349574854,
+              "maximum": 2.8535664349574854,
+              "minimum": 1.2644746417953923
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 7.53938232433281,
+              "p95": 8.159096192001764,
+              "maximum": 8.159096192001764,
+              "minimum": 6.6078567564738995
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 363.0,
+              "p95": 363,
+              "maximum": 363,
+              "minimum": 363
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 363.0,
+              "p95": 363,
+              "maximum": 363,
+              "minimum": 363
+            }
+          },
+          "above": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.7122777410905551,
+              "p95": 0.9540802253814106,
+              "maximum": 0.9540802253814106,
+              "minimum": 0.553198289640687
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 3.787111765523012,
+              "p95": 5.891879173350978,
+              "maximum": 5.891879173350978,
+              "minimum": 2.771028143743616
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 8.842617204698506,
+              "p95": 9.705454204333172,
+              "maximum": 9.705454204333172,
+              "minimum": 7.192302161112219
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 484.0,
+              "p95": 484,
+              "maximum": 484,
+              "minimum": 484
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 484.0,
+              "p95": 484,
+              "maximum": 484,
+              "minimum": 484
+            }
+          },
+          "above_far": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.7894886660327259,
+              "p95": 1.0946382755792452,
+              "maximum": 1.0946382755792452,
+              "minimum": 0.5059236644185785
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 3.7041388291240773,
+              "p95": 5.72923287324509,
+              "maximum": 5.72923287324509,
+              "minimum": 2.580372635631897
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 9.257353357805517,
+              "p95": 10.49413879894338,
+              "maximum": 10.49413879894338,
+              "minimum": 7.192302161112219
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 847.0,
+              "p95": 847,
+              "maximum": 847,
+              "minimum": 847
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 847.0,
+              "p95": 847,
+              "maximum": 847,
+              "minimum": 847
+            }
+          }
+        }
+      },
+      "active_blocks": {
+        "sample_count": 15,
+        "mean": 60.6,
+        "p95": 66,
+        "maximum": 66,
+        "minimum": 56
+      }
+    },
+    "box_shift_one": {
+      "run_count": 3,
+      "channels": {
+        "temperature": {
+          "below": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.05601384543290887,
+              "p95": 0.0640421699936764,
+              "maximum": 0.0640421699936764,
+              "minimum": 0.045521309290130554
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.71279296875,
+              "p95": 0.97998046875,
+              "maximum": 0.97998046875,
+              "minimum": 0.3134765625
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.0,
+              "p95": 1.0,
+              "maximum": 1.0,
+              "minimum": 1.0
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 919.6,
+              "p95": 1145,
+              "maximum": 1145,
+              "minimum": 804
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "inside": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.04550107836272631,
+              "p95": 0.04917453658152618,
+              "maximum": 0.04917453658152618,
+              "minimum": 0.04063947899355104
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.2997314453125,
+              "p95": 0.376953125,
+              "maximum": 0.376953125,
+              "minimum": 0.2059326171875
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.0,
+              "p95": 1.0,
+              "maximum": 1.0,
+              "minimum": 1.0
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 2432.6,
+              "p95": 2687,
+              "maximum": 2687,
+              "minimum": 2349
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 5290.0,
+              "p95": 5290,
+              "maximum": 5290,
+              "minimum": 5290
+            }
+          },
+          "inside_core": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.04197596603170009,
+              "p95": 0.05171369575597839,
+              "maximum": 0.05171369575597839,
+              "minimum": 0.03443708791624621
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.25218505859375,
+              "p95": 0.43408203125,
+              "maximum": 0.43408203125,
+              "minimum": 0.11895751953125
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.0,
+              "p95": 1.0,
+              "maximum": 1.0,
+              "minimum": 1.0
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 1229.0,
+              "p95": 1336,
+              "maximum": 1336,
+              "minimum": 1189
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "above": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.04733041199822056,
+              "p95": 0.055499655199862157,
+              "maximum": 0.055499655199862157,
+              "minimum": 0.040726092423969046
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.3465576171875,
+              "p95": 0.461181640625,
+              "maximum": 0.461181640625,
+              "minimum": 0.2252197265625
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.98984375,
+              "p95": 1.0,
+              "maximum": 1.0,
+              "minimum": 0.974609375
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 2400.2,
+              "p95": 2471,
+              "maximum": 2471,
+              "minimum": 2311
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 4232.0,
+              "p95": 4232,
+              "maximum": 4232,
+              "minimum": 4232
+            }
+          },
+          "above_far": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.0426217122719219,
+              "p95": 0.04965587153873861,
+              "maximum": 0.04965587153873861,
+              "minimum": 0.029290519572257222
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.28525390625,
+              "p95": 0.3974609375,
+              "maximum": 0.3974609375,
+              "minimum": 0.175537109375
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.9697265625,
+              "p95": 0.974609375,
+              "maximum": 0.974609375,
+              "minimum": 0.9501953125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 4666.8,
+              "p95": 4804,
+              "maximum": 4804,
+              "minimum": 4484
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 7406.0,
+              "p95": 7406,
+              "maximum": 7406,
+              "minimum": 7406
+            }
+          }
+        },
+        "fuel": {
+          "below": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.0010173104886521914,
+              "p95": 0.001136786004771357,
+              "maximum": 0.001136786004771357,
+              "minimum": 0.0008312888992756661
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 1.666545867919922e-05,
+              "p95": 3.159046173095703e-05,
+              "maximum": 3.159046173095703e-05,
+              "minimum": 7.748603820800781e-07
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.0606689453125,
+              "p95": 0.061492919921875,
+              "maximum": 0.061492919921875,
+              "minimum": 0.05950927734375
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 967.8,
+              "p95": 986,
+              "maximum": 986,
+              "minimum": 953
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "inside": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 5.138964869349575e-05,
+              "p95": 6.19884474741714e-05,
+              "maximum": 6.19884474741714e-05,
+              "minimum": 3.537911999203082e-05
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 2.1457672119140626e-07,
+              "p95": 8.344650268554688e-07,
+              "maximum": 8.344650268554688e-07,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.0283477783203125,
+              "p95": 0.029815673828125,
+              "maximum": 0.029815673828125,
+              "minimum": 0.0259552001953125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 352.4,
+              "p95": 575,
+              "maximum": 575,
+              "minimum": 197
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 5290.0,
+              "p95": 5290,
+              "maximum": 5290,
+              "minimum": 5290
+            }
+          },
+          "inside_core": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 1.1921357116987666e-05,
+              "p95": 1.639168294030462e-05,
+              "maximum": 1.639168294030462e-05,
+              "minimum": 9.1314090447525e-06
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 1.430511474609375e-07,
+              "p95": 5.364418029785156e-07,
+              "maximum": 5.364418029785156e-07,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.00938262939453125,
+              "p95": 0.01094818115234375,
+              "maximum": 0.01094818115234375,
+              "minimum": 0.005401611328125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 111.4,
+              "p95": 242,
+              "maximum": 242,
+              "minimum": 23
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "above": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 2.2115125998657456e-08,
+              "p95": 6.413978079090947e-08,
+              "maximum": 6.413978079090947e-08,
+              "minimum": 0.0
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 8.916854858398437e-06,
+              "p95": 2.4199485778808594e-05,
+              "maximum": 2.4199485778808594e-05,
+              "minimum": 0.0
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 52.0,
+              "p95": 146,
+              "maximum": 146,
+              "minimum": 0
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 4232.0,
+              "p95": 4232,
+              "maximum": 4232,
+              "minimum": 4232
+            }
+          },
+          "above_far": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 6.0844060829321245e-09,
+              "p95": 1.824517009260202e-08,
+              "maximum": 1.824517009260202e-08,
+              "minimum": 0.0
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 6.175041198730468e-06,
+              "p95": 2.187490463256836e-05,
+              "maximum": 2.187490463256836e-05,
+              "minimum": 0.0
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 47.6,
+              "p95": 157,
+              "maximum": 157,
+              "minimum": 0
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 7406.0,
+              "p95": 7406,
+              "maximum": 7406,
+              "minimum": 7406
+            }
+          }
+        },
+        "burn": {
+          "below": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.002572502292171543,
+              "p95": 0.0028475676682585805,
+              "maximum": 0.0028475676682585805,
+              "minimum": 0.002190778521373727
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.013092041015625,
+              "p95": 0.0182037353515625,
+              "maximum": 0.0182037353515625,
+              "minimum": 0.0058135986328125
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.06329345703125,
+              "p95": 0.06329345703125,
+              "maximum": 0.06329345703125,
+              "minimum": 0.06329345703125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 1170.0,
+              "p95": 1180,
+              "maximum": 1180,
+              "minimum": 1154
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "inside": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.0008078969989697289,
+              "p95": 0.0010563854571776939,
+              "maximum": 0.0010563854571776939,
+              "minimum": 0.0006450383784865612
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0011786460876464845,
+              "p95": 0.0020236968994140625,
+              "maximum": 0.0020236968994140625,
+              "minimum": 0.0002636909484863281
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.06329345703125,
+              "p95": 0.06329345703125,
+              "maximum": 0.06329345703125,
+              "minimum": 0.06329345703125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 2353.6,
+              "p95": 2398,
+              "maximum": 2398,
+              "minimum": 2303
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 5290.0,
+              "p95": 5290,
+              "maximum": 5290,
+              "minimum": 5290
+            }
+          },
+          "inside_core": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.0007166167783827321,
+              "p95": 0.0010115301901992193,
+              "maximum": 0.0010115301901992193,
+              "minimum": 0.000522195819645613
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0012434959411621095,
+              "p95": 0.0023651123046875,
+              "maximum": 0.0023651123046875,
+              "minimum": 0.00016164779663085938
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.06329345703125,
+              "p95": 0.06329345703125,
+              "maximum": 0.06329345703125,
+              "minimum": 0.06329345703125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 1189.6,
+              "p95": 1224,
+              "maximum": 1224,
+              "minimum": 1152
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "above": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.00047090441157551934,
+              "p95": 0.0005854441025532035,
+              "maximum": 0.0005854441025532035,
+              "minimum": 0.0003399702461545544
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0020589828491210938,
+              "p95": 0.0035858154296875,
+              "maximum": 0.0035858154296875,
+              "minimum": 0.0007276535034179688
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.040625,
+              "p95": 0.047210693359375,
+              "maximum": 0.047210693359375,
+              "minimum": 0.035491943359375
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 2459.4,
+              "p95": 2476,
+              "maximum": 2476,
+              "minimum": 2405
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 4232.0,
+              "p95": 4232,
+              "maximum": 4232,
+              "minimum": 4232
+            }
+          },
+          "above_far": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.00045835515340856046,
+              "p95": 0.0005742230432728255,
+              "maximum": 0.0005742230432728255,
+              "minimum": 0.0003446796569443058
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.0022500991821289063,
+              "p95": 0.003376007080078125,
+              "maximum": 0.003376007080078125,
+              "minimum": 0.0015277862548828125
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.0341339111328125,
+              "p95": 0.047210693359375,
+              "maximum": 0.047210693359375,
+              "minimum": 0.0272216796875
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 4877.8,
+              "p95": 4975,
+              "maximum": 4975,
+              "minimum": 4681
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 7406.0,
+              "p95": 7406,
+              "maximum": 7406,
+              "minimum": 7406
+            }
+          }
+        },
+        "smoke": {
+          "below": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.031648895695439355,
+              "p95": 0.03914698105453318,
+              "maximum": 0.03914698105453318,
+              "minimum": 0.0246495540741486
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.2766357421875,
+              "p95": 0.5107421875,
+              "maximum": 0.5107421875,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 0.88544921875,
+              "p95": 0.94677734375,
+              "maximum": 0.94677734375,
+              "minimum": 0.77001953125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 162.0,
+              "p95": 190,
+              "maximum": 190,
+              "minimum": 129
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "inside": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.024989370702570464,
+              "p95": 0.03309655290920928,
+              "maximum": 0.03309655290920928,
+              "minimum": 0.021491954288320417
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.035189056396484376,
+              "p95": 0.1287841796875,
+              "maximum": 0.1287841796875,
+              "minimum": 6.079673767089844e-06
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.2212890625,
+              "p95": 1.2880859375,
+              "maximum": 1.2880859375,
+              "minimum": 1.1533203125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 328.2,
+              "p95": 395,
+              "maximum": 395,
+              "minimum": 290
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 5290.0,
+              "p95": 5290,
+              "maximum": 5290,
+              "minimum": 5290
+            }
+          },
+          "inside_core": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.022336384033210335,
+              "p95": 0.028434055378847176,
+              "maximum": 0.028434055378847176,
+              "minimum": 0.019587858322662757
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.026898193359375,
+              "p95": 0.10101318359375,
+              "maximum": 0.10101318359375,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.2046875,
+              "p95": 1.2578125,
+              "maximum": 1.2578125,
+              "minimum": 1.1533203125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 149.0,
+              "p95": 203,
+              "maximum": 203,
+              "minimum": 97
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 2645.0,
+              "p95": 2645,
+              "maximum": 2645,
+              "minimum": 2645
+            }
+          },
+          "above": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.020391129146000837,
+              "p95": 0.023957204601827778,
+              "maximum": 0.023957204601827778,
+              "minimum": 0.01733114966147338
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.04007631540298462,
+              "p95": 0.127197265625,
+              "maximum": 0.127197265625,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.2046875,
+              "p95": 1.2314453125,
+              "maximum": 1.2314453125,
+              "minimum": 1.1328125
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 263.0,
+              "p95": 353,
+              "maximum": 353,
+              "minimum": 189
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 4232.0,
+              "p95": 4232,
+              "maximum": 4232,
+              "minimum": 4232
+            }
+          },
+          "above_far": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.016219047491788027,
+              "p95": 0.020634047282633832,
+              "maximum": 0.020634047282633832,
+              "minimum": 0.010253169779322967
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 0.01719822883605957,
+              "p95": 0.0565185546875,
+              "maximum": 0.0565185546875,
+              "minimum": 0.0
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 1.196484375,
+              "p95": 1.263671875,
+              "maximum": 1.263671875,
+              "minimum": 1.150390625
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 382.6,
+              "p95": 472,
+              "maximum": 472,
+              "minimum": 239
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 7406.0,
+              "p95": 7406,
+              "maximum": 7406,
+              "minimum": 7406
+            }
+          }
+        },
+        "velocity": {
+          "below": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.38120205840792937,
+              "p95": 0.39773627067729755,
+              "maximum": 0.39773627067729755,
+              "minimum": 0.3568658688584046
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 1.9590263598407198,
+              "p95": 2.208384046931928,
+              "maximum": 2.208384046931928,
+              "minimum": 1.1678812383317514
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 5.833743343473601,
+              "p95": 6.283303895358052,
+              "maximum": 6.283303895358052,
+              "minimum": 5.188286158727832
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 242.0,
+              "p95": 242,
+              "maximum": 242,
+              "minimum": 242
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 242.0,
+              "p95": 242,
+              "maximum": 242,
+              "minimum": 242
+            }
+          },
+          "inside": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.5278436704339422,
+              "p95": 0.5754316002520304,
+              "maximum": 0.5754316002520304,
+              "minimum": 0.4651337393911443
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 2.2081605197315866,
+              "p95": 2.6711068861828866,
+              "maximum": 2.6711068861828866,
+              "minimum": 1.4991295705494372
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 7.933900977003655,
+              "p95": 9.114134509434706,
+              "maximum": 9.114134509434706,
+              "minimum": 6.6078567564738995
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 605.0,
+              "p95": 605,
+              "maximum": 605,
+              "minimum": 605
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 605.0,
+              "p95": 605,
+              "maximum": 605,
+              "minimum": 605
+            }
+          },
+          "inside_core": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.5104138618760572,
+              "p95": 0.5582776434775897,
+              "maximum": 0.5582776434775897,
+              "minimum": 0.45026360080995737
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 2.2033193667509154,
+              "p95": 2.8535664349574854,
+              "maximum": 2.8535664349574854,
+              "minimum": 1.2644746417953923
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 7.53938232433281,
+              "p95": 8.159096192001764,
+              "maximum": 8.159096192001764,
+              "minimum": 6.6078567564738995
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 363.0,
+              "p95": 363,
+              "maximum": 363,
+              "minimum": 363
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 363.0,
+              "p95": 363,
+              "maximum": 363,
+              "minimum": 363
+            }
+          },
+          "above": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.7122777410905551,
+              "p95": 0.9540802253814106,
+              "maximum": 0.9540802253814106,
+              "minimum": 0.553198289640687
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 3.787111765523012,
+              "p95": 5.891879173350978,
+              "maximum": 5.891879173350978,
+              "minimum": 2.771028143743616
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 8.842617204698506,
+              "p95": 9.705454204333172,
+              "maximum": 9.705454204333172,
+              "minimum": 7.192302161112219
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 484.0,
+              "p95": 484,
+              "maximum": 484,
+              "minimum": 484
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 484.0,
+              "p95": 484,
+              "maximum": 484,
+              "minimum": 484
+            }
+          },
+          "above_far": {
+            "available": true,
+            "voxel_mean": {
+              "sample_count": 15,
+              "mean": 0.7894886660327259,
+              "p95": 1.0946382755792452,
+              "maximum": 1.0946382755792452,
+              "minimum": 0.5059236644185785
+            },
+            "voxel_p95": {
+              "sample_count": 15,
+              "mean": 3.7041388291240773,
+              "p95": 5.72923287324509,
+              "maximum": 5.72923287324509,
+              "minimum": 2.580372635631897
+            },
+            "voxel_maximum": {
+              "sample_count": 15,
+              "mean": 9.257353357805517,
+              "p95": 10.49413879894338,
+              "maximum": 10.49413879894338,
+              "minimum": 7.192302161112219
+            },
+            "nonzero_voxel_count": {
+              "sample_count": 15,
+              "mean": 847.0,
+              "p95": 847,
+              "maximum": 847,
+              "minimum": 847
+            },
+            "voxel_count": {
+              "sample_count": 15,
+              "mean": 847.0,
+              "p95": 847,
+              "maximum": 847,
+              "minimum": 847
+            }
+          }
+        }
+      },
+      "active_blocks": {
+        "sample_count": 15,
+        "mean": 60.6,
+        "p95": 66,
+        "maximum": 66,
+        "minimum": 56
+      }
+    }
+  },
+  "off_ratios": {
+    "collision_off": {
+      "temperature": {
+        "below": 1.0,
+        "inside": 1.0,
+        "inside_core": 1.0,
+        "above": 1.0,
+        "above_far": 1.0
+      },
+      "fuel": {
+        "below": 1.0,
+        "inside": 1.0,
+        "inside_core": 1.0,
+        "above": 1.0,
+        "above_far": 1.0
+      },
+      "burn": {
+        "below": 1.0,
+        "inside": 1.0,
+        "inside_core": 1.0,
+        "above": 1.0,
+        "above_far": 1.0
+      },
+      "smoke": {
+        "below": 1.0,
+        "inside": 1.0,
+        "inside_core": 1.0,
+        "above": 1.0,
+        "above_far": 1.0
+      },
+      "velocity": {
+        "below": 1.0,
+        "inside": 1.0,
+        "inside_core": 1.0,
+        "above": 1.0,
+        "above_far": 1.0
+      }
+    },
+    "box_aligned": {
+      "temperature": {
+        "below": 1.003866520411671,
+        "inside": 1.0087887515496363,
+        "inside_core": 1.008460148275042,
+        "above": 0.9981344864226845,
+        "above_far": 1.001260855560202
+      },
+      "fuel": {
+        "below": 0.998050945227657,
+        "inside": 1.0461658424539144,
+        "inside_core": 0.9975196019736846,
+        "above": 1.0577374150478138,
+        "above_far": 1.0090349715709945
+      },
+      "burn": {
+        "below": 0.9978517781588576,
+        "inside": 1.0178553759594986,
+        "inside_core": 1.0041211743734717,
+        "above": 1.001434025332602,
+        "above_far": 0.9963105243768009
+      },
+      "smoke": {
+        "below": 1.006884524781454,
+        "inside": 1.0069702214296659,
+        "inside_core": 1.0012750369656935,
+        "above": 1.0018957922995524,
+        "above_far": 1.0108804915800635
+      },
+      "velocity": {
+        "below": 1.0014073380137885,
+        "inside": 0.9992267164820602,
+        "inside_core": 0.995531718126999,
+        "above": 1.0088612605398342,
+        "above_far": 0.9999198844131573
+      }
+    },
+    "box_shift_half": {
+      "temperature": {
+        "below": 1.0154007021331832,
+        "inside": 1.004418991199474,
+        "inside_core": 1.0169856256466872,
+        "above": 1.0301818667557057,
+        "above_far": 0.9931573850202826
+      },
+      "fuel": {
+        "below": 1.0020941053824668,
+        "inside": 1.0702194505365816,
+        "inside_core": 0.9375823013504601,
+        "above": 0.7082756961568534,
+        "above_far": 0.8832463587506815
+      },
+      "burn": {
+        "below": 1.006076433435941,
+        "inside": 1.0051072596694381,
+        "inside_core": 0.999546823284575,
+        "above": 1.0501336981647666,
+        "above_far": 1.0027722856569872
+      },
+      "smoke": {
+        "below": 1.027199866757508,
+        "inside": 0.9943760570593897,
+        "inside_core": 0.9796563894366164,
+        "above": 1.0684553883255892,
+        "above_far": 1.015141703230053
+      },
+      "velocity": {
+        "below": 1.0011677866113646,
+        "inside": 0.977721782010859,
+        "inside_core": 0.967608909912066,
+        "above": 1.0186333521122835,
+        "above_far": 1.007930931041773
+      }
+    },
+    "box_shift_one": {
+      "temperature": {
+        "below": 1.0154007021331832,
+        "inside": 1.004418991199474,
+        "inside_core": 1.0169856256466872,
+        "above": 1.0301818667557057,
+        "above_far": 0.9931573850202826
+      },
+      "fuel": {
+        "below": 1.0020941053824668,
+        "inside": 1.0702194505365816,
+        "inside_core": 0.9375823013504601,
+        "above": 0.7082756961568534,
+        "above_far": 0.8832463587506815
+      },
+      "burn": {
+        "below": 1.006076433435941,
+        "inside": 1.0051072596694381,
+        "inside_core": 0.999546823284575,
+        "above": 1.0501336981647666,
+        "above_far": 1.0027722856569872
+      },
+      "smoke": {
+        "below": 1.027199866757508,
+        "inside": 0.9943760570593897,
+        "inside_core": 0.9796563894366164,
+        "above": 1.0684553883255892,
+        "above_far": 1.015141703230053
+      },
+      "velocity": {
+        "below": 1.0011677866113646,
+        "inside": 0.977721782010859,
+        "inside_core": 0.967608909912066,
+        "above": 1.0186333521122835,
+        "above_far": 1.007930931041773
+      }
+    }
+  },
+  "safety": {
+    "fatal_count": 0,
+    "native_crash_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "all_shutdown_complete": true,
+    "all_machine_wide_settings_unchanged": true
+  },
+  "measurement_gates": {
+    "three_runs_per_condition": true,
+    "all_run_gates_passed": true,
+    "half_cell_shift_measured": true,
+    "one_cell_shift_measured": true,
+    "safety_clean": true
+  },
+  "interpretation": {
+    "threshold_policy": "Measurement validity is gated; no predeclared zero-leakage threshold is used.",
+    "velocity": "Public velocity readback was sampled as magnitude.",
+    "internal_representation": "Not established by this probe; no claim of retained convex geometry or explicit voxel mask."
+  },
+  "decision": {
+    "classification": "Collision ONでもOFFと同程度に上側へ到達する",
+    "aligned_primary_off_ratios": {
+      "temperature": {
+        "inside_core": 1.008460148275042,
+        "above_far": 1.001260855560202
+      },
+      "smoke": {
+        "inside_core": 1.0012750369656935,
+        "above_far": 1.0108804915800635
+      },
+      "burn": {
+        "inside_core": 1.0041211743734717,
+        "above_far": 0.9963105243768009
+      },
+      "velocity": {
+        "inside_core": 0.995531718126999,
+        "above_far": 0.9999198844131573
+      }
+    },
+    "half_and_one_cell_aggregate_values_equal": true,
+    "position_shift_response": "0.5-cell and 1-cell aggregate values were identical; no monotonic occlusion response was observed.",
+    "visual_classification": "OFF and aligned-ON captures both show the vertical volume continuing through and above the opaque Box; numeric and rendered evidence agree.",
+    "phase6dr_current_explanation": "The leading explanation is real Flow-field non-occlusion under the current public PhysX/Flow integration, not a ray-march-only illusion. The missing ingestion/constraint boundary is not identified.",
+    "cylinder_attempted": false,
+    "cylinder_reason": "The required axis-aligned static Box did not establish occlusion, so Cylinder and dynamic-transform tests were not started."
+  },
+  "visual_evidence": {
+    "comparison_video": "flow_collision_occlusion_comparison.mp4",
+    "comparison_poster": "flow_collision_occlusion_comparison.png",
+    "off_frame": "flow_collision_occlusion_off.png",
+    "aligned_on_frame": "flow_collision_occlusion_on.png",
+    "frame_count": 4,
+    "unique_source_frame_count": 8,
+    "duration_seconds": 8.0,
+    "latest_demo_pointer_changed": false
+  }
+}

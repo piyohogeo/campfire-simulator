@@ -2903,3 +2903,15 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 最終の明示V3 OFF回帰試行がKit quick shutdown中に`0xC0000005`、write target `0xD0`、`usd_usdGeom.dll+0x7A171`でnative crashした。dumpは`artifacts/`に保全、SHA-256は`E0734E2F...E78701DC`、自動upload 0。同一条件を自動再試行せず、正式母集団から除外した。
 - crash/dump 0 gateが不成立のため、`campfire.simulator.kit`からdeveloper bundleを除外するcandidateは昇格せず、production appと既定値は変更しない。GPU transportは使用しておらず、debug分離／V3 OFF／Hydra teardownのどれが原因かは未確認。詳細は`docs/design/production_debug_split_candidate.md`。
 - production変更撤回後のRelease buildは`8.34 s`、Phase 0 RTXは`22.8 s`、標準suiteは8 process・`78 / 78`件（`324.2 s`、collapse `189.3 s`）合格した。
+
+## Phase 6DS Flow collision occlusion probe
+
+### 2026-08-11: 静的BoxでもFlow場の遮蔽を確認できず、Cylinderへ進まない
+
+- production-neutral・既定OFFの独立probeとして、Flow 110.0.0の完全な既知正常graph、Z-up PhysicsScene、静的UsdPhysics CollisionAPI Box、Sphere Emitter、front/side cameraをstage接続前に構築した。wood model、V3、Point、Phase V3T-R候補、V3T-M partial topologyは使用していない。
+- density cellは`0.025 m`、公開velocity NanoVDBから得た実効cellは`0.0500000007 m`。Boxは`2.0 × 2.0 × 0.25 m`で約5 velocity cell厚、Emitterとの最小距離は`0.225 m`・約4.5 cellであり、解析的にBox外部である。
+- Collision OFF、ON aligned、ON +0.5 cell、ON +1 cellを各3独立process、frame 60/90/120/150/180で測定した。公開`get_latest_nanovdb_readback()`、`buffer_to_volume()`、`omni.volume`、同梱`nanovdb` accessorだけでbelow／inside／inside_core／above／above_far ROIのtemperature、fuel、burn、smoke、velocity、divergenceを集計した。private APIは使用していない。
+- aligned ONのinside_core／above_farのOFF比はtemperature `1.008 / 1.001`、smoke `1.001 / 1.011`、burn `1.004 / 0.996`、velocity magnitude `0.996 / 1.000`で、明確な抑制はない。0.5-cellと1-cellの全aggregate値は一致し、位置ずれに対する段階応答もない。
+- 同一camera・同一4時点のOFF／ON frameでも、不透明Box内部から上方へvolumeが連続して見えた。したがって分類は「Collision ONでもOFFと同程度に上側へ到達する」であり、数値上は遮蔽されるが映像だけ貫通するケースではない。Phase 6DR疑惑の現時点の最有力説明は、現在の公開PhysX/Flow integrationでFlow場がColliderに拘束されていないこと。ただし未取込schema、stage順序、lifecycle、Flow constraint境界のどこが欠けるかは未確認である。
+- Boxで遮蔽が成立しなかったためCylinder、斜め配置、dynamic Transform、Phase 6DR実配置へ進んでいない。Flow内部がconvexを保持する、明示voxel maskを持つ、とは断定しない。詳細は`docs/design/flow_collision_occlusion_probe.md`。
+- 12/12 processはfatal／native crash／dump／automatic upload attempt各0、全run `shutdown_complete`、production app SHA-256前後一致だった。診断動画は開発日誌へ追加したがlatest demo pointerはV3T-Pのまま変更していない。productionコード、既定値、wood authority、物理式、Emitter schema、V3、checkpoint、rollback、serialization、Phase V3T-R safe stopは不変である。

@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v3tr">最新記録</a>
+        <a href="#phase-6ds">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v3tr">Phase V3T-Rを読む</a>
+        <a class="button primary" href="#phase-6ds">Phase 6DSを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V3T-R safe stop</strong></div>
-        <div><span>Candidate normal</span><strong>50.231 FPS · debugger-free</strong></div>
-        <div><span>Formal matrix</span><strong>9 / 9 processes</strong></div>
-        <div><span>Promotion</span><strong>held by shutdown crash gate</strong></div>
+        <div><span>現在地</span><strong>Phase 6DS diagnostic stop</strong></div>
+        <div><span>Velocity cell</span><strong>0.050000 m · Box 5 cells</strong></div>
+        <div><span>Formal matrix</span><strong>12 / 12 processes</strong></div>
+        <div><span>Collision result</span><strong>above ROI ≈ OFF</strong></div>
       </div>
     </div>
   </header>
@@ -56,6 +56,19 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6ds" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報"><span class="phase-number compact">6DS</span><p><time datetime="2026-08-11">2026.08.11</time></p><span class="pill current">Diagnostic safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6DS · Flow collision occlusion probe</p><h2>Boxを5セル厚にしても、<br>Flow場は上へ続いた。</h2><p>Phase 6DR動画の薪貫通疑惑を、木材もV3もない軸平行・静止Boxで切り分けました。公開NanoVDB readbackからBox内部coreと上方far ROIを直接測り、同じcameraのCollision OFF／ON映像も比較しています。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/flow_collision_occlusion_report.svg"><img src="assets/phase6/flow_collision_occlusion_comparison.png" alt="左がFlow Collision OFF、右が静的Box Collision ONの同時点比較。両方でvolumeがBox上へ続く" loading="lazy"></a><figcaption><div><strong>12 / 12 isolated processes</strong><span>左 OFF · 右 ON aligned · velocity cell 0.050 m</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/flow_collision_occlusion_comparison.mp4" data-video-poster="assets/phase6/flow_collision_occlusion_comparison.png" data-video-title="Phase 6DS — Flow collision OFF / ON" data-video-meta="左: Collision OFF · 右: 静的Box ON · frame 90/120/150/180 · 0.5 fps診断frame列 · 性能母集団外"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>OFF／ON診断を再生</strong><small>8秒 · 4比較frame</small></span></button></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Aligned Box</p><h3>above far: temperature 1.001×</h3><p>OFF比はsmoke 1.011×、burn 0.996×、velocity magnitude 1.000×。inside coreもtemperature 1.008×で、明確な遮蔽はありません。</p></section><section class="note caution"><p class="note-label">Grid alignment</p><h3>+0.5 cellと+1 cellは同じ集計値</h3><p>Boxを0.025／0.050 mずらしても遮蔽量の段階応答はありませんでした。Box厚は0.25 m＝約5 velocity cell、Emitterとの空間は約4.5 cellです。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Measured boundary</p><h3>映像だけの錯視ではない。</h3><p>temperature／fuel／burn／smoke／velocityを5時点、below／inside／inside core／above／above farで取得しました。Box上方の連続は数値にも存在するため、現時点のPhase 6DR説明は「現在の公開PhysX/Flow連携でFlow場がColliderに拘束されていない」が最有力です。ただし欠けた境界は未特定です。</p><p><a href="assets/phase6/flow_collision_occlusion_report.json">集計JSON</a> · <a href="assets/phase6/flow_collision_occlusion_raw.json">全sample</a> · <a href="assets/phase6/flow_collision_occlusion_report.svg">OFF比SVG</a> · <a href="../design/flow_collision_occlusion_probe.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Public readback</strong><small>scalar + velocity</small></p></div><div role="listitem"><span>✓</span><p><strong>Geometry gate</strong><small>5-cell Box · 4.5-cell gap</small></p></div><div role="listitem"><span>✓</span><p><strong>Safety</strong><small>crash/dump/upload 0</small></p></div><div role="listitem"><span>—</span><p><strong>Cylinder</strong><small>Box不成立で未実行</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>変更なし</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Safe stop</p><h3>まず同梱PhysicsCollision sceneとの差分を監査する。</h3><p>Collider取込、必要schema、stage接続順、Flow constraintのどこが境界かは未確認です。軸平行Boxで遮蔽を再現するまでCylinder、斜め薪、移動Colliderへ進みません。これは診断動画なので、開発日誌の「最新デモ」はV3T-Pのままです。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v3tr" class="section entry-section phase-six">
