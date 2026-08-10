@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v3tn">最新記録</a>
+        <a href="#phase-v3to">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v3tn">Phase V3T-Nを読む</a>
+        <a class="button primary" href="#phase-v3to">Phase V3T-Oを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V3T-N frame budget</strong></div>
-        <div><span>通常目標</span><strong>45 FPS · 22.222 ms</strong></div>
-        <div><span>最低ライン</span><strong>30 FPS · 33.333 ms</strong></div>
-        <div><span>現行余裕</span><strong>1.322 ms to target</strong></div>
+        <div><span>現在地</span><strong>Phase V3T-O diagnostic</strong></div>
+        <div><span>Static uncapped</span><strong>166.4–169.9 FPS</strong></div>
+        <div><span>Flow uncapped</span><strong>50.696 FPS · 19.725 ms</strong></div>
+        <div><span>通常基準</span><strong>47.858 FPS · 20.90 ms</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,19 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-v3to" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報"><span class="phase-number compact">V3T-O</span><p><time datetime="2026-08-10">2026.08.10</time></p><span class="pill current">Diagnostic qualified</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase V3T-O · Capped / 240 Hz diagnostic</p><h2>120 Hzの天井を外す。<br>Flowは、それでも仕事量で決まる。</h2><p>通常のproduction rateは変更せず、別processだけでmain／rendering／viewport tickを240 Hzへ上げました。静的sceneに隠れていたheadroomと、production相当Flowの実負荷を分離しています。</p></header>
+          <figure class="capture-card wide"><a href="assets/phasev3to/frame_budget_diagnostic_report.svg"><img src="assets/phasev3to/frame_budget_diagnostic_report.svg" alt="4代表sceneのproduction cappedと240 Hz診断の平均visible FPS比較" loading="lazy"></a><figcaption><div><strong>12 / 12 formal processes</strong><span>fatal 0 · dump 0 · upload attempt 0</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3tl/candidate_performance_motion.mp4" data-video-poster="assets/phasev3tl/candidate_performance.png" data-video-title="Phase V3T-O normal visual reference · Candidate Performance" data-video-meta="production-cappedの正規Flow＋V3外観 · uncapped性能母集団外 · 240 Hz動画ではない"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>通常体感の外観</strong><small>production-capped動画</small></span></button></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Static scenes</p><h3>約116.7 → 166.4–169.9 FPS</h3><p>floor＋stones、Cylinder 20、V3 Mesh 20はproductionの120 Hz ceilingに当たっていました。240 Hz診断ではGPU 97.6～99.0%、約209.4 Wで、240 Hzそのものには届きません。</p></section><section class="note caution"><p class="note-label">Production Flow</p><h3>47.858 → 50.696 FPS</h3><p>Flow＋volumeの改善は約5.9%です。mainはFlow起動後60 Hz、rendering／viewport tickは240 Hz、presentは59 Hz。通常予算は20.90 ms基準のままです。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Metric boundary</p><h3>平均visible counterの診断</h3><p>GPU render time、display-present FPS、raw frame latency、p95/p99は未取得です。追加RenderProductを作って代用していません。preflightとcold runは正式母集団外です。</p><p><a href="assets/phasev3to/frame_budget_diagnostic_report.json">集計JSON</a> · <a href="assets/phasev3to/frame_budget_diagnostic_samples.json">正式sample</a> · <a href="../design/uncapped_frame_budget_diagnostic.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Rate audit</strong><small>main/render/tick/present</small></p></div><div role="listitem"><span>✓</span><p><strong>Power</strong><small>210 W unchanged</small></p></div><div role="listitem"><span>✓</span><p><strong>Crash safety</strong><small>upload disabled · dump preserved</small></p></div><div role="listitem"><span>✓</span><p><strong>Flow safe stop</strong><small>partial topology not run</small></p></div></div></section>
+          <section class="note next"><p class="note-label">What comes next</p><h3>Resident rigid layoutの本線へ戻る</h3><p>uncapped基準は確立しました。次はPhase 6DQの計画どおり、任意回転済み薪をnormal appで起動し、停止中transform refreshとstage recoveryを独立検証します。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v3tn" class="section entry-section phase-six">

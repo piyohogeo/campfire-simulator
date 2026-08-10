@@ -51,3 +51,6 @@ Candidate Performance＋production相当Flow volumeの既知基準は平均visib
 
 Phase V3T-MのFlow component分解はsafe stopを維持する。クラッシュ済みpartial topology条件を自動再試行せず、production Flowへ推測対策を入れない。隔離Kitはupload無効、`preserveDump=true`、run固有dump、fatal-token fail-fastを必須とする。
 
+## Phase V3T-O実測
+
+240 Hz診断で静的3 sceneは`166.377..169.892 FPS`まで上がり、productionの約116.7 FPSは120 Hz rendering ceilingに当たっていた。production相当Flow＋volumeは`47.858`から`50.696 FPS`への約5.9%改善に留まり、通常予算の基準はproduction-capped値を維持する。詳細は`uncapped_frame_budget_diagnostic.md`。

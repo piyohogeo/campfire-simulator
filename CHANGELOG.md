@@ -1,5 +1,7 @@
 # Changelog
 
+- Qualified Phase V3T-O's production-neutral 240 Hz diagnostic: twelve formal processes raised static scenes from the production ~116.7 FPS ceiling to 166.4-169.9 FPS at 97.6-99.0% GPU, while production-equivalent Flow moved only from 47.858 to 50.696 FPS. All formal runs had zero fatal token, dump, and upload attempt; production rates and defaults remain unchanged.
+
 - Adopted the Phase V3T-N project frame-budget policy without rewriting historical gates: Candidate Performance remains temporary standard, 45 FPS / 22.222 ms is the normal target, 30 FPS / 33.333 ms is the minimum, and 60 FPS / 16.667 ms is a light-scene ideal. The existing 47.858 FPS / 20.90 ms Flow-volume reference leaves estimated average-visible-counter margins of 1.322 ms and 12.433 ms respectively.
 
 - Phase V3T-M reached a production-neutral partial safe stop: 33 qualified processes measured the Candidate Performance timeline/PhysX boundary, Flow-absent stage boundary, and an AutoBaseline reference, while repeated Flow stage-connection crashes were fail-fast isolated as `0xC0000005` reads at `omni.fabric.plugin.dll+0xD6960`. Sensitive dumps remain local and upload-disabled; no production setting was changed.

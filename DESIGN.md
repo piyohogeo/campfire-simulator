@@ -2839,3 +2839,13 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - production相当Flow＋volumeの既知基準`47.858 FPS / 20.90 ms`から、45 FPS枠まで`1.322 ms`、30 FPS枠まで`12.433 ms`の推定余裕がある。平均visible render counterの差であり、display-present FPS、raw frame latency、p95/p99の余裕ではない。
 - 薪状態texture 30～60 Hz／revision変化時、炎照明15～30 Hz＋補間、形状変形は数Hz／閾値超過時、Mesh／RTX acceleration structureは形状変化時だけ、炎voxelは少数代表lightへ圧縮、を将来の実測候補とする。固定仕様にはしない。
 - 通常体感測定と、main／render上限だけを240 Hzへ上げる別processの最適化診断を分離する。Power Limit 210 W、1280×720、camera、stage、presetを固定し、追加RenderProductを作らない。Phase V3T-MのFlow partial topology safe stopは維持する。詳細は`docs/design/frame_budget_policy.md`。
+
+## Phase V3T-O capped / 240 Hz frame-budget diagnostic
+
+### 2026-08-10: production rate ceilingと実描画負荷を分離する
+
+- cappedはPhase V3T-LのCandidate Performance正式3-runを再利用し、新規240 Hz診断は4代表scene×3 runを順序回転した。正式12 processはnormal exit、fatal 0、dump 0、automatic upload attempt 0。cold／preflightは除外した。
+- floor＋stones、Cylinder 20、V3 Mesh 20はproductionの`116.708 / 116.697 / 116.764 FPS`から240 Hz診断の`169.892 / 168.931 / 166.377`へ上がった。診断時GPUは`97.632..98.982%`、powerは約`209.4 W`で、productionの120 Hz rendering ceilingが静的headroomを隠していた。
+- production相当Flow＋volumeは`47.858 FPS / 20.895 ms`から`50.696 / 19.725 ms`への約5.9%改善に留まった。Flowはmainを60 Hzへ再設定し、rendering／viewport tickは240 Hz、presentは59 Hz。liveに押し戻さず実効値を記録した。
+- GPU render time、display-present FPS、raw frame p95/p99は取得不可で推定しない。通常余裕はproduction-cappedの20.90 msを基準に45 FPSへ1.322 ms、30 FPSへ12.433 msのまま維持する。
+- production app／rate／既定値、wood／Flow authority、Emitter、collision、checkpoint、serializationは不変。V3T-Mのpartial Flow topologyは実行していない。次はPhase 6DQの既存ロードマップへ戻る。詳細は`docs/design/uncapped_frame_budget_diagnostic.md`。
