@@ -41,7 +41,10 @@ param(
     [switch]$WoodRenderHierarchy,
     [switch]$WoodVisualV3,
     [switch]$ResidentNativeBackend,
-    [string]$ResidentNativeLibraryPath = ""
+    [string]$ResidentNativeLibraryPath = "",
+    [ValidateSet("Inherit", "CandidateBalanced", "CandidatePerformance", "Quality", "DLAA", "Minimal")]
+    [string]$RtxVisualPreset = "Inherit",
+    [switch]$PhaseV3TLCameraMotion
 )
 
 $ErrorActionPreference = "Stop"
@@ -212,6 +215,21 @@ $kitArgs = @(
     "--/app/viewport/grid/enabled=false",
     "--/persistent/app/viewport/displayOptions=1152"
 )
+
+# Measurement/visual-evidence override only.  The default remains Inherit and
+# no value is written to the production app configuration.
+$rtxVisualPresetArgs = switch ($RtxVisualPreset) {
+    "CandidateBalanced" { @("--/rtx/post/aa/op=3", "--/rtx/post/dlss/execMode=1", "--/rtx/rtpt/maxBounces=2") }
+    "CandidatePerformance" { @("--/rtx/post/aa/op=3", "--/rtx/post/dlss/execMode=0", "--/rtx/rtpt/maxBounces=2") }
+    "Quality" { @("--/rtx/post/aa/op=3", "--/rtx/post/dlss/execMode=2") }
+    "DLAA" { @("--/rtx/post/aa/op=3", "--/rtx/post/dlss/execMode=4") }
+    "Minimal" { @("--/rtx/rendermode=MinimalRendering", "--/rtx/minimal/mode=3") }
+    default { @() }
+}
+$kitArgs += $rtxVisualPresetArgs
+if ($PhaseV3TLCameraMotion.IsPresent) {
+    $kitArgs += @("--exec", (Join-Path $PSScriptRoot "probe_phasev3tl_camera_motion.py"))
+}
 
 $runTimer = [System.Diagnostics.Stopwatch]::StartNew()
 & $kit @kitArgs

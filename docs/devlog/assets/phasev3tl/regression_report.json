@@ -1,0 +1,50 @@
+{
+  "schema": "campfire.phasev3tl.regression.v1",
+  "baseline_commit": "cb96b2a",
+  "release_build": { "status": "passed" },
+  "phase0_rtx": {
+    "status": "ok",
+    "resolution": [1280, 720],
+    "quit_after_capture": true
+  },
+  "standard_suite": {
+    "processes_passed": 8,
+    "processes_total": 8,
+    "tests_passed": 77,
+    "tests_total": 77,
+    "wall_seconds": 343.8,
+    "collapse_coverage_seconds": 203.5
+  },
+  "phasev3tc_integrated": {
+    "processes_passed": 6,
+    "processes_total": 6,
+    "summary_status_ok": 6,
+    "authority_sha256_identical": true,
+    "dry_authority_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+    "wet_authority_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+    "dry_mass_balance_error_kg": 0.0,
+    "wet_mass_balance_error_kg": 0.0,
+    "resident_revision": 1200,
+    "flow_input_owner": "wood thermal model",
+    "flow_active_block_peak_minimum": 138,
+    "flow_active_block_peak_maximum": 318,
+    "native_nonzero_exit_count": 0
+  },
+  "shutdown_and_fatal_gate": {
+    "phasev3tl_formal_kit_logs": 30,
+    "phasev3tl_formal_fatal_hits": 0,
+    "tokens": [
+      "IRenderSettings::getRenderSettings failed getting a stage-id",
+      "[crash] A crash has occurred",
+      "Traceback",
+      "CUDA illegal address",
+      "device lost",
+      "invalid pointer"
+    ],
+    "ao_off_crash_excluded": true,
+    "ao_off_retry_excluded": true,
+    "phasev3tc_normal_process_exits": 6
+  },
+  "production_defaults_changed": false,
+  "power_limit_watts": 210
+}

@@ -4,7 +4,10 @@ param(
     [ValidateRange(1, 1200)]
     [int]$VideoFrameInterval = 20,
     [ValidateRange(1, 60)]
-    [int]$VideoFps = 10
+    [int]$VideoFps = 10,
+    [ValidateSet("Inherit", "CandidateBalanced", "CandidatePerformance", "Quality", "DLAA", "Minimal")]
+    [string]$RtxVisualPreset = "Inherit",
+    [switch]$PhaseV3TLCameraMotion
 )
 
 $ErrorActionPreference = "Stop"
@@ -29,6 +32,8 @@ $arguments = @{
     CaptureVideo = $CaptureVideo.IsPresent
     VideoFrameInterval = $VideoFrameInterval
     VideoFps = $VideoFps
+    RtxVisualPreset = $RtxVisualPreset
+    PhaseV3TLCameraMotion = $PhaseV3TLCameraMotion.IsPresent
 }
 & (Join-Path $PSScriptRoot "run_phase3.ps1") @arguments
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

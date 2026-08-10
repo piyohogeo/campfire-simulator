@@ -2785,3 +2785,14 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - API制約: `/rtx/post/aa/op=3`と`/rtx/post/dlss/execMode`は実効値を再読取した。`/rtx/pathtracing/dlss/enabled`とReal-Time post-AAを混同しない。公開内部render resolutionとRay Reconstruction runtime値は取得できず、AutoがDLAAそのものだとは断定しない。display-present FPS、raw frame p95／p99、1% lowも未計測である。
 - 設計判断: 約32 FPSはV3 MeshやProvider不在ではなく、Flow OFF時にもSimulate／Render Primとlayer Flow renderSettingsがactiveな境界で再現した。productionのFlow OFF semanticsを将来の代表scene profiler／stage-authoring audit候補とするが、本Phaseではproduction code、設定、wood authority、Flow入力、Emitter、collision、rigid layout、checkpoint、serialization、V3既定OFFを変更しない。詳細は`docs/design/wood_visual_v3_rtx_stage_cost.md`。
 - 回帰: 最終状態の標準suiteは8/8 process、77/77 testが合格した。static gateを含む最終commandのwall timeは`352.9 s`。production moduleを変更していないためrelease build／Phase 0の再生成は本Phaseの必須対象外とした。
+
+## Phase V3T-L lightweight RTX preset
+
+### 2026-08-10: DLSSとRT2 bounceを候補化し、AO native crashで停止境界を追加
+
+- Kit 110.2同梱UI sourceからRT2設定pathを確認し、8連続visible frame ready、warmup、設定再適用、実効値一致後だけ`ViewportAPI.frame_info`を測定した。追加RenderProduct／HydraTexture／性能区間captureはない。
+- 個別preflightではDLSS Balanced、Performance、`/rtx/rtpt/maxBounces=2`だけが明確に改善した。cache、sample低減、translucency／SSS OFF、specular最小は寄与未確認なので複合候補へ入れていない。
+- AO OFFはscene acceleration structure生成直後にnative crashした。dumpは`0xC0000005` read、`omni.fabric.plugin.dll+0xD6960`。正式unwindと原因は未確認で、AO変更を保留した。runnerはKit crash行、Crash Reporter／dump、native nonzero exitを明示分類する。
+- 5 scene×2候補×3 run＝30 processは全件normal exit／fatal 0／210 Wだった。Flow＋volumeはBalanced `45.412 FPS / 22.02 ms`、Performance `47.858 / 20.90 ms`で58 FPS gate未達。RTX Minimalは実V3のFlow active-block gateに失敗した。
+- visual-only固定camera／orbit＋薪崩落captureでは両候補ともshadow、V3 emission、炎煙を維持した。Performanceは時間的細部がやや平滑化されるためfallback-only候補とする。
+- production既定、wood authority、Flow入力、Emitter、collision、rigid layout、checkpoint、serialization、V3既定OFF、Power Limit 210 Wを変更しない。詳細は`docs/design/wood_visual_v3_lightweight_rtx_preset.md`。

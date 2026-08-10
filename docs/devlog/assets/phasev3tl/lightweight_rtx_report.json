@@ -1,0 +1,906 @@
+{
+  "schema": "campfire.phasev3tl.lightweight-rtx-report.v1",
+  "status": "ok",
+  "phase": "V3T-L",
+  "baseline_commit": "cb96b2a",
+  "contract": {
+    "production_changed": false,
+    "power_limit_w": 210,
+    "power_limit_changed": false,
+    "display_present_fps_measured": false,
+    "visible_fps_source": "ViewportAPI.frame_info frame delta / wall time",
+    "frame_time_definition": "1000 / average visible FPS; not raw frame latency"
+  },
+  "formal_gate": {
+    "processes": 30,
+    "normal_exits": 30,
+    "fatal_log_count": 0,
+    "crash_count": 0
+  },
+  "v3tk_auto_reference": {
+    "ground_stones_no_lights": 57.47066666666666,
+    "ground_stones_lit": 54.93866666666667,
+    "cylinder20_solid": 46.016999999999996,
+    "v3mesh20_static_texture": 45.536,
+    "flow_volume": 24.51733333333333
+  },
+  "formal_candidates": {
+    "ground_stones_no_lights": {
+      "candidate_balanced": {
+        "run_count": 3,
+        "values_fps": [
+          116.607,
+          116.601,
+          116.734
+        ],
+        "mean_fps": 116.64733333333334,
+        "stdev_fps": 0.07511546667187084,
+        "mean_frame_time_ms_from_average_fps": 8.572849215012774,
+        "hud_mean_fps": 115.47433333333333,
+        "kit_updates_per_second": 116.73066666666666,
+        "timeline_sim_per_wall": 0.0,
+        "gpu_utilization_mean_percent": 76.22233333333334,
+        "graphics_clock_mean_mhz": 1635.5646666666664,
+        "power_mean_w": 209.00133333333335,
+        "vram_max_mib": 3898.0
+      },
+      "candidate_performance": {
+        "run_count": 3,
+        "values_fps": [
+          116.747,
+          116.514,
+          116.762
+        ],
+        "mean_fps": 116.67433333333334,
+        "stdev_fps": 0.13905514493658275,
+        "mean_frame_time_ms_from_average_fps": 8.570865343134594,
+        "hud_mean_fps": 115.56866666666667,
+        "kit_updates_per_second": 116.75733333333334,
+        "timeline_sim_per_wall": 0.0,
+        "gpu_utilization_mean_percent": 61.76133333333333,
+        "graphics_clock_mean_mhz": 1768.312,
+        "power_mean_w": 208.8613333333333,
+        "vram_max_mib": 3860.0
+      }
+    },
+    "ground_stones_lit": {
+      "candidate_balanced": {
+        "run_count": 3,
+        "values_fps": [
+          116.764,
+          116.744,
+          116.475
+        ],
+        "mean_fps": 116.661,
+        "stdev_fps": 0.1613908299749419,
+        "mean_frame_time_ms_from_average_fps": 8.57184491818174,
+        "hud_mean_fps": 115.53566666666666,
+        "kit_updates_per_second": 116.74433333333333,
+        "timeline_sim_per_wall": 0.0,
+        "gpu_utilization_mean_percent": 77.55433333333333,
+        "graphics_clock_mean_mhz": 1627.8010000000002,
+        "power_mean_w": 209.20766666666668,
+        "vram_max_mib": 3898.0
+      },
+      "candidate_performance": {
+        "run_count": 3,
+        "values_fps": [
+          116.735,
+          116.624,
+          116.766
+        ],
+        "mean_fps": 116.70833333333333,
+        "stdev_fps": 0.07466145815167306,
+        "mean_frame_time_ms_from_average_fps": 8.568368439842914,
+        "hud_mean_fps": 115.59166666666665,
+        "kit_updates_per_second": 116.75,
+        "timeline_sim_per_wall": 0.0,
+        "gpu_utilization_mean_percent": 62.65566666666666,
+        "graphics_clock_mean_mhz": 1755.1666666666667,
+        "power_mean_w": 208.77566666666667,
+        "vram_max_mib": 3839.0
+      }
+    },
+    "cylinder20_solid": {
+      "candidate_balanced": {
+        "run_count": 3,
+        "values_fps": [
+          116.693,
+          116.729,
+          116.738
+        ],
+        "mean_fps": 116.71999999999998,
+        "stdev_fps": 0.023811761799582217,
+        "mean_frame_time_ms_from_average_fps": 8.567511994516794,
+        "hud_mean_fps": 115.62466666666667,
+        "kit_updates_per_second": 116.71999999999998,
+        "timeline_sim_per_wall": 0.0,
+        "gpu_utilization_mean_percent": 80.645,
+        "graphics_clock_mean_mhz": 1613.5646666666664,
+        "power_mean_w": 209.289,
+        "vram_max_mib": 3897.0
+      },
+      "candidate_performance": {
+        "run_count": 3,
+        "values_fps": [
+          116.737,
+          116.603,
+          116.75
+        ],
+        "mean_fps": 116.69666666666666,
+        "stdev_fps": 0.08137772012863007,
+        "mean_frame_time_ms_from_average_fps": 8.569225056414066,
+        "hud_mean_fps": 115.61233333333332,
+        "kit_updates_per_second": 116.73833333333333,
+        "timeline_sim_per_wall": 0.0,
+        "gpu_utilization_mean_percent": 61.11600000000001,
+        "graphics_clock_mean_mhz": 1754.1826666666666,
+        "power_mean_w": 208.51766666666666,
+        "vram_max_mib": 3843.0
+      }
+    },
+    "v3mesh20_static_texture": {
+      "candidate_balanced": {
+        "run_count": 3,
+        "values_fps": [
+          116.795,
+          116.737,
+          116.728
+        ],
+        "mean_fps": 116.75333333333333,
+        "stdev_fps": 0.03636390151418892,
+        "mean_frame_time_ms_from_average_fps": 8.565065951007822,
+        "hud_mean_fps": 115.66466666666668,
+        "kit_updates_per_second": 116.75333333333333,
+        "timeline_sim_per_wall": 0.0,
+        "gpu_utilization_mean_percent": 80.5,
+        "graphics_clock_mean_mhz": 1626.8333333333333,
+        "power_mean_w": 209.19766666666666,
+        "vram_max_mib": 3911.0
+      },
+      "candidate_performance": {
+        "run_count": 3,
+        "values_fps": [
+          116.562,
+          116.855,
+          116.874
+        ],
+        "mean_fps": 116.76366666666667,
+        "stdev_fps": 0.17490664176449575,
+        "mean_frame_time_ms_from_average_fps": 8.564307961095205,
+        "hud_mean_fps": 115.633,
+        "kit_updates_per_second": 116.76366666666667,
+        "timeline_sim_per_wall": 0.0,
+        "gpu_utilization_mean_percent": 63.27766666666667,
+        "graphics_clock_mean_mhz": 1752.8333333333333,
+        "power_mean_w": 208.8646666666667,
+        "vram_max_mib": 3855.0
+      }
+    },
+    "flow_volume": {
+      "candidate_balanced": {
+        "run_count": 3,
+        "values_fps": [
+          45.202,
+          45.704,
+          45.329
+        ],
+        "mean_fps": 45.41166666666667,
+        "stdev_fps": 0.26101021691369447,
+        "mean_frame_time_ms_from_average_fps": 22.020772929129812,
+        "hud_mean_fps": 45.00833333333333,
+        "kit_updates_per_second": 47.659,
+        "timeline_sim_per_wall": 0.7943199999999999,
+        "gpu_utilization_mean_percent": 74.352,
+        "graphics_clock_mean_mhz": 1759.129,
+        "power_mean_w": 206.6483333333333,
+        "vram_max_mib": 6163.0
+      },
+      "candidate_performance": {
+        "run_count": 3,
+        "values_fps": [
+          48.123,
+          47.86,
+          47.59
+        ],
+        "mean_fps": 47.85766666666667,
+        "stdev_fps": 0.2665076609280337,
+        "mean_frame_time_ms_from_average_fps": 20.89529368335272,
+        "hud_mean_fps": 47.17666666666667,
+        "kit_updates_per_second": 50.062666666666665,
+        "timeline_sim_per_wall": 0.83438,
+        "gpu_utilization_mean_percent": 68.54466666666666,
+        "graphics_clock_mean_mhz": 1814.6076666666668,
+        "power_mean_w": 205.69733333333332,
+        "vram_max_mib": 6105.0
+      }
+    }
+  },
+  "individual_preflight": {
+    "balanced": {
+      "fps": 40.579,
+      "frame_time_ms": 24.64328840040415,
+      "frame_time_delta_ms_vs_baseline": -18.47316915144339
+    },
+    "baseline": {
+      "fps": 23.193,
+      "frame_time_ms": 43.11645755184754,
+      "frame_time_delta_ms_vs_baseline": 0.0
+    },
+    "performance": {
+      "fps": 44.517,
+      "frame_time_ms": 22.46332861603432,
+      "frame_time_delta_ms_vs_baseline": -20.653128935813218
+    },
+    "max_bounces_2": {
+      "fps": 30.688,
+      "frame_time_ms": 32.58602711157456,
+      "frame_time_delta_ms_vs_baseline": -10.53043044027298
+    },
+    "cache_on": {
+      "fps": 23.287,
+      "frame_time_ms": 42.942414222527596,
+      "frame_time_delta_ms_vs_baseline": -0.17404332931994304
+    },
+    "direct_spp_1": {
+      "fps": 23.121,
+      "frame_time_ms": 43.25072444963453,
+      "frame_time_delta_ms_vs_baseline": 0.1342668977869934
+    },
+    "dome_samples_1": {
+      "fps": 23.191,
+      "frame_time_ms": 43.1201759303178,
+      "frame_time_delta_ms_vs_baseline": 0.003718378470260575
+    },
+    "translucency_off": {
+      "fps": 23.094,
+      "frame_time_ms": 43.301290378453274,
+      "frame_time_delta_ms_vs_baseline": 0.18483282660573508
+    },
+    "sss_off": {
+      "fps": 23.171,
+      "frame_time_ms": 43.15739501963662,
+      "frame_time_delta_ms_vs_baseline": 0.04093746778907814
+    },
+    "specular_bounces_1": {
+      "fps": 23.028,
+      "frame_time_ms": 43.425395171096056,
+      "frame_time_delta_ms_vs_baseline": 0.3089376192485176
+    },
+    "minimal": {
+      "fps": 60.081,
+      "frame_time_ms": 16.6441970007157,
+      "frame_time_delta_ms_vs_baseline": -26.47226055113184
+    }
+  },
+  "ao_off_native_crash": {
+    "classification": "native_crash_excluded",
+    "candidate_status": "held",
+    "continuous_rerun_performed": false,
+    "analysis": {
+      "schema": "campfire.phasev3tl.native-crash-analysis.v1",
+      "status": "ok",
+      "archive": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tl-crash-20260810-132830\\070438c3-66a2-4bcd-8b0c-62ef434b0a94.dmp.zip",
+      "archive_size": 1600508,
+      "archive_sha256": "5C0034D424BFDF9148595BAC034FE5EDB0CDEAE1D6FA0ABCD91F91AC47F3D5C4",
+      "minidump_member": "070438c3-66a2-4bcd-8b0c-62ef434b0a94.dmp",
+      "minidump_size": 8866659,
+      "stream_types": [
+        0,
+        3,
+        4,
+        5,
+        6,
+        7,
+        12,
+        14,
+        15,
+        17,
+        21,
+        22,
+        24,
+        1197932545
+      ],
+      "exception": {
+        "thread_id": 41644,
+        "code": "0xC0000005",
+        "flags": "0x00000000",
+        "address": "0x00007FFAC5216960",
+        "parameters": [
+          "0x0000000000000000",
+          "0x0000000000000020"
+        ],
+        "fault_location": {
+          "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.usd.core-1.8.6+698af100.wx64.r\\bin\\fabric\\omni.fabric.plugin.dll",
+          "module_base": "0x00007FFAC5140000",
+          "offset": "0xD6960",
+          "address": "0x00007FFAC5216960"
+        },
+        "rip_location": {
+          "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.usd.core-1.8.6+698af100.wx64.r\\bin\\fabric\\omni.fabric.plugin.dll",
+          "module_base": "0x00007FFAC5140000",
+          "offset": "0xD6960",
+          "address": "0x00007FFAC5216960"
+        },
+        "rsp": "0x00000029170FD378",
+        "rbp": "0x00000029170FD480"
+      },
+      "native_stack": {
+        "status": "heuristic_module_address_scan_only",
+        "reason": "WinDbg/CDB/DumpChk and matching private symbols are unavailable; optimized frames cannot be authoritatively unwound",
+        "candidates": [
+          {
+            "index": 0,
+            "source": "instruction_pointer",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.usd.core-1.8.6+698af100.wx64.r\\bin\\fabric\\omni.fabric.plugin.dll",
+            "module_base": "0x00007FFAC5140000",
+            "offset": "0xD6960",
+            "address": "0x00007FFAC5216960"
+          },
+          {
+            "index": 1,
+            "source": "stack_scan_rsp+0x0",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.hydra.usdrt_delegate-7.5.2+698af100.wx64.r.cp312\\plugins\\usdrt.hydra.fabric_scene_delegate.plugin.dll",
+            "module_base": "0x00007FFAA9260000",
+            "offset": "0x105F35",
+            "address": "0x00007FFAA9365F35"
+          },
+          {
+            "index": 2,
+            "source": "stack_scan_rsp+0x18",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.hydra.usdrt_delegate-7.5.2+698af100.wx64.r.cp312\\plugins\\usdrt.hydra.fabric_scene_delegate.plugin.dll",
+            "module_base": "0x00007FFAA9260000",
+            "offset": "0x1D74D0",
+            "address": "0x00007FFAA94374D0"
+          },
+          {
+            "index": 3,
+            "source": "stack_scan_rsp+0x50",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\kernel\\plugins\\carb.dictionary.plugin.dll",
+            "module_base": "0x00007FFCC9DF0000",
+            "offset": "0x1792C",
+            "address": "0x00007FFCC9E0792C"
+          },
+          {
+            "index": 4,
+            "source": "stack_scan_rsp+0x68",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\kernel\\plugins\\carb.dictionary.plugin.dll",
+            "module_base": "0x00007FFCC9DF0000",
+            "offset": "0x3B030",
+            "address": "0x00007FFCC9E2B030"
+          },
+          {
+            "index": 5,
+            "source": "stack_scan_rsp+0x98",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.hydra.usdrt_delegate-7.5.2+698af100.wx64.r.cp312\\plugins\\usdrt.hydra.fabric_scene_delegate.plugin.dll",
+            "module_base": "0x00007FFAA9260000",
+            "offset": "0x1D54F0",
+            "address": "0x00007FFAA94354F0"
+          },
+          {
+            "index": 6,
+            "source": "stack_scan_rsp+0xC8",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.hydra.usdrt_delegate-7.5.2+698af100.wx64.r.cp312\\plugins\\usdrt.hydra.fabric_scene_delegate.plugin.dll",
+            "module_base": "0x00007FFAA9260000",
+            "offset": "0x1D9068",
+            "address": "0x00007FFAA9439068"
+          },
+          {
+            "index": 7,
+            "source": "stack_scan_rsp+0xE0",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\kernel\\plugins\\carb.dictionary.plugin.dll",
+            "module_base": "0x00007FFCC9DF0000",
+            "offset": "0xC5FE",
+            "address": "0x00007FFCC9DFC5FE"
+          },
+          {
+            "index": 8,
+            "source": "stack_scan_rsp+0xF8",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.hydra.usdrt_delegate-7.5.2+698af100.wx64.r.cp312\\plugins\\usdrt.hydra.fabric_scene_delegate.plugin.dll",
+            "module_base": "0x00007FFAA9260000",
+            "offset": "0x1D9048",
+            "address": "0x00007FFAA9439048"
+          },
+          {
+            "index": 9,
+            "source": "stack_scan_rsp+0x110",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.hydra.usdrt_delegate-7.5.2+698af100.wx64.r.cp312\\plugins\\usdrt.hydra.fabric_scene_delegate.plugin.dll",
+            "module_base": "0x00007FFAA9260000",
+            "offset": "0x1D75D0",
+            "address": "0x00007FFAA94375D0"
+          },
+          {
+            "index": 10,
+            "source": "stack_scan_rsp+0x150",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\carb.dll",
+            "module_base": "0x00007FFCAA740000",
+            "offset": "0x52CEE",
+            "address": "0x00007FFCAA792CEE"
+          },
+          {
+            "index": 11,
+            "source": "stack_scan_rsp+0x160",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\kernel\\plugins\\carb.dictionary.plugin.dll",
+            "module_base": "0x00007FFCC9DF0000",
+            "offset": "0x90AF",
+            "address": "0x00007FFCC9DF90AF"
+          },
+          {
+            "index": 12,
+            "source": "stack_scan_rsp+0x1C0",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\kernel\\plugins\\carb.dictionary.plugin.dll",
+            "module_base": "0x00007FFCC9DF0000",
+            "offset": "0x160A7",
+            "address": "0x00007FFCC9E060A7"
+          },
+          {
+            "index": 13,
+            "source": "stack_scan_rsp+0x1F0",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.hydra.usdrt_delegate-7.5.2+698af100.wx64.r.cp312\\plugins\\usdrt.hydra.fabric_scene_delegate.plugin.dll",
+            "module_base": "0x00007FFAA9260000",
+            "offset": "0x1D6EE8",
+            "address": "0x00007FFAA9436EE8"
+          },
+          {
+            "index": 14,
+            "source": "stack_scan_rsp+0x218",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.hydra.usdrt_delegate-7.5.2+698af100.wx64.r.cp312\\plugins\\usdrt.hydra.fabric_scene_delegate.plugin.dll",
+            "module_base": "0x00007FFAA9260000",
+            "offset": "0x1D6EF8",
+            "address": "0x00007FFAA9436EF8"
+          },
+          {
+            "index": 15,
+            "source": "stack_scan_rsp+0x240",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\carb.dll",
+            "module_base": "0x00007FFCAA740000",
+            "offset": "0x7C3C9",
+            "address": "0x00007FFCAA7BC3C9"
+          },
+          {
+            "index": 16,
+            "source": "stack_scan_rsp+0x290",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.hydra.usdrt_delegate-7.5.2+698af100.wx64.r.cp312\\plugins\\usdrt.hydra.fabric_scene_delegate.plugin.dll",
+            "module_base": "0x00007FFAA9260000",
+            "offset": "0x1D5F60",
+            "address": "0x00007FFAA9435F60"
+          },
+          {
+            "index": 17,
+            "source": "stack_scan_rsp+0x2C0",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\carb.dll",
+            "module_base": "0x00007FFCAA740000",
+            "offset": "0x3D93A",
+            "address": "0x00007FFCAA77D93A"
+          },
+          {
+            "index": 18,
+            "source": "stack_scan_rsp+0x300",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\carb.dll",
+            "module_base": "0x00007FFCAA740000",
+            "offset": "0x3D87D",
+            "address": "0x00007FFCAA77D87D"
+          },
+          {
+            "index": 19,
+            "source": "stack_scan_rsp+0x330",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\kernel\\plugins\\carb.dictionary.plugin.dll",
+            "module_base": "0x00007FFCC9DF0000",
+            "offset": "0x125C4",
+            "address": "0x00007FFCC9E025C4"
+          },
+          {
+            "index": 20,
+            "source": "stack_scan_rsp+0x338",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\carb.dll",
+            "module_base": "0x00007FFCAA740000",
+            "offset": "0xCBE80",
+            "address": "0x00007FFCAA80BE80"
+          },
+          {
+            "index": 21,
+            "source": "stack_scan_rsp+0x340",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\carb.dll",
+            "module_base": "0x00007FFCAA740000",
+            "offset": "0x8CD19",
+            "address": "0x00007FFCAA7CCD19"
+          },
+          {
+            "index": 22,
+            "source": "stack_scan_rsp+0x370",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.hydra.usdrt_delegate-7.5.2+698af100.wx64.r.cp312\\bin\\omni.hydra.usdrt_delegate.plugin.dll",
+            "module_base": "0x00007FFAC3FF0000",
+            "offset": "0xDCE0",
+            "address": "0x00007FFAC3FFDCE0"
+          },
+          {
+            "index": 23,
+            "source": "stack_scan_rsp+0x400",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\carb.dll",
+            "module_base": "0x00007FFCAA740000",
+            "offset": "0x4D84B",
+            "address": "0x00007FFCAA78D84B"
+          },
+          {
+            "index": 24,
+            "source": "stack_scan_rsp+0x470",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\carb.dll",
+            "module_base": "0x00007FFCAA740000",
+            "offset": "0x8CCBC",
+            "address": "0x00007FFCAA7CCCBC"
+          },
+          {
+            "index": 25,
+            "source": "stack_scan_rsp+0x4D8",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.hydra.usdrt_delegate-7.5.2+698af100.wx64.r.cp312\\plugins\\usdrt.hydra.fabric_scene_delegate.plugin.dll",
+            "module_base": "0x00007FFAA9260000",
+            "offset": "0x1D5EB0",
+            "address": "0x00007FFAA9435EB0"
+          },
+          {
+            "index": 26,
+            "source": "stack_scan_rsp+0x4F0",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\carb.dll",
+            "module_base": "0x00007FFCAA740000",
+            "offset": "0x6E16A",
+            "address": "0x00007FFCAA7AE16A"
+          },
+          {
+            "index": 27,
+            "source": "stack_scan_rsp+0x500",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.hydra.usdrt_delegate-7.5.2+698af100.wx64.r.cp312\\plugins\\usdrt.hydra.fabric_scene_delegate.plugin.dll",
+            "module_base": "0x00007FFAA9260000",
+            "offset": "0x1D6018",
+            "address": "0x00007FFAA9436018"
+          },
+          {
+            "index": 28,
+            "source": "stack_scan_rsp+0x518",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\carb.dll",
+            "module_base": "0x00007FFCAA740000",
+            "offset": "0xAA708",
+            "address": "0x00007FFCAA7EA708"
+          },
+          {
+            "index": 29,
+            "source": "stack_scan_rsp+0x540",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\kernel\\plugins\\carb.tasking.plugin.dll",
+            "module_base": "0x00007FFC193C0000",
+            "offset": "0x195D5",
+            "address": "0x00007FFC193D95D5"
+          },
+          {
+            "index": 30,
+            "source": "stack_scan_rsp+0x570",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\carb.dll",
+            "module_base": "0x00007FFCAA740000",
+            "offset": "0xF09A",
+            "address": "0x00007FFCAA74F09A"
+          },
+          {
+            "index": 31,
+            "source": "stack_scan_rsp+0x5D0",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\kernel\\plugins\\carb.dictionary.plugin.dll",
+            "module_base": "0x00007FFCC9DF0000",
+            "offset": "0x10AEF",
+            "address": "0x00007FFCC9E00AEF"
+          },
+          {
+            "index": 32,
+            "source": "stack_scan_rsp+0x5E0",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\carb.dll",
+            "module_base": "0x00007FFCAA740000",
+            "offset": "0x143DB",
+            "address": "0x00007FFCAA7543DB"
+          },
+          {
+            "index": 33,
+            "source": "stack_scan_rsp+0x620",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\carb.dll",
+            "module_base": "0x00007FFCAA740000",
+            "offset": "0x14AA1",
+            "address": "0x00007FFCAA754AA1"
+          },
+          {
+            "index": 34,
+            "source": "stack_scan_rsp+0x650",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\carb.dll",
+            "module_base": "0x00007FFCAA740000",
+            "offset": "0x147B5",
+            "address": "0x00007FFCAA7547B5"
+          },
+          {
+            "index": 35,
+            "source": "stack_scan_rsp+0x680",
+            "module": "C:\\Windows\\System32\\KERNELBASE.dll",
+            "module_base": "0x00007FFD10ED0000",
+            "offset": "0x5A680",
+            "address": "0x00007FFD10F2A680"
+          },
+          {
+            "index": 36,
+            "source": "stack_scan_rsp+0x6A0",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.hydra.usdrt_delegate-7.5.2+698af100.wx64.r.cp312\\bin\\omni.hydra.usdrt_delegate.plugin.dll",
+            "module_base": "0x00007FFAC3FF0000",
+            "offset": "0x0",
+            "address": "0x00007FFAC3FF0000"
+          },
+          {
+            "index": 37,
+            "source": "stack_scan_rsp+0x6C0",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\carb.dll",
+            "module_base": "0x00007FFCAA740000",
+            "offset": "0x19735",
+            "address": "0x00007FFCAA759735"
+          },
+          {
+            "index": 38,
+            "source": "stack_scan_rsp+0x7B8",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\mimalloc.dll",
+            "module_base": "0x00007FFCE4E40000",
+            "offset": "0x21C80",
+            "address": "0x00007FFCE4E61C80"
+          },
+          {
+            "index": 39,
+            "source": "stack_scan_rsp+0x7C0",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\mimalloc.dll",
+            "module_base": "0x00007FFCE4E40000",
+            "offset": "0xDECD",
+            "address": "0x00007FFCE4E4DECD"
+          },
+          {
+            "index": 40,
+            "source": "stack_scan_rsp+0x7F0",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\mimalloc.dll",
+            "module_base": "0x00007FFCE4E40000",
+            "offset": "0xD725",
+            "address": "0x00007FFCE4E4D725"
+          },
+          {
+            "index": 41,
+            "source": "stack_scan_rsp+0x830",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\mimalloc.dll",
+            "module_base": "0x00007FFCE4E40000",
+            "offset": "0x1208",
+            "address": "0x00007FFCE4E41208"
+          },
+          {
+            "index": 42,
+            "source": "stack_scan_rsp+0x878",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.hydra.usdrt_delegate-7.5.2+698af100.wx64.r.cp312\\bin\\omni.hydra.usdrt_delegate.plugin.dll",
+            "module_base": "0x00007FFAC3FF0000",
+            "offset": "0x90A0",
+            "address": "0x00007FFAC3FF90A0"
+          },
+          {
+            "index": 43,
+            "source": "stack_scan_rsp+0x8C0",
+            "module": "C:\\Windows\\System32\\ntdll.dll",
+            "module_base": "0x00007FFD13870000",
+            "offset": "0x76C6F",
+            "address": "0x00007FFD138E6C6F"
+          },
+          {
+            "index": 44,
+            "source": "stack_scan_rsp+0x8E0",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\carb.dll",
+            "module_base": "0x00007FFCAA740000",
+            "offset": "0x4DCC1",
+            "address": "0x00007FFCAA78DCC1"
+          },
+          {
+            "index": 45,
+            "source": "stack_scan_rsp+0x910",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\carb.dll",
+            "module_base": "0x00007FFCAA740000",
+            "offset": "0x4D882",
+            "address": "0x00007FFCAA78D882"
+          },
+          {
+            "index": 46,
+            "source": "stack_scan_rsp+0x950",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\carb.dll",
+            "module_base": "0x00007FFCAA740000",
+            "offset": "0x3A0FC",
+            "address": "0x00007FFCAA77A0FC"
+          },
+          {
+            "index": 47,
+            "source": "stack_scan_rsp+0x958",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.hydra.usdrt_delegate-7.5.2+698af100.wx64.r.cp312\\bin\\omni.hydra.usdrt_delegate.plugin.dll",
+            "module_base": "0x00007FFAC3FF0000",
+            "offset": "0x13CB8",
+            "address": "0x00007FFAC4003CB8"
+          },
+          {
+            "index": 48,
+            "source": "stack_scan_rsp+0x980",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\kernel\\plugins\\carb.dictionary.plugin.dll",
+            "module_base": "0x00007FFCC9DF0000",
+            "offset": "0x1197D",
+            "address": "0x00007FFCC9E0197D"
+          },
+          {
+            "index": 49,
+            "source": "stack_scan_rsp+0x990",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\kernel\\plugins\\carb.dictionary.plugin.dll",
+            "module_base": "0x00007FFCC9DF0000",
+            "offset": "0x1C34D",
+            "address": "0x00007FFCC9E0C34D"
+          },
+          {
+            "index": 50,
+            "source": "stack_scan_rsp+0x9B0",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.usd.libs-1.0.3+698af100.wx64.r.cp312\\bin\\usd_usd.dll",
+            "module_base": "0x00007FFAE3A80000",
+            "offset": "0xBAA9C",
+            "address": "0x00007FFAE3B3AA9C"
+          },
+          {
+            "index": 51,
+            "source": "stack_scan_rsp+0xA20",
+            "module": "C:\\Windows\\System32\\msvcp140.dll",
+            "module_base": "0x00007FFCEB3B0000",
+            "offset": "0x129CC",
+            "address": "0x00007FFCEB3C29CC"
+          },
+          {
+            "index": 52,
+            "source": "stack_scan_rsp+0xA30",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.usd.libs-1.0.3+698af100.wx64.r.cp312\\bin\\usd_usd.dll",
+            "module_base": "0x00007FFAE3A80000",
+            "offset": "0xA1DA3",
+            "address": "0x00007FFAE3B21DA3"
+          },
+          {
+            "index": 53,
+            "source": "stack_scan_rsp+0xA40",
+            "module": "C:\\Windows\\System32\\msvcp140.dll",
+            "module_base": "0x00007FFCEB3B0000",
+            "offset": "0x1285B",
+            "address": "0x00007FFCEB3C285B"
+          },
+          {
+            "index": 54,
+            "source": "stack_scan_rsp+0xA50",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.usd.core-1.8.6+698af100.wx64.r\\bin\\fabric\\omni.fabric.plugin.dll",
+            "module_base": "0x00007FFAC5140000",
+            "offset": "0x1D17B0",
+            "address": "0x00007FFAC53117B0"
+          },
+          {
+            "index": 55,
+            "source": "stack_scan_rsp+0xA70",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.usd.libs-1.0.3+698af100.wx64.r.cp312\\bin\\usd_usd.dll",
+            "module_base": "0x00007FFAE3A80000",
+            "offset": "0x6EA772",
+            "address": "0x00007FFAE416A772"
+          },
+          {
+            "index": 56,
+            "source": "stack_scan_rsp+0xAE8",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.hydra.usdrt_delegate-7.5.2+698af100.wx64.r.cp312\\bin\\omni.hydra.usdrt_delegate.plugin.dll",
+            "module_base": "0x00007FFAC3FF0000",
+            "offset": "0xEC60",
+            "address": "0x00007FFAC3FFEC60"
+          },
+          {
+            "index": 57,
+            "source": "stack_scan_rsp+0xB10",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.hydra.usdrt_delegate-7.5.2+698af100.wx64.r.cp312\\bin\\omni.hydra.usdrt_delegate.plugin.dll",
+            "module_base": "0x00007FFAC3FF0000",
+            "offset": "0x6E2F",
+            "address": "0x00007FFAC3FF6E2F"
+          },
+          {
+            "index": 58,
+            "source": "stack_scan_rsp+0xB20",
+            "module": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\carb.dll",
+            "module_base": "0x00007FFCAA740000",
+            "offset": "0xCA670",
+            "address": "0x00007FFCAA80A670"
+          },
+          {
+            "index": 59,
+            "source": "stack_scan_rsp+0xB30",
+            "module": "C:\\Windows\\System32\\ucrtbase.dll",
+            "module_base": "0x00007FFD10A00000",
+            "offset": "0x24478",
+            "address": "0x00007FFD10A24478"
+          },
+          {
+            "index": 60,
+            "source": "stack_scan_rsp+0xB78",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.hydra.usdrt_delegate-7.5.2+698af100.wx64.r.cp312\\bin\\omni.hydra.usdrt_delegate.plugin.dll",
+            "module_base": "0x00007FFAC3FF0000",
+            "offset": "0xEE78",
+            "address": "0x00007FFAC3FFEE78"
+          },
+          {
+            "index": 61,
+            "source": "stack_scan_rsp+0xBA0",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.hydra.usdrt_delegate-7.5.2+698af100.wx64.r.cp312\\plugins\\usdrt.hydra.fabric_scene_delegate.plugin.dll",
+            "module_base": "0x00007FFAA9260000",
+            "offset": "0x204AE",
+            "address": "0x00007FFAA92804AE"
+          },
+          {
+            "index": 62,
+            "source": "stack_scan_rsp+0xBE0",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.hydra.usdrt_delegate-7.5.2+698af100.wx64.r.cp312\\bin\\omni.hydra.usdrt_delegate.plugin.dll",
+            "module_base": "0x00007FFAC3FF0000",
+            "offset": "0x4FD3",
+            "address": "0x00007FFAC3FF4FD3"
+          },
+          {
+            "index": 63,
+            "source": "stack_scan_rsp+0xCF0",
+            "module": "c:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\extscache\\omni.usd.libs-1.0.3+698af100.wx64.r.cp312\\bin\\usd_usd.dll",
+            "module_base": "0x00007FFAE3A80000",
+            "offset": "0x1C9766",
+            "address": "0x00007FFAE3C49766"
+          }
+        ]
+      },
+      "module_count": 639,
+      "limitations": [
+        "Stack candidates after RIP are aligned pointer-like values found above RSP, not an authoritative unwind.",
+        "A module/offset match does not establish root cause without symbols and a debugger unwind."
+      ]
+    },
+    "retry_artifact_status": "aborted and excluded"
+  },
+  "visual_gate": {
+    "performance_population": false,
+    "files": [
+      {
+        "file": "candidate_balanced.png",
+        "bytes": 645916,
+        "sha256": "272a53bd2cf4a4b9793703c975890c63598dd44f41b7d4c017d98c5ccad23a0d"
+      },
+      {
+        "file": "candidate_balanced_motion.mp4",
+        "bytes": 96113,
+        "sha256": "7aa39f9553a5c6eb303ea17aa49f62bca874c239298eafd98cbfc3d55000c098"
+      },
+      {
+        "file": "candidate_performance.png",
+        "bytes": 665251,
+        "sha256": "873728d7430197fa1ee320acff1127da0a8b4bd8b4cf04e6274b9e882f9e66be"
+      },
+      {
+        "file": "candidate_performance_motion.mp4",
+        "bytes": 102647,
+        "sha256": "de8863530096c8b37214bd65c931daa76f571e40c00be798a78c23a98da1498f"
+      }
+    ],
+    "balanced": "pass: geometry, shadows, V3 emission, flame and smoke remain visible during fixed and moving camera capture",
+    "performance": "conditional pass: same features remain visible; flame/smoke fine detail is slightly smoother, so fallback-only is recommended",
+    "minimal": "fail: Phase 3 Flow active-block gate failed; not a production candidate"
+  },
+  "decision": {
+    "candidate_balanced": "quality baseline candidate only; production Flow scene mean 45.41 FPS does not reach the 58-FPS near-present threshold",
+    "candidate_performance": "fallback candidate; Flow mean 47.86 FPS, still below 58",
+    "ao": "do not change until native crash boundary is understood",
+    "max_bounces_2": "strong positive contribution and retained",
+    "cache_and_optional_features": "no measurable individual benefit in the tested Flow scene and omitted from combined candidates",
+    "power_100_percent": "not executed; requires a later explicit approval"
+  },
+  "observed_facts": [
+    "Ground/stones Auto reference 17.40 ms fell to 8.57 ms with either candidate.",
+    "Cylinder20 Auto reference 21.73 ms fell to 8.57 ms.",
+    "Flow+volume Auto reference 40.79 ms fell to 22.02 ms Balanced and 20.90 ms Performance.",
+    "AO OFF crashed in omni.fabric.plugin.dll+0xD6960 during startup after scene acceleration-structure creation.",
+    "RTX Minimal reached 60.08 FPS in preflight but failed the real Phase 3 Flow active-block gate."
+  ],
+  "strong_inferences": [
+    "DLSS mode and RT2 max-bounces are the dominant tested public controls.",
+    "The AO crash is native Fabric/Hydra-boundary evidence, not a Python exception."
+  ],
+  "unconfirmed": [
+    "AO OFF versus Flow volume versus setting timing versus RTX initialization race is not isolated.",
+    "The native stack is not authoritatively unwound because WinDbg/CDB and private symbols are unavailable.",
+    "Display-present FPS and raw frame-time percentiles remain unmeasured."
+  ]
+}

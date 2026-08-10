@@ -1,5 +1,12 @@
 # Changelog
 
+- Added production-neutral Phase V3T-L lightweight RTX preset probes with an eight-consecutive-visible-frame readiness gate and effective-setting verification from bundled Kit 110.2 UI paths.
+- Measured 30/30 clean formal processes: Candidate Balanced/Performance reduced ground-and-stones from the V3T-K `17.40 ms` reference to `8.57 ms`, Cylinder20 from `21.73 ms` to `8.57 ms`, and Flow+volume from `40.79 ms` to `22.02 / 20.90 ms`; neither Flow result met the declared 58-FPS near-present gate.
+- Held AO changes after the AO-OFF Flow-volume preflight produced a native `0xC0000005` read at `omni.fabric.plugin.dll+0xD6960`; the Crash Reporter dump remains Git-ignored, while its SHA-256 and limited no-symbol stack evidence are recorded.
+- Rejected RTX Minimal as a production candidate despite a `60.081 FPS` preflight because the real Phase 3 V3 scenario failed the Flow active-block compatibility gate. Balanced/Performance visual-only V3 captures retained geometry, shadows, emission, flame, and smoke; Performance remains fallback-only.
+- Kept production defaults unchanged and did not change the 210 W power limit. The 100% comparison remains approval-gated.
+- Requalified Release build, Phase 0 RTX, all eight standard processes and `77 / 77` tests, plus six alternating V3T-C runs with identical authority hashes, zero mass-balance error, Resident revision 1200, and active wood-owned Flow blocks.
+
 - Added production-neutral Phase V3T-K using only the existing visible viewport's public `ViewportAPI.frame_info` / `fps`; 39 stage processes and 9 AA processes completed with zero stage-ID/fatal errors, no added RenderProduct/HydraTexture/capture, and the RTX 3090 power limit held at 210 W (60%).
 - Isolated the Auto-AA stage path from empty RTX `101.523 FPS` through ground/stones/lights `54.939`, 20 cylinders `46.017`, V3 Mesh `46.136`, fixed textures `45.536`, unprovided dynamic URI `44.781`, rigid STOP `44.775`, timeline PLAY `36.229`, explicitly all-OFF authored Flow `44.247`, global-OFF but active Flow subtree/settings `31.483`, simulation `24.524`, and volume `24.517 FPS`.
 - Found no V3 Mesh penalty relative to cylinders and only a `0.755 FPS` fixed-to-unprovided-dynamic difference; the ~32 FPS boundary is reproduced when global Flow and Emitter are OFF but authored Simulate/Render prims and layer Flow render settings remain active. Explicitly disabling those boundaries improved the same constructed Flow scene by `12.764 FPS`.
