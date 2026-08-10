@@ -2893,3 +2893,13 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - visible-window補助確認もnormal baseline`31.182`、no-developer`55.458 FPS`で同じ分離を示した。正式FPSは`ViewportAPI.frame_info` counterであり、HUD FPS、display-present FPS、GPU render time、raw renderer intervalは未取得・未推定である。
 - このPhaseではdeveloper dependencyをproductionから削除しない。次Phase候補はnormal本体からdeveloper bundleを外し、明示opt-inのdeveloper/debug presetへ分離してinteractive debuggingと全回帰を再検証することである。V3既定ON、CPU-source transport、Flow/wood authority、Emitter、collision、checkpoint、rollback、serializationは不変。詳細は`docs/design/normal_benchmark_fps_boundary.md`。
 - 最終回帰はRelease build、Phase 0 RTX、production normal／benchmarkのPhase 3が合格した。両appのdry／wet authority SHA-256は一致、mass balance errorは0、fatal token／dumpは0で、標準suiteは8 process・78/78件（334.3秒、collapse coverage 192.3秒）合格した。
+
+## Phase V3T-R production / Python debug split candidate
+
+### 2026-08-11: 性能分離は成立、shutdown crash gateでproduction昇格は保留
+
+- production-neutralなderived appでnormal／developer／benchmarkを各3独立process測定し、平均visible counterは`50.231 / 30.525 / 50.488 FPS`だった。normal候補はV3T-Q比`+18.021 FPS`、benchmark差`-0.257 FPS`で、debugpy listenerを明示developer起動に限定する設計の性能効果は成立した。
+- normal／benchmarkはdeveloper由来9 extensionとdebugpy listenが0、developerは9 extensionと`127.0.0.1:3000`の1 listenerを確認した。V3、Flow active block、authority SHA-256、mass balance 0は9/9で維持した。別のvisible-window 2 processも`49.185 / 31.457 FPS`で起動と終了を確認したが、実カメラ入力は自動化環境の制約で未qualified。
+- 最終の明示V3 OFF回帰試行がKit quick shutdown中に`0xC0000005`、write target `0xD0`、`usd_usdGeom.dll+0x7A171`でnative crashした。dumpは`artifacts/`に保全、SHA-256は`E0734E2F...E78701DC`、自動upload 0。同一条件を自動再試行せず、正式母集団から除外した。
+- crash/dump 0 gateが不成立のため、`campfire.simulator.kit`からdeveloper bundleを除外するcandidateは昇格せず、production appと既定値は変更しない。GPU transportは使用しておらず、debug分離／V3 OFF／Hydra teardownのどれが原因かは未確認。詳細は`docs/design/production_debug_split_candidate.md`。
+- production変更撤回後のRelease buildは`8.34 s`、Phase 0 RTXは`22.8 s`、標準suiteは8 process・`78 / 78`件（`324.2 s`、collapse `189.3 s`）合格した。

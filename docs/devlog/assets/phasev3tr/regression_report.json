@@ -1,0 +1,43 @@
+{
+  "schema": "campfire.phasev3tr.regression-report.v1",
+  "status": "safe_stop_not_promoted",
+  "release_build": {
+    "status": "passed",
+    "seconds": 8.34
+  },
+  "phase0_rtx": {
+    "status": "passed",
+    "seconds": 22.8
+  },
+  "standard_suite": {
+    "status": "passed",
+    "processes": 8,
+    "tests_passed": 78,
+    "tests_failed": 0,
+    "seconds": 324.2,
+    "collapse_coverage_seconds": 189.3
+  },
+  "candidate_formal_matrix": {
+    "status": "passed",
+    "processes": 9,
+    "native_crashes": 0,
+    "dumps": 0
+  },
+  "candidate_visible_window": {
+    "status": "partially_qualified",
+    "processes": 2,
+    "startup_and_close_passed": true,
+    "camera_input_automated": false
+  },
+  "explicit_v3_off_regression": {
+    "status": "failed_native_crash",
+    "formal_population": false,
+    "same_condition_automatically_retried": false,
+    "incident": "regression_incident.json"
+  },
+  "excluded_attempts": [
+    "An initial standard-suite invocation lost its outer supervisor to a command timeout after only 75 current-run tests were complete; it was discarded and the full suite was rerun from the beginning."
+  ],
+  "production_changed": false,
+  "latest_demo_changed": false
+}

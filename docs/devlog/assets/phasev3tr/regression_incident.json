@@ -1,0 +1,40 @@
+{
+  "schema": "campfire.phasev3tr.regression-incident.v1",
+  "status": "native_crash",
+  "formal_population": false,
+  "condition": "normal app, explicit woodVisualV3Enabled=false override while inheriting the remaining production defaults",
+  "reason_excluded": "The run terminated during Kit quick shutdown and is not a valid regression result.",
+  "native_crash_count": 1,
+  "dump_count": 1,
+  "automatic_upload_count": 0,
+  "windows_exit_code": "0xC0000005",
+  "exception": {
+    "operation": "write",
+    "target": "0xD0",
+    "module": "usd_usdGeom.dll",
+    "offset": "0x7A171",
+    "stack_boundary": "UsdGeom / UsdContext unregisterViewOverrideToHydraEngines / timeline / Kit quick shutdown",
+    "stack_confidence": "low; WinDbg/CDB and matching private symbols unavailable"
+  },
+  "local_dump": {
+    "path": "artifacts/phasev3tr-regression/v3-off/sensitive-crash-dumps/ad1c5ad1-858a-4834-a036-271a8eb8b497.dmp.zip",
+    "size_bytes": 1576253,
+    "sha256": "E0734E2FA7A3E590AA6724F81AE4BAC6E387F990E053835D2F42B041E78701DC",
+    "git_managed": false
+  },
+  "crash_reporter": {
+    "preserve_dump_requested": true,
+    "upload_dumps_on_startup": false,
+    "skip_old_dump_upload": true,
+    "force_upload": false,
+    "url": "",
+    "metadata_upload_successful": 0,
+    "metadata_last_upload_status": 0
+  },
+  "classification": {
+    "observed": "A native shutdown access violation occurred after the scenario had completed.",
+    "strong_inference": "The boundary resembles the earlier V3T-F quick-shutdown stack, but the GPU transport was not active in this run.",
+    "unconfirmed": "The debug dependency split, V3 OFF state, render hierarchy, USD/Hydra teardown ordering, and Kit 110.2 race are not isolated as causes."
+  },
+  "safety_action": "The same condition was not automatically rerun. The production dependency change is not promoted in this phase."
+}

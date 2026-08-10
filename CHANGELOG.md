@@ -1,5 +1,10 @@
 # Changelog
 
+- Measured a production-neutral Phase V3T-R debug split candidate: debugger-free normal reached `50.231 FPS`, explicit developer `30.525 FPS`, and benchmark `50.488 FPS` across nine order-rotated processes while V3, Flow, authority hashes, and zero mass error were retained.
+- Verified that normal/benchmark loaded none of the nine developer extensions and opened no debugpy listener, while the explicit developer candidate loaded all nine and listened only on `127.0.0.1:3000`. Separate visible-window runs reproduced the performance classes.
+- Withheld the production dependency change after a non-formal explicit V3-OFF regression crashed during Kit quick shutdown (`0xC0000005`, `usd_usdGeom.dll+0x7A171`). The local dump was preserved outside Git, automatic upload remained zero, and the same condition was not automatically rerun.
+- Added reproducible derived-app measurement/collection/report tooling and Phase V3T-R design/devlog evidence. No new video was created because the candidate has no intended visual difference; the verified V3T-P latest demo remains current.
+
 - Isolated Phase V3T-Q's normal/benchmark FPS boundary with four derived-app conditions across 12 order-rotated processes: developer-bundle conditions measured `32.211 / 31.998 FPS`, while no-developer conditions measured `55.427 / 56.241 FPS`; production app hashes and defaults were unchanged.
 - Reduced the bundle result to `omni.kit.debug.python` starting `debugpy.listen()`: the Python debug extension with listen disabled retained `56.010 FPS`, while default listen measured `30.832 FPS`; debug settings and developer window groups stayed in the fast class.
 - Audited effective scheduler values before PLAY, after PLAY, after warmup, and before pause. No condition-specific 30 Hz setting exists; the common simulation minimum is 30 Hz, and all formal conditions use the same main/render/present/tick/VSync contract.

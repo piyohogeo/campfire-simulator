@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="760" viewBox="0 0 1180 760">
+<rect width="1180" height="760" rx="30" fill="#08111f"/>
+<style>.title{font:700 38px sans-serif;fill:#f8fafc}.sub{font:20px sans-serif;fill:#94a3b8}.label{font:600 20px sans-serif;fill:#e2e8f0}.value{font:700 20px sans-serif;fill:#f8fafc}.note{font:19px sans-serif;fill:#cbd5e1}.good{font:700 23px sans-serif;fill:#86efac}</style>
+<text x="70" y="86" class="title">Phase V3T-R - Production / debug split</text>
+<text x="70" y="126" class="sub">Candidate Performance - V3 ON - CPU source - 1280x720 - RTX 3090 - 210 W</text>
+<text x="80" y="235" class="label">Production normal</text><rect x="320" y="204" width="502.3" height="42" rx="8" fill="#22c55e"/><text x="837.3" y="235" class="value">50.231 FPS</text><text x="80" y="347" class="label">Explicit developer</text><rect x="320" y="316" width="305.2" height="42" rx="8" fill="#f97316"/><text x="640.2" y="347" class="value">30.524 FPS</text><text x="80" y="459" class="label">Benchmark</text><rect x="320" y="428" width="504.9" height="42" rx="8" fill="#38bdf8"/><text x="839.9" y="459" class="value">50.488 FPS</text>
+<line x1="70" y1="590" x2="1110" y2="590" stroke="#334155"/>
+<text x="80" y="640" class="good">Candidate normal recovered +18.020 FPS from V3T-Q</text>
+<text x="80" y="680" class="note">Normal - benchmark: -0.257 FPS - localhost debugpy only in explicit developer app</text>
+<text x="80" y="716" class="note">PROMOTION HELD: native shutdown crash in final regression; production app remains unchanged.</text>
+</svg>
