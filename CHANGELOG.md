@@ -1,5 +1,13 @@
 # Changelog
 
+- Added Phase V3T-H's visible-viewport-only average render FPS probe after rejecting and isolating the first copied-RenderProduct approach, which emitted 14,067 `IRenderSettings::getRenderSettings failed getting a stage-id` errors before shutdown.
+- Added live and post-exit fail-fast rejection for any stage-ID error; normal process exit is no longer sufficient to qualify the render path.
+- Enumerated all 13 public `omni.stats` scopes and 274 nested nodes and found no stat matching the visible FPS HUD; audited the bundled HUD to confirm that it reads public `ViewportAPI.fps` and derives displayed frame time as `1000 / FPS`.
+- Measured the existing visible viewport with no added HydraTexture or RenderProduct across 15 clean Kit processes: average FPS was `33.0106` for Flow OFF/V3 OFF, `22.3432` for Flow ON/V3 OFF, and `23.1000` for Flow ON/V3 CPU-source; all accepted logs had zero stage-ID and fatal errors.
+- Explicitly left raw render-frame p95/p99, 1% low, frame thresholds, and display-present FPS unmeasured because Kit 110.2 exposes no public raw completion timestamp mapped safely to the visible viewport.
+- Observed CPU-source V3 Provider setter p95 `76.905 ms`, full publication p95 `79.024 ms`, Kit update rate `23.932 /s`, and timeline sim/wall `0.399` across 903 publications; the small aggregate FPS reversal versus V3 OFF is within three-run variation and is not treated as an improvement.
+- Kept production modules and defaults unchanged: V3 and GPU transport remain default OFF, the GPU production candidate remains absent, Point/rigid remain default OFF, and Sphere remains the production emitter.
+- Requalified the corrected Phase V3T-H boundary with release build `9.41 s`, Phase 0 RTX, all eight standard processes and `77 / 77` tests in `394.0 s`, V3T-C `6 / 6` OFF/ON runs with authority/Flow/RTX invariants intact, and Phase 6DQ `11 / 11` gates at revision `710`; the committed Phase 6DQ evidence was preserved.
 - Added the production-neutral Phase V3T-G shutdown-isolation probe and ran 78 independent Kit 110.2 / Flow 110.0.0 / RTX processes for CPU-source, Provider-only, Warp-only, synchronized GPU, GPU ring3, retained-resource, stage-first, and shutdown A–E boundaries.
 - Observed 78/78 normal `0x00000000` exits with no timeout, `0xC0000005`, CUDA illegal-address, device-lost, or invalid-pointer report; each process retained fsync'd boundary markers and an explicit extension `on_shutdown` begin/end record.
 - Classified the V3T-F crash as not reproduced rather than solved: no resource or shutdown-order condition produced a positive discriminator, the public Provider source-consumed fence remains unavailable, and GPU lifetime/root cause remain unconfirmed.

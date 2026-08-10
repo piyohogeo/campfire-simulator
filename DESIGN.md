@@ -2732,3 +2732,16 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 判定: Phase V3T-Fの単発crashは本matrixで再現しなかった。したがってProvider／Warp／USD-Hydra／Flowのどれにも原因を分類できず、root causeとGPU lifetime安全性は未確認のままである。0 crashを安全証明や修正完了へ読み替えない。
 - 採否: 公開Provider source-consumed fenceは引き続き存在しない。stage replacement、Provider再生成、extension disable、通常Kit quitを含む選択済み最終sequence 20回という再採用gateも未実施なので、GPU production候補は復元しない。V3は既定OFF＋CPU-source、Point／rigidは既定OFF、Sphereはproduction既定のままである。
 - 成果物: 再現runner、全process summary＋marker JSON、集計JSON、SVG、空のcrash index、設計メモを追加した。詳細は`docs/design/wood_visual_v3_shutdown_isolation.md`。次のV3T-Hでは安全gate未達のためGPU条件をskipし、通常連続render FPSのCPU条件1～3だけを測る。
+
+## Phase V3T-H visible-viewport average render FPS
+
+### 2026-08-10: 追加render経路を撤回し、既存visible viewportだけで平均FPSを測る
+
+- invalid経路: active viewportのRenderProductをsession layerへcopyし、専用HydraTextureへ接続した最初の方式は、正式9 logすべてで`IRenderSettings::getRenderSettings failed getting a stage-id`を発生させた。停止までに14,067行へ達したため全結果をinvalid隔離し、process exit 0をrender経路合格とは扱わない。runnerは同文字列をlive追尾して1件で停止し、終了後にも再検査する。
+- API audit: 公開`omni.stats`の13 scope／274 nested nodeを全列挙したが、visible HUD FPSまたは`1000/FPS`へ一致するstatは0だった。同梱`omni.kit.viewport.window` 110.0.0を監査し、HUDが公開`ViewportAPI.fps`を直接読み、frame timeをその逆数として表示することを確認した。公開`frame_info.frame_number`を既存visible viewportの平均throughputに用いる。
+- metric境界: 平均visible render FPSは60秒間の`frame_number` endpoint差／wall時間である。HUD FPSは平滑化されたoverlay sourceの平均として別記する。公開raw visible-frame completion timestampはないため、render frame p50／p95／p99／max、1% low、threshold超過、publication／非publication frame interval、display-present FPSは未計測とし、Kit updateのtimestampから捏造しない。
+- 事前gate: 追加RenderProductなしの1条件smokeはvisible frame 159→370／10.002 s、平均21.10 FPS、stage-ID error 0、fatal log 0、exit 0だった。この合格後だけ新しい正式母集団を開始した。
+- 正式実測: 20本、1280×720、30 s warmup＋60 s測定、3条件×3 rotated run、read ON/OFF 3 pairの15独立processを完走した。全15 processでstage-ID error 0、fatal log 0、追加HydraTexture／RenderProduct 0。平均FPSはFlow OFF/V3 OFF `33.0106`、Flow ON/V3 OFF `22.3432`、Flow ON/V3 CPU-source `23.1000`、HUD平均は`32.8655 / 22.2761 / 23.1252`だった。
+- V3 publication: CPU-source V3は903 publicationでProvider setter p95のrun平均`76.905 ms`、publication total p95 `79.024 ms`、Kit update `23.932 /s`、timeline sim/wall `0.399`だった。Flow ON/V3 OFFより平均render FPSが3.4%高いが、3 runのばらつき内なので改善とは判定しない。owner-thread stallとraw render-frame pacingを分離する。
+- observer overhead: FPS read ON−OFFのKit update差は`+0.477 / -0.132 / +0.265 updates/s`、平均`+0.203`で、測定可能なread slowdownはなかった。ただし3 pairでzero overheadを保証しない。
+- 非変更: production module、V3T-C、Phase 6DQ、Point／rigid、Sphere既定、Flow 110.0.0、wood authority、physics、checkpoint、serialization、revision／rollbackを変更していない。V3とGPU transportは既定OFF、GPU production候補は不在のままである。詳細は`docs/design/wood_visual_v3_normal_render_fps.md`。

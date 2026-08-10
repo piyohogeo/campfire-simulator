@@ -1,0 +1,63 @@
+{
+  "schema": "campfire.phasev3th.regression.v1",
+  "status": "ok",
+  "date": "2026-08-10",
+  "results": {
+    "release_build": {
+      "status": "passed",
+      "wall_seconds": 9.41
+    },
+    "phase0_rtx": {
+      "status": "passed",
+      "runner_wall_seconds": 19.9,
+      "rtx_ready_seconds": 17.411,
+      "resolution": [1280, 720]
+    },
+    "standard_suite": {
+      "status": "passed",
+      "processes": 8,
+      "tests_passed": 77,
+      "tests_total": 77,
+      "wall_seconds": 394.0,
+      "collapse_coverage_seconds": 236.6
+    },
+    "phasev3tc": {
+      "status": "passed",
+      "processes": 6,
+      "wall_seconds": 171.9,
+      "authority_sha256_identical": true,
+      "metrics_csv_sha256_identical": true,
+      "mass_balance_error_zero": true,
+      "resident_revision_consistent": true,
+      "flow_owner_and_peak_fuel_identical": true,
+      "flow_active_in_all_runs": true,
+      "rtx_pending_at_stop_zero": true,
+      "visual_errors": 0,
+      "v3_off_compatibility": true
+    },
+    "phase6dq": {
+      "status": "passed",
+      "wall_seconds": 44.9,
+      "gates_passed": 11,
+      "gates_total": 11,
+      "layout_representation": "rigid_frame_v1",
+      "revision": 710,
+      "committed_evidence_preserved": true
+    },
+    "gpu_production_candidate": {
+      "status": "absent",
+      "searched_symbols": [
+        "woodVisualV3GpuTransportEnabled",
+        "gpu_transport_enabled",
+        "set_bytes_data_from_gpu"
+      ]
+    }
+  },
+  "excluded_attempts": [
+    {
+      "name": "short-timeout standard-suite invocation",
+      "reason": "The caller closed stdout after 3.9 seconds, causing repo_test OSError 22. The residual Kit process was stopped and the complete suite was restarted from the beginning."
+    }
+  ],
+  "production_changed": false
+}

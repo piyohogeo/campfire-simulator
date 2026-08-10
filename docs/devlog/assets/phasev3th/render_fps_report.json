@@ -1,0 +1,1102 @@
+{
+  "schema": "campfire.phasev3th.visible-viewport-report.v2",
+  "status": "ok",
+  "metric_name": "average visible-viewport render FPS",
+  "metric_method": "ViewportAPI.frame_info frame_number endpoint delta divided by wall time; no additional render product",
+  "hud_overlay_metric": "mean of the public ViewportAPI.fps values used by the upper-right HUD",
+  "not_measured": [
+    "display-present FPS",
+    "raw visible-frame completion timestamps",
+    "render frame p50/p95/p99/max",
+    "1% low FPS",
+    "publication versus non-publication render-frame intervals",
+    "16.67/33.33/50/100 ms render-frame threshold counts"
+  ],
+  "why_not_measured": "Kit 110.2 exposes the visible viewport frame counter and a smoothed HUD FPS value, but no public raw completion timestamp/event mapping for that viewport. Poll timestamps are Kit-update observation times, not render completion times.",
+  "omni_stats_inventory": {
+    "exact_numeric_matches": 0,
+    "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3th-stats-inventory-smoke\\stats_inventory.json",
+    "total_node_count": 274,
+    "conclusion": "no omni.stats node numerically matched the visible viewport FPS HUD source",
+    "scope_count": 13
+  },
+  "conditions": {
+    "flow_off_v3_off": {
+      "runs": 3,
+      "wall_seconds": 180.0636287,
+      "visible_frame_counter_delta": 5944,
+      "average_visible_render_fps_weighted": 33.01055323006494,
+      "average_visible_render_fps_per_run": {
+        "count": 3,
+        "p50": 33.33841573399283,
+        "mean": 33.01054407032934,
+        "p95": 33.89252727095091,
+        "p99": 33.94178162979162,
+        "max": 33.9540952195018
+      },
+      "hud_overlay_fps_mean_per_run": {
+        "count": 3,
+        "p50": 33.18011504687352,
+        "mean": 32.865526098474696,
+        "p95": 33.63928322686353,
+        "p99": 33.680098176195976,
+        "max": 33.69030191352909
+      },
+      "hud_overlay_frame_time_mean_ms_per_run": {
+        "count": 3,
+        "p50": 30.399054507417564,
+        "mean": 30.631645434445314,
+        "p95": 31.431197352128954,
+        "p99": 31.522943382769967,
+        "max": 31.54587989043022
+      },
+      "kit_updates_per_second_per_run": {
+        "count": 3,
+        "p50": 43.95139465580864,
+        "mean": 40.20795980345206,
+        "p95": 44.8351666129296,
+        "p99": 44.91372412022924,
+        "max": 44.93336349705415
+      },
+      "kit_update_interval_p95_ms_per_run": {
+        "count": 3,
+        "p50": 26.68678,
+        "mean": 28.978984999999998,
+        "p95": 33.6339205,
+        "p99": 34.2514441,
+        "max": 34.405825
+      },
+      "timeline_sim_wall_ratio": {
+        "count": 3,
+        "p50": 0.7325232442634357,
+        "mean": 0.6701326633908297,
+        "p95": 0.7472527768821178,
+        "p99": 0.7485620686704451,
+        "max": 0.7488893916175269
+      },
+      "v3_publications": 0,
+      "cpu_provider_setter_p95_ms_per_run": {
+        "count": null,
+        "p50": null,
+        "mean": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "publication_total_p95_ms_per_run": {
+        "count": null,
+        "p50": null,
+        "mean": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "active_blocks_final": {
+        "count": 3,
+        "p50": 0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "max": 0
+      },
+      "fatal_log_count": 0,
+      "read_overflow": 0,
+      "gpu_util_mean_percent": {
+        "count": 3,
+        "p50": 78.005,
+        "mean": 76.45366666666666,
+        "p95": 81.24319999999999,
+        "p99": 81.53103999999999,
+        "max": 81.603
+      },
+      "gpu_memory_max_mib": {
+        "count": 3,
+        "p50": 5583,
+        "mean": 5618.333333333333,
+        "p95": 5715.3,
+        "p99": 5727.06,
+        "max": 5730
+      }
+    },
+    "flow_on_v3_off": {
+      "runs": 3,
+      "wall_seconds": 180.0545567,
+      "visible_frame_counter_delta": 4023,
+      "average_visible_render_fps_weighted": 22.343227928982483,
+      "average_visible_render_fps_per_run": {
+        "count": 3,
+        "p50": 21.74376910552512,
+        "mean": 22.343235458874386,
+        "p95": 23.46813918681051,
+        "p99": 23.621416527369213,
+        "max": 23.65973586250889
+      },
+      "hud_overlay_fps_mean_per_run": {
+        "count": 3,
+        "p50": 21.664290417118245,
+        "mean": 22.276092059583533,
+        "p95": 23.410425904029445,
+        "p99": 23.56563794731044,
+        "max": 23.604440958130688
+      },
+      "hud_overlay_frame_time_mean_ms_per_run": {
+        "count": 3,
+        "p50": 46.257986047499294,
+        "mean": 45.067778146322404,
+        "p95": 46.44137101757194,
+        "p99": 46.457671903800616,
+        "max": 46.46174712535779
+      },
+      "kit_updates_per_second_per_run": {
+        "count": 3,
+        "p50": 39.95349073790197,
+        "mean": 36.00016028405185,
+        "p95": 40.254958520107266,
+        "p99": 40.28175565630329,
+        "max": 40.288454940352295
+      },
+      "kit_update_interval_p95_ms_per_run": {
+        "count": 3,
+        "p50": 31.17578,
+        "mean": 34.507306666666665,
+        "p95": 40.276328,
+        "p99": 41.0852656,
+        "max": 41.2875
+      },
+      "timeline_sim_wall_ratio": {
+        "count": 3,
+        "p50": 0.6658915122983283,
+        "mean": 0.6000026714008301,
+        "p95": 0.6709159753350828,
+        "p99": 0.6713625942716833,
+        "max": 0.6714742490058334
+      },
+      "v3_publications": 0,
+      "cpu_provider_setter_p95_ms_per_run": {
+        "count": null,
+        "p50": null,
+        "mean": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "publication_total_p95_ms_per_run": {
+        "count": null,
+        "p50": null,
+        "mean": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "active_blocks_final": {
+        "count": 3,
+        "p50": 187,
+        "mean": 185.66666666666666,
+        "p95": 199.6,
+        "p99": 200.72,
+        "max": 201
+      },
+      "fatal_log_count": 0,
+      "read_overflow": 0,
+      "gpu_util_mean_percent": {
+        "count": 3,
+        "p50": 81.052,
+        "mean": 81.44200000000001,
+        "p95": 82.61890000000001,
+        "p99": 82.75818000000001,
+        "max": 82.793
+      },
+      "gpu_memory_max_mib": {
+        "count": 3,
+        "p50": 6776,
+        "mean": 6770.333333333333,
+        "p95": 6820.1,
+        "p99": 6824.02,
+        "max": 6825
+      }
+    },
+    "flow_on_v3_cpu": {
+      "runs": 3,
+      "wall_seconds": 180.2593823,
+      "visible_frame_counter_delta": 4164,
+      "average_visible_render_fps_weighted": 23.100045872064435,
+      "average_visible_render_fps_per_run": {
+        "count": 3,
+        "p50": 23.081270730157495,
+        "mean": 23.10006219885936,
+        "p95": 23.251928367257776,
+        "p99": 23.267097935000024,
+        "max": 23.270890326935586
+      },
+      "hud_overlay_fps_mean_per_run": {
+        "count": 3,
+        "p50": 23.08851902925179,
+        "mean": 23.12518468202727,
+        "p95": 23.261754068350655,
+        "p99": 23.277152738492777,
+        "max": 23.281002406028307
+      },
+      "hud_overlay_frame_time_mean_ms_per_run": {
+        "count": 3,
+        "p50": 43.391332122343506,
+        "mean": 43.32498373350412,
+        "p95": 43.539385456036655,
+        "p99": 43.552545752364935,
+        "max": 43.55583582644701
+      },
+      "kit_updates_per_second_per_run": {
+        "count": 3,
+        "p50": 23.929848242044535,
+        "mean": 23.932185218134407,
+        "p95": 23.980980292732895,
+        "p99": 23.985525363905193,
+        "max": 23.98666163169827
+      },
+      "kit_update_interval_p95_ms_per_run": {
+        "count": 3,
+        "p50": 83.87597499999998,
+        "mean": 84.12829666666666,
+        "p95": 84.58397350000001,
+        "p99": 84.64690670000002,
+        "max": 84.66264000000001
+      },
+      "timeline_sim_wall_ratio": {
+        "count": 3,
+        "p50": 0.3988308040340533,
+        "mean": 0.3988697536355514,
+        "p95": 0.3996830048788595,
+        "p99": 0.3997587560650645,
+        "max": 0.39977769386161577
+      },
+      "v3_publications": 903,
+      "cpu_provider_setter_p95_ms_per_run": {
+        "count": 3,
+        "p50": 76.8551,
+        "mean": 76.90499999999999,
+        "p95": 77.18747,
+        "p99": 77.217014,
+        "max": 77.2244
+      },
+      "publication_total_p95_ms_per_run": {
+        "count": 3,
+        "p50": 79.219,
+        "mean": 79.02393333333333,
+        "p95": 79.28983000000001,
+        "p99": 79.296126,
+        "max": 79.2977
+      },
+      "active_blocks_final": {
+        "count": 3,
+        "p50": 185,
+        "mean": 180.33333333333334,
+        "p95": 192.2,
+        "p99": 192.84,
+        "max": 193
+      },
+      "fatal_log_count": 0,
+      "read_overflow": 0,
+      "gpu_util_mean_percent": {
+        "count": 3,
+        "p50": 74.878,
+        "mean": 74.52133333333335,
+        "p95": 74.8816,
+        "p99": 74.88192000000001,
+        "max": 74.882
+      },
+      "gpu_memory_max_mib": {
+        "count": 3,
+        "p50": 6712,
+        "mean": 6743.333333333333,
+        "p95": 6799.3,
+        "p99": 6807.06,
+        "max": 6809
+      }
+    }
+  },
+  "runs": [
+    {
+      "name": "formal_flow_off_v3_off_on_r1",
+      "group": "formal",
+      "condition": "flow_off_v3_off",
+      "run": 1,
+      "read_mode": "on",
+      "wall_seconds": 60.0222149,
+      "visible_frame_counter_start": 698,
+      "visible_frame_counter_end": 2736,
+      "visible_frame_counter_delta": 2038,
+      "average_visible_render_fps": 33.9540952195018,
+      "swh_frame_counter_delta": 2699,
+      "hud_overlay_fps_readings": {
+        "count": 2697,
+        "mean": 33.69030191352909,
+        "min": 30.58797836303711,
+        "max": 38.860374450683594
+      },
+      "hud_overlay_frame_time_mean_ms": 29.95000190548815,
+      "kit_update_count": 2697,
+      "kit_updates_per_second": 44.93336349705415,
+      "kit_update_interval_ms": {
+        "count": 2696,
+        "p50": 22.2847,
+        "mean": 22.25666887982196,
+        "p95": 25.84435,
+        "p99": 27.103055,
+        "max": 28.9842
+      },
+      "frame_counter_polling": {
+        "duplicate_poll_count": 660,
+        "multi_frame_gap_count": 1,
+        "largest_observed_gap": 2,
+        "note": "Polling gaps are not raw render intervals and are not used for frame pacing percentiles."
+      },
+      "timeline_sim_wall_ratio": 0.7488893916175269,
+      "v3_publication_count": 0,
+      "cpu_provider_setter_ms": {
+        "count": null,
+        "p50": null,
+        "mean": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "publication_total_ms": {
+        "count": null,
+        "p50": null,
+        "mean": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "flow_active_blocks_final": 0,
+      "read_overflow": 0,
+      "fatal_log_counts": {
+        "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+        "Traceback (most recent call last)": 0,
+        "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+        "device lost": 0,
+        "invalid pointer": 0,
+        "Invoked with: <omni.ui._ui.ImageProvider": 0
+      },
+      "fatal_log_count": 0,
+      "gpu": {
+        "memory_min_mib": 2528,
+        "scope": "whole process at 250 ms cadence",
+        "memory_max_mib": 5583,
+        "util_mean": 81.603,
+        "util_max": 99,
+        "samples": 383,
+        "measurement_only": {
+          "util_max": 99,
+          "memory_min_mib": 5527,
+          "samples": 227,
+          "util_mean": 99,
+          "memory_max_mib": 5562
+        }
+      }
+    },
+    {
+      "name": "formal_flow_on_v3_off_on_r1",
+      "group": "formal",
+      "condition": "flow_on_v3_off",
+      "run": 1,
+      "read_mode": "on",
+      "wall_seconds": 60.0171936,
+      "visible_frame_counter_start": 468,
+      "visible_frame_counter_end": 1773,
+      "visible_frame_counter_delta": 1305,
+      "average_visible_render_fps": 21.74376910552512,
+      "swh_frame_counter_delta": 2420,
+      "hud_overlay_fps_readings": {
+        "count": 2418,
+        "mean": 21.664290417118245,
+        "min": 20.32500648498535,
+        "max": 23.751205444335938
+      },
+      "hud_overlay_frame_time_mean_ms": 46.257986047499294,
+      "kit_update_count": 2418,
+      "kit_updates_per_second": 40.288454940352295,
+      "kit_update_interval_ms": {
+        "count": 2417,
+        "p50": 25.5816,
+        "mean": 24.82282263136119,
+        "p95": 31.17578,
+        "p99": 32.83604400000001,
+        "max": 36.3694
+      },
+      "frame_counter_polling": {
+        "duplicate_poll_count": 1113,
+        "multi_frame_gap_count": 0,
+        "largest_observed_gap": 1,
+        "note": "Polling gaps are not raw render intervals and are not used for frame pacing percentiles."
+      },
+      "timeline_sim_wall_ratio": 0.6714742490058334,
+      "v3_publication_count": 0,
+      "cpu_provider_setter_ms": {
+        "count": null,
+        "p50": null,
+        "mean": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "publication_total_ms": {
+        "count": null,
+        "p50": null,
+        "mean": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "flow_active_blocks_final": 169,
+      "read_overflow": 0,
+      "fatal_log_counts": {
+        "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+        "Traceback (most recent call last)": 0,
+        "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+        "device lost": 0,
+        "invalid pointer": 0,
+        "Invoked with: <omni.ui._ui.ImageProvider": 0
+      },
+      "fatal_log_count": 0,
+      "gpu": {
+        "memory_min_mib": 2522,
+        "scope": "whole process at 250 ms cadence",
+        "memory_max_mib": 6776,
+        "util_mean": 81.052,
+        "util_max": 99,
+        "samples": 384,
+        "measurement_only": {
+          "util_max": 99,
+          "memory_min_mib": 6711,
+          "samples": 227,
+          "util_mean": 99,
+          "memory_max_mib": 6775
+        }
+      }
+    },
+    {
+      "name": "formal_flow_on_v3_cpu_on_r1",
+      "group": "formal",
+      "condition": "flow_on_v3_cpu",
+      "run": 1,
+      "read_mode": "on",
+      "wall_seconds": 60.0750543,
+      "visible_frame_counter_start": 497,
+      "visible_frame_counter_end": 1895,
+      "visible_frame_counter_delta": 1398,
+      "average_visible_render_fps": 23.270890326935586,
+      "swh_frame_counter_delta": 1440,
+      "hud_overlay_fps_readings": {
+        "count": 1441,
+        "mean": 23.281002406028307,
+        "min": 21.430355072021484,
+        "max": 25.290130615234375
+      },
+      "hud_overlay_frame_time_mean_ms": 43.02778325172182,
+      "kit_update_count": 1441,
+      "kit_updates_per_second": 23.98666163169827,
+      "kit_update_interval_ms": {
+        "count": 1440,
+        "p50": 39.41755,
+        "mean": 41.66993125,
+        "p95": 83.846275,
+        "p99": 89.05057599999996,
+        "max": 104.6802
+      },
+      "frame_counter_polling": {
+        "duplicate_poll_count": 610,
+        "multi_frame_gap_count": 290,
+        "largest_observed_gap": 4,
+        "note": "Polling gaps are not raw render intervals and are not used for frame pacing percentiles."
+      },
+      "timeline_sim_wall_ratio": 0.39977769386161577,
+      "v3_publication_count": 301,
+      "cpu_provider_setter_ms": {
+        "count": 301,
+        "p50": 65.6343,
+        "mean": 64.26737441860465,
+        "p95": 76.6355,
+        "p99": 83.8902,
+        "max": 93.108
+      },
+      "publication_total_ms": {
+        "count": 301,
+        "p50": 67.8497,
+        "mean": 66.38571893687707,
+        "p95": 78.5551,
+        "p99": 85.8554,
+        "max": 94.9958
+      },
+      "flow_active_blocks_final": 163,
+      "read_overflow": 0,
+      "fatal_log_counts": {
+        "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+        "Traceback (most recent call last)": 0,
+        "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+        "device lost": 0,
+        "invalid pointer": 0,
+        "Invoked with: <omni.ui._ui.ImageProvider": 0
+      },
+      "fatal_log_count": 0,
+      "gpu": {
+        "memory_min_mib": 2511,
+        "scope": "whole process at 250 ms cadence",
+        "memory_max_mib": 6809,
+        "util_mean": 74.878,
+        "util_max": 100,
+        "samples": 384,
+        "measurement_only": {
+          "util_max": 100,
+          "memory_min_mib": 6696,
+          "samples": 228,
+          "util_mean": 90.504,
+          "memory_max_mib": 6749
+        }
+      }
+    },
+    {
+      "name": "formal_flow_on_v3_off_on_r2",
+      "group": "formal",
+      "condition": "flow_on_v3_off",
+      "run": 2,
+      "read_mode": "on",
+      "wall_seconds": 60.0175762,
+      "visible_frame_counter_start": 515,
+      "visible_frame_counter_end": 1935,
+      "visible_frame_counter_delta": 1420,
+      "average_visible_render_fps": 23.65973586250889,
+      "swh_frame_counter_delta": 1666,
+      "hud_overlay_fps_readings": {
+        "count": 1666,
+        "mean": 23.604440958130688,
+        "min": 21.617053985595703,
+        "max": 25.921689987182617
+      },
+      "hud_overlay_frame_time_mean_ms": 42.483601266110135,
+      "kit_update_count": 1666,
+      "kit_updates_per_second": 27.758535173901276,
+      "kit_update_interval_ms": {
+        "count": 1665,
+        "p50": 36.4485,
+        "mean": 36.02410366366366,
+        "p95": 41.2875,
+        "p99": 42.81577199999998,
+        "max": 44.9197
+      },
+      "frame_counter_polling": {
+        "duplicate_poll_count": 246,
+        "multi_frame_gap_count": 0,
+        "largest_observed_gap": 1,
+        "note": "Polling gaps are not raw render intervals and are not used for frame pacing percentiles."
+      },
+      "timeline_sim_wall_ratio": 0.46264225289832833,
+      "v3_publication_count": 0,
+      "cpu_provider_setter_ms": {
+        "count": null,
+        "p50": null,
+        "mean": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "publication_total_ms": {
+        "count": null,
+        "p50": null,
+        "mean": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "flow_active_blocks_final": 187,
+      "read_overflow": 0,
+      "fatal_log_counts": {
+        "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+        "Traceback (most recent call last)": 0,
+        "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+        "device lost": 0,
+        "invalid pointer": 0,
+        "Invoked with: <omni.ui._ui.ImageProvider": 0
+      },
+      "fatal_log_count": 0,
+      "gpu": {
+        "memory_min_mib": 2485,
+        "scope": "whole process at 250 ms cadence",
+        "memory_max_mib": 6710,
+        "util_mean": 82.793,
+        "util_max": 100,
+        "samples": 381,
+        "measurement_only": {
+          "util_max": 100,
+          "memory_min_mib": 6696,
+          "samples": 228,
+          "util_mean": 100,
+          "memory_max_mib": 6710
+        }
+      }
+    },
+    {
+      "name": "formal_flow_on_v3_cpu_on_r2",
+      "group": "formal",
+      "condition": "flow_on_v3_cpu",
+      "run": 2,
+      "read_mode": "on",
+      "wall_seconds": 60.0920121,
+      "visible_frame_counter_start": 499,
+      "visible_frame_counter_end": 1886,
+      "visible_frame_counter_delta": 1387,
+      "average_visible_render_fps": 23.081270730157495,
+      "swh_frame_counter_delta": 1435,
+      "hud_overlay_fps_readings": {
+        "count": 1435,
+        "mean": 23.08851902925179,
+        "min": 21.306455612182617,
+        "max": 24.852869033813477
+      },
+      "hud_overlay_frame_time_mean_ms": 43.391332122343506,
+      "kit_update_count": 1435,
+      "kit_updates_per_second": 23.88004578066042,
+      "kit_update_interval_ms": {
+        "count": 1434,
+        "p50": 39.26535,
+        "mean": 41.826377196652714,
+        "p95": 83.87597499999998,
+        "p99": 90.049502,
+        "max": 107.9934
+      },
+      "frame_counter_polling": {
+        "duplicate_poll_count": 599,
+        "multi_frame_gap_count": 279,
+        "largest_observed_gap": 4,
+        "note": "Polling gaps are not raw render intervals and are not used for frame pacing percentiles."
+      },
+      "timeline_sim_wall_ratio": 0.39800076301098514,
+      "v3_publication_count": 301,
+      "cpu_provider_setter_ms": {
+        "count": 301,
+        "p50": 65.9432,
+        "mean": 62.539126245847186,
+        "p95": 76.8551,
+        "p99": 87.3335,
+        "max": 96.4402
+      },
+      "publication_total_ms": {
+        "count": 301,
+        "p50": 68.1364,
+        "mean": 64.72300498338869,
+        "p95": 79.2977,
+        "p99": 89.2332,
+        "max": 98.335
+      },
+      "flow_active_blocks_final": 185,
+      "read_overflow": 0,
+      "fatal_log_counts": {
+        "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+        "Traceback (most recent call last)": 0,
+        "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+        "device lost": 0,
+        "invalid pointer": 0,
+        "Invoked with: <omni.ui._ui.ImageProvider": 0
+      },
+      "fatal_log_count": 0,
+      "gpu": {
+        "memory_min_mib": 2482,
+        "scope": "whole process at 250 ms cadence",
+        "memory_max_mib": 6709,
+        "util_mean": 74.882,
+        "util_max": 100,
+        "samples": 382,
+        "measurement_only": {
+          "util_max": 100,
+          "memory_min_mib": 6692,
+          "samples": 228,
+          "util_mean": 90.61,
+          "memory_max_mib": 6709
+        }
+      }
+    },
+    {
+      "name": "formal_flow_off_v3_off_on_r2",
+      "group": "formal",
+      "condition": "flow_off_v3_off",
+      "run": 2,
+      "read_mode": "on",
+      "wall_seconds": 60.0205653,
+      "visible_frame_counter_start": 685,
+      "visible_frame_counter_end": 2590,
+      "visible_frame_counter_delta": 1905,
+      "average_visible_render_fps": 31.739121257493387,
+      "swh_frame_counter_delta": 1905,
+      "hud_overlay_fps_readings": {
+        "count": 1905,
+        "mean": 31.72616133502149,
+        "min": 30.111177444458008,
+        "max": 33.110198974609375
+      },
+      "hud_overlay_frame_time_mean_ms": 31.54587989043022,
+      "kit_update_count": 1905,
+      "kit_updates_per_second": 31.739121257493387,
+      "kit_update_interval_ms": {
+        "count": 1904,
+        "p50": 31.40325,
+        "mean": 31.505656775210085,
+        "p95": 34.405825,
+        "p99": 35.934872,
+        "max": 37.7177
+      },
+      "frame_counter_polling": {
+        "duplicate_poll_count": 0,
+        "multi_frame_gap_count": 0,
+        "largest_observed_gap": 1,
+        "note": "Polling gaps are not raw render intervals and are not used for frame pacing percentiles."
+      },
+      "timeline_sim_wall_ratio": 0.5289853542915265,
+      "v3_publication_count": 0,
+      "cpu_provider_setter_ms": {
+        "count": null,
+        "p50": null,
+        "mean": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "publication_total_ms": {
+        "count": null,
+        "p50": null,
+        "mean": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "flow_active_blocks_final": 0,
+      "read_overflow": 0,
+      "fatal_log_counts": {
+        "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+        "Traceback (most recent call last)": 0,
+        "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+        "device lost": 0,
+        "invalid pointer": 0,
+        "Invoked with: <omni.ui._ui.ImageProvider": 0
+      },
+      "fatal_log_count": 0,
+      "gpu": {
+        "memory_min_mib": 2498,
+        "scope": "whole process at 250 ms cadence",
+        "memory_max_mib": 5542,
+        "util_mean": 69.753,
+        "util_max": 92,
+        "samples": 381,
+        "measurement_only": {
+          "util_max": 92,
+          "memory_min_mib": 5498,
+          "samples": 228,
+          "util_mean": 83.719,
+          "memory_max_mib": 5518
+        }
+      }
+    },
+    {
+      "name": "formal_flow_on_v3_cpu_on_r3",
+      "group": "formal",
+      "condition": "flow_on_v3_cpu",
+      "run": 3,
+      "read_mode": "on",
+      "wall_seconds": 60.0923159,
+      "visible_frame_counter_start": 495,
+      "visible_frame_counter_end": 1874,
+      "visible_frame_counter_delta": 1379,
+      "average_visible_render_fps": 22.94802553948499,
+      "swh_frame_counter_delta": 1436,
+      "hud_overlay_fps_readings": {
+        "count": 1438,
+        "mean": 23.00603261080173,
+        "min": 21.333608627319336,
+        "max": 25.39734649658203
+      },
+      "hud_overlay_frame_time_mean_ms": 43.55583582644701,
+      "kit_update_count": 1438,
+      "kit_updates_per_second": 23.929848242044535,
+      "kit_update_interval_ms": {
+        "count": 1437,
+        "p50": 39.8816,
+        "mean": 41.76063716075157,
+        "p95": 84.66264000000001,
+        "p99": 89.86915600000002,
+        "max": 98.4821
+      },
+      "frame_counter_polling": {
+        "duplicate_poll_count": 604,
+        "multi_frame_gap_count": 280,
+        "largest_observed_gap": 4,
+        "note": "Polling gaps are not raw render intervals and are not used for frame pacing percentiles."
+      },
+      "timeline_sim_wall_ratio": 0.3988308040340533,
+      "v3_publication_count": 301,
+      "cpu_provider_setter_ms": {
+        "count": 301,
+        "p50": 65.7183,
+        "mean": 62.59036710963455,
+        "p95": 77.2244,
+        "p99": 80.9389,
+        "max": 84.0501
+      },
+      "publication_total_ms": {
+        "count": 301,
+        "p50": 67.8214,
+        "mean": 64.7565634551495,
+        "p95": 79.219,
+        "p99": 83.8772,
+        "max": 86.127
+      },
+      "flow_active_blocks_final": 193,
+      "read_overflow": 0,
+      "fatal_log_counts": {
+        "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+        "Traceback (most recent call last)": 0,
+        "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+        "device lost": 0,
+        "invalid pointer": 0,
+        "Invoked with: <omni.ui._ui.ImageProvider": 0
+      },
+      "fatal_log_count": 0,
+      "gpu": {
+        "memory_min_mib": 2492,
+        "scope": "whole process at 250 ms cadence",
+        "memory_max_mib": 6712,
+        "util_mean": 73.804,
+        "util_max": 100,
+        "samples": 383,
+        "measurement_only": {
+          "util_max": 100,
+          "memory_min_mib": 6688,
+          "samples": 228,
+          "util_mean": 90.013,
+          "memory_max_mib": 6712
+        }
+      }
+    },
+    {
+      "name": "formal_flow_off_v3_off_on_r3",
+      "group": "formal",
+      "condition": "flow_off_v3_off",
+      "run": 3,
+      "read_mode": "on",
+      "wall_seconds": 60.0208485,
+      "visible_frame_counter_start": 680,
+      "visible_frame_counter_end": 2681,
+      "visible_frame_counter_delta": 2001,
+      "average_visible_render_fps": 33.33841573399283,
+      "swh_frame_counter_delta": 2637,
+      "hud_overlay_fps_readings": {
+        "count": 2638,
+        "mean": 33.18011504687352,
+        "min": 28.55848503112793,
+        "max": 38.44770050048828
+      },
+      "hud_overlay_frame_time_mean_ms": 30.399054507417564,
+      "kit_update_count": 2638,
+      "kit_updates_per_second": 43.95139465580864,
+      "kit_update_interval_ms": {
+        "count": 2637,
+        "p50": 22.5333,
+        "mean": 22.747564884338264,
+        "p95": 26.68678,
+        "p99": 33.965224,
+        "max": 44.3929
+      },
+      "frame_counter_polling": {
+        "duplicate_poll_count": 638,
+        "multi_frame_gap_count": 1,
+        "largest_observed_gap": 2,
+        "note": "Polling gaps are not raw render intervals and are not used for frame pacing percentiles."
+      },
+      "timeline_sim_wall_ratio": 0.7325232442634357,
+      "v3_publication_count": 0,
+      "cpu_provider_setter_ms": {
+        "count": null,
+        "p50": null,
+        "mean": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "publication_total_ms": {
+        "count": null,
+        "p50": null,
+        "mean": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "flow_active_blocks_final": 0,
+      "read_overflow": 0,
+      "fatal_log_counts": {
+        "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+        "Traceback (most recent call last)": 0,
+        "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+        "device lost": 0,
+        "invalid pointer": 0,
+        "Invoked with: <omni.ui._ui.ImageProvider": 0
+      },
+      "fatal_log_count": 0,
+      "gpu": {
+        "memory_min_mib": 2508,
+        "scope": "whole process at 250 ms cadence",
+        "memory_max_mib": 5730,
+        "util_mean": 78.005,
+        "util_max": 99,
+        "samples": 382,
+        "measurement_only": {
+          "util_max": 99,
+          "memory_min_mib": 5530,
+          "samples": 227,
+          "util_mean": 98.471,
+          "memory_max_mib": 5730
+        }
+      }
+    },
+    {
+      "name": "formal_flow_on_v3_off_on_r3",
+      "group": "formal",
+      "condition": "flow_on_v3_off",
+      "run": 3,
+      "read_mode": "on",
+      "wall_seconds": 60.0197869,
+      "visible_frame_counter_start": 460,
+      "visible_frame_counter_end": 1758,
+      "visible_frame_counter_delta": 1298,
+      "average_visible_render_fps": 21.62620140858914,
+      "swh_frame_counter_delta": 2399,
+      "hud_overlay_fps_readings": {
+        "count": 2398,
+        "mean": 21.559544803501666,
+        "min": 20.3796443939209,
+        "max": 23.509082794189453
+      },
+      "hud_overlay_frame_time_mean_ms": 46.46174712535779,
+      "kit_update_count": 2398,
+      "kit_updates_per_second": 39.95349073790197,
+      "kit_update_interval_ms": {
+        "count": 2397,
+        "p50": 26.1103,
+        "mean": 25.027477555277432,
+        "p95": 31.058639999999997,
+        "p99": 32.993156000000006,
+        "max": 36.5399
+      },
+      "frame_counter_polling": {
+        "duplicate_poll_count": 1099,
+        "multi_frame_gap_count": 0,
+        "largest_observed_gap": 1,
+        "note": "Polling gaps are not raw render intervals and are not used for frame pacing percentiles."
+      },
+      "timeline_sim_wall_ratio": 0.6658915122983283,
+      "v3_publication_count": 0,
+      "cpu_provider_setter_ms": {
+        "count": null,
+        "p50": null,
+        "mean": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "publication_total_ms": {
+        "count": null,
+        "p50": null,
+        "mean": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "flow_active_blocks_final": 201,
+      "read_overflow": 0,
+      "fatal_log_counts": {
+        "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+        "Traceback (most recent call last)": 0,
+        "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+        "device lost": 0,
+        "invalid pointer": 0,
+        "Invoked with: <omni.ui._ui.ImageProvider": 0
+      },
+      "fatal_log_count": 0,
+      "gpu": {
+        "memory_min_mib": 2563,
+        "scope": "whole process at 250 ms cadence",
+        "memory_max_mib": 6825,
+        "util_mean": 80.481,
+        "util_max": 99,
+        "samples": 385,
+        "measurement_only": {
+          "util_max": 99,
+          "memory_min_mib": 6733,
+          "samples": 228,
+          "util_mean": 99,
+          "memory_max_mib": 6825
+        }
+      }
+    }
+  ],
+  "viewport_read_overhead": {
+    "pairs": [
+      {
+        "run": 1,
+        "order": [
+          "off",
+          "on"
+        ],
+        "read_on_updates_per_second": 41.21007203344025,
+        "read_off_updates_per_second": 40.73313632073066,
+        "delta_updates_per_second": 0.4769357127095901
+      },
+      {
+        "run": 2,
+        "order": [
+          "on",
+          "off"
+        ],
+        "read_on_updates_per_second": 40.865304081210915,
+        "read_off_updates_per_second": 40.99683285800561,
+        "delta_updates_per_second": -0.13152877679469555
+      },
+      {
+        "run": 3,
+        "order": [
+          "off",
+          "on"
+        ],
+        "read_on_updates_per_second": 41.29758904675145,
+        "read_off_updates_per_second": 41.03259584081076,
+        "delta_updates_per_second": 0.26499320594069076
+      }
+    ],
+    "update_rate_delta": {
+      "count": 3,
+      "p50": 0.26499320594069076,
+      "mean": 0.20346671395186178,
+      "p95": 0.45574146203270016,
+      "p99": 0.4726968625742121,
+      "max": 0.4769357127095901
+    }
+  },
+  "gpu_ring3_condition": {
+    "measured": false,
+    "reason": "Phase V3T-G did not establish repeated final lifecycle safety"
+  },
+  "separate_prior_metrics": [
+    "next_update wall",
+    "next_viewport_frame_async requested latency",
+    "publication-to-next-RTX",
+    "unique captured frame count"
+  ],
+  "production_changed": false,
+  "observed_facts": [
+    "All public omni.stats scopes and nested nodes were enumerated before the formal run; none matched the visible FPS HUD source.",
+    "The bundled ViewportFPS HUD reads public ViewportAPI.fps directly and derives its displayed frame time as 1000/FPS.",
+    "No HydraTexture, RenderProduct, PNG/video capture, profiler, or per-frame file write was added to the measured population."
+  ],
+  "strong_inference": "Condition deltas bound average visible render throughput and HUD-level responsiveness, not display-present pacing.",
+  "unconfirmed": [
+    "display compositor/present timing",
+    "raw visible render-completion intervals",
+    "renderer-internal scheduling and GPU fences"
+  ]
+}
