@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v3th">最新記録</a>
+        <a href="#phase-v3ti">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v3th">Phase V3T-Hを読む</a>
+        <a class="button primary" href="#phase-v3ti">Phase V3T-Iを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V3T-H visible viewport FPS</strong></div>
-        <div><span>ビルド</span><strong class="success">Succeeded</strong></div>
-        <div><span>測定</span><strong>15 clean Kit processes · 3 conditions</strong></div>
-        <div><span>判定</span><strong>RTX error 0 · extra RenderProduct 0 · raw pacing未計測</strong></div>
+        <div><span>現在地</span><strong>Phase V3T-I FPS isolation</strong></div>
+        <div><span>状態</span><strong class="success">Measured</strong></div>
+        <div><span>正式測定</span><strong>18 clean Kit processes · 6 conditions</strong></div>
+        <div><span>判定</span><strong>pixel/GPU負荷支配 · Power Limit 60%固定</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,60 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-v3ti" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number compact">V3T-I</span>
+          <p><time datetime="2026-08-10">2026.08.10</time></p>
+          <span class="pill current">Measured · isolated</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Phase V3T-I · visible viewport FPS isolation</p>
+            <h2>30 FPS固定ではなかった。<br>解像度とFlowを分けて測った。</h2>
+            <p>既存visible viewportの<code>ViewportAPI.frame_info</code>だけを使い、追加RenderProduct、HydraTexture、capture、encodeなしで表示低下を隔離しました。過去のstage-IDエラーは1件でも即失敗とし、全18正式processで0件でした。</p>
+          </header>
+
+          <figure class="capture-card wide">
+            <a href="assets/phasev3ti/fps_isolation_report.svg" aria-label="Phase V3T-I FPS隔離図を開く">
+              <img src="assets/phasev3ti/fps_isolation_report.svg" alt="empty stage、3解像度、Flow simulationとvolumeのvisible viewport平均FPS比較" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>18 / 18 formal runs</strong><span>3 independent runs · 30 s warmup + 30 s measure · stage-ID error 0 · 210 W固定</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3tc/visual_v3_actual.mp4" data-video-poster="assets/phasev3tc/visual_v3_actual_poster.png" data-video-title="Phase V3T-I visual context · explicit V3 preset" data-video-meta="既存V3T-C実燃焼動画 · 画面内容の参照のみ · V3T-I性能母集団外 · capture/encodeは測定中未使用">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>測定stageの外観参照</strong><small>既存動画 · FPS証拠ではない</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <div class="notes-grid">
+            <section class="note"><p class="note-label">Resolution</p><h3>59.98 → 31.81 → 27.15 FPS</h3><p>640×360、1280×720、1920×1080の順です。低解像度で59 Hz present境界まで改善し、高解像度ではGPU 100%となるため、60% Power Limit下ではpixel/GPU負荷が支配的です。</p></section>
+            <section class="note"><p class="note-label">Flow boundary</p><h3>simulation 24.08 · volume 24.10 FPS</h3><p>Flow OFFは31.81 FPS。Flow有効化で低下しますが、simulation-onlyとvolume付きの差は0.021 FPSでした。solverと個別GPU passの内訳までは断定しません。</p></section>
+          </div>
+
+          <section class="verification" aria-labelledby="phasev3ti-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Result</p>
+              <h3 id="phasev3ti-verification-title">Power Limit 60%を変えず、pixel負荷を主因候補へ分類。</h3>
+              <p>RTX 3090は210 W enforced／350 W defaultでした。reflection OFF、indirect OFF、denoiser ON、UI非表示はいずれも約32.5 FPSの補助preflightで、支配要因ではありませんでした。100%比較は実施していません。</p>
+              <code>.\scripts\run_phasev3ti_fps_isolation.ps1</code>
+              <p><a href="assets/phasev3ti/fps_isolation_report.json">集計JSON</a> · <a href="assets/phasev3ti/fps_isolation_samples.json">全sample＋設定JSON</a> · <a href="../design/wood_visual_v3_fps_isolation.md">設計・制約</a></p>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase V3T-I検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Formal matrix</strong><small>18 / 18 · RTX stage-ID error 0</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Power contract</strong><small>210 / 350 W · 60% · unchanged</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>No extra path</strong><small>RenderProduct/HydraTexture/capture 0</small></p></div>
+              <div role="listitem"><span aria-hidden="true">—</span><p><strong>Raw pacing</strong><small>public timestampなし · p95/p99未計測</small></p></div>
+              <div role="listitem"><span aria-hidden="true">—</span><p><strong>100% power</strong><small>未承認・未実施</small></p></div>
+            </div>
+          </section>
+
+          <section class="note next"><p class="note-label">Next</p><h3>Phase 2はpostmortem dump経路から始める</h3><p>production GPU transportは採用せず、対象kit.exe限定の0xC0000005 full dump収集を先に実証してから、既定OFF experimental経路を隔離再検証します。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v3th" class="section entry-section phase-six">

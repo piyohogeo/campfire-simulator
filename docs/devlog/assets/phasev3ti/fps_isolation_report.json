@@ -1,0 +1,368 @@
+{
+  "schema": "campfire.phasev3ti.fps-isolation-report.v1",
+  "status": "ok",
+  "baseline_commit": "a014058",
+  "formal": {
+    "empty_rtx": {
+      "runs": 3,
+      "average_visible_fps": {
+        "mean": 71.96866666666666,
+        "min": 71.955,
+        "max": 71.989
+      },
+      "hud_fps_mean": 71.97033333333333,
+      "kit_updates_per_second_mean": 71.95733333333334,
+      "timeline_sim_per_wall_mean": 0.9998733333333334,
+      "gpu_utilization_mean_percent": 3.1779999999999995,
+      "gpu_graphics_clock_mean_mhz": 1695.0,
+      "gpu_memory_max_mib": 4255,
+      "gpu_power_mean_w": 134.33833333333334,
+      "gpu_temperature_mean_c": 57.41233333333333,
+      "power_limit_w": [
+        210
+      ],
+      "enforced_power_limit_w": [
+        210
+      ],
+      "perfcap_active_values": [
+        "0x0000000000000001"
+      ],
+      "flow_active_blocks_final": [
+        0,
+        0,
+        0
+      ]
+    },
+    "current_flow_off": {
+      "runs": 3,
+      "average_visible_fps": {
+        "mean": 31.80666666666667,
+        "min": 31.531,
+        "max": 32.098
+      },
+      "hud_fps_mean": 31.822,
+      "kit_updates_per_second_mean": 33.41766666666667,
+      "timeline_sim_per_wall_mean": 0.5569633333333334,
+      "gpu_utilization_mean_percent": 85.158,
+      "gpu_graphics_clock_mean_mhz": 1546.2436666666665,
+      "gpu_memory_max_mib": 4969,
+      "gpu_power_mean_w": 209.13833333333332,
+      "gpu_temperature_mean_c": 64.15866666666666,
+      "power_limit_w": [
+        210
+      ],
+      "enforced_power_limit_w": [
+        210
+      ],
+      "perfcap_active_values": [
+        "0x0000000000000004"
+      ],
+      "flow_active_blocks_final": [
+        0,
+        0,
+        0
+      ]
+    },
+    "resolution_640x360": {
+      "runs": 3,
+      "average_visible_fps": {
+        "mean": 59.97833333333333,
+        "min": 59.962,
+        "max": 59.999
+      },
+      "hud_fps_mean": 59.967999999999996,
+      "kit_updates_per_second_mean": 59.967000000000006,
+      "timeline_sim_per_wall_mean": 0.9994466666666666,
+      "gpu_utilization_mean_percent": 46.138666666666666,
+      "gpu_graphics_clock_mean_mhz": 1832.7873333333334,
+      "gpu_memory_max_mib": 4466,
+      "gpu_power_mean_w": 208.70033333333333,
+      "gpu_temperature_mean_c": 65.72833333333334,
+      "power_limit_w": [
+        210
+      ],
+      "enforced_power_limit_w": [
+        210
+      ],
+      "perfcap_active_values": [
+        "0x0000000000000004"
+      ],
+      "flow_active_blocks_final": [
+        0,
+        0,
+        0
+      ]
+    },
+    "resolution_1920x1080": {
+      "runs": 3,
+      "average_visible_fps": {
+        "mean": 27.149666666666665,
+        "min": 27.116,
+        "max": 27.206
+      },
+      "hud_fps_mean": 27.144666666666666,
+      "kit_updates_per_second_mean": 30.781000000000002,
+      "timeline_sim_per_wall_mean": 0.5130166666666667,
+      "gpu_utilization_mean_percent": 100.0,
+      "gpu_graphics_clock_mean_mhz": 1374.737,
+      "gpu_memory_max_mib": 5241,
+      "gpu_power_mean_w": 209.41366666666667,
+      "gpu_temperature_mean_c": 64.63133333333333,
+      "power_limit_w": [
+        210
+      ],
+      "enforced_power_limit_w": [
+        210
+      ],
+      "perfcap_active_values": [
+        "0x0000000000000004"
+      ],
+      "flow_active_blocks_final": [
+        0,
+        0,
+        0
+      ]
+    },
+    "flow_simulation_only": {
+      "runs": 3,
+      "average_visible_fps": {
+        "mean": 24.080000000000002,
+        "min": 24.012,
+        "max": 24.151
+      },
+      "hud_fps_mean": 24.08,
+      "kit_updates_per_second_mean": 28.032333333333337,
+      "timeline_sim_per_wall_mean": 0.4672066666666667,
+      "gpu_utilization_mean_percent": 100.0,
+      "gpu_graphics_clock_mean_mhz": 1552.631666666667,
+      "gpu_memory_max_mib": 6716,
+      "gpu_power_mean_w": 209.29033333333334,
+      "gpu_temperature_mean_c": 65.52933333333333,
+      "power_limit_w": [
+        210
+      ],
+      "enforced_power_limit_w": [
+        210
+      ],
+      "perfcap_active_values": [
+        "0x0000000000000004"
+      ],
+      "flow_active_blocks_final": [
+        201,
+        192,
+        211
+      ]
+    },
+    "flow_volume": {
+      "runs": 3,
+      "average_visible_fps": {
+        "mean": 24.101,
+        "min": 24.092,
+        "max": 24.119
+      },
+      "hud_fps_mean": 24.090999999999998,
+      "kit_updates_per_second_mean": 27.921666666666667,
+      "timeline_sim_per_wall_mean": 0.46536,
+      "gpu_utilization_mean_percent": 100.0,
+      "gpu_graphics_clock_mean_mhz": 1541.4476666666667,
+      "gpu_memory_max_mib": 6702,
+      "gpu_power_mean_w": 209.20666666666668,
+      "gpu_temperature_mean_c": 65.62566666666667,
+      "power_limit_w": [
+        210
+      ],
+      "enforced_power_limit_w": [
+        210
+      ],
+      "perfcap_active_values": [
+        "0x0000000000000004"
+      ],
+      "flow_active_blocks_final": [
+        197,
+        193,
+        208
+      ]
+    }
+  },
+  "auxiliary_preflight": {
+    "denoiser_on": {
+      "runs": 1,
+      "average_visible_fps": {
+        "mean": 32.465,
+        "min": 32.465,
+        "max": 32.465
+      },
+      "hud_fps_mean": 32.403,
+      "kit_updates_per_second_mean": 46.55,
+      "timeline_sim_per_wall_mean": 0.77583,
+      "gpu_utilization_mean_percent": 99.0,
+      "gpu_graphics_clock_mean_mhz": 1530.0,
+      "gpu_memory_max_mib": 4935,
+      "gpu_power_mean_w": 209.353,
+      "gpu_temperature_mean_c": 63.842,
+      "power_limit_w": [
+        210
+      ],
+      "enforced_power_limit_w": [
+        210
+      ],
+      "perfcap_active_values": [
+        "0x0000000000000004"
+      ],
+      "flow_active_blocks_final": [
+        0
+      ]
+    },
+    "indirect_off": {
+      "runs": 1,
+      "average_visible_fps": {
+        "mean": 32.536,
+        "min": 32.536,
+        "max": 32.536
+      },
+      "hud_fps_mean": 32.542,
+      "kit_updates_per_second_mean": 46.11,
+      "timeline_sim_per_wall_mean": 0.76849,
+      "gpu_utilization_mean_percent": 99.0,
+      "gpu_graphics_clock_mean_mhz": 1524.079,
+      "gpu_memory_max_mib": 4982,
+      "gpu_power_mean_w": 209.371,
+      "gpu_temperature_mean_c": 63.421,
+      "power_limit_w": [
+        210
+      ],
+      "enforced_power_limit_w": [
+        210
+      ],
+      "perfcap_active_values": [
+        "0x0000000000000004"
+      ],
+      "flow_active_blocks_final": [
+        0
+      ]
+    },
+    "reflection_off": {
+      "runs": 1,
+      "average_visible_fps": {
+        "mean": 32.499,
+        "min": 32.499,
+        "max": 32.499
+      },
+      "hud_fps_mean": 32.443,
+      "kit_updates_per_second_mean": 46.399,
+      "timeline_sim_per_wall_mean": 0.77332,
+      "gpu_utilization_mean_percent": 99.0,
+      "gpu_graphics_clock_mean_mhz": 1537.297,
+      "gpu_memory_max_mib": 4930,
+      "gpu_power_mean_w": 209.347,
+      "gpu_temperature_mean_c": 62.514,
+      "power_limit_w": [
+        210
+      ],
+      "enforced_power_limit_w": [
+        210
+      ],
+      "perfcap_active_values": [
+        "0x0000000000000004"
+      ],
+      "flow_active_blocks_final": [
+        0
+      ]
+    },
+    "ui_hidden": {
+      "runs": 1,
+      "average_visible_fps": {
+        "mean": 32.637,
+        "min": 32.637,
+        "max": 32.637
+      },
+      "hud_fps_mean": 32.619,
+      "kit_updates_per_second_mean": 32.737,
+      "timeline_sim_per_wall_mean": 0.54562,
+      "gpu_utilization_mean_percent": 86.421,
+      "gpu_graphics_clock_mean_mhz": 1544.211,
+      "gpu_memory_max_mib": 5558,
+      "gpu_power_mean_w": 209.416,
+      "gpu_temperature_mean_c": 63.553,
+      "power_limit_w": [
+        210
+      ],
+      "enforced_power_limit_w": [
+        210
+      ],
+      "perfcap_active_values": [
+        "0x0000000000000004"
+      ],
+      "flow_active_blocks_final": [
+        0
+      ]
+    }
+  },
+  "frame_limit_inventory": {
+    "/app/runLoops/main/rateLimitEnabled": true,
+    "/app/runLoops/main/rateLimitFrequency": 120,
+    "/app/runLoops/present/rateLimitEnabled": true,
+    "/app/runLoops/present/rateLimitFrequency": 59.0,
+    "/app/runLoops/rendering_0/rateLimitEnabled": true,
+    "/app/runLoops/rendering_0/rateLimitFrequency": 120,
+    "/app/vsync": false,
+    "/renderer/vsync": false,
+    "/persistent/app/viewport/defaults/tickRate": 120,
+    "/persistent/simulation/minFrameRate": 30
+  },
+  "power_contract": {
+    "observed_limit_w": 210.0,
+    "default_limit_w": 350.0,
+    "ratio_percent": 60.0,
+    "changed_during_phase": false,
+    "comparison_with_100_percent_performed": false
+  },
+  "classification": {
+    "pixel_load_dominant": true,
+    "empty_stage_renderer_cap_dominant": false,
+    "reflection_dominant": false,
+    "flow_volume_rendering_dominant": false,
+    "flow_enabled_gpu_work_dominant_over_volume_delta": true,
+    "notes": [
+      "Resolution scaling: 640x360 59.98, 1280x720 31.81, 1920x1080 27.15 visible FPS.",
+      "Flow simulation-only 24.08 versus simulation+volume 24.10 visible FPS.",
+      "The 59 Hz present run-loop limit is visible at 640x360, but it does not explain the 1280x720 or Flow results."
+    ]
+  },
+  "metric_contract": {
+    "measured": [
+      "average visible ViewportAPI frame-counter FPS",
+      "smoothed HUD FPS",
+      "Kit updates/s",
+      "timeline sim/wall",
+      "nvidia-smi telemetry"
+    ],
+    "not_measured": [
+      "display-present FPS",
+      "raw visible render-frame latency",
+      "render-frame p95/p99",
+      "1% low FPS"
+    ],
+    "reason": "Kit 110.2 exposes a counter and smoothed FPS for the existing viewport, not public raw visible-frame completion timestamps."
+  },
+  "profiler": {
+    "run": false,
+    "reason": "Public viewport and GPU telemetry already isolate pixel scaling and Flow activation; profiler overhead was not introduced."
+  },
+  "observed_facts": [
+    "No added RenderProduct, HydraTexture, capture, encoder, or per-frame file write was used.",
+    "All 18 formal runs completed with zero RTX stage-ID errors.",
+    "The RTX 3090 remained at the observed 210 W enforced limit (60% of the 350 W default); no power-setting command was issued."
+  ],
+  "strong_inference": [
+    "The current 20-log stage at 1280x720 is primarily pixel/GPU limited under the 60% power limit.",
+    "For this probe scene, enabling Flow adds GPU cost, while adding Flow volume rendering after simulation changes average visible FPS by less than 2%."
+  ],
+  "unconfirmed": [
+    "ray-tracing pass-level GPU time",
+    "denoiser pass time",
+    "display compositor pacing",
+    "behavior at a 100% power limit"
+  ],
+  "production_changed": false
+}

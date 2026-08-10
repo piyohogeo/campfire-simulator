@@ -2745,3 +2745,16 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - V3 publication: CPU-source V3は903 publicationでProvider setter p95のrun平均`76.905 ms`、publication total p95 `79.024 ms`、Kit update `23.932 /s`、timeline sim/wall `0.399`だった。Flow ON/V3 OFFより平均render FPSが3.4%高いが、3 runのばらつき内なので改善とは判定しない。owner-thread stallとraw render-frame pacingを分離する。
 - observer overhead: FPS read ON−OFFのKit update差は`+0.477 / -0.132 / +0.265 updates/s`、平均`+0.203`で、測定可能なread slowdownはなかった。ただし3 pairでzero overheadを保証しない。
 - 非変更: production module、V3T-C、Phase 6DQ、Point／rigid、Sphere既定、Flow 110.0.0、wood authority、physics、checkpoint、serialization、revision／rollbackを変更していない。V3とGPU transportは既定OFF、GPU production候補は不在のままである。詳細は`docs/design/wood_visual_v3_normal_render_fps.md`。
+
+## Phase V3T-I visible viewport FPS isolation
+
+### 2026-08-10: 60% Power Limitを維持し、解像度とFlow境界を隔離
+
+- 測定境界: `a014058`をclean baselineとし、V3T-Hで確立した既存visible viewportの公開`ViewportAPI.frame_info`／`fps`だけを使用した。追加RenderProduct、HydraTexture、capture、encode、per-frame file writeは0である。`IRenderSettings::getRenderSettings failed getting a stage-id`はlive／終了後の双方で1件でもrunを拒否する。
+- limit監査: main／rendering loopは120 Hz、present loopは59 Hz、3 loopとも`syncToPresent=true`、app／renderer VSyncはfalse、viewport tick rateは120 Hz、simulation minimumは30 Hzだった。RTX 3090はenforced 210 W／default 350 W＝60%で、電力設定は変更していない。
+- Flow gate: 起動引数のFlow OFFがextension startup後に既定値へ戻ることを検出したため、公開`/rtx/flow/enabled`をstage接続前とwarmup後に再適用し、測定前後の実効値一致を必須化した。棄却runは正式母集団へ含めない。
+- 正式実測: 固定camera、20本、30 s warmup＋30 s測定、6条件×3 rotated runの18独立processを完走した。平均visible FPSはempty RTX `71.969`、Flow OFF/V3 OFFの640×360 `59.978`、1280×720 `31.807`、1920×1080 `27.150`、Flow simulation-only `24.080`、Flow＋volume `24.101`。全18 processでstage-ID error 0だった。
+- 補助preflight: 厳密なFlow OFFでreflection OFF `32.499`、indirect diffuse OFF `32.536`、realtime OptiX denoiser ON `32.465`、UI hidden `32.637 FPS`。各1 runのscreening値であり、formal estimateとは扱わない。
+- 判定: 640×360で59 Hz present境界まで改善し、1920×1080とFlow条件でGPU utilization 100%かつ約209 Wとなるため、変更しない60% power limit下ではpixel／GPU負荷が支配的である。empty RTXは約72 FPSなので全体30 FPS capではない。Flow simulation-onlyとvolumeの差は`0.021 FPS`で、volume表示追加は支配要因ではない。ただしsolver、Flow scheduler、個別GPU passの内訳は未確認である。
+- metric制約: visible平均counter FPS、平滑HUD FPS、Kit updates/s、timeline sim/wall、nvidia-smi telemetryだけを実測した。公開raw visible-frame completion timestampがないためdisplay-present FPS、raw render latency、p95／p99、1% lowを推定していない。profilerは通常母集団へ混ぜず、本Phaseでは未実行とした。
+- 非変更: production defaults、wood authority、Flow input、Point／Sphere Emitter、collision、rigid layout、checkpoint、serialization、V3 CPU/GPU transportを変更していない。詳細は`docs/design/wood_visual_v3_fps_isolation.md`。次はproduction-neutralなtargeted full-dump collectorを先に実証し、その後だけGPU transport隔離再検証へ進む。

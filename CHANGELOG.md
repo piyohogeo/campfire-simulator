@@ -1,5 +1,10 @@
 # Changelog
 
+- Added the production-neutral Phase V3T-I visible-viewport FPS isolation path using only public `ViewportAPI.frame_info` / `fps`; all 18 formal Kit processes completed with zero RTX stage-ID errors and no added RenderProduct, HydraTexture, capture, or encoder.
+- Audited effective loop limits (main/render 120 Hz, present 59 Hz, VSync OFF) and retained the observed RTX 3090 210 W enforced limit versus 350 W default (60%) without issuing a power-setting command.
+- Measured three independent runs at 71.969 FPS for empty RTX, 59.978 / 31.807 / 27.150 FPS across 640x360 / 1280x720 / 1920x1080, and 24.080 / 24.101 FPS for Flow simulation-only / simulation-plus-volume.
+- Classified pixel/GPU load as dominant under the fixed power limit; reflection, indirect lighting, realtime denoiser, and UI visibility were non-dominant in short preflight. Display-present FPS and raw frame p95/p99 remain explicitly unmeasured.
+
 - Added Phase V3T-H's visible-viewport-only average render FPS probe after rejecting and isolating the first copied-RenderProduct approach, which emitted 14,067 `IRenderSettings::getRenderSettings failed getting a stage-id` errors before shutdown.
 - Added live and post-exit fail-fast rejection for any stage-ID error; normal process exit is no longer sufficient to qualify the render path.
 - Enumerated all 13 public `omni.stats` scopes and 274 nested nodes and found no stat matching the visible FPS HUD; audited the bundled HUD to confirm that it reads public `ViewportAPI.fps` and derives displayed frame time as `1000 / FPS`.
