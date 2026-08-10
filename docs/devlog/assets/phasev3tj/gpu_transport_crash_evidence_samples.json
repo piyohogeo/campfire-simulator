@@ -1,0 +1,5993 @@
+{
+  "schema": "campfire.phasev3tj.raw.v1",
+  "runs": [
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "cpu_normal_exit_r1",
+        "transport": "cpu",
+        "scenario": "normal_exit",
+        "run": 1,
+        "started_utc": "2026-08-10T01:36:07.6636594+00:00",
+        "ended_utc": "2026-08-10T01:36:28.4663742+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 21,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 0,
+          "slot": null
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\cpu_normal_exit_r1\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\cpu_normal_exit_r1\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\cpu_normal_exit_r1\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "cpu",
+        "scenario": "normal_exit",
+        "run": 1,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": null,
+        "fallback_count": 0,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\cpu_normal_exit_r1\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\cpu_normal_exit_r1\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 241900257194700,
+          "wall_ns": 1786325773631290900
+        },
+        {
+          "detail": {
+            "scenario": "normal_exit",
+            "transport": "cpu"
+          },
+          "name": "probe_begin",
+          "perf_ns": 241900261659500,
+          "wall_ns": 1786325773635297600
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 241900358309400,
+          "wall_ns": 1786325773731965900
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\cpu_normal_exit_r1\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 241901028406400,
+          "wall_ns": 1786325774402015700
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 241912268030500,
+          "wall_ns": 1786325785641861800
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30,
+            "slot": null
+          },
+          "name": "publication_end",
+          "perf_ns": 241912971473500,
+          "wall_ns": 1786325786345299400
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": null
+          },
+          "name": "teardown_begin",
+          "perf_ns": 241912974062700,
+          "wall_ns": 1786325786347800200
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 241912975888200,
+          "wall_ns": 1786325786349799600
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 241912978701900,
+          "wall_ns": 1786325786352389600
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 241912980559100,
+          "wall_ns": 1786325786354386700
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 241912982190000,
+          "wall_ns": 1786325786355886600
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 241912983815100,
+          "wall_ns": 1786325786357886400
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 241912986457800,
+          "wall_ns": 1786325786360386500
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 241913178305800,
+          "wall_ns": 1786325786551988000
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 241913211123300,
+          "wall_ns": 1786325786585019200
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 241913213041400,
+          "wall_ns": 1786325786587018900
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 241913214612200,
+          "wall_ns": 1786325786588526200
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 241913217168200,
+          "wall_ns": 1786325786590529800
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 241913218721200,
+          "wall_ns": 1786325786592603700
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 241914069865800,
+          "wall_ns": 1786325787443913900
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 241914072095500,
+          "wall_ns": 1786325787445914200
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_normal_exit_r1",
+        "transport": "gpu_ring3",
+        "scenario": "normal_exit",
+        "run": 1,
+        "started_utc": "2026-08-10T01:36:28.8083716+00:00",
+        "ended_utc": "2026-08-10T01:36:49.5101746+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 21,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 0,
+          "slot": 0
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_normal_exit_r1\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_normal_exit_r1\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_normal_exit_r1\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "normal_exit",
+        "run": 1,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": 0,
+        "fallback_count": 0,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_normal_exit_r1\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_normal_exit_r1\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 241921401917200,
+          "wall_ns": 1786325794775591600
+        },
+        {
+          "detail": {
+            "scenario": "normal_exit",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 241921406401300,
+          "wall_ns": 1786325794780101500
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 241921574798000,
+          "wall_ns": 1786325794948891900
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_normal_exit_r1\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 241922340225100,
+          "wall_ns": 1786325795714070100
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 241933411297600,
+          "wall_ns": 1786325806785209800
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "publication_end",
+          "perf_ns": 241934037003000,
+          "wall_ns": 1786325807410643300
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "teardown_begin",
+          "perf_ns": 241934040102500,
+          "wall_ns": 1786325807414152100
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 241934043663200,
+          "wall_ns": 1786325807417652300
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 241934046227900,
+          "wall_ns": 1786325807420165600
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 241934048214100,
+          "wall_ns": 1786325807422165900
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 241934051536000,
+          "wall_ns": 1786325807425664800
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 241934053643500,
+          "wall_ns": 1786325807427165200
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 241934056069700,
+          "wall_ns": 1786325807430174700
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 241934247215700,
+          "wall_ns": 1786325807621318700
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 241934279000100,
+          "wall_ns": 1786325807652861900
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 241934282084900,
+          "wall_ns": 1786325807655862000
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 241934283952400,
+          "wall_ns": 1786325807657362300
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 241934286404500,
+          "wall_ns": 1786325807660479000
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 241934288378900,
+          "wall_ns": 1786325807662478700
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 241935147066500,
+          "wall_ns": 1786325808521033400
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 241935149781300,
+          "wall_ns": 1786325808523532800
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_timeline_restart_r1",
+        "transport": "gpu_ring3",
+        "scenario": "timeline_restart",
+        "run": 1,
+        "started_utc": "2026-08-10T01:36:49.8131753+00:00",
+        "ended_utc": "2026-08-10T01:37:10.5387419+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 23,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 0,
+          "slot": 0
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_timeline_restart_r1\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_timeline_restart_r1\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_timeline_restart_r1\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "timeline_restart",
+        "run": 1,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": 0,
+        "fallback_count": 0,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_timeline_restart_r1\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_timeline_restart_r1\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 241942794987800,
+          "wall_ns": 1786325816168737800
+        },
+        {
+          "detail": {
+            "scenario": "timeline_restart",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 241942799968200,
+          "wall_ns": 1786325816173237800
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 241942961543500,
+          "wall_ns": 1786325816335313900
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_timeline_restart_r1\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 241943679968400,
+          "wall_ns": 1786325817053617700
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 241954431001500,
+          "wall_ns": 1786325827804886900
+        },
+        {
+          "detail": {
+            "revision": 15
+          },
+          "name": "timeline_stop_midrun",
+          "perf_ns": 241954714996700,
+          "wall_ns": 1786325828089031200
+        },
+        {
+          "detail": {
+            "revision": 15
+          },
+          "name": "timeline_restart",
+          "perf_ns": 241954760791000,
+          "wall_ns": 1786325828134658300
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "publication_end",
+          "perf_ns": 241955121726300,
+          "wall_ns": 1786325828495518100
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "teardown_begin",
+          "perf_ns": 241955126745500,
+          "wall_ns": 1786325828500515800
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 241955128471700,
+          "wall_ns": 1786325828502516300
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 241955130266000,
+          "wall_ns": 1786325828503517900
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 241955132840700,
+          "wall_ns": 1786325828506538500
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 241955134564900,
+          "wall_ns": 1786325828508546200
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 241955136273200,
+          "wall_ns": 1786325828510046100
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 241955137937000,
+          "wall_ns": 1786325828512047000
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 241955328396000,
+          "wall_ns": 1786325828702540400
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 241955360752900,
+          "wall_ns": 1786325828734732300
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 241955362670000,
+          "wall_ns": 1786325828736736400
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 241955365819000,
+          "wall_ns": 1786325828739734500
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 241955367886700,
+          "wall_ns": 1786325828741734700
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 241955369450400,
+          "wall_ns": 1786325828743234400
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 241956181940700,
+          "wall_ns": 1786325829555828000
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 241956184336800,
+          "wall_ns": 1786325829558331200
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_stage_replacement_r1",
+        "transport": "gpu_ring3",
+        "scenario": "stage_replacement",
+        "run": 1,
+        "started_utc": "2026-08-10T01:37:10.8377421+00:00",
+        "ended_utc": "2026-08-10T01:37:32.1359103+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 27,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 0,
+          "slot": 0
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r1\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r1\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r1\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "stage_replacement",
+        "run": 1,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": 0,
+        "fallback_count": 0,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r1\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r1\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 241963569954900,
+          "wall_ns": 1786325836943633800
+        },
+        {
+          "detail": {
+            "scenario": "stage_replacement",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 241963573171200,
+          "wall_ns": 1786325836947142100
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 241963747297000,
+          "wall_ns": 1786325837121192300
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r1\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 241964457019400,
+          "wall_ns": 1786325837830725400
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 241975690534900,
+          "wall_ns": 1786325849064440800
+        },
+        {
+          "detail": {
+            "revision": 15
+          },
+          "name": "stage_replacement_publication_gate_closed",
+          "perf_ns": 241975966966200,
+          "wall_ns": 1786325849340949400
+        },
+        {
+          "detail": {},
+          "name": "stage_replacement_source_sync",
+          "perf_ns": 241975972003600,
+          "wall_ns": 1786325849346068800
+        },
+        {
+          "detail": {},
+          "name": "stage_replacement_old_stage_closed",
+          "perf_ns": 241976165565500,
+          "wall_ns": 1786325849539279100
+        },
+        {
+          "detail": {},
+          "name": "stage_replacement_new_stage_open_begin",
+          "perf_ns": 241976168618300,
+          "wall_ns": 1786325849542779200
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r1\\probe.stage1.usda"
+          },
+          "name": "stage_replacement_new_stage_open_end",
+          "perf_ns": 241976361262700,
+          "wall_ns": 1786325849735221300
+        },
+        {
+          "detail": {},
+          "name": "stage_replacement_publication_gate_open",
+          "perf_ns": 241976364522500,
+          "wall_ns": 1786325849738727300
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "publication_end",
+          "perf_ns": 241976708637700,
+          "wall_ns": 1786325850082477800
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "teardown_begin",
+          "perf_ns": 241976710752800,
+          "wall_ns": 1786325850084484600
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 241976714051100,
+          "wall_ns": 1786325850087991900
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 241976716545900,
+          "wall_ns": 1786325850090491000
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 241976718412500,
+          "wall_ns": 1786325850092490200
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 241976720113300,
+          "wall_ns": 1786325850093491000
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 241976722898600,
+          "wall_ns": 1786325850097000400
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 241976724572200,
+          "wall_ns": 1786325850098500100
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 241976905639400,
+          "wall_ns": 1786325850279443600
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 241976939176300,
+          "wall_ns": 1786325850313083400
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 241976941049000,
+          "wall_ns": 1786325850315093100
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 241976942706500,
+          "wall_ns": 1786325850316597300
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 241976945583300,
+          "wall_ns": 1786325850319597700
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 241976947340600,
+          "wall_ns": 1786325850321097700
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 241977790606800,
+          "wall_ns": 1786325851164392100
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 241977796329900,
+          "wall_ns": 1786325851170397500
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_provider_regeneration_r1",
+        "transport": "gpu_ring3",
+        "scenario": "provider_regeneration",
+        "run": 1,
+        "started_utc": "2026-08-10T01:37:32.4219121+00:00",
+        "ended_utc": "2026-08-10T01:37:52.7932452+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 25,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 0,
+          "slot": 0
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_provider_regeneration_r1\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_provider_regeneration_r1\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_provider_regeneration_r1\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "provider_regeneration",
+        "run": 1,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": 0,
+        "fallback_count": 0,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_provider_regeneration_r1\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_provider_regeneration_r1\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 241985135912000,
+          "wall_ns": 1786325858510034800
+        },
+        {
+          "detail": {
+            "scenario": "provider_regeneration",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 241985139946300,
+          "wall_ns": 1786325858514034300
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 241985311978500,
+          "wall_ns": 1786325858686046500
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_provider_regeneration_r1\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 241985989612500,
+          "wall_ns": 1786325859363399600
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 241996747943400,
+          "wall_ns": 1786325870121905000
+        },
+        {
+          "detail": {},
+          "name": "provider_regeneration_source_sync",
+          "perf_ns": 241997039643400,
+          "wall_ns": 1786325870413482400
+        },
+        {
+          "detail": {},
+          "name": "provider_regeneration_old_destroyed",
+          "perf_ns": 241997044019300,
+          "wall_ns": 1786325870417481700
+        },
+        {
+          "detail": {},
+          "name": "provider_regeneration_new_created",
+          "perf_ns": 241997045707600,
+          "wall_ns": 1786325870419492400
+        },
+        {
+          "detail": {
+            "revision": 15
+          },
+          "name": "provider_regeneration_republished",
+          "perf_ns": 241997049259300,
+          "wall_ns": 1786325870423492300
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "publication_end",
+          "perf_ns": 241997400476600,
+          "wall_ns": 1786325870774672100
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "teardown_begin",
+          "perf_ns": 241997403749400,
+          "wall_ns": 1786325870777672700
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 241997405602300,
+          "wall_ns": 1786325870779684700
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 241997407248900,
+          "wall_ns": 1786325870781191800
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 241997409949600,
+          "wall_ns": 1786325870783690600
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 241997411574300,
+          "wall_ns": 1786325870785690300
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 241997413296400,
+          "wall_ns": 1786325870787190400
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 241997414864800,
+          "wall_ns": 1786325870788770000
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 241997591628800,
+          "wall_ns": 1786325870965834600
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 241997624697800,
+          "wall_ns": 1786325870998583800
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 241997626688500,
+          "wall_ns": 1786325871000588900
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 241997628564100,
+          "wall_ns": 1786325871002589900
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 241997630591000,
+          "wall_ns": 1786325871004589500
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 241997633140200,
+          "wall_ns": 1786325871007090100
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 241998490172100,
+          "wall_ns": 1786325871863952400
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 241998493891100,
+          "wall_ns": 1786325871867451200
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_extension_disable_r1",
+        "transport": "gpu_ring3",
+        "scenario": "extension_disable",
+        "run": 1,
+        "started_utc": "2026-08-10T01:37:53.0892427+00:00",
+        "ended_utc": "2026-08-10T01:38:13.6444806+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 21,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 0,
+          "slot": 0
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_extension_disable_r1\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_extension_disable_r1\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_extension_disable_r1\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "extension_disable",
+        "run": 1,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": 0,
+        "fallback_count": 0,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_extension_disable_r1\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_extension_disable_r1\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 242005951982400,
+          "wall_ns": 1786325879325789100
+        },
+        {
+          "detail": {
+            "scenario": "extension_disable",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 242005956078400,
+          "wall_ns": 1786325879330293200
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 242006112685500,
+          "wall_ns": 1786325879486531200
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_extension_disable_r1\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 242006819736700,
+          "wall_ns": 1786325880193686700
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 242017555245700,
+          "wall_ns": 1786325890929421300
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "publication_end",
+          "perf_ns": 242018195058800,
+          "wall_ns": 1786325891568846000
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "teardown_begin",
+          "perf_ns": 242018197978300,
+          "wall_ns": 1786325891571846300
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 242018200747200,
+          "wall_ns": 1786325891574848100
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 242018202673600,
+          "wall_ns": 1786325891576935100
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 242018204919600,
+          "wall_ns": 1786325891578940100
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 242018207030600,
+          "wall_ns": 1786325891580938500
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 242018210176500,
+          "wall_ns": 1786325891584437800
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 242018211812100,
+          "wall_ns": 1786325891585944800
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 242018409196500,
+          "wall_ns": 1786325891783402100
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 242018441888300,
+          "wall_ns": 1786325891815953000
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 242018443784700,
+          "wall_ns": 1786325891817953800
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 242018445407100,
+          "wall_ns": 1786325891819453400
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 242018448262600,
+          "wall_ns": 1786325891822454900
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 242018449914100,
+          "wall_ns": 1786325891823951900
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 242019276237800,
+          "wall_ns": 1786325892650088700
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 242019278092300,
+          "wall_ns": 1786325892652088800
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_gpu_initialization_failure_r1",
+        "transport": "gpu_ring3",
+        "scenario": "gpu_initialization_failure",
+        "run": 1,
+        "started_utc": "2026-08-10T01:38:13.9310537+00:00",
+        "ended_utc": "2026-08-10T01:38:35.0203087+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 22,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 1,
+          "slot": null
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_gpu_initialization_failure_r1\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_gpu_initialization_failure_r1\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_gpu_initialization_failure_r1\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "gpu_initialization_failure",
+        "run": 1,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": null,
+        "fallback_count": 1,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_gpu_initialization_failure_r1\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_gpu_initialization_failure_r1\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 242026678359400,
+          "wall_ns": 1786325900052332300
+        },
+        {
+          "detail": {
+            "scenario": "gpu_initialization_failure",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 242026682026600,
+          "wall_ns": 1786325900055832500
+        },
+        {
+          "detail": {
+            "error": "injected GPU initialization failure"
+          },
+          "name": "gpu_initialization_faulted_cpu_fallback",
+          "perf_ns": 242026686331900,
+          "wall_ns": 1786325900060353200
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 242026770522000,
+          "wall_ns": 1786325900144471400
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_gpu_initialization_failure_r1\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 242027407378500,
+          "wall_ns": 1786325900781204200
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 242038725229300,
+          "wall_ns": 1786325912099251600
+        },
+        {
+          "detail": {
+            "fallback_count": 1,
+            "revision": 30,
+            "slot": null
+          },
+          "name": "publication_end",
+          "perf_ns": 242039449177200,
+          "wall_ns": 1786325912823177500
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": null
+          },
+          "name": "teardown_begin",
+          "perf_ns": 242039452021500,
+          "wall_ns": 1786325912826178200
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 242039454065100,
+          "wall_ns": 1786325912827678300
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 242039456054500,
+          "wall_ns": 1786325912830194900
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 242039459467100,
+          "wall_ns": 1786325912833694700
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 242039461386600,
+          "wall_ns": 1786325912835195000
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 242039463119000,
+          "wall_ns": 1786325912837195400
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 242039464872900,
+          "wall_ns": 1786325912838703400
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 242039663114600,
+          "wall_ns": 1786325913037373100
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 242039694850000,
+          "wall_ns": 1786325913068916800
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 242039697799000,
+          "wall_ns": 1786325913071927500
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 242039699600800,
+          "wall_ns": 1786325913073427300
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 242039701353900,
+          "wall_ns": 1786325913075427400
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 242039702926900,
+          "wall_ns": 1786325913076927300
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 242040630458300,
+          "wall_ns": 1786325914004534300
+        },
+        {
+          "detail": {
+            "fallback_count": 1,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 242040634198700,
+          "wall_ns": 1786325914007534400
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_publication_failure_r1",
+        "transport": "gpu_ring3",
+        "scenario": "publication_failure",
+        "run": 1,
+        "started_utc": "2026-08-10T01:38:35.3675044+00:00",
+        "ended_utc": "2026-08-10T01:38:56.5695482+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 22,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 1,
+          "slot": null
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_publication_failure_r1\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_publication_failure_r1\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_publication_failure_r1\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "publication_failure",
+        "run": 1,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": null,
+        "fallback_count": 1,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_publication_failure_r1\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_publication_failure_r1\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 242048620457700,
+          "wall_ns": 1786325921994614600
+        },
+        {
+          "detail": {
+            "scenario": "publication_failure",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 242048636544200,
+          "wall_ns": 1786325922010638900
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 242048841439900,
+          "wall_ns": 1786325922215698400
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_publication_failure_r1\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 242049639091000,
+          "wall_ns": 1786325923013108200
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 242060530108500,
+          "wall_ns": 1786325933904160100
+        },
+        {
+          "detail": {
+            "error": "injected before Provider setter",
+            "revision": 15,
+            "slot": 0
+          },
+          "name": "gpu_publication_faulted",
+          "perf_ns": 242060802327600,
+          "wall_ns": 1786325934176269900
+        },
+        {
+          "detail": {
+            "fallback_count": 1,
+            "revision": 30,
+            "slot": null
+          },
+          "name": "publication_end",
+          "perf_ns": 242061173250000,
+          "wall_ns": 1786325934547310200
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": null
+          },
+          "name": "teardown_begin",
+          "perf_ns": 242061175304700,
+          "wall_ns": 1786325934549310200
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 242061177096600,
+          "wall_ns": 1786325934551310300
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 242061179240100,
+          "wall_ns": 1786325934553310800
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 242061182138000,
+          "wall_ns": 1786325934556319600
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 242061184390500,
+          "wall_ns": 1786325934558320700
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 242061187841200,
+          "wall_ns": 1786325934561820000
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 242061189450400,
+          "wall_ns": 1786325934563320000
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 242061376052300,
+          "wall_ns": 1786325934750338600
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 242061409408100,
+          "wall_ns": 1786325934783454000
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 242061411503000,
+          "wall_ns": 1786325934785452800
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 242061413243500,
+          "wall_ns": 1786325934787457000
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 242061416184900,
+          "wall_ns": 1786325934790457100
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 242061418072800,
+          "wall_ns": 1786325934791957100
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 242062271227400,
+          "wall_ns": 1786325935644783900
+        },
+        {
+          "detail": {
+            "fallback_count": 1,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 242062273035900,
+          "wall_ns": 1786325935646958700
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "cpu_normal_exit_r2",
+        "transport": "cpu",
+        "scenario": "normal_exit",
+        "run": 2,
+        "started_utc": "2026-08-10T01:38:56.8704413+00:00",
+        "ended_utc": "2026-08-10T01:39:17.9472462+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 21,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 0,
+          "slot": null
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\cpu_normal_exit_r2\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\cpu_normal_exit_r2\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\cpu_normal_exit_r2\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "cpu",
+        "scenario": "normal_exit",
+        "run": 2,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": null,
+        "fallback_count": 0,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\cpu_normal_exit_r2\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\cpu_normal_exit_r2\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 242069679784500,
+          "wall_ns": 1786325943054078700
+        },
+        {
+          "detail": {
+            "scenario": "normal_exit",
+            "transport": "cpu"
+          },
+          "name": "probe_begin",
+          "perf_ns": 242069684482900,
+          "wall_ns": 1786325943058583900
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 242069773683400,
+          "wall_ns": 1786325943147840200
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\cpu_normal_exit_r2\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 242070445204800,
+          "wall_ns": 1786325943819236300
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 242081913186100,
+          "wall_ns": 1786325955287138200
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30,
+            "slot": null
+          },
+          "name": "publication_end",
+          "perf_ns": 242082623462400,
+          "wall_ns": 1786325955997480400
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": null
+          },
+          "name": "teardown_begin",
+          "perf_ns": 242082626192700,
+          "wall_ns": 1786325956000481100
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 242082627996100,
+          "wall_ns": 1786325956001480800
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 242082629941600,
+          "wall_ns": 1786325956004070500
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 242082632565600,
+          "wall_ns": 1786325956006569800
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 242082634256500,
+          "wall_ns": 1786325956008569600
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 242082636120300,
+          "wall_ns": 1786325956010069400
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 242082637855200,
+          "wall_ns": 1786325956011569400
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 242082821142700,
+          "wall_ns": 1786325956195486300
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 242082854088000,
+          "wall_ns": 1786325956228009400
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 242082856391900,
+          "wall_ns": 1786325956230509800
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 242082858159800,
+          "wall_ns": 1786325956232512000
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 242082860823800,
+          "wall_ns": 1786325956235021600
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 242082863246200,
+          "wall_ns": 1786325956237520900
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 242083651036200,
+          "wall_ns": 1786325957025222200
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 242083654425100,
+          "wall_ns": 1786325957028722300
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_timeline_restart_r2",
+        "transport": "gpu_ring3",
+        "scenario": "timeline_restart",
+        "run": 2,
+        "started_utc": "2026-08-10T01:39:18.2467997+00:00",
+        "ended_utc": "2026-08-10T01:39:39.6630711+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 23,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 0,
+          "slot": 0
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_timeline_restart_r2\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_timeline_restart_r2\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_timeline_restart_r2\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "timeline_restart",
+        "run": 2,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": 0,
+        "fallback_count": 0,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_timeline_restart_r2\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_timeline_restart_r2\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 242091503802500,
+          "wall_ns": 1786325964878168600
+        },
+        {
+          "detail": {
+            "scenario": "timeline_restart",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 242091507643900,
+          "wall_ns": 1786325964881673200
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 242091683679400,
+          "wall_ns": 1786325965057605700
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_timeline_restart_r2\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 242092393990200,
+          "wall_ns": 1786325965767886700
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 242103585942500,
+          "wall_ns": 1786325976959972900
+        },
+        {
+          "detail": {
+            "revision": 15
+          },
+          "name": "timeline_stop_midrun",
+          "perf_ns": 242103861224200,
+          "wall_ns": 1786325977235512700
+        },
+        {
+          "detail": {
+            "revision": 15
+          },
+          "name": "timeline_restart",
+          "perf_ns": 242103903614400,
+          "wall_ns": 1786325977277672900
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "publication_end",
+          "perf_ns": 242104269019100,
+          "wall_ns": 1786325977643063100
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "teardown_begin",
+          "perf_ns": 242104271678800,
+          "wall_ns": 1786325977646066500
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 242104274841700,
+          "wall_ns": 1786325977649078400
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 242104276551600,
+          "wall_ns": 1786325977650578000
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 242104278287100,
+          "wall_ns": 1786325977652577900
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 242104279923000,
+          "wall_ns": 1786325977654078500
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 242104282568200,
+          "wall_ns": 1786325977656577700
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 242104284171900,
+          "wall_ns": 1786325977658085900
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 242104454118800,
+          "wall_ns": 1786325977828333600
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 242104487264200,
+          "wall_ns": 1786325977861369000
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 242104489481900,
+          "wall_ns": 1786325977863869000
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 242104491193900,
+          "wall_ns": 1786325977865367600
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 242104494282800,
+          "wall_ns": 1786325977868450700
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 242104496290300,
+          "wall_ns": 1786325977870452900
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 242105295559800,
+          "wall_ns": 1786325978669731300
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 242105298170700,
+          "wall_ns": 1786325978672230900
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_stage_replacement_r2",
+        "transport": "gpu_ring3",
+        "scenario": "stage_replacement",
+        "run": 2,
+        "started_utc": "2026-08-10T01:39:39.9740730+00:00",
+        "ended_utc": "2026-08-10T01:40:00.9509354+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 27,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 0,
+          "slot": 0
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r2\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r2\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r2\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "stage_replacement",
+        "run": 2,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": 0,
+        "fallback_count": 0,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r2\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r2\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 242112811449300,
+          "wall_ns": 1786325986185462000
+        },
+        {
+          "detail": {
+            "scenario": "stage_replacement",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 242112816157800,
+          "wall_ns": 1786325986190479500
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 242112973884900,
+          "wall_ns": 1786325986348275900
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r2\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 242113631221900,
+          "wall_ns": 1786325987005169700
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 242124432730100,
+          "wall_ns": 1786325997806844600
+        },
+        {
+          "detail": {
+            "revision": 15
+          },
+          "name": "stage_replacement_publication_gate_closed",
+          "perf_ns": 242124707089000,
+          "wall_ns": 1786325998081370700
+        },
+        {
+          "detail": {},
+          "name": "stage_replacement_source_sync",
+          "perf_ns": 242124709781200,
+          "wall_ns": 1786325998083871600
+        },
+        {
+          "detail": {},
+          "name": "stage_replacement_old_stage_closed",
+          "perf_ns": 242124906630300,
+          "wall_ns": 1786325998280566800
+        },
+        {
+          "detail": {},
+          "name": "stage_replacement_new_stage_open_begin",
+          "perf_ns": 242124909589200,
+          "wall_ns": 1786325998283566100
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r2\\probe.stage1.usda"
+          },
+          "name": "stage_replacement_new_stage_open_end",
+          "perf_ns": 242125111260000,
+          "wall_ns": 1786325998485376100
+        },
+        {
+          "detail": {},
+          "name": "stage_replacement_publication_gate_open",
+          "perf_ns": 242125114707000,
+          "wall_ns": 1786325998488891200
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "publication_end",
+          "perf_ns": 242125467578300,
+          "wall_ns": 1786325998841605300
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "teardown_begin",
+          "perf_ns": 242125471155900,
+          "wall_ns": 1786325998845102900
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 242125473386900,
+          "wall_ns": 1786325998847611000
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 242125475062900,
+          "wall_ns": 1786325998849111200
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 242125477728100,
+          "wall_ns": 1786325998852111600
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 242125479425100,
+          "wall_ns": 1786325998853610300
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 242125481207400,
+          "wall_ns": 1786325998855609800
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 242125482813000,
+          "wall_ns": 1786325998857114000
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 242125655495500,
+          "wall_ns": 1786325999029652200
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 242125687017700,
+          "wall_ns": 1786325999061184200
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 242125688954700,
+          "wall_ns": 1786325999063184300
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 242125690669600,
+          "wall_ns": 1786325999064684500
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 242125693692500,
+          "wall_ns": 1786325999067821300
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 242125696022800,
+          "wall_ns": 1786325999070321500
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 242126511091000,
+          "wall_ns": 1786325999885500500
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 242126513608100,
+          "wall_ns": 1786325999887577500
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_provider_regeneration_r2",
+        "transport": "gpu_ring3",
+        "scenario": "provider_regeneration",
+        "run": 2,
+        "started_utc": "2026-08-10T01:40:01.2433044+00:00",
+        "ended_utc": "2026-08-10T01:40:22.0450806+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 25,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 0,
+          "slot": 0
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_provider_regeneration_r2\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_provider_regeneration_r2\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_provider_regeneration_r2\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "provider_regeneration",
+        "run": 2,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": 0,
+        "fallback_count": 0,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_provider_regeneration_r2\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_provider_regeneration_r2\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 242133990161700,
+          "wall_ns": 1786326007364190200
+        },
+        {
+          "detail": {
+            "scenario": "provider_regeneration",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 242133994644700,
+          "wall_ns": 1786326007368194900
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 242134154725000,
+          "wall_ns": 1786326007528966400
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_provider_regeneration_r2\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 242134863064400,
+          "wall_ns": 1786326008237061300
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 242145849882900,
+          "wall_ns": 1786326019224095700
+        },
+        {
+          "detail": {},
+          "name": "provider_regeneration_source_sync",
+          "perf_ns": 242146152122100,
+          "wall_ns": 1786326019526401500
+        },
+        {
+          "detail": {},
+          "name": "provider_regeneration_old_destroyed",
+          "perf_ns": 242146154716400,
+          "wall_ns": 1786326019528974500
+        },
+        {
+          "detail": {},
+          "name": "provider_regeneration_new_created",
+          "perf_ns": 242146156816300,
+          "wall_ns": 1786326019530978600
+        },
+        {
+          "detail": {
+            "revision": 15
+          },
+          "name": "provider_regeneration_republished",
+          "perf_ns": 242146163244000,
+          "wall_ns": 1786326019536978800
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "publication_end",
+          "perf_ns": 242146534875000,
+          "wall_ns": 1786326019908974200
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "teardown_begin",
+          "perf_ns": 242146540009200,
+          "wall_ns": 1786326019913978500
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 242146542395300,
+          "wall_ns": 1786326019916478800
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 242146544222700,
+          "wall_ns": 1786326019918490700
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 242146547396800,
+          "wall_ns": 1786326019921494500
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 242146549330600,
+          "wall_ns": 1786326019923495300
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 242146551168800,
+          "wall_ns": 1786326019925494300
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 242146553021500,
+          "wall_ns": 1786326019926994400
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 242146734548000,
+          "wall_ns": 1786326020108962400
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 242146766399800,
+          "wall_ns": 1786326020140596000
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 242146769418800,
+          "wall_ns": 1786326020143548000
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 242146771155200,
+          "wall_ns": 1786326020145548200
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 242146773220100,
+          "wall_ns": 1786326020147047600
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 242146774826100,
+          "wall_ns": 1786326020149060300
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 242147646660600,
+          "wall_ns": 1786326021020953500
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 242147649591500,
+          "wall_ns": 1786326021023954000
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_extension_disable_r2",
+        "transport": "gpu_ring3",
+        "scenario": "extension_disable",
+        "run": 2,
+        "started_utc": "2026-08-10T01:40:22.3410808+00:00",
+        "ended_utc": "2026-08-10T01:40:43.5456319+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 21,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 0,
+          "slot": 0
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_extension_disable_r2\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_extension_disable_r2\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_extension_disable_r2\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "extension_disable",
+        "run": 2,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": 0,
+        "fallback_count": 0,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_extension_disable_r2\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_extension_disable_r2\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 242155182997500,
+          "wall_ns": 1786326028557376400
+        },
+        {
+          "detail": {
+            "scenario": "extension_disable",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 242155186810600,
+          "wall_ns": 1786326028560908700
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 242155341071000,
+          "wall_ns": 1786326028715457200
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_extension_disable_r2\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 242156050936200,
+          "wall_ns": 1786326029424926700
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 242166972082100,
+          "wall_ns": 1786326040346290500
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "publication_end",
+          "perf_ns": 242167627082400,
+          "wall_ns": 1786326041001203200
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "teardown_begin",
+          "perf_ns": 242167631076900,
+          "wall_ns": 1786326041005209500
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 242167633097400,
+          "wall_ns": 1786326041007208600
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 242167635285200,
+          "wall_ns": 1786326041009713700
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 242167638013500,
+          "wall_ns": 1786326041012220300
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 242167639920100,
+          "wall_ns": 1786326041014220800
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 242167641918100,
+          "wall_ns": 1786326041016222500
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 242167643576000,
+          "wall_ns": 1786326041017722200
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 242167872496300,
+          "wall_ns": 1786326041246785500
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 242167917990200,
+          "wall_ns": 1786326041292004800
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 242167920801100,
+          "wall_ns": 1786326041295004300
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 242167923641100,
+          "wall_ns": 1786326041297733900
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 242167928314600,
+          "wall_ns": 1786326041302358700
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 242167931464300,
+          "wall_ns": 1786326041305865200
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 242169020803800,
+          "wall_ns": 1786326042394989900
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 242169025044200,
+          "wall_ns": 1786326042398986500
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_gpu_initialization_failure_r2",
+        "transport": "gpu_ring3",
+        "scenario": "gpu_initialization_failure",
+        "run": 2,
+        "started_utc": "2026-08-10T01:40:43.8750431+00:00",
+        "ended_utc": "2026-08-10T01:41:05.9036046+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 22,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 1,
+          "slot": null
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_gpu_initialization_failure_r2\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_gpu_initialization_failure_r2\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_gpu_initialization_failure_r2\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "gpu_initialization_failure",
+        "run": 2,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": null,
+        "fallback_count": 1,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_gpu_initialization_failure_r2\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_gpu_initialization_failure_r2\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 242177166784400,
+          "wall_ns": 1786326050541017000
+        },
+        {
+          "detail": {
+            "scenario": "gpu_initialization_failure",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 242177171192000,
+          "wall_ns": 1786326050545514800
+        },
+        {
+          "detail": {
+            "error": "injected GPU initialization failure"
+          },
+          "name": "gpu_initialization_faulted_cpu_fallback",
+          "perf_ns": 242177175065500,
+          "wall_ns": 1786326050549023400
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 242177269354100,
+          "wall_ns": 1786326050643691400
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_gpu_initialization_failure_r2\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 242177926432200,
+          "wall_ns": 1786326051300607200
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 242189464095700,
+          "wall_ns": 1786326062838322000
+        },
+        {
+          "detail": {
+            "fallback_count": 1,
+            "revision": 30,
+            "slot": null
+          },
+          "name": "publication_end",
+          "perf_ns": 242190194239200,
+          "wall_ns": 1786326063568488800
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": null
+          },
+          "name": "teardown_begin",
+          "perf_ns": 242190196205800,
+          "wall_ns": 1786326063570500900
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 242190198090300,
+          "wall_ns": 1786326063572497100
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 242190199945400,
+          "wall_ns": 1786326063573994500
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 242190203153800,
+          "wall_ns": 1786326063576994400
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 242190205249700,
+          "wall_ns": 1786326063579604300
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 242190206944600,
+          "wall_ns": 1786326063581104500
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 242190208701300,
+          "wall_ns": 1786326063583104400
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 242190392256000,
+          "wall_ns": 1786326063766730000
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 242190424051100,
+          "wall_ns": 1786326063798260800
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 242190425972200,
+          "wall_ns": 1786326063800268500
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 242190427746200,
+          "wall_ns": 1786326063801767800
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 242190430538200,
+          "wall_ns": 1786326063804768400
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 242190432120300,
+          "wall_ns": 1786326063806271300
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 242191344534100,
+          "wall_ns": 1786326064718680300
+        },
+        {
+          "detail": {
+            "fallback_count": 1,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 242191346458000,
+          "wall_ns": 1786326064720684600
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_publication_failure_r2",
+        "transport": "gpu_ring3",
+        "scenario": "publication_failure",
+        "run": 2,
+        "started_utc": "2026-08-10T01:41:06.2667660+00:00",
+        "ended_utc": "2026-08-10T01:41:27.0042583+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 22,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 1,
+          "slot": null
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_publication_failure_r2\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_publication_failure_r2\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_publication_failure_r2\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "publication_failure",
+        "run": 2,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": null,
+        "fallback_count": 1,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_publication_failure_r2\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_publication_failure_r2\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 242199154020100,
+          "wall_ns": 1786326072528496400
+        },
+        {
+          "detail": {
+            "scenario": "publication_failure",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 242199158376800,
+          "wall_ns": 1786326072532499200
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 242199305472100,
+          "wall_ns": 1786326072679825800
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_publication_failure_r2\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 242199949554900,
+          "wall_ns": 1786326073323717800
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 242210931185500,
+          "wall_ns": 1786326084305169500
+        },
+        {
+          "detail": {
+            "error": "injected before Provider setter",
+            "revision": 15,
+            "slot": 0
+          },
+          "name": "gpu_publication_faulted",
+          "perf_ns": 242211208672600,
+          "wall_ns": 1786326084582755500
+        },
+        {
+          "detail": {
+            "fallback_count": 1,
+            "revision": 30,
+            "slot": null
+          },
+          "name": "publication_end",
+          "perf_ns": 242211612163600,
+          "wall_ns": 1786326084986418600
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": null
+          },
+          "name": "teardown_begin",
+          "perf_ns": 242211615065100,
+          "wall_ns": 1786326084989429600
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 242211617085700,
+          "wall_ns": 1786326084991429400
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 242211618866000,
+          "wall_ns": 1786326084992929500
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 242211620831500,
+          "wall_ns": 1786326084994928700
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 242211624534700,
+          "wall_ns": 1786326084998940300
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 242211627104500,
+          "wall_ns": 1786326085001439600
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 242211628821700,
+          "wall_ns": 1786326085002939500
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 242211814197500,
+          "wall_ns": 1786326085188734600
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 242211846917700,
+          "wall_ns": 1786326085221183600
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 242211849288100,
+          "wall_ns": 1786326085223684800
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 242211851194800,
+          "wall_ns": 1786326085225184100
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 242211854722000,
+          "wall_ns": 1786326085229194600
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 242211856445800,
+          "wall_ns": 1786326085230694600
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 242212655974600,
+          "wall_ns": 1786326086030191800
+        },
+        {
+          "detail": {
+            "fallback_count": 1,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 242212657874900,
+          "wall_ns": 1786326086032192200
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_normal_exit_r2",
+        "transport": "gpu_ring3",
+        "scenario": "normal_exit",
+        "run": 2,
+        "started_utc": "2026-08-10T01:41:27.3077295+00:00",
+        "ended_utc": "2026-08-10T01:41:47.9118570+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 21,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 0,
+          "slot": 0
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_normal_exit_r2\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_normal_exit_r2\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_normal_exit_r2\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "normal_exit",
+        "run": 2,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": 0,
+        "fallback_count": 0,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_normal_exit_r2\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_normal_exit_r2\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 242219898541000,
+          "wall_ns": 1786326093272688400
+        },
+        {
+          "detail": {
+            "scenario": "normal_exit",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 242219903079400,
+          "wall_ns": 1786326093277210400
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 242220057345300,
+          "wall_ns": 1786326093431518400
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_normal_exit_r2\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 242220781783000,
+          "wall_ns": 1786326094156050000
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 242231821025100,
+          "wall_ns": 1786326105195181500
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "publication_end",
+          "perf_ns": 242232462906000,
+          "wall_ns": 1786326105837102300
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "teardown_begin",
+          "perf_ns": 242232467468700,
+          "wall_ns": 1786326105841602000
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 242232469642800,
+          "wall_ns": 1786326105844101800
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 242232471765200,
+          "wall_ns": 1786326105846112800
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 242232474420600,
+          "wall_ns": 1786326105848612900
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 242232476434500,
+          "wall_ns": 1786326105850612500
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 242232478597700,
+          "wall_ns": 1786326105853113400
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 242232480198000,
+          "wall_ns": 1786326105854112600
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 242232663810500,
+          "wall_ns": 1786326106038282400
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 242232696023100,
+          "wall_ns": 1786326106070325200
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 242232698978400,
+          "wall_ns": 1786326106073325300
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 242232700739100,
+          "wall_ns": 1786326106074325600
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 242232702821700,
+          "wall_ns": 1786326106077335600
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 242232704402700,
+          "wall_ns": 1786326106078835300
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 242233527094500,
+          "wall_ns": 1786326106901540300
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 242233529927600,
+          "wall_ns": 1786326106904092000
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "cpu_normal_exit_r3",
+        "transport": "cpu",
+        "scenario": "normal_exit",
+        "run": 3,
+        "started_utc": "2026-08-10T01:41:48.2178566+00:00",
+        "ended_utc": "2026-08-10T01:42:08.8676590+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 21,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 0,
+          "slot": null
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\cpu_normal_exit_r3\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\cpu_normal_exit_r3\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\cpu_normal_exit_r3\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "cpu",
+        "scenario": "normal_exit",
+        "run": 3,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": null,
+        "fallback_count": 0,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\cpu_normal_exit_r3\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\cpu_normal_exit_r3\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 242240862679700,
+          "wall_ns": 1786326114236792700
+        },
+        {
+          "detail": {
+            "scenario": "normal_exit",
+            "transport": "cpu"
+          },
+          "name": "probe_begin",
+          "perf_ns": 242240866370400,
+          "wall_ns": 1786326114240803400
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 242240956151300,
+          "wall_ns": 1786326114330418800
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\cpu_normal_exit_r3\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 242241624168700,
+          "wall_ns": 1786326114998260400
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 242252670705800,
+          "wall_ns": 1786326126045054800
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30,
+            "slot": null
+          },
+          "name": "publication_end",
+          "perf_ns": 242253404889700,
+          "wall_ns": 1786326126779182300
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": null
+          },
+          "name": "teardown_begin",
+          "perf_ns": 242253410872800,
+          "wall_ns": 1786326126785188100
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 242253412593900,
+          "wall_ns": 1786326126787186900
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 242253414328800,
+          "wall_ns": 1786326126788187300
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 242253416895300,
+          "wall_ns": 1786326126791202900
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 242253418799500,
+          "wall_ns": 1786326126793203100
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 242253420573000,
+          "wall_ns": 1786326126794705300
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 242253422478100,
+          "wall_ns": 1786326126796704700
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 242253610511600,
+          "wall_ns": 1786326126985071200
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 242253643719800,
+          "wall_ns": 1786326127018106900
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 242253645765000,
+          "wall_ns": 1786326127020195400
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 242253647548500,
+          "wall_ns": 1786326127021702000
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 242253650109700,
+          "wall_ns": 1786326127024701800
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 242253651756700,
+          "wall_ns": 1786326127026201700
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 242254474250000,
+          "wall_ns": 1786326127848469600
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 242254477507100,
+          "wall_ns": 1786326127852098800
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_stage_replacement_r3",
+        "transport": "gpu_ring3",
+        "scenario": "stage_replacement",
+        "run": 3,
+        "started_utc": "2026-08-10T01:42:09.1668885+00:00",
+        "ended_utc": "2026-08-10T01:42:29.9711634+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 27,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 0,
+          "slot": 0
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r3\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r3\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r3\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "stage_replacement",
+        "run": 3,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": 0,
+        "fallback_count": 0,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r3\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r3\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 242261891419100,
+          "wall_ns": 1786326135265950100
+        },
+        {
+          "detail": {
+            "scenario": "stage_replacement",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 242261895937000,
+          "wall_ns": 1786326135270449000
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 242262045074600,
+          "wall_ns": 1786326135419215200
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r3\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 242262722553000,
+          "wall_ns": 1786326136096817900
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 242273466585000,
+          "wall_ns": 1786326146840853800
+        },
+        {
+          "detail": {
+            "revision": 15
+          },
+          "name": "stage_replacement_publication_gate_closed",
+          "perf_ns": 242273751514600,
+          "wall_ns": 1786326147126025900
+        },
+        {
+          "detail": {},
+          "name": "stage_replacement_source_sync",
+          "perf_ns": 242273757035400,
+          "wall_ns": 1786326147131523000
+        },
+        {
+          "detail": {},
+          "name": "stage_replacement_old_stage_closed",
+          "perf_ns": 242273947305500,
+          "wall_ns": 1786326147321432700
+        },
+        {
+          "detail": {},
+          "name": "stage_replacement_new_stage_open_begin",
+          "perf_ns": 242273952238400,
+          "wall_ns": 1786326147326447600
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_stage_replacement_r3\\probe.stage1.usda"
+          },
+          "name": "stage_replacement_new_stage_open_end",
+          "perf_ns": 242274135702900,
+          "wall_ns": 1786326147510079700
+        },
+        {
+          "detail": {},
+          "name": "stage_replacement_publication_gate_open",
+          "perf_ns": 242274139211800,
+          "wall_ns": 1786326147513577500
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "publication_end",
+          "perf_ns": 242274493983300,
+          "wall_ns": 1786326147868340500
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "teardown_begin",
+          "perf_ns": 242274498170400,
+          "wall_ns": 1786326147872339900
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 242274500491300,
+          "wall_ns": 1786326147874854800
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 242274502209700,
+          "wall_ns": 1786326147876354100
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 242274504952500,
+          "wall_ns": 1786326147879353700
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 242274507069700,
+          "wall_ns": 1786326147881355000
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 242274509107700,
+          "wall_ns": 1786326147883353700
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 242274510743400,
+          "wall_ns": 1786326147885363400
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 242274693972300,
+          "wall_ns": 1786326148068292100
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 242274727003800,
+          "wall_ns": 1786326148101328200
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 242274730185500,
+          "wall_ns": 1786326148104404200
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 242274732328300,
+          "wall_ns": 1786326148106909700
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 242274734562000,
+          "wall_ns": 1786326148108909800
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 242274736277200,
+          "wall_ns": 1786326148110410100
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 242275570479000,
+          "wall_ns": 1786326148944736800
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 242275574115000,
+          "wall_ns": 1786326148948742700
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_provider_regeneration_r3",
+        "transport": "gpu_ring3",
+        "scenario": "provider_regeneration",
+        "run": 3,
+        "started_utc": "2026-08-10T01:42:30.2498205+00:00",
+        "ended_utc": "2026-08-10T01:42:50.7063145+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 25,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 0,
+          "slot": 0
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_provider_regeneration_r3\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_provider_regeneration_r3\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_provider_regeneration_r3\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "provider_regeneration",
+        "run": 3,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": 0,
+        "fallback_count": 0,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_provider_regeneration_r3\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_provider_regeneration_r3\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 242282957469600,
+          "wall_ns": 1786326156331657200
+        },
+        {
+          "detail": {
+            "scenario": "provider_regeneration",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 242282962363200,
+          "wall_ns": 1786326156336651100
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 242283110764300,
+          "wall_ns": 1786326156485033400
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_provider_regeneration_r3\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 242283814405500,
+          "wall_ns": 1786326157188742200
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 242294619954200,
+          "wall_ns": 1786326167994345900
+        },
+        {
+          "detail": {},
+          "name": "provider_regeneration_source_sync",
+          "perf_ns": 242294898602500,
+          "wall_ns": 1786326168272856800
+        },
+        {
+          "detail": {},
+          "name": "provider_regeneration_old_destroyed",
+          "perf_ns": 242294901180400,
+          "wall_ns": 1786326168275357400
+        },
+        {
+          "detail": {},
+          "name": "provider_regeneration_new_created",
+          "perf_ns": 242294903022000,
+          "wall_ns": 1786326168277357200
+        },
+        {
+          "detail": {
+            "revision": 15
+          },
+          "name": "provider_regeneration_republished",
+          "perf_ns": 242294907882100,
+          "wall_ns": 1786326168282368700
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "publication_end",
+          "perf_ns": 242295255966300,
+          "wall_ns": 1786326168630148400
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "teardown_begin",
+          "perf_ns": 242295258828900,
+          "wall_ns": 1786326168633154000
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 242295262116600,
+          "wall_ns": 1786326168636654600
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 242295263920700,
+          "wall_ns": 1786326168638161500
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 242295265603000,
+          "wall_ns": 1786326168640163100
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 242295267273000,
+          "wall_ns": 1786326168641671100
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 242295270101200,
+          "wall_ns": 1786326168644670800
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 242295271976900,
+          "wall_ns": 1786326168646170800
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 242295469099500,
+          "wall_ns": 1786326168843695600
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 242295501335900,
+          "wall_ns": 1786326168875679700
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 242295503462000,
+          "wall_ns": 1786326168877680100
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 242295505253900,
+          "wall_ns": 1786326168879180200
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 242295508407900,
+          "wall_ns": 1786326168882696500
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 242295510228100,
+          "wall_ns": 1786326168884694800
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 242296380913000,
+          "wall_ns": 1786326169755504500
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 242296383833100,
+          "wall_ns": 1786326169758004600
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_extension_disable_r3",
+        "transport": "gpu_ring3",
+        "scenario": "extension_disable",
+        "run": 3,
+        "started_utc": "2026-08-10T01:42:51.0088112+00:00",
+        "ended_utc": "2026-08-10T01:43:11.5894532+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 21,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 0,
+          "slot": 0
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_extension_disable_r3\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_extension_disable_r3\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_extension_disable_r3\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "extension_disable",
+        "run": 3,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": 0,
+        "fallback_count": 0,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_extension_disable_r3\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_extension_disable_r3\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 242303924360100,
+          "wall_ns": 1786326177298924500
+        },
+        {
+          "detail": {
+            "scenario": "extension_disable",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 242303931897000,
+          "wall_ns": 1786326177306423400
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 242304122374600,
+          "wall_ns": 1786326177496893300
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_extension_disable_r3\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 242304781006400,
+          "wall_ns": 1786326178155429600
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 242315561691100,
+          "wall_ns": 1786326188936103300
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "publication_end",
+          "perf_ns": 242316194649600,
+          "wall_ns": 1786326189568894000
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "teardown_begin",
+          "perf_ns": 242316199161600,
+          "wall_ns": 1786326189573392900
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 242316201226000,
+          "wall_ns": 1786326189575893000
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 242316203090500,
+          "wall_ns": 1786326189577397900
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 242316206408900,
+          "wall_ns": 1786326189580904100
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 242316208664100,
+          "wall_ns": 1786326189582903900
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 242316211566300,
+          "wall_ns": 1786326189585904200
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 242316213404800,
+          "wall_ns": 1786326189587916900
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 242316393393400,
+          "wall_ns": 1786326189767625000
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 242316425259000,
+          "wall_ns": 1786326189799666900
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 242316427461400,
+          "wall_ns": 1786326189801666800
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 242316429082700,
+          "wall_ns": 1786326189803667300
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 242316432043200,
+          "wall_ns": 1786326189806167000
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 242316433669000,
+          "wall_ns": 1786326189808177600
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 242317213856100,
+          "wall_ns": 1786326190588332200
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 242317215791700,
+          "wall_ns": 1786326190590337200
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_gpu_initialization_failure_r3",
+        "transport": "gpu_ring3",
+        "scenario": "gpu_initialization_failure",
+        "run": 3,
+        "started_utc": "2026-08-10T01:43:11.9002826+00:00",
+        "ended_utc": "2026-08-10T01:43:32.5365937+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 22,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 1,
+          "slot": null
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_gpu_initialization_failure_r3\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_gpu_initialization_failure_r3\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_gpu_initialization_failure_r3\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "gpu_initialization_failure",
+        "run": 3,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": null,
+        "fallback_count": 1,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_gpu_initialization_failure_r3\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_gpu_initialization_failure_r3\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 242324641570400,
+          "wall_ns": 1786326198015853200
+        },
+        {
+          "detail": {
+            "scenario": "gpu_initialization_failure",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 242324646085200,
+          "wall_ns": 1786326198020353200
+        },
+        {
+          "detail": {
+            "error": "injected GPU initialization failure"
+          },
+          "name": "gpu_initialization_faulted_cpu_fallback",
+          "perf_ns": 242324650222800,
+          "wall_ns": 1786326198024861200
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 242324743642900,
+          "wall_ns": 1786326198118097300
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_gpu_initialization_failure_r3\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 242325373382400,
+          "wall_ns": 1786326198747799300
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 242336407293300,
+          "wall_ns": 1786326209781665700
+        },
+        {
+          "detail": {
+            "fallback_count": 1,
+            "revision": 30,
+            "slot": null
+          },
+          "name": "publication_end",
+          "perf_ns": 242337131363400,
+          "wall_ns": 1786326210505634500
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": null
+          },
+          "name": "teardown_begin",
+          "perf_ns": 242337134314000,
+          "wall_ns": 1786326210508634100
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 242337136774800,
+          "wall_ns": 1786326210511138400
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 242337139146300,
+          "wall_ns": 1786326210513155900
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 242337142433000,
+          "wall_ns": 1786326210516943900
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 242337144198300,
+          "wall_ns": 1786326210518444400
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 242337146066200,
+          "wall_ns": 1786326210520443700
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 242337147798500,
+          "wall_ns": 1786326210522452700
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 242337333180300,
+          "wall_ns": 1786326210707863800
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 242337367048300,
+          "wall_ns": 1786326210741438900
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 242337369115800,
+          "wall_ns": 1786326210743444800
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 242337371941500,
+          "wall_ns": 1786326210746446800
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 242337373717200,
+          "wall_ns": 1786326210747946300
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 242337375359400,
+          "wall_ns": 1786326210749946200
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 242338213067600,
+          "wall_ns": 1786326211587712200
+        },
+        {
+          "detail": {
+            "fallback_count": 1,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 242338217236400,
+          "wall_ns": 1786326211591777200
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_publication_failure_r3",
+        "transport": "gpu_ring3",
+        "scenario": "publication_failure",
+        "run": 3,
+        "started_utc": "2026-08-10T01:43:32.8330849+00:00",
+        "ended_utc": "2026-08-10T01:43:53.9662027+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 22,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 1,
+          "slot": null
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_publication_failure_r3\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_publication_failure_r3\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_publication_failure_r3\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "publication_failure",
+        "run": 3,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": null,
+        "fallback_count": 1,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_publication_failure_r3\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_publication_failure_r3\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 242345469095000,
+          "wall_ns": 1786326218843356500
+        },
+        {
+          "detail": {
+            "scenario": "publication_failure",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 242345473160100,
+          "wall_ns": 1786326218847869300
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 242345628690800,
+          "wall_ns": 1786326219003267600
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_publication_failure_r3\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 242346367891700,
+          "wall_ns": 1786326219742274000
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 242357744106800,
+          "wall_ns": 1786326231118446300
+        },
+        {
+          "detail": {
+            "error": "injected before Provider setter",
+            "revision": 15,
+            "slot": 0
+          },
+          "name": "gpu_publication_faulted",
+          "perf_ns": 242358020629100,
+          "wall_ns": 1786326231394978500
+        },
+        {
+          "detail": {
+            "fallback_count": 1,
+            "revision": 30,
+            "slot": null
+          },
+          "name": "publication_end",
+          "perf_ns": 242358420973100,
+          "wall_ns": 1786326231795655200
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": null
+          },
+          "name": "teardown_begin",
+          "perf_ns": 242358424304300,
+          "wall_ns": 1786326231798668400
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 242358426403900,
+          "wall_ns": 1786326231800667700
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 242358428434900,
+          "wall_ns": 1786326231803168700
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 242358431075400,
+          "wall_ns": 1786326231805668700
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 242358433150700,
+          "wall_ns": 1786326231807684600
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 242358435164400,
+          "wall_ns": 1786326231809683100
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 242358437075900,
+          "wall_ns": 1786326231811683300
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 242358629568000,
+          "wall_ns": 1786326232004238300
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 242358661979500,
+          "wall_ns": 1786326232036279000
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 242358664307400,
+          "wall_ns": 1786326232038794400
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 242358666090900,
+          "wall_ns": 1786326232040797700
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 242358669132900,
+          "wall_ns": 1786326232043799100
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 242358671050100,
+          "wall_ns": 1786326232045298900
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 242359549973500,
+          "wall_ns": 1786326232924572400
+        },
+        {
+          "detail": {
+            "fallback_count": 1,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 242359553375400,
+          "wall_ns": 1786326232928081100
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_normal_exit_r3",
+        "transport": "gpu_ring3",
+        "scenario": "normal_exit",
+        "run": 3,
+        "started_utc": "2026-08-10T01:43:54.2746225+00:00",
+        "ended_utc": "2026-08-10T01:44:16.2646759+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 21,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 0,
+          "slot": 0
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_normal_exit_r3\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_normal_exit_r3\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_normal_exit_r3\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "normal_exit",
+        "run": 3,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": 0,
+        "fallback_count": 0,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_normal_exit_r3\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_normal_exit_r3\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 242367569831000,
+          "wall_ns": 1786326240944405800
+        },
+        {
+          "detail": {
+            "scenario": "normal_exit",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 242367574393100,
+          "wall_ns": 1786326240949018900
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 242367742679200,
+          "wall_ns": 1786326241117404000
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_normal_exit_r3\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 242368455431700,
+          "wall_ns": 1786326241829718900
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 242380066719200,
+          "wall_ns": 1786326253441204700
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "publication_end",
+          "perf_ns": 242380706069900,
+          "wall_ns": 1786326254080845000
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "teardown_begin",
+          "perf_ns": 242380709392400,
+          "wall_ns": 1786326254083846000
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 242380711362000,
+          "wall_ns": 1786326254085345100
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 242380715496600,
+          "wall_ns": 1786326254089943600
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 242380718103300,
+          "wall_ns": 1786326254092460500
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 242380720009100,
+          "wall_ns": 1786326254094457900
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 242380722799600,
+          "wall_ns": 1786326254097472000
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 242380724613000,
+          "wall_ns": 1786326254098971000
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 242380916120600,
+          "wall_ns": 1786326254290692100
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 242380948213700,
+          "wall_ns": 1786326254322786400
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 242380951269100,
+          "wall_ns": 1786326254325285700
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 242380952946100,
+          "wall_ns": 1786326254327299000
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 242380955029200,
+          "wall_ns": 1786326254329799000
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 242380956653300,
+          "wall_ns": 1786326254331299100
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 242381819507200,
+          "wall_ns": 1786326255194265900
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 242381821321700,
+          "wall_ns": 1786326255195268500
+        }
+      ]
+    },
+    {
+      "process": {
+        "schema": "campfire.phasev3tj.process-result.v1",
+        "name": "gpu_ring3_timeline_restart_r3",
+        "transport": "gpu_ring3",
+        "scenario": "timeline_restart",
+        "run": 3,
+        "started_utc": "2026-08-10T01:44:16.5787623+00:00",
+        "ended_utc": "2026-08-10T01:44:39.1850256+00:00",
+        "classification": "normal",
+        "simulator_commit": "06e9537",
+        "kit_build_id": "5fe8ad14c77328dbe4a11361d1fdb45f8581d2595e7607afab0221379d4650ef",
+        "kit_file_version": "",
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 3090",
+          "driver": "591.86",
+          "power_limit_w": 210,
+          "enforced_power_limit_w": 210
+        },
+        "settings": {
+          "point_enabled": false,
+          "rigid_layout_enabled": false,
+          "flow_enabled": true,
+          "wood_visual_v3_enabled": false,
+          "gpu_transport_production_enabled": false
+        },
+        "crash_handler": {
+          "scope": "isolated target process only",
+          "machine_wide_configuration_changed": false,
+          "installed": true,
+          "metadata": null
+        },
+        "windows_exit_code": 0,
+        "windows_exit_hex": "0x00000000",
+        "dump": null,
+        "fatal_log_counts": {
+          "IRenderSettings::getRenderSettings failed getting a stage-id": 0,
+          "CUDA_ERROR_ILLEGAL_ADDRESS": 0,
+          "device lost": 0,
+          "invalid pointer": 0
+        },
+        "marker_count": 23,
+        "last_marker": "normal_quit_posted",
+        "teardown_order_ok": true,
+        "publication": {
+          "revision": 30,
+          "fallback_count": 0,
+          "slot": 0
+        },
+        "probe_status": "ok",
+        "probe_json": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_timeline_restart_r3\\probe.json",
+        "markers": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_timeline_restart_r3\\markers.jsonl",
+        "kit_log": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_timeline_restart_r3\\kit.log"
+      },
+      "probe": {
+        "schema": "campfire.phasev3tj.gpu-lifecycle-process.v1",
+        "status": "ok",
+        "transport": "gpu_ring3",
+        "scenario": "timeline_restart",
+        "run": 3,
+        "kit": "110.2",
+        "flow": "110.0.0",
+        "rtx": "omni.hydra.rtx 1.0.4",
+        "atlas": {
+          "width": 120,
+          "height": 60,
+          "textures": 2,
+          "bytes": 57600
+        },
+        "log_count": 20,
+        "prim_count": 75,
+        "replacement_prim_count": 75,
+        "last_revision": 30,
+        "last_slot": 0,
+        "fallback_count": 0,
+        "publication_gate_closed": true,
+        "production_changed": false,
+        "gpu_pointer_externally_exposed": false
+      },
+      "markers": [
+        {
+          "detail": {
+            "dump": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_timeline_restart_r3\\kit_access_violation_full.dmp",
+            "metadata": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_timeline_restart_r3\\crash_handler.json"
+          },
+          "name": "crash_handler_installed",
+          "perf_ns": 242390436014100,
+          "wall_ns": 1786326263810721600
+        },
+        {
+          "detail": {
+            "scenario": "timeline_restart",
+            "transport": "gpu_ring3"
+          },
+          "name": "probe_begin",
+          "perf_ns": 242390439827300,
+          "wall_ns": 1786326263814221800
+        },
+        {
+          "detail": {},
+          "name": "stage_open_begin",
+          "perf_ns": 242390607966600,
+          "wall_ns": 1786326263982694200
+        },
+        {
+          "detail": {
+            "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal\\gpu_ring3_timeline_restart_r3\\probe.stage0.usda"
+          },
+          "name": "stage_open_end",
+          "perf_ns": 242391367757300,
+          "wall_ns": 1786326264742147300
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "warmup_end",
+          "perf_ns": 242402997143900,
+          "wall_ns": 1786326276371591700
+        },
+        {
+          "detail": {
+            "revision": 15
+          },
+          "name": "timeline_stop_midrun",
+          "perf_ns": 242403291550700,
+          "wall_ns": 1786326276665491900
+        },
+        {
+          "detail": {
+            "revision": 15
+          },
+          "name": "timeline_restart",
+          "perf_ns": 242403334201100,
+          "wall_ns": 1786326276708617600
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "publication_end",
+          "perf_ns": 242403731496100,
+          "wall_ns": 1786326277105940100
+        },
+        {
+          "detail": {
+            "revision": 30,
+            "slot": 0
+          },
+          "name": "teardown_begin",
+          "perf_ns": 242403733986400,
+          "wall_ns": 1786326277108449900
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_gate_closed",
+          "perf_ns": 242403736915000,
+          "wall_ns": 1786326277111454700
+        },
+        {
+          "detail": {},
+          "name": "teardown_publication_rejected",
+          "perf_ns": 242403738770000,
+          "wall_ns": 1786326277113455100
+        },
+        {
+          "detail": {
+            "timeline_playing": true
+          },
+          "name": "timeline_stop",
+          "perf_ns": 242403740608800,
+          "wall_ns": 1786326277115038000
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_begin",
+          "perf_ns": 242403743653500,
+          "wall_ns": 1786326277117968400
+        },
+        {
+          "detail": {},
+          "name": "source_generation_sync_end",
+          "perf_ns": 242403745505200,
+          "wall_ns": 1786326277119972100
+        },
+        {
+          "detail": {},
+          "name": "stage_close_begin",
+          "perf_ns": 242403747149300,
+          "wall_ns": 1786326277121471600
+        },
+        {
+          "detail": {
+            "stage_present": false
+          },
+          "name": "stage_close_end",
+          "perf_ns": 242403936686400,
+          "wall_ns": 1786326277311420400
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_begin",
+          "perf_ns": 242403969327700,
+          "wall_ns": 1786326277343959000
+        },
+        {
+          "detail": {},
+          "name": "provider_destroy_end",
+          "perf_ns": 242403971665100,
+          "wall_ns": 1786326277346459100
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_begin",
+          "perf_ns": 242403974375300,
+          "wall_ns": 1786326277349094600
+        },
+        {
+          "detail": {},
+          "name": "gpu_allocation_release_end",
+          "perf_ns": 242403976688100,
+          "wall_ns": 1786326277351092500
+        },
+        {
+          "detail": {},
+          "name": "extension_disable_begin",
+          "perf_ns": 242403978653400,
+          "wall_ns": 1786326277353088600
+        },
+        {
+          "detail": {
+            "disabled": true
+          },
+          "name": "extension_disable_end",
+          "perf_ns": 242404812914800,
+          "wall_ns": 1786326278187660500
+        },
+        {
+          "detail": {
+            "fallback_count": 0,
+            "revision": 30
+          },
+          "name": "normal_quit_posted",
+          "perf_ns": 242404814732500,
+          "wall_ns": 1786326278189172500
+        }
+      ]
+    }
+  ]
+}

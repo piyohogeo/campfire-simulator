@@ -1,0 +1,19 @@
+cmake_minimum_required(VERSION 3.14)
+project(phasev3tj_dump_collector LANGUAGES CXX)
+
+add_executable(phasev3tj_dump_collector dump_collector.cpp)
+target_compile_features(phasev3tj_dump_collector PRIVATE cxx_std_17)
+target_compile_definitions(phasev3tj_dump_collector PRIVATE UNICODE _UNICODE WIN32_LEAN_AND_MEAN NOMINMAX)
+target_link_libraries(phasev3tj_dump_collector PRIVATE dbghelp)
+
+add_executable(phasev3tj_crash_fixture crash_fixture.cpp)
+target_compile_features(phasev3tj_crash_fixture PRIVATE cxx_std_17)
+
+add_library(phasev3tj_crash_handler SHARED crash_handler.cpp)
+target_compile_features(phasev3tj_crash_handler PRIVATE cxx_std_17)
+target_compile_definitions(phasev3tj_crash_handler PRIVATE UNICODE _UNICODE WIN32_LEAN_AND_MEAN NOMINMAX)
+
+add_executable(phasev3tj_dump_helper dump_helper.cpp)
+target_compile_features(phasev3tj_dump_helper PRIVATE cxx_std_17)
+target_compile_definitions(phasev3tj_dump_helper PRIVATE UNICODE _UNICODE WIN32_LEAN_AND_MEAN NOMINMAX)
+target_link_libraries(phasev3tj_dump_helper PRIVATE dbghelp)

@@ -1,5 +1,12 @@
 # Changelog
 
+- Added Phase V3T-J's target-local `0xC0000005` full-dump path without registry or machine-wide changes: a probe-loaded unhandled-exception handler invokes an external helper only on crash and records full-memory dump path, size, SHA-256, exception metadata, revision, slot, and lifecycle markers outside Git.
+- Proved the collector with a real crash fixture: exit `0xC0000005`, `11,374,239`-byte minidump, `Memory64ListStream` present, SHA-256 `f86026adcc5749a298f4cf418ac7a6bb37fe9a461ffc00e9d77d1e902156d07b`.
+- Rejected the first `DEBUG_ONLY_THIS_PROCESS` Kit path because it held RTX RtPso compilation beyond 200 seconds and timed out; none of that run is reused in the formal population.
+- Completed 24 / 24 normal target-local-handler Kit processes across CPU reference, GPU ring3 normal, timeline restart, stage replacement, Provider regeneration, extension disable, GPU-init fallback, and publication-failure fallback with ordered teardown, zero dumps, zero stage-ID errors, and zero CUDA/device/pointer fatal markers.
+- Combined with Phase V3T-G, recorded 102 selected non-reproductions without claiming safety or resolving the Phase V3T-F crash. GPU transport remains probe-only/default OFF and production V3 remains CPU-source/default OFF.
+- Final Phase V3T-J regression passed the release build, Phase 0 RTX, 8/8-process 77/77-test standard suite, six-run V3T-C authority/mass/Flow matrix, and 24/24 ordered shutdown-log gate; the exact hashes and active-block range are recorded separately.
+
 - Added the production-neutral Phase V3T-I visible-viewport FPS isolation path using only public `ViewportAPI.frame_info` / `fps`; all 18 formal Kit processes completed with zero RTX stage-ID errors and no added RenderProduct, HydraTexture, capture, or encoder.
 - Audited effective loop limits (main/render 120 Hz, present 59 Hz, VSync OFF) and retained the observed RTX 3090 210 W enforced limit versus 350 W default (60%) without issuing a power-setting command.
 - Measured three independent runs at 71.969 FPS for empty RTX, 59.978 / 31.807 / 27.150 FPS across 640x360 / 1280x720 / 1920x1080, and 24.080 / 24.101 FPS for Flow simulation-only / simulation-plus-volume.

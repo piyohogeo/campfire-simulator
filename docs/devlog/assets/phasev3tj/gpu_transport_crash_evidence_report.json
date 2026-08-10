@@ -1,0 +1,227 @@
+{
+  "schema": "campfire.phasev3tj.gpu-transport-crash-evidence-report.v1",
+  "status": "ok",
+  "baseline_commit": "a014058",
+  "phase1_commit": "06e9537",
+  "formal_processes": 24,
+  "normal_exits": 24,
+  "access_violations": 0,
+  "full_dumps_created_by_formal_runs": 0,
+  "stage_id_errors": 0,
+  "fatal_log_errors": 0,
+  "lifecycle_groups": [
+    {
+      "transport": "cpu",
+      "scenario": "normal_exit",
+      "runs": 3,
+      "normal_exits": 3,
+      "access_violations": 0,
+      "teardown_order_pass": 3,
+      "fallback_counts": [
+        0,
+        0,
+        0
+      ],
+      "last_markers": [
+        "normal_quit_posted"
+      ]
+    },
+    {
+      "transport": "gpu_ring3",
+      "scenario": "normal_exit",
+      "runs": 3,
+      "normal_exits": 3,
+      "access_violations": 0,
+      "teardown_order_pass": 3,
+      "fallback_counts": [
+        0,
+        0,
+        0
+      ],
+      "last_markers": [
+        "normal_quit_posted"
+      ]
+    },
+    {
+      "transport": "gpu_ring3",
+      "scenario": "timeline_restart",
+      "runs": 3,
+      "normal_exits": 3,
+      "access_violations": 0,
+      "teardown_order_pass": 3,
+      "fallback_counts": [
+        0,
+        0,
+        0
+      ],
+      "last_markers": [
+        "normal_quit_posted"
+      ]
+    },
+    {
+      "transport": "gpu_ring3",
+      "scenario": "stage_replacement",
+      "runs": 3,
+      "normal_exits": 3,
+      "access_violations": 0,
+      "teardown_order_pass": 3,
+      "fallback_counts": [
+        0,
+        0,
+        0
+      ],
+      "last_markers": [
+        "normal_quit_posted"
+      ]
+    },
+    {
+      "transport": "gpu_ring3",
+      "scenario": "provider_regeneration",
+      "runs": 3,
+      "normal_exits": 3,
+      "access_violations": 0,
+      "teardown_order_pass": 3,
+      "fallback_counts": [
+        0,
+        0,
+        0
+      ],
+      "last_markers": [
+        "normal_quit_posted"
+      ]
+    },
+    {
+      "transport": "gpu_ring3",
+      "scenario": "extension_disable",
+      "runs": 3,
+      "normal_exits": 3,
+      "access_violations": 0,
+      "teardown_order_pass": 3,
+      "fallback_counts": [
+        0,
+        0,
+        0
+      ],
+      "last_markers": [
+        "normal_quit_posted"
+      ]
+    },
+    {
+      "transport": "gpu_ring3",
+      "scenario": "gpu_initialization_failure",
+      "runs": 3,
+      "normal_exits": 3,
+      "access_violations": 0,
+      "teardown_order_pass": 3,
+      "fallback_counts": [
+        1,
+        1,
+        1
+      ],
+      "last_markers": [
+        "normal_quit_posted"
+      ]
+    },
+    {
+      "transport": "gpu_ring3",
+      "scenario": "publication_failure",
+      "runs": 3,
+      "normal_exits": 3,
+      "access_violations": 0,
+      "teardown_order_pass": 3,
+      "fallback_counts": [
+        1,
+        1,
+        1
+      ],
+      "last_markers": [
+        "normal_quit_posted"
+      ]
+    }
+  ],
+  "dump_collection": {
+    "scope": "SetUnhandledExceptionFilter installed only by isolated probe in target kit.exe",
+    "full_memory": true,
+    "exception": "unhandled 0xC0000005 only",
+    "machine_wide_configuration_changed": false,
+    "dump_git_managed": false,
+    "external_debugger_attached": false,
+    "fixture_validation": {
+      "schema": "campfire.phasev3tj.minidump-validation.v1",
+      "status": "ok",
+      "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-dump-smoke-handler2\\fixture_access_violation_full.dmp",
+      "size_bytes": 11374239,
+      "sha256": "f86026adcc5749a298f4cf418ac7a6bb37fe9a461ffc00e9d77d1e902156d07b",
+      "signature": "MDMP",
+      "stream_count": 17,
+      "stream_types": [
+        3,
+        17,
+        4,
+        19,
+        9,
+        16,
+        6,
+        7,
+        15,
+        12,
+        21,
+        22,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "memory64_list_stream_present": true,
+      "collector": {
+        "schema": "campfire.phasev3tj.out-of-process-dump-helper.v1",
+        "access_violation_seen": true,
+        "dump_written": true,
+        "dump_error": 0,
+        "exception_code": 3221225477,
+        "exception_hex": "0xC0000005",
+        "exception_thread_id": 17320,
+        "exception_address": "0x7FF7BC40726E",
+        "remote_exception_pointers_used": true,
+        "dump_type_flags": "MiniDumpWithFullMemory|MiniDumpWithHandleData|MiniDumpWithUnloadedModules|MiniDumpWithFullMemoryInfo|MiniDumpWithThreadInfo|MiniDumpWithTokenInformation",
+        "scope": "handler installed only in the isolated target process",
+        "machine_wide_configuration_changed": false
+      },
+      "git_managed": false
+    },
+    "formal_dump_directory": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phasev3tj-gpu-formal",
+    "windbg_available": false,
+    "windbg_analysis_performed": false,
+    "reason": "No Kit access violation was reproduced. WinDbg/cdb/dumpchk were not installed in the fixed environment."
+  },
+  "rejected_path": {
+    "method": "DEBUG_ONLY_THIS_PROCESS external launcher",
+    "result": "rejected before formal population",
+    "reason": "RTX RtPso asynchronous compilation remained in a wait loop beyond 200 seconds and the run timed out at 240 seconds.",
+    "formal_results_reused": false
+  },
+  "combined_non_reproduction": {
+    "phase_v3tg_processes": 78,
+    "phase_v3tj_formal_processes": 24,
+    "combined_processes": 102,
+    "access_violations": 0,
+    "interpretation": "Additional non-reproduction only; it is not proof of safety and does not negate the Phase V3T-F crash."
+  },
+  "observed_facts": [
+    "The target-local handler fixture produced a full-memory minidump with a Memory64ListStream and a durable SHA-256 record.",
+    "All formal Kit processes ran without an attached debugger, exited normally, completed the ordered teardown markers, and emitted no stage-ID, CUDA illegal-address, device-lost, or invalid-pointer marker.",
+    "GPU initialization and publication failures fell back to CPU at a complete publication boundary without reusing a faulted GPU pointer."
+  ],
+  "strong_inference": [
+    "The target-local unhandled-exception filter has negligible steady-state work compared with the rejected debugger-attached path.",
+    "The selected probe-owned GPU lifecycle sequences did not reproduce the prior shutdown crash in this fixed environment."
+  ],
+  "unconfirmed": [
+    "DynamicTextureProvider GPU source-consumed fence and pointer reuse lifetime remain undocumented.",
+    "The target process or a later-loaded component could replace the top-level exception filter after the installation marker.",
+    "The Phase V3T-F crash root cause, native fault module/offset/stack, and reproducibility remain unknown because no Kit dump was generated."
+  ],
+  "decision": "Do not adopt GPU transport in production. Keep the experimental path probe-only and default OFF; reconsider only after a real dump or a documented source-consumed lifetime contract.",
+  "production_changed": false
+}

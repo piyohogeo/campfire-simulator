@@ -2758,3 +2758,16 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 判定: 640×360で59 Hz present境界まで改善し、1920×1080とFlow条件でGPU utilization 100%かつ約209 Wとなるため、変更しない60% power limit下ではpixel／GPU負荷が支配的である。empty RTXは約72 FPSなので全体30 FPS capではない。Flow simulation-onlyとvolumeの差は`0.021 FPS`で、volume表示追加は支配要因ではない。ただしsolver、Flow scheduler、個別GPU passの内訳は未確認である。
 - metric制約: visible平均counter FPS、平滑HUD FPS、Kit updates/s、timeline sim/wall、nvidia-smi telemetryだけを実測した。公開raw visible-frame completion timestampがないためdisplay-present FPS、raw render latency、p95／p99、1% lowを推定していない。profilerは通常母集団へ混ぜず、本Phaseでは未実行とした。
 - 非変更: production defaults、wood authority、Flow input、Point／Sphere Emitter、collision、rigid layout、checkpoint、serialization、V3 CPU/GPU transportを変更していない。詳細は`docs/design/wood_visual_v3_fps_isolation.md`。次はproduction-neutralなtargeted full-dump collectorを先に実証し、その後だけGPU transport隔離再検証へ進む。
+
+## Phase V3T-J GPU transport crash-evidence isolation
+
+### 2026-08-10: target-local full dumpを実証し、GPU ring3はprobe-onlyのまま停止
+
+- dump境界: ProcDump／WinDbg／cdb／dumpchkがない固定環境で、machine-wide WER／registry設定を変更せず、隔離probeがtarget Kit内だけへ`SetUnhandledExceptionFilter` DLLを設置する。unhandled `0xC0000005`時だけ外部helperを起動し、remote exception pointers付き`MiniDumpWriteDump`でfull memory／handle／unloaded module／memory info／thread／token streamを保存する。通常update中はhandler処理を行わない。
+- collector実証: 専用fixtureの実null writeはexit `0xC0000005`となり、`11,374,239 bytes`、SHA-256 `f86026adcc5749a298f4cf418ac7a6bb37fe9a461ffc00e9d77d1e902156d07b`、`MDMP` signature、`Memory64ListStream`ありのdumpを生成した。dump本体はignored `artifacts/phasev3tj-dump-smoke-handler2/`だけに置き、Gitへ含めない。
+- 撤回経路: 最初の`DEBUG_ONLY_THIS_PROCESS`外部launcherはfixture dumpに成功したが、KitではRTX RtPso asynchronous compilation waitが200秒を超え、240秒でtimeoutした。通常挙動への影響が小さい条件を満たさないため正式母集団前に撤回し、そのrunを再利用しない。
+- 正式matrix: Kit 110.2、Flow 110.0.0、RTX 3090、20本、1280×720、120×60 base＋emission、GPU ring3をprobe内だけで構築した。CPU normal、GPU normal、timeline restart、stage replacement、Provider regeneration、extension disable、GPU initialization failure→CPU fallback、pre-setter publication failure→次の完全なCPU pairを各3 process、合計24 process実行した。
+- lifecycle: 全24 processでcrash handler installed、publication gate closed、teardown publication rejected、timeline stop、source sync、stage close、Provider destroy、GPU allocation release、extension disable、normal quitをdurable markerで順序確認した。24/24 normal exit、formal dump 0、stage-ID error 0、CUDA illegal address／device lost／invalid pointer 0。fallback注入6 processは各1回だけCPUへ移行した。
+- 判定: Phase V3T-G 78 processと合計して選択済み102 processでaccess violation未再現だが、安全証明でもV3T-F crashの反証でもない。実Kit dumpがないためfault module／offset／thread／native stackは未確認であり、WinDbg未導入のまま広い環境変更を行っていない。top-level filterが後続componentに置換される可能性も未確認である。
+- 採否: DynamicTextureProviderの公開source-consumed fence／pointer reuse lifetimeは依然不在である。GPU transportをproductionへ採用せず、設定／preset／consumerを追加しない。V3は既定OFF＋CPU-source、Point／rigid既定OFF、Sphere production既定を維持する。再開条件は実Kit dumpの取得・解析、または公開lifetime契約である。詳細は`docs/design/wood_visual_v3_gpu_transport_crash_evidence.md`。
+- 最終回帰: Release build、Phase 0 RTX、標準suite 8/8 process・77/77 test、V3T-C 6/6 process、V3T-J shutdown log gate 24/24が合格した。V3T-Cは全runでdry／wet authority SHA-256一致、両mass balance error `0.0 kg`、Flow active block peak `136..318`、stage-ID error 0。機械可読値は`docs/devlog/assets/phasev3tj/regression_report.json`に固定した。

@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v3ti">最新記録</a>
+        <a href="#phase-v3tj">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v3ti">Phase V3T-Iを読む</a>
+        <a class="button primary" href="#phase-v3tj">Phase V3T-Jを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V3T-I FPS isolation</strong></div>
-        <div><span>状態</span><strong class="success">Measured</strong></div>
-        <div><span>正式測定</span><strong>18 clean Kit processes · 6 conditions</strong></div>
-        <div><span>判定</span><strong>pixel/GPU負荷支配 · Power Limit 60%固定</strong></div>
+        <div><span>現在地</span><strong>Phase V3T-J crash evidence</strong></div>
+        <div><span>状態</span><strong class="success">Safe stop · probe only</strong></div>
+        <div><span>正式検証</span><strong>24 normal Kit processes · dump armed</strong></div>
+        <div><span>判定</span><strong>production不採用 · 原因未確認</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,62 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-v3tj" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number compact">V3T-J</span>
+          <p><time datetime="2026-08-10">2026.08.10</time></p>
+          <span class="pill current">Probe only · not adopted</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Phase V3T-J · GPU transport crash evidence</p>
+            <h2>クラッシュ時だけfull dumpを残す。<br>通常実行を変えずに再検証した。</h2>
+            <p>対象Kit processだけにunhandled access-violation handlerを設置し、<code>0xC0000005</code>時だけ外部helperがfull-memory dumpを保存する経路を実証しました。machine-wide設定は変更せず、production GPU transportも復元していません。</p>
+          </header>
+
+          <figure class="capture-card wide">
+            <a href="assets/phasev3tj/gpu_transport_crash_evidence_report.svg" aria-label="Phase V3T-J lifecycle結果図を開く">
+              <img src="assets/phasev3tj/gpu_transport_crash_evidence_report.svg" alt="CPU対照とGPU ring3 lifecycle各条件の正常終了数を示す図" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>24 / 24 normal exits</strong><span>7 GPU scenarios · teardown order complete · formal dump 0 · stage-ID error 0</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3tc/visual_v3_actual.mp4" data-video-poster="assets/phasev3tc/visual_v3_actual_poster.png" data-video-title="Phase V3T-J visual context · retained CPU V3 preset" data-video-meta="既存V3T-C CPU-source動画 · 外観参照のみ · GPU transport採用結果ではない · crash/lifecycle証拠ではない">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>現行CPU V3の外観参照</strong><small>既存動画 · crash証拠ではない</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <div class="notes-grid">
+            <section class="note"><p class="note-label">Dump proof</p><h3>11,374,239 byte · Memory64ListStream</h3><p>専用fixtureの実access violationでfull-memory streamを検証し、SHA-256を記録しました。dump本体は<code>artifacts/</code>に置き、Git管理外です。</p></section>
+            <section class="note caution"><p class="note-label">Rejected path</p><h3>debug attachはRTXを200秒以上待たせた</h3><p><code>DEBUG_ONLY_THIS_PROCESS</code>方式はKitのRtPso compile挙動を変えたため撤回し、正式結果へ含めていません。採用経路は通常時にdebuggerをattachしません。</p></section>
+          </div>
+
+          <section class="verification" aria-labelledby="phasev3tj-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">Decision</p>
+              <h3 id="phasev3tj-verification-title">V3T-Gと合計102回未再現。それでも「安全」とはしない。</h3>
+              <p>timeline再開、stage replacement、Provider再生成、extension disable、GPU初期化失敗、publication失敗を各3回検証しました。全件でordered teardownとCPU fallbackが成立しましたが、公開source-consumed fenceはなく、V3T-Fのfault module／offset／stackも未確認です。</p>
+              <code>.\scripts\run_phasev3tj_gpu_revalidation.ps1</code>
+              <p><a href="assets/phasev3tj/gpu_transport_crash_evidence_report.json">集計JSON</a> · <a href="assets/phasev3tj/gpu_transport_crash_evidence_samples.json">全process＋marker JSON</a> · <a href="assets/phasev3tj/regression_report.json">最終回帰JSON</a> · <a href="../design/wood_visual_v3_gpu_transport_crash_evidence.md">設計・制約</a></p>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase V3T-J検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Dump fixture</strong><small>0xC0000005 · full memory · hash recorded</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Formal matrix</strong><small>24 / 24 normal · dump 0</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Teardown</strong><small>publication block → sync → close → destroy → free</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Fallback</strong><small>GPU init/publication failure → CPU</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Regression</strong><small>build · Phase 0 · 77/77 · authority/mass/Flow</small></p></div>
+              <div role="listitem"><span aria-hidden="true">!</span><p><strong>Root cause</strong><small>not reproduced · not confirmed</small></p></div>
+              <div role="listitem"><span aria-hidden="true">×</span><p><strong>Production adoption</strong><small>declined · GPU remains probe-only</small></p></div>
+            </div>
+          </section>
+
+          <section class="note next"><p class="note-label">Resume condition</p><h3>実Kit dumpか公開lifetime契約を待つ</h3><p>実クラッシュdumpが得られた場合はWinDbgでmodule／offset／thread／native stackを解析します。それまでは未再現回数を安全証明へ読み替えず、production CPU-sourceと既定OFFを維持します。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v3ti" class="section entry-section phase-six">

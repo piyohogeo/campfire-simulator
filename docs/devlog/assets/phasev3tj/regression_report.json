@@ -1,0 +1,48 @@
+{
+  "schema": "campfire.phasev3tj.regression-report.v1",
+  "status": "ok",
+  "baseline_commit": "a014058",
+  "phase1_commit": "06e9537",
+  "release_build": {
+    "status": "ok",
+    "build_id": "0.1.0+master.0.06e9537a.local",
+    "elapsed_seconds": 9.03
+  },
+  "phase0_rtx": {
+    "status": "ok",
+    "camera": "/World/Camera",
+    "resolution": [1280, 720],
+    "image_bytes": 832300,
+    "stage_id_error_count": 0
+  },
+  "standard_suite": {
+    "status": "ok",
+    "processes": 8,
+    "tests": 77,
+    "elapsed_seconds": 341.7,
+    "collapse_coverage_seconds": 190.0
+  },
+  "phasev3tc_integrated": {
+    "status": "ok",
+    "processes": 6,
+    "authority_sha256_identical": true,
+    "dry_authority_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+    "wet_authority_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+    "dry_mass_balance_error_kg": 0.0,
+    "wet_mass_balance_error_kg": 0.0,
+    "flow_active_blocks_peak_min": 136,
+    "flow_active_blocks_peak_max": 318,
+    "stage_id_error_count": 0
+  },
+  "shutdown_log_gate": {
+    "status": "ok",
+    "formal_processes": 24,
+    "ordered_teardown_passes": 24,
+    "stage_id_error_count": 0,
+    "cuda_illegal_address_count": 0,
+    "device_lost_count": 0,
+    "invalid_pointer_count": 0,
+    "access_violation_count": 0
+  },
+  "production_changed": false
+}
