@@ -3330,6 +3330,38 @@ class CampfireAppExtension(omni.ext.IExt):
         )
         active_block_counts = []
         visible_frame_observations = []
+        scheduler_setting_paths = (
+            "/app/runLoops/main/rateLimitEnabled",
+            "/app/runLoops/main/rateLimitFrequency",
+            "/app/runLoops/main/syncToPresent",
+            "/app/runLoops/rendering_0/rateLimitEnabled",
+            "/app/runLoops/rendering_0/rateLimitFrequency",
+            "/app/runLoops/rendering_0/syncToPresent",
+            "/app/runLoops/present/rateLimitEnabled",
+            "/app/runLoops/present/rateLimitFrequency",
+            "/app/runLoops/present/syncToPresent",
+            "/app/runLoopsGlobal/syncToPresent",
+            "/persistent/app/viewport/defaults/tickRate",
+            "/persistent/simulation/minFrameRate",
+            "/renderer/vsync",
+            "/app/vsync",
+        )
+        scheduler_setting_snapshots = []
+
+        def capture_scheduler_settings(marker: str) -> None:
+            scheduler_setting_snapshots.append(
+                {
+                    "marker": marker,
+                    "flow_update_sample_count": len(update_times_ms),
+                    "timeline_playing": bool(
+                        resident_timeline is not None
+                        and resident_timeline.is_playing()
+                    ),
+                    "values": {
+                        path: settings.get(path) for path in scheduler_setting_paths
+                    },
+                }
+            )
         images = []
         video_frames = []
         rows = []
@@ -3339,9 +3371,11 @@ class CampfireAppExtension(omni.ext.IExt):
 
         try:
             if resident_adapter is not None:
+                capture_scheduler_settings("before_timeline_play")
                 resident_timeline.stop()
                 resident_timeline.set_current_time(0.0)
                 resident_timeline.play()
+                capture_scheduler_settings("after_timeline_play")
                 resident_adapter.on_timeline_started()
                 if wood_visual_consumer is not None:
                     wood_visual_consumer.on_timeline_started()
@@ -3713,6 +3747,8 @@ class CampfireAppExtension(omni.ext.IExt):
                     update_times_ms.append(
                         (time.perf_counter() - update_started) * 1000.0
                     )
+                    if len(update_times_ms) == 5:
+                        capture_scheduler_settings("after_warmup")
                     if wood_visual_v3_pending_reflections:
                         reflected_perf = time.perf_counter()
                         for pending in wood_visual_v3_pending_reflections:
@@ -3812,6 +3848,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 resident_native_export_ms = resident_native_backend_status["export_ms"]
 
             if resident_adapter is not None:
+                capture_scheduler_settings("before_timeline_pause")
                 resident_adapter.on_timeline_stopped()
                 resident_timeline.pause()
                 resident_adapter_stopped = True
@@ -4597,6 +4634,10 @@ class CampfireAppExtension(omni.ext.IExt):
                             else None
                         ),
                         "errors": wood_visual_v3_errors,
+                    },
+                    "scheduler_settings": {
+                        "source": "carb.settings read-only snapshots",
+                        "snapshots": scheduler_setting_snapshots,
                     },
                     "final_phase_refresh_seconds": round(
                         final_phase_refresh_seconds, 6

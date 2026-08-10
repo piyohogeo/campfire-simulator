@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="760" viewBox="0 0 1180 760" role="img" aria-labelledby="title desc">
+<title id="title">Phase V3T-Q normal and benchmark FPS boundary</title>
+<desc id="desc">Developer bundle follows a 32 FPS class result in both app roots. Removing it restores about 56 FPS. Focused probes isolate debugpy listen.</desc>
+<style>.title{font:700 34px Segoe UI,sans-serif;fill:#f8fafc}.sub{font:16px Segoe UI,sans-serif;fill:#94a3b8}.label{font:600 17px Segoe UI,sans-serif;fill:#e2e8f0}.value{font:700 18px Segoe UI,sans-serif;fill:#f8fafc}.note{font:16px Segoe UI,sans-serif;fill:#cbd5e1}.accent{font:700 20px Segoe UI,sans-serif;fill:#fbbf24}</style>
+<rect width="1180" height="760" rx="28" fill="#0b1324"/>
+<text x="70" y="65" class="sub">PHASE V3T-Q / 4 CONDITIONS × 3 INDEPENDENT PROCESSES</text>
+<text x="70" y="112" class="title">The app-root FPS gap follows debugpy listen</text>
+<text x="70" y="145" class="sub">Candidate Performance / 1280×720 / CPU-source V3 / RTX 3090 / 210 W</text>
+<text x="70" y="205" class="label">Normal + developer</text><rect x="330" y="180" width="386.5" height="30" rx="7" fill="#f97316"/><text x="731.5" y="205" class="value">32.211 FPS</text><text x="70" y="279" class="label">Normal - developer</text><rect x="330" y="254" width="665.1" height="30" rx="7" fill="#22c55e"/><text x="1010.1" y="279" class="value">55.426 FPS</text><text x="70" y="353" class="label">Benchmark + developer</text><rect x="330" y="328" width="384.0" height="30" rx="7" fill="#fb7185"/><text x="729.0" y="353" class="value">31.997 FPS</text><text x="70" y="427" class="label">Benchmark - developer</text><rect x="330" y="402" width="674.9" height="30" rx="7" fill="#38bdf8"/><text x="1019.9" y="427" class="value">56.241 FPS</text>
+<rect x="70" y="515" width="1040" height="140" rx="18" fill="#172033" stroke="#334155"/>
+<text x="96" y="552" class="accent">Focused minimum factor</text>
+<text x="96" y="590" class="note">No developer: 55.126 FPS · debug extension, no listen: 56.010 FPS</text>
+<text x="96" y="624" class="note">debugpy listen: 30.832 FPS · VS Code path: 31.551 FPS</text>
+<text x="70" y="700" class="note">No explicit 30 Hz loop setting was observed. Callback-level attribution is unavailable from the public manager boundary.</text>
+<text x="70" y="731" class="sub">Production .kit files and defaults were not changed; removal is a proposed next Phase only.</text>
+</svg>

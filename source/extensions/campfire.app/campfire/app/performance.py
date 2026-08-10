@@ -20,6 +20,7 @@ def summarize_timing_ms(
     ordered = sorted(measured)
     p50_index = min(len(ordered) - 1, int(len(ordered) * 0.50))
     p95_index = min(len(ordered) - 1, int(len(ordered) * 0.95))
+    p99_index = min(len(ordered) - 1, int(len(ordered) * 0.99))
     return {
         "sample_count": len(measured),
         "warmup_samples_excluded": warmup_samples,
@@ -27,5 +28,6 @@ def summarize_timing_ms(
         "mean_ms": round(statistics.fmean(measured), 4),
         "p50_ms": round(ordered[p50_index], 4),
         "p95_ms": round(ordered[p95_index], 4),
+        "p99_ms": round(ordered[p99_index], 4),
         "max_ms": round(ordered[-1], 4),
     }

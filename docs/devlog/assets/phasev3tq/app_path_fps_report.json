@@ -1,0 +1,703 @@
+{
+  "schema": "campfire.phasev3tq.app-path-fps-report.v1",
+  "status": "qualified_diagnostic_safe_stop",
+  "formal_population": {
+    "process_count": 12,
+    "run_count_per_condition": 3,
+    "condition_order_rotated": true,
+    "no_window": true,
+    "cold_or_invalid_runs_included": 0
+  },
+  "fixed_contract": {
+    "kit": "110.2",
+    "flow": "110.0.0",
+    "resolution": [
+      1280,
+      720
+    ],
+    "candidate_performance": true,
+    "rtx_realtime_2": true,
+    "dlss_mode": "Performance",
+    "max_bounces": 2,
+    "v3": "production default ON",
+    "texture_transport": "CPU source",
+    "power_limit_w": 210,
+    "power_limit_changed": false,
+    "additional_render_product": false,
+    "capture_or_encode_in_population": false
+  },
+  "formal_summary": {
+    "benchmark_baseline": {
+      "run_count": 3,
+      "average_visible_fps": {
+        "mean": 56.2409,
+        "min": 55.6373,
+        "max": 56.9109,
+        "range": 1.2736
+      },
+      "derived_visible_frame_ms_mean": 17.7822,
+      "kit_update_rate_hz_mean": 199.3176,
+      "main_update_interval_ms": {
+        "mean_ms": 5.0172,
+        "p50_ms": 4.9441,
+        "p95_ms": 5.9025,
+        "p99_ms": 6.7035,
+        "max_ms": 7.7786
+      },
+      "gpu_utilization_percent_mean": 38.4091,
+      "gpu_power_w_mean": 189.0611,
+      "graphics_clock_mhz_mean": 1874.5454,
+      "vram_mib_mean": 5548.2576,
+      "temperature_c_mean": 57.4849,
+      "process_wall_seconds_mean": 20.0642
+    },
+    "benchmark_with_developer_bundle": {
+      "run_count": 3,
+      "average_visible_fps": {
+        "mean": 31.9975,
+        "min": 30.8741,
+        "max": 33.6886,
+        "range": 2.8145
+      },
+      "derived_visible_frame_ms_mean": 31.2967,
+      "kit_update_rate_hz_mean": 152.9956,
+      "main_update_interval_ms": {
+        "mean_ms": 6.7072,
+        "p50_ms": 5.8351,
+        "p95_ms": 6.7834,
+        "p99_ms": 8.311,
+        "max_ms": 192.6403
+      },
+      "gpu_utilization_percent_mean": 18.7746,
+      "gpu_power_w_mean": 145.5428,
+      "graphics_clock_mhz_mean": 1703.1825,
+      "vram_mib_mean": 5798.068,
+      "temperature_c_mean": 55.6633,
+      "process_wall_seconds_mean": 29.6631
+    },
+    "normal_baseline": {
+      "run_count": 3,
+      "average_visible_fps": {
+        "mean": 32.2109,
+        "min": 31.2406,
+        "max": 33.8039,
+        "range": 2.5633
+      },
+      "derived_visible_frame_ms_mean": 31.0831,
+      "kit_update_rate_hz_mean": 152.8059,
+      "main_update_interval_ms": {
+        "mean_ms": 6.7161,
+        "p50_ms": 5.7938,
+        "p95_ms": 6.7575,
+        "p99_ms": 8.4473,
+        "max_ms": 204.7552
+      },
+      "gpu_utilization_percent_mean": 19.3061,
+      "gpu_power_w_mean": 146.2522,
+      "graphics_clock_mhz_mean": 1706.4373,
+      "vram_mib_mean": 5829.6044,
+      "temperature_c_mean": 55.4799,
+      "process_wall_seconds_mean": 29.7536
+    },
+    "normal_without_developer_bundle": {
+      "run_count": 3,
+      "average_visible_fps": {
+        "mean": 55.4265,
+        "min": 54.2304,
+        "max": 56.1015,
+        "range": 1.8711
+      },
+      "derived_visible_frame_ms_mean": 18.0461,
+      "kit_update_rate_hz_mean": 192.5422,
+      "main_update_interval_ms": {
+        "mean_ms": 5.1996,
+        "p50_ms": 4.9057,
+        "p95_ms": 6.0121,
+        "p99_ms": 11.3395,
+        "max_ms": 32.98
+      },
+      "gpu_utilization_percent_mean": 37.6212,
+      "gpu_power_w_mean": 188.7092,
+      "graphics_clock_mhz_mean": 1864.3182,
+      "vram_mib_mean": 5691.5454,
+      "temperature_c_mean": 57.4091,
+      "process_wall_seconds_mean": 20.027
+    }
+  },
+  "focused_summary": {
+    "normal_without_developer_bundle": {
+      "average_visible_fps": 55.1258,
+      "derived_visible_frame_ms": 18.1403,
+      "main_update_interval": {
+        "sample_count": 236,
+        "warmup_samples_excluded": 4,
+        "total_ms": 1266.5839,
+        "mean_ms": 5.3669,
+        "p50_ms": 4.88,
+        "p95_ms": 7.418,
+        "p99_ms": 14.2709,
+        "max_ms": 31.6256,
+        "over_16_67_ms": 1,
+        "over_33_33_ms": 0,
+        "over_50_ms": 0
+      },
+      "gpu_utilization_percent": 35.1304,
+      "power_w": 185.1404,
+      "debugpy_listening": false
+    },
+    "normal_debug_python_no_listen": {
+      "average_visible_fps": 56.0096,
+      "derived_visible_frame_ms": 17.8541,
+      "main_update_interval": {
+        "sample_count": 236,
+        "warmup_samples_excluded": 4,
+        "total_ms": 1179.8536,
+        "mean_ms": 4.9994,
+        "p50_ms": 4.9111,
+        "p95_ms": 5.8116,
+        "p99_ms": 6.9916,
+        "max_ms": 7.7995,
+        "over_16_67_ms": 0,
+        "over_33_33_ms": 0,
+        "over_50_ms": 0
+      },
+      "gpu_utilization_percent": 40.4286,
+      "power_w": 193.2929,
+      "debugpy_listening": false
+    },
+    "normal_debug_python": {
+      "average_visible_fps": 30.8324,
+      "derived_visible_frame_ms": 32.4334,
+      "main_update_interval": {
+        "sample_count": 236,
+        "warmup_samples_excluded": 4,
+        "total_ms": 1963.163,
+        "mean_ms": 8.3185,
+        "p50_ms": 5.8066,
+        "p95_ms": 7.1047,
+        "p99_ms": 11.3961,
+        "max_ms": 565.5005,
+        "over_16_67_ms": 1,
+        "over_33_33_ms": 1,
+        "over_50_ms": 1
+      },
+      "gpu_utilization_percent": 19.5882,
+      "power_w": 146.5035,
+      "debugpy_listening": true
+    },
+    "normal_debug_vscode": {
+      "average_visible_fps": 31.551,
+      "derived_visible_frame_ms": 31.6947,
+      "main_update_interval": {
+        "sample_count": 236,
+        "warmup_samples_excluded": 4,
+        "total_ms": 1952.4227,
+        "mean_ms": 8.273,
+        "p50_ms": 5.8214,
+        "p95_ms": 6.7432,
+        "p99_ms": 9.6328,
+        "max_ms": 564.2396,
+        "over_16_67_ms": 1,
+        "over_33_33_ms": 1,
+        "over_50_ms": 1
+      },
+      "gpu_utilization_percent": 19.7647,
+      "power_w": 149.1761,
+      "debugpy_listening": true
+    },
+    "normal_debug_settings": {
+      "average_visible_fps": 53.5439,
+      "derived_visible_frame_ms": 18.6763,
+      "main_update_interval": {
+        "sample_count": 236,
+        "warmup_samples_excluded": 4,
+        "total_ms": 1416.2252,
+        "mean_ms": 6.001,
+        "p50_ms": 5.4683,
+        "p95_ms": 8.9813,
+        "p99_ms": 14.2527,
+        "max_ms": 32.7127,
+        "over_16_67_ms": 1,
+        "over_33_33_ms": 0,
+        "over_50_ms": 0
+      },
+      "gpu_utilization_percent": 36.4091,
+      "power_w": 188.7659,
+      "debugpy_listening": false
+    },
+    "normal_developer_windows": {
+      "average_visible_fps": 56.0481,
+      "derived_visible_frame_ms": 17.8418,
+      "main_update_interval": {
+        "sample_count": 236,
+        "warmup_samples_excluded": 4,
+        "total_ms": 1177.1278,
+        "mean_ms": 4.9878,
+        "p50_ms": 4.9069,
+        "p95_ms": 5.8782,
+        "p99_ms": 6.7044,
+        "max_ms": 8.302,
+        "over_16_67_ms": 0,
+        "over_33_33_ms": 0,
+        "over_50_ms": 0
+      },
+      "gpu_utilization_percent": 39.619,
+      "power_w": 190.7486,
+      "debugpy_listening": false
+    },
+    "normal_dev_utilities_bundle": {
+      "average_visible_fps": 31.4441,
+      "derived_visible_frame_ms": 31.8025,
+      "main_update_interval": {
+        "sample_count": 236,
+        "warmup_samples_excluded": 4,
+        "total_ms": 1915.5833,
+        "mean_ms": 8.1169,
+        "p50_ms": 5.7835,
+        "p95_ms": 6.9037,
+        "p99_ms": 7.6014,
+        "max_ms": 540.234,
+        "over_16_67_ms": 1,
+        "over_33_33_ms": 1,
+        "over_50_ms": 1
+      },
+      "gpu_utilization_percent": 19.4118,
+      "power_w": 145.2324,
+      "debugpy_listening": true
+    }
+  },
+  "visible_window_confirmation": {
+    "normal_baseline": {
+      "average_visible_fps": 31.1822,
+      "derived_visible_frame_ms": 32.0696,
+      "main_update_interval": {
+        "sample_count": 236,
+        "warmup_samples_excluded": 4,
+        "total_ms": 1926.3322,
+        "mean_ms": 8.1624,
+        "p50_ms": 5.7742,
+        "p95_ms": 6.5144,
+        "p99_ms": 8.8743,
+        "max_ms": 540.5126,
+        "over_16_67_ms": 2,
+        "over_33_33_ms": 1,
+        "over_50_ms": 1
+      }
+    },
+    "normal_without_developer_bundle": {
+      "average_visible_fps": 55.4582,
+      "derived_visible_frame_ms": 18.0316,
+      "main_update_interval": {
+        "sample_count": 236,
+        "warmup_samples_excluded": 4,
+        "total_ms": 1181.8546,
+        "mean_ms": 5.0079,
+        "p50_ms": 4.9193,
+        "p95_ms": 5.9716,
+        "p99_ms": 6.907,
+        "max_ms": 7.2571,
+        "over_16_67_ms": 0,
+        "over_33_33_ms": 0,
+        "over_50_ms": 0
+      }
+    }
+  },
+  "developer_bundle_transitive_extensions": [
+    "omni.kit.debug.python-1.0.2",
+    "omni.kit.debug.settings-1.0.3",
+    "omni.kit.debug.vscode-0.1.7",
+    "omni.kit.dev.utilities.bundle-0.2.1",
+    "omni.kit.developer.bundle-0.2.0",
+    "omni.kit.widget.text_editor-1.1.1",
+    "omni.kit.window.commands-0.2.9",
+    "omni.kit.window.extensions-1.5.13",
+    "omni.kit.window.script_editor-2.0.9"
+  ],
+  "normal_no_dev_vs_benchmark_baseline_extension_difference": [],
+  "scheduler_probe": [
+    {
+      "condition": "normal_baseline",
+      "snapshots": [
+        {
+          "marker": "before_timeline_play",
+          "flow_update_sample_count": 0,
+          "timeline_playing": false,
+          "values": {
+            "/app/runLoops/main/rateLimitEnabled": true,
+            "/app/runLoops/main/rateLimitFrequency": 120,
+            "/app/runLoops/main/syncToPresent": true,
+            "/app/runLoops/rendering_0/rateLimitEnabled": true,
+            "/app/runLoops/rendering_0/rateLimitFrequency": 120.0,
+            "/app/runLoops/rendering_0/syncToPresent": true,
+            "/app/runLoops/present/rateLimitEnabled": true,
+            "/app/runLoops/present/rateLimitFrequency": 59.0,
+            "/app/runLoops/present/syncToPresent": true,
+            "/app/runLoopsGlobal/syncToPresent": false,
+            "/persistent/app/viewport/defaults/tickRate": 120,
+            "/persistent/simulation/minFrameRate": 30,
+            "/renderer/vsync": false,
+            "/app/vsync": false
+          }
+        },
+        {
+          "marker": "after_timeline_play",
+          "flow_update_sample_count": 0,
+          "timeline_playing": false,
+          "values": {
+            "/app/runLoops/main/rateLimitEnabled": true,
+            "/app/runLoops/main/rateLimitFrequency": 120,
+            "/app/runLoops/main/syncToPresent": true,
+            "/app/runLoops/rendering_0/rateLimitEnabled": true,
+            "/app/runLoops/rendering_0/rateLimitFrequency": 120.0,
+            "/app/runLoops/rendering_0/syncToPresent": true,
+            "/app/runLoops/present/rateLimitEnabled": true,
+            "/app/runLoops/present/rateLimitFrequency": 59.0,
+            "/app/runLoops/present/syncToPresent": true,
+            "/app/runLoopsGlobal/syncToPresent": false,
+            "/persistent/app/viewport/defaults/tickRate": 120,
+            "/persistent/simulation/minFrameRate": 30,
+            "/renderer/vsync": false,
+            "/app/vsync": false
+          }
+        },
+        {
+          "marker": "after_warmup",
+          "flow_update_sample_count": 5,
+          "timeline_playing": false,
+          "values": {
+            "/app/runLoops/main/rateLimitEnabled": true,
+            "/app/runLoops/main/rateLimitFrequency": 120.0,
+            "/app/runLoops/main/syncToPresent": true,
+            "/app/runLoops/rendering_0/rateLimitEnabled": true,
+            "/app/runLoops/rendering_0/rateLimitFrequency": 120.0,
+            "/app/runLoops/rendering_0/syncToPresent": true,
+            "/app/runLoops/present/rateLimitEnabled": true,
+            "/app/runLoops/present/rateLimitFrequency": 59.0,
+            "/app/runLoops/present/syncToPresent": true,
+            "/app/runLoopsGlobal/syncToPresent": false,
+            "/persistent/app/viewport/defaults/tickRate": 120,
+            "/persistent/simulation/minFrameRate": 30,
+            "/renderer/vsync": false,
+            "/app/vsync": false
+          }
+        },
+        {
+          "marker": "before_timeline_pause",
+          "flow_update_sample_count": 240,
+          "timeline_playing": false,
+          "values": {
+            "/app/runLoops/main/rateLimitEnabled": true,
+            "/app/runLoops/main/rateLimitFrequency": 120.0,
+            "/app/runLoops/main/syncToPresent": true,
+            "/app/runLoops/rendering_0/rateLimitEnabled": true,
+            "/app/runLoops/rendering_0/rateLimitFrequency": 120.0,
+            "/app/runLoops/rendering_0/syncToPresent": true,
+            "/app/runLoops/present/rateLimitEnabled": true,
+            "/app/runLoops/present/rateLimitFrequency": 59.0,
+            "/app/runLoops/present/syncToPresent": true,
+            "/app/runLoopsGlobal/syncToPresent": false,
+            "/persistent/app/viewport/defaults/tickRate": 120,
+            "/persistent/simulation/minFrameRate": 30,
+            "/renderer/vsync": false,
+            "/app/vsync": false
+          }
+        }
+      ]
+    },
+    {
+      "condition": "normal_without_developer_bundle",
+      "snapshots": [
+        {
+          "marker": "before_timeline_play",
+          "flow_update_sample_count": 0,
+          "timeline_playing": false,
+          "values": {
+            "/app/runLoops/main/rateLimitEnabled": true,
+            "/app/runLoops/main/rateLimitFrequency": 120,
+            "/app/runLoops/main/syncToPresent": true,
+            "/app/runLoops/rendering_0/rateLimitEnabled": true,
+            "/app/runLoops/rendering_0/rateLimitFrequency": 120.0,
+            "/app/runLoops/rendering_0/syncToPresent": true,
+            "/app/runLoops/present/rateLimitEnabled": true,
+            "/app/runLoops/present/rateLimitFrequency": 59.0,
+            "/app/runLoops/present/syncToPresent": true,
+            "/app/runLoopsGlobal/syncToPresent": false,
+            "/persistent/app/viewport/defaults/tickRate": 120,
+            "/persistent/simulation/minFrameRate": 30,
+            "/renderer/vsync": false,
+            "/app/vsync": false
+          }
+        },
+        {
+          "marker": "after_timeline_play",
+          "flow_update_sample_count": 0,
+          "timeline_playing": false,
+          "values": {
+            "/app/runLoops/main/rateLimitEnabled": true,
+            "/app/runLoops/main/rateLimitFrequency": 120,
+            "/app/runLoops/main/syncToPresent": true,
+            "/app/runLoops/rendering_0/rateLimitEnabled": true,
+            "/app/runLoops/rendering_0/rateLimitFrequency": 120.0,
+            "/app/runLoops/rendering_0/syncToPresent": true,
+            "/app/runLoops/present/rateLimitEnabled": true,
+            "/app/runLoops/present/rateLimitFrequency": 59.0,
+            "/app/runLoops/present/syncToPresent": true,
+            "/app/runLoopsGlobal/syncToPresent": false,
+            "/persistent/app/viewport/defaults/tickRate": 120,
+            "/persistent/simulation/minFrameRate": 30,
+            "/renderer/vsync": false,
+            "/app/vsync": false
+          }
+        },
+        {
+          "marker": "after_warmup",
+          "flow_update_sample_count": 5,
+          "timeline_playing": true,
+          "values": {
+            "/app/runLoops/main/rateLimitEnabled": true,
+            "/app/runLoops/main/rateLimitFrequency": 60.0,
+            "/app/runLoops/main/syncToPresent": true,
+            "/app/runLoops/rendering_0/rateLimitEnabled": true,
+            "/app/runLoops/rendering_0/rateLimitFrequency": 120.0,
+            "/app/runLoops/rendering_0/syncToPresent": true,
+            "/app/runLoops/present/rateLimitEnabled": true,
+            "/app/runLoops/present/rateLimitFrequency": 59.0,
+            "/app/runLoops/present/syncToPresent": true,
+            "/app/runLoopsGlobal/syncToPresent": false,
+            "/persistent/app/viewport/defaults/tickRate": 120,
+            "/persistent/simulation/minFrameRate": 30,
+            "/renderer/vsync": false,
+            "/app/vsync": false
+          }
+        },
+        {
+          "marker": "before_timeline_pause",
+          "flow_update_sample_count": 240,
+          "timeline_playing": false,
+          "values": {
+            "/app/runLoops/main/rateLimitEnabled": true,
+            "/app/runLoops/main/rateLimitFrequency": 120.0,
+            "/app/runLoops/main/syncToPresent": true,
+            "/app/runLoops/rendering_0/rateLimitEnabled": true,
+            "/app/runLoops/rendering_0/rateLimitFrequency": 120.0,
+            "/app/runLoops/rendering_0/syncToPresent": true,
+            "/app/runLoops/present/rateLimitEnabled": true,
+            "/app/runLoops/present/rateLimitFrequency": 59.0,
+            "/app/runLoops/present/syncToPresent": true,
+            "/app/runLoopsGlobal/syncToPresent": false,
+            "/persistent/app/viewport/defaults/tickRate": 120,
+            "/persistent/simulation/minFrameRate": 30,
+            "/renderer/vsync": false,
+            "/app/vsync": false
+          }
+        }
+      ]
+    },
+    {
+      "condition": "benchmark_with_developer_bundle",
+      "snapshots": [
+        {
+          "marker": "before_timeline_play",
+          "flow_update_sample_count": 0,
+          "timeline_playing": false,
+          "values": {
+            "/app/runLoops/main/rateLimitEnabled": true,
+            "/app/runLoops/main/rateLimitFrequency": 120,
+            "/app/runLoops/main/syncToPresent": true,
+            "/app/runLoops/rendering_0/rateLimitEnabled": true,
+            "/app/runLoops/rendering_0/rateLimitFrequency": 120.0,
+            "/app/runLoops/rendering_0/syncToPresent": true,
+            "/app/runLoops/present/rateLimitEnabled": true,
+            "/app/runLoops/present/rateLimitFrequency": 59.0,
+            "/app/runLoops/present/syncToPresent": true,
+            "/app/runLoopsGlobal/syncToPresent": false,
+            "/persistent/app/viewport/defaults/tickRate": 120,
+            "/persistent/simulation/minFrameRate": 30,
+            "/renderer/vsync": false,
+            "/app/vsync": false
+          }
+        },
+        {
+          "marker": "after_timeline_play",
+          "flow_update_sample_count": 0,
+          "timeline_playing": false,
+          "values": {
+            "/app/runLoops/main/rateLimitEnabled": true,
+            "/app/runLoops/main/rateLimitFrequency": 120,
+            "/app/runLoops/main/syncToPresent": true,
+            "/app/runLoops/rendering_0/rateLimitEnabled": true,
+            "/app/runLoops/rendering_0/rateLimitFrequency": 120.0,
+            "/app/runLoops/rendering_0/syncToPresent": true,
+            "/app/runLoops/present/rateLimitEnabled": true,
+            "/app/runLoops/present/rateLimitFrequency": 59.0,
+            "/app/runLoops/present/syncToPresent": true,
+            "/app/runLoopsGlobal/syncToPresent": false,
+            "/persistent/app/viewport/defaults/tickRate": 120,
+            "/persistent/simulation/minFrameRate": 30,
+            "/renderer/vsync": false,
+            "/app/vsync": false
+          }
+        },
+        {
+          "marker": "after_warmup",
+          "flow_update_sample_count": 5,
+          "timeline_playing": false,
+          "values": {
+            "/app/runLoops/main/rateLimitEnabled": true,
+            "/app/runLoops/main/rateLimitFrequency": 120.0,
+            "/app/runLoops/main/syncToPresent": true,
+            "/app/runLoops/rendering_0/rateLimitEnabled": true,
+            "/app/runLoops/rendering_0/rateLimitFrequency": 120.0,
+            "/app/runLoops/rendering_0/syncToPresent": true,
+            "/app/runLoops/present/rateLimitEnabled": true,
+            "/app/runLoops/present/rateLimitFrequency": 59.0,
+            "/app/runLoops/present/syncToPresent": true,
+            "/app/runLoopsGlobal/syncToPresent": false,
+            "/persistent/app/viewport/defaults/tickRate": 120,
+            "/persistent/simulation/minFrameRate": 30,
+            "/renderer/vsync": false,
+            "/app/vsync": false
+          }
+        },
+        {
+          "marker": "before_timeline_pause",
+          "flow_update_sample_count": 240,
+          "timeline_playing": false,
+          "values": {
+            "/app/runLoops/main/rateLimitEnabled": true,
+            "/app/runLoops/main/rateLimitFrequency": 120.0,
+            "/app/runLoops/main/syncToPresent": true,
+            "/app/runLoops/rendering_0/rateLimitEnabled": true,
+            "/app/runLoops/rendering_0/rateLimitFrequency": 120.0,
+            "/app/runLoops/rendering_0/syncToPresent": true,
+            "/app/runLoops/present/rateLimitEnabled": true,
+            "/app/runLoops/present/rateLimitFrequency": 59.0,
+            "/app/runLoops/present/syncToPresent": true,
+            "/app/runLoopsGlobal/syncToPresent": false,
+            "/persistent/app/viewport/defaults/tickRate": 120,
+            "/persistent/simulation/minFrameRate": 30,
+            "/renderer/vsync": false,
+            "/app/vsync": false
+          }
+        }
+      ]
+    },
+    {
+      "condition": "benchmark_baseline",
+      "snapshots": [
+        {
+          "marker": "before_timeline_play",
+          "flow_update_sample_count": 0,
+          "timeline_playing": false,
+          "values": {
+            "/app/runLoops/main/rateLimitEnabled": true,
+            "/app/runLoops/main/rateLimitFrequency": 120,
+            "/app/runLoops/main/syncToPresent": true,
+            "/app/runLoops/rendering_0/rateLimitEnabled": true,
+            "/app/runLoops/rendering_0/rateLimitFrequency": 120.0,
+            "/app/runLoops/rendering_0/syncToPresent": true,
+            "/app/runLoops/present/rateLimitEnabled": true,
+            "/app/runLoops/present/rateLimitFrequency": 59.0,
+            "/app/runLoops/present/syncToPresent": true,
+            "/app/runLoopsGlobal/syncToPresent": false,
+            "/persistent/app/viewport/defaults/tickRate": 120,
+            "/persistent/simulation/minFrameRate": 30,
+            "/renderer/vsync": false,
+            "/app/vsync": false
+          }
+        },
+        {
+          "marker": "after_timeline_play",
+          "flow_update_sample_count": 0,
+          "timeline_playing": false,
+          "values": {
+            "/app/runLoops/main/rateLimitEnabled": true,
+            "/app/runLoops/main/rateLimitFrequency": 120,
+            "/app/runLoops/main/syncToPresent": true,
+            "/app/runLoops/rendering_0/rateLimitEnabled": true,
+            "/app/runLoops/rendering_0/rateLimitFrequency": 120.0,
+            "/app/runLoops/rendering_0/syncToPresent": true,
+            "/app/runLoops/present/rateLimitEnabled": true,
+            "/app/runLoops/present/rateLimitFrequency": 59.0,
+            "/app/runLoops/present/syncToPresent": true,
+            "/app/runLoopsGlobal/syncToPresent": false,
+            "/persistent/app/viewport/defaults/tickRate": 120,
+            "/persistent/simulation/minFrameRate": 30,
+            "/renderer/vsync": false,
+            "/app/vsync": false
+          }
+        },
+        {
+          "marker": "after_warmup",
+          "flow_update_sample_count": 5,
+          "timeline_playing": true,
+          "values": {
+            "/app/runLoops/main/rateLimitEnabled": true,
+            "/app/runLoops/main/rateLimitFrequency": 60.0,
+            "/app/runLoops/main/syncToPresent": true,
+            "/app/runLoops/rendering_0/rateLimitEnabled": true,
+            "/app/runLoops/rendering_0/rateLimitFrequency": 120.0,
+            "/app/runLoops/rendering_0/syncToPresent": true,
+            "/app/runLoops/present/rateLimitEnabled": true,
+            "/app/runLoops/present/rateLimitFrequency": 59.0,
+            "/app/runLoops/present/syncToPresent": true,
+            "/app/runLoopsGlobal/syncToPresent": false,
+            "/persistent/app/viewport/defaults/tickRate": 120,
+            "/persistent/simulation/minFrameRate": 30,
+            "/renderer/vsync": false,
+            "/app/vsync": false
+          }
+        },
+        {
+          "marker": "before_timeline_pause",
+          "flow_update_sample_count": 240,
+          "timeline_playing": false,
+          "values": {
+            "/app/runLoops/main/rateLimitEnabled": true,
+            "/app/runLoops/main/rateLimitFrequency": 120.0,
+            "/app/runLoops/main/syncToPresent": true,
+            "/app/runLoops/rendering_0/rateLimitEnabled": true,
+            "/app/runLoops/rendering_0/rateLimitFrequency": 120.0,
+            "/app/runLoops/rendering_0/syncToPresent": true,
+            "/app/runLoops/present/rateLimitEnabled": true,
+            "/app/runLoops/present/rateLimitFrequency": 59.0,
+            "/app/runLoops/present/syncToPresent": true,
+            "/app/runLoopsGlobal/syncToPresent": false,
+            "/persistent/app/viewport/defaults/tickRate": 120,
+            "/persistent/simulation/minFrameRate": 30,
+            "/renderer/vsync": false,
+            "/app/vsync": false
+          }
+        }
+      ]
+    }
+  ],
+  "effects": {
+    "normal_remove_developer_fps": 23.2156,
+    "benchmark_add_developer_fps": -24.2434,
+    "no_developer_app_root_residual_fps": -0.8144,
+    "developer_app_root_residual_fps": 0.2134
+  },
+  "classification": {
+    "observed_facts": [
+      "The developer bundle follows the low-FPS class across both app roots; removing it reverses the result.",
+      "Focused probes reproduce the loss with omni.kit.debug.python and the VS Code path, but not with debug settings or the developer window group.",
+      "Loading the Python debug extension with its listen mode disabled retains the fast class.",
+      "No explicit 30 Hz main, render, present, viewport, VSync, or simulation setting differs between the four formal conditions.",
+      "The developer conditions use less GPU power/utilization, so the qualified difference is not a pure GPU saturation boundary."
+    ],
+    "strong_inference": "Starting debugpy.listen through omni.kit.debug.python is the minimum identified cause boundary. Debugger instrumentation/tracing is the leading CPU-side mechanism, but callback-level time was not exposed.",
+    "unconfirmed": [
+      "The public extension-manager surface did not expose per-extension update subscriptions or callback durations.",
+      "The exact debugpy internal hook responsible for the render-counter reduction was not profiled.",
+      "HUD FPS is absent in --no-window runs; display-present FPS, GPU render time, and raw renderer frame intervals remain unavailable and were not inferred.",
+      "Warmup scheduler snapshots also show a timeline/main-rate lifecycle difference in debugpy-listening conditions; causality inside Kit/debugpy is unconfirmed."
+    ]
+  },
+  "recommendation": {
+    "next_phase": "Remove omni.kit.developer.bundle from the production normal app and provide an explicit opt-in developer/debug preset; then repeat normal startup, interactive debugging, Phase 0, Phase 3, and the standard suite.",
+    "this_phase_changes_production_dependency": false,
+    "this_phase_changes_rates": false
+  },
+  "production_apps_changed": false
+}

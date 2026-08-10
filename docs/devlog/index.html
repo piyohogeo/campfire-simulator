@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v3tp">最新記録</a>
+        <a href="#phase-v3tq">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v3tp">Phase V3T-Pを読む</a>
+        <a class="button primary" href="#phase-v3tq">Phase V3T-Qを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V3T-P qualified</strong></div>
-        <div><span>Wood Visual V3</span><strong>production default ON</strong></div>
-        <div><span>Correctness</span><strong>14 / 14 gates</strong></div>
-        <div><span>20本実表示</span><strong>45.784 FPS · 21.904 ms</strong></div>
+        <div><span>現在地</span><strong>Phase V3T-Q diagnosed</strong></div>
+        <div><span>Normal app</span><strong>debugpy boundary isolated</strong></div>
+        <div><span>Formal matrix</span><strong>12 / 12 processes</strong></div>
+        <div><span>No-developer normal</span><strong>55.427 FPS · 18.046 ms</strong></div>
       </div>
     </div>
   </header>
@@ -56,6 +56,19 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-v3tq" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報"><span class="phase-number compact">V3T-Q</span><p><time datetime="2026-08-10">2026.08.10</time></p><span class="pill current">Diagnostic qualified</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase V3T-Q · Normal / benchmark app-path boundary</p><h2>normalだけが遅いのではない。<br>debugpy listenが約32 FPSを連れてきた。</h2><p>production appを変更せず、normal／benchmarkへdeveloper bundleを付け外ししたderived appを4条件×3独立processで比較しました。結果はapp rootではなくbundleに追従し、さらにPython debug extensionのlisten開始まで絞り込みました。</p></header>
+          <figure class="capture-card wide"><a href="assets/phasev3tq/app_path_fps_report.svg"><img src="assets/phasev3tq/app_path_fps_report.svg" alt="normalとbenchmarkそれぞれでdeveloper bundleの有無を反転したFPS比較とdebugpy focused probe" loading="lazy"></a><figcaption><div><strong>12 / 12 formal processes</strong><span>4条件×3 run · order回転 · crash/fatal 0 · production hash不変</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">App-path reversal</p><h3>32.211→55.427 FPS</h3><p>normalからbundleを除くと+23.216 FPS。benchmarkへ追加すると56.241→31.998 FPSです。bundle除外後のnormal／benchmark差は−0.814 FPSまで縮みました。</p></section><section class="note caution"><p class="note-label">Minimum factor</p><h3>debug extension loadではなくlisten開始</h3><p>debugpy listen無効では56.010 FPS、既定listenでは30.832 FPSでした。debug settingsとdeveloper window群は53.544／56.048 FPSで、低速classを再現しません。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Scheduler and evidence</p><h3>明示30 Hz設定は見つからない。</h3><p>main／render／presentは最大60／120／59 Hz、viewport tick 120 Hz、VSync OFFで、4条件に30 Hzの差はありません。低速条件はGPU利用率約19%・146 W、高速条件は約38%・189 Wで、純粋なGPU saturationではありません。</p><p>公開extension managerからcallback別時間は取得できず、debugpy内部hookは未確認です。visible-window確認も31.182／55.458 FPSで同じ分離を示しました。Release、Phase 0 RTX、production normal／benchmark Phase 3、標準78／78件はすべて合格し、authority hash一致・mass error 0・fatal／dump 0でした。</p><p><a href="assets/phasev3tq/app_path_fps_report.json">集計JSON</a> · <a href="assets/phasev3tq/app_path_fps_samples.json">全sample／extension順</a> · <a href="assets/phasev3tq/app_path_fps_report.svg">比較SVG</a> · <a href="assets/phasev3tq/regression_report.json">回帰JSON</a> · <a href="../design/normal_benchmark_fps_boundary.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Root reversal</strong><small>normal / benchmark一致</small></p></div><div role="listitem"><span>✓</span><p><strong>Focused</strong><small>debugpy listen境界</small></p></div><div role="listitem"><span>✓</span><p><strong>Regression</strong><small>78 / 78 + RTX</small></p></div><div role="listitem"><span>✓</span><p><strong>Visible UI</strong><small>同じ分離</small></p></div><div role="listitem"><span>—</span><p><strong>Callback profile</strong><small>公開境界で未取得</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Safe stop</p><h3>次Phaseでdeveloper presetへ分離する。</h3><p>このPhaseではproduction dependencyを削除していません。次はnormal本体からdeveloper bundleを外し、明示opt-inのdebug presetを用意した上でinteractive debuggingと通常回帰を再検証します。画面上の新機能ではないため新しい動画は作らず、最新デモはV3T-Pを維持します。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v3tp" class="section entry-section phase-six">

@@ -1,5 +1,11 @@
 # Changelog
 
+- Isolated Phase V3T-Q's normal/benchmark FPS boundary with four derived-app conditions across 12 order-rotated processes: developer-bundle conditions measured `32.211 / 31.998 FPS`, while no-developer conditions measured `55.427 / 56.241 FPS`; production app hashes and defaults were unchanged.
+- Reduced the bundle result to `omni.kit.debug.python` starting `debugpy.listen()`: the Python debug extension with listen disabled retained `56.010 FPS`, while default listen measured `30.832 FPS`; debug settings and developer window groups stayed in the fast class.
+- Audited effective scheduler values before PLAY, after PLAY, after warmup, and before pause. No condition-specific 30 Hz setting exists; the common simulation minimum is 30 Hz, and all formal conditions use the same main/render/present/tick/VSync contract.
+- Added p99 to deterministic timing summaries, reproducible derived-app/focused runners, full extension/startup evidence, a visible-window confirmation, a machine-readable report, and the Phase V3T-Q devlog card. No new video was produced because this diagnostic has no intended visual change; the verified V3T-P latest demo remains current.
+- Qualified the Phase V3T-Q safe stop with a Release build, Phase 0 RTX, production normal and benchmark Phase 3 runs, matching authority hashes, zero mass-balance error, no fatal/dump evidence, and all 78 standard tests across eight processes.
+
 - Promoted CPU-source Wood Visual V3 to the normal and production-benchmark app defaults after 14/14 production gates, identical OFF/ON authority hashes, mass error 0, and 17/17 real-Kit lifecycle gates.
 - Packaged the qualified native wood producer with the extension; explicit native paths still override it and missing production binaries fail closed.
 - Kept legacy, Point, rigid-layout, and isolation paths explicitly V3 OFF; V0 remains an exclusive fallback/diagnostic mode.

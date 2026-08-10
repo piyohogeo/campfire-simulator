@@ -1,0 +1,11 @@
+[package]
+version = "0.1.0"
+title = "Campfire Phase V3T-Q runtime diagnostic"
+description = "Read-only derived-app scheduler and extension inventory probe."
+category = "Internal"
+
+[dependencies]
+"omni.timeline" = {}
+
+[[python.module]]
+name = "omni.campfire.phasev3tq.diagnostic"

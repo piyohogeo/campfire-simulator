@@ -49,6 +49,7 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(summary["mean_ms"], 2.0)
         self.assertEqual(summary["p50_ms"], 2.0)
         self.assertEqual(summary["p95_ms"], 3.0)
+        self.assertEqual(summary["p99_ms"], 3.0)
         self.assertEqual(summary["max_ms"], 3.0)
 
     async def test_fixed_scene_has_expected_structure(self):

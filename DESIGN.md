@@ -2881,3 +2881,15 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 20本visible viewportはOFF `47.054 FPS / 21.329 ms`、ON `45.784 FPS / 21.904 ms`。通常app default pathは`30.528 FPS`で最低30 FPSを維持するが余裕は小さい。CPU publication totalはp50 `2.4329 ms`、p95 `10.1752 ms`、p99 `11.7879 ms`、max `13.9464 ms`、30 ms超過0だった。
 - 1 runあたりtexture upload 868、quantized unchanged skip 99、visual commit 504。effective publishは2.5125 Hz、実commitは2.1 Hz。display-present FPS、GPU render time、raw render interval、1% lowは公開安全経路で未取得のため推定しない。
 - qualified transportは`DynamicTextureProvider.set_raw_bytes_data()`のCPU-sourceだけである。GPU ring、V3T-M保留Flow topology、物理式、authority schema、Flow入力、Emitter、collision、checkpoint/rollback/serialization、形状変化、炎照明は変更していない。詳細は`docs/design/wood_visual_v3_production_default.md`。
+
+## Phase V3T-Q normal / benchmark FPS boundary
+
+### 2026-08-10: normal固有差ではなくdeveloper debug listen境界と確定
+
+- production `.kit`を変更せず、normal baseline／normal no-developer／benchmark +developer／benchmark baselineをderived appで各3独立process、条件順回転、Candidate Performance、1280×720、210 W、CPU-source V3 ON、no-windowで比較した。平均visible counterは`32.211 / 55.427 / 31.998 / 56.241 FPS`で、差はapp rootではなくdeveloper bundleへ追従した。
+- bundle除外後のnormal／benchmark残差は`-0.814 FPS`、bundle追加時は`+0.213 FPS`である。bundleは両appへ同じ9 extensionを追加し、no-developer両appの実効extension集合は派生app自己ID以外一致した。
+- focused probeはno-developer `55.126 FPS`、Python debug extension＋listen無効`56.010`、既定`debugpy.listen()`有効`30.832`、VS Code path`31.551`、debug settings`53.544`、developer window群`56.048`、dev utilities bundle`31.444`だった。最小再現境界はdebug extensionのloadではなくlisten開始である。debugger tracing/instrumentationをCPU側主因と強く推定するが、公開extension managerからcallback別時間は取得できず内部hookは未確認である。
+- main／render／present／viewport tick／VSyncを起動後、PLAY前後、5 flow-update warmup後、pause前にread-only取得した。条件固有の30 Hz設定はなく、共通のsimulation minimum 30 Hzは低速classを判別しない。debugpy listen条件ではwarmup時のtimeline/main-rate lifecycle差も観測したが、内部因果は断定しない。
+- visible-window補助確認もnormal baseline`31.182`、no-developer`55.458 FPS`で同じ分離を示した。正式FPSは`ViewportAPI.frame_info` counterであり、HUD FPS、display-present FPS、GPU render time、raw renderer intervalは未取得・未推定である。
+- このPhaseではdeveloper dependencyをproductionから削除しない。次Phase候補はnormal本体からdeveloper bundleを外し、明示opt-inのdeveloper/debug presetへ分離してinteractive debuggingと全回帰を再検証することである。V3既定ON、CPU-source transport、Flow/wood authority、Emitter、collision、checkpoint、rollback、serializationは不変。詳細は`docs/design/normal_benchmark_fps_boundary.md`。
+- 最終回帰はRelease build、Phase 0 RTX、production normal／benchmarkのPhase 3が合格した。両appのdry／wet authority SHA-256は一致、mass balance errorは0、fatal token／dumpは0で、標準suiteは8 process・78/78件（334.3秒、collapse coverage 192.3秒）合格した。

@@ -51,7 +51,11 @@ param(
     [switch]$DisableMilestoneFrames,
     [switch]$IsolatedCrashSafety,
     [string]$KitLog = "",
-    [string]$CrashDumpDir = ""
+    [string]$CrashDumpDir = "",
+    [string]$AppPath = "",
+    [string[]]$AdditionalKitArguments = @(),
+    [switch]$AllowDebugExtensions,
+    [switch]$VisibleWindow
 )
 
 $ErrorActionPreference = "Stop"
@@ -64,7 +68,12 @@ $appName = if ($AppKind -eq "normal") {
 else {
     "campfire.simulator.benchmark.kit"
 }
-$app = Join-Path $releaseRoot "apps\$appName"
+$app = if ($AppPath) {
+    [System.IO.Path]::GetFullPath($AppPath)
+}
+else {
+    Join-Path $releaseRoot "apps\$appName"
+}
 if ($IsolatedCrashSafety.IsPresent) {
     . (Join-Path $PSScriptRoot "isolated_kit_crash_safety.ps1")
     $app = New-CampfireIsolatedKitApp -SourceApp $app
@@ -194,7 +203,6 @@ $CrashDumpDir = [System.IO.Path]::GetFullPath($CrashDumpDir)
 
 $kitArgs = @(
     $app,
-    "--no-window",
     "--/app/quitAfter=1200",
     "--/app/settings/persistent=0",
     "--/app/settings/loadUserConfig=0",
@@ -225,6 +233,9 @@ $kitArgs = @(
     "--/app/viewport/grid/enabled=false",
     "--/persistent/app/viewport/displayOptions=1152"
 )
+if (-not $VisibleWindow.IsPresent) {
+    $kitArgs = @($kitArgs[0], "--no-window") + $kitArgs[1..($kitArgs.Count - 1)]
+}
 if ($IsolatedCrashSafety.IsPresent) {
     $kitArgs += @(Get-CampfireIsolatedKitCrashSafetyArgs -DumpDir $CrashDumpDir)
 }
@@ -259,6 +270,7 @@ $rtxVisualPresetArgs = switch ($RtxVisualPreset) {
     default { @() }
 }
 $kitArgs += $rtxVisualPresetArgs
+$kitArgs += $AdditionalKitArguments
 if ($PhaseV3TLCameraMotion.IsPresent) {
     $kitArgs += @("--exec", (Join-Path $PSScriptRoot "probe_phasev3tl_camera_motion.py"))
 }
@@ -581,7 +593,11 @@ foreach ($name in @("dry", "wet")) {
         throw "Phase 3 $name wood has an unexpected zero-area cell count."
     }
 }
-if (-not $result.scenario.debugger_free -and $AppKind -ne "normal") {
+if (
+    -not $result.scenario.debugger_free -and
+    $AppKind -ne "normal" -and
+    -not $AllowDebugExtensions.IsPresent
+) {
     $enabledDebugExtensions = @(
         $result.scenario.debug_extension_status.PSObject.Properties |
             Where-Object { $_.Value } |
