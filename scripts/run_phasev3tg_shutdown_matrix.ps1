@@ -19,9 +19,11 @@ if ($pathKeys.Count -gt 1) {
     [Environment]::SetEnvironmentVariable("Path", $processPath, [EnvironmentVariableTarget]::Process)
 }
 $repositoryRoot = Split-Path -Parent $PSScriptRoot
+. (Join-Path $PSScriptRoot "isolated_kit_crash_safety.ps1")
 $releaseRoot = Join-Path $repositoryRoot "_build\windows-x86_64\release"
 $kit = Join-Path $releaseRoot "kit\kit.exe"
 $app = Join-Path $releaseRoot "apps\campfire.simulator.kit"
+$app = New-CampfireIsolatedKitApp -SourceApp $app
 $probe = Join-Path $PSScriptRoot "probe_phasev3tg_shutdown.py"
 $extension = Join-Path $PSScriptRoot "phasev3tg_extension"
 $analyzer = Join-Path $PSScriptRoot "analyze_phasev3tg_shutdown.py"
@@ -73,6 +75,7 @@ function Invoke-IsolatedRun {
     $started = [DateTimeOffset]::UtcNow
     $process = $null
     try {
+        $crashDumpDir = Join-Path $dir "sensitive-crash-dumps"
         $arguments = @(
             $app, "--no-window", "--/app/file/ignoreUnsavedOnExit=true", "--/app/quitAfter=30000",
             "--/app/settings/persistent=0", "--/app/settings/loadUserConfig=0", "--/app/window/hideUi=true",
@@ -83,7 +86,7 @@ function Invoke-IsolatedRun {
             "--/phasev3tg/output=$resultPath", "--/phasev3tg/markers=$markerPath", "--/phasev3tg/mode=$Mode",
             "--/phasev3tg/sequence=$Sequence", "--/phasev3tg/warmup=$Warmup", "--/phasev3tg/updates=$Updates",
             "--/phasev3tg/run=$RunIndex", "--exec", $probe
-        )
+        ) + @(Get-CampfireIsolatedKitCrashSafetyArgs -DumpDir $crashDumpDir)
         $process = Start-Process -FilePath $kit -ArgumentList $arguments -PassThru -WindowStyle Hidden
         if (-not $process.WaitForExit($TimeoutSeconds * 1000)) {
             Stop-Process -Id $process.Id -Force
@@ -106,7 +109,7 @@ function Invoke-IsolatedRun {
         $markers = @(Get-Content -LiteralPath $markerPath | Where-Object { $_ } | ForEach-Object { $_ | ConvertFrom-Json })
     }
     $shutdown = @($markers | Where-Object { $_.name -eq "shutdown_begin" } | Select-Object -Last 1)
-    $crashPatterns = '0xC0000005|access violation|illegal address|device lost|invalid pointer|unregisterViewOverride|ComputeExtent'
+    $crashPatterns = '\[crash\] A crash has occurred|0xC0000005|access violation|illegal address|device lost|invalid pointer|unregisterViewOverride|ComputeExtent'
     $excerpt = @()
     foreach ($path in @($kitLog)) {
         if (Test-Path -LiteralPath $path) { $excerpt += @(Select-String -LiteralPath $path -Pattern $crashPatterns -Context 2,6 | ForEach-Object { $_.ToString() }) }
@@ -127,6 +130,9 @@ function Invoke-IsolatedRun {
         probe_json=if(Test-Path $resultPath){$resultPath}else{$null}; markers=$markerPath; kit_log=$kitLog; gpu_csv=if(Test-Path $gpuCsv){$gpuCsv}else{$null}
     }
     [IO.File]::WriteAllText($processPath, ($record | ConvertTo-Json -Depth 8) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
+    if ($classification -ne "normal" -or [bool]($excerpt -match '\[crash\] A crash has occurred')) {
+        throw "Phase V3T-G fail-fast rejected $name ($classification); isolated dump directory preserved at $crashDumpDir"
+    }
     return [pscustomobject]$record
 }
 

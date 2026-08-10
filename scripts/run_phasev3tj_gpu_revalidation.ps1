@@ -11,12 +11,14 @@ $processPath=$env:Path
 $pathKeys=@([Environment]::GetEnvironmentVariables().Keys|Where-Object{$_ -ieq "path"})
 if($pathKeys.Count-gt1){[Environment]::SetEnvironmentVariable("Path",$null,[EnvironmentVariableTarget]::Process);[Environment]::SetEnvironmentVariable("Path",$processPath,[EnvironmentVariableTarget]::Process)}
 $root=Split-Path -Parent $PSScriptRoot
+. (Join-Path $PSScriptRoot "isolated_kit_crash_safety.ps1")
 if(-not$OutputDir){$OutputDir=Join-Path $root "artifacts\phasev3tj-gpu-revalidation"}
 $OutputDir=[IO.Path]::GetFullPath($OutputDir)
 if(Test-Path $OutputDir){throw "Phase V3T-J refuses to reuse output: $OutputDir"}
 New-Item -ItemType Directory -Path $OutputDir|Out-Null
 $release=Join-Path $root "_build\windows-x86_64\release"
 $kit=Join-Path $release "kit\kit.exe";$app=Join-Path $release "apps\campfire.simulator.kit"
+$app=New-CampfireIsolatedKitApp -SourceApp $app
 $probe=Join-Path $PSScriptRoot "probe_phasev3tj_gpu_transport.py"
 $extension=Join-Path $PSScriptRoot "phasev3tg_extension"
 $tools=Join-Path $root "artifacts\phasev3tj-tools"
@@ -28,7 +30,7 @@ $kitPython=Join-Path $release "kit\python\python.exe"
 $dumpAnalyzer=Join-Path $PSScriptRoot "analyze_phasev3tj_minidump.py"
 $nvidiaSmi=Get-Command nvidia-smi.exe -ErrorAction SilentlyContinue
 $stageIdError="IRenderSettings::getRenderSettings failed getting a stage-id"
-$fatalTokens=@($stageIdError,"CUDA_ERROR_ILLEGAL_ADDRESS","device lost","invalid pointer")
+$fatalTokens=@($stageIdError,"Traceback (most recent call last)","CUDA_ERROR_ILLEGAL_ADDRESS","device lost","invalid pointer","[crash] A crash has occurred")
 if($Quick){$Runs=1;$Warmup=2;$Updates=8}
 
 $commit=(& git -c "safe.directory=$($root.Replace('\','/'))" rev-parse --short HEAD).Trim()
@@ -63,7 +65,7 @@ function Invoke-IsolatedRun([string]$Transport,[string]$Scenario,[int]$Run) {
         "--/phasev3tj/scenario=$Scenario","--/phasev3tj/warmup=$Warmup","--/phasev3tj/updates=$Updates","--/phasev3tj/run=$Run",
         "--/phasev3tj/crashHandler=$handler","--/phasev3tj/dumpHelper=$helper","--/phasev3tj/crashDump=$dump","--/phasev3tj/crashMetadata=$crashJson",
         "--exec",$probe
-    )
+    ) + @(Get-CampfireIsolatedKitCrashSafetyArgs -DumpDir (Join-Path $dir "sensitive-crash-dumps"))
     $started=[DateTimeOffset]::UtcNow
     $process=Start-Process -FilePath $kit -ArgumentList $arguments -PassThru -WindowStyle Hidden
     if(-not$process.WaitForExit($TimeoutSeconds*1000)){

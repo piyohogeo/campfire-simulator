@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">Phase V3T-MA isolated Kit crash safety</title>
+  <desc id="desc">Normal startup, intentional native crash, and next startup all keep automatic upload disabled while preserving a local dump.</desc>
+  <rect width="1200" height="420" rx="28" fill="#111827"/>
+  <text x="54" y="62" fill="#f9fafb" font-family="Segoe UI, sans-serif" font-size="30" font-weight="700">Isolated Kit crash safety</text>
+  <text x="54" y="94" fill="#9ca3af" font-family="Segoe UI, sans-serif" font-size="17">derived app + repo-local privacy opt-out · production settings unchanged</text>
+  <g font-family="Segoe UI, sans-serif">
+    <rect x="54" y="130" width="330" height="220" rx="18" fill="#1f2937" stroke="#34d399" stroke-width="2"/>
+    <text x="78" y="171" fill="#34d399" font-size="19" font-weight="700">1 · Normal startup</text>
+    <text x="78" y="216" fill="#f9fafb" font-size="34" font-weight="700">8 / 8 gates</text>
+    <text x="78" y="252" fill="#d1d5db" font-size="17">upload attempts 0</text>
+    <text x="78" y="281" fill="#d1d5db" font-size="17">preserveDump = true</text>
+    <text x="78" y="310" fill="#d1d5db" font-size="17">privacy/performance = false</text>
+    <rect x="435" y="130" width="330" height="220" rx="18" fill="#1f2937" stroke="#f59e0b" stroke-width="2"/>
+    <text x="459" y="171" fill="#f59e0b" font-size="19" font-weight="700">2 · Intentional crash</text>
+    <text x="459" y="216" fill="#f9fafb" font-size="34" font-weight="700">0xC0000005</text>
+    <text x="459" y="252" fill="#d1d5db" font-size="17">Crash Reporter UI: none</text>
+    <text x="459" y="281" fill="#d1d5db" font-size="17">local compressed dump: saved</text>
+    <text x="459" y="310" fill="#d1d5db" font-size="17">upload attempts 0</text>
+    <rect x="816" y="130" width="330" height="220" rx="18" fill="#1f2937" stroke="#60a5fa" stroke-width="2"/>
+    <text x="840" y="171" fill="#60a5fa" font-size="19" font-weight="700">3 · Next startup</text>
+    <text x="840" y="216" fill="#f9fafb" font-size="34" font-weight="700">hash unchanged</text>
+    <text x="840" y="252" fill="#d1d5db" font-size="17">old dump upload skipped</text>
+    <text x="840" y="281" fill="#d1d5db" font-size="17">upload attempts 0</text>
+    <text x="840" y="310" fill="#d1d5db" font-size="17">relevant registry unchanged</text>
+  </g>
+  <text x="54" y="392" fill="#9ca3af" font-family="Segoe UI, sans-serif" font-size="15">Sensitive dump, Kit log, and raw analysis remain local and Git-ignored.</text>
+</svg>

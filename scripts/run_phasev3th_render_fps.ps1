@@ -14,8 +14,10 @@ $processPath=$env:Path
 $pathKeys=@([Environment]::GetEnvironmentVariables().Keys|Where-Object{$_ -ieq "path"})
 if($pathKeys.Count -gt 1){[Environment]::SetEnvironmentVariable("Path",$null,[EnvironmentVariableTarget]::Process);[Environment]::SetEnvironmentVariable("Path",$processPath,[EnvironmentVariableTarget]::Process)}
 $root=Split-Path -Parent $PSScriptRoot
+. (Join-Path $PSScriptRoot "isolated_kit_crash_safety.ps1")
 $release=Join-Path $root "_build\windows-x86_64\release"
 $kit=Join-Path $release "kit\kit.exe";$app=Join-Path $release "apps\campfire.simulator.kit"
+$app=New-CampfireIsolatedKitApp -SourceApp $app
 $python=Join-Path $release "kit\python\python.exe";$probe=Join-Path $PSScriptRoot "probe_phasev3th_render_fps.py";$analyzer=Join-Path $PSScriptRoot "analyze_phasev3th_render_fps.py"
 $native=Join-Path $root "artifacts\phasev2\native-build\campfire_wood_native.dll"
 if(-not(Test-Path $native)){throw "Phase V3T-H requires qualified native library: $native"}
@@ -28,7 +30,7 @@ if(Test-Path (Join-Path $OutputDir "manifest.json")){throw "Phase V3T-H refuses 
 New-Item -ItemType Directory -Force $OutputDir|Out-Null
 $nvidiaSmi=Get-Command nvidia-smi.exe -ErrorAction SilentlyContinue
 $stageIdError="IRenderSettings::getRenderSettings failed getting a stage-id"
-$fatalTokens=@($stageIdError,"Traceback (most recent call last)","CUDA_ERROR_ILLEGAL_ADDRESS","device lost","invalid pointer","Invoked with: <omni.ui._ui.ImageProvider")
+$fatalTokens=@($stageIdError,"Traceback (most recent call last)","CUDA_ERROR_ILLEGAL_ADDRESS","device lost","invalid pointer","Invoked with: <omni.ui._ui.ImageProvider","[crash] A crash has occurred")
 
 function Assert-NoKit {
     $old=@(Get-CimInstance Win32_Process -Filter "Name='kit.exe'" -ErrorAction SilentlyContinue|Where-Object{$_.ExecutablePath-and([IO.Path]::GetFullPath($_.ExecutablePath)-eq[IO.Path]::GetFullPath($kit))})
@@ -46,7 +48,8 @@ function Invoke-Run {
     $started=[DateTimeOffset]::UtcNow
     try{
         $flow=$Condition-ne"flow_off_v3_off";$quitAfterMs=[int][Math]::Ceiling(($Warmup+$Measure+180)*1000)
-        $arguments=@($app,"--/app/file/ignoreUnsavedOnExit=true","--/app/quitAfter=$quitAfterMs","--/app/settings/persistent=0","--/app/settings/loadUserConfig=0","--/app/window/hideUi=false","--/app/window/width=1280","--/app/window/height=720","--/app/viewport/defaults/fillViewport=false","--/renderer/multiGpu/enabled=false","--/rtx/flow/enabled=$($flow.ToString().ToLowerInvariant())","--/exts/campfire.app/autoCreateScene=false","--/exts/campfire.app/residentPointApplicationEnabled=false","--/exts/campfire.app/residentPointRigidLayoutEnabled=false","--/exts/campfire.app/woodVisualV3Enabled=false","--/log/file=$kitLog","--/phasev3th/output=$raw","--/phasev3th/condition=$Condition","--/phasev3th/readMode=$ReadMode","--/phasev3th/warmupSeconds=$Warmup","--/phasev3th/measureSeconds=$Measure","--/phasev3th/run=$Run","--/phasev3th/nativeLibrary=$native","--exec",$probe)
+        $crashDumpDir=Join-Path $dir "sensitive-crash-dumps"
+        $arguments=@($app,"--/app/file/ignoreUnsavedOnExit=true","--/app/quitAfter=$quitAfterMs","--/app/settings/persistent=0","--/app/settings/loadUserConfig=0","--/app/window/hideUi=false","--/app/window/width=1280","--/app/window/height=720","--/app/viewport/defaults/fillViewport=false","--/renderer/multiGpu/enabled=false","--/rtx/flow/enabled=$($flow.ToString().ToLowerInvariant())","--/exts/campfire.app/autoCreateScene=false","--/exts/campfire.app/residentPointApplicationEnabled=false","--/exts/campfire.app/residentPointRigidLayoutEnabled=false","--/exts/campfire.app/woodVisualV3Enabled=false","--/log/file=$kitLog","--/phasev3th/output=$raw","--/phasev3th/condition=$Condition","--/phasev3th/readMode=$ReadMode","--/phasev3th/warmupSeconds=$Warmup","--/phasev3th/measureSeconds=$Measure","--/phasev3th/run=$Run","--/phasev3th/nativeLibrary=$native","--exec",$probe)+@(Get-CampfireIsolatedKitCrashSafetyArgs -DumpDir $crashDumpDir)
         $process=Start-Process $kit -ArgumentList $arguments -PassThru;$deadline=[DateTimeOffset]::UtcNow.AddSeconds($Warmup+$Measure+180)
         while(-not$process.WaitForExit(250)){
             if(-not$reader-and(Test-Path $kitLog)){$stream=[IO.File]::Open($kitLog,[IO.FileMode]::Open,[IO.FileAccess]::Read,[IO.FileShare]::ReadWrite);$reader=[IO.StreamReader]::new($stream)}

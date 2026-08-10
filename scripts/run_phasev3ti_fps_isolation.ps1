@@ -11,9 +11,11 @@ $processPath=$env:Path
 $pathKeys=@([Environment]::GetEnvironmentVariables().Keys|Where-Object{$_ -ieq "path"})
 if($pathKeys.Count -gt 1){[Environment]::SetEnvironmentVariable("Path",$null,[EnvironmentVariableTarget]::Process);[Environment]::SetEnvironmentVariable("Path",$processPath,[EnvironmentVariableTarget]::Process)}
 $root=Split-Path -Parent $PSScriptRoot
+. (Join-Path $PSScriptRoot "isolated_kit_crash_safety.ps1")
 $release=Join-Path $root "_build\windows-x86_64\release"
 $kit=Join-Path $release "kit\kit.exe"
 $app=Join-Path $release "apps\campfire.simulator.kit"
+$app=New-CampfireIsolatedKitApp -SourceApp $app
 $probe=Join-Path $PSScriptRoot "probe_phasev3ti_fps_isolation.py"
 if(-not$OutputDir){$OutputDir=Join-Path $root ("artifacts\phasev3ti-"+$Mode.ToLowerInvariant())}
 $OutputDir=[IO.Path]::GetFullPath($OutputDir)
@@ -21,7 +23,7 @@ if(Test-Path $OutputDir){throw "Phase V3T-I refuses to reuse output: $OutputDir"
 New-Item -ItemType Directory -Path $OutputDir|Out-Null
 $nvidiaSmi=Get-Command nvidia-smi.exe -ErrorAction SilentlyContinue
 $stageIdError="IRenderSettings::getRenderSettings failed getting a stage-id"
-$fatalTokens=@($stageIdError,"Traceback (most recent call last)","CUDA_ERROR_ILLEGAL_ADDRESS","device lost","invalid pointer")
+$fatalTokens=@($stageIdError,"Traceback (most recent call last)","CUDA_ERROR_ILLEGAL_ADDRESS","device lost","invalid pointer","[crash] A crash has occurred")
 $allConditions=@(
     "empty_rtx","current_flow_off","reflection_off","indirect_off","denoiser_on",
     "resolution_640x360","resolution_1920x1080","ui_hidden",
@@ -112,7 +114,7 @@ function Invoke-IsolatedRun([string]$Condition,[int]$Run) {
             "--/phasev3ti/width=$($config.width)","--/phasev3ti/height=$($config.height)",
             "--/phasev3ti/warmupSeconds=$WarmupSeconds","--/phasev3ti/measureSeconds=$MeasureSeconds",
             "--/phasev3ti/run=$Run"
-        )+$config.extra+@("--exec",$probe)
+        )+$config.extra+@("--exec",$probe)+@(Get-CampfireIsolatedKitCrashSafetyArgs -DumpDir (Join-Path $dir "sensitive-crash-dumps"))
         $process=Start-Process $kit -ArgumentList $arguments -PassThru
         $deadline=[DateTimeOffset]::UtcNow.AddSeconds($WarmupSeconds+$MeasureSeconds+180)
         while(-not$process.WaitForExit(250)){

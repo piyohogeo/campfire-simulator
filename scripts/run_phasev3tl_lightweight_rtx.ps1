@@ -12,9 +12,11 @@ $processPath=$env:Path
 $pathKeys=@([Environment]::GetEnvironmentVariables().Keys|Where-Object{$_ -ieq "path"})
 if($pathKeys.Count-gt1){[Environment]::SetEnvironmentVariable("Path",$null,[EnvironmentVariableTarget]::Process);[Environment]::SetEnvironmentVariable("Path",$processPath,[EnvironmentVariableTarget]::Process)}
 $root=Split-Path -Parent $PSScriptRoot
+. (Join-Path $PSScriptRoot "isolated_kit_crash_safety.ps1")
 $release=Join-Path $root "_build\windows-x86_64\release"
 $kit=Join-Path $release "kit\kit.exe"
 $app=Join-Path $release "apps\campfire.simulator.kit"
+$app=New-CampfireIsolatedKitApp -SourceApp $app
 $probe=Join-Path $PSScriptRoot "probe_phasev3tl_lightweight_rtx.py"
 if(-not$OutputDir){$OutputDir=Join-Path $root ("artifacts\phasev3tl-"+$Mode.ToLowerInvariant())}
 $OutputDir=[IO.Path]::GetFullPath($OutputDir)
@@ -102,7 +104,7 @@ function Invoke-IsolatedRun([string]$Condition,[string]$Preset,[int]$Run) {
             "--/log/file=$log","--/phasev3tl/output=$raw","--/phasev3tl/condition=$Condition",
             "--/phasev3tl/preset=$Preset","--/phasev3tl/warmupSeconds=$WarmupSeconds",
             "--/phasev3tl/measureSeconds=$MeasureSeconds","--/phasev3tl/run=$Run","--exec",$probe
-        )
+        ) + @(Get-CampfireIsolatedKitCrashSafetyArgs -DumpDir (Join-Path $dir "sensitive-crash-dumps"))
         $process=Start-Process $kit -ArgumentList $args -PassThru
         $deadline=[DateTimeOffset]::UtcNow.AddSeconds($WarmupSeconds+$MeasureSeconds+360)
         while(-not$process.WaitForExit(250)){

@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v3tl">最新記録</a>
+        <a href="#phase-v3tma">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v3tl">Phase V3T-Lを読む</a>
+        <a class="button primary" href="#phase-v3tma">Phase V3T-MAを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V3T-L lightweight RTX preset</strong></div>
-        <div><span>状態</span><strong class="success">Measured · production-neutral</strong></div>
-        <div><span>正式検証</span><strong>30 clean candidate processes · 210 W固定</strong></div>
-        <div><span>判定</span><strong>Balanced候補 · AO保留 · Flowは58 FPS未達</strong></div>
+        <div><span>現在地</span><strong>Phase V3T-MA crash safety</strong></div>
+        <div><span>状態</span><strong class="success">Qualified · local preserve</strong></div>
+        <div><span>安全gate</span><strong>upload 0 · popup 0 · dump保存</strong></div>
+        <div><span>判定</span><strong>実クラッシュ2件は共通境界 · 原因未確定</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,19 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-v3tma" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報"><span class="phase-number compact">V3T-MA</span><p><time datetime="2026-08-10">2026.08.10</time></p><span class="pill current">Qualified · privacy-safe</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase V3T-MA · isolated Kit crash safety</p><h2>dumpは残す。<br>自動送信はしない。</h2><p>V3T-Mの正式測定前に、隔離Kitだけへrepo-local privacy opt-outとrun固有dump directoryを適用しました。production appやWindows全体の設定は変更していません。</p></header>
+          <figure class="capture-card wide"><a href="assets/phasev3tm/crash_safety_report.svg"><img src="assets/phasev3tm/crash_safety_report.svg" alt="通常起動、意図的native crash、次回起動のcrash safety gate" loading="lazy"></a><figcaption><div><strong>0xC0000005 fixture qualified</strong><span>popup 0 · upload 0 · compressed dump保存 · registry不変</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3tl/candidate_performance_motion.mp4" data-video-poster="assets/phasev3tl/candidate_performance.png" data-video-title="Phase V3T-MA context · Candidate Performance" data-video-meta="既存V3燃焼動画 · crash fixture映像ではない · 性能母集団外"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>次Phaseの外観基準</strong><small>既存動画 · fixture外</small></span></button></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Effective settings</p><h3>8 / 8 safety gates</h3><p><code>preserveDump=true</code>、old-dump upload skip、空URL、performance consent falseをKit内から再読取しました。crash後の次回起動でもupload試行は0です。</p></section><section class="note caution"><p class="note-label">Common real-crash signature</p><h3>omni.fabric + 0xD6960</h3><p>AO OFFとFlow translucency-onlyが同じread-target <code>0x20</code>で落ちています。AO固有とはせず、設定順・stage接続・Fabric/Hydra・renderer初期化の境界を保留します。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Safety boundary</p><h3>native crashを正常終了に数えない。</h3><p>crash行、dump生成、native nonzero exitをfail-fast分類し、同条件をretryせずmatrixを停止します。dump、Kit log、raw解析JSONはGit外の機密artifactです。</p><code>.\scripts\run_isolated_kit_crash_safety_smoke.ps1</code><p><a href="assets/phasev3tm/crash_safety_report.json">要約JSON</a> · <a href="../design/isolated_kit_crash_safety.md">安全契約</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Upload</strong><small>attempt 0</small></p></div><div role="listitem"><span>✓</span><p><strong>Local dump</strong><small>410,922 bytes</small></p></div><div role="listitem"><span>✓</span><p><strong>Popup</strong><small>0</small></p></div><div role="listitem"><span>✓</span><p><strong>Registry</strong><small>before/after一致</small></p></div><div role="listitem"><span>✓</span><p><strong>Regression</strong><small>77/77</small></p></div><div role="listitem"><span>!</span><p><strong>Root cause</strong><small>未確認</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Next</p><h3>Performance標準化後にV3T-Mを再開</h3><p>AO OFFとtranslucency-onlyは正式matrixへ戻さず、品質設定をstage接続前に固定してPhysX／Flowコストを分解します。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v3tl" class="section entry-section phase-six">

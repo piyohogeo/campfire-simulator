@@ -2796,3 +2796,14 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 5 scene×2候補×3 run＝30 processは全件normal exit／fatal 0／210 Wだった。Flow＋volumeはBalanced `45.412 FPS / 22.02 ms`、Performance `47.858 / 20.90 ms`で58 FPS gate未達。RTX Minimalは実V3のFlow active-block gateに失敗した。
 - visual-only固定camera／orbit＋薪崩落captureでは両候補ともshadow、V3 emission、炎煙を維持した。Performanceは時間的細部がやや平滑化されるためfallback-only候補とする。
 - production既定、wood authority、Flow入力、Emitter、collision、rigid layout、checkpoint、serialization、V3既定OFF、Power Limit 210 Wを変更しない。詳細は`docs/design/wood_visual_v3_lightweight_rtx_preset.md`。
+
+## Phase V3T-MA isolated Kit crash-reporting safety
+
+### 2026-08-10: dump自動送信を無効化し、local preserveとfail-fastを先行gateにする
+
+- V3T-M以降の隔離runnerはproduction appを直接変更せず、同じbuild directoryへ生成するderived `.kit`とrepo-local privacy opt-outを使う。`uploadDumpsOnStartup=false`、`skipOldDumpUpload=true`、`preserveDump=true`、`compressDumpFiles=true`、空upload URL、performance consent falseを起動時に固定し、Kit内から実効値を再読取する。
+- 通常起動、意図的`0xC0000005`、その次の起動を実測した。Crash Reporter GUI 0、upload試行0、410,922-byteの圧縮dump保存、dump SHA-256不変、関連WER／AeDebug registry snapshot前後一致を確認した。dump、Kit log、raw解析JSONは機密情報を含み得るGit外artifactとする。
+- native crash、Crash Reporter dump、native nonzero exitを正常終了と区別し、同条件をretryせずmatrixを停止する。run固有dump directoryを次起動前に保全する。過去のV3T-G〜V3T-L隔離runnerにも同じ送信無効境界を適用する。
+- AO OFFと`flow_layer_translucency_only`はいずれも`0xC0000005` read `0x20`、`omni.fabric.plugin.dll+0xD6960`である。AO固有と断定せず、設定適用時期、stage接続、Fabric/Hydra初期化、renderer初期化raceを未確認候補として保持する。両条件は単独の安全な初期化順probeが成立するまで正式matrixへ戻さない。
+- production既定、wood authority、Flow入力、Emitter、collision、rigid layout、checkpoint、serialization、V3既定OFFは不変。詳細は`docs/design/isolated_kit_crash_safety.md`。
+- 最終標準suiteは8/8 process、77/77 test、371.6秒で合格した。

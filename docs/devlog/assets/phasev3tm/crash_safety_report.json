@@ -1,0 +1,62 @@
+{
+  "schema": "campfire.phasev3tm.crash-safety-summary.v1",
+  "phase": "V3T-MA",
+  "status": "qualified",
+  "production_changed": false,
+  "effective_setting_gates": {
+    "app_upload_dumps_on_startup_disabled": true,
+    "skip_old_dump_upload_enabled": true,
+    "preserve_dump_enabled": true,
+    "compress_dump_files_enabled": true,
+    "forced_upload_disabled": true,
+    "upload_url_empty": true,
+    "performance_consent_disabled": true,
+    "interactive_user_story_disabled": true
+  },
+  "normal_startup_smoke": {
+    "status": "ok",
+    "automatic_upload_attempts": 0,
+    "upload_enabled_true_lines": 0,
+    "relevant_crash_registry_unchanged": true
+  },
+  "intentional_native_crash_fixture": {
+    "status": "ok",
+    "exit_code": "0xC0000005",
+    "crash_reporter_gui_started": false,
+    "automatic_upload_attempts": 0,
+    "dump_preserved": true,
+    "dump_bytes": 410922,
+    "dump_sha256": "D73D24D51019A26F6C37C7EBCC13570AE28FCCD0D7EEA559566AC14D7BC9E3C9",
+    "fault_module": "phasev3tj_crash_handler.dll",
+    "fault_offset": "0x1250",
+    "relevant_crash_registry_unchanged": true,
+    "sensitive_local_artifact": "artifacts/isolated-kit-native-crash-fixture4-20260810/",
+    "git_managed": false
+  },
+  "post_crash_next_startup": {
+    "status": "ok",
+    "dump_hash_unchanged": true,
+    "automatic_upload_attempts": 0
+  },
+  "regression": {
+    "standard_processes_passed": 8,
+    "standard_processes_total": 8,
+    "tests_passed": 77,
+    "tests_total": 77,
+    "wall_seconds": 371.6
+  },
+  "real_crash_common_signature": {
+    "conditions": ["phase_v3tl_ao_off", "phase_v3tm_flow_layer_translucency_only"],
+    "exception": "0xC0000005",
+    "access": "read",
+    "target": "0x20",
+    "fault_module": "omni.fabric.plugin.dll",
+    "fault_offset": "0xD6960",
+    "cause": "unconfirmed",
+    "formal_matrix_status": "held"
+  },
+  "unmeasured_or_unconfirmed": [
+    "Private-symbol native unwind for the two real crashes",
+    "Whether settings timing, stage connection, Fabric/Hydra initialization, or renderer initialization race is causal"
+  ]
+}

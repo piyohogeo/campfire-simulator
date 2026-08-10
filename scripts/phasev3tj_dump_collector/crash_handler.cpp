@@ -47,6 +47,23 @@ extern "C" __declspec(dllexport) BOOL phasev3tj_install_crash_handler(
     return TRUE;
 }
 
+namespace {
+
+DWORD WINAPI intentional_access_violation_thread(LPVOID) {
+    volatile LONG* invalid = reinterpret_cast<volatile LONG*>(0x20);
+    *invalid = 1;
+    return 0;
+}
+
+}  // namespace
+
+extern "C" __declspec(dllexport) BOOL phasev3tj_trigger_access_violation() {
+    HANDLE thread = CreateThread(nullptr, 0, intentional_access_violation_thread, nullptr, 0, nullptr);
+    if (!thread) return FALSE;
+    CloseHandle(thread);
+    return TRUE;
+}
+
 BOOL WINAPI DllMain(HINSTANCE, DWORD, LPVOID) {
     return TRUE;
 }

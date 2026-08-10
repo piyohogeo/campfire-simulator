@@ -1,0 +1,6 @@
+[privacy]
+version = "1.0"
+performance = false
+personalization = false
+usage = false
+extraDiagnosticDataOptIn = ""

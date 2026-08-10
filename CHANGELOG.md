@@ -1,5 +1,10 @@
 # Changelog
 
+- Added a production-neutral isolated-Kit crash-safety boundary before Phase V3T-M: repo-local privacy opt-out, automatic dump upload disabled, compressed local dump preservation, run-scoped dump directories, and crash-token fail-fast are now shared by the V3T-G through V3T-L diagnostic runners.
+- Qualified the boundary with a normal startup, an intentional native `0xC0000005`, and a post-crash startup: Crash Reporter GUI 0, upload attempts 0, preserved 410,922-byte dump, unchanged dump SHA-256, and unchanged relevant Windows crash-reporting registry snapshots.
+- Kept dumps, Kit logs, and raw dump-analysis JSON outside Git. Recorded the common real-crash signature for AO OFF and `flow_layer_translucency_only` (`0xC0000005` read `0x20`, `omni.fabric.plugin.dll+0xD6960`) without attributing it to AO; both conditions remain held.
+- Requalified all eight standard processes and `77 / 77` tests in `371.6 s` after the isolated-runner safety changes.
+
 - Added production-neutral Phase V3T-L lightweight RTX preset probes with an eight-consecutive-visible-frame readiness gate and effective-setting verification from bundled Kit 110.2 UI paths.
 - Measured 30/30 clean formal processes: Candidate Balanced/Performance reduced ground-and-stones from the V3T-K `17.40 ms` reference to `8.57 ms`, Cylinder20 from `21.73 ms` to `8.57 ms`, and Flow+volume from `40.79 ms` to `22.02 / 20.90 ms`; neither Flow result met the declared 58-FPS near-present gate.
 - Held AO changes after the AO-OFF Flow-volume preflight produced a native `0xC0000005` read at `omni.fabric.plugin.dll+0xD6960`; the Crash Reporter dump remains Git-ignored, while its SHA-256 and limited no-symbol stack evidence are recorded.

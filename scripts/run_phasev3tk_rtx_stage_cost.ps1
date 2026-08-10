@@ -14,9 +14,11 @@ $processPath=$env:Path
 $pathKeys=@([Environment]::GetEnvironmentVariables().Keys|Where-Object{$_ -ieq "path"})
 if($pathKeys.Count-gt1){[Environment]::SetEnvironmentVariable("Path",$null,[EnvironmentVariableTarget]::Process);[Environment]::SetEnvironmentVariable("Path",$processPath,[EnvironmentVariableTarget]::Process)}
 $root=Split-Path -Parent $PSScriptRoot
+. (Join-Path $PSScriptRoot "isolated_kit_crash_safety.ps1")
 $release=Join-Path $root "_build\windows-x86_64\release"
 $kit=Join-Path $release "kit\kit.exe"
 $app=Join-Path $release "apps\campfire.simulator.kit"
+$app=New-CampfireIsolatedKitApp -SourceApp $app
 $probe=Join-Path $PSScriptRoot "probe_phasev3tk_rtx_stage_cost.py"
 if(-not$OutputDir){$OutputDir=Join-Path $root ("artifacts\phasev3tk-"+$Mode.ToLowerInvariant())}
 $OutputDir=[IO.Path]::GetFullPath($OutputDir)
@@ -37,7 +39,8 @@ if($Mode-eq"Preflight"){$Runs=1}
 $nvidiaSmi=Get-Command nvidia-smi.exe -ErrorAction SilentlyContinue
 $fatalTokens=@(
     "IRenderSettings::getRenderSettings failed getting a stage-id",
-    "Traceback (most recent call last)","CUDA_ERROR_ILLEGAL_ADDRESS","device lost","invalid pointer"
+    "Traceback (most recent call last)","CUDA_ERROR_ILLEGAL_ADDRESS","device lost","invalid pointer",
+    "[crash] A crash has occurred"
 )
 
 function Assert-NoKit {
@@ -101,7 +104,7 @@ function Invoke-IsolatedRun([string]$Condition,[string]$AaMode,[int]$Run) {
             "--/log/file=$log","--/phasev3tk/output=$raw","--/phasev3tk/condition=$Condition",
             "--/phasev3tk/aaMode=$AaMode","--/phasev3tk/warmupSeconds=$WarmupSeconds",
             "--/phasev3tk/measureSeconds=$MeasureSeconds","--/phasev3tk/run=$Run","--exec",$probe
-        )
+        ) + @(Get-CampfireIsolatedKitCrashSafetyArgs -DumpDir (Join-Path $dir "sensitive-crash-dumps"))
         $process=Start-Process $kit -ArgumentList $args -PassThru
         $deadline=[DateTimeOffset]::UtcNow.AddSeconds($WarmupSeconds+$MeasureSeconds+180)
         while(-not$process.WaitForExit(250)){
