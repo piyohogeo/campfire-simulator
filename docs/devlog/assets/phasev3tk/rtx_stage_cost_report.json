@@ -1,0 +1,1094 @@
+{
+  "schema": "campfire.phasev3tk.rtx-stage-cost-report.v1",
+  "status": "ok",
+  "phase": "V3T-K",
+  "baseline_commit": "88136a2",
+  "kit": "110.2",
+  "flow": "110.0.0",
+  "gpu": "NVIDIA GeForce RTX 3090",
+  "measurement_contract": {
+    "output_resolution": [
+      1280,
+      720
+    ],
+    "power_limit_w": 210.0,
+    "power_limit_percent_of_default": 60.0,
+    "power_limit_changed": false,
+    "measurement_only_override": {
+      "path": "/rtx/ecoMode/enabled",
+      "effective_value": false,
+      "persisted_to_production": false
+    },
+    "visible_fps_source": "public ViewportAPI.frame_info frame_number delta / wall time",
+    "hud_fps_source": "public smoothed ViewportAPI.frame_info fps",
+    "display_present_fps_measured": false,
+    "raw_frame_p95_p99_measured": false,
+    "one_percent_low_measured": false,
+    "additional_render_product_created": false,
+    "hydra_texture_created": false,
+    "capture_or_encode_used": false,
+    "stage_or_material_mutated_during_measurement": false
+  },
+  "formal_gate": {
+    "stage_processes": 39,
+    "aa_processes": 9,
+    "fatal_log_count": 0,
+    "stage_id_error_count": 0,
+    "normal_exit_count": 48
+  },
+  "regression": {
+    "standard_processes_passed": 8,
+    "standard_processes_total": 8,
+    "tests_passed": 77,
+    "tests_total": 77,
+    "suite_elapsed_seconds": null,
+    "final_static_plus_suite_command_wall_seconds": 352.9
+  },
+  "effective_setting_audit": {
+    "requested_paths": {
+      "/rtx/post/aa/op": 3,
+      "/rtx/post/dlss/execMode": 3,
+      "/rtx/post/dlss/enabled": null,
+      "/rtx/pathtracing/dlss/enabled": false,
+      "/rtx-transient/dlssg/enabled": true,
+      "/rtx-transient/dlssg/x3x4supported": true,
+      "/rtx/ecoMode/enabled": false,
+      "/rtx/directLighting/enabled": true,
+      "/rtx/directLighting/sampledLighting/samplesPerPixel": 2,
+      "/rtx/directLighting/domeLight/sampleCount": 2,
+      "/rtx/shadows/enabled": true,
+      "/rtx/reflections/enabled": true,
+      "/rtx/reflections/sampledLighting/samplesPerPixel": null,
+      "/rtx/reflections/maxReflectionBounces": 1,
+      "/rtx/translucency/enabled": true,
+      "/rtx/translucency/maxRefractionBounces": 6,
+      "/rtx/indirectDiffuse/enabled": true,
+      "/rtx/indirectDiffuse/maxBounces": 2,
+      "/rtx/realtime/optixDenoiser/enabled": false,
+      "/rtx/flow/enabled": false,
+      "/renderer/multiGpu/enabled": false,
+      "/app/runLoops/main/rateLimitEnabled": true,
+      "/app/runLoops/main/rateLimitFrequency": 120,
+      "/app/runLoops/main/syncToPresent": true,
+      "/app/runLoops/present/rateLimitEnabled": true,
+      "/app/runLoops/present/rateLimitFrequency": 59.0,
+      "/app/runLoops/present/syncToPresent": true,
+      "/app/runLoops/rendering_0/rateLimitEnabled": true,
+      "/app/runLoops/rendering_0/rateLimitFrequency": 120.0,
+      "/app/runLoops/rendering_0/syncToPresent": true,
+      "/app/runLoopsGlobal/syncToPresent": false,
+      "/persistent/app/viewport/defaults/tickRate": 120,
+      "/persistent/simulation/minFrameRate": 30,
+      "/renderer/vsync": false,
+      "/app/vsync": false
+    },
+    "discovered_related_settings": {
+      "/rtx-transient/directLighting/sampledLighting/enforced": true,
+      "/rtx-transient/dldenoiser/enabled": true,
+      "/rtx-transient/dldenoiser/presetHint": 0,
+      "/rtx-transient/dlssg/enabled": true,
+      "/rtx-transient/dlssg/x3x4supported": true,
+      "/rtx-transient/hashed/410cea6f0e51aa5e9f232895a3a4f74a": 3,
+      "/rtx-transient/post/aa/limitedOps": true,
+      "/rtx-transient/post/dlss/forceParamReset": false,
+      "/rtx-transient/post/dlss/supported": true,
+      "/rtx-transient/resourcemanager/texturestreaming/maxSampleCountDecay": 0.5,
+      "/rtx-transient/resourcemanager/texturestreaming/sampleCountBlend": 0.949999988079071,
+      "/rtx-transient/resourcemanager/texturestreaming/sampleCountLargeJumpScale": 10.0,
+      "/rtx-transient/resourcemanager/texturestreaming/sampleCountRelativeClamp": 0.3869999945163727,
+      "/rtx-transient/samplerFeedbackTileSize": 8,
+      "/rtx-transient/sceneDb/fastRefractionShadow/enabled": true,
+      "/rtx-transient/sceneDb/shadowLink/enabled": true,
+      "/rtx/ambientOcclusion/denoiserMode": 0,
+      "/rtx/ambientOcclusion/maxSamples": 9,
+      "/rtx/ambientOcclusion/minSamples": 3,
+      "/rtx/directLighting/diffuseBackscattering/shadowOffset": 10.0,
+      "/rtx/directLighting/domeLight/denoisingTechnique": 4,
+      "/rtx/directLighting/domeLight/sampleCount": 2,
+      "/rtx/directLighting/sampledLighting/autoEnable": true,
+      "/rtx/directLighting/sampledLighting/autoEnableLightCountThreshold": 10,
+      "/rtx/directLighting/sampledLighting/clampSamplesPerPixelToNumberOfLights": false,
+      "/rtx/directLighting/sampledLighting/denoisingTechnique": 0,
+      "/rtx/directLighting/sampledLighting/enabled": true,
+      "/rtx/directLighting/sampledLighting/enforceDenoiser": false,
+      "/rtx/directLighting/sampledLighting/irradiance/denoiser/enabled": false,
+      "/rtx/directLighting/sampledLighting/maxRayUnexposedIntensity": 6400.0,
+      "/rtx/directLighting/sampledLighting/mis/enabled": true,
+      "/rtx/directLighting/sampledLighting/optixDenoiser/blendFactor": 0.085,
+      "/rtx/directLighting/sampledLighting/optixDenoiser/useAlbedo": false,
+      "/rtx/directLighting/sampledLighting/optixDenoiser/useNormals": false,
+      "/rtx/directLighting/sampledLighting/ris/meshLights": false,
+      "/rtx/directLighting/sampledLighting/samplesPerPixel": 2,
+      "/rtx/directLighting/sampledLighting/separateGlossyDiffuseContrib": false,
+      "/rtx/directLighting/sampledLighting/stochasticLCRefresh": true,
+      "/rtx/directLighting/sampledLighting/stochasticLcUpdateMaxTileSize": 8,
+      "/rtx/domeLight/baking/resolution": 4096,
+      "/rtx/domeLight/resolutionFactor": 1.0,
+      "/rtx/fishEye/enableUnboundedResolutions": false,
+      "/rtx/flow/pathTracingShadowsEnabled": false,
+      "/rtx/flow/rayTracedShadowsEnabled": false,
+      "/rtx/flow/useFlowLibrarySelfShadow": true,
+      "/rtx/index/renderingSamples": 1,
+      "/rtx/index/resolutionScale": 100,
+      "/rtx/indirectDiffuse/denoiser/enabled": false,
+      "/rtx/indirectDiffuse/denoiser/iterations": 4,
+      "/rtx/indirectDiffuse/denoiser/kernelRadius": 32,
+      "/rtx/indirectDiffuse/denoiser/method": 0,
+      "/rtx/indirectDiffuse/denoiser/temporal/enabled": true,
+      "/rtx/indirectDiffuse/denoiser/temporal/halfResolution": false,
+      "/rtx/indirectDiffuse/denoiser/temporal/maxHistory": 100,
+      "/rtx/indirectDiffuse/denoiser/temporal/phiDeviation": 0.10000000149011612,
+      "/rtx/indirectDiffuse/denoiser/temporal/phiNormal": 0.10000000149011612,
+      "/rtx/indirectDiffuse/denoiser/temporal/phiPlanarDistance": 0.009999999776482582,
+      "/rtx/indirectDiffuse/fetchSampleCount": 1,
+      "/rtx/indirectDiffuse/maxBounces": 2,
+      "/rtx/indirectDiffuse/maxSpecularAndTransmissionBounces": 1,
+      "/rtx/indirectDiffuse/updateSampleCount": 1,
+      "/rtx/lightspeed/NRD_Common/denoisingRange": 500000.0,
+      "/rtx/matteObject/ambientShadowCatcherFactor": 1.0,
+      "/rtx/matteObject/enableAmbientShadowCatcher": false,
+      "/rtx/matteObject/shadowCatcher/mode": 0,
+      "/rtx/pathtracing/aa/filterRadius": 1.0,
+      "/rtx/pathtracing/aa/op": 1,
+      "/rtx/pathtracing/cached/minimumSamplesBeforeSplit": 96,
+      "/rtx/pathtracing/dlss/enabled": false,
+      "/rtx/pathtracing/dlss/training/enabled": false,
+      "/rtx/pathtracing/dynamicResolution/ratio": 1.0,
+      "/rtx/pathtracing/dynamicResolution/sppRatio": 1,
+      "/rtx/pathtracing/fireflyFilter/maxUnexposedIntensityPerSample": 3200.0,
+      "/rtx/pathtracing/fireflyFilter/maxUnexposedIntensityPerSampleDiffuse": 3200.0,
+      "/rtx/pathtracing/lightcache/cached/distanceHashResolution": 8,
+      "/rtx/pathtracing/maxBounces": 4,
+      "/rtx/pathtracing/maxSamplesPerLaunch": 2073600,
+      "/rtx/pathtracing/maxSpecularAndTransmissionBounces": 6,
+      "/rtx/pathtracing/maxVolumeBounces": 15,
+      "/rtx/pathtracing/moreBouncesForSpecularEvents": true,
+      "/rtx/pathtracing/optixDenoiser/AOV": true,
+      "/rtx/pathtracing/optixDenoiser/blendFactor": 0.0,
+      "/rtx/pathtracing/optixDenoiser/enabled": true,
+      "/rtx/pathtracing/optixDenoiser/intensity": 0.0,
+      "/rtx/pathtracing/optixDenoiser/temporalMode/enabled": false,
+      "/rtx/pathtracing/optixDenoiser/useAlbedo": true,
+      "/rtx/pathtracing/optixDenoiser/useNormals": true,
+      "/rtx/pathtracing/preDenoisedResultAOV": false,
+      "/rtx/pathtracing/ptfog/maxBounces": 2,
+      "/rtx/pathtracing/ptvol/maxBounces": 2,
+      "/rtx/pathtracing/ptvol/maxRoughBouncesBeforeIgnoreVolume": 2,
+      "/rtx/pathtracing/rayguide/distanceHashResolution": 8,
+      "/rtx/post/aa/autoExposureMode": 1,
+      "/rtx/post/aa/exposure": 1.0,
+      "/rtx/post/aa/exposureMultiplier": 0.10000000149011612,
+      "/rtx/post/aa/op": 3,
+      "/rtx/post/aa/sharpness": 0.5,
+      "/rtx/post/dlss/execMode": 3,
+      "/rtx/post/dlss/manualScaling": 1.0,
+      "/rtx/post/fxaa/qualityEdgeThreshold": 0.16599999368190765,
+      "/rtx/post/fxaa/qualityEdgeThresholdMin": 0.08330000191926956,
+      "/rtx/post/fxaa/qualitySubPix": 0.75,
+      "/rtx/post/lensFlares/spectralBlurSamples": 0,
+      "/rtx/post/matteObject/enableShadowCatcher": false,
+      "/rtx/post/motionblur/numSamples": 8,
+      "/rtx/post/taa/alpha": 1.0,
+      "/rtx/post/taa/colorBoxSigma": 2.0,
+      "/rtx/post/taa/samples": 8,
+      "/rtx/raytracing/autoToggleDenoiserSettings": true,
+      "/rtx/raytracing/gaussian/selfShadowDistance": 10.0,
+      "/rtx/raytracing/groundTruth/resolution/height": 1080,
+      "/rtx/raytracing/groundTruth/resolution/width": 1920,
+      "/rtx/raytracing/inscattering/inscatterUpsample": 1,
+      "/rtx/raytracing/inscattering/maxRTSampleUnexposedIntensity": 204800.0,
+      "/rtx/raytracing/lightcache/spatialCache/distanceHashResolution": 8,
+      "/rtx/raytracing/shadowBias": 0.0010000000474974513,
+      "/rtx/raytracing/subsurface/denoiser/enabled": false,
+      "/rtx/raytracing/subsurface/maxSamplePerFrame": 1,
+      "/rtx/raytracing/subsurface/shadowRayThreshold": 0.0,
+      "/rtx/raytracing/subsurface/transmission/bsdfSampleCount": 1,
+      "/rtx/raytracing/subsurface/transmission/denoiser/enabled": true,
+      "/rtx/raytracing/subsurface/transmission/halfResolutionBackfaceLighting": true,
+      "/rtx/raytracing/subsurface/transmission/perBsdfScatteringSampleCount": 1,
+      "/rtx/realtime/optixDenoiser/enabled": false,
+      "/rtx/reflections/denoiser/enabled": false,
+      "/rtx/reflections/halfResolution": false,
+      "/rtx/reflections/maxReflectionBounces": 1,
+      "/rtx/reflections/outputDefaultAlbedoOn1stBounceLowRoughness": true,
+      "/rtx/reflections/sampledLighting/enabled": true,
+      "/rtx/rendermode": "RealTimePathTracing",
+      "/rtx/rtpt/cached/maxBounces": 4,
+      "/rtx/rtpt/cached/updateSampleCount": 1,
+      "/rtx/rtpt/fireflyFilter/maxUnexposedIntensityPerSample": 3200.0,
+      "/rtx/rtpt/fireflyFilter/maxUnexposedIntensityPerSampleDiffuse": 3200.0,
+      "/rtx/rtpt/maxBounces": 3,
+      "/rtx/rtpt/maxSpecularAndTransmissionBounces": 3,
+      "/rtx/rtpt/maxVolumeBounces": 15,
+      "/rtx/sampledLighting/maxShadowRays": 8,
+      "/rtx/scenedb/GPUProceduralAABB/enabled": true,
+      "/rtx/scenedb/lighting/powerShapingNormalizerPhiSamples": 64,
+      "/rtx/scenedb/lighting/powerShapingNormalizerThetaSamples": 32,
+      "/rtx/shadows/denoiser/quarterRes": true,
+      "/rtx/shadows/enabled": true,
+      "/rtx/shadows/fractionalCutoutOpacity": true,
+      "/rtx/translucency/maxRefractionBounces": 6,
+      "/rtx/translucency/reflectAtAllBounce": false,
+      "/rtx/translucency/sampleRoughness": false,
+      "/rtx/viewTile/resolution": [
+        0,
+        0
+      ]
+    },
+    "renderer_mode": {
+      "public_setting_value": null,
+      "rtx_setting_value": "RealTimePathTracing",
+      "viewport_render_product_path": "/Render/OmniverseKit/HydraTextures/omni_kit_widget_viewport_ViewportTexture_0",
+      "label": "RTX Real-Time 2.0 selected by the existing visible viewport"
+    },
+    "output_resolution": [
+      1280,
+      720
+    ],
+    "internal_render_resolution": null,
+    "internal_render_resolution_status": "unavailable through the public ViewportAPI/settings inspected in Kit 110.2",
+    "ray_reconstruction_runtime_value": null,
+    "ray_reconstruction_status": "no public runtime value found; not inferred from the local UI changelog",
+    "frame_generation_requested": false
+  },
+  "stage_formal": {
+    "empty_rtx": {
+      "run_count": 3,
+      "values_fps": [
+        102.85,
+        100.844,
+        100.874
+      ],
+      "mean_fps": 101.52266666666667,
+      "stdev_fps": 1.149602250055789,
+      "min_fps": 100.844,
+      "max_fps": 102.85,
+      "hud_mean_fps": 100.70466666666668,
+      "gpu_utilization_mean_percent": 98.51299999999999,
+      "power_mean_w": 209.61800000000002,
+      "graphics_clock_mean_mhz": 1037.9033333333334,
+      "stage": {
+        "prim_count": 2,
+        "mesh_count": 0,
+        "authored_mesh_triangle_count": 0,
+        "implicit_cylinder_count": 0,
+        "implicit_cylinder_triangle_count": null,
+        "material_count": 0,
+        "texture_count": 0,
+        "dynamic_uri_count": 0,
+        "dynamic_uris": [],
+        "rigid_body_count": 0,
+        "light_count": 0,
+        "flow_prim_count": 0,
+        "prim_paths_sha256": "dc7addf666e33b67d140a2452d379bf4eebdb420914a9c452f76207ae0c4d0cb",
+        "flow_active_blocks_final": 0
+      }
+    },
+    "ground_stones_no_lights": {
+      "run_count": 3,
+      "values_fps": [
+        57.736,
+        57.315,
+        57.361
+      ],
+      "mean_fps": 57.47066666666666,
+      "stdev_fps": 0.23093361239398053,
+      "min_fps": 57.315,
+      "max_fps": 57.736,
+      "hud_mean_fps": 56.98666666666667,
+      "gpu_utilization_mean_percent": 98.243,
+      "power_mean_w": 209.41033333333334,
+      "graphics_clock_mean_mhz": 1226.8816666666667,
+      "stage": {
+        "prim_count": 19,
+        "mesh_count": 0,
+        "authored_mesh_triangle_count": 0,
+        "implicit_cylinder_count": 1,
+        "implicit_cylinder_triangle_count": null,
+        "material_count": 0,
+        "texture_count": 0,
+        "dynamic_uri_count": 0,
+        "dynamic_uris": [],
+        "rigid_body_count": 0,
+        "light_count": 0,
+        "flow_prim_count": 0,
+        "prim_paths_sha256": "313c253b852c60c0c708a4c331ced3f47dfbdcd1c12d0a86481d6992baa3cfea",
+        "flow_active_blocks_final": 0
+      }
+    },
+    "ground_stones_lit": {
+      "run_count": 3,
+      "values_fps": [
+        54.87,
+        54.873,
+        55.073
+      ],
+      "mean_fps": 54.93866666666667,
+      "stdev_fps": 0.11634574909868312,
+      "min_fps": 54.87,
+      "max_fps": 55.073,
+      "hud_mean_fps": 54.42933333333334,
+      "gpu_utilization_mean_percent": 98.66666666666667,
+      "power_mean_w": 209.477,
+      "graphics_clock_mean_mhz": 1278.156,
+      "stage": {
+        "prim_count": 22,
+        "mesh_count": 0,
+        "authored_mesh_triangle_count": 0,
+        "implicit_cylinder_count": 1,
+        "implicit_cylinder_triangle_count": null,
+        "material_count": 0,
+        "texture_count": 0,
+        "dynamic_uri_count": 0,
+        "dynamic_uris": [],
+        "rigid_body_count": 0,
+        "light_count": 2,
+        "flow_prim_count": 0,
+        "prim_paths_sha256": "0330bcae1bb153e25dcc46652561e80d14a860e4403a01509f8601092a4fe771",
+        "flow_active_blocks_final": 0
+      }
+    },
+    "cylinder20_solid": {
+      "run_count": 3,
+      "values_fps": [
+        46.458,
+        46.239,
+        45.354
+      ],
+      "mean_fps": 46.016999999999996,
+      "stdev_fps": 0.5845228823579101,
+      "min_fps": 45.354,
+      "max_fps": 46.458,
+      "hud_mean_fps": 45.55466666666667,
+      "gpu_utilization_mean_percent": 97.04633333333334,
+      "power_mean_w": 209.21400000000003,
+      "graphics_clock_mean_mhz": 1425.5163333333333,
+      "stage": {
+        "prim_count": 44,
+        "mesh_count": 0,
+        "authored_mesh_triangle_count": 0,
+        "implicit_cylinder_count": 21,
+        "implicit_cylinder_triangle_count": null,
+        "material_count": 1,
+        "texture_count": 0,
+        "dynamic_uri_count": 0,
+        "dynamic_uris": [],
+        "rigid_body_count": 0,
+        "light_count": 2,
+        "flow_prim_count": 0,
+        "prim_paths_sha256": "1b5d16890d683fee00540c31b4d2182625bec7cb83dcf0032c399915f552dad3",
+        "flow_active_blocks_final": 0
+      }
+    },
+    "v3mesh20_solid": {
+      "run_count": 3,
+      "values_fps": [
+        46.124,
+        45.949,
+        46.335
+      ],
+      "mean_fps": 46.136,
+      "stdev_fps": 0.193279590231355,
+      "min_fps": 45.949,
+      "max_fps": 46.335,
+      "hud_mean_fps": 45.67366666666666,
+      "gpu_utilization_mean_percent": 100.0,
+      "power_mean_w": 209.57899999999998,
+      "graphics_clock_mean_mhz": 1418.1666666666667,
+      "stage": {
+        "prim_count": 64,
+        "mesh_count": 20,
+        "authored_mesh_triangle_count": 14880,
+        "implicit_cylinder_count": 1,
+        "implicit_cylinder_triangle_count": null,
+        "material_count": 1,
+        "texture_count": 0,
+        "dynamic_uri_count": 0,
+        "dynamic_uris": [],
+        "rigid_body_count": 0,
+        "light_count": 2,
+        "flow_prim_count": 0,
+        "prim_paths_sha256": "043cb4f3d131046edf3fb20d864f31260e8aed4024c1fbc1c8942b0e40e6b9de",
+        "flow_active_blocks_final": 0
+      }
+    },
+    "v3mesh20_static_texture": {
+      "run_count": 3,
+      "values_fps": [
+        45.496,
+        45.492,
+        45.62
+      ],
+      "mean_fps": 45.536,
+      "stdev_fps": 0.07277362159463972,
+      "min_fps": 45.492,
+      "max_fps": 45.62,
+      "hud_mean_fps": 45.06433333333334,
+      "gpu_utilization_mean_percent": 99.24433333333333,
+      "power_mean_w": 209.6163333333333,
+      "graphics_clock_mean_mhz": 1408.0,
+      "stage": {
+        "prim_count": 69,
+        "mesh_count": 20,
+        "authored_mesh_triangle_count": 14880,
+        "implicit_cylinder_count": 1,
+        "implicit_cylinder_triangle_count": null,
+        "material_count": 2,
+        "texture_count": 2,
+        "dynamic_uri_count": 0,
+        "dynamic_uris": [],
+        "rigid_body_count": 0,
+        "light_count": 2,
+        "flow_prim_count": 0,
+        "prim_paths_sha256": "5ab4947ee42dc96bfc372eb2f8d242db213625a1ae51461abb59f548a2fe256c",
+        "flow_active_blocks_final": 0
+      }
+    },
+    "v3mesh20_dynamic_unprovided": {
+      "run_count": 3,
+      "values_fps": [
+        44.738,
+        44.865,
+        44.74
+      ],
+      "mean_fps": 44.781000000000006,
+      "stdev_fps": 0.07275300681071611,
+      "min_fps": 44.738,
+      "max_fps": 44.865,
+      "hud_mean_fps": 44.31833333333333,
+      "gpu_utilization_mean_percent": 100.0,
+      "power_mean_w": 209.58833333333334,
+      "graphics_clock_mean_mhz": 1419.3550000000002,
+      "stage": {
+        "prim_count": 69,
+        "mesh_count": 20,
+        "authored_mesh_triangle_count": 14880,
+        "implicit_cylinder_count": 1,
+        "implicit_cylinder_triangle_count": null,
+        "material_count": 2,
+        "texture_count": 2,
+        "dynamic_uri_count": 2,
+        "dynamic_uris": [
+          "dynamic://campfire_wood_visual_v3_base",
+          "dynamic://campfire_wood_visual_v3_emission"
+        ],
+        "rigid_body_count": 0,
+        "light_count": 2,
+        "flow_prim_count": 0,
+        "prim_paths_sha256": "150bb0e180d3597e65cacaf1b13a181206bd0059016e47767fd7312efe4007ee",
+        "flow_active_blocks_final": 0
+      }
+    },
+    "v3mesh20_dynamic_rigid_stopped": {
+      "run_count": 3,
+      "values_fps": [
+        44.868,
+        44.848,
+        44.609
+      ],
+      "mean_fps": 44.775,
+      "stdev_fps": 0.1441075986893121,
+      "min_fps": 44.609,
+      "max_fps": 44.868,
+      "hud_mean_fps": 44.333,
+      "gpu_utilization_mean_percent": 98.51100000000001,
+      "power_mean_w": 209.515,
+      "graphics_clock_mean_mhz": 1424.5,
+      "stage": {
+        "prim_count": 89,
+        "mesh_count": 20,
+        "authored_mesh_triangle_count": 14880,
+        "implicit_cylinder_count": 21,
+        "implicit_cylinder_triangle_count": null,
+        "material_count": 2,
+        "texture_count": 2,
+        "dynamic_uri_count": 2,
+        "dynamic_uris": [
+          "dynamic://campfire_wood_visual_v3_base",
+          "dynamic://campfire_wood_visual_v3_emission"
+        ],
+        "rigid_body_count": 20,
+        "light_count": 2,
+        "flow_prim_count": 0,
+        "prim_paths_sha256": "70f959e100310c38e7d3822e824c4d563b0f73f628519cf6031adde313a058fa",
+        "flow_active_blocks_final": 0
+      }
+    },
+    "v3mesh20_dynamic_rigid_play": {
+      "run_count": 3,
+      "values_fps": [
+        36.22,
+        36.194,
+        36.274
+      ],
+      "mean_fps": 36.22933333333334,
+      "stdev_fps": 0.04080849584747387,
+      "min_fps": 36.194,
+      "max_fps": 36.274,
+      "hud_mean_fps": 35.809333333333335,
+      "gpu_utilization_mean_percent": 77.49466666666666,
+      "power_mean_w": 208.92666666666665,
+      "graphics_clock_mean_mhz": 1617.1989999999998,
+      "stage": {
+        "prim_count": 89,
+        "mesh_count": 20,
+        "authored_mesh_triangle_count": 14880,
+        "implicit_cylinder_count": 21,
+        "implicit_cylinder_triangle_count": null,
+        "material_count": 2,
+        "texture_count": 2,
+        "dynamic_uri_count": 2,
+        "dynamic_uris": [
+          "dynamic://campfire_wood_visual_v3_base",
+          "dynamic://campfire_wood_visual_v3_emission"
+        ],
+        "rigid_body_count": 20,
+        "light_count": 2,
+        "flow_prim_count": 0,
+        "prim_paths_sha256": "70f959e100310c38e7d3822e824c4d563b0f73f628519cf6031adde313a058fa",
+        "flow_active_blocks_final": 0
+      }
+    },
+    "flow_prims_disabled": {
+      "run_count": 3,
+      "values_fps": [
+        44.386,
+        44.129,
+        44.225
+      ],
+      "mean_fps": 44.24666666666667,
+      "stdev_fps": 0.12986274805860976,
+      "min_fps": 44.129,
+      "max_fps": 44.386,
+      "hud_mean_fps": 43.75266666666667,
+      "gpu_utilization_mean_percent": 97.859,
+      "power_mean_w": 209.306,
+      "graphics_clock_mean_mhz": 1529.9246666666666,
+      "stage": {
+        "prim_count": 91,
+        "mesh_count": 20,
+        "authored_mesh_triangle_count": 14880,
+        "implicit_cylinder_count": 21,
+        "implicit_cylinder_triangle_count": null,
+        "material_count": 2,
+        "texture_count": 2,
+        "dynamic_uri_count": 2,
+        "dynamic_uris": [
+          "dynamic://campfire_wood_visual_v3_base",
+          "dynamic://campfire_wood_visual_v3_emission"
+        ],
+        "rigid_body_count": 20,
+        "light_count": 2,
+        "flow_prim_count": 1,
+        "prim_paths_sha256": "51fc50a3be5a967c0a7d6b7e65155303d86ac40150abdc8aabaa4ef7446a7cab",
+        "flow_active_blocks_final": 0
+      }
+    },
+    "flow_prims_global_off_active": {
+      "run_count": 3,
+      "values_fps": [
+        31.618,
+        31.403,
+        31.428
+      ],
+      "mean_fps": 31.483,
+      "stdev_fps": 0.11757976016304789,
+      "min_fps": 31.403,
+      "max_fps": 31.618,
+      "hud_mean_fps": 31.064000000000004,
+      "gpu_utilization_mean_percent": 81.589,
+      "power_mean_w": 208.82833333333335,
+      "graphics_clock_mean_mhz": 1564.1666666666667,
+      "stage": {
+        "prim_count": 108,
+        "mesh_count": 20,
+        "authored_mesh_triangle_count": 14880,
+        "implicit_cylinder_count": 21,
+        "implicit_cylinder_triangle_count": null,
+        "material_count": 2,
+        "texture_count": 2,
+        "dynamic_uri_count": 2,
+        "dynamic_uris": [
+          "dynamic://campfire_wood_visual_v3_base",
+          "dynamic://campfire_wood_visual_v3_emission"
+        ],
+        "rigid_body_count": 20,
+        "light_count": 2,
+        "flow_prim_count": 18,
+        "prim_paths_sha256": "14706d2f2ad63a6878edc1f992e71722baeb11ca2cbae66d1c56dceaf95cee84",
+        "flow_active_blocks_final": 0
+      }
+    },
+    "flow_simulation_only": {
+      "run_count": 3,
+      "values_fps": [
+        24.553,
+        24.547,
+        24.473
+      ],
+      "mean_fps": 24.524333333333335,
+      "stdev_fps": 0.04455707949735287,
+      "min_fps": 24.473,
+      "max_fps": 24.553,
+      "hud_mean_fps": 24.316666666666666,
+      "gpu_utilization_mean_percent": 99.82799999999999,
+      "power_mean_w": 209.24,
+      "graphics_clock_mean_mhz": 1570.9946666666667,
+      "stage": {
+        "prim_count": 103,
+        "mesh_count": 20,
+        "authored_mesh_triangle_count": 14880,
+        "implicit_cylinder_count": 21,
+        "implicit_cylinder_triangle_count": null,
+        "material_count": 2,
+        "texture_count": 2,
+        "dynamic_uri_count": 2,
+        "dynamic_uris": [
+          "dynamic://campfire_wood_visual_v3_base",
+          "dynamic://campfire_wood_visual_v3_emission"
+        ],
+        "rigid_body_count": 20,
+        "light_count": 2,
+        "flow_prim_count": 13,
+        "prim_paths_sha256": "f06ce8fb4000a8dcff534aaaf78713ce228b52da1eb1daf569b5bb0b74e68aab",
+        "flow_active_blocks_final": 184
+      }
+    },
+    "flow_volume": {
+      "run_count": 3,
+      "values_fps": [
+        24.572,
+        24.467,
+        24.513
+      ],
+      "mean_fps": 24.51733333333333,
+      "stdev_fps": 0.05263395608666846,
+      "min_fps": 24.467,
+      "max_fps": 24.572,
+      "hud_mean_fps": 24.319,
+      "gpu_utilization_mean_percent": 99.59133333333334,
+      "power_mean_w": 209.21433333333334,
+      "graphics_clock_mean_mhz": 1567.656,
+      "stage": {
+        "prim_count": 108,
+        "mesh_count": 20,
+        "authored_mesh_triangle_count": 14880,
+        "implicit_cylinder_count": 21,
+        "implicit_cylinder_triangle_count": null,
+        "material_count": 2,
+        "texture_count": 2,
+        "dynamic_uri_count": 2,
+        "dynamic_uris": [
+          "dynamic://campfire_wood_visual_v3_base",
+          "dynamic://campfire_wood_visual_v3_emission"
+        ],
+        "rigid_body_count": 20,
+        "light_count": 2,
+        "flow_prim_count": 18,
+        "prim_paths_sha256": "14706d2f2ad63a6878edc1f992e71722baeb11ca2cbae66d1c56dceaf95cee84",
+        "flow_active_blocks_final": 180
+      }
+    }
+  },
+  "aa_formal": {
+    "performance": {
+      "run_count": 3,
+      "values_fps": [
+        59.913,
+        59.678,
+        59.844
+      ],
+      "mean_fps": 59.81166666666667,
+      "stdev_fps": 0.1207904521613087,
+      "min_fps": 59.678,
+      "max_fps": 59.913,
+      "hud_mean_fps": 59.12166666666667,
+      "gpu_utilization_mean_percent": 49.827666666666666,
+      "power_mean_w": 207.69066666666666,
+      "graphics_clock_mean_mhz": 1829.9530000000002,
+      "stage": {
+        "prim_count": 106,
+        "mesh_count": 20,
+        "authored_mesh_triangle_count": 14880,
+        "implicit_cylinder_count": 21,
+        "implicit_cylinder_triangle_count": null,
+        "material_count": 1,
+        "texture_count": 2,
+        "dynamic_uri_count": 2,
+        "dynamic_uris": [
+          "dynamic://campfire_wood_visual_v3_base",
+          "dynamic://campfire_wood_visual_v3_emission"
+        ],
+        "rigid_body_count": 20,
+        "light_count": 2,
+        "flow_prim_count": 18,
+        "prim_paths_sha256": "c7f79861785b966ae28406a173393e0623a6410b6d28af6c2e29edf45b853e23",
+        "flow_active_blocks_final": 0
+      }
+    },
+    "auto": {
+      "run_count": 3,
+      "values_fps": [
+        31.159,
+        31.155,
+        31.154
+      ],
+      "mean_fps": 31.156000000000002,
+      "stdev_fps": 0.002645751311063796,
+      "min_fps": 31.154,
+      "max_fps": 31.159,
+      "hud_mean_fps": 30.729,
+      "gpu_utilization_mean_percent": 79.56033333333333,
+      "power_mean_w": 208.50733333333332,
+      "graphics_clock_mean_mhz": 1587.3193333333336,
+      "stage": {
+        "prim_count": 106,
+        "mesh_count": 20,
+        "authored_mesh_triangle_count": 14880,
+        "implicit_cylinder_count": 21,
+        "implicit_cylinder_triangle_count": null,
+        "material_count": 1,
+        "texture_count": 2,
+        "dynamic_uri_count": 2,
+        "dynamic_uris": [
+          "dynamic://campfire_wood_visual_v3_base",
+          "dynamic://campfire_wood_visual_v3_emission"
+        ],
+        "rigid_body_count": 20,
+        "light_count": 2,
+        "flow_prim_count": 18,
+        "prim_paths_sha256": "c7f79861785b966ae28406a173393e0623a6410b6d28af6c2e29edf45b853e23",
+        "flow_active_blocks_final": 0
+      }
+    },
+    "dlaa": {
+      "run_count": 3,
+      "values_fps": [
+        31.214,
+        31.138,
+        31.037
+      ],
+      "mean_fps": 31.129666666666665,
+      "stdev_fps": 0.08879376855012587,
+      "min_fps": 31.037,
+      "max_fps": 31.214,
+      "hud_mean_fps": 30.758666666666667,
+      "gpu_utilization_mean_percent": 78.98266666666667,
+      "power_mean_w": 208.69366666666667,
+      "graphics_clock_mean_mhz": 1598.3216666666667,
+      "stage": {
+        "prim_count": 106,
+        "mesh_count": 20,
+        "authored_mesh_triangle_count": 14880,
+        "implicit_cylinder_count": 21,
+        "implicit_cylinder_triangle_count": null,
+        "material_count": 1,
+        "texture_count": 2,
+        "dynamic_uri_count": 2,
+        "dynamic_uris": [
+          "dynamic://campfire_wood_visual_v3_base",
+          "dynamic://campfire_wood_visual_v3_emission"
+        ],
+        "rigid_body_count": 20,
+        "light_count": 2,
+        "flow_prim_count": 18,
+        "prim_paths_sha256": "c7f79861785b966ae28406a173393e0623a6410b6d28af6c2e29edf45b853e23",
+        "flow_active_blocks_final": 0
+      }
+    }
+  },
+  "stage_preflight": {
+    "empty_rtx": {
+      "average_visible_fps": 104.763,
+      "hud_fps_mean": 103.148,
+      "kit_updates_per_second": 116.754,
+      "timeline_sim_per_wall": 0,
+      "display_present_fps": null,
+      "raw_frame_p95_ms": null,
+      "raw_frame_p99_ms": null,
+      "one_percent_low_fps": null
+    },
+    "ground_stones_no_lights": {
+      "average_visible_fps": 58.963,
+      "hud_fps_mean": 58.205,
+      "kit_updates_per_second": 116.76,
+      "timeline_sim_per_wall": 0,
+      "display_present_fps": null,
+      "raw_frame_p95_ms": null,
+      "raw_frame_p99_ms": null,
+      "one_percent_low_fps": null
+    },
+    "ground_stones_lit": {
+      "average_visible_fps": 55.799,
+      "hud_fps_mean": 55.003,
+      "kit_updates_per_second": 116.762,
+      "timeline_sim_per_wall": 0,
+      "display_present_fps": null,
+      "raw_frame_p95_ms": null,
+      "raw_frame_p99_ms": null,
+      "one_percent_low_fps": null
+    },
+    "ground_stones_shadows_off": {
+      "average_visible_fps": 55.634,
+      "hud_fps_mean": 54.79,
+      "kit_updates_per_second": 116.765,
+      "timeline_sim_per_wall": 0,
+      "display_present_fps": null,
+      "raw_frame_p95_ms": null,
+      "raw_frame_p99_ms": null,
+      "one_percent_low_fps": null
+    },
+    "cylinder1_solid": {
+      "average_visible_fps": 53.143,
+      "hud_fps_mean": 52.429,
+      "kit_updates_per_second": 116.781,
+      "timeline_sim_per_wall": 0,
+      "display_present_fps": null,
+      "raw_frame_p95_ms": null,
+      "raw_frame_p99_ms": null,
+      "one_percent_low_fps": null
+    },
+    "cylinder20_solid": {
+      "average_visible_fps": 46.29,
+      "hud_fps_mean": 45.818,
+      "kit_updates_per_second": 116.725,
+      "timeline_sim_per_wall": 0,
+      "display_present_fps": null,
+      "raw_frame_p95_ms": null,
+      "raw_frame_p99_ms": null,
+      "one_percent_low_fps": null
+    },
+    "v3mesh20_solid": {
+      "average_visible_fps": 45.972,
+      "hud_fps_mean": 45.418,
+      "kit_updates_per_second": 116.761,
+      "timeline_sim_per_wall": 0,
+      "display_present_fps": null,
+      "raw_frame_p95_ms": null,
+      "raw_frame_p99_ms": null,
+      "one_percent_low_fps": null
+    },
+    "v3mesh20_static_texture": {
+      "average_visible_fps": 45.314,
+      "hud_fps_mean": 44.759,
+      "kit_updates_per_second": 116.783,
+      "timeline_sim_per_wall": 0,
+      "display_present_fps": null,
+      "raw_frame_p95_ms": null,
+      "raw_frame_p99_ms": null,
+      "one_percent_low_fps": null
+    },
+    "v3mesh20_dynamic_unprovided": {
+      "average_visible_fps": 44.467,
+      "hud_fps_mean": 43.937,
+      "kit_updates_per_second": 116.746,
+      "timeline_sim_per_wall": 0,
+      "display_present_fps": null,
+      "raw_frame_p95_ms": null,
+      "raw_frame_p99_ms": null,
+      "one_percent_low_fps": null
+    },
+    "v3mesh20_dynamic_rigid_stopped": {
+      "average_visible_fps": 44.798,
+      "hud_fps_mean": 44.158,
+      "kit_updates_per_second": 116.742,
+      "timeline_sim_per_wall": 0,
+      "display_present_fps": null,
+      "raw_frame_p95_ms": null,
+      "raw_frame_p99_ms": null,
+      "one_percent_low_fps": null
+    },
+    "v3mesh20_dynamic_rigid_play": {
+      "average_visible_fps": 43.85,
+      "hud_fps_mean": 43.309,
+      "kit_updates_per_second": 45.178,
+      "timeline_sim_per_wall": 0.75297,
+      "display_present_fps": null,
+      "raw_frame_p95_ms": null,
+      "raw_frame_p99_ms": null,
+      "one_percent_low_fps": null
+    },
+    "flow_prims_global_off_active": {
+      "average_visible_fps": 33.462,
+      "hud_fps_mean": 33.063,
+      "kit_updates_per_second": 45.448,
+      "timeline_sim_per_wall": 0.75747,
+      "display_present_fps": null,
+      "raw_frame_p95_ms": null,
+      "raw_frame_p99_ms": null,
+      "one_percent_low_fps": null
+    },
+    "flow_simulation_only": {
+      "average_visible_fps": 22.927,
+      "hud_fps_mean": 22.512,
+      "kit_updates_per_second": 41.368,
+      "timeline_sim_per_wall": 0.68947,
+      "display_present_fps": null,
+      "raw_frame_p95_ms": null,
+      "raw_frame_p99_ms": null,
+      "one_percent_low_fps": null
+    },
+    "flow_volume": {
+      "average_visible_fps": 22.794,
+      "hud_fps_mean": 22.442,
+      "kit_updates_per_second": 41.595,
+      "timeline_sim_per_wall": 0.69326,
+      "display_present_fps": null,
+      "raw_frame_p95_ms": null,
+      "raw_frame_p99_ms": null,
+      "one_percent_low_fps": null
+    }
+  },
+  "aa_preflight": {
+    "performance": {
+      "average_visible_fps": 59.656,
+      "hud_fps_mean": 59.021,
+      "kit_updates_per_second": 59.656,
+      "timeline_sim_per_wall": 0.99427,
+      "display_present_fps": null,
+      "raw_frame_p95_ms": null,
+      "raw_frame_p99_ms": null,
+      "one_percent_low_fps": null
+    },
+    "balanced": {
+      "average_visible_fps": 52.623,
+      "hud_fps_mean": 51.873,
+      "kit_updates_per_second": 52.623,
+      "timeline_sim_per_wall": 0.87705,
+      "display_present_fps": null,
+      "raw_frame_p95_ms": null,
+      "raw_frame_p99_ms": null,
+      "one_percent_low_fps": null
+    },
+    "quality": {
+      "average_visible_fps": 51.062,
+      "hud_fps_mean": 50.128,
+      "kit_updates_per_second": 51.062,
+      "timeline_sim_per_wall": 0.85104,
+      "display_present_fps": null,
+      "raw_frame_p95_ms": null,
+      "raw_frame_p99_ms": null,
+      "one_percent_low_fps": null
+    },
+    "auto": {
+      "average_visible_fps": 31.539,
+      "hud_fps_mean": 31.078,
+      "kit_updates_per_second": 31.539,
+      "timeline_sim_per_wall": 0.52565,
+      "display_present_fps": null,
+      "raw_frame_p95_ms": null,
+      "raw_frame_p99_ms": null,
+      "one_percent_low_fps": null
+    },
+    "dlaa": {
+      "average_visible_fps": 31.521,
+      "hud_fps_mean": 31.217,
+      "kit_updates_per_second": 31.521,
+      "timeline_sim_per_wall": 0.52536,
+      "display_present_fps": null,
+      "raw_frame_p95_ms": null,
+      "raw_frame_p99_ms": null,
+      "one_percent_low_fps": null
+    }
+  },
+  "deltas": {
+    "empty_to_ground_stones_unlit": {
+      "before": "empty_rtx",
+      "after": "ground_stones_no_lights",
+      "fps_delta": -44.05200000000001,
+      "percent": -43.391295211578374
+    },
+    "unlit_to_lit": {
+      "before": "ground_stones_no_lights",
+      "after": "ground_stones_lit",
+      "fps_delta": -2.5319999999999894,
+      "percent": -4.4057258195485005
+    },
+    "lit_to_20_cylinders": {
+      "before": "ground_stones_lit",
+      "after": "cylinder20_solid",
+      "fps_delta": -8.921666666666674,
+      "percent": -16.239321425104368
+    },
+    "cylinders_to_v3_mesh": {
+      "before": "cylinder20_solid",
+      "after": "v3mesh20_solid",
+      "fps_delta": 0.11900000000000688,
+      "percent": 0.25860008257818645
+    },
+    "solid_to_fixed_textures": {
+      "before": "v3mesh20_solid",
+      "after": "v3mesh20_static_texture",
+      "fps_delta": -0.6000000000000014,
+      "percent": -1.3005028611063008
+    },
+    "fixed_to_unprovided_dynamic": {
+      "before": "v3mesh20_static_texture",
+      "after": "v3mesh20_dynamic_unprovided",
+      "fps_delta": -0.7549999999999955,
+      "percent": -1.6580288123682285
+    },
+    "rigid_stopped_to_play": {
+      "before": "v3mesh20_dynamic_rigid_stopped",
+      "after": "v3mesh20_dynamic_rigid_play",
+      "fps_delta": -8.545666666666662,
+      "percent": -19.08579936720639
+    },
+    "no_flow_to_fully_disabled_flow_prims": {
+      "before": "v3mesh20_dynamic_rigid_play",
+      "after": "flow_prims_disabled",
+      "fps_delta": 8.017333333333333,
+      "percent": 22.129397909612834
+    },
+    "fully_disabled_to_global_off_active_flow": {
+      "before": "flow_prims_disabled",
+      "after": "flow_prims_global_off_active",
+      "fps_delta": -12.76366666666667,
+      "percent": -28.84661744764201
+    },
+    "global_off_active_to_simulation": {
+      "before": "flow_prims_global_off_active",
+      "after": "flow_simulation_only",
+      "fps_delta": -6.958666666666666,
+      "percent": -22.102933858484477
+    },
+    "simulation_to_volume": {
+      "before": "flow_simulation_only",
+      "after": "flow_volume",
+      "fps_delta": -0.007000000000005002,
+      "percent": -0.028543079662401993
+    }
+  },
+  "decision": {
+    "first_large_drop": "empty RTX to ground plus stones (-43.4%)",
+    "v3_mesh_is_primary_cause": false,
+    "unprovided_dynamic_uri_is_primary_cause": false,
+    "flow_off_32fps_classification": "Flow global OFF and Emitter disabled were insufficient while Simulate/Render prims and layer Flow render settings remained active",
+    "aa_dominant_observation": "Performance 59.81 FPS versus Auto 31.16 and DLAA 31.13 on the global-OFF/active-subtree scene",
+    "highest_quality_mode_meeting_60_fps": null,
+    "closest_tested_mode": "DLSS Performance (59.812 FPS mean; all three runs below 60)",
+    "production_fix_required": "audit production Flow-OFF semantics: the exact all-OFF scene measured 44.25 FPS versus 31.48 with active Flow subtree/settings; do not change production in this phase",
+    "profiler_run_performed": false,
+    "profiler_reason": "staged and AA comparisons already identified the dominant public boundaries; no profiler overhead added"
+  },
+  "observed_facts": [
+    "Cylinder20 and V3 Mesh20 differ by +0.12 FPS, within run variation.",
+    "Fixed texture to unprovided dynamic URI costs 0.76 FPS; no repeated dynamic-URI warning/error was logged.",
+    "RigidBody with timeline stopped is unchanged; timeline PLAY costs 8.55 FPS.",
+    "Authoring Flow while explicitly deactivating Simulate/Render and layer Flow settings measured 44.25 FPS.",
+    "Leaving the Flow subtree/settings active while global Flow and Emitter were OFF reduced the same constructed scene to 31.48 FPS.",
+    "Flow simulation costs 6.95 FPS; volume rendering adds no measurable loss in this camera."
+  ],
+  "strong_inferences": [
+    "The reported Flow-OFF ~32 FPS is not caused primarily by the V3 render mesh or missing DynamicTextureProvider.",
+    "The application-level Flow-OFF path does not fully eliminate Flow integration work when authored prims and layer render settings remain active.",
+    "DLSS Auto behaves like the measured DLAA cost on this scene, but internal resolution/mode equivalence is unconfirmed."
+  ],
+  "unconfirmed": [
+    "Public internal render resolution was not found in Kit 110.2.",
+    "Public Ray Reconstruction runtime state was not found.",
+    "The exact RTX pass or Flow integration work executed for globally disabled Flow prims is not profiled.",
+    "Why the explicit all-OFF Flow stage outperformed the no-Flow stage during timeline PLAY is not confirmed.",
+    "Display-present FPS, raw frame latency p95/p99, and 1% low are not measured."
+  ]
+}

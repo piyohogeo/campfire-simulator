@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v3tj">最新記録</a>
+        <a href="#phase-v3tk">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v3tj">Phase V3T-Jを読む</a>
+        <a class="button primary" href="#phase-v3tk">Phase V3T-Kを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V3T-J crash evidence</strong></div>
-        <div><span>状態</span><strong class="success">Safe stop · probe only</strong></div>
-        <div><span>正式検証</span><strong>24 normal Kit processes · dump armed</strong></div>
-        <div><span>判定</span><strong>production不採用 · 原因未確認</strong></div>
+        <div><span>現在地</span><strong>Phase V3T-K RTX stage cost</strong></div>
+        <div><span>状態</span><strong class="success">Measured · production-neutral</strong></div>
+        <div><span>正式検証</span><strong>48 clean Kit processes · 210 W固定</strong></div>
+        <div><span>判定</span><strong>32 FPSはFlow OFF残留境界 · V3 Mesh主因ではない</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,62 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-v3tk" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報">
+          <span class="phase-number compact">V3T-K</span>
+          <p><time datetime="2026-08-10">2026.08.10</time></p>
+          <span class="pill current">Measured · no production change</span>
+        </aside>
+        <div class="entry-body">
+          <header class="entry-header">
+            <p class="section-kicker">Phase V3T-K · RTX stage and AA cost isolation</p>
+            <h2>約32 FPSはV3 Meshのせいではない。<br>stage、PhysX、Flow、AAを順に足した。</h2>
+            <p>既存visible viewportの公開<code>ViewportAPI.frame_info</code>だけを使い、empty RTXから地面・石、薪形状、texture、RigidBody、Flow subtree、simulationを一項目ずつ追加しました。追加RenderProduct、HydraTexture、capture、encodeは使っていません。</p>
+          </header>
+
+          <figure class="capture-card wide">
+            <a href="assets/phasev3tk/rtx_stage_cost_report.svg" aria-label="Phase V3T-K stageとAAのFPS比較図を開く">
+              <img src="assets/phasev3tk/rtx_stage_cost_report.svg" alt="empty RTXからFlow simulationまでの段階的FPS低下とPerformance、Auto、DLAAの比較" loading="lazy">
+            </a>
+            <figcaption>
+              <div><strong>48 / 48 formal processes</strong><span>13 stage条件＋3 AA条件 · 各3 run · fatal log 0 · Power Limit 210 W</span></div>
+              <button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3tc/visual_v3_actual.mp4" data-video-poster="assets/phasev3tc/visual_v3_actual_poster.png" data-video-title="Phase V3T-K visual context · explicit V3 preset" data-video-meta="既存V3T-C実燃焼動画 · scene外観の参照のみ · V3T-K性能母集団外 · capture/encode未使用">
+                <span class="video-trigger-icon" aria-hidden="true"></span>
+                <span><strong>測定対象に近い外観</strong><small>既存動画 · FPS証拠ではない</small></span>
+              </button>
+            </figcaption>
+          </figure>
+
+          <div class="notes-grid">
+            <section class="note"><p class="note-label">Stage boundary</p><h3>101.52 → 54.94 → 46.02 FPS</h3><p>empty RTX、地面＋石＋ライト、Cylinder 20本の順です。CylinderとV3 Meshは<code>46.017 / 46.136 FPS</code>で差がなく、14,880 trianglesのV3形状は主因ではありません。</p></section>
+            <section class="note caution"><p class="note-label">Flow OFF semantics</p><h3>44.25 → 31.48 → 24.52 FPS</h3><p>Flow author済み明示all-OFF、global／EmitterだけOFFでsubtree active、simulation ONの順です。約32 FPSはFlow Primの存在だけでなく、OFF時にもactiveなSimulate／Render／layer settingsで再現しました。</p></section>
+          </div>
+
+          <section class="verification" aria-labelledby="phasev3tk-verification-title">
+            <div class="verification-copy">
+              <p class="section-kicker">AA result</p>
+              <h3 id="phasev3tk-verification-title">Performanceは59.81 FPS、AutoとDLAAは約31.1 FPS。</h3>
+              <p>Performanceは最速ですが3 runすべて60 FPS未満で、厳密な60 FPS gateは未達です。内部レンダリング解像度とRay Reconstructionの公開runtime値は取得できず、AutoがDLAAそのものだとは断定していません。</p>
+              <code>.\scripts\run_phasev3tk_rtx_stage_cost.ps1</code>
+              <p><a href="assets/phasev3tk/rtx_stage_cost_report.json">集計JSON</a> · <a href="assets/phasev3tk/rtx_stage_cost_samples.json">全run summary JSON</a> · <a href="../design/wood_visual_v3_rtx_stage_cost.md">設計・制約</a></p>
+            </div>
+            <div class="check-list" role="list" aria-label="Phase V3T-K検証結果">
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Formal matrix</strong><small>48 / 48 · stage-ID/fatal error 0</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Power contract</strong><small>210 W · 60% · unchanged</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>V3 Mesh</strong><small>Cylinderとの差はrun variation内</small></p></div>
+              <div role="listitem"><span aria-hidden="true">✓</span><p><strong>Regression</strong><small>8 / 8 processes · 77 / 77 tests</small></p></div>
+              <div role="listitem"><span aria-hidden="true">!</span><p><strong>Flow OFF semantics</strong><small>all-OFFより12.76 FPS低下 · 内部pass未確認</small></p></div>
+              <div role="listitem"><span aria-hidden="true">—</span><p><strong>Internal resolution</strong><small>公開APIで取得不可 · 推定なし</small></p></div>
+              <div role="listitem"><span aria-hidden="true">—</span><p><strong>Raw pacing</strong><small>p95/p99・1% low未計測</small></p></div>
+            </div>
+          </section>
+
+          <section class="note next"><p class="note-label">Next candidate</p><h3>Flow OFF時のactive subtree／layer設定を監査する</h3><p>productionは変更しません。次に進めるなら代表sceneだけをprofilerまたはstage-authoring auditへかけ、global Flow OFFでもSimulate／Render登録・RTX pass・observer更新が残るかを確認します。DLSS Performanceのproduction既定化も行っていません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v3tj" class="section entry-section phase-six">

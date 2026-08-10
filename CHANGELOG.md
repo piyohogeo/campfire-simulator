@@ -1,5 +1,12 @@
 # Changelog
 
+- Added production-neutral Phase V3T-K using only the existing visible viewport's public `ViewportAPI.frame_info` / `fps`; 39 stage processes and 9 AA processes completed with zero stage-ID/fatal errors, no added RenderProduct/HydraTexture/capture, and the RTX 3090 power limit held at 210 W (60%).
+- Isolated the Auto-AA stage path from empty RTX `101.523 FPS` through ground/stones/lights `54.939`, 20 cylinders `46.017`, V3 Mesh `46.136`, fixed textures `45.536`, unprovided dynamic URI `44.781`, rigid STOP `44.775`, timeline PLAY `36.229`, explicitly all-OFF authored Flow `44.247`, global-OFF but active Flow subtree/settings `31.483`, simulation `24.524`, and volume `24.517 FPS`.
+- Found no V3 Mesh penalty relative to cylinders and only a `0.755 FPS` fixed-to-unprovided-dynamic difference; the ~32 FPS boundary is reproduced when global Flow and Emitter are OFF but authored Simulate/Render prims and layer Flow render settings remain active. Explicitly disabling those boundaries improved the same constructed Flow scene by `12.764 FPS`.
+- Measured the global-OFF/active-subtree representative scene at `59.812 / 31.156 / 31.130 FPS` for DLSS Performance / Auto / DLAA. Performance approached but did not pass 60 FPS in any formal run; internal render resolution and Ray Reconstruction runtime state remain unavailable through the inspected public Kit 110.2 boundary.
+- Kept production code and defaults unchanged. V3 remains default OFF, Sphere remains the production emitter, and the disabled Flow-subtree cost is recorded as a future profiler/stage-authoring audit rather than changed in this phase.
+- Requalified the unchanged production paths with all eight standard test processes and `77 / 77` tests passing; the final combined static-gate plus suite command completed in `352.9 s`.
+
 - Suppressed interactive Windows Application Error UI only inside the intentional Phase V3T-J crash fixture using process/thread error mode plus public WER `NO_UI`; the smoke runner now has a bounded, hidden fixture process while `kit.exe` and machine-wide settings remain unchanged.
 
 - Added Phase V3T-J's target-local `0xC0000005` full-dump path without registry or machine-wide changes: a probe-loaded unhandled-exception handler invokes an external helper only on crash and records full-memory dump path, size, SHA-256, exception metadata, revision, slot, and lifecycle markers outside Git.
