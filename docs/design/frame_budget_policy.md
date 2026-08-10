@@ -54,3 +54,7 @@ Phase V3T-MのFlow component分解はsafe stopを維持する。クラッシュ�
 ## Phase V3T-O実測
 
 240 Hz診断で静的3 sceneは`166.377..169.892 FPS`まで上がり、productionの約116.7 FPSは120 Hz rendering ceilingに当たっていた。production相当Flow＋volumeは`47.858`から`50.696 FPS`への約5.9%改善に留まり、通常予算の基準はproduction-capped値を維持する。詳細は`uncapped_frame_budget_diagnostic.md`。
+
+## Phase V3T-P production V3予算
+
+CPU-source Wood Visual V3のproduction既定ON後、20本production相当visible viewportは`45.784 FPS / HUD mean 21.904 ms`で45 FPS通常目標を維持した。通常appの単独qualificationは`30.528 FPS`で30 FPS最低線への余裕が小さいため、今後の大きな描画変更では両経路を再測定する。publication totalはp95 `10.175 ms`、max `13.946 ms`、30 ms超過0で、adaptive publicationは2.5125 Hz、実visual commitは2.1 Hzだった。過去の`47.858 FPS / 20.90 ms`基準はV3T-N当時の参照値として残し、V3既定ON後の現在値と混同しない。詳細は`wood_visual_v3_production_default.md`。

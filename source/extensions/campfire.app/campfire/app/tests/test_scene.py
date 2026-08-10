@@ -13,6 +13,34 @@ from pxr import Gf, Sdf, Tf, Usd, UsdGeom, UsdPhysics, UsdShade
 
 
 class TestScene(omni.kit.test.AsyncTestCase):
+    async def test_v3_production_defaults_and_bundled_native_runtime(self):
+        root = next(
+            candidate
+            for candidate in Path(__file__).resolve().parents
+            if (candidate / "DESIGN.md").is_file()
+        )
+        for name in ("campfire.simulator.kit", "campfire.simulator.benchmark.kit"):
+            text = (root / "source" / "apps" / name).read_text(encoding="utf-8")
+            self.assertIn('phase = "phase3"', text)
+            self.assertIn("residentSnapshotAdapterEnabled = true", text)
+            self.assertIn("residentSnapshotHandleCacheEnabled = true", text)
+            self.assertIn("residentSnapshotLightweightCommitEnabled = true", text)
+            self.assertIn("residentSnapshotSkipUnchangedEnabled = true", text)
+            self.assertIn("woodRenderHierarchyEnabled = true", text)
+            self.assertIn("woodVisualV3Enabled = true", text)
+            self.assertIn("residentNativeBackendEnabled = true", text)
+            self.assertIn("woodVisualV0Enabled = false", text)
+        native = (
+            root
+            / "source"
+            / "extensions"
+            / "campfire.app"
+            / "bin"
+            / "campfire_wood_native.dll"
+        )
+        self.assertTrue(native.is_file())
+        self.assertGreater(native.stat().st_size, 0)
+
     async def test_timing_summary_excludes_warmup_and_reports_tail(self):
         summary = campfire.app.summarize_timing_ms([99.0, 1.0, 2.0, 3.0], 1)
         self.assertEqual(summary["sample_count"], 3)

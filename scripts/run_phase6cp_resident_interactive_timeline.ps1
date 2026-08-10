@@ -27,6 +27,8 @@ if (-not (Test-Path -LiteralPath $nativeLibrary)) {
     "--/exts/campfire.app/captureOnStartup=false",
     "--/exts/campfire.app/sceneOutputDir=$sceneDir",
     "--/exts/campfire.app/residentPointApplicationEnabled=true",
+    "--/exts/campfire.app/woodRenderHierarchyEnabled=false",
+    "--/exts/campfire.app/woodVisualV3Enabled=false",
     "--/exts/campfire.app/residentNativeLibraryPath=$nativeLibrary",
     "--/phase6cp/output=$output",
     "--/renderer/enabled=false",

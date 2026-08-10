@@ -467,7 +467,7 @@ def _pointer_capsule(array):
 
 
 class WoodVisualV3Consumer:
-    """Owner-thread best-effort observer with visual-only recovery."""
+    """Production CPU-source observer with visual-only recovery."""
 
     def __init__(
         self,

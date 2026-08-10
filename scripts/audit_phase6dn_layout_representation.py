@@ -22,6 +22,7 @@ FILES = {
     "checkpoint": ROOT / "scripts" / "resident_checkpoint_package.py",
     "app": ROOT / "source" / "apps" / "campfire.simulator.kit",
     "benchmark_app": ROOT / "source" / "apps" / "campfire.simulator.benchmark.kit",
+    "point_runner": ROOT / "scripts" / "run_phase6dq_rigid_normal_app.ps1",
 }
 EXPECTED_FIELDS = (
     "revision",
@@ -35,6 +36,7 @@ EXPECTED_FIELDS = (
     "layout_origins",
     "layout_axes",
     "layout_representation",
+    "layout_frames",
 )
 
 
@@ -131,11 +133,13 @@ def main():
             for value in ("CHECKPOINT_VERSION = 1", "len(log_ids) + 1")
         )
         and "layoutRepresentation" not in _source("checkpoint"),
-        "point_and_v3_defaults_remain_off": all(
+        "point_default_off_and_isolation_explicit_v3_off": all(
             "residentPointApplicationEnabled = false" in _source(name)
-            and "woodVisualV3Enabled = false" in _source(name)
             for name in ("app", "benchmark_app")
-        ),
+        )
+        and 'residentPointApplicationEnabled=true' in _source("point_runner")
+        and 'woodRenderHierarchyEnabled=false' in _source("point_runner")
+        and 'woodVisualV3Enabled=false' in _source("point_runner"),
     }
     report = {
         "schema": "campfire.phase6dn.layout_representation_audit.v1",
@@ -159,7 +163,8 @@ def main():
             "native_abi": True,
             "flow_version": "110.0.0",
             "point_default": False,
-            "v3_default": False,
+            "production_v3_default": True,
+            "point_isolation_v3_enabled": False,
             "rigid_frame_producer_connected": False,
         },
     }

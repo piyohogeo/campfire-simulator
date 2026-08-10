@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="360" viewBox="0 0 920 360">
+<rect width="920" height="360" rx="18" fill="#111827"/>
+<style>.title{font:700 24px Segoe UI;fill:#f8fafc}.label{font:16px Segoe UI;fill:#e2e8f0}.value{font:700 16px Segoe UI;fill:#f8fafc}.note{font:14px Segoe UI;fill:#94a3b8}</style>
+<text x="28" y="38" class="title">Phase V3T-P — CPU-source V3 production promotion</text>
+<text x="28" y="88" class="label">20 logs OFF</text><rect x="205" y="64" width="423.5" height="30" rx="6" fill="#64748b"/><text x="638.5" y="88" class="value">47.05 FPS</text><text x="28" y="154" class="label">20 logs V3 ON</text><rect x="205" y="130" width="412.1" height="30" rx="6" fill="#f97316"/><text x="627.1" y="154" class="value">45.78 FPS</text><text x="28" y="220" class="label">Normal app V3 ON</text><rect x="205" y="196" width="274.7" height="30" rx="6" fill="#ef4444"/><text x="489.7" y="220" class="value">30.53 FPS</text>
+<line x1="475" y1="54" x2="475" y2="272" stroke="#22c55e" stroke-width="2" stroke-dasharray="6 6"/>
+<text x="482" y="70" class="note">45 FPS target</text>
+<line x1="340" y1="54" x2="340" y2="272" stroke="#eab308" stroke-width="2" stroke-dasharray="6 6"/>
+<text x="347" y="270" class="note">30 FPS minimum</text>
+<text x="28" y="314" class="label">Publication total p95: 10.18 ms · fatal / dump / upload: 0 · authority hash: identical</text>
+<text x="28" y="340" class="note">Visible FPS is ViewportAPI.frame_info, not display-present FPS. Candidate Performance, 1280×720, 210 W limit.</text>
+</svg>

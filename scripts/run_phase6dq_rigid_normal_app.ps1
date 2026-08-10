@@ -44,6 +44,8 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     "--/exts/campfire.app/outputDir=$OutputDir",
     "--/exts/campfire.app/sceneOutputDir=$sceneDir",
     "--/exts/campfire.app/residentPointApplicationEnabled=true",
+    "--/exts/campfire.app/woodRenderHierarchyEnabled=false",
+    "--/exts/campfire.app/woodVisualV3Enabled=false",
     "--/exts/campfire.app/residentPointRigidLayoutEnabled=true",
     "--/exts/campfire.app/residentNativeLibraryPath=$nativeDll",
     "--/rtx/flow/enabled=true"

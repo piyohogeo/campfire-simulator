@@ -5,6 +5,7 @@ project_ext (ext)
 
 -- Link only those files and folders into the extension target directory
 repo_build.prebuild_link {
+    { "bin", ext.target_dir.."/bin" },
     { "data", ext.target_dir.."/data" },
     { "docs", ext.target_dir.."/docs" },
     { "campfire", ext.target_dir.."/campfire" },

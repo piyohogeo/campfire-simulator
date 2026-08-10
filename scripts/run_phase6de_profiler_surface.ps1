@@ -72,6 +72,8 @@ if ($productionHashBefore -ne $productionHashAfter) {
     "--/exts/campfire.app/outputDir=$OutputDir",
     "--/exts/campfire.app/sceneOutputDir=$sceneDir",
     "--/exts/campfire.app/residentPointApplicationEnabled=true",
+    "--/exts/campfire.app/woodRenderHierarchyEnabled=false",
+    "--/exts/campfire.app/woodVisualV3Enabled=false",
     "--/exts/campfire.app/residentPointTimelineContinuityQualificationEnabled=true",
     "--/exts/campfire.app/residentPointDynamicTranslationQualificationEnabled=true",
     "--/exts/campfire.app/residentPointSkipUnchangedTranslationLayoutQualificationEnabled=true",

@@ -7,7 +7,10 @@ param(
     [double]$OverheadMeasureSeconds=30,
     [string]$SmokeCondition="",
     [switch]$SkipOverhead,
-    [string]$StatsInventory=""
+    [string]$StatsInventory="",
+    [ValidateSet("flow_off_v3_off","flow_on_v3_off","flow_on_v3_cpu")]
+    [string[]]$FormalConditions=@("flow_off_v3_off","flow_on_v3_off","flow_on_v3_cpu"),
+    [switch]$ProductionPair
 )
 $ErrorActionPreference="Stop"
 $processPath=$env:Path
@@ -44,7 +47,7 @@ function Invoke-Run {
     if(Test-Path $dir){throw "Phase V3T-H refuses to reuse run directory: $dir"};New-Item -ItemType Directory $dir|Out-Null
     $raw=Join-Path $dir "samples.json";$kitLog=Join-Path $dir "kit.log";$gpuCsv=Join-Path $dir "gpu.csv";$processJson=Join-Path $dir "process.json"
     $monitor=$null;$reader=$null;$classification=$null;$exit=$null
-    if($nvidiaSmi){$monitor=Start-Process $nvidiaSmi.Source -ArgumentList @("--query-gpu=timestamp,utilization.gpu,memory.used","--format=csv,noheader,nounits","--loop-ms=250") -RedirectStandardOutput $gpuCsv -PassThru -WindowStyle Hidden}
+    if($nvidiaSmi){$monitor=Start-Process $nvidiaSmi.Source -ArgumentList @("--query-gpu=timestamp,utilization.gpu,memory.used,power.draw,clocks.current.graphics,clocks.current.sm,temperature.gpu,pstate,power.limit,enforced.power.limit","--format=csv,noheader,nounits","--loop-ms=250") -RedirectStandardOutput $gpuCsv -PassThru -WindowStyle Hidden}
     $started=[DateTimeOffset]::UtcNow
     try{
         $flow=$Condition-ne"flow_off_v3_off";$quitAfterMs=[int][Math]::Ceiling(($Warmup+$Measure+180)*1000)
@@ -59,7 +62,7 @@ function Invoke-Run {
         }
         if(-not$classification){$process.WaitForExit();$process.Refresh();$exit=$process.ExitCode;$classification=if($exit-eq0){"normal"}else{"nonzero_exit"}}
     }finally{if($reader){$reader.Dispose()};if($monitor-and-not$monitor.HasExited){Stop-Process $monitor.Id -Force;Wait-Process $monitor.Id -Timeout 5 -ErrorAction SilentlyContinue}}
-    $fatalCounts=[ordered]@{};foreach($token in $fatalTokens){$fatalCounts[$token]=if(Test-Path $kitLog){(Select-String -LiteralPath $kitLog -SimpleMatch $token).Count}else{0}}
+    $fatalCounts=[ordered]@{};foreach($token in $fatalTokens){$fatalCounts[$token]=if(Test-Path $kitLog){@(Select-String -LiteralPath $kitLog -SimpleMatch $token).Count}else{0}}
     if($fatalCounts[$stageIdError]-gt0){$classification="rtx_stage_id_error"}
     if($classification-ne"normal"){throw "Phase V3T-H process rejected: $name ($classification); stage-id errors=$($fatalCounts[$stageIdError])"}
     if(($fatalCounts.Values|Measure-Object -Sum).Sum-ne0){throw "Phase V3T-H process rejected by fatal-log gate: $name"}
@@ -71,7 +74,7 @@ function Invoke-Run {
 }
 
 $allConditions=@("flow_off_v3_off","flow_on_v3_off","flow_on_v3_cpu")
-if($SmokeCondition){if($SmokeCondition -notin $allConditions){throw "invalid smoke condition: $SmokeCondition"};$conditions=@($SmokeCondition);$Runs=1;$SkipOverhead=$true}else{$conditions=$allConditions}
+if($SmokeCondition){if($SmokeCondition -notin $allConditions){throw "invalid smoke condition: $SmokeCondition"};$conditions=@($SmokeCondition);$Runs=1;$SkipOverhead=$true}elseif($ProductionPair.IsPresent){$conditions=@("flow_on_v3_off","flow_on_v3_cpu")}else{$conditions=@($FormalConditions)}
 $entries=[Collections.Generic.List[object]]::new()
 for($run=0;$run-lt$Runs;$run++){$offset=$run%$conditions.Count;$ordered=if($offset-eq0){$conditions}else{@($conditions[$offset..($conditions.Count-1)]+$conditions[0..($offset-1)])};foreach($condition in $ordered){$entries.Add((Invoke-Run $condition "on" $run "formal" $WarmupSeconds $MeasureSeconds))}}
 if(-not$SkipOverhead){for($run=0;$run-lt$Runs;$run++){$modes=if(($run%2)-eq0){@("off","on")}else{@("on","off")};foreach($mode in $modes){$entries.Add((Invoke-Run "flow_on_v3_off" $mode $run "overhead" $OverheadWarmupSeconds $OverheadMeasureSeconds))}}}

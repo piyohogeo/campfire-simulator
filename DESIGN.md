@@ -2871,3 +2871,13 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 最初のscenario: Phase 6DRは既存60枚のpost-recovery frameを維持しつつ、default-off qualification内だけで変更前30枚をGit外artifactへ追加する。37度frameから停止中53度refresh、resume、stage recoveryの境界を短いデモにする。Point／rigidはrunner内だけON、V3T-M保留条件は実行しない。詳細は`docs/design/latest_change_demo_workflow.md`。
 - 実測: 最初のverified動画はH.264、1280×720、30 fps、11.5秒で、source 90枚中89枚が固有だった。Phase 6DRは15/15 gate、Resident revision 710、fatal／crash dump／automatic upload attempt 0。ブラウザで末尾まで実再生し、37度から停止中53度refresh、resume、stage recovery、およびFlow継続を確認した後にだけlatest manifestを切り替えた。
 - 回帰: Release build 8.49秒、Phase 0 RTX exit 0、標準8 process／77/77 testを355.5秒で完走。latest／Phase別／既存動画の各modal、日本語置換文字0、console warning/error 0、開発日誌のlocal参照309件中missing 0を確認した。
+
+## Phase V3T-P Wood Visual V3 production default
+
+### 2026-08-10: CPU-source V3を通常appとproduction benchmarkの既定ONへ昇格
+
+- 通常appとbenchmark appはPhase 3、Candidate Performance、Resident native producer、render Mesh hierarchy、CPU-source Wood Visual V3を既定ONとする。V0、Point、rigid layoutは既定OFFのままで、過去比較・隔離runnerはV3とhierarchyを明示OFFにする。
+- OFF/ONのauthority SHA-256とmetrics CSV SHA-256は全runで一致し、両薪mass-balance error 0、Resident/V3 revision 1200、Flow fuel/temperature/smokeとactive block、analytic collisionを維持した。実Kit lifecycleは17/17、全V3 runのfailure/native crash/dump/uploadは0だった。
+- 20本visible viewportはOFF `47.054 FPS / 21.329 ms`、ON `45.784 FPS / 21.904 ms`。通常app default pathは`30.528 FPS`で最低30 FPSを維持するが余裕は小さい。CPU publication totalはp50 `2.4329 ms`、p95 `10.1752 ms`、p99 `11.7879 ms`、max `13.9464 ms`、30 ms超過0だった。
+- 1 runあたりtexture upload 868、quantized unchanged skip 99、visual commit 504。effective publishは2.5125 Hz、実commitは2.1 Hz。display-present FPS、GPU render time、raw render interval、1% lowは公開安全経路で未取得のため推定しない。
+- qualified transportは`DynamicTextureProvider.set_raw_bytes_data()`のCPU-sourceだけである。GPU ring、V3T-M保留Flow topology、物理式、authority schema、Flow入力、Emitter、collision、checkpoint/rollback/serialization、形状変化、炎照明は変更していない。詳細は`docs/design/wood_visual_v3_production_default.md`。

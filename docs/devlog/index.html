@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6dr">最新記録</a>
+        <a href="#phase-v3tp">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6dr">Phase 6DRを読む</a>
+        <a class="button primary" href="#phase-v3tp">Phase V3T-Pを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6DR qualified</strong></div>
-        <div><span>Rigid lifecycle</span><strong>15 / 15 gates</strong></div>
-        <div><span>Resident</span><strong>revision 710 · resync 0</strong></div>
-        <div><span>通常描画基準</span><strong>47.858 FPS · 20.90 ms</strong></div>
+        <div><span>現在地</span><strong>Phase V3T-P qualified</strong></div>
+        <div><span>Wood Visual V3</span><strong>production default ON</strong></div>
+        <div><span>Correctness</span><strong>14 / 14 gates</strong></div>
+        <div><span>20本実表示</span><strong>45.784 FPS · 21.904 ms</strong></div>
       </div>
     </div>
   </header>
@@ -56,6 +56,19 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-v3tp" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報"><span class="phase-number compact">V3T-P</span><p><time datetime="2026-08-10">2026.08.10</time></p><span class="pill current">Production default</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase V3T-P · Wood state as product appearance</p><h2>濡れ、乾き、焦げ、灰、赤熱。<br>V3を通常の薪表示にする。</h2><p>木材authorityから作るsurface atlasを、通常appとproduction相当benchmarkで既定ONへ昇格しました。正式transportはCPU-source DynamicTextureProviderのままです。GPU ringや保留中のFlow topologyには触れていません。</p></header>
+          <figure class="capture-card wide"><a href="assets/phasev3tp/production_promotion_report.svg"><img src="assets/phasev3tp/phasev3tp_demo_poster.png" alt="Wood Visual V3で炭化と高温発光が表面に現れ、中央に炎と煙が立つproductionデモ" loading="lazy"></a><figcaption><div><strong>14 / 14 promotion gates</strong><span>authority一致 · lifecycle 17/17 · crash/dump/upload 0</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3tp/phasev3tp_demo.mp4" data-video-poster="assets/phasev3tp/phasev3tp_demo_poster.png" data-video-title="Phase V3T-P — Wood Visual V3 production default" data-video-meta="dry/wet → heating/darkening → char/emission＋fire/smoke · Candidate Performance · 性能母集団外"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>V3昇格デモを再生</strong><small>14.6秒 · 再生確認済み</small></span></button></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Correctness</p><h3>OFF / ON authority hash一致</h3><p>dry／wet／metrics CSVのSHA-256は全runで一致し、mass balance error 0、Resident／V3 revision 1200、Flow fuel／temperature／smokeを維持しました。表示失敗は物理をrollbackしません。</p></section><section class="note caution"><p class="note-label">Frame budget</p><h3>45.784 FPS · 21.904 ms</h3><p>20本visible viewportの3-run値です。OFFは47.054 FPS。通常app単独runは30.528 FPSで最低線を満たしますが余裕は小さく、今後の描画変更で再確認します。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">CPU publication</p><h3>低頻度・change-awareのまま製品化。</h3><p>2,412 sampleのtotal publicationはp50 2.433 ms、p95 10.175 ms、p99 11.788 ms、max 13.946 msで、30 ms超過は0でした。benchmark 1 runあたりupload 868、quantized skip 99、visual commit 504、effective publish 2.5125 Hzです。</p><p>display-present FPS、GPU render time、raw render interval、1% lowは未計測で、推定していません。</p><p><a href="assets/phasev3tp/production_promotion_report.json">集計JSON</a> · <a href="assets/phasev3tp/production_promotion_samples.json">publication sample</a> · <a href="assets/phasev3tp/production_promotion_report.svg">比較SVG</a> · <a href="../design/wood_visual_v3_production_default.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Authority</strong><small>OFF / ON identical</small></p></div><div role="listitem"><span>✓</span><p><strong>Lifecycle</strong><small>reload / stop / resume</small></p></div><div role="listitem"><span>✓</span><p><strong>Collision</strong><small>analytic collider retained</small></p></div><div role="listitem"><span>✓</span><p><strong>Fallback</strong><small>explicit V3 OFF</small></p></div><div role="listitem"><span>!</span><p><strong>Normal app margin</strong><small>30.528 FPS</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Remaining boundary</p><h3>V3は表示observer、物理の真実ではない。</h3><p>CPU-sourceだけが正式経路です。GPU transport、薪形状変化、炎由来照明は別Phaseです。V3T-MのFlow topology safe stopも維持します。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6dr" class="section entry-section phase-six">

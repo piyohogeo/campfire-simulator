@@ -44,14 +44,31 @@ param(
     [string]$ResidentNativeLibraryPath = "",
     [ValidateSet("Inherit", "AutoBaseline", "CandidateBalanced", "CandidatePerformance", "Quality", "DLAA", "Minimal")]
     [string]$RtxVisualPreset = "Inherit",
-    [switch]$PhaseV3TLCameraMotion
+    [switch]$PhaseV3TLCameraMotion,
+    [ValidateSet("benchmark", "normal")]
+    [string]$AppKind = "benchmark",
+    [switch]$InheritProductionV3Defaults,
+    [switch]$DisableMilestoneFrames,
+    [switch]$IsolatedCrashSafety,
+    [string]$KitLog = "",
+    [string]$CrashDumpDir = ""
 )
 
 $ErrorActionPreference = "Stop"
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $releaseRoot = Join-Path $repoRoot "_build\windows-x86_64\release"
 $kit = Join-Path $releaseRoot "kit\kit.exe"
-$app = Join-Path $releaseRoot "apps\campfire.simulator.benchmark.kit"
+$appName = if ($AppKind -eq "normal") {
+    "campfire.simulator.kit"
+}
+else {
+    "campfire.simulator.benchmark.kit"
+}
+$app = Join-Path $releaseRoot "apps\$appName"
+if ($IsolatedCrashSafety.IsPresent) {
+    . (Join-Path $PSScriptRoot "isolated_kit_crash_safety.ps1")
+    $app = New-CampfireIsolatedKitApp -SourceApp $app
+}
 $useConstantHeatCapacityFastPath = $ConstantHeatCapacityPath -eq "fast"
 $useHomogeneousHeatCapacityFastPath = if ($HomogeneousHeatCapacityPath -eq "auto") {
     $useConstantHeatCapacityFastPath
@@ -170,6 +187,10 @@ if (-not $OutputDir) {
 }
 $OutputDir = [System.IO.Path]::GetFullPath($OutputDir)
 New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
+if (-not $KitLog) { $KitLog = Join-Path $OutputDir "kit.log" }
+if (-not $CrashDumpDir) { $CrashDumpDir = Join-Path $OutputDir "sensitive-crash-dumps" }
+$KitLog = [System.IO.Path]::GetFullPath($KitLog)
+$CrashDumpDir = [System.IO.Path]::GetFullPath($CrashDumpDir)
 
 $kitArgs = @(
     $app,
@@ -177,6 +198,7 @@ $kitArgs = @(
     "--/app/quitAfter=1200",
     "--/app/settings/persistent=0",
     "--/app/settings/loadUserConfig=0",
+    "--/log/file=$KitLog",
     "--/exts/campfire.app/autoCreateScene=true",
     "--/exts/campfire.app/phase=phase3",
     "--/exts/campfire.app/captureOnStartup=true",
@@ -197,24 +219,32 @@ $kitArgs = @(
     "--/exts/campfire.app/compactRuntimeMetrics=$($compactRuntimeMetrics.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/precomputedRuntimeTopology=$($precomputedRuntimeTopology.ToString().ToLowerInvariant())",
     "--/exts/campfire.app/captureVideoFrames=$($CaptureVideo.IsPresent.ToString().ToLowerInvariant())",
+    "--/exts/campfire.app/captureMilestoneFrames=$(((-not $DisableMilestoneFrames.IsPresent)).ToString().ToLowerInvariant())",
     "--/exts/campfire.app/videoFrameIntervalSteps=$VideoFrameInterval",
-    "--/exts/campfire.app/residentSnapshotAdapterEnabled=$($ResidentSnapshotAdapter.IsPresent.ToString().ToLowerInvariant())",
-    "--/exts/campfire.app/residentSnapshotTimingEnabled=$($ResidentSnapshotTiming.IsPresent.ToString().ToLowerInvariant())",
-    "--/exts/campfire.app/residentSnapshotHandleCacheEnabled=$($ResidentSnapshotHandleCache.IsPresent.ToString().ToLowerInvariant())",
-    "--/exts/campfire.app/residentSnapshotLightweightCommitEnabled=$($ResidentSnapshotLightweightCommit.IsPresent.ToString().ToLowerInvariant())",
-    "--/exts/campfire.app/residentSnapshotSkipUnchangedEnabled=$($ResidentSnapshotSkipUnchanged.IsPresent.ToString().ToLowerInvariant())",
-    "--/exts/campfire.app/residentSnapshotLightweightTailTimingEnabled=$($ResidentSnapshotLightweightTailTiming.IsPresent.ToString().ToLowerInvariant())",
-    "--/exts/campfire.app/residentSnapshotLightweightNoticeCoalescingEnabled=$($useResidentSnapshotLightweightNoticeCoalescing.ToString().ToLowerInvariant())",
-    "--/exts/campfire.app/residentSnapshotLightweightNoticeTrackingEnabled=$($ResidentSnapshotLightweightNoticeTracking.IsPresent.ToString().ToLowerInvariant())",
-    "--/exts/campfire.app/woodVisualV0Enabled=$($WoodVisualV0.IsPresent.ToString().ToLowerInvariant())",
-    "--/exts/campfire.app/woodRenderHierarchyEnabled=$($WoodRenderHierarchy.IsPresent.ToString().ToLowerInvariant())",
-    "--/exts/campfire.app/woodVisualV3Enabled=$($WoodVisualV3.IsPresent.ToString().ToLowerInvariant())",
-    "--/exts/campfire.app/residentNativeBackendEnabled=$($ResidentNativeBackend.IsPresent.ToString().ToLowerInvariant())",
-    "--/exts/campfire.app/residentNativeLibraryPath=$ResidentNativeLibraryPath",
     "--/rtx/flow/enabled=true",
     "--/app/viewport/grid/enabled=false",
     "--/persistent/app/viewport/displayOptions=1152"
 )
+if ($IsolatedCrashSafety.IsPresent) {
+    $kitArgs += @(Get-CampfireIsolatedKitCrashSafetyArgs -DumpDir $CrashDumpDir)
+}
+if (-not $InheritProductionV3Defaults.IsPresent) {
+    $kitArgs += @(
+        "--/exts/campfire.app/residentSnapshotAdapterEnabled=$($ResidentSnapshotAdapter.IsPresent.ToString().ToLowerInvariant())",
+        "--/exts/campfire.app/residentSnapshotTimingEnabled=$($ResidentSnapshotTiming.IsPresent.ToString().ToLowerInvariant())",
+        "--/exts/campfire.app/residentSnapshotHandleCacheEnabled=$($ResidentSnapshotHandleCache.IsPresent.ToString().ToLowerInvariant())",
+        "--/exts/campfire.app/residentSnapshotLightweightCommitEnabled=$($ResidentSnapshotLightweightCommit.IsPresent.ToString().ToLowerInvariant())",
+        "--/exts/campfire.app/residentSnapshotSkipUnchangedEnabled=$($ResidentSnapshotSkipUnchanged.IsPresent.ToString().ToLowerInvariant())",
+        "--/exts/campfire.app/residentSnapshotLightweightTailTimingEnabled=$($ResidentSnapshotLightweightTailTiming.IsPresent.ToString().ToLowerInvariant())",
+        "--/exts/campfire.app/residentSnapshotLightweightNoticeCoalescingEnabled=$($useResidentSnapshotLightweightNoticeCoalescing.ToString().ToLowerInvariant())",
+        "--/exts/campfire.app/residentSnapshotLightweightNoticeTrackingEnabled=$($ResidentSnapshotLightweightNoticeTracking.IsPresent.ToString().ToLowerInvariant())",
+        "--/exts/campfire.app/woodVisualV0Enabled=$($WoodVisualV0.IsPresent.ToString().ToLowerInvariant())",
+        "--/exts/campfire.app/woodRenderHierarchyEnabled=$($WoodRenderHierarchy.IsPresent.ToString().ToLowerInvariant())",
+        "--/exts/campfire.app/woodVisualV3Enabled=$($WoodVisualV3.IsPresent.ToString().ToLowerInvariant())",
+        "--/exts/campfire.app/residentNativeBackendEnabled=$($ResidentNativeBackend.IsPresent.ToString().ToLowerInvariant())",
+        "--/exts/campfire.app/residentNativeLibraryPath=$ResidentNativeLibraryPath"
+    )
+}
 
 # Measurement/visual-evidence override. Inherit uses the temporary Candidate
 # Performance app standard; AutoBaseline and CandidateBalanced are retained as
@@ -240,6 +270,25 @@ $runTimer.Stop()
 if ($exitCode -ne 0) {
     throw "Phase 3 application failed with exit code $exitCode."
 }
+if ($IsolatedCrashSafety.IsPresent) {
+    $fatalTokens = @(
+        "[crash] A crash has occurred",
+        "IRenderSettings::getRenderSettings failed getting a stage-id",
+        "Traceback (most recent call last)",
+        "CUDA_ERROR_ILLEGAL_ADDRESS",
+        "device lost",
+        "invalid pointer",
+        "Uploading minidump:"
+    )
+    foreach ($token in $fatalTokens) {
+        if (@(Select-String -LiteralPath $KitLog -SimpleMatch $token).Count -gt 0) {
+            throw "Phase 3 isolated run rejected by fatal token: $token"
+        }
+    }
+    if (@(Get-CampfireCrashDumpInventory -DumpDir $CrashDumpDir).Count -gt 0) {
+        throw "Phase 3 isolated run produced a crash dump."
+    }
+}
 
 $summary = Join-Path $OutputDir "summary.json"
 if (-not (Test-Path -LiteralPath $summary)) {
@@ -249,6 +298,22 @@ if (-not (Test-Path -LiteralPath $summary)) {
 $result = Get-Content -LiteralPath $summary -Raw | ConvertFrom-Json
 if ($result.status -ne "ok" -or $result.phase -ne "phase3") {
     throw "Phase 3 summary reported a failure or unexpected phase: $summary"
+}
+if ($InheritProductionV3Defaults.IsPresent) {
+    $enabled = [System.Management.Automation.SwitchParameter]::new($true)
+    $disabled = [System.Management.Automation.SwitchParameter]::new($false)
+    $ResidentSnapshotAdapter = $enabled
+    $ResidentSnapshotTiming = $disabled
+    $ResidentSnapshotHandleCache = $enabled
+    $ResidentSnapshotLightweightCommit = $enabled
+    $ResidentSnapshotSkipUnchanged = $enabled
+    $ResidentSnapshotLightweightTailTiming = $disabled
+    $ResidentSnapshotLightweightNoticeTracking = $disabled
+    $ResidentNativeBackend = $enabled
+    $WoodVisualV0 = $disabled
+    $WoodRenderHierarchy = $enabled
+    $WoodVisualV3 = $enabled
+    $useResidentSnapshotLightweightNoticeCoalescing = $true
 }
 if ($result.scenario.wood_array_backend -ne $ArrayBackend) {
     throw "Phase 3 used an unexpected wood array backend."
@@ -516,7 +581,7 @@ foreach ($name in @("dry", "wet")) {
         throw "Phase 3 $name wood has an unexpected zero-area cell count."
     }
 }
-if (-not $result.scenario.debugger_free) {
+if (-not $result.scenario.debugger_free -and $AppKind -ne "normal") {
     $enabledDebugExtensions = @(
         $result.scenario.debug_extension_status.PSObject.Properties |
             Where-Object { $_.Value } |
@@ -557,8 +622,10 @@ if (-not (Test-Path -LiteralPath $result.metrics_csv)) {
 if ((Get-Content -LiteralPath $result.metrics_csv | Measure-Object).Count -ne 1201) {
     throw "Phase 3 metrics CSV does not contain 1200 data rows."
 }
-if ($result.images.Count -ne 2) {
-    throw "Phase 3 must produce two fixed-step captures."
+$expectedMilestoneFrameCount = if ($DisableMilestoneFrames.IsPresent) { 0 } else { 2 }
+if ($result.images.Count -ne $expectedMilestoneFrameCount -or
+    [bool]$result.milestone_frames_enabled -eq $DisableMilestoneFrames.IsPresent) {
+    throw "Phase 3 produced an unexpected milestone-frame count."
 }
 $expectedVideoFrameCount = if ($CaptureVideo.IsPresent) {
     [math]::Floor(1200 / $VideoFrameInterval)
@@ -584,7 +651,12 @@ $expectedTimingSamples = @{
     csv_row_build = 1180
     kit_flow_render_update = 236
     active_block_query = 236
-    viewport_capture = 2
+}
+if (-not $DisableMilestoneFrames.IsPresent) {
+    $expectedTimingSamples.viewport_capture = 2
+}
+elseif ($null -ne $result.timing.segments.viewport_capture) {
+    throw "Phase 3 measured viewport capture while milestone frames were disabled."
 }
 if ($ResidentSnapshotAdapter.IsPresent) {
     $expectedTimingSamples.resident_snapshot_usd = 236

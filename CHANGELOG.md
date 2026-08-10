@@ -1,5 +1,11 @@
 # Changelog
 
+- Promoted CPU-source Wood Visual V3 to the normal and production-benchmark app defaults after 14/14 production gates, identical OFF/ON authority hashes, mass error 0, and 17/17 real-Kit lifecycle gates.
+- Packaged the qualified native wood producer with the extension; explicit native paths still override it and missing production binaries fail closed.
+- Kept legacy, Point, rigid-layout, and isolation paths explicitly V3 OFF; V0 remains an exclusive fallback/diagnostic mode.
+- Measured 20-log visible FPS at 47.054 OFF versus 45.784 ON, normal-app default at 30.528 FPS, and aggregate CPU publication total p95 at 10.175 ms with no 30 ms tail events.
+- Added a production-default burn demo, machine-readable samples/report, lifecycle crash safety, and reusable V3T-P promotion runners. GPU texture transport and held Phase V3T-M Flow topology remain unchanged.
+
 - Added a reusable latest-change demo workflow with phase-owned scenario runners, a shared Candidate Performance encode/safety/manifest boundary, and explicit post-playback promotion. Phase 6DR supplies the first before/after capture scenario; no latest pointer is replaced until the encoded candidate is actually played and accepted.
 - Published the first verified latest demo as the phase-owned 11.5-second Phase 6DR rigid-lifecycle video. Its 15/15 Kit run produced 89/90 unique source frames with no fatal token, native crash dump, or automatic upload attempt; browser playback reached the end before the latest manifest was promoted.
 - Requalified the Release build in 8.49 seconds, Phase 0 RTX with exit 0, and all eight standard processes with 77/77 tests in 355.5 seconds. The latest and Phase-owned modal buttons, an existing video button, all 309 local devlog references, and Japanese text rendering were checked after publication.

@@ -179,6 +179,24 @@ def _find_repo_root(extension_path: Path) -> Path:
     raise RuntimeError(f"Could not locate repository root from {extension_path}")
 
 
+def _resolve_resident_native_library(
+    extension_path: Path,
+    configured_path: str,
+    *,
+    allow_bundled: bool,
+) -> str:
+    """Resolve the packaged production DLL without weakening explicit probe paths."""
+
+    if configured_path:
+        return str(Path(configured_path).resolve())
+    if not allow_bundled:
+        return ""
+    bundled = extension_path / "bin" / "campfire_wood_native.dll"
+    if not bundled.is_file():
+        raise ValueError(f"Bundled Resident native library is unavailable: {bundled}")
+    return str(bundled.resolve())
+
+
 def _read_png_resolution(image_path: Path) -> tuple[int, int]:
     with image_path.open("rb") as image_file:
         header = image_file.read(24)
@@ -294,10 +312,19 @@ class CampfireAppExtension(omni.ext.IExt):
         try:
             point_configuration = resident_point_application_configuration(settings)
             point_application_enabled = point_configuration["enabled"]
-            render_hierarchy_enabled = settings.get_as_bool(
+            # Application defaults describe the production Phase 3 experience.  A
+            # legacy/isolation runner that selects another Phase must not inherit
+            # Phase 3-only visual observers merely because the setting exists in
+            # the root app.  Phase 3 isolation runners still override V3 explicitly.
+            render_hierarchy_requested = settings.get_as_bool(
                 WOOD_RENDER_HIERARCHY_SETTING
             )
-            wood_visual_v3_enabled = settings.get_as_bool(WOOD_VISUAL_V3_SETTING)
+            render_hierarchy_enabled = render_hierarchy_requested and phase in (
+                "phase2",
+                "phase3",
+            )
+            wood_visual_v3_requested = settings.get_as_bool(WOOD_VISUAL_V3_SETTING)
+            wood_visual_v3_enabled = wood_visual_v3_requested and phase == "phase3"
             if point_application_enabled and phase != "phase3":
                 raise ValueError(
                     "Resident Point application is available only for Phase 3"
@@ -3016,6 +3043,9 @@ class CampfireAppExtension(omni.ext.IExt):
         capture_video_frames = settings.get_as_bool(
             f"{SETTINGS_ROOT}/captureVideoFrames"
         )
+        capture_milestone_frames = settings.get_as_bool(
+            f"{SETTINGS_ROOT}/captureMilestoneFrames"
+        )
         resident_snapshot_adapter_enabled = settings.get_as_bool(
             f"{SETTINGS_ROOT}/residentSnapshotAdapterEnabled"
         )
@@ -3052,6 +3082,13 @@ class CampfireAppExtension(omni.ext.IExt):
         )
         wood_visual_v0_enabled = settings.get_as_bool(WOOD_VISUAL_V0_SETTING)
         wood_visual_v3_enabled = settings.get_as_bool(WOOD_VISUAL_V3_SETTING)
+        resident_native_library_path = _resolve_resident_native_library(
+            self._extension_path,
+            resident_native_library_path,
+            allow_bundled=(
+                wood_visual_v3_enabled and resident_native_backend_enabled
+            ),
+        )
         video_frame_interval_steps = settings.get_as_int(
             f"{SETTINGS_ROOT}/videoFrameIntervalSteps"
         )
@@ -3292,6 +3329,7 @@ class CampfireAppExtension(omni.ext.IExt):
             {"dry": {}, "wet": {}} if collect_wood_state_diagnostics else {}
         )
         active_block_counts = []
+        visible_frame_observations = []
         images = []
         video_frames = []
         rows = []
@@ -3386,7 +3424,10 @@ class CampfireAppExtension(omni.ext.IExt):
                         visual_payload,
                         visual_payload.tick * PHASE3_MODEL_DT_SECONDS,
                         force=(
-                            step_index in PHASE3_CAPTURE_STEPS
+                            (
+                                capture_milestone_frames
+                                and step_index in PHASE3_CAPTURE_STEPS
+                            )
                             or (
                                 capture_video_frames
                                 and step_index % video_frame_interval_steps == 0
@@ -3402,7 +3443,10 @@ class CampfireAppExtension(omni.ext.IExt):
                                 )
                                 if schedule.reason == "full_republish"
                                 and (
-                                    step_index in PHASE3_CAPTURE_STEPS
+                                    (
+                                        capture_milestone_frames
+                                        and step_index in PHASE3_CAPTURE_STEPS
+                                    )
                                     or (
                                         capture_video_frames
                                         and step_index % video_frame_interval_steps == 0
@@ -3659,6 +3703,13 @@ class CampfireAppExtension(omni.ext.IExt):
                     )
                     update_started = time.perf_counter()
                     await omni.kit.app.get_app().next_update_async()
+                    frame_info = dict(viewport.frame_info)
+                    visible_frame_observations.append(
+                        {
+                            "perf_ns": time.perf_counter_ns(),
+                            "frame_number": int(frame_info.get("frame_number", -1)),
+                        }
+                    )
                     update_times_ms.append(
                         (time.perf_counter() - update_started) * 1000.0
                     )
@@ -3700,7 +3751,10 @@ class CampfireAppExtension(omni.ext.IExt):
                     )
                     active_block_counts.append(active_block_count)
 
-                    if step_index in PHASE3_CAPTURE_STEPS:
+                    if (
+                        capture_milestone_frames
+                        and step_index in PHASE3_CAPTURE_STEPS
+                    ):
                         image_path = output_dir / f"frame_{step_index:04d}.png"
                         capture_started = time.perf_counter()
                         resolution = await self._capture_image(viewport, image_path)
@@ -4202,7 +4256,11 @@ class CampfireAppExtension(omni.ext.IExt):
                 "active_block_query": summarize_timing_ms(
                     active_block_query_times_ms, flow_warmup_samples
                 ),
-                "viewport_capture": summarize_timing_ms(capture_times_ms),
+                "viewport_capture": (
+                    summarize_timing_ms(capture_times_ms)
+                    if capture_times_ms
+                    else None
+                ),
                 "frame_pacing": {
                     "update_frame": {
                         **summarize_timing_ms(
@@ -4305,6 +4363,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 "camera": str(CAMERA_PATH),
                 "resolution": list(CAPTURE_RESOLUTION),
                 "images": images,
+                "milestone_frames_enabled": capture_milestone_frames,
                 "video_frames": {
                     "enabled": capture_video_frames,
                     "interval_steps": video_frame_interval_steps,
@@ -4502,6 +4561,9 @@ class CampfireAppExtension(omni.ext.IExt):
                             if wood_visual_v3_profiles
                             else None
                         ),
+                        "publication_samples": [
+                            asdict(profile) for profile in wood_visual_v3_profiles
+                        ],
                         "upload_count": sum(
                             profile.upload_count for profile in wood_visual_v3_profiles
                         ),
@@ -4557,6 +4619,37 @@ class CampfireAppExtension(omni.ext.IExt):
                     "model_duration_seconds": round(dry_model.elapsed_seconds, 6),
                     "external_heat_flux_w_m2": PHASE3_EXTERNAL_HEAT_FLUX_W_M2,
                     "simulation_wall_seconds": round(simulation_elapsed, 4),
+                    "visible_viewport": {
+                        "source": "ViewportAPI.frame_info frame counter",
+                        "additional_render_product_created": False,
+                        "sample_count": len(visible_frame_observations),
+                        "average_fps": (
+                            round(
+                                (
+                                    visible_frame_observations[-1]["frame_number"]
+                                    - visible_frame_observations[0]["frame_number"]
+                                )
+                                / (
+                                    (
+                                        visible_frame_observations[-1]["perf_ns"]
+                                        - visible_frame_observations[0]["perf_ns"]
+                                    )
+                                    / 1_000_000_000.0
+                                ),
+                                4,
+                            )
+                            if len(visible_frame_observations) >= 2
+                            and visible_frame_observations[0]["frame_number"] >= 0
+                            and visible_frame_observations[-1]["frame_number"]
+                            >= visible_frame_observations[0]["frame_number"]
+                            and visible_frame_observations[-1]["perf_ns"]
+                            > visible_frame_observations[0]["perf_ns"]
+                            else None
+                        ),
+                        "observations": visible_frame_observations,
+                        "display_present_fps": None,
+                        "raw_render_frame_intervals": None,
+                    },
                 },
                 "wood": model_summaries,
                 "comparison": {

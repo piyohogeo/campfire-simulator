@@ -35,7 +35,7 @@ Performanceでは炎の時間方向ディテールが多少平滑化される。
 
 ## 非変更と制約
 
-wood authority、Flow入力、Point／Sphere Emitter、collision、rigid layout、checkpoint、serialization、V3既定OFF、AO、Power Limitは変更しない。V3T-M以降の主要計測はCandidate Performanceを使い、各Phaseで代表条件のAutoBaselineも別processで測る。
+wood authority、Flow入力、Point／Sphere Emitter、collision、rigid layout、checkpoint、serialization、AO、Power Limitは変更しない。この文書で記録したPhase V3T-MB時点ではV3既定OFFだった。Phase V3T-P以降のproduction既定ONは別のcorrectness／lifecycle／30 FPS gateを通した後続判断であり、この過去測定の意味を変更しない。V3T-M以降の主要計測はCandidate Performanceを使い、各Phaseで代表条件のAutoBaselineも別processで測る。
 
 最終回帰はRelease build 8.21秒、Phase 0 RTX exit 0、標準suite 8/8 process・77/77 test（354.5秒）が合格した。
 

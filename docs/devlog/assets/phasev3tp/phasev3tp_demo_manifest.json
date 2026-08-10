@@ -1,0 +1,92 @@
+{
+    "schema":  "campfire.devlog-phase-demo.v1",
+    "status":  "verified",
+    "phase":  "phasev3tp",
+    "change_name":  "Wood Visual V3 production default",
+    "focus":  "Dry/wet contrast, heating, char, emission, fire and smoke",
+    "source_commit":  "505e3d3",
+    "generated_at_utc":  "2026-08-10T10:26:31.0425345+00:00",
+    "scenario_runner":  "scripts/run_phasev3tp_latest_demo_scenario.ps1",
+    "common_runner":  "scripts/build_devlog_demo.ps1",
+    "rendering":  {
+                      "preset":  "CandidatePerformance",
+                      "aa_op":  3,
+                      "dlss_exec_mode":  0,
+                      "max_bounces":  2,
+                      "resolution":  [
+                                         1280,
+                                         720
+                                     ]
+                  },
+    "feature_flags":  {
+                          "productionAppDefaultsInherited":  true,
+                          "residentSnapshotAdapterEnabled":  true,
+                          "residentNativeBackendEnabled":  true,
+                          "woodRenderHierarchyEnabled":  true,
+                          "woodVisualV3Enabled":  true,
+                          "woodVisualV0Enabled":  false,
+                          "gpuTextureTransportEnabled":  false,
+                          "rtxFlowEnabled":  true
+                      },
+    "events":  [
+                   {
+                       "id":  "initial",
+                       "event_label":  "Initial: dry and wet surfaces",
+                       "frame_count":  15,
+                       "unique_frame_count":  15,
+                       "start_seconds":  1.5,
+                       "end_seconds":  4.5
+                   },
+                   {
+                       "id":  "heating",
+                       "event_label":  "Dry log heats, darkens, and glows",
+                       "frame_count":  20,
+                       "unique_frame_count":  20,
+                       "start_seconds":  4.5,
+                       "end_seconds":  8.5
+                   },
+                   {
+                       "id":  "burning",
+                       "event_label":  "Char and emission with fire and smoke",
+                       "frame_count":  25,
+                       "unique_frame_count":  24,
+                       "start_seconds":  8.5,
+                       "end_seconds":  13.5
+                   }
+               ],
+    "source_frame_count":  60,
+    "source_unique_frame_count":  59,
+    "encoded_fps":  30,
+    "duration_seconds":  14.6,
+    "encoded_bytes":  471328,
+    "encoded_sha256":  "DC14693EB07116C145344675BD830A0D2B0179FB08DCB3B83EEFEFFA3970E90F",
+    "devlog_video_path":  "assets/phasev3tp/phasev3tp_demo.mp4",
+    "devlog_poster_path":  "assets/phasev3tp/phasev3tp_demo_poster.png",
+    "fatal_log_counts":  {
+                             "IRenderSettings::getRenderSettings failed getting a stage-id":  0,
+                             "Traceback (most recent call last)":  0,
+                             "CUDA_ERROR_ILLEGAL_ADDRESS":  0,
+                             "device lost":  0,
+                             "invalid pointer":  0,
+                             "[crash] A crash has occurred":  0,
+                             "Uploading minidump:":  0
+                         },
+    "crash_dump_count":  0,
+    "automatic_upload_attempt_count":  0,
+    "playback_verified":  true,
+    "playback_verified_at_utc":  "2026-08-10T10:36:09.6759618+00:00",
+    "verification_notes":  "In-app browser playback completed to 14.6 s; dry/wet contrast, heating/darkening, char, high-temperature emission, fire/smoke, stones and RTX shadows verified; no playback error.",
+    "eligible_for_latest":  true,
+    "benchmark_population":  false,
+    "qualification":  {
+                          "resident_revision":  1200,
+                          "visual_revision":  1200,
+                          "visual_failure_count":  0,
+                          "active_blocks_peak":  342,
+                          "dry_surface_temperature_k":  1189.222022006,
+                          "wet_surface_temperature_k":  549.534809689,
+                          "dry_char_mass_kg":  6.72384609,
+                          "wet_remaining_moisture_kg":  24.377229463,
+                          "mass_balance_error_kg":  0
+                      }
+}
