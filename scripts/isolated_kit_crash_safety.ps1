@@ -6,7 +6,10 @@ function New-CampfireIsolatedKitApp {
 
     $source = [IO.Path]::GetFullPath($SourceApp)
     if (-not (Test-Path -LiteralPath $source)) { throw "Kit app source does not exist: $source" }
-    $destination = Join-Path ([IO.Path]::GetDirectoryName($source)) (([IO.Path]::GetFileNameWithoutExtension($source)) + ".isolated.kit")
+    $sourceDirectory = [IO.Path]::GetDirectoryName($source)
+    $destinationDirectory = Join-Path ([IO.Path]::GetDirectoryName($sourceDirectory)) "isolated-apps"
+    New-Item -ItemType Directory -Path $destinationDirectory -Force | Out-Null
+    $destination = Join-Path $destinationDirectory (([IO.Path]::GetFileNameWithoutExtension($source)) + ".isolated.kit")
     $text = [IO.File]::ReadAllText($source)
     $text = $text -replace '(?m)^telemetry\.enableAnonymousData\s*=\s*(?:true|false)\s*\r?\n', ''
     $settingsMarker = "[settings]"
