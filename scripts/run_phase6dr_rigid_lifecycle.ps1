@@ -1,4 +1,4 @@
-param([string]$OutputDir = "")
+param([string]$OutputDir = "", [string]$ReportDir = "")
 
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
@@ -20,8 +20,12 @@ $sceneDir = Join-Path $OutputDir "scene"
 $summary = Join-Path $OutputDir "summary.json"
 $kitLog = Join-Path $OutputDir "kit.log"
 $dumpDir = Join-Path $OutputDir "sensitive-crash-dumps"
-$report = Join-Path $root "docs\devlog\assets\phase6\rigid_lifecycle_report.json"
-$svg = Join-Path $root "docs\devlog\assets\phase6\rigid_lifecycle_report.svg"
+if (-not $ReportDir) {
+    $ReportDir = Join-Path $root "docs\devlog\assets\phase6"
+}
+$ReportDir = [IO.Path]::GetFullPath($ReportDir)
+$report = Join-Path $ReportDir "rigid_lifecycle_report.json"
+$svg = Join-Path $ReportDir "rigid_lifecycle_report.svg"
 New-Item -ItemType Directory -Path $sceneDir -Force | Out-Null
 
 if (-not (Test-Path -LiteralPath $kit) -or -not (Test-Path -LiteralPath $app)) {
@@ -37,6 +41,15 @@ $arguments = @(
     "--/app/quitAfter=10000",
     "--/app/settings/persistent=0",
     "--/app/settings/loadUserConfig=0",
+    "--/app/window/width=1280",
+    "--/app/window/height=720",
+    "--/app/viewport/defaults/fillViewport=false",
+    "--/renderer/multiGpu/enabled=false",
+    "--/rtx/ecoMode/enabled=false",
+    "--/rtx/rendermode=RealTimePathTracing",
+    "--/rtx/post/aa/op=3",
+    "--/rtx/post/dlss/execMode=0",
+    "--/rtx/rtpt/maxBounces=2",
     "--/exts/campfire.app/autoCreateScene=true",
     "--/exts/campfire.app/phase=phase3",
     "--/exts/campfire.app/captureOnStartup=true",

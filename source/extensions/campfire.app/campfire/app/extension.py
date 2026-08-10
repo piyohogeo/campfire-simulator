@@ -983,6 +983,12 @@ class CampfireAppExtension(omni.ext.IExt):
         video_frames_dir.mkdir(parents=True, exist_ok=True)
         for old_frame in video_frames_dir.glob("frame_*.png"):
             old_frame.unlink()
+        demo_pre_frames_dir = output_dir / "demo_pre_frames"
+        demo_pre_capture_count = 30 if rigid_lifecycle_qualification else 0
+        if demo_pre_capture_count:
+            demo_pre_frames_dir.mkdir(parents=True, exist_ok=True)
+            for old_frame in demo_pre_frames_dir.glob("frame_*.png"):
+                old_frame.unlink()
         timeline = omni.timeline.get_timeline_interface()
         flow_interface = None
         listener = None
@@ -1227,6 +1233,19 @@ class CampfireAppExtension(omni.ext.IExt):
                     await self._capture_fast_image(
                         viewport,
                         video_frames_dir / f"frame_{capture_frame:04d}.png",
+                    )
+                if (
+                    rigid_lifecycle_qualification
+                    and tick > initial_warmup_steps - demo_pre_capture_count
+                ):
+                    await omni.kit.app.get_app().next_update_async()
+                    await omni.kit.viewport.utility.next_viewport_frame_async(viewport)
+                    demo_frame = tick - (
+                        initial_warmup_steps - demo_pre_capture_count
+                    ) - 1
+                    await self._capture_fast_image(
+                        viewport,
+                        demo_pre_frames_dir / f"frame_{demo_frame:04d}.png",
                     )
             if (
                 recovery_qualification
@@ -1603,6 +1622,15 @@ class CampfireAppExtension(omni.ext.IExt):
                     for path in frame_paths
                 }
             )
+            demo_pre_frame_paths = sorted(
+                demo_pre_frames_dir.glob("frame_*.png")
+            )
+            demo_pre_unique_frames = len(
+                {
+                    hashlib.sha256(path.read_bytes()).hexdigest()
+                    for path in demo_pre_frame_paths
+                }
+            )
             allowed_point_properties = {
                 f"{point_prefix}.pointPositions",
                 f"{point_prefix}.pointFuels",
@@ -1968,6 +1996,22 @@ class CampfireAppExtension(omni.ext.IExt):
                     "log_count": 2,
                     "emitter_count": 1,
                     "canonical_scene_changed": False,
+                    "rendering": {
+                        "preset": "CandidatePerformance",
+                        "renderer_mode": carb.settings.get_settings().get_as_string(
+                            "/rtx/rendermode"
+                        ),
+                        "aa_op": carb.settings.get_settings().get_as_int(
+                            "/rtx/post/aa/op"
+                        ),
+                        "dlss_exec_mode": carb.settings.get_settings().get_as_int(
+                            "/rtx/post/dlss/execMode"
+                        ),
+                        "max_bounces": carb.settings.get_settings().get_as_int(
+                            "/rtx/rtpt/maxBounces"
+                        ),
+                        "resolution": list(CAPTURE_RESOLUTION),
+                    },
                 },
                 "lifecycle": {
                     "owner": stopped_status,
@@ -2008,6 +2052,18 @@ class CampfireAppExtension(omni.ext.IExt):
                         if replacement_scene_path is not None
                         else None
                     ),
+                    "demo_capture": {
+                        "pre_frame_directory": str(demo_pre_frames_dir),
+                        "pre_frame_count": len(demo_pre_frame_paths),
+                        "pre_unique_frame_count": demo_pre_unique_frames,
+                        "post_frame_directory": str(video_frames_dir),
+                        "post_frame_count": len(frame_paths),
+                        "post_unique_frame_count": unique_frames,
+                        "event_boundary": (
+                            "37 degree frame -> stopped 53 degree refresh -> "
+                            "resume -> replacement-stage recovery"
+                        ),
+                    },
                 },
                 "publication": {
                     "revisions": revisions,

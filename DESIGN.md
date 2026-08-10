@@ -2860,3 +2860,12 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 実測: Flow 110.0.0の隔離normal-app runで`15 / 15` gate、最終Resident revision `710`の3 consumer一致、layout／consumer replacement各1、Point resync 0、active block peak 291、60/60 unique frame、fuel／temperature／smoke／burn readback、clean shutdownを確認した。crash／dump／自動uploadは0だった。
 - 回帰: release build `8.20 s`、Phase 0 RTX `22.3 s`、標準suite 8 process・`77 / 77`（`354.7 s`）、Phase 2 collision `34.6 s`、Phase 6DQ `11 / 11`・revision 710に合格した。Candidate Performance V3＋Flowもrevision 1200、両薪mass error 0、active block final/peak `259 / 355`、V3 failure 0で、実frameに炎煙、影、surface texture、高温emissionを確認した。
 - 非変更: Point／rigid／qualification／V3は既定OFF、Sphereはproduction既定である。wood authority、物理式、JSON、`ResidentPublishedSnapshot`、checkpoint、serialization、revision／rollback、collision、Emitter schema、Flow 110.0.0は不変。V3T-Mの保留条件は再試行していない。詳細は`docs/design/resident_rigid_lifecycle.md`。
+
+## Latest change demo workflow
+
+### 2026-08-10: Phase固有scenarioと共通encode／promotion境界を分離
+
+- 運用: 画面で確認可能な変更は、固定の万能sceneではなく変更点を最も説明しやすい小さなPhase scenarioを選ぶ。内部契約だけで映像差がない場合は新規動画を要求しない。この規則を`AGENTS.md`へ追加した。
+- 共通境界: scenario runnerはordered frame segment、実効Candidate Performance、feature flag、Kit log、dump directory、qualificationをmanifestへ出す。共通runnerは1280×720、frame数／unique hash、fatal／native crash／dump／upload、10～30秒H.264、軽量event overlayを検査する。動画は性能母集団ではない。
+- promotion: encode成功直後のPhase manifestは`encoded_unverified`であり、latest pointerを変更できない。実再生後だけ別scriptがvideo hashを再確認し、Phase manifestと`docs/devlog/assets/latest_demo.json`をverifiedへ更新する。失敗・不明・cold初期化中の動画は既存latestを置換しない。
+- 最初のscenario: Phase 6DRは既存60枚のpost-recovery frameを維持しつつ、default-off qualification内だけで変更前30枚をGit外artifactへ追加する。37度frameから停止中53度refresh、resume、stage recoveryの境界を短いデモにする。Point／rigidはrunner内だけON、V3T-M保留条件は実行しない。詳細は`docs/design/latest_change_demo_workflow.md`。
