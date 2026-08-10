@@ -36,6 +36,10 @@ The dedicated fixture loads the same DLL/helper pair and performs an actual null
 
 The dump itself remains under ignored `artifacts/` and is not committed or pushed. The committed report contains only its local path, size, hash, stream validation, and collector metadata.
 
+The fixture process alone enables `SEM_NOGPFAULTERRORBOX` at process/thread scope and public WER `WER_FAULT_REPORTING_NO_UI` before loading the crash handler. The automated smoke launches that fixture hidden and enforces a bounded wait. These settings are not applied to `kit.exe`, the dump helper, the production app, the registry, or machine-wide Windows configuration; the intentional `0xC0000005` and full-memory dump path are unchanged.
+
+The final automated proof required no input and completed the fixture process in `0.381 s`, retaining exit `0xC0000005`. It produced a `10,734,307`-byte full-memory dump with `Memory64ListStream` and SHA-256 `ae8c21e0e8cb044a4ae0623d8ed2dfcaf6414e3b1565005794532a40bc7421a0`. The runner writes the process-local scope, elapsed time, timeout, exit code, and `interactive_input_supplied=false` to ignored `automation.json` beside the dump.
+
 ## GPU transport lifecycle matrix
 
 Fixed conditions are Kit 110.2, Flow 110.0.0, `omni.hydra.rtx` 1.0.4, RTX 3090 / driver 591.86, 20 logs, 1280x720, one 120x60 RGBA8 base atlas plus one emission atlas, three permanent Warp source slots per texture, and Flow+RTX enabled. Production V3 remains OFF.

@@ -8,6 +8,7 @@ target_link_libraries(phasev3tj_dump_collector PRIVATE dbghelp)
 
 add_executable(phasev3tj_crash_fixture crash_fixture.cpp)
 target_compile_features(phasev3tj_crash_fixture PRIVATE cxx_std_17)
+target_link_libraries(phasev3tj_crash_fixture PRIVATE wer)
 
 add_library(phasev3tj_crash_handler SHARED crash_handler.cpp)
 target_compile_features(phasev3tj_crash_handler PRIVATE cxx_std_17)

@@ -27,7 +27,7 @@ $collectorCommand="call `"$vsdev`" -no_logo -arch=x64 && cl.exe /nologo /std:c++
 & cmd.exe /d /s /c $collectorCommand
 if($LASTEXITCODE-ne0){exit $LASTEXITCODE}
 $fixturePdb=Join-Path $build "phasev3tj_crash_fixture_compile.pdb"
-$fixtureCommand="call `"$vsdev`" -no_logo -arch=x64 && cl.exe /nologo /std:c++17 /EHsc /Od /Zi /Fd:`"$fixturePdb`" /Fo:`"$fixtureObject`" /Fe:`"$fixture`" `"$fixtureSource`""
+$fixtureCommand="call `"$vsdev`" -no_logo -arch=x64 && cl.exe /nologo /std:c++17 /EHsc /Od /Zi /Fd:`"$fixturePdb`" /Fo:`"$fixtureObject`" /Fe:`"$fixture`" `"$fixtureSource`" /link wer.lib"
 & cmd.exe /d /s /c $fixtureCommand
 if($LASTEXITCODE-ne0){exit $LASTEXITCODE}
 $handlerCommand="call `"$vsdev`" -no_logo -arch=x64 && cl.exe /nologo /std:c++17 /EHsc /O2 /LD /DUNICODE /D_UNICODE /Fo:`"$handlerObject`" /Fe:`"$handler`" `"$handlerSource`""

@@ -1,5 +1,7 @@
 # Changelog
 
+- Suppressed interactive Windows Application Error UI only inside the intentional Phase V3T-J crash fixture using process/thread error mode plus public WER `NO_UI`; the smoke runner now has a bounded, hidden fixture process while `kit.exe` and machine-wide settings remain unchanged.
+
 - Added Phase V3T-J's target-local `0xC0000005` full-dump path without registry or machine-wide changes: a probe-loaded unhandled-exception handler invokes an external helper only on crash and records full-memory dump path, size, SHA-256, exception metadata, revision, slot, and lifecycle markers outside Git.
 - Proved the collector with a real crash fixture: exit `0xC0000005`, `11,374,239`-byte minidump, `Memory64ListStream` present, SHA-256 `f86026adcc5749a298f4cf418ac7a6bb37fe9a461ffc00e9d77d1e902156d07b`.
 - Rejected the first `DEBUG_ONLY_THIS_PROCESS` Kit path because it held RTX RtPso compilation beyond 200 seconds and timed out; none of that run is reused in the formal population.
