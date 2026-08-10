@@ -1,0 +1,25 @@
+{
+    "schema":  "campfire.devlog-latest-demo.v1",
+    "status":  "verified",
+    "phase":  "phase6dr",
+    "change_name":  "Rigid Point lifecycle",
+    "source_commit":  "f9034bc",
+    "video_path":  "assets/phase6/phase6dr_demo.mp4",
+    "poster_path":  "assets/phase6/phase6dr_demo_poster.png",
+    "focus":  "Watch the front log rotate, refresh, resume, and survive stage recovery",
+    "scenario_runner":  "scripts/run_phase6dr_latest_demo_scenario.ps1",
+    "common_runner":  "scripts/build_devlog_demo.ps1",
+    "generated_at_utc":  "2026-08-10T09:33:07.0283156+00:00",
+    "playback_verified_at_utc":  "2026-08-10T09:35:08.6386488+00:00",
+    "verification_notes":  "Browser playback reached 11.5 s with no media error; 37 degree pre-refresh and 53 degree post-refresh frames, continuous Flow flame, overlays, and final stage-recovery segment were visually checked.",
+    "feature_flags":  {
+                          "residentPointApplicationEnabled":  true,
+                          "residentPointRigidLayoutEnabled":  true,
+                          "residentPointRigidLifecycleQualificationEnabled":  true,
+                          "woodVisualV3Enabled":  false,
+                          "rtxFlowEnabled":  true
+                      },
+    "duration_seconds":  11.5,
+    "encoded_sha256":  "FE60A3292BA06B8C8224A47FD07090BA9E579F55CA553AB9155FA39A05896EC2",
+    "phase_manifest_path":  "assets/phase6/phase6dr_demo.json"
+}

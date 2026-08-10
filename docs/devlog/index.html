@@ -6,7 +6,7 @@
   <meta name="description" content="Campfire Simulatorの開発日記。実装内容、検証結果、画面キャプチャ、次の課題を人間が読みやすい形で記録します。">
   <title>Campfire Simulator — Development Log</title>
   <link rel="stylesheet" href="styles.css?v=20260807-phase-headings">
-  <script src="devlog.js" defer></script>
+  <script src="devlog.js?v=20260810-latest-demo-v1" defer></script>
 </head>
 <body>
   <header class="hero">
@@ -51,12 +51,19 @@
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
     </section>
 
+    <section id="latest-demo" class="section shell" aria-labelledby="latest-demo-title">
+      <div class="entry-body">
+        <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
+        <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
+      </div>
+    </section>
+
     <section id="phase-6dr" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="エントリ情報"><span class="phase-number compact">6DR</span><p><time datetime="2026-08-10">2026.08.10</time></p><span class="pill current">Lifecycle qualified</span></aside>
         <div class="entry-body">
           <header class="entry-header"><p class="section-kicker">Phase 6DR · Normal-app rigid lifecycle</p><h2>37°で始め、53°へ動かす。<br>同じownerのまま、stageも戻す。</h2><p>既定OFFの通常アプリscenarioで、任意角のrigid frameをstage接続前に構築しました。停止中のtransform refresh、同値skip、replacement stage recoveryを既存のResident ownerで連続検証しています。</p></header>
-          <figure class="capture-card wide"><a href="assets/phase6/rigid_lifecycle_report.svg"><img src="assets/phase6/rigid_lifecycle_report.svg" alt="Phase 6DRの37度から53度へのrigid transform更新とstage recoveryの機械レポート" loading="lazy"></a><figcaption><div><strong>15 / 15 real-Kit gates</strong><span>revision 710 · resync 0 · crash/dump/upload 0</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3tl/candidate_performance_motion.mp4" data-video-poster="assets/phasev3tl/candidate_performance.png" data-video-title="Phase 6DR wood-state visual reference · Candidate Performance" data-video-meta="既存のV3明示presetによる外観参照 · 6DRの合格根拠は機械report · 性能母集団外"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>通常外観の参照</strong><small>Candidate Performance</small></span></button></figcaption></figure>
+          <figure class="capture-card wide"><a href="assets/phase6/rigid_lifecycle_report.svg"><img src="assets/phase6/rigid_lifecycle_report.svg" alt="Phase 6DRの37度から53度へのrigid transform更新とstage recoveryの機械レポート" loading="lazy"></a><figcaption><div><strong>15 / 15 real-Kit gates</strong><span>revision 710 · resync 0 · crash/dump/upload 0</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase6dr_demo.mp4" data-video-poster="assets/phase6/phase6dr_demo_poster.png" data-video-title="Phase 6DR — Rigid Point lifecycle" data-video-meta="37° frame → stopped 53° refresh → resume → replacement-stage recovery · Candidate Performance · 性能母集団外"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>6DRデモを再生</strong><small>11.5秒 · 再生確認済み</small></span></button></figcaption></figure>
           <div class="notes-grid"><section class="note"><p class="note-label">Layout transaction</p><h3>37° → 53° · revision 2</h3><p>300 step後にtimelineとownerを停止し、回転とoriginを更新しました。layout replacementは1回だけで、同じtransformの再要求は<code>changed=false</code>です。</p></section><section class="note"><p class="note-label">Stage recovery</p><h3>consumer replace 1 · pending none</h3><p>closing→closed→opening→openedを通り、committed revision 301から継続。最終revision 710はbackend／USD adapter／Point sidecarで一致しました。</p></section></div>
           <section class="verification"><div class="verification-copy"><p class="section-kicker">Boundary</p><h3>通常起動の既定挙動は変えない。</h3><p>Point、rigid、6DR qualification、V3は既定OFF、Sphereがproduction既定です。wood authority、Flow 110.0.0、collision、snapshot、rollbackは不変で、V3T-Mの保留条件も再試行していません。</p><p>Release build、Phase 0、77/77 suite、Phase 2、Phase 6DQ 11/11、Candidate Performance V3＋Flowに合格。V3実frameでも炎煙、影、surface texture、高温emissionを確認しました。</p><p><a href="assets/phase6/rigid_lifecycle_report.json">機械レポート</a> · <a href="../design/resident_rigid_lifecycle.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Offline frame</strong><small>37° before connection</small></p></div><div role="listitem"><span>✓</span><p><strong>Stopped refresh</strong><small>53° + translation</small></p></div><div role="listitem"><span>✓</span><p><strong>Unchanged</strong><small>publication skipped</small></p></div><div role="listitem"><span>✓</span><p><strong>Recovery</strong><small>pending revision none</small></p></div><div role="listitem"><span>✓</span><p><strong>Regression</strong><small>77/77 · V3/Flow</small></p></div></div></section>
           <section class="note next"><p class="note-label">What comes next</p><h3>qualified rigid transformを次の表示・操作境界へ渡す</h3><p>別のlayout authorityやlive migrationは増やしません。次Phaseは既存roadmap上のinteractive／rendering consumerを、この確定したowner lifecycleへ接続する独立境界として設計します。</p></section>

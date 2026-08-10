@@ -1,0 +1,77 @@
+{
+    "schema":  "campfire.devlog-phase-demo.v1",
+    "status":  "verified",
+    "phase":  "phase6dr",
+    "change_name":  "Rigid Point lifecycle",
+    "focus":  "Watch the front log rotate, refresh, resume, and survive stage recovery",
+    "source_commit":  "f9034bc",
+    "generated_at_utc":  "2026-08-10T09:33:07.0283156+00:00",
+    "scenario_runner":  "scripts/run_phase6dr_latest_demo_scenario.ps1",
+    "common_runner":  "scripts/build_devlog_demo.ps1",
+    "rendering":  {
+                      "preset":  "CandidatePerformance",
+                      "renderer_mode":  "RealTimePathTracing",
+                      "aa_op":  3,
+                      "dlss_exec_mode":  0,
+                      "max_bounces":  2,
+                      "resolution":  [
+                                         1280,
+                                         720
+                                     ]
+                  },
+    "feature_flags":  {
+                          "residentPointApplicationEnabled":  true,
+                          "residentPointRigidLayoutEnabled":  true,
+                          "residentPointRigidLifecycleQualificationEnabled":  true,
+                          "woodVisualV3Enabled":  false,
+                          "rtxFlowEnabled":  true
+                      },
+    "events":  [
+                   {
+                       "id":  "before",
+                       "event_label":  "Before: 37 degree rigid frame",
+                       "frame_count":  30,
+                       "unique_frame_count":  30,
+                       "start_seconds":  1.5,
+                       "end_seconds":  4.5
+                   },
+                   {
+                       "id":  "after",
+                       "event_label":  "Refresh 53 deg, resume, recover stage",
+                       "frame_count":  60,
+                       "unique_frame_count":  59,
+                       "start_seconds":  4.5,
+                       "end_seconds":  10.5
+                   }
+               ],
+    "source_frame_count":  90,
+    "source_unique_frame_count":  89,
+    "encoded_fps":  30,
+    "duration_seconds":  11.5,
+    "encoded_bytes":  540268,
+    "encoded_sha256":  "FE60A3292BA06B8C8224A47FD07090BA9E579F55CA553AB9155FA39A05896EC2",
+    "devlog_video_path":  "assets/phase6/phase6dr_demo.mp4",
+    "devlog_poster_path":  "assets/phase6/phase6dr_demo_poster.png",
+    "fatal_log_counts":  {
+                             "IRenderSettings::getRenderSettings failed getting a stage-id":  0,
+                             "Traceback (most recent call last)":  0,
+                             "CUDA_ERROR_ILLEGAL_ADDRESS":  0,
+                             "device lost":  0,
+                             "invalid pointer":  0,
+                             "[crash] A crash has occurred":  0,
+                             "Uploading minidump:":  0
+                         },
+    "crash_dump_count":  0,
+    "automatic_upload_attempt_count":  0,
+    "playback_verified":  true,
+    "playback_verified_at_utc":  "2026-08-10T09:35:08.6386488+00:00",
+    "verification_notes":  "Browser playback reached 11.5 s with no media error; 37 degree pre-refresh and 53 degree post-refresh frames, continuous Flow flame, overlays, and final stage-recovery segment were visually checked.",
+    "eligible_for_latest":  true,
+    "benchmark_population":  false,
+    "qualification":  {
+                          "gate_count":  15,
+                          "all_passed":  true,
+                          "resident_revision":  710,
+                          "active_blocks_peak":  278
+                      }
+}

@@ -1,4 +1,4 @@
-(() => {
+(async () => {
   const dialog = document.querySelector("#video-modal");
   const player = document.querySelector("#video-modal-player");
   const title = document.querySelector("#video-modal-title");
@@ -9,6 +9,41 @@
 
   if (!dialog || !player || !title || !meta || !directLink || !closeButton) {
     return;
+  }
+
+  const latestTrigger = document.querySelector("[data-latest-demo-manifest]");
+  if (latestTrigger) {
+    const status = document.querySelector("#latest-demo-status");
+    try {
+      const response = await fetch(latestTrigger.dataset.latestDemoManifest, {
+        cache: "no-store",
+      });
+      if (!response.ok) {
+        throw new Error(`latest demo manifest returned ${response.status}`);
+      }
+      const latest = await response.json();
+      if (latest.status !== "verified" || !latest.video_path || !latest.poster_path) {
+        throw new Error("latest demo manifest is not verified");
+      }
+      latestTrigger.dataset.videoSrc = latest.video_path;
+      latestTrigger.dataset.videoPoster = latest.poster_path;
+      latestTrigger.dataset.videoTitle = `${latest.phase.toUpperCase()} - ${latest.change_name}`;
+      latestTrigger.dataset.videoMeta = `${latest.focus} / ${latest.duration_seconds} s / source ${latest.source_commit}`;
+      const phase = document.querySelector("#latest-demo-phase");
+      const focus = document.querySelector("#latest-demo-focus");
+      const poster = document.querySelector("#latest-demo-poster");
+      if (phase) phase.textContent = latest.phase.toUpperCase();
+      if (focus) focus.textContent = latest.focus;
+      if (poster) {
+        poster.src = latest.poster_path;
+        poster.alt = `${latest.phase.toUpperCase()} latest demo poster`;
+      }
+      if (status) status.textContent = "再生確認済み";
+    } catch (error) {
+      latestTrigger.disabled = true;
+      if (status) status.textContent = "最新デモを読み込めません";
+      console.warn("Latest demo manifest could not be loaded", error);
+    }
   }
 
   const closeDialog = () => {
