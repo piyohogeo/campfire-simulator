@@ -1,5 +1,10 @@
 # Changelog
 
+- Adopted Phase V3T-L Candidate Performance as the temporary rendering standard for normal/benchmark startup, development videos, probes, and regressions: RTX Real-Time 2.0, DLSS Performance, and RTPT max bounces 2, with AO unchanged.
+- Verified the effective values in separate normal and benchmark processes at 1280×720, VSync OFF, 120 Hz main/render, 59 Hz present, and the unchanged 210 W power limit. AutoBaseline and Candidate Balanced remain explicit comparison presets; RTX Minimal and AO OFF are not production candidates.
+- Regressed the explicit V3 demo through the inherited standard: revision 1200, zero mass-balance error, Flow active-block final/peak 278/305, 505 V3 visual commits, 868 texture uploads, and zero V3 failures; the rendered frame retained flame/smoke, shadows, V3 surface texture, and hot emission.
+- Requalified Release build in `8.21 s`, Phase 0 RTX exit 0, and all eight standard processes with `77 / 77` tests in `354.5 s`.
+
 - Added a production-neutral isolated-Kit crash-safety boundary before Phase V3T-M: repo-local privacy opt-out, automatic dump upload disabled, compressed local dump preservation, run-scoped dump directories, and crash-token fail-fast are now shared by the V3T-G through V3T-L diagnostic runners.
 - Qualified the boundary with a normal startup, an intentional native `0xC0000005`, and a post-crash startup: Crash Reporter GUI 0, upload attempts 0, preserved 410,922-byte dump, unchanged dump SHA-256, and unchanged relevant Windows crash-reporting registry snapshots.
 - Kept dumps, Kit logs, and raw dump-analysis JSON outside Git. Recorded the common real-crash signature for AO OFF and `flow_layer_translucency_only` (`0xC0000005` read `0x20`, `omni.fabric.plugin.dll+0xD6960`) without attributing it to AO; both conditions remain held.

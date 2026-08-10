@@ -42,7 +42,7 @@ param(
     [switch]$WoodVisualV3,
     [switch]$ResidentNativeBackend,
     [string]$ResidentNativeLibraryPath = "",
-    [ValidateSet("Inherit", "CandidateBalanced", "CandidatePerformance", "Quality", "DLAA", "Minimal")]
+    [ValidateSet("Inherit", "AutoBaseline", "CandidateBalanced", "CandidatePerformance", "Quality", "DLAA", "Minimal")]
     [string]$RtxVisualPreset = "Inherit",
     [switch]$PhaseV3TLCameraMotion
 )
@@ -216,9 +216,11 @@ $kitArgs = @(
     "--/persistent/app/viewport/displayOptions=1152"
 )
 
-# Measurement/visual-evidence override only.  The default remains Inherit and
-# no value is written to the production app configuration.
+# Measurement/visual-evidence override. Inherit uses the temporary Candidate
+# Performance app standard; AutoBaseline and CandidateBalanced are retained as
+# explicit comparison presets. Minimal remains diagnostic-only.
 $rtxVisualPresetArgs = switch ($RtxVisualPreset) {
+    "AutoBaseline" { @("--/rtx/post/aa/op=3", "--/rtx/post/dlss/execMode=3", "--/rtx/rtpt/maxBounces=4") }
     "CandidateBalanced" { @("--/rtx/post/aa/op=3", "--/rtx/post/dlss/execMode=1", "--/rtx/rtpt/maxBounces=2") }
     "CandidatePerformance" { @("--/rtx/post/aa/op=3", "--/rtx/post/dlss/execMode=0", "--/rtx/rtpt/maxBounces=2") }
     "Quality" { @("--/rtx/post/aa/op=3", "--/rtx/post/dlss/execMode=2") }

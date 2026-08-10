@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-v3tma">最新記録</a>
+        <a href="#phase-v3tmb">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-v3tma">Phase V3T-MAを読む</a>
+        <a class="button primary" href="#phase-v3tmb">Phase V3T-MBを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase V3T-MA crash safety</strong></div>
-        <div><span>状態</span><strong class="success">Qualified · local preserve</strong></div>
-        <div><span>安全gate</span><strong>upload 0 · popup 0 · dump保存</strong></div>
-        <div><span>判定</span><strong>実クラッシュ2件は共通境界 · 原因未確定</strong></div>
+        <div><span>現在地</span><strong>Phase V3T-MB rendering standard</strong></div>
+        <div><span>状態</span><strong class="success">Candidate Performance · active</strong></div>
+        <div><span>実効値</span><strong>RT2 · DLSS Performance · 2 bounce</strong></div>
+        <div><span>判定</span><strong>47.858 FPS基準 · 58 FPS gate未達</strong></div>
       </div>
     </div>
   </header>
@@ -49,6 +49,19 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-v3tmb" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報"><span class="phase-number compact">V3T-MB</span><p><time datetime="2026-08-10">2026.08.10</time></p><span class="pill current">Temporary standard</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase V3T-MB · Candidate Performance standard</p><h2>Performanceを、<br>暫定の通常表示にする。</h2><p>normal／benchmark app、開発動画、性能probe、回帰試験の標準をRTX Real-Time 2.0＋DLSS Performance＋2 bounceへ揃えました。AO、Power Limit、物理とFlow authorityは変更していません。</p></header>
+          <figure class="capture-card wide"><a href="assets/phasev3tm/candidate_performance_standard_report.svg"><img src="assets/phasev3tm/candidate_performance_standard_report.svg" alt="Candidate Performance実効設定とV3 Flow回帰" loading="lazy"></a><figcaption><div><strong>normal + benchmark qualified</strong><span>1280×720 · VSync OFF · 210 W · V3/Flow回帰合格</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phasev3tl/candidate_performance_motion.mp4" data-video-poster="assets/phasev3tl/candidate_performance.png" data-video-title="Phase V3T-MB · Candidate Performance standard" data-video-meta="V3実燃焼＋visual-only camera orbit · 今後の開発動画基準 · 性能母集団外"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Performance動画</strong><small>今後の目視基準</small></span></button></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Known reference</p><h3>47.858 FPS · 20.90 ms</h3><p>Phase V3T-Lのproduction相当Flow＋volume基準です。58 FPS gate合格ではなく、display-present FPSでもありません。</p></section><section class="note"><p class="note-label">V3 regression</p><h3>revision 1200 · failures 0</h3><p>active blocks final/peak <code>278 / 305</code>、mass error 0。炎煙、影、surface texture、高温emissionを実画面で維持しました。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Contract</p><h3>Performance主基準＋Auto代表比較。</h3><p>今後の主要計測はPerformanceを使い、各Phaseで代表条件1つはAutoBaselineも別processで測ります。Balancedも比較用に残し、Minimal／AO OFFはproduction候補にしません。</p><code>.\scripts\run_candidate_performance_standard.ps1</code><p><a href="assets/phasev3tm/candidate_performance_standard_report.json">実効値・回帰JSON</a> · <a href="../design/candidate_performance_standard.md">標準契約</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Apps</strong><small>normal / benchmark</small></p></div><div role="listitem"><span>✓</span><p><strong>Flow</strong><small>active blocks維持</small></p></div><div role="listitem"><span>✓</span><p><strong>V3</strong><small>texture / emission維持</small></p></div><div role="listitem"><span>✓</span><p><strong>Authority</strong><small>mass error 0</small></p></div><div role="listitem"><span>×</span><p><strong>58 FPS</strong><small>未達</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Next</p><h3>V3T-MのPhysX／Flow分解へ戻る</h3><p>Performanceを主基準に、timeline、PhysX scene／sleep／collision／collapse、Flow Prim／Simulate／Offscreen／Render／active block／volumeを独立processで比較します。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-v3tma" class="section entry-section phase-six">

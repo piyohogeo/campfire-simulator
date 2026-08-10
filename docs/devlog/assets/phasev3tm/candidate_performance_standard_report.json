@@ -1,0 +1,69 @@
+{
+  "schema": "campfire.phasev3tm.candidate-performance-standard.v1",
+  "phase": "V3T-MB",
+  "status": "qualified",
+  "standard": {
+    "name": "Candidate Performance",
+    "renderer": "RTX Real-Time 2.0",
+    "rtx_rendermode": "RealTimePathTracing",
+    "post_aa_op": 3,
+    "dlss_exec_mode": 0,
+    "dlss_label": "Performance",
+    "rtpt_max_bounces": 2,
+    "ambient_occlusion_enabled": true
+  },
+  "effective_settings": {
+    "normal_app_passed": true,
+    "benchmark_app_passed": true,
+    "output_resolution": [1280, 720],
+    "renderer_vsync": false,
+    "main_rate_hz": 120,
+    "render_rate_hz": 120.0,
+    "present_rate_hz": 59.0,
+    "internal_render_resolution": null,
+    "internal_render_resolution_status": "unavailable through public ViewportAPI/settings in Kit 110.2"
+  },
+  "gpu": {
+    "name": "NVIDIA GeForce RTX 3090",
+    "driver": "591.86",
+    "power_limit_w": 210.0,
+    "enforced_power_limit_w": 210.0,
+    "power_setting_changed": false
+  },
+  "phase_v3tl_reference": {
+    "flow_volume_average_visible_fps": 47.858,
+    "derived_frame_time_ms": 20.90,
+    "meets_58_fps_gate": false,
+    "display_present_fps": null
+  },
+  "v3_regression": {
+    "status": "ok",
+    "dry_mass_balance_error_kg": 0.0,
+    "wet_mass_balance_error_kg": 0.0,
+    "resident_revision": 1200,
+    "revision_consistent": true,
+    "flow_active_blocks_final": 278,
+    "flow_active_blocks_peak": 305,
+    "v3_processed_revision": 1200,
+    "v3_visual_commits": 505,
+    "v3_texture_uploads": 868,
+    "v3_failures": 0,
+    "atlas": [96, 15],
+    "render_log_count": 4,
+    "visual_observation": ["Flow flame/smoke volume present", "shadows present", "V3 surface texture present", "hot emission present"]
+  },
+  "regression": {
+    "release_build_seconds": 8.21,
+    "phase0_rtx_exit_code": 0,
+    "standard_processes_passed": 8,
+    "standard_processes_total": 8,
+    "tests_passed": 77,
+    "tests_total": 77,
+    "standard_suite_wall_seconds": 354.5
+  },
+  "comparison_presets": ["AutoBaseline", "CandidateBalanced"],
+  "not_production_candidates": ["RTX Minimal", "AO OFF"],
+  "known_acceptable_difference": "Performance smooths some temporal flame detail",
+  "production_defaults_unchanged_except_rendering_standard": true,
+  "authority_or_flow_input_changed": false
+}

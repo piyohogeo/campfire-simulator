@@ -5,7 +5,7 @@ param(
     [int]$VideoFrameInterval = 20,
     [ValidateRange(1, 60)]
     [int]$VideoFps = 10,
-    [ValidateSet("Inherit", "CandidateBalanced", "CandidatePerformance", "Quality", "DLAA", "Minimal")]
+    [ValidateSet("Inherit", "AutoBaseline", "CandidateBalanced", "CandidatePerformance", "Quality", "DLAA", "Minimal")]
     [string]$RtxVisualPreset = "Inherit",
     [switch]$PhaseV3TLCameraMotion
 )

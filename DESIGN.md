@@ -2807,3 +2807,14 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - AO OFFと`flow_layer_translucency_only`はいずれも`0xC0000005` read `0x20`、`omni.fabric.plugin.dll+0xD6960`である。AO固有と断定せず、設定適用時期、stage接続、Fabric/Hydra初期化、renderer初期化raceを未確認候補として保持する。両条件は単独の安全な初期化順probeが成立するまで正式matrixへ戻さない。
 - production既定、wood authority、Flow入力、Emitter、collision、rigid layout、checkpoint、serialization、V3既定OFFは不変。詳細は`docs/design/isolated_kit_crash_safety.md`。
 - 最終標準suiteは8/8 process、77/77 test、371.6秒で合格した。
+
+## Phase V3T-MB Candidate Performance temporary standard
+
+### 2026-08-10: Performanceを通常起動と今後の計測の暫定標準にする
+
+- normal／benchmark appのstage接続前設定をRTX Real-Time 2.0、`/rtx/post/aa/op=3`、DLSS `execMode=0`、`/rtx/rtpt/maxBounces=2`へ固定した。AOは変更せずON、V3は既定OFF、Power Limitは210 Wのまま。`AutoBaseline`と`CandidateBalanced`は明示比較preset、RTX MinimalとAO OFFは非production候補とする。
+- 両appを別processで起動し、8連続visible frame後の実効値一致を確認した。1280×720、VSync OFF、main／render 120 Hz、present 59 Hz。内部render resolutionは公開境界から取得できず推定しない。
+- 明示V3デモの`Inherit`が新標準を継承し、dry／wet mass-balance error 0、Resident revision 1200、Flow active blocks final 278／peak 305、V3 processed revision 1200、visual commit 505、texture upload 868、failure 0だった。実画面でも炎煙volume、影、V3 surface texture、高温emissionを確認した。
+- Phase V3T-Lのproduction相当Flow＋volume `47.858 FPS / 20.90 ms`は既知基準であり、58 FPS gate合格ではない。visible render counterとdisplay-present FPSを混同しない。Performanceの炎時間方向ディテール平滑化は既知の許容事項である。
+- wood authority、Flow入力、Emitter、collision、rigid layout、checkpoint、serializationは不変。以後の主要測定はPerformance、各Phaseの代表条件1つはAutoBaselineを別processで測る。詳細は`docs/design/candidate_performance_standard.md`。
+- 最終回帰はRelease build 8.21秒、Phase 0 RTX exit 0、標準suite 8/8 process・77/77 test（354.5秒）が合格した。
