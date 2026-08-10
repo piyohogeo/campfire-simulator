@@ -180,6 +180,7 @@ from .resident_point_scene import (
     RESIDENT_POINT_APPLICATION_SETTING,
     RESIDENT_POINT_EMITTER_PATH,
     RESIDENT_POINT_RIGID_LAYOUT_SETTING,
+    RESIDENT_POINT_RIGID_LIFECYCLE_QUALIFICATION_SETTING,
     RESIDENT_POINT_SOURCE_PATH,
     configure_resident_point_application_scene,
     preauthor_resident_snapshot_consumers,

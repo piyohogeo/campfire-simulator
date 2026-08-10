@@ -1,0 +1,55 @@
+{
+  "schema": "campfire.phase6dr.rigid_lifecycle_report.v1",
+  "phase": "phase6dr",
+  "status": "qualified_default_off",
+  "qualification": {
+    "gates": {
+      "passed": 15,
+      "total": 15,
+      "checks": {
+        "explicit_setting_enabled": true,
+        "normal_extension_owner_composed": true,
+        "complete_schema_connected": true,
+        "selected_layout_representation_matches_stage_and_owner": true,
+        "only_existing_point_properties_changed_live": true,
+        "consumer_revisions_match": true,
+        "final_revision_matches_steps": true,
+        "flow_core_active": true,
+        "fuel_temperature_smoke_present": true,
+        "continuous_video": true,
+        "clean_shutdown": true,
+        "initial_arbitrary_rotation_authored_before_connection": true,
+        "stopped_arbitrary_transform_refresh_committed": true,
+        "unchanged_rigid_transform_skipped": true,
+        "normal_owner_rigid_stage_recovery_completed": true
+      }
+    },
+    "initial_rotation_degrees": 37.0,
+    "refreshed_rotation_degrees": 53.0,
+    "stage_built_before_connection": true
+  },
+  "publication": {
+    "revision": 710,
+    "consumer_revisions": [
+      710,
+      710,
+      710
+    ],
+    "layout_revision": 2,
+    "layout_replace_count": 1,
+    "consumer_replace_count": 1,
+    "pending_revision": null,
+    "point_resync_count": 0
+  },
+  "flow": {
+    "version": "110.0.0",
+    "active_blocks_peak": 291,
+    "unique_video_frames": 60,
+    "video_frame_count": 60
+  },
+  "safety": {
+    "production_defaults_changed": false,
+    "live_representation_migration": false,
+    "v3tm_held_conditions_retried": false
+  }
+}

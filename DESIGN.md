@@ -2849,3 +2849,14 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - production相当Flow＋volumeは`47.858 FPS / 20.895 ms`から`50.696 / 19.725 ms`への約5.9%改善に留まった。Flowはmainを60 Hzへ再設定し、rendering／viewport tickは240 Hz、presentは59 Hz。liveに押し戻さず実効値を記録した。
 - GPU render time、display-present FPS、raw frame p95/p99は取得不可で推定しない。通常余裕はproduction-cappedの20.90 msを基準に45 FPSへ1.322 ms、30 FPSへ12.433 msのまま維持する。
 - production app／rate／既定値、wood／Flow authority、Emitter、collision、checkpoint、serializationは不変。V3T-Mのpartial Flow topologyは実行していない。次はPhase 6DQの既存ロードマップへ戻る。詳細は`docs/design/uncapped_frame_budget_diagnostic.md`。
+
+## Phase 6DR normal-app rigid lifecycle
+
+### 2026-08-10: 任意角のoffline frameから停止中refreshとstage recoveryまで接続
+
+- 構成: 新しい`/exts/campfire.app/residentPointRigidLifecycleQualificationEnabled`はnormal／benchmarkとも既定`false`で、Point＋rigidの明示opt-in時だけ許可する。legacy qualificationとの混在、rigidなし、Pointなしはstage authoring前にfail closedする。
+- offline boundary: 通常extensionが1本目を37度へ配置してから`rigid_frame_v1`、native 720点layout、Point schema、application ownerを構築し、その後にstageをKit contextへ接続した。live representation migrationは追加していない。
+- lifecycle: 300 step後にtimelineとownerを停止し、1本目を53度＋新originへ移動した。既存`refresh_layout()`はlayout revision 2を1回commitし、同一transformの再refreshは`changed=false`でskipした。既存recovery orchestratorはclosing→closed→opening→openedの順でreplacement stageを接続し、committed revision 301、pendingなしで復旧した。
+- 実測: Flow 110.0.0の隔離normal-app runで`15 / 15` gate、最終Resident revision `710`の3 consumer一致、layout／consumer replacement各1、Point resync 0、active block peak 291、60/60 unique frame、fuel／temperature／smoke／burn readback、clean shutdownを確認した。crash／dump／自動uploadは0だった。
+- 回帰: release build `8.20 s`、Phase 0 RTX `22.3 s`、標準suite 8 process・`77 / 77`（`354.7 s`）、Phase 2 collision `34.6 s`、Phase 6DQ `11 / 11`・revision 710に合格した。Candidate Performance V3＋Flowもrevision 1200、両薪mass error 0、active block final/peak `259 / 355`、V3 failure 0で、実frameに炎煙、影、surface texture、高温emissionを確認した。
+- 非変更: Point／rigid／qualification／V3は既定OFF、Sphereはproduction既定である。wood authority、物理式、JSON、`ResidentPublishedSnapshot`、checkpoint、serialization、revision／rollback、collision、Emitter schema、Flow 110.0.0は不変。V3T-Mの保留条件は再試行していない。詳細は`docs/design/resident_rigid_lifecycle.md`。

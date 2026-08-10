@@ -1,4 +1,4 @@
-param([string]$OutputDir = "")
+param([string]$OutputDir = "", [string]$ReportDir = "")
 
 $ErrorActionPreference = "Stop"
 $repositoryRoot = Split-Path -Parent $PSScriptRoot
@@ -16,8 +16,12 @@ $nativeBuild = Join-Path $OutputDir "native-build"
 $nativeDll = Join-Path $nativeBuild "campfire_wood_native.dll"
 $sceneDir = Join-Path $OutputDir "scene"
 $summary = Join-Path $OutputDir "summary.json"
-$report = Join-Path $repositoryRoot "docs\devlog\assets\phase6\rigid_normal_app_report.json"
-$svg = Join-Path $repositoryRoot "docs\devlog\assets\phase6\rigid_normal_app_report.svg"
+if (-not $ReportDir) {
+    $ReportDir = Join-Path $repositoryRoot "docs\devlog\assets\phase6"
+}
+$ReportDir = [System.IO.Path]::GetFullPath($ReportDir)
+$report = Join-Path $ReportDir "rigid_normal_app_report.json"
+$svg = Join-Path $ReportDir "rigid_normal_app_report.svg"
 New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
 New-Item -ItemType Directory -Path $sceneDir -Force | Out-Null
 
@@ -30,7 +34,7 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 & $kit @(
     $app,
     "--no-window",
-    "--/app/quitAfter=1200",
+    "--/app/quitAfter=10000",
     "--/app/settings/persistent=0",
     "--/app/settings/loadUserConfig=0",
     "--/exts/campfire.app/autoCreateScene=true",

@@ -27,6 +27,9 @@ RESIDENT_POINT_APPLICATION_SETTING = (
 RESIDENT_POINT_RIGID_LAYOUT_SETTING = (
     "/exts/campfire.app/residentPointRigidLayoutEnabled"
 )
+RESIDENT_POINT_RIGID_LIFECYCLE_QUALIFICATION_SETTING = (
+    "/exts/campfire.app/residentPointRigidLifecycleQualificationEnabled"
+)
 RESIDENT_POINT_PRIMARY_QUALIFICATION_SETTINGS = (
     "/exts/campfire.app/residentPointRecoveryQualificationEnabled",
     "/exts/campfire.app/residentPointCommandQualificationEnabled",
@@ -69,8 +72,16 @@ def resident_point_application_configuration(settings) -> dict:
     skip_unchanged_translation = bool(
         settings.get_as_bool(RESIDENT_POINT_SKIP_UNCHANGED_TRANSLATION_SETTING)
     )
+    rigid_lifecycle = bool(
+        settings.get_as_bool(
+            RESIDENT_POINT_RIGID_LIFECYCLE_QUALIFICATION_SETTING
+        )
+    )
     qualification_enabled = bool(
-        primary or dynamic_translation or skip_unchanged_translation
+        primary
+        or dynamic_translation
+        or skip_unchanged_translation
+        or rigid_lifecycle
     )
     if (rigid_layout or qualification_enabled) and not enabled:
         raise ValueError(
@@ -90,7 +101,13 @@ def resident_point_application_configuration(settings) -> dict:
             "Resident Point unchanged-translation skip qualification requires "
             "dynamic translation qualification"
         )
-    if rigid_layout and qualification_enabled:
+    if rigid_lifecycle and not rigid_layout:
+        raise ValueError(
+            "Resident Point rigid lifecycle qualification requires rigid layout"
+        )
+    if rigid_layout and (
+        primary or dynamic_translation or skip_unchanged_translation
+    ):
         raise ValueError(
             "Resident Point rigid layout is isolated from legacy qualification modes"
         )
@@ -104,6 +121,7 @@ def resident_point_application_configuration(settings) -> dict:
         "primary_qualification_settings": primary,
         "dynamic_translation_qualification": dynamic_translation,
         "skip_unchanged_translation_qualification": skip_unchanged_translation,
+        "rigid_lifecycle_qualification": rigid_lifecycle,
     }
 
 

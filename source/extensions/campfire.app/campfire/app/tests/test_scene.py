@@ -1513,6 +1513,9 @@ class TestScene(omni.kit.test.AsyncTestCase):
 
         application = campfire.app.RESIDENT_POINT_APPLICATION_SETTING
         rigid = campfire.app.RESIDENT_POINT_RIGID_LAYOUT_SETTING
+        rigid_lifecycle = (
+            campfire.app.RESIDENT_POINT_RIGID_LIFECYCLE_QUALIFICATION_SETTING
+        )
         legacy = campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_LEGACY
         rigid_representation = (
             campfire.app.RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME
@@ -1543,6 +1546,10 @@ class TestScene(omni.kit.test.AsyncTestCase):
         self.assertEqual(
             rigid_enabled["layout_representation"], rigid_representation
         )
+        rigid_qualified = campfire.app.resident_point_application_configuration(
+            Settings((application, rigid, rigid_lifecycle))
+        )
+        self.assertTrue(rigid_qualified["rigid_lifecycle_qualification"])
         legacy_translation = campfire.app.resident_point_application_configuration(
             Settings((application, timeline, dynamic, skip))
         )
@@ -1555,6 +1562,10 @@ class TestScene(omni.kit.test.AsyncTestCase):
         with self.assertRaisesRegex(ValueError, "isolated"):
             campfire.app.resident_point_application_configuration(
                 Settings((application, rigid, timeline))
+            )
+        with self.assertRaisesRegex(ValueError, "requires rigid layout"):
+            campfire.app.resident_point_application_configuration(
+                Settings((application, rigid_lifecycle))
             )
         with self.assertRaisesRegex(ValueError, "requires timeline"):
             campfire.app.resident_point_application_configuration(

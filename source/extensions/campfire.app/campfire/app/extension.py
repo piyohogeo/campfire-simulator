@@ -102,6 +102,7 @@ from .resident_point_commands import (
 from .resident_point_continuity import measure_resident_point_log_alignment
 from .resident_point_scene import (
     RESIDENT_POINT_EMITTER_PATH,
+    RESIDENT_POINT_RIGID_LIFECYCLE_QUALIFICATION_SETTING,
     configure_resident_point_application_scene,
     preauthor_resident_snapshot_consumers,
     resident_point_application_configuration,
@@ -498,6 +499,19 @@ class CampfireAppExtension(omni.ext.IExt):
                 offline_stage, render_hierarchy=render_hierarchy
             )
             log_ids = (PHASE3_DRY_LOG_ID, PHASE3_WET_LOG_ID)
+            rigid_lifecycle_qualification = settings.get_as_bool(
+                RESIDENT_POINT_RIGID_LIFECYCLE_QUALIFICATION_SETTING
+            )
+            if rigid_lifecycle_qualification:
+                initial_origin = get_log_world_position(
+                    offline_stage, PHASE3_DRY_LOG_ID
+                )
+                move_log(
+                    offline_stage,
+                    PHASE3_DRY_LOG_ID,
+                    initial_origin,
+                    37.0,
+                )
             models = tuple(
                 load_model_from_prim(
                     offline_stage.GetPrimAtPath(f"/World/Logs/{log_id}")
@@ -559,7 +573,9 @@ class CampfireAppExtension(omni.ext.IExt):
                 f"{SETTINGS_ROOT}/residentPointSkipUnchangedTranslationLayoutQualificationEnabled"
             )
             point_phase = (
-                "phase6dq"
+                "phase6dr"
+                if rigid_lifecycle_qualification
+                else "phase6dq"
                 if layout_representation
                 == RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME
                 else "phase6co"
@@ -582,6 +598,9 @@ class CampfireAppExtension(omni.ext.IExt):
                 "campfire:flowVersion": FLOW_VERSION,
                 "campfire:stageBuiltBeforeConnection": True,
                 "campfire:normalApplicationOwner": True,
+                "campfire:initialRigidRotationDegrees": (
+                    37.0 if rigid_lifecycle_qualification else 0.0
+                ),
             }
             if not offline_stage.GetRootLayer().Save():
                 raise RuntimeError(
@@ -912,6 +931,11 @@ class CampfireAppExtension(omni.ext.IExt):
                 f"{SETTINGS_ROOT}/residentPointTimelineContinuityQualificationEnabled"
             )
         )
+        rigid_lifecycle_qualification = (
+            carb.settings.get_settings().get_as_bool(
+                RESIDENT_POINT_RIGID_LIFECYCLE_QUALIFICATION_SETTING
+            )
+        )
         dynamic_translation_qualification = (
             carb.settings.get_settings().get_as_bool(
                 f"{SETTINGS_ROOT}/residentPointDynamicTranslationQualificationEnabled"
@@ -935,7 +959,9 @@ class CampfireAppExtension(omni.ext.IExt):
         ) > 1:
             raise ValueError("Resident Point qualifications are mutually exclusive")
         phase_name = (
-            "phase6dq"
+            "phase6dr"
+            if rigid_lifecycle_qualification
+            else "phase6dq"
             if owner.status()["layout_representation"]
             == RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME
             else "phase6co"
@@ -965,6 +991,8 @@ class CampfireAppExtension(omni.ext.IExt):
         point_notice_records = []
         point_prefix = str(RESIDENT_POINT_EMITTER_PATH)
         layout_result = None
+        unchanged_layout_result = None
+        initial_rigid_frame = None
         recovery_result = None
         layout_changed_point_count = 0
         replacement_scene_path = None
@@ -1054,6 +1082,10 @@ class CampfireAppExtension(omni.ext.IExt):
             )
 
         try:
+            if rigid_lifecycle_qualification:
+                initial_rigid_frame = resident_point_frame_layout_for_logs(
+                    stage, (PHASE3_DRY_LOG_ID, PHASE3_WET_LOG_ID)
+                )["frames"][0]
             listener = register_point_listener(stage)
             if continuity_fix_qualification or timeline_continuity_qualification:
                 timeline_event_subscription = (
@@ -1129,6 +1161,7 @@ class CampfireAppExtension(omni.ext.IExt):
                 if timeline_continuity_qualification
                 else 300
                 if recovery_qualification
+                or rigid_lifecycle_qualification
                 or command_qualification
                 or transform_qualification
                 or continuity_diagnostic
@@ -1197,6 +1230,7 @@ class CampfireAppExtension(omni.ext.IExt):
                     )
             if (
                 recovery_qualification
+                or rigid_lifecycle_qualification
                 or command_qualification
                 or transform_qualification
                 or continuity_diagnostic
@@ -1219,7 +1253,21 @@ class CampfireAppExtension(omni.ext.IExt):
                     float(original_origin[1]) + 0.04,
                     float(original_origin[2]),
                 )
-                if (
+                if rigid_lifecycle_qualification:
+                    moved_origin = (
+                        float(original_origin[0]) + 0.03,
+                        float(original_origin[1]) + 0.03,
+                        float(original_origin[2]) + 0.02,
+                    )
+                    move_log(
+                        stage,
+                        PHASE3_DRY_LOG_ID,
+                        moved_origin,
+                        53.0,
+                    )
+                    layout_result = owner.refresh_layout(stage)
+                    unchanged_layout_result = owner.refresh_layout(stage)
+                elif (
                     command_qualification
                     or transform_qualification
                     or continuity_diagnostic
@@ -1392,7 +1440,7 @@ class CampfireAppExtension(omni.ext.IExt):
                     for before, after in zip(positions_before, positions_after)
                 )
 
-                if recovery_qualification:
+                if recovery_qualification or rigid_lifecycle_qualification:
                     replacement_scene_path = output_dir / "replacement_stage.usda"
                     replacement_scene_path.unlink(missing_ok=True)
                     if not stage.Export(str(replacement_scene_path)):
@@ -1570,6 +1618,7 @@ class CampfireAppExtension(omni.ext.IExt):
             expected_owner_transitions = (
                 2
                 if recovery_qualification
+                or rigid_lifecycle_qualification
                 or command_qualification
                 or transform_qualification
                 or continuity_diagnostic
@@ -1652,6 +1701,57 @@ class CampfireAppExtension(omni.ext.IExt):
                             and session_status["pending_revision"] is None
                             and session_status["sidecar"]["committed_layout_revision"]
                             == 2
+                        ),
+                    }
+                )
+            if rigid_lifecycle_qualification:
+                orchestrator_status = stopped_status["orchestrator"]
+                session_status = stopped_status["session"]
+                gates.update(
+                    {
+                        "initial_arbitrary_rotation_authored_before_connection": (
+                            phase_name == "phase6dr"
+                            and initial_rigid_frame is not None
+                            and abs(
+                                initial_rigid_frame[0]
+                                - math.cos(math.radians(37.0))
+                            )
+                            <= 1.0e-5
+                            and abs(
+                                initial_rigid_frame[1]
+                                - math.sin(math.radians(37.0))
+                            )
+                            <= 1.0e-5
+                            and stopped_status["layout_representation"]
+                            == RESIDENT_POINT_LAYOUT_REPRESENTATION_RIGID_FRAME
+                        ),
+                        "stopped_arbitrary_transform_refresh_committed": (
+                            layout_result is not None
+                            and layout_result["changed"]
+                            and layout_result["revision"] == 2
+                            and stopped_status["layout_revision"] == 2
+                            and stopped_status["layout_replace_count"] == 1
+                            and session_status["sidecar"]["layout_revision"] == 2
+                            and 360 <= layout_changed_point_count <= 720
+                            and layout_changed_point_count % 360 == 0
+                        ),
+                        "unchanged_rigid_transform_skipped": (
+                            unchanged_layout_result is not None
+                            and not unchanged_layout_result["changed"]
+                            and unchanged_layout_result["revision"] == 2
+                            and stopped_status["layout_replace_count"] == 1
+                        ),
+                        "normal_owner_rigid_stage_recovery_completed": (
+                            recovery_result is not None
+                            and orchestrator_status["attempt_count"] == 1
+                            and orchestrator_status["success_count"] == 1
+                            and orchestrator_status["failure_count"] == 0
+                            and session_status["consumer_replace_count"] == 1
+                            and tuple(recovery_result["observed_events"])
+                            == ("closing", "closed", "opening", "opened")
+                            and recovery_result["committed_revision"] == 301
+                            and recovery_result["pending_revision"] is None
+                            and session_status["pending_revision"] is None
                         ),
                     }
                 )
@@ -1860,6 +1960,9 @@ class CampfireAppExtension(omni.ext.IExt):
                     "timeline_continuity_qualification": (
                         timeline_continuity_qualification
                     ),
+                    "rigid_lifecycle_qualification": (
+                        rigid_lifecycle_qualification
+                    ),
                     "point_count": 720,
                     "surface_points_per_log": 360,
                     "log_count": 2,
@@ -1874,6 +1977,7 @@ class CampfireAppExtension(omni.ext.IExt):
                     ),
                     "timeline_paused_after_run": not timeline.is_playing(),
                     "layout_refresh": layout_result,
+                    "unchanged_layout_refresh": unchanged_layout_result,
                     "layout_changed_point_count": layout_changed_point_count,
                     "recovery": recovery_result,
                     "commands": command_results,

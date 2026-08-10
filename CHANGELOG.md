@@ -1,5 +1,8 @@
 # Changelog
 
+- Qualified Phase 6DR's default-off normal-app rigid lifecycle with 15/15 real-Kit gates: a 37-degree frame was authored before stage connection, a stopped 53-degree transform plus translation committed layout revision 2 once, an unchanged refresh skipped publication, and stage replacement recovered without a pending revision. Final Resident revision was 710 across all three consumers, Point resyncs were zero, Flow peaked at 291 active blocks, all 60 captured frames were unique, and the isolated run had zero crash, dump, or upload attempt.
+- Requalified the release build in 8.20 seconds, Phase 0 RTX in 22.3 seconds, all eight standard processes and 77/77 tests in 354.7 seconds, Phase 2 collision in 34.6 seconds, Phase 6DQ at 11/11 gates, and the Candidate Performance V3/Flow scenario at Resident revision 1200 with zero mass-balance error, active-block final/peak 259/355, and zero V3 failure.
+
 - Qualified Phase V3T-O's production-neutral 240 Hz diagnostic: twelve formal processes raised static scenes from the production ~116.7 FPS ceiling to 166.4-169.9 FPS at 97.6-99.0% GPU, while production-equivalent Flow moved only from 47.858 to 50.696 FPS. All formal runs had zero fatal token, dump, and upload attempt; production rates and defaults remain unchanged.
 
 - Adopted the Phase V3T-N project frame-budget policy without rewriting historical gates: Candidate Performance remains temporary standard, 45 FPS / 22.222 ms is the normal target, 30 FPS / 33.333 ms is the minimum, and 60 FPS / 16.667 ms is a light-scene ideal. The existing 47.858 FPS / 20.90 ms Flow-volume reference leaves estimated average-visible-counter margins of 1.322 ms and 12.433 ms respectively.

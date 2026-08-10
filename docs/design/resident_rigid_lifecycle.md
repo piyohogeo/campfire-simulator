@@ -1,0 +1,15 @@
+# Resident rigid lifecycle in the normal application
+
+Status: Phase 6DR qualifies the arbitrary-transform and stage-recovery lifecycle through the normal extension. The scenario is explicit and default OFF. Point, rigid layout, and the qualification setting remain OFF in normal and benchmark applications; Sphere remains the production emitter.
+
+The normal extension reads `/exts/campfire.app/residentPointRigidLifecycleQualificationEnabled` only after the validated Point and rigid startup opt-ins. It authors the first log at 37 degrees before extracting `rigid_frame_v1`, building the native 720-point layout, creating the full Point schema, and connecting the stage. It does not migrate a live representation.
+
+After 300 Resident steps the qualification pauses the timeline, stops the owner, moves the first log to 53 degrees and a new origin, and calls the existing `ResidentPointApplicationOwner.refresh_layout()`. The operation committed layout revision 2 and changed all 720 point positions because the second log had also moved under PhysX. Repeating the same refresh returned `changed=false` without another layout replacement. The current stage was exported and opened as the replacement through the existing recovery orchestrator; the observed event order was closing, closed, opening, opened, committed Resident revision was 301, and no pending revision remained.
+
+The real Flow 110.0.0 isolated run passed 15/15 gates. Final backend, USD adapter, and Point sidecar revisions were all 710; layout and consumer replacement counts were each one; Point resync count was zero; Flow peaked at 291 active blocks; fuel, temperature, smoke, and burn readback were present; all 60 capture frames were unique; shutdown was clean; crash, dump, and automatic-upload counts were zero.
+
+Final regression passed: release build 8.20 seconds, Phase 0 RTX exit 0 in 22.3 seconds, all eight standard processes and 77/77 tests in 354.7 seconds, Phase 2 collision exit 0 in 34.6 seconds, and Phase 6DQ 11/11 gates at revision 710 without overwriting its historical report. The Candidate Performance V3/Flow scenario also exited normally at Resident revision 1200, zero mass-balance error for both modeled logs, Flow active-block final/peak 259/355, 505 visual commits, 868 texture uploads, and zero V3 failure. Its final real frame retained flame/smoke, shadows, surface texture, and hot emission.
+
+The setting is not a user-facing mode or a new authority. It only drives the reproducible qualification scenario. Wood authority, physical equations, `ResidentPublishedSnapshot`, checkpoint, rollback, serialization, collision, Emitter schema, Flow 110.0.0, V3, and normal startup behavior are unchanged. The held Phase V3T-M partial-Flow conditions were not retried.
+
+The next roadmap step should use this now-qualified representation and lifecycle rather than add another layout authority. A subsequent interactive or rendering feature may consume rigid transforms, but live legacy-to-rigid migration remains out of scope.
