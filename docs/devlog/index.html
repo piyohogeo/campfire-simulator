@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6dv">最新記録</a>
+        <a href="#phase-6dw">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6dv">Phase 6DVを読む</a>
+        <a class="button primary" href="#phase-6dw">Phase 6DWを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6DV safe stop</strong></div>
-        <div><span>Crash signature</span><strong>fabric +0xD6960 · read 0x20</strong></div>
-        <div><span>Known-good control</span><strong>OpenUSD pass · OS exit abnormal</strong></div>
-        <div><span>Production</span><strong>unchanged · 6DU held</strong></div>
+        <div><span>現在地</span><strong>Phase 6DW baseline qualified</strong></div>
+        <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
+        <div><span>Lifecycle</span><strong>14 / 14 normal exits</strong></div>
+        <div><span>Production</span><strong>unchanged · 6DU staged restart</strong></div>
       </div>
     </div>
   </header>
@@ -56,6 +56,19 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6dw" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報"><span class="phase-number compact">6DW</span><p><time datetime="2026-08-11">2026.08.11</time></p><span class="pill current">GPU baseline qualified</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6DW · GPU configuration / renderer lifecycle baseline</p><h2>GPUを2枚にした現在環境で、<br>rendererの正常終了基準を取り直した。</h2><p>RTX 2070追加後のadapter順、Kit／RTX／Hydra／Flowのdevice選択、cache、終了順を独立processで確認しました。Phase 6DT／6DU／6DVはいずれもGPU変更後のrunでしたが、現在の最小構成ではRTX 3090が一貫して選ばれ、既知正常BoxとFlowを含む全条件が正常終了しています。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/gpu_renderer_lifecycle_report.svg"><img src="assets/phase6/gpu_renderer_lifecycle_report.svg" alt="Phase 6DWの通常cacheと隔離cacheによる7条件のprocess時間と14件の正常終了" loading="lazy"></a><figcaption><div><strong>14 / 14 normal OS exits</strong><span>RTX 3090 selected · CUDA 0 · fatal / dump / upload 0</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Timeline</p><h3>6DT／6DU／6DVはすべてGPU変更後</h3><p>RTX 2070のPnP導入は08:17:20、Windows起動は08:19:33。保存artifactの開始は6DTが08:35:17、6DUが09:36:55、6DVが09:53:05です。変更前runとの比較は存在しないため、過去crashへの因果は未確定です。</p></section><section class="note"><p class="note-label">Device selection</p><h3>renderもpresentもRTX 3090側</h3><p>NVIDIA index 0は3090（PCI 01:00.0）、index 1は2070（08:00.0）。全renderer runが3090／CUDA 0を選び、primary present targetも3090側DISPLAY2でした。起動ごとの順序変化とcross-adapter presentは観測していません。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Cache and lifecycle</p><h3>通常cacheでも空cacheでも正常終了。</h3><p>Kitのみ、空OpenUSD、空RTX、known-good Box OpenUSD／RTX、Flow load、Flow simulationを各cacheで測定しました。空cacheはRTX初期化を13.14→34.16秒、Flow simを26.37→45.18秒へ延ばしましたが、全14 processがexit 0。Box RTXはfirst viewport frame、stage close、renderer drain、plugin shutdownまで通過しました。</p><p>Release build 6.25秒、標準suite 8 process・78 / 78件（310.6秒）、Phase 0 RTX、normal／benchmark Candidate Performance、Flow最小probeも合格しました。日誌は589参照・missing 0・文字化け0ですが、browser bindingがなく実ブラウザ描画だけ未確認です。</p><p><a href="assets/phase6/gpu_renderer_lifecycle_report.json">集計JSON</a> · <a href="assets/phase6/gpu_renderer_lifecycle_report.svg">process表SVG</a> · <a href="../design/gpu_renderer_lifecycle_baseline.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Device</strong><small>3090 · CUDA 0固定</small></p></div><div role="listitem"><span>✓</span><p><strong>Existing cache</strong><small>7 / 7 exit 0</small></p></div><div role="listitem"><span>✓</span><p><strong>Empty cache</strong><small>7 / 7 exit 0</small></p></div><div role="listitem"><span>✓</span><p><strong>Crash safety</strong><small>dump / upload 0</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>SHA-256不変</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Decision</p><h3>Phase 6DUは段階的ablationだけ再開可能。</h3><p>現在の2-GPU構成一般や旧cacheだけではPhase 6DV異常を再現しませんでした。known-good Boxの正常exitという再開条件は満たしたため、次PhaseではBoxから一差分ずつCylinderへ近づけられます。失敗済み<code>mesh_hull</code>の直接再実行、dynamic collider、production統合はまだ行いません。映像上の変更はないため新動画は作らず、latest demoも変更していません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6dv" class="section entry-section phase-six">

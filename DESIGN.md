@@ -2946,3 +2946,15 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - Phase 6DTのknown-good Box stageをPhase 6DU相当のisolated app／launcherでpure OpenUSDに読み込み、stage監査は合格した。一方、renderer plugin shutdown後もKit OS processが長時間残留し、renderer readinessを8 frame先行させても正常exitを得られなかった。既知正常条件の異常としてHydra接続とBox→Cylinder差分matrixを開始せず安全停止した。
 - したがって円筒topologyまたは`convexHull`を原因とは確定しない。構造の異なる2 stageで同じsignatureが出た事実はFabric/Hydra engine追加またはrenderer初期化・寿命境界を強く示すが、harness control未成立のため根本条件は未確定である。
 - Phase 6DUは再開不可。same-launcher known-good BoxがHydra接続から正常OS exitまで通った後に限り、Box hull、Cylinder decomposition、Cylinder hull、hierarchy、RenderSurface、analytic siblingを別processで一項目ずつ評価する。production、Flow 110.0.0、V3既定、Resident session、collision契約、latest demoは不変。詳細は`docs/design/stage_open_crash_classification.md`。
+
+## Phase 6DW GPU configuration / renderer lifecycle baseline
+
+### 2026-08-11: RTX 3090 + RTX 2070環境で正常終了基準を再確立
+
+- PnP上のRTX 2070初回導入は2026-08-11 08:17:20 JST、再起動は08:19:33。Phase 6DT／6DU／6DVの保存artifactはいずれもその後であり、3 PhaseをGPU変更前のrunとして扱えない。
+- 現在のNVIDIA列挙はRTX 3090=`index 0`, PCI `01:00.0`, device `0x2204`、RTX 2070=`index 1`, PCI `08:00.0`, device `0x1F02`。Kit RTXはRTX 3090／CUDA 0、Hydraはdevice mask 1・viewport device 0、Flow processはgraph CUDA ordinal 0を報告し、primary present targetも3090側DISPLAY2だった。Flow単独の公開device selector logはないため独立保証とは扱わない。
+- Kitのみ、空OpenUSD、空RTX、Phase 6DT Box OpenUSD、同Box RTX、Flow load、Flow simulationの7条件を、通常cacheと新規空isolated cacheで別process実行した。14/14がexit 0、timeout／fatal／dump／upload 0。Box RTXはfirst viewport frame、stage close、renderer drain、plugin shutdown、正常OS exitまで到達した。
+- isolated cacheはRTX/Flow cold startを長くしたが正常化の有無は変えず、旧cache起因の必須故障は否定した。公開設定`/renderer/activeGpu=0`の隔離controlも自動選択と同じ3090で正常終了したが、production既定は変更していない。
+- Phase 6DVの終了不能は、現在の2-GPU構成一般より同runnerのapp composition／teardown順に固有である可能性が高い。ただし過去crashへのmulti-GPU寄与、Fabric関数内部、物理ケーブル実配置は未確定。
+- Phase 6DUは次の独立Phaseで段階的ablationを再開可能。既知正常Boxを起点に一差分ずつCylinderへ近づけ、失敗済み`mesh_hull`を直接再実行しない。詳細は`docs/design/gpu_renderer_lifecycle_baseline.md`。
+- Release build 6.25 s、標準suite 8 process・78/78件（310.6 s）、Phase 0 RTX、normal／benchmark Candidate Performance、最小Flow probeが合格。production app SHA-256は`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`で前後一致。映像差がないためlatest demoは変更していない。

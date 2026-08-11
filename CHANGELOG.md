@@ -1,5 +1,9 @@
 # Changelog
 
+- Added the production-neutral Phase 6DW GPU/renderer lifecycle baseline after the RTX 2070 installation: Windows and Kit consistently enumerate RTX 3090 as GPU/CUDA index 0 and RTX 2070 as index 1, while Kit renders and presents on the RTX 3090 path.
+- Qualified all seven lifecycle boundaries with both the existing and a new empty isolated cache (14/14 normal OS exits, fatal/crash/dump/upload 0), including the Phase 6DT known-good Box through first RTX frame and the known-good Flow simulation through shutdown.
+- Established that Phase 6DT, 6DU, and 6DV artifacts all postdate the GPU change and reboot; the hardware change remains historically unqualified, but a generic current two-GPU or stale-cache teardown failure was not reproduced.
+- Reopened Phase 6DU only for a future independent, staged Box-to-Cylinder ablation. The failed cylindrical `mesh_hull` condition was not rerun, production defaults and app SHA-256 remain unchanged, and no new demo was needed for this internal diagnostic phase.
 - Added production-neutral Phase 6DV read-only MINIDUMP analysis and classified the preserved Phase 6DT/6DU stage-open crashes as the same `0xC0000005` read of `0x20` at `omni.fabric.plugin.dll+0xD6960`; matching debugger symbols were unavailable, so function-level attribution remains unqualified.
 - Reopened the Phase 6DT known-good Box through pure OpenUSD in the Phase 6DU-equivalent isolated launcher, but stopped before Hydra ablation because two controls reached probe/plugin shutdown yet failed to produce a normal OS process exit, including one with an eight-frame renderer-readiness prelude.
 - Preserved the no-retry boundary: the failed Phase 6DU Cylinder condition was not rerun, no new dump or automatic upload occurred, the production app hash remained unchanged, and Cylinder Flow collision remains unqualified.

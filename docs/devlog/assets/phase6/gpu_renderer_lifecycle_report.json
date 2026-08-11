@@ -1,0 +1,2019 @@
+{
+  "schema": "campfire.phase6dw.gpu-renderer-lifecycle-report.v1",
+  "phase": "6DW",
+  "status": "qualified_safe_baseline",
+  "production_changed": false,
+  "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "environment": {
+    "os": {
+      "caption": "Microsoft Windows 11 Pro",
+      "version": "10.0.22631",
+      "build": "22631",
+      "architecture": "64-bit",
+      "last_boot_local": "2026-08-11T08:19:33.5000000+09:00"
+    },
+    "directx": [
+      "DirectX 12"
+    ],
+    "wddm": [
+      "WDDM 3.1"
+    ],
+    "feature_levels": [
+      "12_2,12_1,12_0,11_1,11_0,10_1,10_0,9_3,9_2,9_1"
+    ],
+    "gpus": [
+      {
+        "index": "0",
+        "name": "NVIDIA GeForce RTX 3090",
+        "pci_bus_id": "00000000:01:00.0",
+        "pci_device_id": "0x220410DE",
+        "driver_version": "591.86",
+        "display_active": "Enabled",
+        "memory_total_mib": "24576",
+        "power_limit_w": "210.00"
+      },
+      {
+        "index": "1",
+        "name": "NVIDIA GeForce RTX 2070",
+        "pci_bus_id": "00000000:08:00.0",
+        "pci_device_id": "0x1F0210DE",
+        "driver_version": "591.86",
+        "display_active": "Enabled",
+        "memory_total_mib": "8192",
+        "power_limit_w": "131.25"
+      }
+    ],
+    "display_paths": [
+      {
+        "display_name": "\\\\.\\DISPLAY1",
+        "adapter_name": "NVIDIA GeForce RTX 3090",
+        "adapter_state_flags": 1,
+        "monitor_description": "ViewSonic VX3276-FHD",
+        "monitor_state_flags": 3
+      },
+      {
+        "display_name": "\\\\.\\DISPLAY2",
+        "adapter_name": "NVIDIA GeForce RTX 3090",
+        "adapter_state_flags": 5,
+        "monitor_description": "ViewSonic VX3276-FHD",
+        "monitor_state_flags": 3
+      },
+      {
+        "display_name": "\\\\.\\DISPLAY3",
+        "adapter_name": "NVIDIA GeForce RTX 3090",
+        "adapter_state_flags": 1,
+        "monitor_description": "ViewSonic VX3276-FHD",
+        "monitor_state_flags": 3
+      },
+      {
+        "display_name": "\\\\.\\DISPLAY4",
+        "adapter_name": "NVIDIA GeForce RTX 3090",
+        "adapter_state_flags": 1,
+        "monitor_description": "Generic PnP Monitor",
+        "monitor_state_flags": 3
+      },
+      {
+        "display_name": "\\\\.\\DISPLAY5",
+        "adapter_name": "NVIDIA GeForce RTX 2070",
+        "adapter_state_flags": 1,
+        "monitor_description": "Generic PnP Monitor",
+        "monitor_state_flags": 3
+      },
+      {
+        "display_name": "\\\\.\\DISPLAY6",
+        "adapter_name": "NVIDIA GeForce RTX 2070",
+        "adapter_state_flags": 1,
+        "monitor_description": "Generic PnP Monitor",
+        "monitor_state_flags": 3
+      }
+    ],
+    "rtx_2070_first_install_local": "08/11/2026 08:17:20",
+    "physical_cable_identity": "not independently verified; Windows maps active outputs to both GPUs"
+  },
+  "timeline": {
+    "rtx_2070_first_install_local": "08/11/2026 08:17:20",
+    "windows_last_boot_local": "2026-08-11T08:19:33.5000000+09:00",
+    "phase_artifacts": [
+      {
+        "phase": "6DT",
+        "path": "artifacts\\phase6dt-reference-audit-2",
+        "file_count": 159,
+        "earliest_local": "2026-08-11T08:35:17.8556976+09:00",
+        "latest_local": "2026-08-11T09:08:33.7252229+09:00"
+      },
+      {
+        "phase": "6DU",
+        "path": "artifacts\\phase6du-static-cylinder-1",
+        "file_count": 8,
+        "earliest_local": "2026-08-11T09:36:55.0659806+09:00",
+        "latest_local": "2026-08-11T09:37:21.0257318+09:00"
+      },
+      {
+        "phase": "6DV",
+        "path": "artifacts\\phase6dv-stage-open-classification-1",
+        "file_count": 12,
+        "earliest_local": "2026-08-11T09:53:05.0709941+09:00",
+        "latest_local": "2026-08-11T10:15:50.0924588+09:00"
+      }
+    ],
+    "classification": "Phase 6DT, 6DU, and 6DV artifacts all postdate RTX 2070 installation and the full reboot"
+  },
+  "historical_phase_device_evidence": [
+    {
+      "phase": "6DT",
+      "artifact_root": "artifacts/phase6dt-reference-audit-2",
+      "kit_log_count": 22,
+      "logs_with_device_evidence": 22,
+      "active_gpu_names": [
+        "NVIDIA GeForce RTX 3090"
+      ],
+      "cuda_device_indices": [
+        "0"
+      ]
+    },
+    {
+      "phase": "6DU",
+      "artifact_root": "artifacts/phase6du-static-cylinder-1",
+      "kit_log_count": 1,
+      "logs_with_device_evidence": 1,
+      "active_gpu_names": [
+        "NVIDIA GeForce RTX 3090"
+      ],
+      "cuda_device_indices": [
+        "0"
+      ]
+    },
+    {
+      "phase": "6DV",
+      "artifact_root": "artifacts/phase6dv-stage-open-classification-1",
+      "kit_log_count": 3,
+      "logs_with_device_evidence": 3,
+      "active_gpu_names": [
+        "NVIDIA GeForce RTX 3090"
+      ],
+      "cuda_device_indices": [
+        "0"
+      ]
+    }
+  ],
+  "formal_runs": [
+    {
+      "condition": "kit_only",
+      "cache_kind": "normal",
+      "status": "ok",
+      "duration_seconds": 0.440717,
+      "process_exit_code": 0,
+      "timed_out": false,
+      "final_durable_marker": "shutdown_requested",
+      "markers": [
+        "kit_started",
+        "kit_only_complete",
+        "shutdown_requested"
+      ],
+      "renderer_frame_complete": false,
+      "flow_extension_loaded": false,
+      "flow_simulation_started": false,
+      "stage_close_complete": false,
+      "renderer_drain_complete": false,
+      "plugin_shutdown_observed": false,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "automatic_upload_attempt_count": 0,
+      "crash_registry_unchanged": true,
+      "crash_upload_contract": {
+        "app_startup_upload_disabled": true,
+        "old_dump_upload_skipped": true,
+        "upload_url_empty": true,
+        "privacy_opt_out_file": true,
+        "preserve_dump_requested": true
+      },
+      "production_changed": false,
+      "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "gpu_before": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1771",
+          "utilization_percent": "6",
+          "power_w": "138.76",
+          "temperature_c": "62"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "0",
+          "power_w": "37.92",
+          "temperature_c": "48"
+        }
+      ],
+      "gpu_after": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1772",
+          "utilization_percent": "3",
+          "power_w": "138.62",
+          "temperature_c": "62"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "0",
+          "power_w": "37.83",
+          "temperature_c": "48"
+        }
+      ],
+      "selected_device": {
+        "active_gpu": null,
+        "cuda_device_index": null,
+        "hydra_device_mask": null,
+        "viewport_device": null,
+        "graph_cuda_device_ordinal": null,
+        "primary_display_log": null
+      },
+      "effective_cache": "existing_user_cache",
+      "kit_build": "110.2.0+feature.342835.698af100.gl",
+      "extensions": {
+        "omni.hydra.rtx": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.hydra.usdrt_delegate": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.flowusd": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx.stageupdate": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        }
+      }
+    },
+    {
+      "condition": "openusd_empty",
+      "cache_kind": "normal",
+      "status": "ok",
+      "duration_seconds": 0.9254,
+      "process_exit_code": 0,
+      "timed_out": false,
+      "final_durable_marker": "shutdown_requested",
+      "markers": [
+        "kit_started",
+        "stage_create_started",
+        "stage_create_complete",
+        "pure_openusd_open_started",
+        "openusd_only_complete",
+        "shutdown_requested"
+      ],
+      "renderer_frame_complete": false,
+      "flow_extension_loaded": false,
+      "flow_simulation_started": false,
+      "stage_close_complete": false,
+      "renderer_drain_complete": false,
+      "plugin_shutdown_observed": false,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "automatic_upload_attempt_count": 0,
+      "crash_registry_unchanged": true,
+      "crash_upload_contract": {
+        "app_startup_upload_disabled": true,
+        "old_dump_upload_skipped": true,
+        "upload_url_empty": true,
+        "privacy_opt_out_file": true,
+        "preserve_dump_requested": true
+      },
+      "production_changed": false,
+      "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "gpu_before": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1772",
+          "utilization_percent": "3",
+          "power_w": "138.49",
+          "temperature_c": "62"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "0",
+          "power_w": "37.83",
+          "temperature_c": "48"
+        }
+      ],
+      "gpu_after": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1771",
+          "utilization_percent": "3",
+          "power_w": "138.18",
+          "temperature_c": "62"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "0",
+          "power_w": "37.88",
+          "temperature_c": "48"
+        }
+      ],
+      "selected_device": {
+        "active_gpu": null,
+        "cuda_device_index": null,
+        "hydra_device_mask": null,
+        "viewport_device": null,
+        "graph_cuda_device_ordinal": null,
+        "primary_display_log": null
+      },
+      "effective_cache": "existing_user_cache",
+      "kit_build": "110.2.0+feature.342835.698af100.gl",
+      "extensions": {
+        "omni.hydra.rtx": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.hydra.usdrt_delegate": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.flowusd": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx.stageupdate": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        }
+      }
+    },
+    {
+      "condition": "rtx_empty",
+      "cache_kind": "normal",
+      "status": "ok",
+      "duration_seconds": 15.361573,
+      "process_exit_code": 0,
+      "timed_out": false,
+      "final_durable_marker": "shutdown_requested",
+      "markers": [
+        "kit_started",
+        "kit_updates_complete",
+        "stage_create_started",
+        "stage_create_complete",
+        "pure_openusd_open_started",
+        "pure_openusd_open_complete",
+        "renderer_readiness_started",
+        "renderer_readiness_complete",
+        "usd_context_connection_started",
+        "usd_context_connection_complete",
+        "hydra_delegate_connection_observed",
+        "first_renderer_update_started",
+        "first_renderer_update_complete",
+        "first_viewport_frame_started",
+        "first_viewport_frame_complete",
+        "condition_complete",
+        "timeline_stopped",
+        "stage_close_started",
+        "stage_close_complete",
+        "renderer_drain_started",
+        "renderer_drain_complete",
+        "shutdown_requested"
+      ],
+      "renderer_frame_complete": true,
+      "flow_extension_loaded": false,
+      "flow_simulation_started": false,
+      "stage_close_complete": true,
+      "renderer_drain_complete": true,
+      "plugin_shutdown_observed": true,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "automatic_upload_attempt_count": 0,
+      "crash_registry_unchanged": true,
+      "crash_upload_contract": {
+        "app_startup_upload_disabled": true,
+        "old_dump_upload_skipped": true,
+        "upload_url_empty": true,
+        "privacy_opt_out_file": true,
+        "preserve_dump_requested": true
+      },
+      "production_changed": false,
+      "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "gpu_before": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1771",
+          "utilization_percent": "3",
+          "power_w": "138.18",
+          "temperature_c": "62"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "1",
+          "power_w": "37.90",
+          "temperature_c": "48"
+        }
+      ],
+      "gpu_after": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1758",
+          "utilization_percent": "3",
+          "power_w": "137.09",
+          "temperature_c": "61"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "1",
+          "power_w": "37.81",
+          "temperature_c": "48"
+        }
+      ],
+      "selected_device": {
+        "active_gpu": "NVIDIA GeForce RTX 3090",
+        "cuda_device_index": "0",
+        "hydra_device_mask": "1",
+        "viewport_device": "0",
+        "graph_cuda_device_ordinal": null,
+        "primary_display_log": "2026-08-11T01:50:17Z [2,997ms] [Info] [omni.kit.renderer.plugin] Reducing '/app/runLoops/present/rateLimitFrequency' from 120.000000 to primary monitor's refresh rate of 59.000000 ('ViewSonic VX3276-FHD', '\\\\.\\DISPLAY2\\Monitor0')"
+      },
+      "effective_cache": "existing_user_cache",
+      "kit_build": "110.2.0+feature.342835.698af100.gl",
+      "extensions": {
+        "omni.hydra.rtx": {
+          "enabled": true,
+          "id": "omni.hydra.rtx-1.0.4",
+          "version": "1.0.4"
+        },
+        "omni.hydra.usdrt_delegate": {
+          "enabled": true,
+          "id": "omni.hydra.usdrt_delegate-7.5.2",
+          "version": "7.5.2"
+        },
+        "omni.flowusd": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx.stageupdate": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        }
+      }
+    },
+    {
+      "condition": "box_openusd",
+      "cache_kind": "normal",
+      "status": "ok",
+      "duration_seconds": 0.966515,
+      "process_exit_code": 0,
+      "timed_out": false,
+      "final_durable_marker": "shutdown_requested",
+      "markers": [
+        "kit_started",
+        "pure_openusd_open_started",
+        "openusd_only_complete",
+        "shutdown_requested"
+      ],
+      "renderer_frame_complete": false,
+      "flow_extension_loaded": false,
+      "flow_simulation_started": false,
+      "stage_close_complete": false,
+      "renderer_drain_complete": false,
+      "plugin_shutdown_observed": false,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "automatic_upload_attempt_count": 0,
+      "crash_registry_unchanged": true,
+      "crash_upload_contract": {
+        "app_startup_upload_disabled": true,
+        "old_dump_upload_skipped": true,
+        "upload_url_empty": true,
+        "privacy_opt_out_file": true,
+        "preserve_dump_requested": true
+      },
+      "production_changed": false,
+      "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "gpu_before": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1762",
+          "utilization_percent": "3",
+          "power_w": "138.40",
+          "temperature_c": "61"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "1",
+          "power_w": "37.79",
+          "temperature_c": "48"
+        }
+      ],
+      "gpu_after": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1774",
+          "utilization_percent": "3",
+          "power_w": "138.11",
+          "temperature_c": "61"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "1",
+          "power_w": "37.79",
+          "temperature_c": "48"
+        }
+      ],
+      "selected_device": {
+        "active_gpu": null,
+        "cuda_device_index": null,
+        "hydra_device_mask": null,
+        "viewport_device": null,
+        "graph_cuda_device_ordinal": null,
+        "primary_display_log": null
+      },
+      "effective_cache": "existing_user_cache",
+      "kit_build": "110.2.0+feature.342835.698af100.gl",
+      "extensions": {
+        "omni.hydra.rtx": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.hydra.usdrt_delegate": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.flowusd": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx.stageupdate": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        }
+      }
+    },
+    {
+      "condition": "box_rtx",
+      "cache_kind": "normal",
+      "status": "ok",
+      "duration_seconds": 13.136624,
+      "process_exit_code": 0,
+      "timed_out": false,
+      "final_durable_marker": "shutdown_requested",
+      "markers": [
+        "kit_started",
+        "kit_updates_complete",
+        "pure_openusd_open_started",
+        "pure_openusd_open_complete",
+        "renderer_readiness_started",
+        "renderer_readiness_complete",
+        "usd_context_connection_started",
+        "usd_context_connection_complete",
+        "hydra_delegate_connection_observed",
+        "first_renderer_update_started",
+        "first_renderer_update_complete",
+        "first_viewport_frame_started",
+        "first_viewport_frame_complete",
+        "condition_complete",
+        "timeline_stopped",
+        "stage_close_started",
+        "stage_close_complete",
+        "renderer_drain_started",
+        "renderer_drain_complete",
+        "shutdown_requested"
+      ],
+      "renderer_frame_complete": true,
+      "flow_extension_loaded": false,
+      "flow_simulation_started": false,
+      "stage_close_complete": true,
+      "renderer_drain_complete": true,
+      "plugin_shutdown_observed": true,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "automatic_upload_attempt_count": 0,
+      "crash_registry_unchanged": true,
+      "crash_upload_contract": {
+        "app_startup_upload_disabled": true,
+        "old_dump_upload_skipped": true,
+        "upload_url_empty": true,
+        "privacy_opt_out_file": true,
+        "preserve_dump_requested": true
+      },
+      "production_changed": false,
+      "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "gpu_before": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1774",
+          "utilization_percent": "3",
+          "power_w": "138.10",
+          "temperature_c": "61"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "1",
+          "power_w": "37.82",
+          "temperature_c": "48"
+        }
+      ],
+      "gpu_after": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1767",
+          "utilization_percent": "3",
+          "power_w": "137.17",
+          "temperature_c": "61"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "0",
+          "power_w": "38.01",
+          "temperature_c": "48"
+        }
+      ],
+      "selected_device": {
+        "active_gpu": "NVIDIA GeForce RTX 3090",
+        "cuda_device_index": "0",
+        "hydra_device_mask": "1",
+        "viewport_device": "0",
+        "graph_cuda_device_ordinal": null,
+        "primary_display_log": "2026-08-11T01:50:46Z [1,431ms] [Info] [omni.kit.renderer.plugin] Reducing '/app/runLoops/present/rateLimitFrequency' from 120.000000 to primary monitor's refresh rate of 59.000000 ('ViewSonic VX3276-FHD', '\\\\.\\DISPLAY2\\Monitor0')"
+      },
+      "effective_cache": "existing_user_cache",
+      "kit_build": "110.2.0+feature.342835.698af100.gl",
+      "extensions": {
+        "omni.hydra.rtx": {
+          "enabled": true,
+          "id": "omni.hydra.rtx-1.0.4",
+          "version": "1.0.4"
+        },
+        "omni.hydra.usdrt_delegate": {
+          "enabled": true,
+          "id": "omni.hydra.usdrt_delegate-7.5.2",
+          "version": "7.5.2"
+        },
+        "omni.flowusd": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx.stageupdate": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        }
+      }
+    },
+    {
+      "condition": "flow_load",
+      "cache_kind": "normal",
+      "status": "ok",
+      "duration_seconds": 5.719924,
+      "process_exit_code": 0,
+      "timed_out": false,
+      "final_durable_marker": "shutdown_requested",
+      "markers": [
+        "kit_started",
+        "kit_updates_complete",
+        "stage_create_started",
+        "stage_create_complete",
+        "pure_openusd_open_started",
+        "pure_openusd_open_complete",
+        "flow_extension_load_verified",
+        "renderer_readiness_started",
+        "renderer_readiness_complete",
+        "flow_loaded_without_simulation",
+        "timeline_stopped",
+        "renderer_drain_started",
+        "renderer_drain_complete",
+        "shutdown_requested"
+      ],
+      "renderer_frame_complete": false,
+      "flow_extension_loaded": true,
+      "flow_simulation_started": false,
+      "stage_close_complete": false,
+      "renderer_drain_complete": true,
+      "plugin_shutdown_observed": true,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "automatic_upload_attempt_count": 0,
+      "crash_registry_unchanged": true,
+      "crash_upload_contract": {
+        "app_startup_upload_disabled": true,
+        "old_dump_upload_skipped": true,
+        "upload_url_empty": true,
+        "privacy_opt_out_file": true,
+        "preserve_dump_requested": true
+      },
+      "production_changed": false,
+      "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "gpu_before": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1846",
+          "utilization_percent": "2",
+          "power_w": "138.11",
+          "temperature_c": "61"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "0",
+          "power_w": "37.70",
+          "temperature_c": "48"
+        }
+      ],
+      "gpu_after": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1845",
+          "utilization_percent": "3",
+          "power_w": "137.26",
+          "temperature_c": "61"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "0",
+          "power_w": "37.53",
+          "temperature_c": "48"
+        }
+      ],
+      "selected_device": {
+        "active_gpu": "NVIDIA GeForce RTX 3090",
+        "cuda_device_index": "0",
+        "hydra_device_mask": null,
+        "viewport_device": null,
+        "graph_cuda_device_ordinal": null,
+        "primary_display_log": "2026-08-11T01:51:20Z [3,605ms] [Info] [omni.kit.renderer.plugin] Reducing '/app/runLoops/present/rateLimitFrequency' from 120.000000 to primary monitor's refresh rate of 59.000000 ('ViewSonic VX3276-FHD', '\\\\.\\DISPLAY2\\Monitor0')"
+      },
+      "effective_cache": "existing_user_cache",
+      "kit_build": "110.2.0+feature.342835.698af100.gl",
+      "extensions": {
+        "omni.hydra.rtx": {
+          "enabled": true,
+          "id": "omni.hydra.rtx-1.0.4",
+          "version": "1.0.4"
+        },
+        "omni.hydra.usdrt_delegate": {
+          "enabled": true,
+          "id": "omni.hydra.usdrt_delegate-7.5.2",
+          "version": "7.5.2"
+        },
+        "omni.flowusd": {
+          "enabled": true,
+          "id": "omni.flowusd-110.0.0",
+          "version": "110.0.0"
+        },
+        "omni.physx": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx.stageupdate": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        }
+      }
+    },
+    {
+      "condition": "flow_sim",
+      "cache_kind": "normal",
+      "status": "ok",
+      "duration_seconds": 26.368826,
+      "process_exit_code": 0,
+      "timed_out": false,
+      "final_durable_marker": "shutdown_requested",
+      "markers": [
+        "kit_started",
+        "kit_updates_complete",
+        "pure_openusd_open_started",
+        "pure_openusd_open_complete",
+        "flow_extension_load_verified",
+        "renderer_readiness_started",
+        "renderer_readiness_complete",
+        "usd_context_connection_started",
+        "usd_context_connection_complete",
+        "hydra_delegate_connection_observed",
+        "first_renderer_update_started",
+        "first_renderer_update_complete",
+        "first_viewport_frame_started",
+        "first_viewport_frame_complete",
+        "flow_simulation_starting",
+        "flow_simulation_started",
+        "condition_complete",
+        "timeline_stopped",
+        "stage_close_started",
+        "stage_close_complete",
+        "renderer_drain_started",
+        "renderer_drain_complete",
+        "shutdown_requested"
+      ],
+      "renderer_frame_complete": true,
+      "flow_extension_loaded": true,
+      "flow_simulation_started": true,
+      "stage_close_complete": true,
+      "renderer_drain_complete": true,
+      "plugin_shutdown_observed": true,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "automatic_upload_attempt_count": 0,
+      "crash_registry_unchanged": true,
+      "crash_upload_contract": {
+        "app_startup_upload_disabled": true,
+        "old_dump_upload_skipped": true,
+        "upload_url_empty": true,
+        "privacy_opt_out_file": true,
+        "preserve_dump_requested": true
+      },
+      "production_changed": false,
+      "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "gpu_before": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1845",
+          "utilization_percent": "2",
+          "power_w": "137.62",
+          "temperature_c": "61"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "0",
+          "power_w": "37.76",
+          "temperature_c": "48"
+        }
+      ],
+      "gpu_after": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1762",
+          "utilization_percent": "3",
+          "power_w": "137.35",
+          "temperature_c": "62"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "0",
+          "power_w": "37.88",
+          "temperature_c": "48"
+        }
+      ],
+      "selected_device": {
+        "active_gpu": "NVIDIA GeForce RTX 3090",
+        "cuda_device_index": "0",
+        "hydra_device_mask": "1",
+        "viewport_device": "0",
+        "graph_cuda_device_ordinal": "0",
+        "primary_display_log": "2026-08-11T01:51:24Z [1,472ms] [Info] [omni.kit.renderer.plugin] Reducing '/app/runLoops/present/rateLimitFrequency' from 120.000000 to primary monitor's refresh rate of 59.000000 ('ViewSonic VX3276-FHD', '\\\\.\\DISPLAY2\\Monitor0')"
+      },
+      "effective_cache": "existing_user_cache",
+      "kit_build": "110.2.0+feature.342835.698af100.gl",
+      "extensions": {
+        "omni.hydra.rtx": {
+          "enabled": true,
+          "id": "omni.hydra.rtx-1.0.4",
+          "version": "1.0.4"
+        },
+        "omni.hydra.usdrt_delegate": {
+          "enabled": true,
+          "id": "omni.hydra.usdrt_delegate-7.5.2",
+          "version": "7.5.2"
+        },
+        "omni.flowusd": {
+          "enabled": true,
+          "id": "omni.flowusd-110.0.0",
+          "version": "110.0.0"
+        },
+        "omni.physx": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx.stageupdate": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        }
+      }
+    },
+    {
+      "condition": "kit_only",
+      "cache_kind": "isolated",
+      "status": "ok",
+      "duration_seconds": 0.442416,
+      "process_exit_code": 0,
+      "timed_out": false,
+      "final_durable_marker": "shutdown_requested",
+      "markers": [
+        "kit_started",
+        "kit_only_complete",
+        "shutdown_requested"
+      ],
+      "renderer_frame_complete": false,
+      "flow_extension_loaded": false,
+      "flow_simulation_started": false,
+      "stage_close_complete": false,
+      "renderer_drain_complete": false,
+      "plugin_shutdown_observed": false,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "automatic_upload_attempt_count": 0,
+      "crash_registry_unchanged": true,
+      "crash_upload_contract": {
+        "app_startup_upload_disabled": true,
+        "old_dump_upload_skipped": true,
+        "upload_url_empty": true,
+        "privacy_opt_out_file": true,
+        "preserve_dump_requested": true
+      },
+      "production_changed": false,
+      "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "gpu_before": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1768",
+          "utilization_percent": "3",
+          "power_w": "138.62",
+          "temperature_c": "62"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "1",
+          "power_w": "37.72",
+          "temperature_c": "48"
+        }
+      ],
+      "gpu_after": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1852",
+          "utilization_percent": "3",
+          "power_w": "138.47",
+          "temperature_c": "62"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "1",
+          "power_w": "37.91",
+          "temperature_c": "48"
+        }
+      ],
+      "selected_device": {
+        "active_gpu": null,
+        "cuda_device_index": null,
+        "hydra_device_mask": null,
+        "viewport_device": null,
+        "graph_cuda_device_ordinal": null,
+        "primary_display_log": null
+      },
+      "effective_cache": "new_empty_isolated_cache",
+      "kit_build": "110.2.0+feature.342835.698af100.gl",
+      "extensions": {
+        "omni.hydra.rtx": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.hydra.usdrt_delegate": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.flowusd": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx.stageupdate": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        }
+      }
+    },
+    {
+      "condition": "openusd_empty",
+      "cache_kind": "isolated",
+      "status": "ok",
+      "duration_seconds": 0.941914,
+      "process_exit_code": 0,
+      "timed_out": false,
+      "final_durable_marker": "shutdown_requested",
+      "markers": [
+        "kit_started",
+        "stage_create_started",
+        "stage_create_complete",
+        "pure_openusd_open_started",
+        "openusd_only_complete",
+        "shutdown_requested"
+      ],
+      "renderer_frame_complete": false,
+      "flow_extension_loaded": false,
+      "flow_simulation_started": false,
+      "stage_close_complete": false,
+      "renderer_drain_complete": false,
+      "plugin_shutdown_observed": false,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "automatic_upload_attempt_count": 0,
+      "crash_registry_unchanged": true,
+      "crash_upload_contract": {
+        "app_startup_upload_disabled": true,
+        "old_dump_upload_skipped": true,
+        "upload_url_empty": true,
+        "privacy_opt_out_file": true,
+        "preserve_dump_requested": true
+      },
+      "production_changed": false,
+      "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "gpu_before": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1851",
+          "utilization_percent": "3",
+          "power_w": "138.47",
+          "temperature_c": "62"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "1",
+          "power_w": "37.82",
+          "temperature_c": "48"
+        }
+      ],
+      "gpu_after": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1851",
+          "utilization_percent": "3",
+          "power_w": "138.63",
+          "temperature_c": "62"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "0",
+          "power_w": "37.80",
+          "temperature_c": "48"
+        }
+      ],
+      "selected_device": {
+        "active_gpu": null,
+        "cuda_device_index": null,
+        "hydra_device_mask": null,
+        "viewport_device": null,
+        "graph_cuda_device_ordinal": null,
+        "primary_display_log": null
+      },
+      "effective_cache": "new_empty_isolated_cache",
+      "kit_build": "110.2.0+feature.342835.698af100.gl",
+      "extensions": {
+        "omni.hydra.rtx": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.hydra.usdrt_delegate": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.flowusd": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx.stageupdate": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        }
+      }
+    },
+    {
+      "condition": "rtx_empty",
+      "cache_kind": "isolated",
+      "status": "ok",
+      "duration_seconds": 31.392568,
+      "process_exit_code": 0,
+      "timed_out": false,
+      "final_durable_marker": "shutdown_requested",
+      "markers": [
+        "kit_started",
+        "kit_updates_complete",
+        "stage_create_started",
+        "stage_create_complete",
+        "pure_openusd_open_started",
+        "pure_openusd_open_complete",
+        "renderer_readiness_started",
+        "renderer_readiness_complete",
+        "usd_context_connection_started",
+        "usd_context_connection_complete",
+        "hydra_delegate_connection_observed",
+        "first_renderer_update_started",
+        "first_renderer_update_complete",
+        "first_viewport_frame_started",
+        "first_viewport_frame_complete",
+        "condition_complete",
+        "timeline_stopped",
+        "stage_close_started",
+        "stage_close_complete",
+        "renderer_drain_started",
+        "renderer_drain_complete",
+        "shutdown_requested"
+      ],
+      "renderer_frame_complete": true,
+      "flow_extension_loaded": false,
+      "flow_simulation_started": false,
+      "stage_close_complete": true,
+      "renderer_drain_complete": true,
+      "plugin_shutdown_observed": true,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "automatic_upload_attempt_count": 0,
+      "crash_registry_unchanged": true,
+      "crash_upload_contract": {
+        "app_startup_upload_disabled": true,
+        "old_dump_upload_skipped": true,
+        "upload_url_empty": true,
+        "privacy_opt_out_file": true,
+        "preserve_dump_requested": true
+      },
+      "production_changed": false,
+      "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "gpu_before": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1851",
+          "utilization_percent": "3",
+          "power_w": "138.63",
+          "temperature_c": "62"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "0",
+          "power_w": "37.88",
+          "temperature_c": "48"
+        }
+      ],
+      "gpu_after": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1795",
+          "utilization_percent": "3",
+          "power_w": "137.37",
+          "temperature_c": "61"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "2",
+          "power_w": "37.76",
+          "temperature_c": "48"
+        }
+      ],
+      "selected_device": {
+        "active_gpu": "NVIDIA GeForce RTX 3090",
+        "cuda_device_index": "0",
+        "hydra_device_mask": "1",
+        "viewport_device": "0",
+        "graph_cuda_device_ordinal": null,
+        "primary_display_log": "2026-08-11T01:52:09Z [1,403ms] [Info] [omni.kit.renderer.plugin] Reducing '/app/runLoops/present/rateLimitFrequency' from 120.000000 to primary monitor's refresh rate of 59.000000 ('ViewSonic VX3276-FHD', '\\\\.\\DISPLAY2\\Monitor0')"
+      },
+      "effective_cache": "new_empty_isolated_cache",
+      "kit_build": "110.2.0+feature.342835.698af100.gl",
+      "extensions": {
+        "omni.hydra.rtx": {
+          "enabled": true,
+          "id": "omni.hydra.rtx-1.0.4",
+          "version": "1.0.4"
+        },
+        "omni.hydra.usdrt_delegate": {
+          "enabled": true,
+          "id": "omni.hydra.usdrt_delegate-7.5.2",
+          "version": "7.5.2"
+        },
+        "omni.flowusd": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx.stageupdate": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        }
+      }
+    },
+    {
+      "condition": "box_openusd",
+      "cache_kind": "isolated",
+      "status": "ok",
+      "duration_seconds": 0.959006,
+      "process_exit_code": 0,
+      "timed_out": false,
+      "final_durable_marker": "shutdown_requested",
+      "markers": [
+        "kit_started",
+        "pure_openusd_open_started",
+        "openusd_only_complete",
+        "shutdown_requested"
+      ],
+      "renderer_frame_complete": false,
+      "flow_extension_loaded": false,
+      "flow_simulation_started": false,
+      "stage_close_complete": false,
+      "renderer_drain_complete": false,
+      "plugin_shutdown_observed": false,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "automatic_upload_attempt_count": 0,
+      "crash_registry_unchanged": true,
+      "crash_upload_contract": {
+        "app_startup_upload_disabled": true,
+        "old_dump_upload_skipped": true,
+        "upload_url_empty": true,
+        "privacy_opt_out_file": true,
+        "preserve_dump_requested": true
+      },
+      "production_changed": false,
+      "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "gpu_before": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1804",
+          "utilization_percent": "6",
+          "power_w": "137.90",
+          "temperature_c": "61"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "2",
+          "power_w": "37.82",
+          "temperature_c": "48"
+        }
+      ],
+      "gpu_after": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1804",
+          "utilization_percent": "3",
+          "power_w": "138.51",
+          "temperature_c": "61"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "0",
+          "power_w": "37.85",
+          "temperature_c": "48"
+        }
+      ],
+      "selected_device": {
+        "active_gpu": null,
+        "cuda_device_index": null,
+        "hydra_device_mask": null,
+        "viewport_device": null,
+        "graph_cuda_device_ordinal": null,
+        "primary_display_log": null
+      },
+      "effective_cache": "new_empty_isolated_cache",
+      "kit_build": "110.2.0+feature.342835.698af100.gl",
+      "extensions": {
+        "omni.hydra.rtx": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.hydra.usdrt_delegate": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.flowusd": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx.stageupdate": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        }
+      }
+    },
+    {
+      "condition": "box_rtx",
+      "cache_kind": "isolated",
+      "status": "ok",
+      "duration_seconds": 34.155175,
+      "process_exit_code": 0,
+      "timed_out": false,
+      "final_durable_marker": "shutdown_requested",
+      "markers": [
+        "kit_started",
+        "kit_updates_complete",
+        "pure_openusd_open_started",
+        "pure_openusd_open_complete",
+        "renderer_readiness_started",
+        "renderer_readiness_complete",
+        "usd_context_connection_started",
+        "usd_context_connection_complete",
+        "hydra_delegate_connection_observed",
+        "first_renderer_update_started",
+        "first_renderer_update_complete",
+        "first_viewport_frame_started",
+        "first_viewport_frame_complete",
+        "condition_complete",
+        "timeline_stopped",
+        "stage_close_started",
+        "stage_close_complete",
+        "renderer_drain_started",
+        "renderer_drain_complete",
+        "shutdown_requested"
+      ],
+      "renderer_frame_complete": true,
+      "flow_extension_loaded": false,
+      "flow_simulation_started": false,
+      "stage_close_complete": true,
+      "renderer_drain_complete": true,
+      "plugin_shutdown_observed": true,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "automatic_upload_attempt_count": 0,
+      "crash_registry_unchanged": true,
+      "crash_upload_contract": {
+        "app_startup_upload_disabled": true,
+        "old_dump_upload_skipped": true,
+        "upload_url_empty": true,
+        "privacy_opt_out_file": true,
+        "preserve_dump_requested": true
+      },
+      "production_changed": false,
+      "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "gpu_before": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1804",
+          "utilization_percent": "3",
+          "power_w": "138.51",
+          "temperature_c": "61"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "0",
+          "power_w": "37.84",
+          "temperature_c": "48"
+        }
+      ],
+      "gpu_after": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1771",
+          "utilization_percent": "3",
+          "power_w": "137.18",
+          "temperature_c": "61"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "1",
+          "power_w": "37.78",
+          "temperature_c": "48"
+        }
+      ],
+      "selected_device": {
+        "active_gpu": "NVIDIA GeForce RTX 3090",
+        "cuda_device_index": "0",
+        "hydra_device_mask": "1",
+        "viewport_device": "0",
+        "graph_cuda_device_ordinal": null,
+        "primary_display_log": "2026-08-11T01:52:42Z [1,361ms] [Info] [omni.kit.renderer.plugin] Reducing '/app/runLoops/present/rateLimitFrequency' from 120.000000 to primary monitor's refresh rate of 59.000000 ('ViewSonic VX3276-FHD', '\\\\.\\DISPLAY2\\Monitor0')"
+      },
+      "effective_cache": "new_empty_isolated_cache",
+      "kit_build": "110.2.0+feature.342835.698af100.gl",
+      "extensions": {
+        "omni.hydra.rtx": {
+          "enabled": true,
+          "id": "omni.hydra.rtx-1.0.4",
+          "version": "1.0.4"
+        },
+        "omni.hydra.usdrt_delegate": {
+          "enabled": true,
+          "id": "omni.hydra.usdrt_delegate-7.5.2",
+          "version": "7.5.2"
+        },
+        "omni.flowusd": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx.stageupdate": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        }
+      }
+    },
+    {
+      "condition": "flow_load",
+      "cache_kind": "isolated",
+      "status": "ok",
+      "duration_seconds": 3.715521,
+      "process_exit_code": 0,
+      "timed_out": false,
+      "final_durable_marker": "shutdown_requested",
+      "markers": [
+        "kit_started",
+        "kit_updates_complete",
+        "stage_create_started",
+        "stage_create_complete",
+        "pure_openusd_open_started",
+        "pure_openusd_open_complete",
+        "flow_extension_load_verified",
+        "renderer_readiness_started",
+        "renderer_readiness_complete",
+        "flow_loaded_without_simulation",
+        "timeline_stopped",
+        "renderer_drain_started",
+        "renderer_drain_complete",
+        "shutdown_requested"
+      ],
+      "renderer_frame_complete": false,
+      "flow_extension_loaded": true,
+      "flow_simulation_started": false,
+      "stage_close_complete": false,
+      "renderer_drain_complete": true,
+      "plugin_shutdown_observed": true,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "automatic_upload_attempt_count": 0,
+      "crash_registry_unchanged": true,
+      "crash_upload_contract": {
+        "app_startup_upload_disabled": true,
+        "old_dump_upload_skipped": true,
+        "upload_url_empty": true,
+        "privacy_opt_out_file": true,
+        "preserve_dump_requested": true
+      },
+      "production_changed": false,
+      "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "gpu_before": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1772",
+          "utilization_percent": "3",
+          "power_w": "137.18",
+          "temperature_c": "61"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "1",
+          "power_w": "37.85",
+          "temperature_c": "48"
+        }
+      ],
+      "gpu_after": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1779",
+          "utilization_percent": "3",
+          "power_w": "137.39",
+          "temperature_c": "61"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "0",
+          "power_w": "37.81",
+          "temperature_c": "48"
+        }
+      ],
+      "selected_device": {
+        "active_gpu": "NVIDIA GeForce RTX 3090",
+        "cuda_device_index": "0",
+        "hydra_device_mask": null,
+        "viewport_device": null,
+        "graph_cuda_device_ordinal": null,
+        "primary_display_log": "2026-08-11T01:53:16Z [1,564ms] [Info] [omni.kit.renderer.plugin] Reducing '/app/runLoops/present/rateLimitFrequency' from 120.000000 to primary monitor's refresh rate of 59.000000 ('ViewSonic VX3276-FHD', '\\\\.\\DISPLAY2\\Monitor0')"
+      },
+      "effective_cache": "new_empty_isolated_cache",
+      "kit_build": "110.2.0+feature.342835.698af100.gl",
+      "extensions": {
+        "omni.hydra.rtx": {
+          "enabled": true,
+          "id": "omni.hydra.rtx-1.0.4",
+          "version": "1.0.4"
+        },
+        "omni.hydra.usdrt_delegate": {
+          "enabled": true,
+          "id": "omni.hydra.usdrt_delegate-7.5.2",
+          "version": "7.5.2"
+        },
+        "omni.flowusd": {
+          "enabled": true,
+          "id": "omni.flowusd-110.0.0",
+          "version": "110.0.0"
+        },
+        "omni.physx": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx.stageupdate": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        }
+      }
+    },
+    {
+      "condition": "flow_sim",
+      "cache_kind": "isolated",
+      "status": "ok",
+      "duration_seconds": 45.183462,
+      "process_exit_code": 0,
+      "timed_out": false,
+      "final_durable_marker": "shutdown_requested",
+      "markers": [
+        "kit_started",
+        "kit_updates_complete",
+        "pure_openusd_open_started",
+        "pure_openusd_open_complete",
+        "flow_extension_load_verified",
+        "renderer_readiness_started",
+        "renderer_readiness_complete",
+        "usd_context_connection_started",
+        "usd_context_connection_complete",
+        "hydra_delegate_connection_observed",
+        "first_renderer_update_started",
+        "first_renderer_update_complete",
+        "first_viewport_frame_started",
+        "first_viewport_frame_complete",
+        "flow_simulation_starting",
+        "flow_simulation_started",
+        "condition_complete",
+        "timeline_stopped",
+        "stage_close_started",
+        "stage_close_complete",
+        "renderer_drain_started",
+        "renderer_drain_complete",
+        "shutdown_requested"
+      ],
+      "renderer_frame_complete": true,
+      "flow_extension_loaded": true,
+      "flow_simulation_started": true,
+      "stage_close_complete": true,
+      "renderer_drain_complete": true,
+      "plugin_shutdown_observed": true,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "automatic_upload_attempt_count": 0,
+      "crash_registry_unchanged": true,
+      "crash_upload_contract": {
+        "app_startup_upload_disabled": true,
+        "old_dump_upload_skipped": true,
+        "upload_url_empty": true,
+        "privacy_opt_out_file": true,
+        "preserve_dump_requested": true
+      },
+      "production_changed": false,
+      "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+      "gpu_before": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1779",
+          "utilization_percent": "3",
+          "power_w": "137.39",
+          "temperature_c": "61"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "0",
+          "power_w": "37.89",
+          "temperature_c": "48"
+        }
+      ],
+      "gpu_after": [
+        {
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_used_mib": "1785",
+          "utilization_percent": "3",
+          "power_w": "137.60",
+          "temperature_c": "61"
+        },
+        {
+          "index": "1",
+          "name": "NVIDIA GeForce RTX 2070",
+          "memory_used_mib": "228",
+          "utilization_percent": "0",
+          "power_w": "37.89",
+          "temperature_c": "48"
+        }
+      ],
+      "selected_device": {
+        "active_gpu": "NVIDIA GeForce RTX 3090",
+        "cuda_device_index": "0",
+        "hydra_device_mask": "1",
+        "viewport_device": "0",
+        "graph_cuda_device_ordinal": "0",
+        "primary_display_log": "2026-08-11T01:53:20Z [1,666ms] [Info] [omni.kit.renderer.plugin] Reducing '/app/runLoops/present/rateLimitFrequency' from 120.000000 to primary monitor's refresh rate of 59.000000 ('ViewSonic VX3276-FHD', '\\\\.\\DISPLAY2\\Monitor0')"
+      },
+      "effective_cache": "new_empty_isolated_cache",
+      "kit_build": "110.2.0+feature.342835.698af100.gl",
+      "extensions": {
+        "omni.hydra.rtx": {
+          "enabled": true,
+          "id": "omni.hydra.rtx-1.0.4",
+          "version": "1.0.4"
+        },
+        "omni.hydra.usdrt_delegate": {
+          "enabled": true,
+          "id": "omni.hydra.usdrt_delegate-7.5.2",
+          "version": "7.5.2"
+        },
+        "omni.flowusd": {
+          "enabled": true,
+          "id": "omni.flowusd-110.0.0",
+          "version": "110.0.0"
+        },
+        "omni.physx": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        },
+        "omni.physx.stageupdate": {
+          "enabled": false,
+          "id": null,
+          "version": null
+        }
+      }
+    }
+  ],
+  "formal_gate": {
+    "processes": 14,
+    "normal_exit_count": 14,
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "all_production_hashes_unchanged": true,
+    "selected_gpu_names": [
+      "NVIDIA GeForce RTX 3090"
+    ],
+    "selected_cuda_indices": [
+      "0"
+    ]
+  },
+  "explicit_gpu_zero_control": {
+    "condition": "box_rtx",
+    "cache_kind": "normal",
+    "status": "ok",
+    "duration_seconds": 13.410718,
+    "process_exit_code": 0,
+    "timed_out": false,
+    "final_durable_marker": "shutdown_requested",
+    "markers": [
+      "kit_started",
+      "kit_updates_complete",
+      "pure_openusd_open_started",
+      "pure_openusd_open_complete",
+      "renderer_readiness_started",
+      "renderer_readiness_complete",
+      "usd_context_connection_started",
+      "usd_context_connection_complete",
+      "hydra_delegate_connection_observed",
+      "first_renderer_update_started",
+      "first_renderer_update_complete",
+      "first_viewport_frame_started",
+      "first_viewport_frame_complete",
+      "condition_complete",
+      "timeline_stopped",
+      "stage_close_started",
+      "stage_close_complete",
+      "renderer_drain_started",
+      "renderer_drain_complete",
+      "shutdown_requested"
+    ],
+    "renderer_frame_complete": true,
+    "flow_extension_loaded": false,
+    "flow_simulation_started": false,
+    "stage_close_complete": true,
+    "renderer_drain_complete": true,
+    "plugin_shutdown_observed": true,
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "crash_registry_unchanged": true,
+    "crash_upload_contract": {
+      "app_startup_upload_disabled": true,
+      "old_dump_upload_skipped": true,
+      "upload_url_empty": true,
+      "privacy_opt_out_file": true,
+      "preserve_dump_requested": true
+    },
+    "production_changed": false,
+    "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "gpu_before": [
+      {
+        "index": "0",
+        "name": "NVIDIA GeForce RTX 3090",
+        "memory_used_mib": "1781",
+        "utilization_percent": "3",
+        "power_w": "138.43",
+        "temperature_c": "61"
+      },
+      {
+        "index": "1",
+        "name": "NVIDIA GeForce RTX 2070",
+        "memory_used_mib": "228",
+        "utilization_percent": "0",
+        "power_w": "37.61",
+        "temperature_c": "48"
+      }
+    ],
+    "gpu_after": [
+      {
+        "index": "0",
+        "name": "NVIDIA GeForce RTX 3090",
+        "memory_used_mib": "1780",
+        "utilization_percent": "3",
+        "power_w": "137.35",
+        "temperature_c": "61"
+      },
+      {
+        "index": "1",
+        "name": "NVIDIA GeForce RTX 2070",
+        "memory_used_mib": "228",
+        "utilization_percent": "0",
+        "power_w": "37.77",
+        "temperature_c": "48"
+      }
+    ],
+    "selected_device": {
+      "active_gpu": "NVIDIA GeForce RTX 3090",
+      "cuda_device_index": "0",
+      "hydra_device_mask": "1",
+      "viewport_device": "0",
+      "graph_cuda_device_ordinal": null,
+      "primary_display_log": "2026-08-11T01:56:42Z [1,487ms] [Info] [omni.kit.renderer.plugin] Reducing '/app/runLoops/present/rateLimitFrequency' from 120.000000 to primary monitor's refresh rate of 59.000000 ('ViewSonic VX3276-FHD', '\\\\.\\DISPLAY2\\Monitor0')"
+    },
+    "effective_cache": "existing_user_cache",
+    "kit_build": "110.2.0+feature.342835.698af100.gl",
+    "extensions": {
+      "omni.hydra.rtx": {
+        "enabled": true,
+        "id": "omni.hydra.rtx-1.0.4",
+        "version": "1.0.4"
+      },
+      "omni.hydra.usdrt_delegate": {
+        "enabled": true,
+        "id": "omni.hydra.usdrt_delegate-7.5.2",
+        "version": "7.5.2"
+      },
+      "omni.flowusd": {
+        "enabled": false,
+        "id": null,
+        "version": null
+      },
+      "omni.physx": {
+        "enabled": false,
+        "id": null,
+        "version": null
+      },
+      "omni.physx.stageupdate": {
+        "enabled": false,
+        "id": null,
+        "version": null
+      }
+    }
+  },
+  "official_selection_evidence": {
+    "setting": "/renderer/activeGpu",
+    "local_runtime_evidence": "gpu.foundation.plugin.dll setting strings and omni.app.mini.kit",
+    "auto_and_explicit_gpu_zero_same_device": true,
+    "production_default_changed": false
+  },
+  "regressions": {
+    "release_build": {
+      "status": "ok",
+      "seconds": 6.25
+    },
+    "standard_suite": {
+      "status": "ok",
+      "processes": 8,
+      "tests_passed": 78,
+      "tests_total": 78,
+      "wall_seconds": 310.6
+    },
+    "phase0_rtx": {
+      "status": "ok",
+      "resolution": [
+        1280,
+        720
+      ]
+    },
+    "candidate_performance_apps": {
+      "status": "ok",
+      "app_count": 2,
+      "gpu": {
+        "name": "NVIDIA GeForce RTX 3090",
+        "driver": "591.86",
+        "power_limit_w": 210,
+        "enforced_power_limit_w": 210
+      }
+    },
+    "known_good_flow_minimal": {
+      "status": "ok"
+    },
+    "devlog_static": {
+      "status": "ok",
+      "local_reference_count": 589,
+      "missing_reference_count": 0,
+      "utf8_replacement_character_count": 0
+    },
+    "devlog_browser_render": {
+      "status": "unavailable",
+      "reason": "no browser binding in this session"
+    }
+  },
+  "classification": {
+    "observed": [
+      "RTX 3090 was selected as render/CUDA device 0 in every formal renderer run",
+      "Kit primary present display was DISPLAY2 on RTX 3090; no cross-adapter presentation was observed",
+      "all seven conditions exited normally with both existing and newly isolated cache directories",
+      "known-good Box reached first renderer frame, stage close, renderer drain, plugin shutdown, and OS exit",
+      "Flow extension load and known-good Flow simulation also exited normally"
+    ],
+    "strong_inference": [
+      "Phase 6DV's non-exit is more likely tied to its launcher/app composition or teardown ordering than to the current two-GPU configuration alone",
+      "the existing renderer cache is not required to obtain a normal lifecycle; isolated cache only increases cold startup time"
+    ],
+    "unconfirmed": [
+      "whether the RTX 2070 addition contributed to the historical Fabric crashes through a rare race or stale cache state",
+      "function-level cause of omni.fabric.plugin.dll+0xD6960",
+      "Flow 110.0.0 does not emit a separate public device-selection line; the Flow process used RTX/Hydra device mask 1 and graph CUDA ordinal 0",
+      "physical cable identity beyond Windows display-path mapping"
+    ]
+  },
+  "phase6du_restart": {
+    "qualified": true,
+    "scope": "next independent staged Box-to-Cylinder ablation only",
+    "direct_failed_condition_rerun": false,
+    "minimum_safe_start": "known-good static axis-aligned Flow-only Box Mesh, then one topology difference per process before any Cylinder hull retry"
+  },
+  "excluded_local_runs": {
+    "reason": "runner-development defects before the formal matrix; no native crash, dump, upload, device lost, or TDR",
+    "included_in_formal_population": false
+  },
+  "sensitive_local_artifacts_committed": false,
+  "latest_demo_changed": false
+}
