@@ -2982,6 +2982,17 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - Phase 6DUは次の独立Phaseでstatic Cylinder decompositionを起点に再開可能。Cylinder Hull、rotation、PhysX共用、dynamic transform、Phase 6DR統合、20本性能はまだ行わない。映像上のproduction変更がないため新動画とlatest demo更新は行わない。
 - Release build `6.80 s`、lifecycle contract `6 / 6`、Flow collider targeted test `1 / 1`・`0.073 s`、標準suite 8 process・`78 / 78`件・`305.9 s`（collapse `179.5 s`）が合格した。
 
+## Phase 6EA Kit shutdown residual process diagnosis
+
+### 2026-08-11: exact Phase 6DY stageでもGPU foundation shutdown境界に残留
+
+- Phase 6DY qualified stage `BC6572...D894D5F9`とPhase 6DZ regenerated axis `45CABF...CE26848`をread-only正規化し、差が生成元を追加したdocumentation 2表現だけであることを確認した。Geometry、topology、schema、approximation、transform、relationship、Prim順序、custom layer dataは一致する。
+- exact Phase 6DY stageを同じPhase 6DW runner/probe/app/cacheで1回実行した。OpenUSD、USD context、Hydra、first viewport frame、stage close、renderer drain、`shutdown_requested`まで到達したが、正常OS exitへ進まなかった。Fatal、Crash Reporter dump、upload attempt、device lost、TDRは0で、production app SHA-256は前後一致した。
+- 成功logとの最後の共通終了行は`Shutting down plugin gpu.foundation.plugin`で、成功runだけが次の`PerfMonitorManager::stop`以降へ進む。5,949,208,019-byte full hang dump（SHA-256 `5D91062D...20520`）は133 threads、438 modules、ExceptionStreamなしで、captured instruction pointerは`ntdll.dll` 132、`win32u.dll` 1だった。
+- これはstage geometry/Python probeではなくGPU/graphics teardown waitの強い候補である。ただしWCTのdurable result、symbolized unwind、wait object、owner threadは未取得で、D3D12、NGX、NVIDIA telemetry、Kit plugin lifetimeのどれかは断定しない。過去の`omni.fabric.plugin.dll+0xD6960` crashと同じ原因を示す証拠もない。
+- 条件Aで停止条件に達したため、6DZ outer経由のB、regenerated axisのC、3-run stability、rotation再開は未実行である。Phase 6DU/rotationは引き続き保留する。Production code/default/latest demoは不変。詳細は`docs/design/kit_shutdown_residual_process.md`。
+- Release build `9.41 s`、Phase 6DY lifecycle `6 / 6`、Phase 6DZ rotation/ROI `5 / 5`、Phase 6EA診断 `5 / 5`、標準suite 8 process・`78 / 78`件・`380.1 s`、日誌333 local referenceの静的検査が合格した。Flow collider対象testは標準suite内で合格した。Production code/app composition不変のためPhase 0 RTXとPhase 3は未実行である。
+
 ## Phase 6DZ rotated Cylinder Flow-collision safe stop
 
 ### 2026-08-11: 回転前のaxis controlが正常OS exitへ到達せず停止

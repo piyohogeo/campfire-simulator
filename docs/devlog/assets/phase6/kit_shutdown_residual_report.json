@@ -1,0 +1,266 @@
+{
+  "schema": "campfire.phase6ea.shutdown-residual-report.v1",
+  "phase": "phase6ea",
+  "status": "safe_stop",
+  "condition_a": {
+    "status": "hang_confirmed",
+    "stage_sha256": "BC65721F4C6D4ECF1F35C736F2DD10F7A47C9F2B361E45898032E869D894D5F9",
+    "runner": "scripts/run_phase6dw_gpu_renderer_case.ps1",
+    "probe": "scripts/probe_phase6dw_gpu_renderer_lifecycle.py",
+    "cache": "normal",
+    "app": "omni.app.viewport.kit",
+    "lifecycle_marker": "shutdown_requested",
+    "probe_status": "ok",
+    "normal_os_exit": false,
+    "observed_seconds_after_shutdown_requested": 250.38681,
+    "automatic_retry": false,
+    "path_verified_before_capture_and_stop": true,
+    "process_id": 26684,
+    "parent_runner_pid": 504,
+    "fatal_count": 0,
+    "crash_reporter_dump_count": 0,
+    "automatic_upload_attempt_count": 0
+  },
+  "matrix": {
+    "A_phase6dy_direct": "hang_confirmed",
+    "B_phase6dy_through_phase6dz_outer": "not_run_due_to_A_hang",
+    "C_phase6dz_axis": "not_run_due_to_A_hang",
+    "phase6dy_three_run_stability": "not_run_due_to_A_hang",
+    "rotation_restart": "not_permitted"
+  },
+  "stage_comparison": {
+    "phase6dy_sha256": "BC65721F4C6D4ECF1F35C736F2DD10F7A47C9F2B361E45898032E869D894D5F9",
+    "phase6dz_sha256": "45CABF115369E538949437599743AAD102CD9CBD3108499A49C4962EFCE26848",
+    "normalized_difference_count": 2,
+    "differences": [
+      {
+        "path": "root_layer.documentation",
+        "classification": "generated source documentation differs"
+      },
+      {
+        "path": "stage_metadata.documentation",
+        "classification": "generated source documentation differs"
+      }
+    ],
+    "semantic_payload_equal_except_documentation": true,
+    "category_gates": {
+      "geometry_equal": true,
+      "schemas_equal": true,
+      "transforms_equal": true,
+      "relationships_equal": true,
+      "prim_order_equal": true,
+      "stage_metadata_equal_except_documentation": true
+    }
+  },
+  "successful_control_comparison": {
+    "prior_phase6dy_exit_code": 0,
+    "prior_phase6dy_duration_seconds": 15.734789099999999,
+    "last_common_shutdown_line": "Shutting down plugin gpu.foundation.plugin",
+    "first_line_reached_by_success_but_not_hang": "PerfMonitorManager::stop",
+    "hang_final_log_line_number": 4271,
+    "success_matching_line_number": 4223
+  },
+  "hang_dump": {
+    "relative_path": "artifacts/phase6ea-shutdown-residual-1/A_monitor/sensitive-hang-diagnostics/hang-full.dmp",
+    "git_ignored": true,
+    "bytes": 5949208019,
+    "sha256": "5D91062D28352D8CCBC5153AF1B9256BF4ABDAFA14B242BAC69BDC09ADD20520",
+    "full_memory_range_count": 11288,
+    "module_count": 438,
+    "thread_count": 133,
+    "exception_stream_present": false,
+    "instruction_module_counts": {
+      "ntdll.dll": 132,
+      "win32u.dll": 1
+    },
+    "earliest_created_thread": {
+      "thread_id": 25628,
+      "instruction_module": {
+        "name": "C:\\Windows\\System32\\ntdll.dll",
+        "base": "0x00007FF9DD510000",
+        "offset": "0xA0E84"
+      },
+      "kernel_time_100ns": 8750000,
+      "user_time_100ns": 105156250,
+      "heuristic_stack_module_candidates": [
+        "KERNELBASE.dll+0x39D0E",
+        "NvTelemetryAPI64.dll+0x3CC87",
+        "NvTelemetryAPI64.dll+0x88600",
+        "NvTelemetryAPI64.dll+0xBF0F",
+        "NvTelemetryAPI64.dll+0x3B03F",
+        "NvTelemetryAPI64.dll+0x978F",
+        "_nvngx.dll+0x2E687",
+        "_nvngx.dll+0x43167",
+        "D3D12Core.dll+0xF023",
+        "_nvngx.dll+0x65BE2",
+        "_nvngx.dll+0x65B60",
+        "D3D12Core.dll+0x6DB8B",
+        "carb.graphics-direct3d.plugin.dll+0x621BE",
+        "ucrtbase.dll+0x13610",
+        "msvcp140.dll+0x129CC",
+        "mimalloc.dll+0x1A52"
+      ]
+    },
+    "native_stack_unwind": {
+      "available": false,
+      "reason": "No WinDbg/CDB/ProcDump is installed; public MINIDUMP streams expose captured contexts but this parser does not unwind native stacks."
+    },
+    "wait_chain": {
+      "available": false,
+      "reason": "The first public-WCT collection did not produce durable output before the bounded capture command; future collection is capped at 10 seconds and writes a pre-dump snapshot."
+    },
+    "handle_targets": {
+      "available": false,
+      "reason": "The dump includes MiniDumpWithHandleData, but no installed public debugger/analyzer can decode it in this environment."
+    }
+  },
+  "classification": {
+    "observed_fact": [
+      "The exact Phase 6DY qualified stage completed OpenUSD, USD-context, Hydra, viewport, stage-close, renderer-drain, and shutdown_requested before the process remained alive.",
+      "The hang log stopped after 'Shutting down plugin gpu.foundation.plugin'; the prior successful log continued with PerfMonitor shutdown and remaining plugin unloads.",
+      "The hang dump has no ExceptionStream; 132 of 133 captured instruction pointers are in ntdll.dll and one is in win32u.dll.",
+      "No crash-reporter dump, fatal token, device-lost/TDR token, or upload attempt was recorded."
+    ],
+    "strong_inference": "The residual process is predominantly waiting during the GPU/graphics teardown boundary at or immediately after gpu.foundation shutdown, rather than failing in stage geometry or Python probe execution.",
+    "unconfirmed": [
+      "The exact wait object and owner thread are unavailable because the WCT attempt did not complete durably.",
+      "The heuristic stack scan is not a symbolized unwind and cannot identify a responsible function.",
+      "Whether the cause is intermittent renderer teardown, NVIDIA NGX/telemetry, D3D12, or a Kit plugin lifetime issue remains unconfirmed."
+    ],
+    "relation_to_prior_fabric_crash": "No ExceptionStream is present and the captured hang contexts do not reproduce omni.fabric.plugin.dll+0xD6960; this is a different evidence class, not proof of the same fault.",
+    "runner_pid_misidentification": "denied_for_this_run: the remaining PID was kit.exe and its executable path was checked before dump capture and termination"
+  },
+  "tool_inventory": [
+    {
+      "name": "windbg",
+      "available": false,
+      "path": null
+    },
+    {
+      "name": "windbgx",
+      "available": false,
+      "path": null
+    },
+    {
+      "name": "cdb",
+      "available": false,
+      "path": null
+    },
+    {
+      "name": "procdump",
+      "available": false,
+      "path": null
+    },
+    {
+      "name": "procdump64",
+      "available": false,
+      "path": null
+    },
+    {
+      "name": "procexp",
+      "available": false,
+      "path": null
+    },
+    {
+      "name": "handle",
+      "available": false,
+      "path": null
+    },
+    {
+      "name": "listdlls",
+      "available": false,
+      "path": null
+    },
+    {
+      "name": "dumpchk",
+      "available": false,
+      "path": null
+    },
+    {
+      "name": "wpr",
+      "available": true,
+      "path": "C:\\Windows\\system32\\wpr.EXE"
+    },
+    {
+      "name": "wpa",
+      "available": true,
+      "path": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\wpa.EXE"
+    },
+    {
+      "name": "Windows Wait Chain Traversal API",
+      "available": true,
+      "path": "advapi32.dll (public API)"
+    },
+    {
+      "name": "Windows MiniDumpWriteDump API",
+      "available": true,
+      "path": "DbgHelp.dll (public API)"
+    }
+  ],
+  "production": {
+    "app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "changed": false,
+    "production_code_changed": false,
+    "latest_demo_changed": false
+  },
+  "decision": {
+    "normal_control_recovered": false,
+    "phase6du_resume_allowed": false,
+    "rotation_resume_allowed": false,
+    "next_required_evidence": "Analyze the preserved full dump with WinDbg/CDB and matching symbols, or perform a separately approved bounded ETW/WPR teardown trace; do not auto-retry condition A."
+  },
+  "verification": {
+    "release_build": {
+      "status": "ok",
+      "seconds": 9.41
+    },
+    "phase6dy_lifecycle_contract": {
+      "status": "ok",
+      "passed": 6,
+      "total": 6
+    },
+    "phase6dz_rotation_roi_contract": {
+      "status": "ok",
+      "passed": 5,
+      "total": 5
+    },
+    "phase6ea_diagnostic_contract": {
+      "status": "ok",
+      "passed": 5,
+      "total": 5
+    },
+    "standard_suite": {
+      "status": "ok",
+      "processes": 8,
+      "passed": 78,
+      "total": 78,
+      "seconds": 380.1
+    },
+    "flow_collider_test": {
+      "status": "ok_in_standard_suite",
+      "test": "campfire.app.tests.test_scene.TestScene.test_flow_scene_has_emitter_simulation_and_colliders"
+    },
+    "excluded_direct_test_launcher": {
+      "status": "excluded_harness_permission_failure",
+      "reason": "A non-escalated direct Kit test attempt could not write the AppData test reporter and was path-verified and stopped after its 120-second timeout; it is not a product or test failure and is not part of the formal results.",
+      "automatic_retry": false
+    },
+    "devlog_static": {
+      "status": "ok",
+      "unique_local_references": 333,
+      "missing": 0,
+      "json_files": 178,
+      "svg_files": 145,
+      "replacement_characters": 0
+    },
+    "phase0_rtx": {
+      "status": "not_run",
+      "reason": "production code and app composition unchanged"
+    },
+    "phase3": {
+      "status": "not_run",
+      "reason": "production code and app composition unchanged"
+    }
+  }
+}

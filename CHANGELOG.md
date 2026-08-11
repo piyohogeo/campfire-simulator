@@ -1,5 +1,12 @@
 # Changelog
 
+- Added the production-neutral Phase 6EA shutdown-residual diagnosis and reproduced the non-exiting Kit process with the exact Phase 6DY qualified stage after OpenUSD, Hydra, viewport, stage close, renderer drain, and `shutdown_requested` all completed.
+- Proved that the Phase 6DY and regenerated Phase 6DZ axis stages differ only in generated documentation; geometry, topology, schema, approximation, transforms, relationships, and Prim order are equal.
+- Narrowed the last common shutdown boundary to `Shutting down plugin gpu.foundation.plugin`; the prior successful run continued with `PerfMonitorManager::stop`, while the hang stopped there.
+- Preserved a Git-ignored 5.95 GB full hang dump (133 threads, 438 modules, no ExceptionStream; 132 captured instruction pointers in `ntdll.dll`) and recorded the lack of a symbolized unwind or durable WCT result instead of claiming a root function.
+- Stopped conditions B/C, the 3-run stability check, and all rotation work after condition A hung. Production code/defaults and the latest-demo pointer remain unchanged.
+- Passed the Release build in 9.41 seconds, lifecycle 6/6, rotation/ROI 5/5, Phase 6EA diagnostics 5/5, and all eight standard processes with 78/78 tests in 380.1 seconds; static devlog validation found 333 local references with zero missing or malformed JSON/SVG assets.
+
 - Prepared Phase 6DZ's seven rotation-isolation stages from the qualified Phase 6DY Cylinder. All retain the same local geometry SHA-256, schemas, `convexDecomposition`, unit scale, and pivot; start/end controls are byte-identical and cylindrical `convexHull` remains excluded.
 - Stopped Phase 6DZ on the unchanged axis-aligned entry control: it reached OpenUSD, USD context, Hydra, first viewport frame, stage close, renderer drain, and `shutdown_requested`, but the Kit process did not reach normal OS exit within 420.092 seconds. No rotated or Flow-readback condition was started.
 - Recorded fatal/dump/upload/device-lost/TDR 0, RTX 3090/CUDA 0, and unchanged production app SHA-256. The isolated remaining Kit process was path-verified and terminated; Phases B–G remain held pending a normal control exit.
