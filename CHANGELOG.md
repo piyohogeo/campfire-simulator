@@ -1,5 +1,12 @@
 # Changelog
 
+- Added the Phase 6EB known-NGX shutdown policy: a maximum 60-second post-`shutdown_requested` grace, non-invasive bounded CDB stack fingerprinting, repeated full-dump avoidance, verified PID/path/start-time identity, and fail-closed handling for any unknown non-exit.
+- Split every covered Kit result into functional, lifecycle, and performance-acceptance axes. A fully completed run with the exact NGX telemetry signature may pass functionally, but is not a normal exit and is excluded from shutdown timing and performance populations.
+- Reused the Phase 6EA atomic capture lock and guarded helper for CDB, with 45-second timeout, 512 MiB private-memory ceiling, direct file redirection, and streamed token matching. Diagnostic failure never authorizes target-Kit termination.
+- Added positive known-residual, negative unknown-residual, exception/dump/timeout/corrupt-input, lifecycle, and mixed-aggregate contracts. All 24 targeted tests passed; the final real `kit_only` smoke exited normally in 1.423 seconds and production app SHA-256 remained `94162F82...F02A`.
+- Reconfirmed Phase 6EA resource safety 7/7, its static contract 6/6, and all eight standard test processes with 78/78 tests in 302.2 seconds. Devlog validation found 338 unique local references, 180 JSON files, and 146 SVG files with no missing, malformed, or replacement-character failures.
+- Recorded the historical baseline as 22 normal exits in 24 controlled processes, one signature-confirmed residual, and one pre-policy residual that is deliberately not relabeled. Production code/defaults and the latest demo remain unchanged.
+
 - Symbolized the preserved Phase 6EA full dump with WinDbg/CDB and Microsoft public symbols without rerunning condition A. The Kit main thread waits on thread handle `0x1D4C`, targeting NVIDIA telemetry worker `0x1A60`, during `gpu.foundation` -> Direct3D -> NGX D3D12 shutdown -> telemetry uninitialization.
 - Located the target worker in `NvTelemetryBridge64` `WaitNamedPipeW` on a GUID-named local pipe. D3D12 background threads were idle, and the all-thread stacks showed no main-chain GPU fence, DLL unload, or held-critical-section boundary.
 - Kept raw debugger logs, symbols, and the 5.95 GB dump outside Git. The upstream pipe/service/NGX ordering trigger remains unconfirmed, so Phase 6DU and rotation remain paused; production code/defaults and the latest demo are unchanged.

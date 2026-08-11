@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6ea">最新記録</a>
+        <a href="#phase-6eb">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6ea">Phase 6EAを読む</a>
+        <a class="button primary" href="#phase-6eb">Phase 6EBを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6EA shutdown residual safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6EB known residual policy</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>NGX telemetry worker join</strong></div>
-        <div><span>Production</span><strong>unchanged · phases B–G held</strong></div>
+        <div><span>Lifecycle</span><strong>function / exit split</strong></div>
+        <div><span>Production</span><strong>unchanged · rotation restart ready</strong></div>
       </div>
     </div>
   </header>
@@ -56,6 +56,19 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6eb" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報"><span class="phase-number compact">6EB</span><p><time datetime="2026-08-11">2026.08.11</time></p><span class="pill current">Known residual policy</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6EB · Known NGX shutdown residual policy</p><h2>機能の合格とOS終了を、<br>別の事実として残す。</h2><p>Phase 6EAで特定したNGX telemetry shutdown待ちを監視対象にしました。60秒以内のexitだけを正常終了とし、同じ残留が出ても完了gateと軽量stackがすべて一致した場合だけ、性能に混ぜない機能合格として扱います。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/known_ngx_shutdown_policy.svg"><img src="assets/phase6/known_ngx_shutdown_policy.svg" alt="正常終了、既知NGX残留、未知の終了失敗を分離するPhase 6EBの判定表" loading="lazy"></a><figcaption><div><strong>Three-axis outcome</strong><span>functional · lifecycle · performance acceptance</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Known residual</p><h3>完了gateを全部満たしたときだけ</h3><p>result保存、timeline停止、stage close、renderer drain、hash不変、安全token 0、PID/path/start-time確認を必須にしました。そのうえで非侵襲CDB stackが既知のNGX→telemetry pipe待ちへ完全一致した場合だけ、外側runnerが対象Kitを停止します。</p></section><section class="note caution"><p class="note-label">Not normal</p><h3>性能と終了率からは除外</h3><p><code>functional_status=pass</code>でも<code>lifecycle_status=known_ngx_shutdown_residual</code>、<code>performance_sample_accepted=false</code>です。signature不一致、未知module/offset、Windows例外、dump、証拠不足はunknown failureとして停止し、自動retryしません。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Evidence budget</p><h3>反復ごとの6 GB dumpをやめ、必要時だけ再調査。</h3><p>通常反復はversion、GPU、設定、最終marker／log、bounded thread stack、終了結果だけをGit外へ保存します。CDBはPhase 6EAのatomic lockとguarded helperを再利用し、45秒timeout、512 MiB上限、直接ファイル出力を適用。helper失敗では対象Kitを停止しません。新signature、close前hang、既知residual 2連続、20件以上で5%超、fatal／例外／TDR／device lostなどを再調査triggerにしました。</p><p>歴史baselineは24 process中normal 22、signature確認済み1、policy導入前で遡及分類しない残留1です。正常・既知・未知・破損入力・混合集計を含む24 / 24 contractと、1.423秒の最終実Kit normal-exit smokeが合格。Phase 6EA 7 / 7・6 / 6、標準suite 78 / 78も再合格し、Production hashは前後一致しています。</p><p><a href="assets/phase6/known_ngx_shutdown_policy.json">policy JSON</a> · <a href="assets/phase6/known_ngx_shutdown_policy.svg">判定SVG</a> · <a href="../design/kit_shutdown_residual_process.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Grace</strong><small>最大60秒</small></p></div><div role="listitem"><span>✓</span><p><strong>Repeat capture</strong><small>軽量stackのみ</small></p></div><div role="listitem"><span>!</span><p><strong>Known residual</strong><small>normal exitではない</small></p></div><div role="listitem"><span>✓</span><p><strong>Unknown</strong><small>fail closed</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>変更なし</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Next</p><h3>Phase 6DZをaxis → X17° → axisから再開。</h3><p>内部診断だけで映像差はないため新動画は作らず、latest demoも維持します。distribution前には別途長時間soakが必要です。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6ea" class="section entry-section phase-six">

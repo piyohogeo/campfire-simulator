@@ -2995,6 +2995,17 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 保存済みdumpを条件Aの再実行なしでWinDbg/CDB解析した。Main threadは`gpu.foundation.plugin`→Direct3D plugin→`NVSDK_NGX_D3D12_Shutdown1`→`NvTelemetryAPI64!UninitializeTelemetry`へ入り、Thread handle `0x1D4C`でtelemetry worker `0x1A60`の終了を待っていた。対象workerは`NvTelemetryBridge64`内の`WaitNamedPipeW`でGUID名local pipeを待つ。
 - D3D12Core公開PDBでは4本のD3D background threadはいずれもidleだった。全thread stackにGPU fence completion、`LdrUnloadDll`、`FreeLibrary`、保持critical-section chainはなく、このsnapshotの最小wait境界はNGX shutdown中のNVIDIA telemetry worker joinである。Pipe不応答の上流triggerと再現率は未確認のため、Phase 6DU／rotationは再開しない。必要なら別承認のbounded WPR/ETWを実施する。
 
+## Phase 6EB known NGX shutdown residual policy
+
+### 2026-08-11: 機能完了とOS終了を分離し、回転検証の再開条件を固定
+
+- Phase 6EAで特定した`gpu.foundation`→NGX D3D12 shutdown→NVIDIA telemetry uninitialize→telemetry worker `WaitNamedPipeW`を既知signatureとして登録した。`shutdown_requested`後のgraceは最大60秒、反復時は非侵襲CDB thread stackだけをGit外へ保存し、同signatureのfull dumpは反復生成しない。
+- 機能passにはprobe／public result保存、timeline stop、stage close、renderer drain、production hash不変、fatal／dump／Windows exception／access violation／device lost／TDR／CUDA illegal／upload 0、PID/path/start-time確認、完全な軽量診断、既知signature、外側runner停止、PID消滅をすべて要求する。表現は`functional_status=pass`、`lifecycle_status=known_ngx_shutdown_residual`、`performance_sample_accepted=false`で、normal exit率と性能母集団から除外する。
+- 不一致・証拠不足は`unknown_shutdown_failure`としてfail closed。新signature、close前hang、既知residual 2連続、20件以上で5%超、fatal/Fabric AV/TDR/device lost、安全な停止不能、interactive反復、driver/Kit更新後悪化を再調査triggerとする。それまではWPR/ETWを保留する。
+- CDBはPhase 6EAのatomic lockとguarded helperを直接再利用し、45秒timeout、512 MiB上限、process-tree cleanup、stdout/stderrの直接ファイル出力を適用する。stackは`Select-String`で逐次照合し、PowerShell変数へ全量保持しない。helper timeout／memory超過／CDB errorでは既知判定を行わず、対象Kitも停止しない。入力欠落・破損、未知module／offset、Windows exception、dump、functional gate failure、残留停止失敗はすべてunknownである。
+- 歴史baselineは24 process中normal exit 22、signature確認済みresidual 1、導入前の未分類residual 1。既知率4.17%は新schemaのrateではない。distribution前soakは別途必要。Production app SHA-256は`94162F82...F02A`で前後一致し、productionコード／既定値／latest demoは不変。
+- Phase 6EB固有contractは24/24、Phase 6DW `kit_only`の最終normal-exit smokeは1.423秒で合格した。既知hang自体は再実行しておらず、positive fixtureは保存済みWinDbg summaryのsignature contractを検証したもの。Phase 6EA resource safety 7/7、静的契約6/6、標準suite 8 process・78/78件・302.2秒も再合格した。日誌は338 local reference、JSON 180、SVG 146、欠落／parse failure／replacement character 0だった。
+
 ## Phase 6DZ rotated Cylinder Flow-collision safe stop
 
 ### 2026-08-11: 回転前のaxis controlが正常OS exitへ到達せず停止

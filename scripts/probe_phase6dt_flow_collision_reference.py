@@ -628,6 +628,14 @@ async def _run() -> None:
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "production_changed": False,
         "lifecycle_marker": "starting",
+        "lifecycle_history": [],
+        "completion_contract": {
+            "results_saved": False,
+            "timeline_stopped": False,
+            "stage_closed": False,
+            "renderer_drained": False,
+            "shutdown_requested": False,
+        },
         "samples": [],
         "captures": [],
     }
@@ -785,7 +793,10 @@ async def _run() -> None:
         if not all(report["measurement_gates"].values()):
             raise RuntimeError(f"Measurement gates failed: {report['measurement_gates']}")
         report["status"] = "ok"
+        report["completion_contract"]["results_saved"] = True
         report["lifecycle_marker"] = "measurement_complete"
+        report["lifecycle_history"].append({"marker": "measurement_complete", "timestamp_utc": datetime.now(timezone.utc).isoformat()})
+        _write(output, report)
         exit_code = 0
     except Exception as error:
         report["status"] = "error"
@@ -797,15 +808,26 @@ async def _run() -> None:
             timeline.stop()
             for _ in range(12):
                 await app.next_update_async()
+            report["completion_contract"]["timeline_stopped"] = True
+            report["lifecycle_marker"] = "timeline_stopped"
+            report["lifecycle_history"].append({"marker": "timeline_stopped", "timestamp_utc": datetime.now(timezone.utc).isoformat()})
+            _write(output, report)
             report["lifecycle_marker"] = "stage_closing"
             await context.close_stage_async()
             for _ in range(12):
                 await app.next_update_async()
+            report["completion_contract"]["stage_closed"] = True
+            report["completion_contract"]["renderer_drained"] = True
+            report["lifecycle_marker"] = "renderer_drain_complete"
+            report["lifecycle_history"].append({"marker": "renderer_drain_complete", "timestamp_utc": datetime.now(timezone.utc).isoformat()})
+            _write(output, report)
             report["lifecycle_marker"] = "flow_interface_releasing"
             if flow is not None:
                 _flowusd.release_flowusd_interface(flow)
                 flow = None
+            report["completion_contract"]["shutdown_requested"] = True
             report["lifecycle_marker"] = "shutdown_complete"
+            report["lifecycle_history"].append({"marker": "shutdown_complete", "timestamp_utc": datetime.now(timezone.utc).isoformat()})
         except Exception as shutdown_error:
             report["shutdown_error"] = f"{type(shutdown_error).__name__}: {shutdown_error}"
             report["status"] = "error"

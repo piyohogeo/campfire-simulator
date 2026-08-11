@@ -12,6 +12,7 @@ param(
     [Parameter(Mandatory = $true)][string]$OutputDir,
     [string]$SourceStage = "",
     [int]$TimeoutSeconds = 420,
+    [ValidateRange(1, 60)][int]$ShutdownGraceSeconds = 60,
     [int]$ActiveGpu = -1
 )
 
@@ -19,6 +20,7 @@ $ErrorActionPreference = "Stop"
 Set-StrictMode -Version 3.0
 $root = Split-Path -Parent $PSScriptRoot
 . (Join-Path $PSScriptRoot "isolated_kit_crash_safety.ps1")
+. (Join-Path $PSScriptRoot "kit_shutdown_policy.ps1")
 $release = Join-Path $root "_build\windows-x86_64\release"
 $kit = Join-Path $release "kit\kit.exe"
 $productionApp = Join-Path $release "apps\campfire.simulator.kit"
@@ -31,6 +33,7 @@ New-Item -ItemType Directory -Path $output | Out-Null
 $raw = Join-Path $output "raw.json"
 $log = Join-Path $output "kit.log"
 $evidencePath = Join-Path $output "runner_evidence.json"
+$diagnosticDir = Join-Path $output "sensitive-shutdown-diagnostics"
 $dumpDir = Join-Path $output "sensitive-crash-dumps"
 $cacheDir = Join-Path $output "isolated-omni-cache"
 $source = if ($SourceStage) { [IO.Path]::GetFullPath($SourceStage) } else { "" }
@@ -118,15 +121,7 @@ $registryBefore = Get-CampfireCrashRegistrySnapshot
 $gpuBefore = @(Get-GpuSnapshot)
 $started = Get-Date
 $process = Start-Process -FilePath $kit -ArgumentList $arguments -PassThru -WindowStyle Hidden
-$timedOut = -not $process.WaitForExit($TimeoutSeconds * 1000)
-if ($timedOut) {
-    $actual = Get-CimInstance Win32_Process -Filter "ProcessId=$($process.Id)" -ErrorAction SilentlyContinue
-    $expectedKit = [IO.Path]::GetFullPath($kit)
-    if ($null -ne $actual -and [IO.Path]::GetFullPath($actual.ExecutablePath) -eq $expectedKit) {
-        Stop-Process -Id $process.Id -Force
-        $process.WaitForExit(10000) | Out-Null
-    }
-}
+$monitor = Wait-CampfireKitProcessWithShutdownPolicy -Process $process -ExpectedExecutable $kit -LifecyclePath $raw -LogPath $log -DiagnosticDir $diagnosticDir -ShutdownGraceSeconds $ShutdownGraceSeconds -AbsoluteTimeoutSeconds $TimeoutSeconds
 $process.Refresh()
 $ended = Get-Date
 $gpuAfter = @(Get-GpuSnapshot)
@@ -138,6 +133,8 @@ $fatalPatterns = @(
     "[crash] A crash has occurred",
     "Traceback (most recent call last)",
     "CUDA illegal address",
+    "0xC0000005",
+    "access violation",
     "device lost",
     "invalid pointer",
     "TDR",
@@ -161,9 +158,14 @@ if (Test-Path -LiteralPath $log) {
 }
 $probeReport = $null
 if (Test-Path -LiteralPath $raw) { $probeReport = Get-Content -Raw -Encoding UTF8 $raw | ConvertFrom-Json }
-$exitCode = if ($timedOut) { -1 } else { $process.ExitCode }
+$timedOut = [bool]$monitor.absolute_timeout
+$exitCode = $monitor.exit_code
+$outcome = $null
+if ($null -ne $probeReport) {
+    $outcome = Invoke-CampfireShutdownOutcomeClassification -Monitor $monitor -ProbeReport $probeReport -LogPath $log -FatalLines $fatalLines -DumpCount $dumps.Count -UploadAttemptCount $uploadAttemptLines.Count -ProductionHashBefore $productionHashBefore -ProductionHashAfter $productionHashAfter -OutputDir $output
+}
 $evidence = [ordered]@{
-    schema = "campfire.phase6dw.gpu-renderer-lifecycle-runner.v1"
+    schema = "campfire.phase6dw.gpu-renderer-lifecycle-runner.v2"
     phase = "phase6dw"
     condition = $Condition
     cache_kind = $CacheKind
@@ -172,6 +174,8 @@ $evidence = [ordered]@{
     duration_seconds = ($ended - $started).TotalSeconds
     process_exit_code = $exitCode
     timed_out = $timedOut
+    shutdown_monitor = $monitor
+    outcome = $outcome
     fatal_lines = @($fatalLines)
     dump_inventory = $dumps
     automatic_upload_attempt_lines = @($uploadAttemptLines)
@@ -195,8 +199,7 @@ if ($productionHashBefore -ne $productionHashAfter) { throw "Phase 6DW changed p
 if ($dumps.Count -gt 0) { throw "Phase 6DW produced a dump; stop the matrix" }
 if ($fatalLines.Count -gt 0) { throw "Phase 6DW fatal token detected; stop the matrix" }
 if ($uploadAttemptLines.Count -gt 0) { throw "Phase 6DW detected automatic crash upload" }
-if ($timedOut) { throw "Phase 6DW timed out: $Condition / $CacheKind" }
-if ($process.ExitCode -ne 0) { throw "Phase 6DW Kit exited $($process.ExitCode); stop the matrix" }
 if ($null -eq $probeReport -or $probeReport.status -ne "ok") { throw "Phase 6DW probe failed: $raw" }
 if ($probeReport.lifecycle_marker -ne "shutdown_requested") { throw "Phase 6DW unsafe lifecycle marker: $($probeReport.lifecycle_marker)" }
-Write-Host "Phase 6DW passed: $Condition / $CacheKind"
+if ($null -eq $outcome -or $outcome.functional_status -ne "pass") { throw "Phase 6DW shutdown classification failed: $Condition / $CacheKind" }
+Write-Host "Phase 6DW functionally passed: $Condition / $CacheKind ($($outcome.lifecycle_status))"

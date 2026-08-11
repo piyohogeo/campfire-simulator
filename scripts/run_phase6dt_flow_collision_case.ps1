@@ -33,6 +33,7 @@ $ErrorActionPreference = "Stop"
 Set-StrictMode -Version 3.0
 $root = Split-Path -Parent $PSScriptRoot
 . (Join-Path $PSScriptRoot "isolated_kit_crash_safety.ps1")
+. (Join-Path $PSScriptRoot "kit_shutdown_policy.ps1")
 $release = Join-Path $root "_build\windows-x86_64\release"
 $kit = Join-Path $release "kit\kit.exe"
 $source = [IO.Path]::GetFullPath($SourceStage)
@@ -44,6 +45,7 @@ $raw = Join-Path $output "raw.json"
 $log = Join-Path $output "kit.log"
 $dumpDir = Join-Path $output "sensitive-crash-dumps"
 $evidencePath = Join-Path $output "runner_evidence.json"
+$diagnosticDir = Join-Path $output "sensitive-shutdown-diagnostics"
 $productionApp = Join-Path $release "apps\campfire.simulator.kit"
 $productionHashBefore = (Get-FileHash -Algorithm SHA256 -LiteralPath $productionApp).Hash
 if ($AppKind -eq "reference") {
@@ -92,10 +94,7 @@ $arguments = @(
 $registryBefore = Get-CampfireCrashRegistrySnapshot
 $started = Get-Date
 $process = Start-Process -FilePath $kit -ArgumentList $arguments -PassThru -WindowStyle Hidden
-if (-not $process.WaitForExit(330000)) {
-    Stop-Process -Id $process.Id -Force
-    throw "Phase 6DT timed out: $Mode"
-}
+$monitor = Wait-CampfireKitProcessWithShutdownPolicy -Process $process -ExpectedExecutable $kit -LifecyclePath $raw -LogPath $log -DiagnosticDir $diagnosticDir -ShutdownGraceSeconds 60 -AbsoluteTimeoutSeconds 330
 $process.Refresh()
 $registryAfter = Get-CampfireCrashRegistrySnapshot
 $registryUnchanged = (($registryBefore | ConvertTo-Json -Depth 12 -Compress) -eq ($registryAfter | ConvertTo-Json -Depth 12 -Compress))
@@ -105,8 +104,11 @@ $fatalPatterns = @(
     "[crash] A crash has occurred",
     "Traceback (most recent call last)",
     "CUDA illegal address",
+    "0xC0000005",
+    "access violation",
     "device lost",
     "invalid pointer",
+    "TDR",
     "IRenderSettings::getRenderSettings failed getting a stage-id"
 )
 $fatalLines = @()
@@ -116,14 +118,21 @@ foreach ($pattern in $fatalPatterns) {
 $uploadAttemptLines = @(Select-String -LiteralPath $log -Pattern "upload(?:ing|ed)? (?:mini)?dump|sending crash|submit.*crash" -CaseSensitive:$false -ErrorAction SilentlyContinue | ForEach-Object { $_.Line })
 $probeReport = $null
 if (Test-Path -LiteralPath $raw) { $probeReport = Get-Content -Raw -Encoding UTF8 $raw | ConvertFrom-Json }
+$outcome = $null
+if ($null -ne $probeReport) {
+    $outcome = Invoke-CampfireShutdownOutcomeClassification -Monitor $monitor -ProbeReport $probeReport -LogPath $log -FatalLines $fatalLines -DumpCount $dumps.Count -UploadAttemptCount $uploadAttemptLines.Count -ProductionHashBefore $productionHashBefore -ProductionHashAfter $productionHashAfter -OutputDir $output
+}
 $evidence = [ordered]@{
-    schema = "campfire.phase6dt.flow-collision-runner.v1"
+    schema = "campfire.phase6dt.flow-collision-runner.v2"
     phase = "phase6dt"
     mode = $Mode
     app_kind = $AppKind
     run_index = $RunIndex
     started_local = $started.ToString("o")
-    process_exit_code = $process.ExitCode
+    process_exit_code = $monitor.exit_code
+    timed_out = [bool]$monitor.absolute_timeout
+    shutdown_monitor = $monitor
+    outcome = $outcome
     fatal_lines = @($fatalLines)
     dump_inventory = $dumps
     automatic_upload_attempt_lines = @($uploadAttemptLines)
@@ -142,7 +151,7 @@ if ($productionHashBefore -ne $productionHashAfter) { throw "Phase 6DT changed p
 if ($dumps.Count -gt 0) { throw "Phase 6DT produced a dump; do not retry $Mode" }
 if ($fatalLines.Count -gt 0) { throw "Phase 6DT fatal token detected; do not retry $Mode" }
 if ($uploadAttemptLines.Count -gt 0) { throw "Phase 6DT detected automatic crash upload" }
-if ($process.ExitCode -ne 0) { throw "Phase 6DT Kit exited $($process.ExitCode); do not retry $Mode" }
 if ($null -eq $probeReport -or $probeReport.status -ne "ok") { throw "Phase 6DT probe failed: $raw" }
 if ($probeReport.lifecycle_marker -ne "shutdown_complete") { throw "Phase 6DT unsafe shutdown: $($probeReport.lifecycle_marker)" }
-Write-Host "Phase 6DT passed: $Mode run $RunIndex ($AppKind)"
+if ($null -eq $outcome -or $outcome.functional_status -ne "pass") { throw "Phase 6DT shutdown classification failed; do not retry $Mode" }
+Write-Host "Phase 6DT functionally passed: $Mode run $RunIndex ($AppKind) ($($outcome.lifecycle_status))"

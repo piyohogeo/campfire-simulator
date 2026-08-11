@@ -1,0 +1,103 @@
+{
+  "schema": "campfire.phase6eb.known-ngx-shutdown-policy.v1",
+  "phase": "phase6eb",
+  "date": "2026-08-11",
+  "decision": "monitor_and_collect_without_treating_as_normal_exit",
+  "classification": {
+    "functional_pass_with_known_shutdown_residual": {
+      "functional_status": "pass",
+      "lifecycle_status": "known_ngx_shutdown_residual",
+      "performance_sample_accepted": false,
+      "normal_exit_sample_accepted": false,
+      "application_shutdown_marker": "record exact marker independently",
+      "os_process_normal_exit": false
+    },
+    "unknown_non_exit": {
+      "functional_status": "fail",
+      "lifecycle_status": "unknown_shutdown_failure",
+      "performance_sample_accepted": false,
+      "normal_exit_sample_accepted": false
+    }
+  },
+  "required_gates": [
+    "probe and public result save complete",
+    "timeline stopped",
+    "stage closed",
+    "renderer drained",
+    "shutdown_requested reached",
+    "production app SHA-256 unchanged",
+    "fatal, dump, Windows exception, access violation, device lost, TDR, CUDA illegal address and upload attempt all zero",
+    "remaining PID, kit.exe path and process start time verified",
+    "lightweight diagnostic completed inside its timeout and memory limit",
+    "non-invasive lightweight stack matches the known NGX telemetry signature",
+    "outer runner termination completes and PID disappears"
+  ],
+  "grace_seconds": 60,
+  "known_signature": [
+    "gpu_foundation_plugin!carbOnPluginShutdown",
+    "NVSDK_NGX_D3D12_Shutdown",
+    "NvTelemetryAPI64!UninitializeTelemetry",
+    "KERNELBASE!WaitNamedPipeW",
+    "NvTelemetryBridge64"
+  ],
+  "lightweight_evidence": {
+    "full_dump_created_on_repeat": false,
+    "debugger_attach": "CDB non-invasive (-pv), bounded to 45 seconds and 512 MiB Private Bytes via the Phase 6EA guarded helper",
+    "capture_lock": "Phase 6EA atomic output lock; live owner rejects duplicates and stale ownership is start-time checked",
+    "failure_contract": "A debugger/helper failure is unknown and does not authorize terminating the target Kit process.",
+    "stack_processing": "stdout/stderr go directly to files; required tokens are searched without loading the whole stack log into PowerShell memory",
+    "raw_stack_log_and_symbol_cache": "Git-ignored artifact directory",
+    "records": [
+      "Kit/Flow versions from the probe plus driver and GPU inventory",
+      "GPU inventory and DLSS/AA settings where the probe exposes them",
+      "PID, executable, process start time and Kit file version",
+      "last lifecycle marker and completion contract",
+      "final shutdown log lines and stack fingerprint",
+      "termination result and production hash"
+    ]
+  },
+  "historical_baseline": {
+    "scope": "Phase 6DW 14 processes + Phase 6DY 8 processes + Phase 6DZ control + Phase 6EA direct control",
+    "total_processes": 24,
+    "normal_exits": 22,
+    "known_signature_residuals": 1,
+    "historical_unclassified_residuals": 1,
+    "known_signature_rate": 0.041666666666666664,
+    "note": "The Phase 6DZ residual predates lightweight signature capture and is not retroactively labeled known."
+  },
+  "reinvestigation_triggers": [
+    "new stack signature, module or fault offset",
+    "hang before result save or stage close",
+    "two consecutive known residuals",
+    "known residual rate above 5% with at least 20 policy-classified processes",
+    "fatal, Windows exception, Fabric access violation, TDR or device lost",
+    "target PID cannot be identified or terminated safely",
+    "interactive production repeats",
+    "behavior worsens after driver or Kit update"
+  ],
+  "verification": {
+    "positive_fixture": "pass",
+    "unknown_negative_fixture": "pass",
+    "normal_exit_smoke": {
+      "condition": "Phase 6DW kit_only",
+      "duration_seconds": 1.4228049,
+      "lifecycle_status": "normal_exit",
+      "process_exit_code": 0,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "automatic_upload_attempt_count": 0
+    },
+    "targeted_contract_tests": {
+      "passed": 24,
+      "total": 24
+    },
+    "phase6ea_resource_safety": {"passed": 7, "total": 7},
+    "phase6ea_static_contract": {"passed": 6, "total": 6},
+    "standard_suite": {"processes": 8, "passed": 78, "total": 78, "duration_seconds": 302.2},
+    "devlog_static": {"unique_local_references": 338, "missing": 0, "json_files": 180, "json_failures": 0, "svg_files": 146, "svg_failures": 0, "replacement_characters": 0},
+    "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "production_changed": false
+  },
+  "distribution_rule": "Run a longer pre-distribution soak; this policy is evidence collection, not proof that shutdown is fully normal or harmless on every machine."
+}

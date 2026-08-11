@@ -131,6 +131,8 @@ def _setting_snapshot() -> dict:
         "/app/tokens/omni_cache",
         "/rtx/rendermode",
         "/rtx/flow/enabled",
+        "/rtx/post/aa/op",
+        "/rtx/post/dlss/execMode",
     )
     return {key: settings.get(key) for key in keys}
 
@@ -168,6 +170,13 @@ async def _run() -> None:
         "timestamp_utc": _utc(),
         "lifecycle_marker": "starting",
         "lifecycle_history": [],
+        "completion_contract": {
+            "results_saved": False,
+            "timeline_stopped": False,
+            "stage_closed": False,
+            "renderer_drained": False,
+            "shutdown_requested": False,
+        },
         "gpu_start": _gpu_snapshot(),
         "production_code_changed": False,
     }
@@ -195,6 +204,7 @@ async def _run() -> None:
 
         if condition == "kit_only":
             report["status"] = "ok"
+            report["completion_contract"]["results_saved"] = True
             exit_code = 0
             mark("kit_only_complete")
             return
@@ -231,6 +241,7 @@ async def _run() -> None:
 
         if condition in ("openusd_empty", "box_openusd"):
             report["status"] = "ok"
+            report["completion_contract"]["results_saved"] = True
             exit_code = 0
             mark("openusd_only_complete")
             return
@@ -270,6 +281,7 @@ async def _run() -> None:
 
         if condition == "flow_load":
             report["status"] = "ok"
+            report["completion_contract"]["results_saved"] = True
             exit_code = 0
             mark("flow_loaded_without_simulation")
             return
@@ -318,6 +330,7 @@ async def _run() -> None:
             mark("flow_simulation_started")
 
         report["status"] = "ok"
+        report["completion_contract"]["results_saved"] = True
         exit_code = 0
         mark("condition_complete")
     except Exception as error:
@@ -330,17 +343,21 @@ async def _run() -> None:
             if timeline is not None:
                 timeline.stop()
                 mark("timeline_stopped")
+            report["completion_contract"]["timeline_stopped"] = True
             if connected and context is not None:
                 mark("stage_close_started")
                 await context.close_stage_async()
                 connected = False
                 mark("stage_close_complete")
+            report["completion_contract"]["stage_closed"] = True
             mark("renderer_drain_started")
             for _ in range(8):
                 await app.next_update_async()
             mark("renderer_drain_complete")
+            report["completion_contract"]["renderer_drained"] = True
             stage_subscription = None
             report["gpu_before_quit"] = _gpu_snapshot()
+            report["completion_contract"]["shutdown_requested"] = True
             mark("shutdown_requested")
         except Exception as error:
             report["shutdown_error"] = f"{type(error).__name__}: {error}"
@@ -369,6 +386,13 @@ def _run_synchronous_renderer_free() -> None:
         "timestamp_utc": _utc(),
         "lifecycle_marker": "starting",
         "lifecycle_history": [],
+        "completion_contract": {
+            "results_saved": False,
+            "timeline_stopped": True,
+            "stage_closed": True,
+            "renderer_drained": True,
+            "shutdown_requested": False,
+        },
         "gpu_start": _gpu_snapshot(),
         "production_code_changed": False,
     }
@@ -387,6 +411,7 @@ def _run_synchronous_renderer_free() -> None:
         mark("kit_started")
         if condition == "kit_only":
             report["status"] = "ok"
+            report["completion_contract"]["results_saved"] = True
             exit_code = 0
             mark("kit_only_complete")
         else:
@@ -416,6 +441,7 @@ def _run_synchronous_renderer_free() -> None:
             report["offline_stage"] = _stage_audit(offline_stage)
             del offline_stage
             report["status"] = "ok"
+            report["completion_contract"]["results_saved"] = True
             exit_code = 0
             mark("openusd_only_complete")
     except Exception as error:
@@ -424,6 +450,7 @@ def _run_synchronous_renderer_free() -> None:
         report["traceback"] = traceback.format_exc()
     finally:
         report["gpu_before_quit"] = _gpu_snapshot()
+        report["completion_contract"]["shutdown_requested"] = True
         mark("shutdown_requested")
         _write(output, report)
         app.post_uncancellable_quit(exit_code)

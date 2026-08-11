@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600">
+  <style>.title{font:700 32px system-ui;fill:#f5f7fb}.sub{font:18px system-ui;fill:#aeb8cc}.label{font:18px system-ui;fill:#eef2fa}.value{font:600 18px ui-monospace,monospace;fill:#d5def0}.state{font:700 13px system-ui;fill:#0b1020;text-anchor:middle}.foot{font:16px system-ui;fill:#aeb8cc}</style>
+  <rect width="1200" height="600" fill="#0c1322"/>
+  <text x="55" y="58" class="title">Phase 6EB — known NGX shutdown residual policy</text>
+  <text x="55" y="92" class="sub">Functional completion and OS lifecycle are recorded independently.</text>
+  <rect x="55" y="132" width="1090" height="58" rx="8" fill="#162033"/><text x="76" y="168" class="label">Normal exit within 60 s</text><text x="675" y="168" class="value">function pass · perf accepted</text><rect x="1015" y="146" width="100" height="28" rx="14" fill="#6ee7a2"/><text x="1065" y="166" class="state">NORMAL</text>
+  <rect x="55" y="205" width="1090" height="58" rx="8" fill="#162033"/><text x="76" y="241" class="label">Known NGX telemetry residual</text><text x="675" y="241" class="value">function pass · perf rejected</text><rect x="1015" y="219" width="100" height="28" rx="14" fill="#ffd36e"/><text x="1065" y="239" class="state">KNOWN</text>
+  <rect x="55" y="278" width="1090" height="58" rx="8" fill="#162033"/><text x="76" y="314" class="label">Unknown non-exit / missing gate</text><text x="675" y="314" class="value">fail closed · no retry</text><rect x="1015" y="292" width="100" height="28" rx="14" fill="#ff8b7b"/><text x="1065" y="312" class="state">FAIL</text>
+  <rect x="55" y="365" width="527" height="112" rx="10" fill="#162033"/><text x="76" y="401" class="label">Historical controlled baseline</text><text x="76" y="436" class="value">22 normal / 24 total</text><text x="76" y="464" class="sub">1 signature-confirmed · 1 pre-policy unclassified</text>
+  <rect x="598" y="365" width="547" height="112" rx="10" fill="#162033"/><text x="619" y="401" class="label">Repeat evidence</text><text x="619" y="436" class="value">guarded non-invasive stack · no full dump</text><text x="619" y="464" class="sub">PID/path/start-time rechecked before outer termination</text>
+  <text x="55" y="526" class="foot">Known residual is not a normal exit and is excluded from shutdown timing and performance populations.</text>
+  <text x="55" y="558" class="foot">WPR/ETW remains paused unless a documented reinvestigation threshold is crossed.</text>
+</svg>

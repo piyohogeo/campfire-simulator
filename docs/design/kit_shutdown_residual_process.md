@@ -119,3 +119,25 @@ Release buildは`9.41 s`で合格した。Phase 6DY lifecycle contractは`6 / 6`
 補助的な単独Flow testのdirect Kit launcherは、sandboxからAppData test reporterへ書けず120秒でtimeoutしたため正式結果から除外し、対象Kitをpath確認後に停止した。自動retryは行っていない。正式suiteは実環境権限で正常完了している。Production codeとapp compositionを変更していないためPhase 0 RTXとPhase 3は実行していない。
 
 WinDbg follow-up後はPhase 6EA targeted contract `6 / 6`、標準suite 8 process・`78 / 78`件・`354.2 s`に合格した。日誌は336 local reference、JSON 179、SVG 145、欠落・replacement character 0である。接続可能なBrowserがなかったため実レンダリング確認はできず、静的参照、JSON、SVG、UTF-8検査で代替した。
+
+## Phase 6EB: 既知residualの監視運用
+
+Phase 6EAでstack境界が特定できたため、この現象を全機能検証の永久blockerにはしない。ただし正常終了へ読み替えない。runnerは`shutdown_requested`後に最大60秒待ち、その間のexit 0を`normal_exit`とする。60秒後もpath確認済みの対象`kit.exe`だけが残る場合、CDBの非侵襲attachで全threadの短いstackを取得し、`gpu_foundation_plugin!carbOnPluginShutdown`、NGX D3D12 shutdown、Telemetry uninitialize、Telemetry Bridgeの`WaitNamedPipeW`がそろう場合だけ既知signatureとする。CDB、symbol cache、生stack logはGit管理外で、反復ごとのfull dumpは作らない。
+
+既知signatureでも、probe完了、public result保存、timeline stop、stage close、renderer drain、`shutdown_requested`、production hash不変、fatal／dump／Windows exception／`0xC0000005`／device lost／TDR／CUDA illegal address／upload attempt 0がすべて必要である。さらに診断前と停止直前にPID、実行path、process start timeを再確認し、外側runnerからだけ終了させ、PID消滅を確認する。合格表現は次の3軸に固定する。
+
+```text
+functional_status: pass
+lifecycle_status: known_ngx_shutdown_residual
+performance_sample_accepted: false
+```
+
+これはnormal exitではなく、shutdown時間、normal-exit率、性能母集団から除外する。outcomeには最後のapplication marker、`shutdown_complete_reached`、`os_process_normal_exit`を別々に記録し、`shutdown_complete`到達をexit 0へ読み替えない。signature不一致、証拠不足、完了gate不足、PID/path/start-time未確認、Windows exception、未知module／fault offset、dump、停止失敗は`unknown_shutdown_failure`としてfail closedにする。入力JSONの欠落、型不一致、破損も明示的なunknown結果にする。アプリ内部の`os._exit()`やkillは使わない。
+
+軽量CDBはPhase 6EAの共通安全helperへ隔離し、atomic output lock、45秒timeout、Private Bytes 512 MiB上限、process-tree cleanupを適用する。stdout/stderrは直接Git外ファイルへredirectし、stack tokenはstreaming検索する。WCT 10秒、Phase 6EA診断全体360秒、dump 16 GiB上限、`.partial` commit、existing dump read-onlyなど既存のPhase 6EA契約は変更しない。CDB helperがtimeout、memory超過、起動失敗した場合は既知signatureとは認めず、helper失敗を理由に対象Kitを停止しない。full dumpは同signatureの通常反復では作らず、新signature、例外、または追加承認された再調査だけの候補とする。
+
+今後の各Kit processでは総数、normal exit、known residual、unknown failure、native crash、device lost/TDRを条件・driver・Kit build別に累積する。ハードウェア変更後の既存統制runをhistoryとして数えると、Phase 6DW 14件、6DY 8件、6DZ control、6EA direct controlの計24件中、normal exit 22、full dumpでsignature確認済み1、軽量signature導入前で遡及分類しない残留1である。既知signature率は`1 / 24 = 4.17%`だが、これは新schemaで得たrateではなく歴史baselineである。
+
+再調査triggerは、新signatureまたは新module/offset、result保存またはstage close前のhang、既知residual 2回連続、policy分類済み20 process以上で5%超、fatal／Fabric access violation／Windows exception／TDR／device lost、安全なPID特定・停止不能、interactive productionでの反復、driver／Kit更新後の悪化である。それまではWPR/ETW、DLSS以外を含むNGX内部、telemetry serviceの追加調査を開始しない。distribution前には長時間soakを別途必要とし、この運用を「完全に正常」「完全に安全」と表現しない。
+
+Phase 6EBのfixtureはnormal、既知NGX、未知signature、shutdown marker欠落、functional gate失敗、Windows exception、未知module/offset、dump、timeout、残留停止失敗、入力破損、複数runの既知・未知混在を24/24で確認した。既存正常runnerの最終`kit_only`実processは1.423秒、exit 0、`normal_exit`、性能母集団accepted、fatal/dump/upload 0である。既知hang条件は再実行せず、保存済みWinDbg summaryだけをsignature定義の根拠にした。Phase 6EA resource safety 7/7・静的契約6/6、標準suite 8 process・78/78件・302.2秒、日誌338 reference／JSON 180／SVG 146の静的検査も合格した。Production app SHA-256は`94162F82...F02A`で前後一致した。
