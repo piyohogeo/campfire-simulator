@@ -1,0 +1,399 @@
+{
+  "schema": "campfire.phase6em.phase6eg-numeric-safe-stop.v1",
+  "phase": "phase6em",
+  "status": "safe_stop",
+  "generated_utc": "2026-08-11T22:42:22.343429+00:00",
+  "qualification": {
+    "phase6eg_qualified": false,
+    "planned_processes": 36,
+    "completed_normal_exit_incremental_gate_processes": 8,
+    "active_normal_exit_numeric_failure_processes": 1,
+    "accepted_complete_population": 0,
+    "prior_samples_reused": false,
+    "automatic_retry": false,
+    "later_processes_started": false,
+    "active_condition": "run_1/P4_y24_z31_on",
+    "failure_kind": "incremental_numeric_gate"
+  },
+  "frozen_contract": {
+    "sha256_before": "4BAED82160A08C061D479BCCA6B6A46866DE88F5046851D2AF140D36D8C80687",
+    "sha256_after": "4BAED82160A08C061D479BCCA6B6A46866DE88F5046851D2AF140D36D8C80687",
+    "changed": false,
+    "pose_order_threshold_mesh_emitter_flow_changed": false,
+    "velocity_limit_m_s": 1e-05
+  },
+  "active_condition": {
+    "probe_status": "ok",
+    "last_lifecycle_marker": "shutdown_complete",
+    "functional_status": "pass",
+    "lifecycle_status": "normal_exit",
+    "normal_os_exit": true,
+    "flow_velocity_sample_count": 4,
+    "sample_frames": [
+      60,
+      120,
+      180,
+      200
+    ],
+    "active_blocks_final": 42,
+    "source_fuel": 0.800000011920929,
+    "numeric": {
+      "pass": false,
+      "pair_available": false,
+      "deep_maximum_m_s": 1.5913657989585772e-05,
+      "center_maximum_m_s": 1.0030949852080084e-05,
+      "boundary_p95_maximum_m_s": 0.027096415683627105,
+      "boundary_maximum_m_s": 1.9408366680145264,
+      "deep_cells_above_1e_5_by_frame": {
+        "60": 11,
+        "120": 11,
+        "180": 11,
+        "200": 11
+      },
+      "center_cells_above_1e_5_by_frame": {
+        "60": 1,
+        "120": 1,
+        "180": 1,
+        "200": 1
+      },
+      "worst_on_off_deep_ratio": null,
+      "stale_position_checks_pass": null
+    },
+    "pair_gate_evaluated": false,
+    "paired_off_condition_started": false,
+    "cpu_by_lifecycle_section": {
+      "process_startup": {
+        "sample_count": 29,
+        "mean_percent_of_logical_total": 7.429744305306922,
+        "maximum_percent_of_logical_total": 29.79411284554769
+      },
+      "opening_prebuilt_stage": {
+        "sample_count": 19,
+        "mean_percent_of_logical_total": 0.6523430950543695,
+        "maximum_percent_of_logical_total": 2.902803482346997
+      },
+      "timeline_playing": {
+        "sample_count": 141,
+        "mean_percent_of_logical_total": 2.7919611044636596,
+        "maximum_percent_of_logical_total": 5.019327197544867
+      },
+      "measurement_complete": {
+        "sample_count": 1,
+        "mean_percent_of_logical_total": 1.7940321057725588,
+        "maximum_percent_of_logical_total": 1.7940321057725588
+      },
+      "timeline_stopped": {
+        "sample_count": 40,
+        "mean_percent_of_logical_total": 0.8412718263169128,
+        "maximum_percent_of_logical_total": 1.7955432521097685
+      },
+      "shutdown_complete": {
+        "sample_count": 12,
+        "mean_percent_of_logical_total": 1.8222966999664336,
+        "maximum_percent_of_logical_total": 4.12683689153353
+      }
+    },
+    "resource_peaks_bytes": {
+      "runner": 97599488,
+      "kit": 11981434880,
+      "diagnostic": 16932864,
+      "child": 65204224,
+      "tree": 12128337920
+    },
+    "resource_limits": {
+      "runner_private_bytes": 536870912,
+      "kit_private_bytes": 15032385536,
+      "diagnostic_private_bytes": 536870912,
+      "tree_private_bytes": 17179869184,
+      "available_memory_floor_bytes": 8589934592,
+      "commit_headroom_floor_bytes": 8589934592,
+      "timeout_seconds": 720.0
+    },
+    "machine_minima_bytes": {
+      "available_physical_bytes": 92538318848,
+      "estimated_commit_headroom_bytes": 111578693632
+    },
+    "duration_seconds": 87.74050331115723
+  },
+  "completed_partial_evidence": [
+    {
+      "run": 1,
+      "condition": "P0_identity_on",
+      "functional_status": "pass",
+      "lifecycle_status": "normal_exit",
+      "active_blocks_final": 26,
+      "source_fuel": 0.800000011920929,
+      "numeric": {
+        "pass": true,
+        "pair_available": false,
+        "deep_maximum_m_s": 0.0,
+        "center_maximum_m_s": 0.0,
+        "boundary_p95_maximum_m_s": 0.01472094655036926,
+        "boundary_maximum_m_s": 2.831104278564453,
+        "deep_cells_above_1e_5_by_frame": {
+          "60": 0,
+          "120": 0,
+          "180": 0,
+          "200": 0
+        },
+        "center_cells_above_1e_5_by_frame": {
+          "60": 0,
+          "120": 0,
+          "180": 0,
+          "200": 0
+        },
+        "worst_on_off_deep_ratio": null,
+        "stale_position_checks_pass": null
+      }
+    },
+    {
+      "run": 1,
+      "condition": "P0_identity_off",
+      "functional_status": "pass",
+      "lifecycle_status": "normal_exit",
+      "active_blocks_final": 58,
+      "source_fuel": 0.800000011920929,
+      "numeric": {
+        "pass": true,
+        "pair_available": true,
+        "deep_maximum_m_s": 8.826881408691406,
+        "center_maximum_m_s": 8.357105255126953,
+        "boundary_p95_maximum_m_s": 1.2706607520580278,
+        "boundary_maximum_m_s": 8.928284645080566,
+        "deep_cells_above_1e_5_by_frame": {
+          "60": 448,
+          "120": 448,
+          "180": 448,
+          "200": 448
+        },
+        "center_cells_above_1e_5_by_frame": {
+          "60": 32,
+          "120": 32,
+          "180": 32,
+          "200": 32
+        },
+        "worst_on_off_deep_ratio": 0.0,
+        "stale_position_checks_pass": null
+      }
+    },
+    {
+      "run": 1,
+      "condition": "P1_y40_on",
+      "functional_status": "pass",
+      "lifecycle_status": "normal_exit",
+      "active_blocks_final": 24,
+      "source_fuel": 0.800000011920929,
+      "numeric": {
+        "pass": true,
+        "pair_available": false,
+        "deep_maximum_m_s": 8.352522854693234e-06,
+        "center_maximum_m_s": 8.352522854693234e-06,
+        "boundary_p95_maximum_m_s": 0.10412837825715347,
+        "boundary_maximum_m_s": 3.1623966693878174,
+        "deep_cells_above_1e_5_by_frame": {
+          "60": 0,
+          "120": 0,
+          "180": 0,
+          "200": 0
+        },
+        "center_cells_above_1e_5_by_frame": {
+          "60": 0,
+          "120": 0,
+          "180": 0,
+          "200": 0
+        },
+        "worst_on_off_deep_ratio": null,
+        "stale_position_checks_pass": null
+      }
+    },
+    {
+      "run": 1,
+      "condition": "P1_y40_off",
+      "functional_status": "pass",
+      "lifecycle_status": "normal_exit",
+      "active_blocks_final": 58,
+      "source_fuel": 0.800000011920929,
+      "numeric": {
+        "pass": true,
+        "pair_available": true,
+        "deep_maximum_m_s": 9.09351921081543,
+        "center_maximum_m_s": 8.357105255126953,
+        "boundary_p95_maximum_m_s": 1.7267936766147538,
+        "boundary_maximum_m_s": 9.40645694732666,
+        "deep_cells_above_1e_5_by_frame": {
+          "60": 491,
+          "120": 491,
+          "180": 491,
+          "200": 491
+        },
+        "center_cells_above_1e_5_by_frame": {
+          "60": 34,
+          "120": 34,
+          "180": 34,
+          "200": 34
+        },
+        "worst_on_off_deep_ratio": 1.0753648856049525e-06,
+        "stale_position_checks_pass": true
+      }
+    },
+    {
+      "run": 1,
+      "condition": "P2_roll_x17_on",
+      "functional_status": "pass",
+      "lifecycle_status": "normal_exit",
+      "active_blocks_final": 32,
+      "source_fuel": 0.800000011920929,
+      "numeric": {
+        "pass": true,
+        "pair_available": false,
+        "deep_maximum_m_s": 7.300534889509436e-06,
+        "center_maximum_m_s": 2.980232238769531e-07,
+        "boundary_p95_maximum_m_s": 0.015165542811155279,
+        "boundary_maximum_m_s": 3.0230672359466553,
+        "deep_cells_above_1e_5_by_frame": {
+          "60": 0,
+          "120": 0,
+          "180": 0,
+          "200": 0
+        },
+        "center_cells_above_1e_5_by_frame": {
+          "60": 0,
+          "120": 0,
+          "180": 0,
+          "200": 0
+        },
+        "worst_on_off_deep_ratio": null,
+        "stale_position_checks_pass": null
+      }
+    },
+    {
+      "run": 1,
+      "condition": "P2_roll_x17_off",
+      "functional_status": "pass",
+      "lifecycle_status": "normal_exit",
+      "active_blocks_final": 58,
+      "source_fuel": 0.800000011920929,
+      "numeric": {
+        "pass": true,
+        "pair_available": true,
+        "deep_maximum_m_s": 8.826881408691406,
+        "center_maximum_m_s": 8.357105255126953,
+        "boundary_p95_maximum_m_s": 1.2497273921966525,
+        "boundary_maximum_m_s": 8.928284645080566,
+        "deep_cells_above_1e_5_by_frame": {
+          "60": 480,
+          "120": 480,
+          "180": 480,
+          "200": 480
+        },
+        "center_cells_above_1e_5_by_frame": {
+          "60": 32,
+          "120": 32,
+          "180": 32,
+          "200": 32
+        },
+        "worst_on_off_deep_ratio": 9.399242603569763e-07,
+        "stale_position_checks_pass": null
+      }
+    },
+    {
+      "run": 1,
+      "condition": "P3_z33_on",
+      "functional_status": "pass",
+      "lifecycle_status": "normal_exit",
+      "active_blocks_final": 34,
+      "source_fuel": 0.800000011920929,
+      "numeric": {
+        "pass": true,
+        "pair_available": false,
+        "deep_maximum_m_s": 3.918523816537345e-06,
+        "center_maximum_m_s": 3.918523816537345e-06,
+        "boundary_p95_maximum_m_s": 0.004876111820340145,
+        "boundary_maximum_m_s": 2.5665783882141113,
+        "deep_cells_above_1e_5_by_frame": {
+          "60": 0,
+          "120": 0,
+          "180": 0,
+          "200": 0
+        },
+        "center_cells_above_1e_5_by_frame": {
+          "60": 0,
+          "120": 0,
+          "180": 0,
+          "200": 0
+        },
+        "worst_on_off_deep_ratio": null,
+        "stale_position_checks_pass": null
+      }
+    },
+    {
+      "run": 1,
+      "condition": "P3_z33_off",
+      "functional_status": "pass",
+      "lifecycle_status": "normal_exit",
+      "active_blocks_final": 58,
+      "source_fuel": 0.800000011920929,
+      "numeric": {
+        "pass": true,
+        "pair_available": true,
+        "deep_maximum_m_s": 8.826881408691406,
+        "center_maximum_m_s": 8.175348281860352,
+        "boundary_p95_maximum_m_s": 1.3073453247547122,
+        "boundary_maximum_m_s": 8.928284645080566,
+        "deep_cells_above_1e_5_by_frame": {
+          "60": 474,
+          "120": 474,
+          "180": 474,
+          "200": 474
+        },
+        "center_cells_above_1e_5_by_frame": {
+          "60": 27,
+          "120": 27,
+          "180": 27,
+          "200": 27
+        },
+        "worst_on_off_deep_ratio": 5.044994176032969e-07,
+        "stale_position_checks_pass": true
+      }
+    }
+  ],
+  "cdb": {
+    "phase6el_path_integrated": true,
+    "invocation_count": 0,
+    "not_invoked_reason": "Kit exited normally inside shutdown grace; residual-only CDB path was not needed",
+    "known_ngx_classification_used": false
+  },
+  "safety": {
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "device_lost_or_tdr_count": 0,
+    "resource_guard_status": "ok",
+    "resource_limit_exceeded": false,
+    "process_absent_after_cleanup": true,
+    "observed_process_cleanup": {
+      "root_pid": 44848,
+      "observed_alive_before_cleanup": [],
+      "cleanup_required": false,
+      "killed_pids": [],
+      "remaining": [],
+      "all_observed_absent": true
+    }
+  },
+  "production": {
+    "app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "changed": false
+  },
+  "conclusion": {
+    "observed_fact": "P4 compound collision ON exceeded the frozen deep and center 1e-5 m/s maxima in all four frames after a normal OS exit",
+    "not_claimed": "The result does not qualify P4, the six-pose set, all SO(3), dynamic transforms, production integration, or PointEmitter coexistence",
+    "next_step": "Investigate P4 spatial depth/mesh-grid phase as a new diagnostic before any new full-matrix restart; do not relax the frozen gate post-result"
+  },
+  "artifacts": {
+    "local_root": "artifacts/phase6eg-static-pose-qualification-5",
+    "raw_artifacts_committed": false,
+    "qualification_svg_or_zip_generated": false,
+    "latest_demo_changed": false
+  }
+}

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="430" viewBox="0 0 1120 430">
+<rect width="1120" height="430" fill="#101827"/><g font-family="Segoe UI, sans-serif">
+<text x="45" y="48" fill="#f8fafc" font-size="29">Phase 6EM - Phase 6EG numeric safe stop</text>
+<text x="45" y="82" fill="#94a3b8" font-size="17">P0-P3 pairs passed; P4 compound ON exited normally but exceeded the frozen velocity gate.</text>
+<text x="45" y="145" fill="#e5e7eb" font-size="18">P4 deep interior maximum</text><rect x="220" y="120" width="620" height="28" rx="5" fill="#253044"/><rect x="220" y="120" width="493.3" height="28" rx="5" fill="#ef4444"/>
+<text x="865" y="143" fill="#f8fafc" font-size="17">1.5913658e-05 m/s</text>
+<text x="45" y="215" fill="#e5e7eb" font-size="18">P4 center-axis maximum</text><rect x="220" y="190" width="620" height="28" rx="5" fill="#253044"/><rect x="220" y="190" width="311.0" height="28" rx="5" fill="#f59e0b"/>
+<text x="865" y="213" fill="#f8fafc" font-size="17">1.003095e-05 m/s</text>
+<line x1="530.0" y1="108" x2="530.0" y2="232" stroke="#f8fafc" stroke-width="3" stroke-dasharray="7 6"/><text x="538.0" y="258" fill="#cbd5e1" font-size="15">frozen limit 1e-5</text>
+<text x="45" y="315" fill="#f8fafc" font-size="19">normal exit · active blocks 42 · fuel 0.800 · CDB calls 0</text>
+<text x="45" y="352" fill="#fbbf24" font-size="18">Safe stop: 8 completed passes + 1 numeric failure; P4 OFF and later conditions not started.</text>
+<text x="45" y="390" fill="#94a3b8" font-size="17">0 / 36 accepted as a complete population · no retry · production and contract unchanged</text>
+</g></svg>

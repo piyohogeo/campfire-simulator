@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6el">最新記録</a>
+        <a href="#phase-6em">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6el">Phase 6EL診断結果を読む</a>
+        <a class="button primary" href="#phase-6em">Phase 6EM診断結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6EL CDB path · qualified</strong></div>
+        <div><span>現在地</span><strong>Phase 6EM numeric safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>CDB attach / stack / detach verified</strong></div>
+        <div><span>Lifecycle</span><strong>normal exit · numeric gate failed</strong></div>
         <div><span>Production</span><strong>unchanged · Phase 6EG unqualified</strong></div>
       </div>
     </div>
@@ -56,6 +56,20 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6em" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報"><span class="phase-number compact">6EM</span><p><time datetime="2026-08-12">2026.08.12</time></p><span class="pill current">Numeric-gate safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6EM · Phase 6EG fifth-root restart</p><h2>P4は正常終了。<br>凍結済み数値gateで安全停止。</h2><p>Phase 6ELのCDB診断経路を有効にしたまま、明示承認された36条件を新rootのprocess 1から開始しました。過去sampleを再利用せず、姿勢、順序、閾値、Mesh、Emitter、Flow設定、productionを変更していません。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/static_pose_numeric_safe_stop.svg"><img src="assets/phase6/static_pose_numeric_safe_stop.svg" alt="Phase 6EMのP4 deep interiorとcenter-axis最大速度を凍結済み1e-5メートル毎秒gateと比較した図" loading="lazy"></a><figcaption><div><strong>Frozen numeric gate</strong><span>P4 compound ONはnormal exit後、deep／centerの両方で超過。</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Completed partial evidence</p><h3>P0～P3 · 8 process pass</h3><p>run 1のP0～P3 ON/OFFはすべてfunctional pass、normal OS exit、4 sample、incremental/pair gateを満たしました。ただし3 run・36条件の母集団ではないため、正式qualificationへ採用しません。</p></section><section class="note caution"><p class="note-label">Active condition</p><h3><code>run_1/P4_y24_z31_on</code></h3><p>P4はactive blocks 42、fuel 0.8、<code>shutdown_complete</code>、normal exitまで成立しましたが、deep最大<code>1.5913658e-5</code>、center最大<code>1.0030950e-5 m/s</code>で、固定された<code>1e-5</code>を超えました。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Fail-closed result</p><h3>0 / 36 accepted · Phase 6EG unqualified</h3><p>frames 60／120／180／200の各frameでdeep 11 voxel、center 1 voxelが閾値を超えました。P4 OFFを開始していないため、ON/OFF比とstale-positionは未評価です。結果を見た後に閾値を緩和せず、P4をretryせず、後続条件も開始していません。</p><p>P4のrunner／diagnostic／Kit／tree peakは97.6 MB／16.9 MB／11.98 GB／12.13 GBで上限内。fatal、dump、upload、device lost、TDR、resource breach、残留processは0です。Kitが正常終了したためCDB呼出しは0で、Phase 6ELのresidual-only契約どおりです。</p><p><a href="assets/phase6/static_pose_numeric_safe_stop.json">safe-stop JSON</a> · <a href="assets/phase6/static_pose_numeric_safe_stop.svg">数値SVG</a> · <a href="../design/static_pose_set_collision_qualification.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>P0–P3</strong><small>8 incremental passes</small></p></div><div role="listitem"><span>✓</span><p><strong>P4 lifecycle</strong><small>normal OS exit</small></p></div><div role="listitem"><span>!</span><p><strong>P4 numeric</strong><small>deep / center fail</small></p></div><div role="listitem"><span>—</span><p><strong>Pair gate</strong><small>P4 OFF not started</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>SHA unchanged</small></p></div></div></section>
+          <section class="note"><p class="note-label">Regression</p><h3>107/107 focused · 78/78 standard</h3><p>Release build 8.28秒、Phase 0 RTX 20.4秒、Phase 3 26.8秒が合格しました。Phase 3はdry/wet mass balance 0、authority SHA維持、active blocks final/peak 280/340、fuel peak 1.0です。日誌372 reference・192 JSON・158 SVG・2 ZIPも検査済みで、Kit／CDB／nvidia-smi残留は0です。</p></section>
+          <section class="note next"><p class="note-label">Next diagnostic</p><h3>P4の11＋1 voxelを空間的に局在化。</h3><p>次は別Phaseで、P4の実Mesh signed depth、格子位相、再現性を調べます。Phase 6EGのgate変更、PointEmitter–CollisionProxy共存、dynamic transform、production統合へ自動的には進みません。内部診断だけで画面上の変更がないため、新動画を作らずlatest demo pointerも維持します。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6el" class="section entry-section phase-six">

@@ -1,5 +1,19 @@
 # Phase 6EG: representative static Mesh CollisionProxy poses
 
+## Phase 6EM fifth-root numeric safe stop
+
+The explicitly approved fifth root started from frozen process 1 with no prior sample reuse. The contract SHA-256 remained `4BAED82160A08C061D479BCCA6B6A46866DE88F5046851D2AF140D36D8C80687`, the production app SHA-256 remained `94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`, and no pose, process order, threshold, Mesh, emitter, Flow setting, production code, or production default changed.
+
+P0 identity, P1 Y40°, P2 X17° roll, and P3 Z33° each completed their run-1 ON/OFF pair. All eight processes reached functional pass, normal OS exit, four velocity samples, active blocks, fuel 0.8, and passing incremental/pair gates. They remain partial diagnostics because the frozen qualification requires all three runs and 36 processes.
+
+The ninth process, P4 local Y24° then world Z31° collision ON, completed the same lifecycle and exited normally. Its four samples all failed the unchanged `1e-5 m/s` deep/center gate. Deep-interior maximum was `1.5913657989585772e-5 m/s`; 11 of 479 deep cells exceeded the limit in each frame. Center-axis maximum was `1.0030949852080084e-5 m/s`; one of 28 center cells exceeded the limit in each frame. Boundary-band p95 reached `0.0270964157 m/s` and maximum reached `1.9408366680 m/s`, which remain reported but are excluded from the zero gate by the frozen contract. P4 OFF was never started, so a deep ON/OFF ratio and stale-position predicate were not evaluated.
+
+This is the first safe stop in this sequence caused by the frozen collision-number gate after a normal OS exit. It is not a CDB, shutdown, resource, crash, or renderer failure. The Phase 6EL path was present but correctly invoked zero times because Kit exited within the normal grace. P4 runner/diagnostic/Kit/unique-tree peaks were 97,599,488 / 16,932,864 / 11,981,434,880 / 12,128,337,920 bytes. Minimum available physical memory and estimated commit headroom were 92,538,318,848 and 111,578,693,632 bytes. Fatal, dump, automatic upload, device loss, TDR, limit breach, and cleanup residual evidence were zero.
+
+The active condition was not retried and no P4 OFF or later condition was started. Phase 6EG remains unqualified at 0/36 complete-population acceptance, and the observed result does not authorize a post-result gate change. A separate next diagnostic should localize the repeated P4 cells by signed actual-Mesh depth and grid phase, then decide whether the next one-variable comparison is pose repeatability, Mesh tessellation, or velocity-cell resolution. PointEmitter–CollisionProxy coexistence remains pending only after the complete Phase 6EG qualification succeeds. This internal result produces no demo and does not move the latest-demo pointer.
+
+Regression passed Release build (8.28 seconds), Phase 0 RTX (20.4 seconds), Phase 3 authority/mass-balance/Flow input (26.8 seconds), 107/107 focused Phase 6E contracts, and the standard eight-process 78/78 suite (314.0 seconds). Devlog validation found 372 references, 192 JSON, 158 SVG, and 2 ZIP files with no missing/invalid asset, replacement character, or duplicate ID. Production and contract SHA-256 values remained unchanged, and Kit/CDB/`nvidia-smi` residual count was zero.
+
 ## Phase 6EK fourth-root safe stop
 
 Explicit approval started a fresh root from frozen process 1. The contract SHA-256 remained `4BAED82160A08C061D479BCCA6B6A46866DE88F5046851D2AF140D36D8C80687`; no old sample was reused and no pose, order, threshold, Mesh, emitter, or Flow setting changed. Run-1 P0 through P3 ON/OFF all completed normal OS exit and incremental numeric gates. Completed ON deep maxima were P0 `0`, P1 `8.352523e-6`, P2 `7.300535e-6`, and P3 `3.918524e-6 m/s`; paired OFF deep maxima were at least `8.826881 m/s`. The worst completed deep ratio was `1.075365e-6`. This is eight-process partial evidence, not the required three-run population.
