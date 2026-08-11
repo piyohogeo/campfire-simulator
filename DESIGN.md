@@ -2915,3 +2915,14 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 同一camera・同一4時点のOFF／ON frameでも、不透明Box内部から上方へvolumeが連続して見えた。したがって分類は「Collision ONでもOFFと同程度に上側へ到達する」であり、数値上は遮蔽されるが映像だけ貫通するケースではない。Phase 6DR疑惑の現時点の最有力説明は、現在の公開PhysX/Flow integrationでFlow場がColliderに拘束されていないこと。ただし未取込schema、stage順序、lifecycle、Flow constraint境界のどこが欠けるかは未確認である。
 - Boxで遮蔽が成立しなかったためCylinder、斜め配置、dynamic Transform、Phase 6DR実配置へ進んでいない。Flow内部がconvexを保持する、明示voxel maskを持つ、とは断定しない。詳細は`docs/design/flow_collision_occlusion_probe.md`。
 - 12/12 processはfatal／native crash／dump／automatic upload attempt各0、全run `shutdown_complete`、production app SHA-256前後一致だった。診断動画は開発日誌へ追加したがlatest demo pointerはV3T-Pのまま変更していない。productionコード、既定値、wood authority、物理式、Emitter schema、V3、checkpoint、rollback、serialization、Phase V3T-R safe stopは不変である。
+
+## Phase 6DT NVIDIA Flow collision reference audit
+
+### 2026-08-11: PhysX自動連携CollisionをMesh境界で再現
+
+- Flow 110.0.0同梱`data/tests/PhysicsCollision.usda`（SHA-256 `EA91AD...C9A9`）はCollision用Emitterではなく、静的MeshへPhysics/PhysX collision schemaを適用する自動連携参照だった。同じKit 110.2環境で、ON/OFF temperature比はinside core `0.167659`、above `0.003147`、above far `0`。正規Editor appとCampfire隔離appの結果は全ROIで一致した。
+- Phase 6DSのCubeへ公式schema一式を追加しても全channel・全ROIがbaselineと完全一致した。同寸法Meshへ`PhysicsCollisionAPI + PhysicsMeshCollisionAPI + convexHull/convexDecomposition`を適用すると、inside/above/farのtemperature・smoke・burnが0となった。convexDecomposition最小候補は3独立runで一致し、Flow側Collision OFFとschemaなしMeshのnegative controlは非遮蔽場へ戻った。
+- `PhysxCollisionAPI`、Flow layer 2、`forceSimulate=false`、空`physicsCollisionPrim` relationship、公式の追加PhysX schema 3種は静的Box成立に不要だった。`approximation=none`はEmitter側までfield 0になる退化条件で採用しない。Collider側`physics:collisionEnabled=false`はFlow遮蔽を止めなかったが、内部の取り込み実装は断定しない。
+- 不完全な`Mesh + PhysicsCollisionAPI` ablationはstage open前にnative `0xC0000005`となったため再試行せず、正式母集団から除外した。dumpはGit外に保全しupload attempt 0。正式19 processはfatal/crash/dump/upload 0、全run safe shutdown、production hash不変だった。
+- Phase 6DRのCylinderはprimitive + `PhysicsCollisionAPI`だけであり、Phase 6DS Cubeと同じ非取込クラスである可能性が最有力となった。次は独立Phaseで静的Cylinder相当Mesh proxyを測り、成立後にrotation・dynamic transform・20本costへ進む。productionは未変更。詳細は`docs/design/nvidia_flow_collision_reference_audit.md`。
+- Release buildは`7.25 s`で合格し、Flow scene collider契約のtargeted Kit testは`1 / 1`件、`0.078 s`で合格した。共有productionコードとapp構成を変更していないため、Phase 0 RTXと標準suite全体はこのPhaseでは再実行していない。

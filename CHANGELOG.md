@@ -1,5 +1,11 @@
 # Changelog
 
+- Reproduced automatic PhysX-to-Flow collision with the bundled Flow 110.0.0 `PhysicsCollision.usda`: official Collision ON reduced temperature mean to `0.167659 / 0.003147 / 0` of OFF in the collider-core / above / far-above ROIs, and the rendered comparison showed matching occlusion.
+- Isolated the Phase 6DS missing boundary to collision representation. Adding the official schema bundle to a Cube changed nothing, while an equivalent Mesh with `PhysicsCollisionAPI`, `PhysicsMeshCollisionAPI`, and a convex approximation reduced core/above/far scalar channels to zero across three independent runs. The official auxiliary PhysX schemas, layer 2, `forceSimulate=false`, and app composition were not required.
+- Recorded one excluded `0xC0000005` startup crash during the incomplete Mesh-schema ablation without retrying or attributing causality; its dump remains local, automatic upload attempts were zero, and all 19 formal processes shut down cleanly with unchanged production hashes.
+- Added the Phase 6DT runner, public NanoVDB samples, normalized difference report, SVG, official OFF/ON diagnostic video, design note, and devlog card. Production code/defaults and the latest-demo pointer remain unchanged; a static Cylinder mesh-proxy qualification is proposed as the next independent collision Phase.
+- Passed the Release build in `7.25 s` and the focused Flow-scene collider contract `1 / 1` in `0.078 s`; Phase 0 RTX and the full standard suite were not rerun because no shared production code or app composition changed.
+
 - Added the production-neutral, default-off Phase 6DS static Flow-collision probe with a complete offline-authored Flow 110.0.0 graph, public NanoVDB ROI sampling, and four conditions across 12 isolated Kit processes.
 - Measured the effective velocity cell at `0.050000 m`; the `0.25 m` Box was five velocity cells thick and the Emitter-to-Box gap was 4.5 cells. Aligned Collision ON retained inside-core / above-far OFF ratios of `1.008 / 1.001` for temperature, `1.001 / 1.011` for smoke, `1.004 / 0.996` for burn, and `0.996 / 1.000` for velocity magnitude.
 - Found no monotonic 0.5/1-cell position response; their aggregate ROI values were identical. Numeric readback and OFF/ON rendered captures both show continued passage, so Cylinder and dynamic-collider work were not started.
