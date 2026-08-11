@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="520" viewBox="0 0 1180 520">
+<style>.bg{fill:#111827}.title{fill:#f8fafc;font:700 28px system-ui}.sub{fill:#94a3b8;font:16px system-ui}.label{fill:#e2e8f0;font:15px system-ui}.value{fill:#f8fafc;font:700 14px system-ui}.bar{fill:#38bdf8}.gate{fill:#bbf7d0;font:700 16px system-ui}</style>
+<rect class="bg" width="1180" height="520" rx="20"/>
+<text x="56" y="54" class="title">Phase 6EL — bounded CDB diagnostic path</text>
+<text x="56" y="82" class="sub">CDB Private Bytes · direct-to-file stack capture · no system-wide debugger changes</text>
+<text x="56" y="116" class="label">wait-target</text><rect x="300" y="96" width="440.3" height="26" rx="7" class="bar"/><text x="750.3" y="116" class="value">42.2 MiB</text><text x="56" y="184" class="label">locked-log-target</text><rect x="300" y="164" width="307.7" height="26" rx="7" class="bar"/><text x="617.7" y="184" class="value">29.5 MiB</text><text x="56" y="252" class="label">cdb-timeout-target</text><rect x="300" y="232" width="480.0" height="26" rx="7" class="bar"/><text x="790.0" y="252" class="value">46.0 MiB</text><text x="56" y="320" class="label">cdb-abnormal-exit</text><rect x="300" y="300" width="22.7" height="26" rx="7" class="bar"/><text x="332.7" y="320" class="value">2.2 MiB</text>
+<text x="56" y="472" class="gate">5 / 5 fixtures passed · CDB/target/helper remainder 0 · Phase 6EG not restarted</text>
+</svg>

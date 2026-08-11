@@ -1,5 +1,11 @@
 # Changelog
 
+- Added the production-neutral Phase 6EL CDB diagnostic path without restarting the Phase 6EG matrix. Windows Kits CDB `10.0.28000.2526` is auto-detected at its installed x64 path and recorded with SHA-256 `506D1FD7AD306F6F53D8D157375A03A8368446923DEF9457CDFB2E3214054376`.
+- Bounded non-invasive CDB capture to residual-only use after PID/start-time/executable verification. Loaded modules and all-thread native stacks go directly to 16-MiB/2-MiB bounded files; markers persist attach, stack capture, detach, and cleanup. Helper memory, user/kernel CPU, and output sizes are recorded.
+- Passed wait-target, exclusive-log, normal-exit, forced-CDB-timeout, and abnormal-CDB-exit fixtures. The final successful stack logs were 37,449/38,518 bytes, CDB peak Private Bytes stayed below 48.3 MB, the fixture runner peaked at 98.5 MB, targets survived detach/timeout as intended, and exact cleanup left no fixture CDB or target process.
+- Kept known-NGX classification fail closed: CDB availability alone is insufficient, and only the accepted five-token native stack signature may classify a residual as known. No postmortem debugger registration, WER change, dump, production change, or Phase 6EG formal run occurred.
+- Passed the Release build in 6.57 seconds, 79/79 focused shutdown/resource/collision contracts, and the eight-process standard suite with 78/78 tests in 310.2 seconds. Production and frozen-contract hashes stayed unchanged.
+
 - Restarted the frozen Phase 6EG matrix from process 1 in a new root after explicit approval. Eight independent run-1 P0–P3 ON/OFF processes reached normal OS exit and passed their incremental numeric gates; no prior sample or contract input was reused.
 - Safely stopped at active condition `run_1/P4_y24_z31_on`. Flow produced all four velocity samples, active blocks 42, fuel 0.8, and `timeline_stopped`, but normal OS exit was not established. Its 848 timeline-stopped CPU samples averaged 0.1700% and peaked at 2.0566%, classifying the silent interval as a low-CPU wait rather than a sustained spin.
 - Preserved fail-closed behavior because CDB was unavailable. The diagnostic failed while Kit held `kit.log` exclusively, so no accepted NGX stack signature exists; P4 was rejected, not retried, and no later condition started. Phase 6EG remains unqualified at 0/36 complete-population acceptance.

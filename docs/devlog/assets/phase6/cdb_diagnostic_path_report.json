@@ -1,0 +1,197 @@
+{
+  "schema": "campfire.phase6el.cdb-diagnostic-path-report.v1",
+  "phase": "phase6el",
+  "status": "pass",
+  "phase6eg_formal_restarted": false,
+  "cdb": {
+    "path": "C:\\Program Files (x86)\\Windows Kits\\10\\Debuggers\\x64\\cdb.exe",
+    "file_version": "10.0.28000.2526 (WinBuild.160101.0800)",
+    "product_version": "10.0.28000.2526",
+    "bytes": 178632,
+    "sha256": "506D1FD7AD306F6F53D8D157375A03A8368446923DEF9457CDFB2E3214054376"
+  },
+  "contract": {
+    "residual_only": true,
+    "identity": "pid+process_start_time+absolute_executable_path",
+    "noninvasive": true,
+    "system_wide_debugger_registration": false,
+    "stdout_direct_to_file": true,
+    "stderr_direct_to_file": true,
+    "stack_log_limit_bytes": 16777216,
+    "stderr_limit_bytes": 2097152,
+    "private_bytes_limit": 536870912,
+    "known_ngx_requires_accepted_stack_signature": true
+  },
+  "cases": [
+    {
+      "name": "wait-target",
+      "status": "pass",
+      "diagnostic_capture_succeeded": true,
+      "exclusive_log_lock": false,
+      "log_capture_error_recorded": false,
+      "target_alive_after_detach": true,
+      "target_alive_after_cdb_timeout": null,
+      "cdb_timed_out": false,
+      "cdb_process_absent": true,
+      "cdb_exit_code": 0,
+      "cdb_peak_private_bytes": 44290048,
+      "cdb_total_cpu_seconds": 0.734375,
+      "stack_bytes": 37449,
+      "stderr_bytes": 0,
+      "diagnostic_helper_peak_private_bytes": 96555008,
+      "diagnostic_helper_total_cpu_seconds": 0.34375,
+      "target_resource_before": {
+        "pid": 28364,
+        "private_bytes": 67493888,
+        "working_set_bytes": 78327808,
+        "user_cpu_seconds": 0.03125,
+        "kernel_cpu_seconds": 0.0625,
+        "total_cpu_seconds": 0.09375
+      },
+      "target_resource_after": {
+        "pid": 28364,
+        "private_bytes": 67465216,
+        "working_set_bytes": 91557888,
+        "user_cpu_seconds": 0.03125,
+        "kernel_cpu_seconds": 0.0625,
+        "total_cpu_seconds": 0.09375
+      }
+    },
+    {
+      "name": "locked-log-target",
+      "status": "pass",
+      "diagnostic_capture_succeeded": true,
+      "exclusive_log_lock": true,
+      "log_capture_error_recorded": true,
+      "target_alive_after_detach": true,
+      "target_alive_after_cdb_timeout": null,
+      "cdb_timed_out": false,
+      "cdb_process_absent": true,
+      "cdb_exit_code": 0,
+      "cdb_peak_private_bytes": 30949376,
+      "cdb_total_cpu_seconds": 0.765625,
+      "stack_bytes": 38518,
+      "stderr_bytes": 0,
+      "diagnostic_helper_peak_private_bytes": 95821824,
+      "diagnostic_helper_total_cpu_seconds": 0.21875,
+      "target_resource_before": {
+        "pid": 24596,
+        "private_bytes": 68444160,
+        "working_set_bytes": 79216640,
+        "user_cpu_seconds": 0.03125,
+        "kernel_cpu_seconds": 0.015625,
+        "total_cpu_seconds": 0.046875
+      },
+      "target_resource_after": {
+        "pid": 24596,
+        "private_bytes": 68415488,
+        "working_set_bytes": 92327936,
+        "user_cpu_seconds": 0.03125,
+        "kernel_cpu_seconds": 0.015625,
+        "total_cpu_seconds": 0.046875
+      }
+    },
+    {
+      "name": "normal-exit-target",
+      "status": "pass",
+      "diagnostic_capture_succeeded": false,
+      "exclusive_log_lock": false,
+      "log_capture_error_recorded": false,
+      "target_alive_after_detach": null,
+      "target_alive_after_cdb_timeout": null,
+      "cdb_timed_out": false,
+      "cdb_process_absent": null,
+      "cdb_exit_code": null,
+      "cdb_peak_private_bytes": null,
+      "cdb_total_cpu_seconds": null,
+      "stack_bytes": 0,
+      "stderr_bytes": 0,
+      "diagnostic_helper_peak_private_bytes": 77492224,
+      "diagnostic_helper_total_cpu_seconds": 0.078125,
+      "target_resource_before": null,
+      "target_resource_after": null
+    },
+    {
+      "name": "cdb-timeout-target",
+      "status": "pass",
+      "diagnostic_capture_succeeded": null,
+      "exclusive_log_lock": false,
+      "log_capture_error_recorded": false,
+      "target_alive_after_detach": null,
+      "target_alive_after_cdb_timeout": true,
+      "cdb_timed_out": true,
+      "cdb_process_absent": true,
+      "cdb_exit_code": 4294967295,
+      "cdb_peak_private_bytes": 48279552,
+      "cdb_total_cpu_seconds": 0.765625,
+      "stack_bytes": 36644,
+      "stderr_bytes": 0,
+      "diagnostic_helper_peak_private_bytes": 96796672,
+      "diagnostic_helper_total_cpu_seconds": 0.125,
+      "target_resource_before": {
+        "pid": 19200,
+        "private_bytes": 67366912,
+        "working_set_bytes": 78241792,
+        "user_cpu_seconds": 0.03125,
+        "kernel_cpu_seconds": 0,
+        "total_cpu_seconds": 0.03125
+      },
+      "target_resource_after": {
+        "pid": 19200,
+        "private_bytes": 67366912,
+        "working_set_bytes": 91492352,
+        "user_cpu_seconds": 0.03125,
+        "kernel_cpu_seconds": 0,
+        "total_cpu_seconds": 0.03125
+      }
+    },
+    {
+      "name": "cdb-abnormal-exit",
+      "status": "pass",
+      "diagnostic_capture_succeeded": null,
+      "exclusive_log_lock": false,
+      "log_capture_error_recorded": false,
+      "target_alive_after_detach": null,
+      "target_alive_after_cdb_timeout": null,
+      "cdb_timed_out": false,
+      "cdb_process_absent": true,
+      "cdb_exit_code": 2147942487,
+      "cdb_peak_private_bytes": 2285568,
+      "cdb_total_cpu_seconds": 0.015625,
+      "stack_bytes": 8085,
+      "stderr_bytes": 0,
+      "diagnostic_helper_peak_private_bytes": null,
+      "diagnostic_helper_total_cpu_seconds": null,
+      "target_resource_before": null,
+      "target_resource_after": null
+    }
+  ],
+  "machine_wide_configuration_changed": false,
+  "machine_debug_configuration_before_sha256": "5257D235AC62807C899FB0DC9BF732013745AF559FB1F6523C14AABCF34E016F",
+  "machine_debug_configuration_after_sha256": "5257D235AC62807C899FB0DC9BF732013745AF559FB1F6523C14AABCF34E016F",
+  "fixture_runner": {
+    "peak_private_bytes": 98504704,
+    "total_cpu_seconds": 0.359375,
+    "duration_seconds": 11.192038199999999,
+    "process_absent": true
+  },
+  "remainder": {
+    "fixture_targets": 0,
+    "cdb": 0
+  },
+  "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "phase6eg_contract_sha256_before": "4BAED82160A08C061D479BCCA6B6A46866DE88F5046851D2AF140D36D8C80687",
+  "phase6eg_contract_sha256_after": "4BAED82160A08C061D479BCCA6B6A46866DE88F5046851D2AF140D36D8C80687",
+  "observations": [
+    "The installed Windows Kits CDB was detected without postmortem registration.",
+    "A non-invasive attach produced loaded modules and all-thread native stacks, then detached while the target remained alive.",
+    "Exclusive log access produced log_capture_error but did not prevent CDB capture or bounded JSON publication.",
+    "Timeout and abnormal-exit fixtures removed only their exact debugger/helper processes."
+  ],
+  "limits": [
+    "Fixture processes are PowerShell wait fixtures, not Kit; they do not prove the known NGX stack is present.",
+    "Private NVIDIA and Omniverse symbols may remain unavailable; unknown or ambiguous stacks still fail closed.",
+    "Phase 6EG remains unqualified and was not restarted."
+  ]
+}

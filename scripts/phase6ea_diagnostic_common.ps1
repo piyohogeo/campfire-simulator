@@ -148,12 +148,19 @@ function Invoke-Phase6EaGuardedHelper {
         [Parameter(Mandatory = $true)][string]$StdoutPath,
         [Parameter(Mandatory = $true)][string]$StderrPath,
         [Parameter(Mandatory = $true)][int]$TimeoutSeconds,
-        [Parameter(Mandatory = $true)][long]$PrivateBytesLimit
+        [Parameter(Mandatory = $true)][long]$PrivateBytesLimit,
+        [long]$MaximumStdoutBytes = 0,
+        [long]$MaximumStderrBytes = 0
     )
     $started = Get-Date
     $peak = 0L
     $timedOut = $false
     $memoryExceeded = $false
+    $outputBytesExceeded = $false
+    $stdoutBytes = 0L
+    $stderrBytes = 0L
+    $stdoutBytesBeforeTruncate = 0L
+    $stderrBytesBeforeTruncate = 0L
     $process = $null
     $nativeProcessHandle = [IntPtr]::Zero
     try {
@@ -166,10 +173,17 @@ function Invoke-Phase6EaGuardedHelper {
             $process.Refresh()
             $peak = [math]::Max($peak, $process.PrivateMemorySize64)
             if ($process.PrivateMemorySize64 -gt $PrivateBytesLimit) { $memoryExceeded = $true; break }
+            if (Test-Path -LiteralPath $StdoutPath -PathType Leaf) { $stdoutBytes = (Get-Item -LiteralPath $StdoutPath).Length }
+            if (Test-Path -LiteralPath $StderrPath -PathType Leaf) { $stderrBytes = (Get-Item -LiteralPath $StderrPath).Length }
+            if (($MaximumStdoutBytes -gt 0 -and $stdoutBytes -gt $MaximumStdoutBytes) -or
+                ($MaximumStderrBytes -gt 0 -and $stderrBytes -gt $MaximumStderrBytes)) {
+                $outputBytesExceeded = $true
+                break
+            }
             if (((Get-Date) - $started).TotalSeconds -ge $TimeoutSeconds) { $timedOut = $true; break }
             Start-Sleep -Milliseconds 100
         }
-        if ($timedOut -or $memoryExceeded) {
+        if ($timedOut -or $memoryExceeded -or $outputBytesExceeded) {
             Stop-Phase6EaHelperTree -RootProcessId $process.Id
             $exited = $process.WaitForExit(10000)
             if (-not $exited) {
@@ -183,17 +197,51 @@ function Invoke-Phase6EaGuardedHelper {
             $process.WaitForExit()
         }
         $process.Refresh()
+        if (Test-Path -LiteralPath $StdoutPath -PathType Leaf) { $stdoutBytes = (Get-Item -LiteralPath $StdoutPath).Length }
+        if (Test-Path -LiteralPath $StderrPath -PathType Leaf) { $stderrBytes = (Get-Item -LiteralPath $StderrPath).Length }
+        $stdoutBytesBeforeTruncate = $stdoutBytes
+        $stderrBytesBeforeTruncate = $stderrBytes
+        if ($MaximumStdoutBytes -gt 0 -and $stdoutBytes -gt $MaximumStdoutBytes) {
+            $outputBytesExceeded = $true
+            $stream = [IO.FileStream]::new([IO.Path]::GetFullPath($StdoutPath), [IO.FileMode]::Open, [IO.FileAccess]::Write, [IO.FileShare]::ReadWrite)
+            try { $stream.SetLength($MaximumStdoutBytes); $stream.Flush($true) } finally { $stream.Dispose() }
+            $stdoutBytes = $MaximumStdoutBytes
+        }
+        if ($MaximumStderrBytes -gt 0 -and $stderrBytes -gt $MaximumStderrBytes) {
+            $outputBytesExceeded = $true
+            $stream = [IO.FileStream]::new([IO.Path]::GetFullPath($StderrPath), [IO.FileMode]::Open, [IO.FileAccess]::Write, [IO.FileShare]::ReadWrite)
+            try { $stream.SetLength($MaximumStderrBytes); $stream.Flush($true) } finally { $stream.Dispose() }
+            $stderrBytes = $MaximumStderrBytes
+        }
         $exitCode = $null
         $exitCodeError = $null
+        $userCpuSeconds = $null
+        $kernelCpuSeconds = $null
+        $totalCpuSeconds = $null
         try { $exitCode = [Phase6EaFileSafety]::ReadExitCode($nativeProcessHandle) } catch { $exitCodeError = $_.Exception.Message }
+        try {
+            $userCpuSeconds = $process.UserProcessorTime.TotalSeconds
+            $kernelCpuSeconds = $process.PrivilegedProcessorTime.TotalSeconds
+            $totalCpuSeconds = $process.TotalProcessorTime.TotalSeconds
+        } catch {}
         return [ordered]@{
             pid = $process.Id
             exit_code = $exitCode
             exit_code_error = $exitCodeError
             timed_out = $timedOut
             private_bytes_exceeded = $memoryExceeded
+            output_bytes_exceeded = $outputBytesExceeded
             private_bytes_limit = $PrivateBytesLimit
+            maximum_stdout_bytes = $MaximumStdoutBytes
+            maximum_stderr_bytes = $MaximumStderrBytes
             peak_private_bytes = $peak
+            stdout_bytes = $stdoutBytes
+            stderr_bytes = $stderrBytes
+            stdout_bytes_before_truncate = $stdoutBytesBeforeTruncate
+            stderr_bytes_before_truncate = $stderrBytesBeforeTruncate
+            user_cpu_seconds = $userCpuSeconds
+            kernel_cpu_seconds = $kernelCpuSeconds
+            total_cpu_seconds = $totalCpuSeconds
             duration_seconds = ((Get-Date) - $started).TotalSeconds
             process_absent = ($null -eq (Get-Process -Id $process.Id -ErrorAction SilentlyContinue))
             stdout_path = $StdoutPath

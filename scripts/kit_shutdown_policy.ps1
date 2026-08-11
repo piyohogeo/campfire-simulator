@@ -9,6 +9,8 @@ $CampfireKnownNgxSignature = "ngx_telemetry_shutdown_wait_v1"
 $CampfireShutdownHelperPrivateBytesLimit = 512MB
 $CampfireShutdownDiagnosticTimeoutSeconds = 90
 $CampfireShutdownDiagnosticJsonLimitBytes = 2MB
+$CampfireCdbStackLogLimitBytes = 16MB
+$CampfireCdbStderrLimitBytes = 2MB
 
 function Write-CampfireDiagnosticMarker {
     param(
@@ -147,15 +149,48 @@ function Get-CampfireLifecycleMarker([string]$LifecyclePath) {
 }
 
 function Get-CampfireCdbPath {
-    $root = "C:\Program Files\WindowsApps"
     $candidates = @(
-        Get-ChildItem -LiteralPath $root -Directory -Filter "Microsoft.WinDbg_*_x64__8wekyb3d8bbwe" -ErrorAction SilentlyContinue |
+        "C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\cdb.exe",
+        "C:\Program Files\Windows Kits\10\Debuggers\x64\cdb.exe"
+    ) | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf }
+    $windowsAppsRoot = "C:\Program Files\WindowsApps"
+    $windowsAppsCandidates = @(
+        Get-ChildItem -LiteralPath $windowsAppsRoot -Directory -Filter "Microsoft.WinDbg_*_x64__8wekyb3d8bbwe" -ErrorAction SilentlyContinue |
             Sort-Object Name -Descending |
             ForEach-Object { Join-Path $_.FullName "amd64\cdb.exe" } |
             Where-Object { Test-Path -LiteralPath $_ -PathType Leaf }
     )
+    $candidates = @($candidates) + @($windowsAppsCandidates)
     if ($candidates.Count -eq 0) { return $null }
     return [IO.Path]::GetFullPath($candidates[0])
+}
+
+function Get-CampfireCdbMetadata {
+    param([string]$Path)
+    if ([string]::IsNullOrWhiteSpace($Path) -or -not (Test-Path -LiteralPath $Path -PathType Leaf)) { return $null }
+    $item = Get-Item -LiteralPath $Path
+    return [ordered]@{
+        path = [IO.Path]::GetFullPath($item.FullName)
+        file_version = $item.VersionInfo.FileVersion
+        product_version = $item.VersionInfo.ProductVersion
+        bytes = $item.Length
+        sha256 = [Phase6EaFileSafety]::ComputeSha256($item.FullName)
+    }
+}
+
+function Get-CampfireProcessResourceSnapshot {
+    param([Parameter(Mandatory = $true)][System.Diagnostics.Process]$Process)
+    try {
+        $Process.Refresh()
+        return [ordered]@{
+            pid = $Process.Id
+            private_bytes = $Process.PrivateMemorySize64
+            working_set_bytes = $Process.WorkingSet64
+            user_cpu_seconds = $Process.UserProcessorTime.TotalSeconds
+            kernel_cpu_seconds = $Process.PrivilegedProcessorTime.TotalSeconds
+            total_cpu_seconds = $Process.TotalProcessorTime.TotalSeconds
+        }
+    } catch { return $null }
 }
 
 function Get-CampfireGpuInventory {
@@ -206,7 +241,8 @@ function Invoke-CampfireLightweightNgxDiagnosticCore {
         [Parameter(Mandatory = $true)][string]$LifecyclePath,
         [Parameter(Mandatory = $true)][string]$LogPath,
         [Parameter(Mandatory = $true)][string]$MarkerPath,
-        [int]$DebuggerTimeoutSeconds = 45
+        [int]$DebuggerTimeoutSeconds = 45,
+        [ValidateRange(0, 60000)][int]$FixtureCdbSleepMilliseconds = 0
     )
     $output = [IO.Path]::GetFullPath($OutputDir)
     $expected = [IO.Path]::GetFullPath($ExpectedExecutable)
@@ -220,6 +256,7 @@ function Invoke-CampfireLightweightNgxDiagnosticCore {
         if (Test-Path -LiteralPath $output) { throw "Shutdown diagnostic output already exists: $output" }
         New-Item -ItemType Directory -Path $output | Out-Null
         $actual = [IO.Path]::GetFullPath($process.Path)
+        $targetResourceBefore = Get-CampfireProcessResourceSnapshot -Process $process
         $lifecycle = $null
         Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "kit_log_parse_started"
         if (Test-Path -LiteralPath $LifecyclePath) {
@@ -242,20 +279,50 @@ function Invoke-CampfireLightweightNgxDiagnosticCore {
         Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "gpu_inventory_complete" -Details @{ succeeded = [bool]$gpuInventoryCapture.evidence.succeeded; row_count = @($gpuInventoryCapture.rows).Count }
 
         $cdb = Get-CampfireCdbPath
+        $cdbMetadata = Get-CampfireCdbMetadata -Path $cdb
         $stackLog = Join-Path $output "cdb-thread-stacks.log"
         $stackError = Join-Path $output "cdb-thread-stacks.stderr.log"
         $symbolCache = Join-Path $output "symbols"
         New-Item -ItemType Directory -Path $symbolCache | Out-Null
         $guard = $null
         $cdbError = $null
+        $attachObserved = $false
+        $stackObserved = $false
+        $nativeFramesObserved = $false
+        $modulesObserved = $false
+        $detachObserved = $false
         Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "dump_cdb_decision" -Details @{ dump_required = $false; cdb_available = ($null -ne $cdb) }
         if ($null -ne $cdb) {
             try {
                 $symbolPath = "srv*$symbolCache*https://msdl.microsoft.com/download/symbols"
                 $commandFile = Join-Path $output "cdb-commands.txt"
-                [IO.File]::WriteAllLines($commandFile, @(".reload /f ntdll.dll KERNELBASE.dll", ".echo ===== THREAD_STACKS =====", "~* kPn 48", "qd"), [Text.UTF8Encoding]::new($false))
-                $guard = Invoke-Phase6EaGuardedHelper -FilePath $cdb -ArgumentList @("-p", [string]$ProcessId, "-pv", "-y", $symbolPath, "-cf", $commandFile) -StdoutPath $stackLog -StderrPath $stackError -TimeoutSeconds $DebuggerTimeoutSeconds -PrivateBytesLimit $CampfireShutdownHelperPrivateBytesLimit
-            } catch { $cdbError = $_.Exception.Message }
+                $commands = @(
+                    ".echo ===== CDB_ATTACH_CONFIRMED =====",
+                    ".reload /f ntdll.dll KERNELBASE.dll",
+                    ".echo ===== LOADED_MODULES =====",
+                    "lm",
+                    ".echo ===== THREAD_STACKS =====",
+                    "~* kPn 64"
+                )
+                if ($FixtureCdbSleepMilliseconds -gt 0) { $commands += ".sleep $FixtureCdbSleepMilliseconds" }
+                $commands += @(".echo ===== CDB_DETACHING =====", "qd")
+                [IO.File]::WriteAllLines($commandFile, $commands, [Text.UTF8Encoding]::new($false))
+                Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_attach_started" -Details @{ target_pid = $ProcessId; debugger_path = $cdb }
+                Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_stack_capture_started" -Details @{ stdout_limit_bytes = $CampfireCdbStackLogLimitBytes; stderr_limit_bytes = $CampfireCdbStderrLimitBytes }
+                $guard = Invoke-Phase6EaGuardedHelper -FilePath $cdb -ArgumentList @("-p", [string]$ProcessId, "-pv", "-y", $symbolPath, "-cf", $commandFile) -StdoutPath $stackLog -StderrPath $stackError -TimeoutSeconds $DebuggerTimeoutSeconds -PrivateBytesLimit $CampfireShutdownHelperPrivateBytesLimit -MaximumStdoutBytes $CampfireCdbStackLogLimitBytes -MaximumStderrBytes $CampfireCdbStderrLimitBytes
+                $attachObserved = Test-CampfireLogPattern -Path $stackLog -Pattern "CDB_ATTACH_CONFIRMED"
+                $stackObserved = Test-CampfireLogPattern -Path $stackLog -Pattern "THREAD_STACKS"
+                $nativeFramesObserved = Test-CampfireLogPattern -Path $stackLog -Pattern "Child-SP\s+RetAddr|ntdll!|KERNELBASE!"
+                $modulesObserved = Test-CampfireLogPattern -Path $stackLog -Pattern "LOADED_MODULES"
+                $detachObserved = Test-CampfireLogPattern -Path $stackLog -Pattern "CDB_DETACHING"
+                if ($attachObserved) { Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_attach_complete" }
+                if ($stackObserved) { Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_stack_capture_complete" -Details @{ bytes = if (Test-Path -LiteralPath $stackLog) { (Get-Item -LiteralPath $stackLog).Length } else { 0 } } }
+                if ($detachObserved -and $guard.process_absent) { Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_detach_complete" }
+                Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_cleanup_complete" -Details @{ process_absent = [bool]$guard.process_absent; timed_out = [bool]$guard.timed_out; output_bytes_exceeded = [bool]$guard.output_bytes_exceeded }
+            } catch {
+                $cdbError = $_.Exception.Message
+                Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_cleanup_complete" -Details @{ process_absent = if ($null -ne $guard) { [bool]$guard.process_absent } else { $true }; error = $cdbError }
+            }
         } else {
             $cdbError = "installed WinDbg CDB not found"
         }
@@ -266,7 +333,8 @@ function Invoke-CampfireLightweightNgxDiagnosticCore {
             telemetry_named_pipe_wait = Test-CampfireLogPattern -Path $stackLog -Pattern "KERNELBASE!WaitNamedPipeW"
             telemetry_bridge_stack = Test-CampfireLogPattern -Path $stackLog -Pattern "NvTelemetryBridge64(?:!|\.dll\+)"
         }
-        $guardSucceeded = $null -ne $guard -and -not $guard.timed_out -and -not $guard.private_bytes_exceeded -and $guard.process_absent -and $guard.exit_code_error -eq $null -and $guard.exit_code -eq 0
+        $guardSucceeded = $null -ne $guard -and -not $guard.timed_out -and -not $guard.private_bytes_exceeded -and -not $guard.output_bytes_exceeded -and $guard.process_absent -and $guard.exit_code_error -eq $null -and $guard.exit_code -eq 0
+        $cdbCaptureComplete = $attachObserved -and $stackObserved -and $nativeFramesObserved -and $modulesObserved -and $detachObserved
         $knownSignature = $guardSucceeded -and -not ($tokens.Values -contains $false)
         $fingerprint = [ordered]@{
             name = $CampfireKnownNgxSignature
@@ -280,9 +348,10 @@ function Invoke-CampfireLightweightNgxDiagnosticCore {
             }
             known_chain = "gpu.foundation shutdown -> NGX D3D12 shutdown -> NvTelemetryAPI64 UninitializeTelemetry -> telemetry worker WaitNamedPipeW"
         }
-        $diagnosticCaptureSucceeded = $guardSucceeded -and [bool]$gpuInventoryCapture.evidence.succeeded
+        $diagnosticCaptureSucceeded = $guardSucceeded -and $cdbCaptureComplete -and [bool]$gpuInventoryCapture.evidence.succeeded
+        $targetResourceAfter = Get-CampfireProcessResourceSnapshot -Process $process
         $report = [ordered]@{
-            schema = "campfire.kit-lightweight-shutdown-diagnostic.v2"
+            schema = "campfire.kit-lightweight-shutdown-diagnostic.v3"
             timestamp_local = (Get-Date).ToString("o")
             diagnostic_capture_succeeded = $diagnosticCaptureSucceeded
             process_identity_verified = $true
@@ -294,6 +363,8 @@ function Invoke-CampfireLightweightNgxDiagnosticCore {
                 thread_count = $process.Threads.Count
                 handle_count = $process.HandleCount
                 file_version = $process.MainModule.FileVersionInfo.FileVersion
+                resource_before = $targetResourceBefore
+                resource_after = $targetResourceAfter
             }
             lifecycle_marker = if ($null -ne $lifecycle) { $lifecycle.lifecycle_marker } else { $null }
             lifecycle_history = if ($null -ne $lifecycle -and $null -ne $lifecycle.lifecycle_history) { @($lifecycle.lifecycle_history | Select-Object -Last 128) } else { @() }
@@ -304,14 +375,28 @@ function Invoke-CampfireLightweightNgxDiagnosticCore {
             gpu_inventory_capture = $gpuInventoryCapture.evidence
             debugger = [ordered]@{
                 cdb_path = $cdb
+                cdb = $cdbMetadata
                 noninvasive_attach = $true
                 timeout_seconds = $DebuggerTimeoutSeconds
                 timed_out = if ($null -ne $guard) { [bool]$guard.timed_out } else { $false }
                 private_bytes_exceeded = if ($null -ne $guard) { [bool]$guard.private_bytes_exceeded } else { $false }
+                output_bytes_exceeded = if ($null -ne $guard) { [bool]$guard.output_bytes_exceeded } else { $false }
                 peak_private_bytes = if ($null -ne $guard) { $guard.peak_private_bytes } else { $null }
+                user_cpu_seconds = if ($null -ne $guard) { $guard.user_cpu_seconds } else { $null }
+                kernel_cpu_seconds = if ($null -ne $guard) { $guard.kernel_cpu_seconds } else { $null }
+                total_cpu_seconds = if ($null -ne $guard) { $guard.total_cpu_seconds } else { $null }
+                stdout_bytes = if ($null -ne $guard) { $guard.stdout_bytes } else { $null }
+                stderr_bytes = if ($null -ne $guard) { $guard.stderr_bytes } else { $null }
+                stdout_limit_bytes = $CampfireCdbStackLogLimitBytes
+                stderr_limit_bytes = $CampfireCdbStderrLimitBytes
                 process_absent = if ($null -ne $guard) { [bool]$guard.process_absent } else { $true }
                 exit_code = if ($null -ne $guard) { $guard.exit_code } else { $null }
                 error = $cdbError
+                attach_observed = $attachObserved
+                all_thread_stack_observed = $stackObserved
+                native_frames_observed = $nativeFramesObserved
+                loaded_modules_observed = $modulesObserved
+                detach_observed = $detachObserved
                 raw_stack_log = $stackLog
                 stderr_log = $stackError
                 symbol_cache = $symbolCache
@@ -361,9 +446,9 @@ function Invoke-CampfireLightweightNgxDiagnostic {
         "-MarkerPath", $markerPath,
         "-DebuggerTimeoutSeconds", [string]$DebuggerTimeoutSeconds
     )
-    $guard = Invoke-Phase6EaGuardedHelper -FilePath $powershell -ArgumentList $arguments -StdoutPath $stdout -StderrPath $stderr -TimeoutSeconds $CampfireShutdownDiagnosticTimeoutSeconds -PrivateBytesLimit $CampfireShutdownHelperPrivateBytesLimit
+    $guard = Invoke-Phase6EaGuardedHelper -FilePath $powershell -ArgumentList $arguments -StdoutPath $stdout -StderrPath $stderr -TimeoutSeconds $CampfireShutdownDiagnosticTimeoutSeconds -PrivateBytesLimit $CampfireShutdownHelperPrivateBytesLimit -MaximumStdoutBytes $CampfireShutdownDiagnosticJsonLimitBytes -MaximumStderrBytes $CampfireShutdownDiagnosticJsonLimitBytes
     Write-CampfireDiagnosticMarker -Path $markerPath -Marker "parent_process_returned" -Details @{ helper_exit_code = $guard.exit_code; timed_out = $guard.timed_out; private_bytes_exceeded = $guard.private_bytes_exceeded }
-    if ($guard.timed_out -or $guard.private_bytes_exceeded -or -not $guard.process_absent -or $guard.exit_code_error -ne $null -or $guard.exit_code -ne 0) {
+    if ($guard.timed_out -or $guard.private_bytes_exceeded -or $guard.output_bytes_exceeded -or -not $guard.process_absent -or $guard.exit_code_error -ne $null -or $guard.exit_code -ne 0) {
         return [ordered]@{
             diagnostic_capture_succeeded = $false
             error = "isolated lightweight diagnostic helper failed"

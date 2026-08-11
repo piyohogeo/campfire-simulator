@@ -3115,3 +3115,11 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 自動retryと後続条件を開始せず、0/36 accepted、Phase 6EG unqualifiedとした。fatal／dump／automatic upload／device lost／TDR、cleanup後のKit／CDB／helper残留は0、production app SHA-256は前後一致。観測事実は「隔離child完了後、親診断の戻り／後処理境界で増加」であり、内部PowerShell/native allocation機構とlightweight診断全体を別process化した場合の効果は未確認である。
 - PointEmitter–CollisionProxy共存PhaseはPhase 6EG全36 process合格後のpendingのまま維持し、配置、Emitter schema、CollisionProxy geometry、production、Flow、V3、Resident、wood authorityを変更しない。詳細は`docs/design/static_pose_set_collision_qualification.md`。
 - 最終回帰はRelease build 8.13秒、Phase 0 RTX 164.4秒、Phase 3 194.1秒（authority・mass balance・Flow入力合格）、focused contract 84/84、標準suite 8 process・78/78件（313.8秒wall）に合格した。production app SHA-256は`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`で前後一致し、Kit／CDB／GPU inventory helper残留は0だった。
+
+## Phase 6EL bounded CDB diagnostic path
+
+- Windows Kits x64 CDB `10.0.28000.2526`を正式な診断候補として自動検出する。path、file/product version、size、SHA-256をartifactへ残し、`cdb -iae`、AeDebug／WERの書換え、system-wide postmortem debugger登録は行わない。
+- CDBは`shutdown_complete`後の終了残留が確定した診断childだけから起動する。attach前にPID＋開始時刻＋完全な実行pathを照合し、`-pv`非侵襲attach、Microsoft symbol server用artifact内cache、明示timeout、512 MiB、stdout 16 MiB、stderr 2 MiBの上限を適用する。loaded moduleと`~* kPn 64`を直接fileへ保存し、`qd` detach後にCDB不在を確認する。
+- wait、排他log、正常終了済みtarget、強制CDB timeout、CDB異常終了の5 fixtureは全合格。正常attachでは37.4～37.8 KiBの全thread stackを保存し、targetはdetach後も生存、CDBは消滅した。排他logは`log_capture_error`を記録してJSON確定まで継続し、timeoutはCDBだけを停止した。runner／診断child／CDBは512 MiB以内、残留process 0、system-wide debugger設定hash前後一致である。
+- CDBの利用可能性だけで既知NGXとは判定しない。受理済み5-token stack signatureが実際のKit stackに揃う場合だけknown候補とし、未知module／offset、symbol不足、曖昧stack、marker欠落、timeoutはfail closedを維持する。Phase 6EGの36条件は再開せず、production appと凍結contractのSHA-256は不変である。
+- 回帰はRelease build 6.57秒、Phase 6EA/6EB/6ED/6EJ/6ELとPhase 6EG静的契約79/79、標準suite 8 process・78/78件（310.2秒）に合格した。CDB／fixture target／診断helper残留は0である。

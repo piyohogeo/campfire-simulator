@@ -7,7 +7,8 @@ param(
     [Parameter(Mandatory = $true)][string]$LogPath,
     [Parameter(Mandatory = $true)][string]$MarkerPath,
     [int]$DebuggerTimeoutSeconds = 45,
-    [ValidateRange(0, 60000)][int]$FixtureDelayMilliseconds = 0
+    [ValidateRange(0, 60000)][int]$FixtureDelayMilliseconds = 0,
+    [ValidateRange(0, 60000)][int]$FixtureCdbSleepMilliseconds = 0
 )
 
 $ErrorActionPreference = "Stop"
@@ -28,7 +29,8 @@ try {
         -LifecyclePath $LifecyclePath `
         -LogPath $LogPath `
         -MarkerPath $MarkerPath `
-        -DebuggerTimeoutSeconds $DebuggerTimeoutSeconds
+        -DebuggerTimeoutSeconds $DebuggerTimeoutSeconds `
+        -FixtureCdbSleepMilliseconds $FixtureCdbSleepMilliseconds
     Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "diagnostic_child_process_normal_exit"
     exit 0
 } catch {
