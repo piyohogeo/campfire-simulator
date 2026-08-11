@@ -3032,6 +3032,7 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 新root `phase6ec-static-rotation-2`のoffline準備は合格し、Aはpublic NanoVDB 4 sample、active blocks 26、`shutdown_complete`、Kit OS process消滅まで到達した。一方、runner evidence確定前のinline case-runner PowerShell PID 45864がPrivate Bytes 7,193,456,640まで増加した。Kit／CDBは既に不在であり、PID pathと開始時刻を再確認して当該PowerShellだけを停止した。B/Cは開始せず、dumpは作らず、root 2は正式母集団外として保持する。
 - WinDbg path探索、GPU inventory、保存rawのlifecycle marker反復読取を各々10～30秒・256 MiB以下の短命helperで切り分け、単独ではpeak約68～92 MiBで終了した。したがって個々の関数を原因と断定せず、長時間inline case-runner hostの無制限resource境界を確定事実とする。
 - Phase 6EC runnerだけを変更し、各formal／visual case runnerをPhase 6EA `Invoke-Phase6EaGuardedHelper`の別processへ隔離した。stdout/stderrはファイルへ直接redirectし、timeout 720秒、Private Bytes 512 MiB、process-tree cleanupを適用する。Phase 6ED exception evidence、Phase 6EA helper実装、production app／Flow／wood／V3は変更しない。targeted contractは8/8合格。次はroot 2を再利用せず、新rootでAから開始する。
+- 次の新root 3ではcase-runner peak 95,330,304 bytes、A probe `ok`、`shutdown_complete`、OS exit 0まで正常だったが、exit直後の`kit.log`が一時的にread不能で、Phase 6EDは意図どおりevidence unavailableへfail closedした。保存logは直後のoffline probeでavailable／例外なしとなった。Phase 6ED matcherを緩めず、shared diagnostic case runner側へ最大5秒・100 ms間隔のreadiness待機を追加し、attempt数・待機時間・最後のerrorをevidenceへ残す。上限後は従来どおりunknownであり、root 3は再利用しない。
 
 ## Phase 6DZ rotated Cylinder Flow-collision safe stop
 

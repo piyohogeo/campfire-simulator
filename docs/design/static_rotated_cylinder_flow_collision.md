@@ -38,6 +38,8 @@ Phase 6EDでPhase 6EBのWindows exception evidenceを明示的exception文脈と
 
 最初の再開root 2ではAの4 sampleと`shutdown_complete`まで到達したが、inline case-runner PowerShellが7 GiB超へ増加したためB/C前に安全停止した。これはFlow遮蔽の合否ではない。root 2は再利用せず、各case runnerをPhase 6EA guarded helperの別process、直接stdout/stderr、720秒、512 MiBへ隔離してから、さらに新しいrootでAから開始する。Phase 6ED exception policyは変更していない。
 
+guarded runnerによるroot 3のAはpeak 95,330,304 bytesで終了したが、正常exit直後の`kit.log`が一時的にread不能でexception evidence unavailableとなり、Phase 6EDどおりfail closedした。直後のread-only offline probeでは同logはavailable／例外なしだった。Phase 6ED matcherは変更せず、shared diagnostic runnerに最大5秒のbounded log-readiness待機だけを追加する。上限後はunknownのままであり、root 3も再利用しない。
+
 今回、production app、Flow既定、V3、Resident session、wood authority、Emitter schemaは変更していない。Production app SHA-256は前後とも`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`である。画面上の合格結果がないため動画とlatest demo pointerは変更しない。
 
 回帰はPhase 6EC contract 7/7、Phase 6EA resource safety 7/7（10.5秒、128 MiB sparse hash peak private bytes 75,849,728）、Phase 6EA静的契約6/6、Phase 6EB契約24/24、Release build 6.94秒、標準suite 8 process・78/78件・303.1秒に合格した。Phase 0は17.4秒で合格しRTX readyは14.176秒。Phase 3はdry/wet mass balance error 0、authority SHA-256 `0dec57...be10`／`148585...20c9`、Flow active blocks final 252／peak 405、peak fuel input 1.0だった。日誌静的検査は341 local reference、JSON 181、SVG 147、欠落・parse failure・replacement character・duplicate ID 0。接続可能なBrowser instanceがなかったため実レンダリング確認はできず、静的検査で代替した。全run後のKit/CDB残留は0だった。

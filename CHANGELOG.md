@@ -2,6 +2,7 @@
 
 - Safely stopped the first Phase 6EC restart root after condition A completed four public readback samples and `shutdown_complete`: its inline case-runner PowerShell grew beyond 7 GiB while post-shutdown evidence remained incomplete. Conditions B/C were not started, no dump was created, and the exact runner PID was stopped after path/start-time verification.
 - Isolated every Phase 6EC formal and visual case runner behind the existing Phase 6EA guarded-helper boundary with direct stdout/stderr files, a 720-second timeout, a 512 MiB Private Bytes limit, and process-tree cleanup. The Phase 6ED exception policy and production paths remain unchanged; the invalid root is retained and will not be reused.
+- Safely stopped the next fresh root at A when its normally exited Kit log was transiently unreadable and Phase 6ED correctly failed closed. Added a bounded five-second post-exit log-readiness wait to the shared diagnostic case runner; exhaustion remains evidence-unavailable and cannot be accepted as no exception.
 
 - Corrected the Phase 6EB Windows-exception evidence boundary in production-neutral Phase 6ED. Log scanning now uses line-streamed explicit exception/exit/access-violation context instead of treating every bare `0xC........` value as a crash.
 - Added hardware/value negative fixtures and explicit exception positive fixtures, preserving the original 24 Phase 6EB contracts while expanding the policy suite to 31/31. Missing or unreadable logs remain fail-closed without inventing a fault module or offset.

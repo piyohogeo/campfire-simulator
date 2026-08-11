@@ -98,6 +98,24 @@ $started = Get-Date
 $process = Start-Process -FilePath $kit -ArgumentList $arguments -PassThru -WindowStyle Hidden
 $monitor = Wait-CampfireKitProcessWithShutdownPolicy -Process $process -ExpectedExecutable $kit -LifecyclePath $raw -LogPath $log -DiagnosticDir $diagnosticDir -ShutdownGraceSeconds 60 -AbsoluteTimeoutSeconds 330
 $process.Refresh()
+$logEvidenceReadiness = [ordered]@{
+    available = $false
+    attempts = 0
+    waited_seconds = 0.0
+    last_error = $null
+    maximum_wait_seconds = 5
+}
+$logReadyStopwatch = [Diagnostics.Stopwatch]::StartNew()
+do {
+    $logEvidenceReadiness.attempts += 1
+    $readinessProbe = Get-CampfireWindowsExceptionEvidence -Path $log
+    $logEvidenceReadiness.available = [bool]$readinessProbe.available
+    $logEvidenceReadiness.last_error = $readinessProbe.error
+    if ($logEvidenceReadiness.available -or $logReadyStopwatch.Elapsed.TotalSeconds -ge $logEvidenceReadiness.maximum_wait_seconds) { break }
+    Start-Sleep -Milliseconds 100
+} while ($true)
+$logReadyStopwatch.Stop()
+$logEvidenceReadiness.waited_seconds = $logReadyStopwatch.Elapsed.TotalSeconds
 $registryAfter = Get-CampfireCrashRegistrySnapshot
 $registryUnchanged = (($registryBefore | ConvertTo-Json -Depth 12 -Compress) -eq ($registryAfter | ConvertTo-Json -Depth 12 -Compress))
 $productionHashAfter = (Get-FileHash -Algorithm SHA256 -LiteralPath $productionApp).Hash
@@ -134,6 +152,7 @@ $evidence = [ordered]@{
     process_exit_code = $monitor.exit_code
     timed_out = [bool]$monitor.absolute_timeout
     shutdown_monitor = $monitor
+    log_evidence_readiness = $logEvidenceReadiness
     outcome = $outcome
     fatal_lines = @($fatalLines)
     dump_inventory = $dumps
