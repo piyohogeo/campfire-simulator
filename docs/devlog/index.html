@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6ec-runtime">最新記録</a>
+        <a href="#phase-6ee">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6ec-runtime">Phase 6EC実測を読む</a>
+        <a class="button primary" href="#phase-6ee">Phase 6EE診断を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6EC rotated collision numeric safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6EE rotated collision spatial diagnostic</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Lifecycle</span><strong>A / B / C · normal exit</strong></div>
-        <div><span>Production</span><strong>unchanged · rotation not qualified</strong></div>
+        <div><span>Production</span><strong>unchanged · Phase 6EC gate retained</strong></div>
       </div>
     </div>
   </header>
@@ -56,6 +56,19 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6ee" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報"><span class="phase-number compact">6EE</span><p><time datetime="2026-08-11">2026.08.11</time></p><span class="pill current">Spatial diagnostic</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6EE · Rotated CollisionProxy velocity distribution</p><h2>0.719 m/sは深部貫通ではなく、<br>実Mesh表面の約1 cell以内にあった。</h2><p>Phase 6ECと同じA axis ON、B Y40° ON、C Y40° OFFを別processで再測定し、公開NanoVDBのCollider近傍全cellを、実際にFlowへ渡した低ポリMeshからの距離で分類しました。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/rotated_collision_velocity_section.svg"><img src="assets/phase6/rotated_collision_velocity_section.svg" alt="Phase 6EEのA、B、Cを同じ速度色scaleで比較したCollider local断面図" loading="lazy"></a><figcaption><div><strong>Exact authored-Mesh depth · frame 200</strong><span>white outline: actual 12-sided proxy · color: velocity</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Existing gate</p><h3>1 cellより深いBは最大8.35e-6 m/s</h3><p>Bの0.5～1 cell帯は最大0.675930 m/sでしたが、1～2 cell、2 cell以上、中心軸近傍はすべて最大<code>8.35253e-6 m/s</code>でした。Phase 6ECの既存<code>1e-5 m/s</code>基準では、残存値は実Mesh表面約1 cell以内です。</p></section><section class="note caution"><p class="note-label">Sensitivity</p><h3>微小値は深部にもあり、完全ゼロではない</h3><p><code>1e-6</code>では外側haloから6近傍で約3.05 cellまで連結します。これは数値拡散・補間の候補ですが、Flow内部occupancy maskは公開APIで取得できず、幾何ラベルを内部maskとは扱いません。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Why the old ROI looked penetrated</p><h3>真円ROIが12角形proxyの外側を数えていた。</h3><p>Bでは「理想Cylinderなら内側、実12角形Meshなら外側」のcell recordが352件あり、160件が<code>1e-5 m/s</code>を超え、最大2.97754 m/sでした。旧coreの約0.719 m/sは、実Meshの1 cell深部には再現していません。回転後Mesh深部は抑制され、元のaxis位置だけの領域は抑制されないため、stale transformよりY40 transform追従と整合します。</p><p>A/B/Cは全てfunctional pass、normal exit、fuel 0.8、fatal／dump／upload／残留process 0でした。各native channel gridを独立に保存し、温度、fuel、burn、smoke、velocityと追加divergenceを含む72 NPZは17.37 MBです。Production app SHA-256は不変です。</p><p>本Phaseは診断だけで、Phase 6EC gateを変更せず、回転collisionをqualifiedにもしていません。画面上のproduction変更がないため新しいデモ動画とlatest demoは更新していません。次は実Mesh距離ROIを使う独立qualificationを定義し、その後必要ならMesh分割数またはFlow cell sizeを比較します。</p><p><a href="assets/phase6/rotated_collision_velocity_distribution.json">集計JSON</a> · <a href="assets/phase6/rotated_collision_velocity_distribution.svg">深さ帯SVG</a> · <a href="assets/phase6/rotated_collision_velocity_section.svg">断面SVG</a> · <a href="assets/phase6/rotated_collision_velocity_neighborhoods.zip">raw NPZ archive</a> · <a href="../design/rotated_collision_velocity_distribution.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>A / B / C</strong><small>normal exit</small></p></div><div role="listitem"><span>✓</span><p><strong>1+ cell depth</strong><small>≤ 8.35e-6 m/s</small></p></div><div role="listitem"><span>!</span><p><strong>1e-6 sensitivity</strong><small>deep micro-values</small></p></div><div role="listitem"><span>✓</span><p><strong>Transform</strong><small>Y40追従と整合</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>SHA不変</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Next decision</p><h3>ROIを実Meshへ合わせてから再qualification。</h3><p>既存gateをこの診断中に緩和せず、次の独立Phaseで実Mesh距離を使う判定を事前定義します。Mesh解像度やFlow格子解像度の比較は、その結果で必要になった場合だけ進めます。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6ec-runtime" class="section entry-section phase-six">

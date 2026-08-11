@@ -28,7 +28,9 @@ param(
     [Parameter(Mandatory = $true)][string]$OutputDir,
     [ValidateSet("reference", "campfire")][string]$AppKind = "reference",
     [int]$RunIndex = 1,
-    [switch]$Capture
+    [switch]$Capture,
+    [string]$SpatialOutputRoot = "",
+    [string]$SpatialCondition = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -40,6 +42,11 @@ $release = Join-Path $root "_build\windows-x86_64\release"
 $kit = Join-Path $release "kit\kit.exe"
 $source = [IO.Path]::GetFullPath($SourceStage)
 $output = [IO.Path]::GetFullPath($OutputDir)
+$spatialEnabled = -not [string]::IsNullOrWhiteSpace($SpatialOutputRoot)
+if ($spatialEnabled -ne (-not [string]::IsNullOrWhiteSpace($SpatialCondition))) {
+    throw "Phase 6EE spatial output root and condition must be provided together"
+}
+$spatialRoot = if ($spatialEnabled) { [IO.Path]::GetFullPath($SpatialOutputRoot) } else { "" }
 if (-not (Test-Path -LiteralPath $source -PathType Leaf)) { throw "Phase 6DT source stage missing: $source" }
 if (Test-Path -LiteralPath $output) { throw "Phase 6DT refuses output reuse: $output" }
 New-Item -ItemType Directory -Path $output | Out-Null
@@ -88,6 +95,9 @@ $arguments = @(
     "--/phase6dt/runIndex=$RunIndex",
     "--/phase6dt/appKind=$AppKind",
     "--/phase6dt/capture=$($Capture.IsPresent.ToString().ToLowerInvariant())",
+    "--/phase6ee/spatialEnabled=$($spatialEnabled.ToString().ToLowerInvariant())",
+    "--/phase6ee/spatialOutputRoot=$spatialRoot",
+    "--/phase6ee/condition=$SpatialCondition",
     "--/rtx/flow/enabled=true",
     "--/log/file=$log",
     "--/log/fileLogLevel=Info"

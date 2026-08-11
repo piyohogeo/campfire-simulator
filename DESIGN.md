@@ -3038,6 +3038,18 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 観測上、回転proxyはOFFより流れを大きく弱めるが、変換後core内の速度拘束は軸平行controlと同等ではない。したがって「回転後world transformへ完全追従して貫通を防ぐ」とはqualifiedにせず、任意軸回転、RenderSurface、PhysX共用、dynamic transform、Phase 6DR統合、20本性能へ進まない。数値gate不合格なのでvisual processとlatest demo更新も開始しない。原因はFlow 110.0.0の回転Mesh取り込み、convex decomposition、ROI境界、格子サンプリングのいずれかに未確定で、production変更は行わない。
 - 回帰はRelease build 7.09秒、Phase 0 RTX 19.4秒、Phase 3 dry/wet mass balance error 0、authority SHA-256 `0dec57...be10`／`148585...20c9`、Flow active blocks final 227／peak 321、peak fuel input 1.0、Phase 6EC 9/9、Phase 6EA 7/7・6/6、Phase 6EB/6ED 31/31、標準suite 8 process・78/78件・309.8秒に合格した。日誌は513 reference（312 unique）、JSON 183、SVG 149、欠落・parse failure・replacement character・duplicate ID 0。Production app SHA-256は前後`94162F82...F02A`である。
 
+## Phase 6EE rotated CollisionProxy velocity distribution
+
+### 2026-08-11: 実低ポリMesh境界からの深さでPhase 6EC残存速度を再分類
+
+- Flow 110.0.0の公開`IFlowUsd` 19 memberと同梱stubを監査したが、Flow自身のcollision occupancy maskを取得する公開APIはなかった。Phase 6EEの内外・距離・深さは、実際に渡した26頂点・36面の閉じたMeshから計算した幾何ラベルであり、Flow内部maskとは扱わない。private APIは未使用。
+- Phase 6ECと同じA axis ON、B Y40 ON、C Y40 OFFを新rootで各別process実行した。各条件はframe 60/120/180/200、functional pass、normal exit、active blocks final 26/24/58、fuel 0.8、fatal/dump/upload/residual 0。Phase 6EA guarded helperとPhase 6EB/6ED分類を直接再利用した。
+- Velocity voxel sizeは0.05 m。Bの実Mesh内0.5～1 cell帯はmax `0.675930 m/s`だが、1～2 cell、2+ cell、中心軸近傍はいずれもmax `8.35253e-6 m/s`で、既存Phase 6EC gate `1e-5 m/s`以下だった。Aは1 cell以深が0、Cは2+ cell max `8.92828 m/s`／中心軸max `8.35711 m/s`。既存gateに対して残存は実Mesh表面約1 cell以内に限定された。
+- `1e-12`／`1e-6`感度ではBの微小速度が外側haloから6近傍で最大約3.05 cellまで連結する。数学的な完全ゼロやFlow内部占有を主張しない。実Mesh外／理想Cylinder内のB recordは352件、うち`>1e-5`が160件、max `2.97754 m/s`で、旧analytic Cylinder ROIが低ポリ表面外部を内部扱いした説明を支持する。
+- 回転後Meshの1 cell深部は強く抑制され、元のaxis位置だけに属する領域は抑制されないため、stale axis transformよりY40 transform追従と整合する。Phase 6EC gateは変更せず、回転collisionも未qualifiedのまま。次は実Mesh距離ROIを使う独立qualificationを定義し、その後必要ならMesh分割数またはvelocity cell sizeを一変数比較する。詳細は`docs/design/rotated_collision_velocity_distribution.md`。
+- A/B/C各24 NPZを17,373,364 bytesのstream-built archiveへ保存し、SHA-256は`7E198D02...5A369458`。最初のoffline analyzer停止は追加divergenceを含む24ファイルを「必須5 channel×4 frameのちょうど20」と誤判定しただけで、raw runは再実行せず必須channel各4件のgateへ直してoffline再集計した。Production app SHA-256は前後`94162F82...F02A`で一致。
+- 回帰はRelease build 6.38秒、Phase 0 RTX、Phase 3 dry/wet mass-balance error 0・authority SHA従来値・active blocks final/peak 258/349・fuel peak 1.0、Phase 6EC～6EE targeted 60/60、標準suite 8 process・78/78件・310.8秒に合格。日誌521 reference（318 unique）、JSON 184、SVG 151、ZIP 73 entryで欠落・parse・CRC・文字化け・duplicate ID異常0。接続可能なBrowserがなく実レンダリングは未確認、Kit/CDB残留0。
+
 ## Phase 6DZ rotated Cylinder Flow-collision safe stop
 
 ### 2026-08-11: 回転前のaxis controlが正常OS exitへ到達せず停止

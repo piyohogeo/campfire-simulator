@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import importlib.util
 import json
 import math
 import statistics
@@ -46,6 +47,7 @@ EXTENSIONS = (
 
 def _settings() -> dict:
     settings = carb.settings.get_settings()
+    spatial_root = settings.get_as_string("/phase6ee/spatialOutputRoot")
     return {
         "output": Path(settings.get_as_string("/phase6dt/output")).resolve(),
         "mode": settings.get_as_string("/phase6dt/mode"),
@@ -53,6 +55,9 @@ def _settings() -> dict:
         "capture": bool(settings.get_as_bool("/phase6dt/capture")),
         "run_index": int(settings.get_as_int("/phase6dt/runIndex")) or 1,
         "app_kind": settings.get_as_string("/phase6dt/appKind") or "reference",
+        "phase6ee_spatial_enabled": bool(settings.get_as_bool("/phase6ee/spatialEnabled")),
+        "phase6ee_spatial_root": Path(spatial_root).resolve() if spatial_root else None,
+        "phase6ee_condition": settings.get_as_string("/phase6ee/condition"),
     }
 
 
@@ -639,6 +644,8 @@ def _save_and_sample(
     rois: dict,
     local_rois: dict | None = None,
     local_to_world: Gf.Matrix4d | None = None,
+    spatial_collector=None,
+    frame: int | None = None,
 ) -> dict:
     grid_data = flow.buffer_to_volume(buffer)
     parameters = omni.volume.SaveVolumeParameters()
@@ -659,8 +666,28 @@ def _save_and_sample(
         result["alignment_rois"] = _sample_alignment_grid(
             grid, local_rois["cylinder_inside"], local_to_world, vector
         )
+    if spatial_collector is not None:
+        if frame is None:
+            raise RuntimeError("Phase 6EE spatial capture requires a frame")
+        result["phase6ee_neighborhood"] = spatial_collector.capture(
+            grid,
+            channel,
+            frame,
+            vector,
+            nanovdb.math.Vec3d,
+        )
     path.unlink(missing_ok=True)
     return result
+
+
+def _load_phase6ee_collector():
+    path = Path(__file__).with_name("phase6ee_velocity_distribution.py")
+    spec = importlib.util.spec_from_file_location("campfire_phase6ee_velocity_distribution", path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"Unable to load Phase 6EE collector: {path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.SpatialNeighborhoodCollector
 
 
 async def _capture(viewport, path: Path) -> dict:
@@ -692,6 +719,7 @@ async def _run() -> None:
     timeline = omni.timeline.get_timeline_interface()
     flow = None
     volume = None
+    spatial_collector = None
     report = {
         "schema": "campfire.phase6dt.flow-collision-reference-run.v1",
         "phase": "phase6dt",
@@ -766,6 +794,7 @@ async def _run() -> None:
         report["effective_stage_audit"] = effective
         local_rois = None
         local_to_world = None
+        spatial_mesh = None
         if arguments["mode"] in (
             "phase6dz_rotated_mesh",
             "phase6ec_rotated_mesh",
@@ -783,6 +812,17 @@ async def _run() -> None:
                 "velocity_noise_threshold_m_s": 1.0e-5,
                 "alignment_comparison": "transformed Cylinder versus stale axis-aligned Cylinder",
             }
+            if arguments["phase6ee_spatial_enabled"]:
+                if arguments["phase6ee_spatial_root"] is None or not arguments["phase6ee_condition"]:
+                    raise RuntimeError("Phase 6EE spatial output root and condition are required")
+                mesh = UsdGeom.Mesh(collider)
+                spatial_mesh = {
+                    "points": list(mesh.GetPointsAttr().Get() or ()),
+                    "face_counts": list(mesh.GetFaceVertexCountsAttr().Get() or ()),
+                    "face_indices": list(mesh.GetFaceVertexIndicesAttr().Get() or ()),
+                }
+                if not spatial_mesh["points"] or not spatial_mesh["face_counts"]:
+                    raise RuntimeError("Phase 6EE requires the authored collision Mesh topology")
 
         viewport = None
         for _ in range(240):
@@ -800,6 +840,36 @@ async def _run() -> None:
 
         numeric = arguments["mode"] != "reference_unmodified_on"
         flow = _flowusd.acquire_flowusd_interface()
+        if arguments["phase6ee_spatial_enabled"]:
+            if spatial_mesh is None or local_to_world is None:
+                raise RuntimeError("Phase 6EE spatial capture is only valid for the Phase 6EC Mesh modes")
+            collector_type = _load_phase6ee_collector()
+            public_members = sorted(name for name in dir(flow) if not name.startswith("_"))
+            collision_mask_candidates = [
+                name
+                for name in public_members
+                if any(term in name.lower() for term in ("collision", "mask", "occup"))
+            ]
+            spatial_collector = collector_type(
+                arguments["phase6ee_spatial_root"],
+                arguments["phase6ee_condition"],
+                spatial_mesh["points"],
+                spatial_mesh["face_counts"],
+                spatial_mesh["face_indices"],
+                _matrix_list(local_to_world),
+                public_members,
+            )
+            report["phase6ee_public_api_audit"] = {
+                "public_members": public_members,
+                "public_member_count": len(public_members),
+                "collision_mask_candidates": collision_mask_candidates,
+                "flow_collision_occupancy_mask_readback_available": bool(collision_mask_candidates),
+                "reason": (
+                    "no public IFlowUsd collision/mask/occupancy member in Flow 110.0.0"
+                    if not collision_mask_candidates
+                    else "candidate member requires explicit semantic validation"
+                ),
+            }
         if numeric:
             volume = omni.volume.get_volume_interface()
         timeline.stop()
@@ -846,9 +916,15 @@ async def _run() -> None:
                         report["rois"],
                         local_rois,
                         local_to_world,
+                        spatial_collector,
+                        frame,
                     ),
                 }
             report["samples"].append(sample)
+            _write(output, report)
+
+        if spatial_collector is not None:
+            report["phase6ee_spatial"] = spatial_collector.finalize()
             _write(output, report)
 
         report["active_blocks_final"] = int(flow.get_active_block_count()) if flow is not None else None
