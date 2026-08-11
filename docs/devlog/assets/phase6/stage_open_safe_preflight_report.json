@@ -1,0 +1,87 @@
+{
+  "schema": "campfire.phase6dx.stage-open-safe-stop-report.v1",
+  "phase": "phase6dx",
+  "status": "safe_stop",
+  "source_phase": "phase6dt",
+  "source_stage_sha256": "2ED926A1EAF14356A44487D2426E712002A61FBD6937C5C5A797F74E68861862",
+  "process_results": [
+    {
+      "condition": "box_control",
+      "started": true,
+      "duration_seconds": 420.47399199999995,
+      "exit_code": -1,
+      "timed_out": true,
+      "last_marker": "renderer_readiness_warmup_started",
+      "stage_created": false,
+      "usd_context_connected": false,
+      "first_renderer_update": false,
+      "first_viewport_frame": false,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "upload_attempt_count": 0,
+      "production_changed": false
+    },
+    {
+      "condition": "box_hull",
+      "started": false,
+      "reason": "fail-fast after known-good control timeout"
+    },
+    {
+      "condition": "cylinder_decomposition",
+      "started": false,
+      "reason": "fail-fast after known-good control timeout"
+    }
+  ],
+  "lifecycle_history": [
+    {
+      "marker": "renderer_readiness_warmup_started",
+      "timestamp_utc": "2026-08-11T02:24:24.391697+00:00"
+    }
+  ],
+  "selected_render_device": "NVIDIA GeForce RTX 3090",
+  "selected_cuda_index": 0,
+  "matrix_completed": [],
+  "automatic_retry": false,
+  "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "classification": {
+    "observed": [
+      "The known-good Box process timed out after 420 seconds before offline stage preparation or stage connection.",
+      "The last durable marker was renderer_readiness_warmup_started while waiting for pre-stage viewport frames.",
+      "No fatal token, crash dump, upload attempt, or production app hash change was observed.",
+      "Neither box_hull nor cylinder_decomposition was started; cylinder_hull was excluded from the runnable matrix."
+    ],
+    "strong_inference": [
+      "This result classifies the new no-window pre-stage viewport-frame wait as an invalid harness boundary; it does not classify Box or Cylinder stage content.",
+      "Phase 6DW's qualified runner checked for an active viewport before stage connection and waited for a viewport frame only after connection, unlike this preflight."
+    ],
+    "unconfirmed": [
+      "No Box-to-Cylinder topology, approximation, schema, hierarchy, or material boundary was exercised.",
+      "The historical Fabric crash cause remains unresolved and Phase 6DU runtime work is not resumed."
+    ]
+  },
+  "restart_condition": "Create a new independent harness that reproduces the Phase 6DW qualified readiness order, then obtain a known-good Box normal OS exit before any topology ablation.",
+  "regression": {
+    "release_build": {
+      "status": "passed",
+      "seconds": 6.79
+    },
+    "standard_suite": {
+      "status": "passed",
+      "processes": 8,
+      "passed": 78,
+      "total": 78,
+      "seconds": 304.5
+    },
+    "static_devlog": {
+      "status": "passed",
+      "unique_local_references": 326,
+      "missing_references": 0,
+      "utf8_replacement_characters": 0,
+      "browser_render": "unavailable; no browser connection was available in this session"
+    },
+    "phase0_rtx": "not rerun; production code and app composition unchanged and the runtime matrix stopped at its control"
+  },
+  "latest_demo_changed": false,
+  "production_changed": false
+}

@@ -45,14 +45,18 @@ SEGMENTS = 12
 
 def _settings() -> dict:
     settings = carb.settings.get_settings()
-    mode = settings.get_as_string("/phase6dv/mode")
-    if mode not in ALL_MODES:
-        raise RuntimeError(f"Unsupported Phase 6DV mode: {mode}")
+    phase = "phase6dx" if settings.get_as_string("/phase6dx/mode") else "phase6dv"
+    prefix = f"/{phase}"
+    mode = settings.get_as_string(f"{prefix}/mode")
+    allowed_modes = frozenset(("box_control", "box_hull", "cylinder_decomposition")) if phase == "phase6dx" else ALL_MODES
+    if mode not in allowed_modes:
+        raise RuntimeError(f"Unsupported {phase} mode: {mode}")
     return {
-        "output": Path(settings.get_as_string("/phase6dv/output")).resolve(),
-        "source": Path(settings.get_as_string("/phase6dv/source")).resolve(),
+        "phase": phase,
+        "output": Path(settings.get_as_string(f"{prefix}/output")).resolve(),
+        "source": Path(settings.get_as_string(f"{prefix}/source")).resolve(),
         "mode": mode,
-        "run_index": int(settings.get_as_int("/phase6dv/runIndex")) or 1,
+        "run_index": int(settings.get_as_int(f"{prefix}/runIndex")) or 1,
     }
 
 
@@ -256,8 +260,8 @@ async def _run() -> None:
     context = omni.usd.get_context()
     timeline = omni.timeline.get_timeline_interface()
     report = {
-        "schema": "campfire.phase6dv.stage-open-boundary-run.v1",
-        "phase": "phase6dv",
+        "schema": f"campfire.{arguments['phase']}.stage-open-boundary-run.v1",
+        "phase": arguments["phase"],
         "status": "running",
         "mode": arguments["mode"],
         "run_index": arguments["run_index"],

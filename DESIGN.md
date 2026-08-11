@@ -2958,3 +2958,14 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - Phase 6DVの終了不能は、現在の2-GPU構成一般より同runnerのapp composition／teardown順に固有である可能性が高い。ただし過去crashへのmulti-GPU寄与、Fabric関数内部、物理ケーブル実配置は未確定。
 - Phase 6DUは次の独立Phaseで段階的ablationを再開可能。既知正常Boxを起点に一差分ずつCylinderへ近づけ、失敗済み`mesh_hull`を直接再実行しない。詳細は`docs/design/gpu_renderer_lifecycle_baseline.md`。
 - Release build 6.25 s、標準suite 8 process・78/78件（310.6 s）、Phase 0 RTX、normal／benchmark Candidate Performance、最小Flow probeが合格。production app SHA-256は`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`で前後一致。映像差がないためlatest demoは変更していない。
+
+## Phase 6DX stage-open safe preflight
+
+### 2026-08-11: known-good controlのpre-stage frame待ちで安全停止
+
+- 失敗済みCylinder Hull条件を実行対象から外し、Phase 6DT known-good Box、Box approximationだけの変更、Cylinder topologyだけの変更という3条件に限定した。各条件は独立process、420秒timeout、dump保全、crash upload無効、fatal／hash gate、no retryとした。
+- 最初のknown-good Box controlは`renderer_readiness_warmup_started`から進まず420.474秒でtimeoutした。stage prepare、pure OpenUSD、USD context、Hydra、first renderer update、first viewport frameのいずれにも到達していない。後続2条件は開始していない。
+- Phase 6DWはstage接続前にactive viewportの存在だけを確認し、stage接続後にviewport frameを待って合格していた。Phase 6DXで追加したno-window／pre-stageの8 frame待ちはcontrolとして不成立であり、この結果からBox、Cylinder、topology、`physics:approximation`、collision schemaを評価しない。
+- fatal／native crash／dump／automatic upload attemptは0。RTX 3090／CUDA 0が選択され、production app SHA-256は`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`で前後一致した。
+- Phase 6DUは再開しない。次の独立harnessはPhase 6DWで合格したreadiness順をそのまま使い、known-good Boxの正常OS exitを得てから一差分ablationへ進む。失敗済みCylinder Hullは引き続き自動再試行しない。詳細は`docs/design/stage_open_safe_preflight.md`。映像差がないためlatest demoは変更していない。
+- Release buildは`6.79 s`、標準suiteは8 process・`78 / 78`件・`304.5 s`、JSON／SVG／HTML静的検査は合格した。browser connectionがないため実ブラウザ描画は未確認。productionコードとapp compositionは不変で、runtime matrixはcontrolで安全停止済みのためPhase 0 RTXは再実行していない。

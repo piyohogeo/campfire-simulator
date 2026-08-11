@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+<title id="title">Phase 6DX stage-open safe preflight</title>
+<desc id="desc">Known-good Box stopped at the pre-stage viewport-frame readiness wait; no stage ablation ran.</desc>
+<rect width="1200" height="560" fill="#0e1118"/>
+<text x="54" y="68" fill="#f4f7fb" font-family="Segoe UI, sans-serif" font-size="30" font-weight="700">Phase 6DX · stage-open safe preflight</text>
+<text x="54" y="104" fill="#9eabc1" font-family="Segoe UI, sans-serif" font-size="18">known-good control stopped before stage preparation · no topology conclusion</text>
+<rect x="54" y="145" width="1092" height="108" rx="12" fill="#1a2130" stroke="#39445a"/>
+<text x="82" y="183" fill="#ffcc80" font-family="Segoe UI, sans-serif" font-size="18" font-weight="700">BOX CONTROL</text>
+<text x="82" y="218" fill="#f4f7fb" font-family="Segoe UI, sans-serif" font-size="24">420.47 s timeout at renderer_readiness_warmup_started</text>
+<text x="890" y="218" fill="#ff8a80" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">SAFE STOP</text>
+<line x1="86" y1="317" x2="1114" y2="317" stroke="#3c485d" stroke-width="4"/>
+<circle cx="125" cy="317" r="16" fill="#ffcc80"/><circle cx="450" cy="317" r="16" fill="#4b5568"/><circle cx="775" cy="317" r="16" fill="#4b5568"/><circle cx="1080" cy="317" r="16" fill="#4b5568"/>
+<text x="74" y="363" fill="#f4f7fb" font-family="Segoe UI, sans-serif" font-size="17">app ready</text>
+<text x="365" y="363" fill="#8995aa" font-family="Segoe UI, sans-serif" font-size="17">stage prepare</text>
+<text x="682" y="363" fill="#8995aa" font-family="Segoe UI, sans-serif" font-size="17">USD / Hydra</text>
+<text x="1002" y="363" fill="#8995aa" font-family="Segoe UI, sans-serif" font-size="17">OS exit</text>
+<rect x="54" y="414" width="1092" height="92" rx="12" fill="#151b27"/>
+<text x="82" y="451" fill="#a8e6cf" font-family="Segoe UI, sans-serif" font-size="18">fatal 0 · dump 0 · upload 0 · production hash unchanged</text>
+<text x="82" y="484" fill="#9eabc1" font-family="Segoe UI, sans-serif" font-size="17">box_hull and cylinder_decomposition not started · failed cylinder_hull excluded</text>
+</svg>

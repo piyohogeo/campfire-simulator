@@ -1,5 +1,10 @@
 # Changelog
 
+- Added the production-neutral Phase 6DX stage-open safe preflight and limited its executable matrix to the known-good Box, a Box approximation-only change, and a Cylinder-topology-only change; the previously failed cylindrical Hull branch was not runnable.
+- Stopped on the first known-good Box control after a bounded 420.474-second timeout at `renderer_readiness_warmup_started`, before stage preparation, OpenUSD open, USD-context connection, Hydra attachment, or any Box-to-Cylinder ablation.
+- Classified the newly added no-window pre-stage viewport-frame wait as an invalid harness boundary relative to the qualified Phase 6DW ordering. No crash, dump, upload attempt, production hash change, or topology result occurred, and Phase 6DU remains paused.
+- Passed the Release build in `6.79 s`, the standard suite in 8 processes with `78 / 78` tests in `304.5 s`, and the JSON/SVG/HTML static checks. Browser rendering was unavailable; Phase 0 RTX was not rerun because production code and app composition were unchanged and the diagnostic matrix had safely stopped at its control.
+
 - Added the production-neutral Phase 6DW GPU/renderer lifecycle baseline after the RTX 2070 installation: Windows and Kit consistently enumerate RTX 3090 as GPU/CUDA index 0 and RTX 2070 as index 1, while Kit renders and presents on the RTX 3090 path.
 - Qualified all seven lifecycle boundaries with both the existing and a new empty isolated cache (14/14 normal OS exits, fatal/crash/dump/upload 0), including the Phase 6DT known-good Box through first RTX frame and the known-good Flow simulation through shutdown.
 - Established that Phase 6DT, 6DU, and 6DV artifacts all postdate the GPU change and reboot; the hardware change remains historically unqualified, but a generic current two-GPU or stale-cache teardown failure was not reproduced.
