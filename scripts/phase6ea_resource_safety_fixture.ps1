@@ -15,9 +15,9 @@ New-Item -ItemType Directory -Path $output -Force | Out-Null
 $reportPath = Join-Path $output "fixture_result.json"
 
 if ($Mode -eq "wct_timeout") {
-    $powershell = (Get-Process -Id $PID).Path
-    $helper = Join-Path $PSScriptRoot "phase6ea_wct_helper.ps1"
-    $result = Invoke-Phase6EaGuardedHelper -FilePath $powershell -ArgumentList @("-NoLogo","-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-File",$helper,"-OutputPath",(Join-Path $output "never.json"),"-ObjectNameBoundaryFixture","-FixtureHangSeconds","300") -StdoutPath (Join-Path $output "helper.stdout.log") -StderrPath (Join-Path $output "helper.stderr.log") -TimeoutSeconds 1 -PrivateBytesLimit 268435456
+    $python = (Get-Command python.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source
+    $helper = Join-Path $PSScriptRoot "phase6ea_wct_helper.py"
+    $result = Invoke-Phase6EaGuardedHelper -FilePath $python -ArgumentList @($helper,"--output-path",(Join-Path $output "never.json"),"--object-name-boundary-fixture","--fixture-hang-seconds","300") -StdoutPath (Join-Path $output "helper.stdout.log") -StderrPath (Join-Path $output "helper.stderr.log") -TimeoutSeconds 1 -PrivateBytesLimit 268435456
     [IO.File]::WriteAllText($reportPath, ($result | ConvertTo-Json -Depth 8) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
     exit 0
 }

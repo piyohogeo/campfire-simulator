@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT = ROOT / "scripts" / "audit_phase6ea_stage_difference.py"
 CAPTURE = ROOT / "scripts" / "capture_phase6ea_hang_diagnostics.ps1"
-WCT_HELPER = ROOT / "scripts" / "phase6ea_wct_helper.ps1"
+WCT_HELPER = ROOT / "scripts" / "phase6ea_wct_helper.py"
 DUMP_HELPER = ROOT / "scripts" / "phase6ea_dump_helper.ps1"
 MONITOR = ROOT / "scripts" / "run_phase6ea_monitored_invocation.ps1"
 REPORT = ROOT / "docs" / "devlog" / "assets" / "phase6" / "kit_shutdown_residual_report.json"
@@ -37,7 +37,7 @@ class Phase6EaShutdownDiagnosticsContract(unittest.TestCase):
 
     def test_capture_isolates_wct_and_dump_helpers(self) -> None:
         text = CAPTURE.read_text(encoding="utf-8")
-        self.assertIn("phase6ea_wct_helper.ps1", text)
+        self.assertIn("phase6ea_wct_helper.py", text)
         self.assertIn("Invoke-Phase6EaGuardedHelper", text)
         self.assertIn("phase6ea_dump_helper.ps1", text)
         self.assertIn("Invoke-Phase6EaDumpHelper", text)
@@ -46,6 +46,8 @@ class Phase6EaShutdownDiagnosticsContract(unittest.TestCase):
         self.assertLess(pre_dump, full_dump)
         self.assertNotIn("MiniDumpWriteDump", text)
         self.assertNotIn("Task.Run", WCT_HELPER.read_text(encoding="utf-8"))
+        self.assertNotIn("Add-Type", WCT_HELPER.read_text(encoding="utf-8"))
+        self.assertIn("OBJECT_NAME_CHARACTERS = 128", WCT_HELPER.read_text(encoding="utf-8"))
         self.assertIn("MiniDumpWriteDump", DUMP_HELPER.read_text(encoding="utf-8"))
 
     def test_checked_in_report_is_safe_stop(self) -> None:

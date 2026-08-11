@@ -4,10 +4,22 @@ if (-not ("Phase6EaFileSafety" -as [type])) {
     Add-Type -TypeDefinition @'
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
 public static class Phase6EaFileSafety {
     public const int HashBufferBytes = 1024 * 1024;
+
+    [DllImport("kernel32.dll", SetLastError=true)]
+    private static extern bool GetExitCodeProcess(IntPtr process, out uint exitCode);
+
+    public static long ReadExitCode(IntPtr process) {
+        uint exitCode;
+        if (!GetExitCodeProcess(process, out exitCode)) {
+            throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
+        }
+        return exitCode;
+    }
 
     public static string ComputeSha256(string path) {
         using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, HashBufferBytes, FileOptions.SequentialScan))
@@ -101,6 +113,7 @@ function Exit-Phase6EaCaptureLock {
 function Stop-Phase6EaHelperTree {
     param([Parameter(Mandatory = $true)][int]$RootProcessId)
     $descendants = @()
+    $cimAvailable = $true
     try {
         $all = @(Get-CimInstance Win32_Process -ErrorAction Stop)
         $frontier = @($RootProcessId)
@@ -111,7 +124,19 @@ function Stop-Phase6EaHelperTree {
             }
             $frontier = $next
         }
-    } catch {}
+    } catch { $cimAvailable = $false }
+    if (-not $cimAvailable) {
+        # taskkill /T is scoped to the known helper root PID. It is the fallback
+        # when standard-user CIM cannot enumerate descendants; the target Kit PID
+        # is never passed to this helper-only cleanup function.
+        $priorErrorAction = $ErrorActionPreference
+        try {
+            $ErrorActionPreference = "SilentlyContinue"
+            & (Join-Path $env:SystemRoot "System32\taskkill.exe") /PID $RootProcessId /T /F *> $null
+        } catch {} finally { $ErrorActionPreference = $priorErrorAction }
+        Stop-Process -Id $RootProcessId -Force -ErrorAction SilentlyContinue
+        return
+    }
     foreach ($id in @($descendants | Sort-Object -Descending)) { Stop-Process -Id $id -Force -ErrorAction SilentlyContinue }
     Stop-Process -Id $RootProcessId -Force -ErrorAction SilentlyContinue
 }
@@ -130,8 +155,13 @@ function Invoke-Phase6EaGuardedHelper {
     $timedOut = $false
     $memoryExceeded = $false
     $process = $null
+    $nativeProcessHandle = [IntPtr]::Zero
     try {
         $process = Start-Process -FilePath $FilePath -ArgumentList $ArgumentList -PassThru -WindowStyle Hidden -RedirectStandardOutput $StdoutPath -RedirectStandardError $StderrPath
+        # Access Handle while the process is alive so the Process object retains a
+        # query handle. On this Windows build, reading Handle only after exit can
+        # return null and make ExitCode appear unavailable.
+        $nativeProcessHandle = $process.Handle
         while (-not $process.HasExited) {
             $process.Refresh()
             $peak = [math]::Max($peak, $process.PrivateMemorySize64)
@@ -141,12 +171,25 @@ function Invoke-Phase6EaGuardedHelper {
         }
         if ($timedOut -or $memoryExceeded) {
             Stop-Phase6EaHelperTree -RootProcessId $process.Id
-            $process.WaitForExit(10000) | Out-Null
+            $exited = $process.WaitForExit(10000)
+            if (-not $exited) {
+                Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+                $exited = $process.WaitForExit(5000)
+            }
+        } else {
+            # Synchronize the redirected stream handles and make ExitCode stable before
+            # constructing the result. Start-Process can otherwise report an absent
+            # process while the cached Process object still exposes no exit code.
+            $process.WaitForExit()
         }
         $process.Refresh()
+        $exitCode = $null
+        $exitCodeError = $null
+        try { $exitCode = [Phase6EaFileSafety]::ReadExitCode($nativeProcessHandle) } catch { $exitCodeError = $_.Exception.Message }
         return [ordered]@{
             pid = $process.Id
-            exit_code = if ($process.HasExited) { $process.ExitCode } else { $null }
+            exit_code = $exitCode
+            exit_code_error = $exitCodeError
             timed_out = $timedOut
             private_bytes_exceeded = $memoryExceeded
             private_bytes_limit = $PrivateBytesLimit

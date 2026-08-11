@@ -91,13 +91,13 @@ try {
     }
     Assert-DiagnosticTimeBudget
 
-    $powershell = (Get-Process -Id $PID).Path
     $wctOutput = Join-Path $output "wct.json"
     $wctStdout = Join-Path $output "wct.stdout.log"
     $wctStderr = Join-Path $output "wct.stderr.log"
-    $wctScript = Join-Path $PSScriptRoot "phase6ea_wct_helper.ps1"
-    $wctArgs = @("-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", $wctScript, "-TargetProcessId", $ProcessId, "-OutputPath", $wctOutput)
-    $wctGuard = Invoke-Phase6EaGuardedHelper -FilePath $powershell -ArgumentList $wctArgs -StdoutPath $wctStdout -StderrPath $wctStderr -TimeoutSeconds $WctTimeoutSeconds -PrivateBytesLimit $HelperPrivateBytesLimit
+    $python = (Get-Command python.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source
+    $wctScript = Join-Path $PSScriptRoot "phase6ea_wct_helper.py"
+    $wctArgs = @($wctScript, "--target-process-id", $ProcessId, "--output-path", $wctOutput)
+    $wctGuard = Invoke-Phase6EaGuardedHelper -FilePath $python -ArgumentList $wctArgs -StdoutPath $wctStdout -StderrPath $wctStderr -TimeoutSeconds $WctTimeoutSeconds -PrivateBytesLimit $HelperPrivateBytesLimit
     $wctStatus = if ($wctGuard.timed_out) { "wct_timeout" } elseif ($wctGuard.private_bytes_exceeded) { "wct_memory_limit" } elseif ($wctGuard.exit_code -ne 0 -or -not (Test-Path -LiteralPath $wctOutput)) { "wct_failed" } else { "ok" }
     $waitChains = @()
     if ($wctStatus -eq "ok") {
