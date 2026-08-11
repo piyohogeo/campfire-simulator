@@ -1,5 +1,10 @@
 # Changelog
 
+- Symbolized the preserved Phase 6EA full dump with WinDbg/CDB and Microsoft public symbols without rerunning condition A. The Kit main thread waits on thread handle `0x1D4C`, targeting NVIDIA telemetry worker `0x1A60`, during `gpu.foundation` -> Direct3D -> NGX D3D12 shutdown -> telemetry uninitialization.
+- Located the target worker in `NvTelemetryBridge64` `WaitNamedPipeW` on a GUID-named local pipe. D3D12 background threads were idle, and the all-thread stacks showed no main-chain GPU fence, DLL unload, or held-critical-section boundary.
+- Kept raw debugger logs, symbols, and the 5.95 GB dump outside Git. The upstream pipe/service/NGX ordering trigger remains unconfirmed, so Phase 6DU and rotation remain paused; production code/defaults and the latest demo are unchanged.
+- Passed the expanded Phase 6EA contract 6/6 and all eight standard test processes with 78/78 tests in 354.2 seconds; static devlog validation found 336 local references, 179 JSON files, and 145 SVG files with no missing or malformed assets.
+
 - Added the production-neutral Phase 6EA shutdown-residual diagnosis and reproduced the non-exiting Kit process with the exact Phase 6DY qualified stage after OpenUSD, Hydra, viewport, stage close, renderer drain, and `shutdown_requested` all completed.
 - Proved that the Phase 6DY and regenerated Phase 6DZ axis stages differ only in generated documentation; geometry, topology, schema, approximation, transforms, relationships, and Prim order are equal.
 - Narrowed the last common shutdown boundary to `Shutting down plugin gpu.foundation.plugin`; the prior successful run continued with `PerfMonitorManager::stop`, while the hang stopped there.

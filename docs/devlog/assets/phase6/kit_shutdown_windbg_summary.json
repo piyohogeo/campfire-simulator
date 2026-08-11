@@ -1,0 +1,159 @@
+{
+  "schema": "campfire.phase6ea.windbg-hang-summary.v1",
+  "phase": "phase6ea",
+  "analyzed_at": "2026-08-11",
+  "dump": {
+    "sha256": "5D91062D28352D8CCBC5153AF1B9256BF4ABDAFA14B242BAC69BDC09ADD20520",
+    "rerun_performed": false
+  },
+  "debugger": {
+    "frontend_detected": "WinDbgX.exe 1.2606.22001.0",
+    "engine": "cdb.exe 10.0.29617.1000 AMD64 from the installed WinDbg package",
+    "symbol_server": "Microsoft public symbol server",
+    "symbol_cache_git_ignored": true,
+    "raw_logs_git_ignored": true,
+    "private_nvidia_omniverse_symbols_available": false,
+    "commands_completed": [
+      "!analyze -hang",
+      "!runaway 7",
+      "all-thread stacks",
+      "loaded modules",
+      "thread and event handles",
+      "targeted main and telemetry thread inspection"
+    ]
+  },
+  "analyze_hang": {
+    "process_name": "kit.exe",
+    "failure_bucket": "APPLICATION_HANG_cfffffff_NvTelemetryAPI64.dll!Unknown",
+    "symbol_name": "NvTelemetryAPI64+0x3CC87"
+  },
+  "native_stack_unwind": {
+    "available": true,
+    "thread_count": 133,
+    "main_thread_index": 0,
+    "main_thread_id": "0x641C",
+    "main_thread_cpu_seconds": 10.515,
+    "main_stack": [
+      "ntdll!NtWaitForSingleObject+0x14",
+      "KERNELBASE!WaitForSingleObjectEx+0x8E",
+      "NvTelemetryAPI64.dll+0x3CC87",
+      "NvTelemetryAPI64!UninitializeTelemetry+0xAF",
+      "_nvngx!NVSDK_NGX_D3D12_Shutdown1+0x82",
+      "carb.graphics-direct3d.plugin.dll+0x621BE",
+      "gpu.foundation.plugin.dll+0x18F4D3 (nearest export: carbOnPluginShutdown+0x133)",
+      "carb framework shutdown",
+      "kit.exe shutdown"
+    ]
+  },
+  "wait_chain": {
+    "available": true,
+    "waiter": {
+      "thread_index": 0,
+      "thread_id": "0x641C",
+      "api": "WaitForSingleObjectEx",
+      "handle": "0x1D4C",
+      "handle_type": "Thread",
+      "owned_critical_sections": 0
+    },
+    "target": {
+      "thread_index": 128,
+      "thread_id": "0x1A60",
+      "thread_start": "NvTelemetryAPI64.dll+0x44780",
+      "state": "KERNELBASE!WaitNamedPipeW inside NvTelemetryBridge64.dll+0x134F8",
+      "pipe_class": "local GUID-named pipe",
+      "stack_timeout_candidate_ms": 5000
+    },
+    "relationship": "The Kit main thread is synchronously waiting for the NVIDIA telemetry worker thread to terminate while NGX D3D12 shutdown calls telemetry uninitialization.",
+    "timeout_confidence": "strong inference only: 0x1388 is present in the WaitNamedPipeW stack frame, but NVIDIA private symbols are unavailable"
+  },
+  "handle_targets": {
+    "available": true,
+    "main_wait_handle": "0x1D4C",
+    "type": "Thread",
+    "target_thread_id": "0x1A60",
+    "target_thread_index": 128
+  },
+  "related_boundaries": {
+    "gpu_fence": {
+      "observed_as_main_blocker": false,
+      "evidence": "No ID3D12Fence or SetEventOnCompletion frame appears in the all-thread stacks. Four D3D12Core background threads are idle on condition variables. CUDA and NVIDIA UMD wait threads exist but are not the main thread's 0x1D4C target."
+    },
+    "dll_unload": {
+      "observed": false,
+      "evidence": "No LdrUnloadDll or FreeLibrary frame appears in the all-thread stacks; the main thread is still inside the plugin shutdown callback and the inspected modules remain loaded."
+    },
+    "critical_section_deadlock": {
+      "observed": false,
+      "evidence": "The main and telemetry TEBs report zero owned locks and !locks found no held critical section chain."
+    },
+    "d3d12": {
+      "module_version": "10.0.22621.5415",
+      "public_symbols_loaded": true
+    },
+    "ngx_driver": {
+      "module_version": "32.0.15.9186",
+      "private_symbols_loaded": false
+    },
+    "nvidia_telemetry": {
+      "api_version": "17.1.7.0",
+      "bridge_version": "17.1.7.0",
+      "private_symbols_loaded": false
+    }
+  },
+  "classification": {
+    "observed_fact": "The narrow blocking chain is gpu.foundation shutdown -> Direct3D plugin shutdown -> NGX D3D12 shutdown -> NVIDIA telemetry uninitialization -> main-thread join of telemetry worker 0x1A60 -> WaitNamedPipeW.",
+    "strong_inference": "The residual process is blocked on NVIDIA NGX telemetry-worker termination, not on stage content, a Python thread, a D3D12 background task, or a demonstrated GPU fence.",
+    "unconfirmed": [
+      "Why the GUID-named telemetry pipe did not become available or return in time",
+      "Whether the telemetry worker eventually exits without external intervention",
+      "Whether multi-GPU state, NVIDIA telemetry service state, or NGX shutdown ordering is the upstream trigger",
+      "Whether the same condition reproduces, because no rerun was permitted"
+    ]
+  },
+  "next_trace_if_required": {
+    "rerun_required": true,
+    "status": "not_started",
+    "bounded_capture": "60-90 seconds around shutdown_requested, file-mode, with an automatic stop and no retry",
+    "providers_verified_present": [
+      "Microsoft-Windows-Kernel-Process",
+      "Microsoft-Windows-Kernel-File",
+      "Microsoft-Windows-Direct3D12",
+      "Microsoft-Windows-DXGI",
+      "Microsoft-Windows-DxgKrnl"
+    ],
+    "required_events": [
+      "CPU sampling plus CSwitch/ReadyThread and thread lifetime",
+      "file and named-pipe create/wait completion",
+      "image load/unload",
+      "D3D12, DXGI, and DxgKrnl queue/fence activity",
+      "Phase lifecycle markers correlated to QPC"
+    ],
+    "nvidia_provider_rule": "Add an NVIDIA or telemetry ETW provider only if wpr -providers confirms it on the capture machine; none was found in the current provider inventory."
+  },
+  "decision": {
+    "phase6du_resume_allowed": false,
+    "rotation_resume_allowed": false,
+    "reason": "The wait boundary is classified, but its upstream trigger and repeatability remain unconfirmed; no hang condition was rerun."
+  },
+  "verification": {
+    "phase6ea_targeted_contract": {
+      "passed": 6,
+      "total": 6
+    },
+    "standard_suite": {
+      "processes": 8,
+      "passed": 78,
+      "total": 78,
+      "seconds": 354.2,
+      "upload_enabled": false
+    },
+    "devlog_static": {
+      "local_references": 336,
+      "missing": 0,
+      "json_files": 179,
+      "svg_files": 145,
+      "replacement_characters": 0
+    },
+    "browser_render": "not_run: no in-app or connected browser was available in this session"
+  }
+}

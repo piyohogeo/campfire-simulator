@@ -63,7 +63,25 @@ Git管理外のfull dumpを保存した。
 
 最も早く作成されたthreadのinstruction pointerは`ntdll.dll+0xA0E84`だった。stack memoryの単純なmodule-address scanには`KERNELBASE.dll`、`NvTelemetryAPI64.dll`、`_nvngx.dll`、`D3D12Core.dll`、`carb.graphics-direct3d.plugin.dll`、`carb.dll`が現れた。ただしこれはsymbolized unwindではなくreturn-address候補の走査であり、call stackや責任関数として扱わない。
 
-公開WCTは今回の収集中にdurable resultを返さず、正確なwait objectとowner threadは未確認である。dumpはHandleDataを含むが、ローカルに対応する公開analyzerがないためhandle targetも未解析である。WinDbg/CDBとmatching symbolsがないためnative stackは未展開である。
+収集時の公開WCTはdurable resultを返さなかったが、その後インストールしたWinDbg 1.2606.22001.0同梱のx64 CDB 10.0.29617.1000で同じdumpを再実行なしに解析した。Microsoft public symbol serverのcache、WinDbg command、raw logはすべてGit管理外の`artifacts/phase6ea-shutdown-residual-1/windbg/`へ置いた。NVIDIA／Omniverse private symbolは得られず、該当moduleはexport名とmodule offsetで扱う。
+
+### WinDbg symbolized解析
+
+`!analyze -hang`は`APPLICATION_HANG_cfffffff_NvTelemetryAPI64.dll!Unknown`、`NvTelemetryAPI64+0x3CC87`を選んだ。全133 threadのstack、`!runaway 7`、handle data、module inventoryを突合すると、main thread 0（OS thread `0x641C`）のblocking chainは次だった。
+
+```text
+kit / carb framework shutdown
+  -> gpu.foundation.plugin.dll+0x18F4D3
+     (nearest export: carbOnPluginShutdown+0x133)
+  -> carb.graphics-direct3d.plugin.dll+0x621BE
+  -> _nvngx!NVSDK_NGX_D3D12_Shutdown1+0x82
+  -> NvTelemetryAPI64!UninitializeTelemetry+0xAF
+  -> WaitForSingleObjectEx(handle 0x1D4C)
+```
+
+handle `0x1D4C`はEventやGPU fenceではなくThread objectで、targetはthread 128（OS thread `0x1A60`）だった。対象threadは`NvTelemetryAPI64.dll+0x44780`から開始され、`NvTelemetryBridge64.dll+0x134F8`内から`KERNELBASE!WaitNamedPipeW`を呼び、GUID名のlocal named pipeを待っていた。stack frameには`0x1388`（5000 ms）があるため5秒のpipe timeout候補と読めるが、private symbolがないので引数同定は強い推定に留める。mainとtelemetry threadのTEBはともにowned lock 0で、`!locks`にも保持critical section chainは出なかった。
+
+loaded moduleは`gpu.foundation.plugin.dll`、D3D12、NGX、NVIDIA UMD、Telemetry API/Bridgeを含んだ。D3D12Core 10.0.22621.5415は公開PDBで解決され、4本のD3D background threadはいずれもcondition variableでidleだった。全thread stackに`ID3D12Fence`、`SetEventOnCompletion`、`LdrUnloadDll`、`FreeLibrary`はない。CUDA／NVIDIA UMDの通常wait threadは存在するが、mainが待つthread object `0x1D4C`のtargetではない。したがって、このsnapshotで直接確認できる停止点はGPU fenceやDLL loader lockではなく、NGX D3D12 shutdown中のNVIDIA telemetry worker joinである。
 
 過去の`omni.fabric.plugin.dll+0xD6960` crashとは異なり、今回はExceptionStreamがなく同offsetもcaptured instruction pointerに現れない。同一原因を示す証拠とは扱わない。
 
@@ -79,23 +97,25 @@ Git管理外のfull dumpを保存した。
 
 ### 強い推定
 
-captured contextの132/133が`ntdll.dll`にあり、正常logとの差もGPU foundation終了境界に集中するため、processはCPU spinよりGPU/graphics teardownのwait状態にある可能性が高い。
+main threadのwait handleとtarget threadをdump内HandleDataから対応付けられた。したがって、processはCPU spinや一般的なrenderer frame待ちではなく、GPU foundationからNGX D3D12 shutdownへ入り、NVIDIA telemetry workerの終了を同期的に待つ状態にある可能性が高い。D3D12 background threadやGPU fenceがmain blockerである証拠はない。
 
 ### 未確認
 
-- 正確なwait object、owner thread、GPU fence
-- D3D12、NGX、NVIDIA telemetry、Kit renderer/plugin lifetimeのどれが根因か
+- GUID名telemetry pipeが利用可能にならない、または所定時間内に戻らない理由
+- multi-GPU状態、NVIDIA telemetry service状態、NGX shutdown順序のどれが上流triggerか
 - 同じ条件が毎回hangするかという再現率
 - 6DZ outer orchestration固有差とregenerated axis stage固有差
 
 ## Safe stop
 
-条件Aでhangしたため、指示どおり条件B、C、Phase 6DY 3-run stability controlを開始しない。Phase 6DUとrotationの再開条件も満たさない。次に必要なのは、保存dumpをWinDbg/CDBと利用可能なsymbolsで解析するか、別途承認したbounded WPR/ETW teardown traceでwait境界を特定することである。同じ条件の自動再試行は行わない。
+条件Aでhangしたため、指示どおり条件B、C、Phase 6DY 3-run stability controlを開始しない。Phase 6DUとrotationの再開条件も満たさない。保存dumpの解析でwait境界はtelemetry worker joinまで絞れたが、上流triggerは未確認である。追加証拠が必要なら、別途承認した60〜90秒のfile-mode WPR/ETWを`shutdown_requested`前後だけ取得する。CPU sample、CSwitch/ReadyThread、thread lifetime、file/named-pipe I/O、image load/unload、D3D12、DXGI、DxgKrnl、QPC相関のPhase markerを含める。現在の`wpr -providers`でNVIDIA/Telemetry providerは見つからなかったため、将来のcapture時に列挙できた場合だけ追加する。同じhang条件の自動再試行は行わない。
 
 このPhaseは内部lifecycle診断で、映像上の新機能はないため新しいデモ動画を作らず、latest demo pointerも変更しない。
 
 ## 回帰
 
-Release buildは`9.41 s`で合格した。Phase 6DY lifecycle contractは`6 / 6`、Phase 6DZ rotation/ROI contractは`5 / 5`、Phase 6EA診断contractは`5 / 5`で合格した。標準suiteは8 process・`78 / 78`件・`380.1 s`で合格し、Flow collider対象testもその正式suite内で合格した。日誌は333 local reference、JSON 178、SVG 145、欠落・replacement character 0だった。
+Release buildは`9.41 s`で合格した。Phase 6DY lifecycle contractは`6 / 6`、Phase 6DZ rotation/ROI contractは`5 / 5`、Phase 6EA診断contractは`6 / 6`で合格した。標準suiteは8 process・`78 / 78`件・`380.1 s`で合格し、Flow collider対象testもその正式suite内で合格した。日誌は336 local reference、JSON 179、SVG 145、欠落・replacement character 0だった。
 
 補助的な単独Flow testのdirect Kit launcherは、sandboxからAppData test reporterへ書けず120秒でtimeoutしたため正式結果から除外し、対象Kitをpath確認後に停止した。自動retryは行っていない。正式suiteは実環境権限で正常完了している。Production codeとapp compositionを変更していないためPhase 0 RTXとPhase 3は実行していない。
+
+WinDbg follow-up後はPhase 6EA targeted contract `6 / 6`、標準suite 8 process・`78 / 78`件・`354.2 s`に合格した。日誌は336 local reference、JSON 179、SVG 145、欠落・replacement character 0である。接続可能なBrowserがなかったため実レンダリング確認はできず、静的参照、JSON、SVG、UTF-8検査で代替した。

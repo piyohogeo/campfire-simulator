@@ -13,6 +13,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_ARTIFACT = ROOT / "artifacts" / "phase6ea-shutdown-residual-1"
+WINDBG_SUMMARY = ROOT / "docs" / "devlog" / "assets" / "phase6" / "kit_shutdown_windbg_summary.json"
 
 
 def load(path: Path):
@@ -49,6 +50,11 @@ def tool_inventory() -> list[dict]:
         result.append({"name": name, "available": bool(path), "path": path})
     result.extend(
         [
+            {
+                "name": "cdb (installed WinDbg package)",
+                "available": WINDBG_SUMMARY.exists(),
+                "path": "WinDbg app package amd64/cdb.exe (not on PATH)" if WINDBG_SUMMARY.exists() else None,
+            },
             {"name": "Windows Wait Chain Traversal API", "available": True, "path": "advapi32.dll (public API)"},
             {"name": "Windows MiniDumpWriteDump API", "available": True, "path": "DbgHelp.dll (public API)"},
         ]
@@ -68,6 +74,7 @@ def main() -> None:
     runner = load(artifact / "A_phase6dy_direct" / "runner_evidence.json")
     monitor = load(artifact / "A_monitor" / "monitor_evidence.json")
     dump_analysis = load(artifact / "A_monitor" / "hang_dump_analysis.json")
+    windbg = load(WINDBG_SUMMARY) if WINDBG_SUMMARY.exists() else None
     dump_path = artifact / "A_monitor" / "sensitive-hang-diagnostics" / "hang-full.dmp"
     success_root = ROOT / "artifacts" / "phase6dy-calibrated-stage-open-1" / "stage-open" / "D_cylinder_decomposition"
     success = load(success_root / "runner_evidence.json")
@@ -159,25 +166,26 @@ def main() -> None:
                 "user_time_100ns": earliest["thread_info"]["user_time_100ns"],
                 "heuristic_stack_module_candidates": candidate_modules,
             },
-            "native_stack_unwind": dump_analysis["stack_analysis"],
-            "wait_chain": {
+            "native_stack_unwind": windbg["native_stack_unwind"] if windbg else dump_analysis["stack_analysis"],
+            "wait_chain": windbg["wait_chain"] if windbg else {
                 "available": False,
                 "reason": "The first public-WCT collection did not produce durable output before the bounded capture command; future collection is capped at 10 seconds and writes a pre-dump snapshot.",
             },
-            "handle_targets": {
+            "handle_targets": windbg["handle_targets"] if windbg else {
                 "available": False,
                 "reason": "The dump includes MiniDumpWithHandleData, but no installed public debugger/analyzer can decode it in this environment.",
             },
+            "windbg_analysis": windbg,
         },
         "classification": {
             "observed_fact": [
                 "The exact Phase 6DY qualified stage completed OpenUSD, USD-context, Hydra, viewport, stage-close, renderer-drain, and shutdown_requested before the process remained alive.",
                 "The hang log stopped after 'Shutting down plugin gpu.foundation.plugin'; the prior successful log continued with PerfMonitor shutdown and remaining plugin unloads.",
-                "The hang dump has no ExceptionStream; 132 of 133 captured instruction pointers are in ntdll.dll and one is in win32u.dll.",
+                "The hang dump has no ExceptionStream; WinDbg resolved the main thread's wait handle as thread 0x1A60, which is blocked in NVIDIA Telemetry Bridge WaitNamedPipeW.",
                 "No crash-reporter dump, fatal token, device-lost/TDR token, or upload attempt was recorded.",
             ],
-            "strong_inference": "The residual process is predominantly waiting during the GPU/graphics teardown boundary at or immediately after gpu.foundation shutdown, rather than failing in stage geometry or Python probe execution.",
-            "unconfirmed": [
+            "strong_inference": windbg["classification"]["strong_inference"] if windbg else "The residual process is predominantly waiting during the GPU/graphics teardown boundary at or immediately after gpu.foundation shutdown, rather than failing in stage geometry or Python probe execution.",
+            "unconfirmed": windbg["classification"]["unconfirmed"] if windbg else [
                 "The exact wait object and owner thread are unavailable because the WCT attempt did not complete durably.",
                 "The heuristic stack scan is not a symbolized unwind and cannot identify a responsible function.",
                 "Whether the cause is intermittent renderer teardown, NVIDIA NGX/telemetry, D3D12, or a Kit plugin lifetime issue remains unconfirmed.",
@@ -197,13 +205,15 @@ def main() -> None:
             "normal_control_recovered": False,
             "phase6du_resume_allowed": False,
             "rotation_resume_allowed": False,
-            "next_required_evidence": "Analyze the preserved full dump with WinDbg/CDB and matching symbols, or perform a separately approved bounded ETW/WPR teardown trace; do not auto-retry condition A.",
+            "next_required_evidence": "If upstream cause evidence is required, perform the separately approved bounded ETW/WPR trace specified in the WinDbg summary; do not auto-retry condition A.",
         },
         "verification": {
             "release_build": {"status": "ok", "seconds": 9.41},
             "phase6dy_lifecycle_contract": {"status": "ok", "passed": 6, "total": 6},
             "phase6dz_rotation_roi_contract": {"status": "ok", "passed": 5, "total": 5},
             "phase6ea_diagnostic_contract": {"status": "ok", "passed": 5, "total": 5},
+            "phase6ea_windbg_followup_contract": {"status": "ok", "passed": 6, "total": 6},
+            "windbg_followup_standard_suite": {"status": "ok", "processes": 8, "passed": 78, "total": 78, "seconds": 354.2},
             "standard_suite": {"status": "ok", "processes": 8, "passed": 78, "total": 78, "seconds": 380.1},
             "flow_collider_test": {
                 "status": "ok_in_standard_suite",
@@ -214,7 +224,7 @@ def main() -> None:
                 "reason": "A non-escalated direct Kit test attempt could not write the AppData test reporter and was path-verified and stopped after its 120-second timeout; it is not a product or test failure and is not part of the formal results.",
                 "automatic_retry": False,
             },
-            "devlog_static": {"status": "ok", "unique_local_references": 333, "missing": 0, "json_files": 178, "svg_files": 145, "replacement_characters": 0},
+            "devlog_static": {"status": "ok", "unique_local_references": 336, "missing": 0, "json_files": 179, "svg_files": 145, "replacement_characters": 0},
             "phase0_rtx": {"status": "not_run", "reason": "production code and app composition unchanged"},
             "phase3": {"status": "not_run", "reason": "production code and app composition unchanged"},
         },
@@ -223,15 +233,15 @@ def main() -> None:
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
 <title id="title">Phase 6EA Kit shutdown residual process diagnosis</title>
-<desc id="desc">Condition A completed stage lifecycle but remained after shutdown, stopping before conditions B and C.</desc>
+<desc id="desc">Condition A completed stage lifecycle but remained while the main thread joined an NVIDIA telemetry worker during NGX D3D12 shutdown.</desc>
 <rect width="1200" height="520" fill="#11151c"/><text x="60" y="64" fill="#f4f0e6" font-family="Segoe UI, sans-serif" font-size="30" font-weight="700">Phase 6EA — Kit shutdown residual diagnosis</text>
 <text x="60" y="100" fill="#aab7c8" font-family="Segoe UI, sans-serif" font-size="18">Exact Phase 6DY stage · production-neutral · no automatic retry</text>
 <g font-family="Segoe UI, sans-serif" font-size="17"><rect x="60" y="150" width="250" height="92" rx="12" fill="#193b31"/><text x="82" y="184" fill="#8ee3bd">STAGE LIFECYCLE</text><text x="82" y="218" fill="#fff">close + drain + quit reached</text>
 <rect x="350" y="150" width="250" height="92" rx="12" fill="#553822"/><text x="372" y="184" fill="#ffd18c">OS PROCESS</text><text x="372" y="218" fill="#fff">still alive after shutdown</text>
-<rect x="640" y="150" width="250" height="92" rx="12" fill="#3d2730"/><text x="662" y="184" fill="#ff9faa">LAST LOG BOUNDARY</text><text x="662" y="218" fill="#fff">gpu.foundation shutdown</text>
+<rect x="640" y="150" width="250" height="92" rx="12" fill="#3d2730"/><text x="662" y="184" fill="#ff9faa">RESOLVED WAIT</text><text x="662" y="218" fill="#fff">telemetry worker join</text>
 <rect x="930" y="150" width="210" height="92" rx="12" fill="#252c3b"/><text x="952" y="184" fill="#a9c7ff">MATRIX</text><text x="952" y="218" fill="#fff">B / C not run</text></g>
 <path d="M310 196h40M600 196h40M890 196h40" stroke="#718096" stroke-width="4"/>
-<g font-family="Segoe UI, sans-serif"><text x="60" y="310" fill="#f4f0e6" font-size="22" font-weight="700">Captured hang state</text><text x="60" y="348" fill="#cbd5e1" font-size="18">133 threads · 438 modules · ExceptionStream absent</text><text x="60" y="380" fill="#cbd5e1" font-size="18">132 instruction pointers in ntdll.dll · 1 in win32u.dll</text><text x="60" y="412" fill="#cbd5e1" font-size="18">Full dump: {report['hang_dump']['bytes'] / (1024**3):.2f} GiB · SHA-256 {report['hang_dump']['sha256'][:16]}…</text><text x="60" y="468" fill="#ffcf7d" font-size="19">Decision: renderer/GPU teardown wait is the leading boundary; rotation remains paused.</text></g></svg>'''
+<g font-family="Segoe UI, sans-serif"><text x="60" y="310" fill="#f4f0e6" font-size="22" font-weight="700">Captured hang state</text><text x="60" y="348" fill="#cbd5e1" font-size="18">133 threads · 438 modules · ExceptionStream absent</text><text x="60" y="380" fill="#cbd5e1" font-size="18">Main handle 0x1D4C → telemetry thread 0x1A60 → WaitNamedPipeW</text><text x="60" y="412" fill="#cbd5e1" font-size="18">Full dump: {report['hang_dump']['bytes'] / (1024**3):.2f} GiB · SHA-256 {report['hang_dump']['sha256'][:16]}…</text><text x="60" y="468" fill="#ffcf7d" font-size="19">Decision: upstream trigger is unconfirmed; rotation remains paused.</text></g></svg>'''
     args.svg.write_text(svg, encoding="utf-8")
 
 

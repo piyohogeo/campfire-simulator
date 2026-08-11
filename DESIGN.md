@@ -2992,6 +2992,8 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - これはstage geometry/Python probeではなくGPU/graphics teardown waitの強い候補である。ただしWCTのdurable result、symbolized unwind、wait object、owner threadは未取得で、D3D12、NGX、NVIDIA telemetry、Kit plugin lifetimeのどれかは断定しない。過去の`omni.fabric.plugin.dll+0xD6960` crashと同じ原因を示す証拠もない。
 - 条件Aで停止条件に達したため、6DZ outer経由のB、regenerated axisのC、3-run stability、rotation再開は未実行である。Phase 6DU/rotationは引き続き保留する。Production code/default/latest demoは不変。詳細は`docs/design/kit_shutdown_residual_process.md`。
 - Release build `9.41 s`、Phase 6DY lifecycle `6 / 6`、Phase 6DZ rotation/ROI `5 / 5`、Phase 6EA診断 `5 / 5`、標準suite 8 process・`78 / 78`件・`380.1 s`、日誌333 local referenceの静的検査が合格した。Flow collider対象testは標準suite内で合格した。Production code/app composition不変のためPhase 0 RTXとPhase 3は未実行である。
+- 保存済みdumpを条件Aの再実行なしでWinDbg/CDB解析した。Main threadは`gpu.foundation.plugin`→Direct3D plugin→`NVSDK_NGX_D3D12_Shutdown1`→`NvTelemetryAPI64!UninitializeTelemetry`へ入り、Thread handle `0x1D4C`でtelemetry worker `0x1A60`の終了を待っていた。対象workerは`NvTelemetryBridge64`内の`WaitNamedPipeW`でGUID名local pipeを待つ。
+- D3D12Core公開PDBでは4本のD3D background threadはいずれもidleだった。全thread stackにGPU fence completion、`LdrUnloadDll`、`FreeLibrary`、保持critical-section chainはなく、このsnapshotの最小wait境界はNGX shutdown中のNVIDIA telemetry worker joinである。Pipe不応答の上流triggerと再現率は未確認のため、Phase 6DU／rotationは再開しない。必要なら別承認のbounded WPR/ETWを実施する。
 
 ## Phase 6DZ rotated Cylinder Flow-collision safe stop
 

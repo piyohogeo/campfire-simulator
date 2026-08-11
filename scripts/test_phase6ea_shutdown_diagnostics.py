@@ -10,6 +10,7 @@ AUDIT = ROOT / "scripts" / "audit_phase6ea_stage_difference.py"
 CAPTURE = ROOT / "scripts" / "capture_phase6ea_hang_diagnostics.ps1"
 MONITOR = ROOT / "scripts" / "run_phase6ea_monitored_invocation.ps1"
 REPORT = ROOT / "docs" / "devlog" / "assets" / "phase6" / "kit_shutdown_residual_report.json"
+WINDBG_SUMMARY = ROOT / "docs" / "devlog" / "assets" / "phase6" / "kit_shutdown_windbg_summary.json"
 DEVLOG = ROOT / "docs" / "devlog" / "index.html"
 
 
@@ -49,12 +50,24 @@ class Phase6EaShutdownDiagnosticsContract(unittest.TestCase):
         self.assertTrue(report["stage_comparison"]["semantic_payload_equal_except_documentation"])
         self.assertFalse(report["production"]["changed"])
         self.assertFalse(report["decision"]["rotation_resume_allowed"])
+        self.assertTrue(report["hang_dump"]["native_stack_unwind"]["available"])
+        self.assertEqual(report["hang_dump"]["handle_targets"]["target_thread_id"], "0x1A60")
+
+    def test_windbg_summary_records_join_without_claiming_gpu_fence(self) -> None:
+        summary = json.loads(WINDBG_SUMMARY.read_text(encoding="utf-8"))
+        self.assertFalse(summary["dump"]["rerun_performed"])
+        self.assertEqual(summary["wait_chain"]["waiter"]["handle_type"], "Thread")
+        self.assertEqual(summary["wait_chain"]["target"]["thread_id"], "0x1A60")
+        self.assertIn("WaitNamedPipeW", summary["wait_chain"]["target"]["state"])
+        self.assertFalse(summary["related_boundaries"]["gpu_fence"]["observed_as_main_blocker"])
+        self.assertFalse(summary["decision"]["rotation_resume_allowed"])
 
     def test_devlog_links_phase6ea_without_changing_latest_demo(self) -> None:
         html = DEVLOG.read_text(encoding="utf-8")
         self.assertIn('id="phase-6ea"', html)
         self.assertIn("kit_shutdown_residual_report.json", html)
         self.assertIn("kit_shutdown_residual_report.svg", html)
+        self.assertIn("kit_shutdown_windbg_summary.json", html)
         self.assertIn('data-latest-demo-manifest="assets/latest_demo.json"', html)
 
 
