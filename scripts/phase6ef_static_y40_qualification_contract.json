@@ -1,0 +1,69 @@
+{
+  "schema": "campfire.phase6ef.static-y40-qualification-contract.v1",
+  "phase": "phase6ef",
+  "declared_before_formal_runs": true,
+  "purpose": "Qualify only the static Y40-degree rotated Mesh CollisionProxy judgment method; preserve the Phase 6EC historical gate and result.",
+  "source_stage_sha256": "BC65721F4C6D4ECF1F35C736F2DD10F7A47C9F2B361E45898032E869D894D5F9",
+  "fixed_environment": {
+    "flow_version": "110.0.0",
+    "velocity_voxel_size_m": 0.05,
+    "sample_frames": [60, 120, 180, 200],
+    "emitter_fuel": 0.8,
+    "geometry": {
+      "vertex_count": 26,
+      "face_count": 36,
+      "face_index_count": 120,
+      "closed": true
+    }
+  },
+  "conditions": {
+    "A_axis_on": {"rotation_y_degrees": 0.0, "collision_enabled": true},
+    "B_rotate_y40_on": {"rotation_y_degrees": 40.0, "collision_enabled": true},
+    "C_rotate_y40_off": {"rotation_y_degrees": 40.0, "collision_enabled": false}
+  },
+  "run_order": [
+    ["A_axis_on", "B_rotate_y40_on", "C_rotate_y40_off"],
+    ["B_rotate_y40_on", "C_rotate_y40_off", "A_axis_on"],
+    ["C_rotate_y40_off", "A_axis_on", "B_rotate_y40_on"]
+  ],
+  "geometry_contract": {
+    "primary_distance": "signed shortest distance to the exact authored 26-vertex, 36-face closed Mesh",
+    "ideal_cylinder_role": "secondary diagnostic only",
+    "flow_internal_occupancy_mask_public_api_available": false,
+    "geometry_labels_are_flow_occupancy": false,
+    "depth_unit": "native velocity NanoVDB voxel size",
+    "boundary_band": "actual-Mesh inside with signed depth in [0, 1] voxel; reported but excluded from the zero-velocity qualification",
+    "deep_interior": "actual-Mesh signed depth > 1 voxel",
+    "center_axis_near": "deep interior and radial distance <= 0.5 native velocity voxel",
+    "axis_reference_deep": "unrotated actual-Mesh signed depth > 1 native velocity voxel",
+    "rotated_only": "rotated deep interior and outside the unrotated actual Mesh",
+    "axis_only": "axis-reference deep interior and outside the rotated actual Mesh",
+    "overlap": "rotated and axis-reference deep interiors"
+  },
+  "thresholds": {
+    "existing_velocity_limit_m_s": 0.00001,
+    "collision_off_positive_minimum_m_s": 0.1,
+    "rotated_on_to_off_deep_maximum_ratio": 0.01,
+    "axis_only_comparison_minimum_off_m_s": 0.1,
+    "axis_only_on_to_off_minimum_ratio": 0.1,
+    "reported_velocity_thresholds_m_s": [1e-12, 1e-6, 0.00001, 0.1],
+    "fuel_absolute_tolerance": 0.000001
+  },
+  "gates": {
+    "all_runs_and_samples_required": true,
+    "A_deep_and_center_maximum_at_or_below_existing_limit": true,
+    "B_deep_and_center_maximum_at_or_below_existing_limit": true,
+    "C_deep_and_center_maximum_at_or_above_positive_minimum": true,
+    "B_over_C_deep_maximum_ratio_at_or_below_limit": true,
+    "axis_only_requires_comparable_C_and_unsuppressed_B_ratio": true,
+    "active_blocks_positive_and_source_fuel_preserved": true,
+    "condition_difference_limited_to_declared_transform_and_collision_switch": true,
+    "functional_pass_and_normal_os_exit_only": true,
+    "fatal_dump_upload_residual_zero": true
+  },
+  "history_contract": {
+    "phase6ec_gate_changed": false,
+    "phase6ec_failure_reinterpreted": false,
+    "qualification_scope_if_pass": "Flow 110.0.0, fixed current resolution, 26-vertex closed Mesh, static Y40 degrees only"
+  }
+}

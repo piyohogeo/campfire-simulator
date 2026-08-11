@@ -30,7 +30,8 @@ param(
     [int]$RunIndex = 1,
     [switch]$Capture,
     [string]$SpatialOutputRoot = "",
-    [string]$SpatialCondition = ""
+    [string]$SpatialCondition = "",
+    [switch]$SpatialVelocityOnly
 )
 
 $ErrorActionPreference = "Stop"
@@ -45,6 +46,9 @@ $output = [IO.Path]::GetFullPath($OutputDir)
 $spatialEnabled = -not [string]::IsNullOrWhiteSpace($SpatialOutputRoot)
 if ($spatialEnabled -ne (-not [string]::IsNullOrWhiteSpace($SpatialCondition))) {
     throw "Phase 6EE spatial output root and condition must be provided together"
+}
+if ($SpatialVelocityOnly -and -not $spatialEnabled) {
+    throw "Phase 6EE velocity-only capture requires spatial output"
 }
 $spatialRoot = if ($spatialEnabled) { [IO.Path]::GetFullPath($SpatialOutputRoot) } else { "" }
 if (-not (Test-Path -LiteralPath $source -PathType Leaf)) { throw "Phase 6DT source stage missing: $source" }
@@ -98,6 +102,7 @@ $arguments = @(
     "--/phase6ee/spatialEnabled=$($spatialEnabled.ToString().ToLowerInvariant())",
     "--/phase6ee/spatialOutputRoot=$spatialRoot",
     "--/phase6ee/condition=$SpatialCondition",
+    "--/phase6ee/spatialVelocityOnly=$($SpatialVelocityOnly.IsPresent.ToString().ToLowerInvariant())",
     "--/rtx/flow/enabled=true",
     "--/log/file=$log",
     "--/log/fileLogLevel=Info"

@@ -58,6 +58,9 @@ def _settings() -> dict:
         "phase6ee_spatial_enabled": bool(settings.get_as_bool("/phase6ee/spatialEnabled")),
         "phase6ee_spatial_root": Path(spatial_root).resolve() if spatial_root else None,
         "phase6ee_condition": settings.get_as_string("/phase6ee/condition"),
+        "phase6ee_spatial_velocity_only": bool(
+            settings.get_as_bool("/phase6ee/spatialVelocityOnly")
+        ),
     }
 
 
@@ -645,6 +648,7 @@ def _save_and_sample(
     local_rois: dict | None = None,
     local_to_world: Gf.Matrix4d | None = None,
     spatial_collector=None,
+    spatial_velocity_only: bool = False,
     frame: int | None = None,
 ) -> dict:
     grid_data = flow.buffer_to_volume(buffer)
@@ -666,7 +670,7 @@ def _save_and_sample(
         result["alignment_rois"] = _sample_alignment_grid(
             grid, local_rois["cylinder_inside"], local_to_world, vector
         )
-    if spatial_collector is not None:
+    if spatial_collector is not None and (not spatial_velocity_only or channel == "velocity"):
         if frame is None:
             raise RuntimeError("Phase 6EE spatial capture requires a frame")
         result["phase6ee_neighborhood"] = spatial_collector.capture(
@@ -917,6 +921,7 @@ async def _run() -> None:
                         local_rois,
                         local_to_world,
                         spatial_collector,
+                        arguments["phase6ee_spatial_velocity_only"],
                         frame,
                     ),
                 }

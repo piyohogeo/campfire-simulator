@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6ee">最新記録</a>
+        <a href="#phase-6ef">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6ee">Phase 6EE診断を読む</a>
+        <a class="button primary" href="#phase-6ef">Phase 6EF qualificationを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6EE rotated collision spatial diagnostic</strong></div>
+        <div><span>現在地</span><strong>Phase 6EF static Y40 collision qualified</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Lifecycle</span><strong>A / B / C · normal exit</strong></div>
-        <div><span>Production</span><strong>unchanged · Phase 6EC gate retained</strong></div>
+        <div><span>Production</span><strong>unchanged · static Y40 only</strong></div>
       </div>
     </div>
   </header>
@@ -56,6 +56,19 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6ef" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報"><span class="phase-number compact">6EF</span><p><time datetime="2026-08-11">2026.08.11</time></p><span class="pill current">Static Y40 qualified</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6EF · Static Y40 Mesh CollisionProxy qualification</p><h2>表面1 cellを分離し、<br>静的Y40°を限定qualification。</h2><p>Phase 6EEの距離分布を根拠に、正式runを見る前に実Mesh deep interior用gateを固定しました。Phase 6ECの旧ROI gateと不合格履歴は変更せず、判定方法だけを一変数として再測定しています。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/static_y40_collision_qualification.svg"><img src="assets/phase6/static_y40_collision_qualification.svg" alt="Phase 6EFのA axis ON、B Y40 ON、C Y40 OFFを同一速度scaleで示す断面図" loading="lazy"></a><figcaption><div><strong>Authored-Mesh qualification · run 1 frame 200</strong><span>yellow: boundary ≤1 cell · white: deep interior · cyan: center axis</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Predeclared gate</p><h3>deep／centerは全36 sampleで合格</h3><p>AとBの実Mesh表面から1 cellより深い領域と中心軸を<code>≤1e-5 m/s</code>、C正例を<code>≥0.1 m/s</code>と固定しました。最悪値はA 0、B <code>8.352523e-6 m/s</code>、C最小<code>7.767152 m/s</code>です。</p></section><section class="note caution"><p class="note-label">Boundary is not hidden</p><h3>B表面帯の最大は3.162397 m/s</h3><p>実Mesh内側0～1 cellは完全ゼロgateから分離しましたが、mean、p50、p95、maximumと閾値別件数を保存しています。Flow内部occupancy maskは公開APIで取得できず、この分類は実Meshから計算した幾何ラベルです。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Formal matrix</p><h3>3 run・9 process・全てnormal exit。</h3><p>順序を<code>ABC / BCA / CAB</code>と回転し、frame 60/120/180/200を測定しました。B/C deep比の最悪値は<code>1.075365e-6</code>。C axis-onlyの最小maximumは0.650298 m/s、B/C axis-only比の最小は4.03873で、遮蔽が元のaxis位置へ残るstale-transform像とは整合しません。</p><p>全processでfunctional pass、normal OS exit、active blocks 26/24/58、fuel 0.8、fatal／dump／upload／residual 0でした。velocity-only 36 NPZは4.24 MB、Kit collectorの最大RSS増分は703.9 MBです。production app SHA-256は不変です。</p><p>Release build、Phase 0 RTX、Phase 3 authority／mass balance、targeted 67/67、標準suite 8 process・78/78件が合格しました。qualified範囲はFlow 110.0.0、現行固定解像度、26頂点閉Mesh、static Y40°だけです。任意軸、dynamic transform、RenderSurface、PhysX共用、20本性能は未qualifiedです。画面上のproduction変更がないため新規動画とlatest demoは更新していません。</p><p><a href="assets/phase6/static_y40_collision_qualification.json">集計JSON</a> · <a href="assets/phase6/static_y40_collision_qualification.svg">比較SVG</a> · <a href="assets/phase6/static_y40_collision_velocity_samples.zip">velocity NPZ archive</a> · <a href="../design/static_y40_collision_qualification.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>36 samples</strong><small>all gates pass</small></p></div><div role="listitem"><span>✓</span><p><strong>Y40 deep</strong><small>≤8.35e-6 m/s</small></p></div><div role="listitem"><span>✓</span><p><strong>OFF control</strong><small>≥7.767 m/s</small></p></div><div role="listitem"><span>✓</span><p><strong>Lifecycle</strong><small>9 normal exits</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>SHA不変</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Next boundary</p><h3>次は任意軸の静的回転を一変数で。</h3><p>Y40°の限定qualificationを前提に、複合軸の静的transformだけを変更する独立Phaseへ進めます。動的更新やproduction統合は、その結果より先に扱いません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6ee" class="section entry-section phase-six">

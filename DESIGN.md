@@ -3050,6 +3050,17 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - A/B/C各24 NPZを17,373,364 bytesのstream-built archiveへ保存し、SHA-256は`7E198D02...5A369458`。最初のoffline analyzer停止は追加divergenceを含む24ファイルを「必須5 channel×4 frameのちょうど20」と誤判定しただけで、raw runは再実行せず必須channel各4件のgateへ直してoffline再集計した。Production app SHA-256は前後`94162F82...F02A`で一致。
 - 回帰はRelease build 6.38秒、Phase 0 RTX、Phase 3 dry/wet mass-balance error 0・authority SHA従来値・active blocks final/peak 258/349・fuel peak 1.0、Phase 6EC～6EE targeted 60/60、標準suite 8 process・78/78件・310.8秒に合格。日誌521 reference（318 unique）、JSON 184、SVG 151、ZIP 73 entryで欠落・parse・CRC・文字化け・duplicate ID異常0。接続可能なBrowserがなく実レンダリングは未確認、Kit/CDB残留0。
 
+## Phase 6EF static Y40 Mesh CollisionProxy qualification
+
+### 2026-08-11: 実Meshの1-cell boundaryを分離して静的Y40°を限定qualification
+
+- 正式run前に`scripts/phase6ef_static_y40_qualification_contract.json`へgateを固定した。主距離はFlowへ渡す26頂点・36面・120 indexの閉じたMesh、deep interiorはvelocity NanoVDB固有voxelで実Mesh表面から1 cellより深い領域、boundary bandは0～1 cellである。Flow 110.0.0の公開APIには内部occupancy maskがないため、幾何ラベルをFlow内部maskとは扱わない。Phase 6ECの旧gateと不合格履歴は変更しない。
+- A axis ON、B Y40 ON、C Y40 OFFを`ABC / BCA / CAB`順の3 run・9別processで実測した。全processがfunctional pass、`normal_exit`、exit 0、fatal/dump/upload/residual 0で、frame 60/120/180/200の36 velocity sampleが事前gateに合格した。active blocksはA/B/Cで26/24/58、fuelは全条件0.8だった。
+- 最悪値はA deep/center `0 / 0 m/s`、B deep/center `8.352523e-6 / 8.352523e-6 m/s`、C positive-control最小deep/center `7.767152 / 7.767152 m/s`、B/C deep比`1.075365e-6`である。C axis-only最小maximumは`0.650298 m/s`、B/C axis-only比の最小は`4.03873`で、元のaxis位置へ遮蔽が残るstale-transform像とは整合しない。
+- boundary bandは報告から除外せず、Bの全sample中maximumは`3.162397 m/s`、最大p95は`0.104128 m/s`だった。したがって完全ゼロやFlow内部maskを主張せず、固定環境で意味のある速度が実Mesh表面1 cell以内に限定されることをqualification根拠とする。velocity-only保存は36 NPZ・4,236,585 bytes、Kit内collector最大RSS増分は703,864,832 bytesだった。
+- qualified範囲は`Flow 110.0.0、現行固定解像度、26頂点閉Mesh、static Y40°`のみである。任意軸回転へは次の一変数Phaseとして進めるが、dynamic transform、RenderSurface、PhysX共用、20本production性能は未qualifiedのままとする。production app SHA-256は`94162F82...F02A`で前後一致し、productionコード・既定値・latest demoは変更しない。詳細は`docs/design/static_y40_collision_qualification.md`。
+- 回帰はRelease build 5.97秒、Phase 0 RTX、Phase 3 mass balance 0・authority SHA維持・active blocks final/peak 281/312、targeted 67/67、標準suite 8 process・78/78件・303.2秒に合格した。Kit/CDB残留とPhase 6EFのfatal/dump/uploadは0だった。
+
 ## Phase 6DZ rotated Cylinder Flow-collision safe stop
 
 ### 2026-08-11: 回転前のaxis controlが正常OS exitへ到達せず停止

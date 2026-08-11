@@ -1,0 +1,5629 @@
+{
+  "schema": "campfire.phase6ef.static-y40-qualification-report.v1",
+  "phase": "phase6ef",
+  "contract": {
+    "path": "phase6ef_static_y40_qualification_contract.json",
+    "sha256": "49ED1C383000B881F2BF4F5275B71DCE6263BF7ACE1C3564DA222219363EC6E2",
+    "thresholds": {
+      "existing_velocity_limit_m_s": 1e-05,
+      "collision_off_positive_minimum_m_s": 0.1,
+      "rotated_on_to_off_deep_maximum_ratio": 0.01,
+      "axis_only_comparison_minimum_off_m_s": 0.1,
+      "axis_only_on_to_off_minimum_ratio": 0.1,
+      "reported_velocity_thresholds_m_s": [
+        1e-12,
+        1e-06,
+        1e-05,
+        0.1
+      ],
+      "fuel_absolute_tolerance": 1e-06
+    },
+    "run_order": [
+      [
+        "A_axis_on",
+        "B_rotate_y40_on",
+        "C_rotate_y40_off"
+      ],
+      [
+        "B_rotate_y40_on",
+        "C_rotate_y40_off",
+        "A_axis_on"
+      ],
+      [
+        "C_rotate_y40_off",
+        "A_axis_on",
+        "B_rotate_y40_on"
+      ]
+    ]
+  },
+  "scope": "Flow 110.0.0, fixed current resolution, 26-vertex closed Mesh, static Y40 degrees only",
+  "flow_collision_occupancy": {
+    "public_api_available": false,
+    "geometry_labels_are_flow_occupancy": false,
+    "label_source": "signed shortest distance to the exact authored 26-vertex, 36-face closed Mesh"
+  },
+  "samples": {
+    "1": {
+      "A_axis_on": {
+        "60": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3652,
+            "mean": 0.10102671238897508,
+            "p50": 0.0007517303456552327,
+            "p95": 0.5757871985435484,
+            "maximum": 6.178751468658447,
+            "threshold_counts": {
+              "1e-12": 2656,
+              "1e-06": 2656,
+              "1e-05": 2636,
+              "0.1": 378
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 658,
+            "mean": 0.027399282805442446,
+            "p50": 0.0,
+            "p95": 0.0100699505303055,
+            "maximum": 2.291821241378784,
+            "threshold_counts": {
+              "1e-12": 160,
+              "1e-06": 160,
+              "1e-05": 160,
+              "0.1": 18
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 33,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "rotated_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        },
+        "120": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3652,
+            "mean": 0.10208898497955582,
+            "p50": 0.0010580260423012078,
+            "p95": 0.5687298476696014,
+            "maximum": 6.180800914764404,
+            "threshold_counts": {
+              "1e-12": 2656,
+              "1e-06": 2656,
+              "1e-05": 2654,
+              "0.1": 357
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 658,
+            "mean": 0.029177526538408896,
+            "p50": 0.0,
+            "p95": 0.01157784797251223,
+            "maximum": 2.391477108001709,
+            "threshold_counts": {
+              "1e-12": 160,
+              "1e-06": 160,
+              "1e-05": 160,
+              "0.1": 21
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 33,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "rotated_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        },
+        "180": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3652,
+            "mean": 0.10725386104159809,
+            "p50": 0.001057548332028091,
+            "p95": 0.6153807222843164,
+            "maximum": 6.2074785232543945,
+            "threshold_counts": {
+              "1e-12": 2656,
+              "1e-06": 2656,
+              "1e-05": 2656,
+              "0.1": 370
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 658,
+            "mean": 0.030083512851918782,
+            "p50": 0.0,
+            "p95": 0.013362914137542238,
+            "maximum": 2.831104278564453,
+            "threshold_counts": {
+              "1e-12": 160,
+              "1e-06": 160,
+              "1e-05": 160,
+              "0.1": 23
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 33,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "rotated_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        },
+        "200": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3652,
+            "mean": 0.10798625145849029,
+            "p50": 0.0010036216699518263,
+            "p95": 0.6188430488109586,
+            "maximum": 6.1561079025268555,
+            "threshold_counts": {
+              "1e-12": 2656,
+              "1e-06": 2656,
+              "1e-05": 2656,
+              "0.1": 366
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 658,
+            "mean": 0.03085535741824707,
+            "p50": 0.0,
+            "p95": 0.01472094655036926,
+            "maximum": 2.7337613105773926,
+            "threshold_counts": {
+              "1e-12": 160,
+              "1e-06": 160,
+              "1e-05": 160,
+              "0.1": 21
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 33,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "rotated_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        }
+      },
+      "B_rotate_y40_on": {
+        "60": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.19734043800919543,
+            "p50": 0.004924028879031539,
+            "p95": 1.1429904520511627,
+            "maximum": 6.282830715179443,
+            "threshold_counts": {
+              "1e-12": 3078,
+              "1e-06": 3054,
+              "1e-05": 2928,
+              "0.1": 704
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.04890612699087125,
+            "p50": 3.516674041748047e-06,
+            "p95": 0.09299651384353615,
+            "maximum": 3.1623966693878174,
+            "threshold_counts": {
+              "1e-12": 474,
+              "1e-06": 423,
+              "1e-05": 174,
+              "0.1": 30
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 2.874585539357287e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 396,
+              "1e-06": 337,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 3.173803520439833e-06,
+            "p50": 2.3543834686279297e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 30,
+              "1e-06": 27,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.10497786494651574,
+            "p50": 0.0023532062768936157,
+            "p95": 0.6836528569459914,
+            "maximum": 4.59628438949585,
+            "threshold_counts": {
+              "1e-12": 234,
+              "1e-06": 207,
+              "1e-05": 138,
+              "0.1": 26
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 2.991355431832287e-06,
+            "p50": 2.6226043701171875e-06,
+            "p95": 7.8860622124921e-06,
+            "maximum": 7.91687944001751e-06,
+            "threshold_counts": {
+              "1e-12": 288,
+              "1e-06": 259,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.20417589345276216,
+            "p50": 0.008466081693768501,
+            "p95": 0.9190354853868481,
+            "maximum": 4.59628438949585,
+            "threshold_counts": {
+              "1e-12": 127,
+              "1e-06": 125,
+              "1e-05": 120,
+              "0.1": 26
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.4289570762460234e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.562277005490614e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 62,
+              "1e-06": 46,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        },
+        "120": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.18514060666444235,
+            "p50": 0.005215097218751907,
+            "p95": 1.0518907427787765,
+            "maximum": 6.304191589355469,
+            "threshold_counts": {
+              "1e-12": 3078,
+              "1e-06": 3054,
+              "1e-05": 2928,
+              "0.1": 679
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.04691973762480445,
+            "p50": 3.516674041748047e-06,
+            "p95": 0.06827705502510055,
+            "maximum": 2.8901114463806152,
+            "threshold_counts": {
+              "1e-12": 474,
+              "1e-06": 423,
+              "1e-05": 174,
+              "0.1": 27
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 2.874585539357287e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 396,
+              "1e-06": 337,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 3.173803520439833e-06,
+            "p50": 2.3543834686279297e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 30,
+              "1e-06": 27,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.11043836927387671,
+            "p50": 0.0018818179378286004,
+            "p95": 0.7009601593017573,
+            "maximum": 4.572147369384766,
+            "threshold_counts": {
+              "1e-12": 234,
+              "1e-06": 207,
+              "1e-05": 138,
+              "0.1": 27
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 2.991355431832287e-06,
+            "p50": 2.6226043701171875e-06,
+            "p95": 7.8860622124921e-06,
+            "maximum": 7.91687944001751e-06,
+            "threshold_counts": {
+              "1e-12": 288,
+              "1e-06": 259,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.21568552381532796,
+            "p50": 0.008653231430798769,
+            "p95": 0.9685306847095481,
+            "maximum": 4.572147369384766,
+            "threshold_counts": {
+              "1e-12": 127,
+              "1e-06": 125,
+              "1e-05": 120,
+              "0.1": 27
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.4289570762460234e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.562277005490614e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 62,
+              "1e-06": 46,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        },
+        "180": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.17601731467409565,
+            "p50": 0.005023875972256064,
+            "p95": 0.9231731414794919,
+            "maximum": 6.322177886962891,
+            "threshold_counts": {
+              "1e-12": 3078,
+              "1e-06": 3054,
+              "1e-05": 2928,
+              "0.1": 646
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.0520394227782433,
+            "p50": 3.516674041748047e-06,
+            "p95": 0.08936493322253136,
+            "maximum": 2.914672613143921,
+            "threshold_counts": {
+              "1e-12": 474,
+              "1e-06": 423,
+              "1e-05": 174,
+              "0.1": 30
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 2.874585539357287e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 396,
+              "1e-06": 337,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 3.173803520439833e-06,
+            "p50": 2.3543834686279297e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 30,
+              "1e-06": 27,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.12100088253032223,
+            "p50": 0.0022315102396532893,
+            "p95": 0.6521747678518292,
+            "maximum": 4.513385772705078,
+            "threshold_counts": {
+              "1e-12": 234,
+              "1e-06": 207,
+              "1e-05": 138,
+              "0.1": 29
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 2.991355431832287e-06,
+            "p50": 2.6226043701171875e-06,
+            "p95": 7.8860622124921e-06,
+            "maximum": 7.91687944001751e-06,
+            "threshold_counts": {
+              "1e-12": 288,
+              "1e-06": 259,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.23638364004923393,
+            "p50": 0.008642352651804686,
+            "p95": 1.191741520166395,
+            "maximum": 4.513385772705078,
+            "threshold_counts": {
+              "1e-12": 127,
+              "1e-06": 125,
+              "1e-05": 120,
+              "0.1": 29
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.4289570762460234e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.562277005490614e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 62,
+              "1e-06": 46,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        },
+        "200": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.177486230832439,
+            "p50": 0.004745036829262972,
+            "p95": 0.9533458799123762,
+            "maximum": 6.332172870635986,
+            "threshold_counts": {
+              "1e-12": 3078,
+              "1e-06": 3054,
+              "1e-05": 2928,
+              "0.1": 636
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.04766709623196619,
+            "p50": 3.516674041748047e-06,
+            "p95": 0.10412837825715347,
+            "maximum": 2.903322458267212,
+            "threshold_counts": {
+              "1e-12": 474,
+              "1e-06": 423,
+              "1e-05": 174,
+              "0.1": 31
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 2.874585539357287e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 396,
+              "1e-06": 337,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 3.173803520439833e-06,
+            "p50": 2.3543834686279297e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 30,
+              "1e-06": 27,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.13353700907643945,
+            "p50": 0.0021078772842884064,
+            "p95": 0.7592074781656264,
+            "maximum": 4.713141918182373,
+            "threshold_counts": {
+              "1e-12": 234,
+              "1e-06": 207,
+              "1e-05": 138,
+              "0.1": 29
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 2.991355431832287e-06,
+            "p50": 2.6226043701171875e-06,
+            "p95": 7.8860622124921e-06,
+            "maximum": 7.91687944001751e-06,
+            "threshold_counts": {
+              "1e-12": 288,
+              "1e-06": 259,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.26076677247339775,
+            "p50": 0.008484463673084974,
+            "p95": 1.450593972206115,
+            "maximum": 4.713141918182373,
+            "threshold_counts": {
+              "1e-12": 127,
+              "1e-06": 125,
+              "1e-05": 120,
+              "0.1": 29
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.4289570762460234e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.562277005490614e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 62,
+              "1e-06": 46,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        }
+      },
+      "C_rotate_y40_off": {
+        "60": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.19811091003039993,
+            "p50": 0.02825654298067093,
+            "p95": 0.8240388214588154,
+            "maximum": 9.778183937072754,
+            "threshold_counts": {
+              "1e-12": 3535,
+              "1e-06": 3535,
+              "1e-05": 3535,
+              "0.1": 1040
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.3538290829035557,
+            "p50": 0.05043712444603443,
+            "p95": 1.5468631207942944,
+            "maximum": 8.400203704833984,
+            "threshold_counts": {
+              "1e-12": 612,
+              "1e-06": 612,
+              "1e-05": 612,
+              "0.1": 227
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 0.7269348943427721,
+            "p50": 0.06111787259578705,
+            "p95": 5.433024644851685,
+            "maximum": 8.357105255126953,
+            "threshold_counts": {
+              "1e-12": 491,
+              "1e-06": 491,
+              "1e-05": 491,
+              "0.1": 181
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 1.3650263613911675,
+            "p50": 0.047380488365888596,
+            "p95": 8.047443103790282,
+            "maximum": 8.357105255126953,
+            "threshold_counts": {
+              "1e-12": 34,
+              "1e-06": 34,
+              "1e-05": 34,
+              "0.1": 11
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.9157343498522867,
+            "p50": 0.19763849675655365,
+            "p95": 5.673716807365416,
+            "maximum": 8.357105255126953,
+            "threshold_counts": {
+              "1e-12": 264,
+              "1e-06": 264,
+              "1e-05": 264,
+              "0.1": 177
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 0.1806536063099105,
+            "p50": 0.041630081832408905,
+            "p95": 0.5806703567504881,
+            "maximum": 7.998531818389893,
+            "threshold_counts": {
+              "1e-12": 362,
+              "1e-06": 362,
+              "1e-05": 362,
+              "0.1": 60
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.11208126883703604,
+            "p50": 0.07931675389409065,
+            "p95": 0.3233177840709683,
+            "maximum": 0.9084175229072571,
+            "threshold_counts": {
+              "1e-12": 134,
+              "1e-06": 134,
+              "1e-05": 134,
+              "0.1": 53
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.5016940393811695,
+            "p50": 1.285954236984253,
+            "p95": 7.403823375701904,
+            "maximum": 8.357105255126953,
+            "threshold_counts": {
+              "1e-12": 77,
+              "1e-06": 77,
+              "1e-05": 77,
+              "0.1": 77
+            }
+          }
+        },
+        "120": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.20669143113709332,
+            "p50": 0.025400256738066673,
+            "p95": 0.8836827695369694,
+            "maximum": 9.101585388183594,
+            "threshold_counts": {
+              "1e-12": 3535,
+              "1e-06": 3535,
+              "1e-05": 3535,
+              "0.1": 884
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.3653148730579167,
+            "p50": 0.0459979884326458,
+            "p95": 1.5045440256595606,
+            "maximum": 9.40645694732666,
+            "threshold_counts": {
+              "1e-12": 612,
+              "1e-06": 612,
+              "1e-05": 612,
+              "0.1": 226
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 0.6384852904676557,
+            "p50": 0.0748777985572815,
+            "p95": 4.057732939720154,
+            "maximum": 9.09351921081543,
+            "threshold_counts": {
+              "1e-12": 491,
+              "1e-06": 491,
+              "1e-05": 491,
+              "0.1": 224
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 1.0413372923674828,
+            "p50": 0.07728883624076843,
+            "p95": 7.477409529685974,
+            "maximum": 8.175348281860352,
+            "threshold_counts": {
+              "1e-12": 34,
+              "1e-06": 34,
+              "1e-05": 34,
+              "0.1": 16
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.7804377439139044,
+            "p50": 0.09883799031376839,
+            "p95": 5.868278837203975,
+            "maximum": 8.175348281860352,
+            "threshold_counts": {
+              "1e-12": 264,
+              "1e-06": 264,
+              "1e-05": 264,
+              "0.1": 132
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 0.23022292830302118,
+            "p50": 0.03429570607841015,
+            "p95": 0.5728920757770536,
+            "maximum": 9.09351921081543,
+            "threshold_counts": {
+              "1e-12": 362,
+              "1e-06": 362,
+              "1e-05": 362,
+              "0.1": 111
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.06915084215979189,
+            "p50": 0.04101226665079594,
+            "p95": 0.19588008597493164,
+            "maximum": 0.6502975821495056,
+            "threshold_counts": {
+              "1e-12": 134,
+              "1e-06": 134,
+              "1e-05": 134,
+              "0.1": 18
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.1900223851107157,
+            "p50": 0.9564407467842102,
+            "p95": 7.460234737396241,
+            "maximum": 8.175348281860352,
+            "threshold_counts": {
+              "1e-12": 77,
+              "1e-06": 77,
+              "1e-05": 77,
+              "0.1": 73
+            }
+          }
+        },
+        "180": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.18791347901862893,
+            "p50": 0.028081768192350864,
+            "p95": 0.6676595717668521,
+            "maximum": 9.44670295715332,
+            "threshold_counts": {
+              "1e-12": 3535,
+              "1e-06": 3535,
+              "1e-05": 3535,
+              "0.1": 806
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.3611853335618066,
+            "p50": 0.04277707450091839,
+            "p95": 1.7267936766147538,
+            "maximum": 8.536612510681152,
+            "threshold_counts": {
+              "1e-12": 612,
+              "1e-06": 612,
+              "1e-05": 612,
+              "0.1": 189
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 0.5673975967479653,
+            "p50": 0.05036107450723648,
+            "p95": 3.542444348335266,
+            "maximum": 8.826881408691406,
+            "threshold_counts": {
+              "1e-12": 491,
+              "1e-06": 491,
+              "1e-05": 491,
+              "0.1": 168
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 0.8422229201806819,
+            "p50": 0.0439100731164217,
+            "p95": 5.915677738189694,
+            "maximum": 8.080873489379883,
+            "threshold_counts": {
+              "1e-12": 34,
+              "1e-06": 34,
+              "1e-05": 34,
+              "0.1": 12
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.7272626450814476,
+            "p50": 0.10180923342704773,
+            "p95": 4.643258738517761,
+            "maximum": 8.826881408691406,
+            "threshold_counts": {
+              "1e-12": 264,
+              "1e-06": 264,
+              "1e-05": 264,
+              "0.1": 135
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 0.17216718476394305,
+            "p50": 0.030655101872980595,
+            "p95": 0.4713052645325657,
+            "maximum": 7.1124982833862305,
+            "threshold_counts": {
+              "1e-12": 362,
+              "1e-06": 362,
+              "1e-05": 362,
+              "0.1": 56
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.08027545937489886,
+            "p50": 0.05663265846669674,
+            "p95": 0.239427604526281,
+            "maximum": 0.9761605858802795,
+            "threshold_counts": {
+              "1e-12": 134,
+              "1e-06": 134,
+              "1e-05": 134,
+              "0.1": 22
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 1.9382362758571452,
+            "p50": 0.9678394198417664,
+            "p95": 7.453444099426271,
+            "maximum": 8.826881408691406,
+            "threshold_counts": {
+              "1e-12": 77,
+              "1e-06": 77,
+              "1e-05": 77,
+              "0.1": 71
+            }
+          }
+        },
+        "200": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.19992889421059562,
+            "p50": 0.02276185154914856,
+            "p95": 0.8739326745271663,
+            "maximum": 9.486875534057617,
+            "threshold_counts": {
+              "1e-12": 3535,
+              "1e-06": 3535,
+              "1e-05": 3535,
+              "0.1": 855
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.3268618191450871,
+            "p50": 0.043295690789818764,
+            "p95": 1.3742532908916445,
+            "maximum": 7.414128303527832,
+            "threshold_counts": {
+              "1e-12": 612,
+              "1e-06": 612,
+              "1e-05": 612,
+              "0.1": 211
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 0.6556385874941703,
+            "p50": 0.06603535264730453,
+            "p95": 4.7365827560424805,
+            "maximum": 7.767152309417725,
+            "threshold_counts": {
+              "1e-12": 491,
+              "1e-06": 491,
+              "1e-05": 491,
+              "0.1": 196
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 1.1022157467874314,
+            "p50": 0.07295085117220879,
+            "p95": 6.694790434837341,
+            "maximum": 7.767152309417725,
+            "threshold_counts": {
+              "1e-12": 34,
+              "1e-06": 34,
+              "1e-05": 34,
+              "0.1": 15
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.9181107208414963,
+            "p50": 0.1671798676252365,
+            "p95": 5.944016933441161,
+            "maximum": 7.767152309417725,
+            "threshold_counts": {
+              "1e-12": 264,
+              "1e-06": 264,
+              "1e-05": 264,
+              "0.1": 169
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 0.15065659869472542,
+            "p50": 0.03546706587076187,
+            "p95": 0.3416178107261657,
+            "maximum": 6.818838596343994,
+            "threshold_counts": {
+              "1e-12": 362,
+              "1e-06": 362,
+              "1e-05": 362,
+              "0.1": 75
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.109201151849841,
+            "p50": 0.06972809508442879,
+            "p95": 0.31102299243211745,
+            "maximum": 1.166986107826233,
+            "threshold_counts": {
+              "1e-12": 134,
+              "1e-06": 134,
+              "1e-05": 134,
+              "0.1": 46
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.537495713826124,
+            "p50": 1.47420334815979,
+            "p95": 7.402511119842529,
+            "maximum": 7.767152309417725,
+            "threshold_counts": {
+              "1e-12": 77,
+              "1e-06": 77,
+              "1e-05": 77,
+              "0.1": 77
+            }
+          }
+        }
+      }
+    },
+    "2": {
+      "A_axis_on": {
+        "60": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3652,
+            "mean": 0.10102671238897508,
+            "p50": 0.0007517303456552327,
+            "p95": 0.5757871985435484,
+            "maximum": 6.178751468658447,
+            "threshold_counts": {
+              "1e-12": 2656,
+              "1e-06": 2656,
+              "1e-05": 2636,
+              "0.1": 378
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 658,
+            "mean": 0.027399282805442446,
+            "p50": 0.0,
+            "p95": 0.0100699505303055,
+            "maximum": 2.291821241378784,
+            "threshold_counts": {
+              "1e-12": 160,
+              "1e-06": 160,
+              "1e-05": 160,
+              "0.1": 18
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 33,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "rotated_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        },
+        "120": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3652,
+            "mean": 0.10208898497955582,
+            "p50": 0.0010580260423012078,
+            "p95": 0.5687298476696014,
+            "maximum": 6.180800914764404,
+            "threshold_counts": {
+              "1e-12": 2656,
+              "1e-06": 2656,
+              "1e-05": 2654,
+              "0.1": 357
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 658,
+            "mean": 0.029177526538408896,
+            "p50": 0.0,
+            "p95": 0.01157784797251223,
+            "maximum": 2.391477108001709,
+            "threshold_counts": {
+              "1e-12": 160,
+              "1e-06": 160,
+              "1e-05": 160,
+              "0.1": 21
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 33,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "rotated_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        },
+        "180": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3652,
+            "mean": 0.10725386104159809,
+            "p50": 0.001057548332028091,
+            "p95": 0.6153807222843164,
+            "maximum": 6.2074785232543945,
+            "threshold_counts": {
+              "1e-12": 2656,
+              "1e-06": 2656,
+              "1e-05": 2656,
+              "0.1": 370
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 658,
+            "mean": 0.030083512851918782,
+            "p50": 0.0,
+            "p95": 0.013362914137542238,
+            "maximum": 2.831104278564453,
+            "threshold_counts": {
+              "1e-12": 160,
+              "1e-06": 160,
+              "1e-05": 160,
+              "0.1": 23
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 33,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "rotated_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        },
+        "200": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3652,
+            "mean": 0.10798625145849029,
+            "p50": 0.0010036216699518263,
+            "p95": 0.6188430488109586,
+            "maximum": 6.1561079025268555,
+            "threshold_counts": {
+              "1e-12": 2656,
+              "1e-06": 2656,
+              "1e-05": 2656,
+              "0.1": 366
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 658,
+            "mean": 0.03085535741824707,
+            "p50": 0.0,
+            "p95": 0.01472094655036926,
+            "maximum": 2.7337613105773926,
+            "threshold_counts": {
+              "1e-12": 160,
+              "1e-06": 160,
+              "1e-05": 160,
+              "0.1": 21
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 33,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "rotated_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        }
+      },
+      "B_rotate_y40_on": {
+        "60": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.19734043800919543,
+            "p50": 0.004924028879031539,
+            "p95": 1.1429904520511627,
+            "maximum": 6.282830715179443,
+            "threshold_counts": {
+              "1e-12": 3078,
+              "1e-06": 3054,
+              "1e-05": 2928,
+              "0.1": 704
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.04890612699087125,
+            "p50": 3.516674041748047e-06,
+            "p95": 0.09299651384353615,
+            "maximum": 3.1623966693878174,
+            "threshold_counts": {
+              "1e-12": 474,
+              "1e-06": 423,
+              "1e-05": 174,
+              "0.1": 30
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 2.874585539357287e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 396,
+              "1e-06": 337,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 3.173803520439833e-06,
+            "p50": 2.3543834686279297e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 30,
+              "1e-06": 27,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.10497786494651574,
+            "p50": 0.0023532062768936157,
+            "p95": 0.6836528569459914,
+            "maximum": 4.59628438949585,
+            "threshold_counts": {
+              "1e-12": 234,
+              "1e-06": 207,
+              "1e-05": 138,
+              "0.1": 26
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 2.991355431832287e-06,
+            "p50": 2.6226043701171875e-06,
+            "p95": 7.8860622124921e-06,
+            "maximum": 7.91687944001751e-06,
+            "threshold_counts": {
+              "1e-12": 288,
+              "1e-06": 259,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.20417589345276216,
+            "p50": 0.008466081693768501,
+            "p95": 0.9190354853868481,
+            "maximum": 4.59628438949585,
+            "threshold_counts": {
+              "1e-12": 127,
+              "1e-06": 125,
+              "1e-05": 120,
+              "0.1": 26
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.4289570762460234e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.562277005490614e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 62,
+              "1e-06": 46,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        },
+        "120": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.18514060666444235,
+            "p50": 0.005215097218751907,
+            "p95": 1.0518907427787765,
+            "maximum": 6.304191589355469,
+            "threshold_counts": {
+              "1e-12": 3078,
+              "1e-06": 3054,
+              "1e-05": 2928,
+              "0.1": 679
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.04691973762480445,
+            "p50": 3.516674041748047e-06,
+            "p95": 0.06827705502510055,
+            "maximum": 2.8901114463806152,
+            "threshold_counts": {
+              "1e-12": 474,
+              "1e-06": 423,
+              "1e-05": 174,
+              "0.1": 27
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 2.874585539357287e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 396,
+              "1e-06": 337,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 3.173803520439833e-06,
+            "p50": 2.3543834686279297e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 30,
+              "1e-06": 27,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.11043836927387671,
+            "p50": 0.0018818179378286004,
+            "p95": 0.7009601593017573,
+            "maximum": 4.572147369384766,
+            "threshold_counts": {
+              "1e-12": 234,
+              "1e-06": 207,
+              "1e-05": 138,
+              "0.1": 27
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 2.991355431832287e-06,
+            "p50": 2.6226043701171875e-06,
+            "p95": 7.8860622124921e-06,
+            "maximum": 7.91687944001751e-06,
+            "threshold_counts": {
+              "1e-12": 288,
+              "1e-06": 259,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.21568552381532796,
+            "p50": 0.008653231430798769,
+            "p95": 0.9685306847095481,
+            "maximum": 4.572147369384766,
+            "threshold_counts": {
+              "1e-12": 127,
+              "1e-06": 125,
+              "1e-05": 120,
+              "0.1": 27
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.4289570762460234e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.562277005490614e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 62,
+              "1e-06": 46,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        },
+        "180": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.17601731467409565,
+            "p50": 0.005023875972256064,
+            "p95": 0.9231731414794919,
+            "maximum": 6.322177886962891,
+            "threshold_counts": {
+              "1e-12": 3078,
+              "1e-06": 3054,
+              "1e-05": 2928,
+              "0.1": 646
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.0520394227782433,
+            "p50": 3.516674041748047e-06,
+            "p95": 0.08936493322253136,
+            "maximum": 2.914672613143921,
+            "threshold_counts": {
+              "1e-12": 474,
+              "1e-06": 423,
+              "1e-05": 174,
+              "0.1": 30
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 2.874585539357287e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 396,
+              "1e-06": 337,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 3.173803520439833e-06,
+            "p50": 2.3543834686279297e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 30,
+              "1e-06": 27,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.12100088253032223,
+            "p50": 0.0022315102396532893,
+            "p95": 0.6521747678518292,
+            "maximum": 4.513385772705078,
+            "threshold_counts": {
+              "1e-12": 234,
+              "1e-06": 207,
+              "1e-05": 138,
+              "0.1": 29
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 2.991355431832287e-06,
+            "p50": 2.6226043701171875e-06,
+            "p95": 7.8860622124921e-06,
+            "maximum": 7.91687944001751e-06,
+            "threshold_counts": {
+              "1e-12": 288,
+              "1e-06": 259,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.23638364004923393,
+            "p50": 0.008642352651804686,
+            "p95": 1.191741520166395,
+            "maximum": 4.513385772705078,
+            "threshold_counts": {
+              "1e-12": 127,
+              "1e-06": 125,
+              "1e-05": 120,
+              "0.1": 29
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.4289570762460234e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.562277005490614e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 62,
+              "1e-06": 46,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        },
+        "200": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.177486230832439,
+            "p50": 0.004745036829262972,
+            "p95": 0.9533458799123762,
+            "maximum": 6.332172870635986,
+            "threshold_counts": {
+              "1e-12": 3078,
+              "1e-06": 3054,
+              "1e-05": 2928,
+              "0.1": 636
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.04766709623196619,
+            "p50": 3.516674041748047e-06,
+            "p95": 0.10412837825715347,
+            "maximum": 2.903322458267212,
+            "threshold_counts": {
+              "1e-12": 474,
+              "1e-06": 423,
+              "1e-05": 174,
+              "0.1": 31
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 2.874585539357287e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 396,
+              "1e-06": 337,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 3.173803520439833e-06,
+            "p50": 2.3543834686279297e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 30,
+              "1e-06": 27,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.13353700907643945,
+            "p50": 0.0021078772842884064,
+            "p95": 0.7592074781656264,
+            "maximum": 4.713141918182373,
+            "threshold_counts": {
+              "1e-12": 234,
+              "1e-06": 207,
+              "1e-05": 138,
+              "0.1": 29
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 2.991355431832287e-06,
+            "p50": 2.6226043701171875e-06,
+            "p95": 7.8860622124921e-06,
+            "maximum": 7.91687944001751e-06,
+            "threshold_counts": {
+              "1e-12": 288,
+              "1e-06": 259,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.26076677247339775,
+            "p50": 0.008484463673084974,
+            "p95": 1.450593972206115,
+            "maximum": 4.713141918182373,
+            "threshold_counts": {
+              "1e-12": 127,
+              "1e-06": 125,
+              "1e-05": 120,
+              "0.1": 29
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.4289570762460234e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.562277005490614e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 62,
+              "1e-06": 46,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        }
+      },
+      "C_rotate_y40_off": {
+        "60": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.19811091003039993,
+            "p50": 0.02825654298067093,
+            "p95": 0.8240388214588154,
+            "maximum": 9.778183937072754,
+            "threshold_counts": {
+              "1e-12": 3535,
+              "1e-06": 3535,
+              "1e-05": 3535,
+              "0.1": 1040
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.3538290829035557,
+            "p50": 0.05043712444603443,
+            "p95": 1.5468631207942944,
+            "maximum": 8.400203704833984,
+            "threshold_counts": {
+              "1e-12": 612,
+              "1e-06": 612,
+              "1e-05": 612,
+              "0.1": 227
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 0.7269348943427721,
+            "p50": 0.06111787259578705,
+            "p95": 5.433024644851685,
+            "maximum": 8.357105255126953,
+            "threshold_counts": {
+              "1e-12": 491,
+              "1e-06": 491,
+              "1e-05": 491,
+              "0.1": 181
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 1.3650263613911675,
+            "p50": 0.047380488365888596,
+            "p95": 8.047443103790282,
+            "maximum": 8.357105255126953,
+            "threshold_counts": {
+              "1e-12": 34,
+              "1e-06": 34,
+              "1e-05": 34,
+              "0.1": 11
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.9157343498522867,
+            "p50": 0.19763849675655365,
+            "p95": 5.673716807365416,
+            "maximum": 8.357105255126953,
+            "threshold_counts": {
+              "1e-12": 264,
+              "1e-06": 264,
+              "1e-05": 264,
+              "0.1": 177
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 0.1806536063099105,
+            "p50": 0.041630081832408905,
+            "p95": 0.5806703567504881,
+            "maximum": 7.998531818389893,
+            "threshold_counts": {
+              "1e-12": 362,
+              "1e-06": 362,
+              "1e-05": 362,
+              "0.1": 60
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.11208126883703604,
+            "p50": 0.07931675389409065,
+            "p95": 0.3233177840709683,
+            "maximum": 0.9084175229072571,
+            "threshold_counts": {
+              "1e-12": 134,
+              "1e-06": 134,
+              "1e-05": 134,
+              "0.1": 53
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.5016940393811695,
+            "p50": 1.285954236984253,
+            "p95": 7.403823375701904,
+            "maximum": 8.357105255126953,
+            "threshold_counts": {
+              "1e-12": 77,
+              "1e-06": 77,
+              "1e-05": 77,
+              "0.1": 77
+            }
+          }
+        },
+        "120": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.20669143113709332,
+            "p50": 0.025400256738066673,
+            "p95": 0.8836827695369694,
+            "maximum": 9.101585388183594,
+            "threshold_counts": {
+              "1e-12": 3535,
+              "1e-06": 3535,
+              "1e-05": 3535,
+              "0.1": 884
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.3653148730579167,
+            "p50": 0.0459979884326458,
+            "p95": 1.5045440256595606,
+            "maximum": 9.40645694732666,
+            "threshold_counts": {
+              "1e-12": 612,
+              "1e-06": 612,
+              "1e-05": 612,
+              "0.1": 226
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 0.6384852904676557,
+            "p50": 0.0748777985572815,
+            "p95": 4.057732939720154,
+            "maximum": 9.09351921081543,
+            "threshold_counts": {
+              "1e-12": 491,
+              "1e-06": 491,
+              "1e-05": 491,
+              "0.1": 224
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 1.0413372923674828,
+            "p50": 0.07728883624076843,
+            "p95": 7.477409529685974,
+            "maximum": 8.175348281860352,
+            "threshold_counts": {
+              "1e-12": 34,
+              "1e-06": 34,
+              "1e-05": 34,
+              "0.1": 16
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.7804377439139044,
+            "p50": 0.09883799031376839,
+            "p95": 5.868278837203975,
+            "maximum": 8.175348281860352,
+            "threshold_counts": {
+              "1e-12": 264,
+              "1e-06": 264,
+              "1e-05": 264,
+              "0.1": 132
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 0.23022292830302118,
+            "p50": 0.03429570607841015,
+            "p95": 0.5728920757770536,
+            "maximum": 9.09351921081543,
+            "threshold_counts": {
+              "1e-12": 362,
+              "1e-06": 362,
+              "1e-05": 362,
+              "0.1": 111
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.06915084215979189,
+            "p50": 0.04101226665079594,
+            "p95": 0.19588008597493164,
+            "maximum": 0.6502975821495056,
+            "threshold_counts": {
+              "1e-12": 134,
+              "1e-06": 134,
+              "1e-05": 134,
+              "0.1": 18
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.1900223851107157,
+            "p50": 0.9564407467842102,
+            "p95": 7.460234737396241,
+            "maximum": 8.175348281860352,
+            "threshold_counts": {
+              "1e-12": 77,
+              "1e-06": 77,
+              "1e-05": 77,
+              "0.1": 73
+            }
+          }
+        },
+        "180": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.18791347901862893,
+            "p50": 0.028081768192350864,
+            "p95": 0.6676595717668521,
+            "maximum": 9.44670295715332,
+            "threshold_counts": {
+              "1e-12": 3535,
+              "1e-06": 3535,
+              "1e-05": 3535,
+              "0.1": 806
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.3611853335618066,
+            "p50": 0.04277707450091839,
+            "p95": 1.7267936766147538,
+            "maximum": 8.536612510681152,
+            "threshold_counts": {
+              "1e-12": 612,
+              "1e-06": 612,
+              "1e-05": 612,
+              "0.1": 189
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 0.5673975967479653,
+            "p50": 0.05036107450723648,
+            "p95": 3.542444348335266,
+            "maximum": 8.826881408691406,
+            "threshold_counts": {
+              "1e-12": 491,
+              "1e-06": 491,
+              "1e-05": 491,
+              "0.1": 168
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 0.8422229201806819,
+            "p50": 0.0439100731164217,
+            "p95": 5.915677738189694,
+            "maximum": 8.080873489379883,
+            "threshold_counts": {
+              "1e-12": 34,
+              "1e-06": 34,
+              "1e-05": 34,
+              "0.1": 12
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.7272626450814476,
+            "p50": 0.10180923342704773,
+            "p95": 4.643258738517761,
+            "maximum": 8.826881408691406,
+            "threshold_counts": {
+              "1e-12": 264,
+              "1e-06": 264,
+              "1e-05": 264,
+              "0.1": 135
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 0.17216718476394305,
+            "p50": 0.030655101872980595,
+            "p95": 0.4713052645325657,
+            "maximum": 7.1124982833862305,
+            "threshold_counts": {
+              "1e-12": 362,
+              "1e-06": 362,
+              "1e-05": 362,
+              "0.1": 56
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.08027545937489886,
+            "p50": 0.05663265846669674,
+            "p95": 0.239427604526281,
+            "maximum": 0.9761605858802795,
+            "threshold_counts": {
+              "1e-12": 134,
+              "1e-06": 134,
+              "1e-05": 134,
+              "0.1": 22
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 1.9382362758571452,
+            "p50": 0.9678394198417664,
+            "p95": 7.453444099426271,
+            "maximum": 8.826881408691406,
+            "threshold_counts": {
+              "1e-12": 77,
+              "1e-06": 77,
+              "1e-05": 77,
+              "0.1": 71
+            }
+          }
+        },
+        "200": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.19992889421059562,
+            "p50": 0.02276185154914856,
+            "p95": 0.8739326745271663,
+            "maximum": 9.486875534057617,
+            "threshold_counts": {
+              "1e-12": 3535,
+              "1e-06": 3535,
+              "1e-05": 3535,
+              "0.1": 855
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.3268618191450871,
+            "p50": 0.043295690789818764,
+            "p95": 1.3742532908916445,
+            "maximum": 7.414128303527832,
+            "threshold_counts": {
+              "1e-12": 612,
+              "1e-06": 612,
+              "1e-05": 612,
+              "0.1": 211
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 0.6556385874941703,
+            "p50": 0.06603535264730453,
+            "p95": 4.7365827560424805,
+            "maximum": 7.767152309417725,
+            "threshold_counts": {
+              "1e-12": 491,
+              "1e-06": 491,
+              "1e-05": 491,
+              "0.1": 196
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 1.1022157467874314,
+            "p50": 0.07295085117220879,
+            "p95": 6.694790434837341,
+            "maximum": 7.767152309417725,
+            "threshold_counts": {
+              "1e-12": 34,
+              "1e-06": 34,
+              "1e-05": 34,
+              "0.1": 15
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.9181107208414963,
+            "p50": 0.1671798676252365,
+            "p95": 5.944016933441161,
+            "maximum": 7.767152309417725,
+            "threshold_counts": {
+              "1e-12": 264,
+              "1e-06": 264,
+              "1e-05": 264,
+              "0.1": 169
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 0.15065659869472542,
+            "p50": 0.03546706587076187,
+            "p95": 0.3416178107261657,
+            "maximum": 6.818838596343994,
+            "threshold_counts": {
+              "1e-12": 362,
+              "1e-06": 362,
+              "1e-05": 362,
+              "0.1": 75
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.109201151849841,
+            "p50": 0.06972809508442879,
+            "p95": 0.31102299243211745,
+            "maximum": 1.166986107826233,
+            "threshold_counts": {
+              "1e-12": 134,
+              "1e-06": 134,
+              "1e-05": 134,
+              "0.1": 46
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.537495713826124,
+            "p50": 1.47420334815979,
+            "p95": 7.402511119842529,
+            "maximum": 7.767152309417725,
+            "threshold_counts": {
+              "1e-12": 77,
+              "1e-06": 77,
+              "1e-05": 77,
+              "0.1": 77
+            }
+          }
+        }
+      }
+    },
+    "3": {
+      "A_axis_on": {
+        "60": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3652,
+            "mean": 0.10102671238897508,
+            "p50": 0.0007517303456552327,
+            "p95": 0.5757871985435484,
+            "maximum": 6.178751468658447,
+            "threshold_counts": {
+              "1e-12": 2656,
+              "1e-06": 2656,
+              "1e-05": 2636,
+              "0.1": 378
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 658,
+            "mean": 0.027399282805442446,
+            "p50": 0.0,
+            "p95": 0.0100699505303055,
+            "maximum": 2.291821241378784,
+            "threshold_counts": {
+              "1e-12": 160,
+              "1e-06": 160,
+              "1e-05": 160,
+              "0.1": 18
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 33,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "rotated_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        },
+        "120": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3652,
+            "mean": 0.10208898497955582,
+            "p50": 0.0010580260423012078,
+            "p95": 0.5687298476696014,
+            "maximum": 6.180800914764404,
+            "threshold_counts": {
+              "1e-12": 2656,
+              "1e-06": 2656,
+              "1e-05": 2654,
+              "0.1": 357
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 658,
+            "mean": 0.029177526538408896,
+            "p50": 0.0,
+            "p95": 0.01157784797251223,
+            "maximum": 2.391477108001709,
+            "threshold_counts": {
+              "1e-12": 160,
+              "1e-06": 160,
+              "1e-05": 160,
+              "0.1": 21
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 33,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "rotated_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        },
+        "180": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3652,
+            "mean": 0.10725386104159809,
+            "p50": 0.001057548332028091,
+            "p95": 0.6153807222843164,
+            "maximum": 6.2074785232543945,
+            "threshold_counts": {
+              "1e-12": 2656,
+              "1e-06": 2656,
+              "1e-05": 2656,
+              "0.1": 370
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 658,
+            "mean": 0.030083512851918782,
+            "p50": 0.0,
+            "p95": 0.013362914137542238,
+            "maximum": 2.831104278564453,
+            "threshold_counts": {
+              "1e-12": 160,
+              "1e-06": 160,
+              "1e-05": 160,
+              "0.1": 23
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 33,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "rotated_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        },
+        "200": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3652,
+            "mean": 0.10798625145849029,
+            "p50": 0.0010036216699518263,
+            "p95": 0.6188430488109586,
+            "maximum": 6.1561079025268555,
+            "threshold_counts": {
+              "1e-12": 2656,
+              "1e-06": 2656,
+              "1e-05": 2656,
+              "0.1": 366
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 658,
+            "mean": 0.03085535741824707,
+            "p50": 0.0,
+            "p95": 0.01472094655036926,
+            "maximum": 2.7337613105773926,
+            "threshold_counts": {
+              "1e-12": 160,
+              "1e-06": 160,
+              "1e-05": 160,
+              "0.1": 21
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 33,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "rotated_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": false,
+            "voxel_count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 462,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "threshold_counts": {
+              "1e-12": 0,
+              "1e-06": 0,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        }
+      },
+      "B_rotate_y40_on": {
+        "60": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.19734043800919543,
+            "p50": 0.004924028879031539,
+            "p95": 1.1429904520511627,
+            "maximum": 6.282830715179443,
+            "threshold_counts": {
+              "1e-12": 3078,
+              "1e-06": 3054,
+              "1e-05": 2928,
+              "0.1": 704
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.04890612699087125,
+            "p50": 3.516674041748047e-06,
+            "p95": 0.09299651384353615,
+            "maximum": 3.1623966693878174,
+            "threshold_counts": {
+              "1e-12": 474,
+              "1e-06": 423,
+              "1e-05": 174,
+              "0.1": 30
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 2.874585539357287e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 396,
+              "1e-06": 337,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 3.173803520439833e-06,
+            "p50": 2.3543834686279297e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 30,
+              "1e-06": 27,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.10497786494651574,
+            "p50": 0.0023532062768936157,
+            "p95": 0.6836528569459914,
+            "maximum": 4.59628438949585,
+            "threshold_counts": {
+              "1e-12": 234,
+              "1e-06": 207,
+              "1e-05": 138,
+              "0.1": 26
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 2.991355431832287e-06,
+            "p50": 2.6226043701171875e-06,
+            "p95": 7.8860622124921e-06,
+            "maximum": 7.91687944001751e-06,
+            "threshold_counts": {
+              "1e-12": 288,
+              "1e-06": 259,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.20417589345276216,
+            "p50": 0.008466081693768501,
+            "p95": 0.9190354853868481,
+            "maximum": 4.59628438949585,
+            "threshold_counts": {
+              "1e-12": 127,
+              "1e-06": 125,
+              "1e-05": 120,
+              "0.1": 26
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.4289570762460234e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.562277005490614e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 62,
+              "1e-06": 46,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        },
+        "120": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.18514060666444235,
+            "p50": 0.005215097218751907,
+            "p95": 1.0518907427787765,
+            "maximum": 6.304191589355469,
+            "threshold_counts": {
+              "1e-12": 3078,
+              "1e-06": 3054,
+              "1e-05": 2928,
+              "0.1": 679
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.04691973762480445,
+            "p50": 3.516674041748047e-06,
+            "p95": 0.06827705502510055,
+            "maximum": 2.8901114463806152,
+            "threshold_counts": {
+              "1e-12": 474,
+              "1e-06": 423,
+              "1e-05": 174,
+              "0.1": 27
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 2.874585539357287e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 396,
+              "1e-06": 337,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 3.173803520439833e-06,
+            "p50": 2.3543834686279297e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 30,
+              "1e-06": 27,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.11043836927387671,
+            "p50": 0.0018818179378286004,
+            "p95": 0.7009601593017573,
+            "maximum": 4.572147369384766,
+            "threshold_counts": {
+              "1e-12": 234,
+              "1e-06": 207,
+              "1e-05": 138,
+              "0.1": 27
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 2.991355431832287e-06,
+            "p50": 2.6226043701171875e-06,
+            "p95": 7.8860622124921e-06,
+            "maximum": 7.91687944001751e-06,
+            "threshold_counts": {
+              "1e-12": 288,
+              "1e-06": 259,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.21568552381532796,
+            "p50": 0.008653231430798769,
+            "p95": 0.9685306847095481,
+            "maximum": 4.572147369384766,
+            "threshold_counts": {
+              "1e-12": 127,
+              "1e-06": 125,
+              "1e-05": 120,
+              "0.1": 27
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.4289570762460234e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.562277005490614e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 62,
+              "1e-06": 46,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        },
+        "180": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.17601731467409565,
+            "p50": 0.005023875972256064,
+            "p95": 0.9231731414794919,
+            "maximum": 6.322177886962891,
+            "threshold_counts": {
+              "1e-12": 3078,
+              "1e-06": 3054,
+              "1e-05": 2928,
+              "0.1": 646
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.0520394227782433,
+            "p50": 3.516674041748047e-06,
+            "p95": 0.08936493322253136,
+            "maximum": 2.914672613143921,
+            "threshold_counts": {
+              "1e-12": 474,
+              "1e-06": 423,
+              "1e-05": 174,
+              "0.1": 30
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 2.874585539357287e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 396,
+              "1e-06": 337,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 3.173803520439833e-06,
+            "p50": 2.3543834686279297e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 30,
+              "1e-06": 27,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.12100088253032223,
+            "p50": 0.0022315102396532893,
+            "p95": 0.6521747678518292,
+            "maximum": 4.513385772705078,
+            "threshold_counts": {
+              "1e-12": 234,
+              "1e-06": 207,
+              "1e-05": 138,
+              "0.1": 29
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 2.991355431832287e-06,
+            "p50": 2.6226043701171875e-06,
+            "p95": 7.8860622124921e-06,
+            "maximum": 7.91687944001751e-06,
+            "threshold_counts": {
+              "1e-12": 288,
+              "1e-06": 259,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.23638364004923393,
+            "p50": 0.008642352651804686,
+            "p95": 1.191741520166395,
+            "maximum": 4.513385772705078,
+            "threshold_counts": {
+              "1e-12": 127,
+              "1e-06": 125,
+              "1e-05": 120,
+              "0.1": 29
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.4289570762460234e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.562277005490614e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 62,
+              "1e-06": 46,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        },
+        "200": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.177486230832439,
+            "p50": 0.004745036829262972,
+            "p95": 0.9533458799123762,
+            "maximum": 6.332172870635986,
+            "threshold_counts": {
+              "1e-12": 3078,
+              "1e-06": 3054,
+              "1e-05": 2928,
+              "0.1": 636
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.04766709623196619,
+            "p50": 3.516674041748047e-06,
+            "p95": 0.10412837825715347,
+            "maximum": 2.903322458267212,
+            "threshold_counts": {
+              "1e-12": 474,
+              "1e-06": 423,
+              "1e-05": 174,
+              "0.1": 31
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 2.874585539357287e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 396,
+              "1e-06": 337,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 3.173803520439833e-06,
+            "p50": 2.3543834686279297e-06,
+            "p95": 7.91687944001751e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 30,
+              "1e-06": 27,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.13353700907643945,
+            "p50": 0.0021078772842884064,
+            "p95": 0.7592074781656264,
+            "maximum": 4.713141918182373,
+            "threshold_counts": {
+              "1e-12": 234,
+              "1e-06": 207,
+              "1e-05": 138,
+              "0.1": 29
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 2.991355431832287e-06,
+            "p50": 2.6226043701171875e-06,
+            "p95": 7.8860622124921e-06,
+            "maximum": 7.91687944001751e-06,
+            "threshold_counts": {
+              "1e-12": 288,
+              "1e-06": 259,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.26076677247339775,
+            "p50": 0.008484463673084974,
+            "p95": 1.450593972206115,
+            "maximum": 4.713141918182373,
+            "threshold_counts": {
+              "1e-12": 127,
+              "1e-06": 125,
+              "1e-05": 120,
+              "0.1": 29
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.4289570762460234e-06,
+            "p50": 2.086162567138672e-06,
+            "p95": 7.562277005490614e-06,
+            "maximum": 8.352522854693234e-06,
+            "threshold_counts": {
+              "1e-12": 62,
+              "1e-06": 46,
+              "1e-05": 0,
+              "0.1": 0
+            }
+          }
+        }
+      },
+      "C_rotate_y40_off": {
+        "60": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.19811091003039993,
+            "p50": 0.02825654298067093,
+            "p95": 0.8240388214588154,
+            "maximum": 9.778183937072754,
+            "threshold_counts": {
+              "1e-12": 3535,
+              "1e-06": 3535,
+              "1e-05": 3535,
+              "0.1": 1040
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.3538290829035557,
+            "p50": 0.05043712444603443,
+            "p95": 1.5468631207942944,
+            "maximum": 8.400203704833984,
+            "threshold_counts": {
+              "1e-12": 612,
+              "1e-06": 612,
+              "1e-05": 612,
+              "0.1": 227
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 0.7269348943427721,
+            "p50": 0.06111787259578705,
+            "p95": 5.433024644851685,
+            "maximum": 8.357105255126953,
+            "threshold_counts": {
+              "1e-12": 491,
+              "1e-06": 491,
+              "1e-05": 491,
+              "0.1": 181
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 1.3650263613911675,
+            "p50": 0.047380488365888596,
+            "p95": 8.047443103790282,
+            "maximum": 8.357105255126953,
+            "threshold_counts": {
+              "1e-12": 34,
+              "1e-06": 34,
+              "1e-05": 34,
+              "0.1": 11
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.9157343498522867,
+            "p50": 0.19763849675655365,
+            "p95": 5.673716807365416,
+            "maximum": 8.357105255126953,
+            "threshold_counts": {
+              "1e-12": 264,
+              "1e-06": 264,
+              "1e-05": 264,
+              "0.1": 177
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 0.1806536063099105,
+            "p50": 0.041630081832408905,
+            "p95": 0.5806703567504881,
+            "maximum": 7.998531818389893,
+            "threshold_counts": {
+              "1e-12": 362,
+              "1e-06": 362,
+              "1e-05": 362,
+              "0.1": 60
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.11208126883703604,
+            "p50": 0.07931675389409065,
+            "p95": 0.3233177840709683,
+            "maximum": 0.9084175229072571,
+            "threshold_counts": {
+              "1e-12": 134,
+              "1e-06": 134,
+              "1e-05": 134,
+              "0.1": 53
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.5016940393811695,
+            "p50": 1.285954236984253,
+            "p95": 7.403823375701904,
+            "maximum": 8.357105255126953,
+            "threshold_counts": {
+              "1e-12": 77,
+              "1e-06": 77,
+              "1e-05": 77,
+              "0.1": 77
+            }
+          }
+        },
+        "120": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.20669143113709332,
+            "p50": 0.025400256738066673,
+            "p95": 0.8836827695369694,
+            "maximum": 9.101585388183594,
+            "threshold_counts": {
+              "1e-12": 3535,
+              "1e-06": 3535,
+              "1e-05": 3535,
+              "0.1": 884
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.3653148730579167,
+            "p50": 0.0459979884326458,
+            "p95": 1.5045440256595606,
+            "maximum": 9.40645694732666,
+            "threshold_counts": {
+              "1e-12": 612,
+              "1e-06": 612,
+              "1e-05": 612,
+              "0.1": 226
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 0.6384852904676557,
+            "p50": 0.0748777985572815,
+            "p95": 4.057732939720154,
+            "maximum": 9.09351921081543,
+            "threshold_counts": {
+              "1e-12": 491,
+              "1e-06": 491,
+              "1e-05": 491,
+              "0.1": 224
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 1.0413372923674828,
+            "p50": 0.07728883624076843,
+            "p95": 7.477409529685974,
+            "maximum": 8.175348281860352,
+            "threshold_counts": {
+              "1e-12": 34,
+              "1e-06": 34,
+              "1e-05": 34,
+              "0.1": 16
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.7804377439139044,
+            "p50": 0.09883799031376839,
+            "p95": 5.868278837203975,
+            "maximum": 8.175348281860352,
+            "threshold_counts": {
+              "1e-12": 264,
+              "1e-06": 264,
+              "1e-05": 264,
+              "0.1": 132
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 0.23022292830302118,
+            "p50": 0.03429570607841015,
+            "p95": 0.5728920757770536,
+            "maximum": 9.09351921081543,
+            "threshold_counts": {
+              "1e-12": 362,
+              "1e-06": 362,
+              "1e-05": 362,
+              "0.1": 111
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.06915084215979189,
+            "p50": 0.04101226665079594,
+            "p95": 0.19588008597493164,
+            "maximum": 0.6502975821495056,
+            "threshold_counts": {
+              "1e-12": 134,
+              "1e-06": 134,
+              "1e-05": 134,
+              "0.1": 18
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.1900223851107157,
+            "p50": 0.9564407467842102,
+            "p95": 7.460234737396241,
+            "maximum": 8.175348281860352,
+            "threshold_counts": {
+              "1e-12": 77,
+              "1e-06": 77,
+              "1e-05": 77,
+              "0.1": 73
+            }
+          }
+        },
+        "180": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.18791347901862893,
+            "p50": 0.028081768192350864,
+            "p95": 0.6676595717668521,
+            "maximum": 9.44670295715332,
+            "threshold_counts": {
+              "1e-12": 3535,
+              "1e-06": 3535,
+              "1e-05": 3535,
+              "0.1": 806
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.3611853335618066,
+            "p50": 0.04277707450091839,
+            "p95": 1.7267936766147538,
+            "maximum": 8.536612510681152,
+            "threshold_counts": {
+              "1e-12": 612,
+              "1e-06": 612,
+              "1e-05": 612,
+              "0.1": 189
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 0.5673975967479653,
+            "p50": 0.05036107450723648,
+            "p95": 3.542444348335266,
+            "maximum": 8.826881408691406,
+            "threshold_counts": {
+              "1e-12": 491,
+              "1e-06": 491,
+              "1e-05": 491,
+              "0.1": 168
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 0.8422229201806819,
+            "p50": 0.0439100731164217,
+            "p95": 5.915677738189694,
+            "maximum": 8.080873489379883,
+            "threshold_counts": {
+              "1e-12": 34,
+              "1e-06": 34,
+              "1e-05": 34,
+              "0.1": 12
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.7272626450814476,
+            "p50": 0.10180923342704773,
+            "p95": 4.643258738517761,
+            "maximum": 8.826881408691406,
+            "threshold_counts": {
+              "1e-12": 264,
+              "1e-06": 264,
+              "1e-05": 264,
+              "0.1": 135
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 0.17216718476394305,
+            "p50": 0.030655101872980595,
+            "p95": 0.4713052645325657,
+            "maximum": 7.1124982833862305,
+            "threshold_counts": {
+              "1e-12": 362,
+              "1e-06": 362,
+              "1e-05": 362,
+              "0.1": 56
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.08027545937489886,
+            "p50": 0.05663265846669674,
+            "p95": 0.239427604526281,
+            "maximum": 0.9761605858802795,
+            "threshold_counts": {
+              "1e-12": 134,
+              "1e-06": 134,
+              "1e-05": 134,
+              "0.1": 22
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 1.9382362758571452,
+            "p50": 0.9678394198417664,
+            "p95": 7.453444099426271,
+            "maximum": 8.826881408691406,
+            "threshold_counts": {
+              "1e-12": 77,
+              "1e-06": 77,
+              "1e-05": 77,
+              "0.1": 71
+            }
+          }
+        },
+        "200": {
+          "outside_halo": {
+            "available": true,
+            "voxel_count": 3748,
+            "mean": 0.19992889421059562,
+            "p50": 0.02276185154914856,
+            "p95": 0.8739326745271663,
+            "maximum": 9.486875534057617,
+            "threshold_counts": {
+              "1e-12": 3535,
+              "1e-06": 3535,
+              "1e-05": 3535,
+              "0.1": 855
+            }
+          },
+          "boundary_0_to_1_voxel": {
+            "available": true,
+            "voxel_count": 612,
+            "mean": 0.3268618191450871,
+            "p50": 0.043295690789818764,
+            "p95": 1.3742532908916445,
+            "maximum": 7.414128303527832,
+            "threshold_counts": {
+              "1e-12": 612,
+              "1e-06": 612,
+              "1e-05": 612,
+              "0.1": 211
+            }
+          },
+          "deep_interior": {
+            "available": true,
+            "voxel_count": 491,
+            "mean": 0.6556385874941703,
+            "p50": 0.06603535264730453,
+            "p95": 4.7365827560424805,
+            "maximum": 7.767152309417725,
+            "threshold_counts": {
+              "1e-12": 491,
+              "1e-06": 491,
+              "1e-05": 491,
+              "0.1": 196
+            }
+          },
+          "center_axis_near": {
+            "available": true,
+            "voxel_count": 34,
+            "mean": 1.1022157467874314,
+            "p50": 0.07295085117220879,
+            "p95": 6.694790434837341,
+            "maximum": 7.767152309417725,
+            "threshold_counts": {
+              "1e-12": 34,
+              "1e-06": 34,
+              "1e-05": 34,
+              "0.1": 15
+            }
+          },
+          "axis_reference_deep": {
+            "available": true,
+            "voxel_count": 264,
+            "mean": 0.9181107208414963,
+            "p50": 0.1671798676252365,
+            "p95": 5.944016933441161,
+            "maximum": 7.767152309417725,
+            "threshold_counts": {
+              "1e-12": 264,
+              "1e-06": 264,
+              "1e-05": 264,
+              "0.1": 169
+            }
+          },
+          "rotated_only": {
+            "available": true,
+            "voxel_count": 362,
+            "mean": 0.15065659869472542,
+            "p50": 0.03546706587076187,
+            "p95": 0.3416178107261657,
+            "maximum": 6.818838596343994,
+            "threshold_counts": {
+              "1e-12": 362,
+              "1e-06": 362,
+              "1e-05": 362,
+              "0.1": 75
+            }
+          },
+          "axis_only": {
+            "available": true,
+            "voxel_count": 134,
+            "mean": 0.109201151849841,
+            "p50": 0.06972809508442879,
+            "p95": 0.31102299243211745,
+            "maximum": 1.166986107826233,
+            "threshold_counts": {
+              "1e-12": 134,
+              "1e-06": 134,
+              "1e-05": 134,
+              "0.1": 46
+            }
+          },
+          "overlap": {
+            "available": true,
+            "voxel_count": 77,
+            "mean": 2.537495713826124,
+            "p50": 1.47420334815979,
+            "p95": 7.402511119842529,
+            "maximum": 7.767152309417725,
+            "threshold_counts": {
+              "1e-12": 77,
+              "1e-06": 77,
+              "1e-05": 77,
+              "0.1": 77
+            }
+          }
+        }
+      }
+    }
+  },
+  "ratios": {
+    "1": {
+      "60": {
+        "B_over_C_deep_maximum": 9.994516761134596e-07,
+        "B_over_C_axis_only_maximum": 5.059660644574661,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 8.357105255126953,
+          "C_center": 8.357105255126953,
+          "B_axis_only": 4.59628438949585,
+          "C_axis_only": 0.9084175229072571
+        }
+      },
+      "120": {
+        "B_over_C_deep_maximum": 9.185137965903357e-07,
+        "B_over_C_axis_only_maximum": 7.030854019588856,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 9.09351921081543,
+          "C_center": 8.175348281860352,
+          "B_axis_only": 4.572147369384766,
+          "C_axis_only": 0.6502975821495056
+        }
+      },
+      "180": {
+        "B_over_C_deep_maximum": 9.462597794130219e-07,
+        "B_over_C_axis_only_maximum": 4.62360992442141,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 8.826881408691406,
+          "C_center": 8.080873489379883,
+          "B_axis_only": 4.513385772705078,
+          "C_axis_only": 0.9761605858802795
+        }
+      },
+      "200": {
+        "B_over_C_deep_maximum": 1.0753648856049525e-06,
+        "B_over_C_axis_only_maximum": 4.038730098477035,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 7.767152309417725,
+          "C_center": 7.767152309417725,
+          "B_axis_only": 4.713141918182373,
+          "C_axis_only": 1.166986107826233
+        }
+      }
+    },
+    "2": {
+      "60": {
+        "B_over_C_deep_maximum": 9.994516761134596e-07,
+        "B_over_C_axis_only_maximum": 5.059660644574661,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 8.357105255126953,
+          "C_center": 8.357105255126953,
+          "B_axis_only": 4.59628438949585,
+          "C_axis_only": 0.9084175229072571
+        }
+      },
+      "120": {
+        "B_over_C_deep_maximum": 9.185137965903357e-07,
+        "B_over_C_axis_only_maximum": 7.030854019588856,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 9.09351921081543,
+          "C_center": 8.175348281860352,
+          "B_axis_only": 4.572147369384766,
+          "C_axis_only": 0.6502975821495056
+        }
+      },
+      "180": {
+        "B_over_C_deep_maximum": 9.462597794130219e-07,
+        "B_over_C_axis_only_maximum": 4.62360992442141,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 8.826881408691406,
+          "C_center": 8.080873489379883,
+          "B_axis_only": 4.513385772705078,
+          "C_axis_only": 0.9761605858802795
+        }
+      },
+      "200": {
+        "B_over_C_deep_maximum": 1.0753648856049525e-06,
+        "B_over_C_axis_only_maximum": 4.038730098477035,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 7.767152309417725,
+          "C_center": 7.767152309417725,
+          "B_axis_only": 4.713141918182373,
+          "C_axis_only": 1.166986107826233
+        }
+      }
+    },
+    "3": {
+      "60": {
+        "B_over_C_deep_maximum": 9.994516761134596e-07,
+        "B_over_C_axis_only_maximum": 5.059660644574661,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 8.357105255126953,
+          "C_center": 8.357105255126953,
+          "B_axis_only": 4.59628438949585,
+          "C_axis_only": 0.9084175229072571
+        }
+      },
+      "120": {
+        "B_over_C_deep_maximum": 9.185137965903357e-07,
+        "B_over_C_axis_only_maximum": 7.030854019588856,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 9.09351921081543,
+          "C_center": 8.175348281860352,
+          "B_axis_only": 4.572147369384766,
+          "C_axis_only": 0.6502975821495056
+        }
+      },
+      "180": {
+        "B_over_C_deep_maximum": 9.462597794130219e-07,
+        "B_over_C_axis_only_maximum": 4.62360992442141,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 8.826881408691406,
+          "C_center": 8.080873489379883,
+          "B_axis_only": 4.513385772705078,
+          "C_axis_only": 0.9761605858802795
+        }
+      },
+      "200": {
+        "B_over_C_deep_maximum": 1.0753648856049525e-06,
+        "B_over_C_axis_only_maximum": 4.038730098477035,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 7.767152309417725,
+          "C_center": 7.767152309417725,
+          "B_axis_only": 4.713141918182373,
+          "C_axis_only": 1.166986107826233
+        }
+      }
+    }
+  },
+  "sample_checks": [
+    {
+      "run": 1,
+      "frame": 60,
+      "values_m_s": {
+        "A_deep": 0.0,
+        "A_center": 0.0,
+        "B_deep": 8.352522854693234e-06,
+        "B_center": 8.352522854693234e-06,
+        "C_deep": 8.357105255126953,
+        "C_center": 8.357105255126953,
+        "B_axis_only": 4.59628438949585,
+        "C_axis_only": 0.9084175229072571
+      },
+      "ratios": {
+        "B_over_C_deep_maximum": 9.994516761134596e-07,
+        "B_over_C_axis_only_maximum": 5.059660644574661,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 8.357105255126953,
+          "C_center": 8.357105255126953,
+          "B_axis_only": 4.59628438949585,
+          "C_axis_only": 0.9084175229072571
+        }
+      },
+      "predicates": {
+        "A_deep_at_or_below_limit": true,
+        "A_center_at_or_below_limit": true,
+        "B_deep_at_or_below_limit": true,
+        "B_center_at_or_below_limit": true,
+        "C_deep_positive": true,
+        "C_center_positive": true,
+        "B_over_C_deep_suppressed": true,
+        "axis_only_C_comparable": true,
+        "axis_only_not_stale_suppressed": true
+      },
+      "pass": true
+    },
+    {
+      "run": 1,
+      "frame": 120,
+      "values_m_s": {
+        "A_deep": 0.0,
+        "A_center": 0.0,
+        "B_deep": 8.352522854693234e-06,
+        "B_center": 8.352522854693234e-06,
+        "C_deep": 9.09351921081543,
+        "C_center": 8.175348281860352,
+        "B_axis_only": 4.572147369384766,
+        "C_axis_only": 0.6502975821495056
+      },
+      "ratios": {
+        "B_over_C_deep_maximum": 9.185137965903357e-07,
+        "B_over_C_axis_only_maximum": 7.030854019588856,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 9.09351921081543,
+          "C_center": 8.175348281860352,
+          "B_axis_only": 4.572147369384766,
+          "C_axis_only": 0.6502975821495056
+        }
+      },
+      "predicates": {
+        "A_deep_at_or_below_limit": true,
+        "A_center_at_or_below_limit": true,
+        "B_deep_at_or_below_limit": true,
+        "B_center_at_or_below_limit": true,
+        "C_deep_positive": true,
+        "C_center_positive": true,
+        "B_over_C_deep_suppressed": true,
+        "axis_only_C_comparable": true,
+        "axis_only_not_stale_suppressed": true
+      },
+      "pass": true
+    },
+    {
+      "run": 1,
+      "frame": 180,
+      "values_m_s": {
+        "A_deep": 0.0,
+        "A_center": 0.0,
+        "B_deep": 8.352522854693234e-06,
+        "B_center": 8.352522854693234e-06,
+        "C_deep": 8.826881408691406,
+        "C_center": 8.080873489379883,
+        "B_axis_only": 4.513385772705078,
+        "C_axis_only": 0.9761605858802795
+      },
+      "ratios": {
+        "B_over_C_deep_maximum": 9.462597794130219e-07,
+        "B_over_C_axis_only_maximum": 4.62360992442141,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 8.826881408691406,
+          "C_center": 8.080873489379883,
+          "B_axis_only": 4.513385772705078,
+          "C_axis_only": 0.9761605858802795
+        }
+      },
+      "predicates": {
+        "A_deep_at_or_below_limit": true,
+        "A_center_at_or_below_limit": true,
+        "B_deep_at_or_below_limit": true,
+        "B_center_at_or_below_limit": true,
+        "C_deep_positive": true,
+        "C_center_positive": true,
+        "B_over_C_deep_suppressed": true,
+        "axis_only_C_comparable": true,
+        "axis_only_not_stale_suppressed": true
+      },
+      "pass": true
+    },
+    {
+      "run": 1,
+      "frame": 200,
+      "values_m_s": {
+        "A_deep": 0.0,
+        "A_center": 0.0,
+        "B_deep": 8.352522854693234e-06,
+        "B_center": 8.352522854693234e-06,
+        "C_deep": 7.767152309417725,
+        "C_center": 7.767152309417725,
+        "B_axis_only": 4.713141918182373,
+        "C_axis_only": 1.166986107826233
+      },
+      "ratios": {
+        "B_over_C_deep_maximum": 1.0753648856049525e-06,
+        "B_over_C_axis_only_maximum": 4.038730098477035,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 7.767152309417725,
+          "C_center": 7.767152309417725,
+          "B_axis_only": 4.713141918182373,
+          "C_axis_only": 1.166986107826233
+        }
+      },
+      "predicates": {
+        "A_deep_at_or_below_limit": true,
+        "A_center_at_or_below_limit": true,
+        "B_deep_at_or_below_limit": true,
+        "B_center_at_or_below_limit": true,
+        "C_deep_positive": true,
+        "C_center_positive": true,
+        "B_over_C_deep_suppressed": true,
+        "axis_only_C_comparable": true,
+        "axis_only_not_stale_suppressed": true
+      },
+      "pass": true
+    },
+    {
+      "run": 2,
+      "frame": 60,
+      "values_m_s": {
+        "A_deep": 0.0,
+        "A_center": 0.0,
+        "B_deep": 8.352522854693234e-06,
+        "B_center": 8.352522854693234e-06,
+        "C_deep": 8.357105255126953,
+        "C_center": 8.357105255126953,
+        "B_axis_only": 4.59628438949585,
+        "C_axis_only": 0.9084175229072571
+      },
+      "ratios": {
+        "B_over_C_deep_maximum": 9.994516761134596e-07,
+        "B_over_C_axis_only_maximum": 5.059660644574661,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 8.357105255126953,
+          "C_center": 8.357105255126953,
+          "B_axis_only": 4.59628438949585,
+          "C_axis_only": 0.9084175229072571
+        }
+      },
+      "predicates": {
+        "A_deep_at_or_below_limit": true,
+        "A_center_at_or_below_limit": true,
+        "B_deep_at_or_below_limit": true,
+        "B_center_at_or_below_limit": true,
+        "C_deep_positive": true,
+        "C_center_positive": true,
+        "B_over_C_deep_suppressed": true,
+        "axis_only_C_comparable": true,
+        "axis_only_not_stale_suppressed": true
+      },
+      "pass": true
+    },
+    {
+      "run": 2,
+      "frame": 120,
+      "values_m_s": {
+        "A_deep": 0.0,
+        "A_center": 0.0,
+        "B_deep": 8.352522854693234e-06,
+        "B_center": 8.352522854693234e-06,
+        "C_deep": 9.09351921081543,
+        "C_center": 8.175348281860352,
+        "B_axis_only": 4.572147369384766,
+        "C_axis_only": 0.6502975821495056
+      },
+      "ratios": {
+        "B_over_C_deep_maximum": 9.185137965903357e-07,
+        "B_over_C_axis_only_maximum": 7.030854019588856,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 9.09351921081543,
+          "C_center": 8.175348281860352,
+          "B_axis_only": 4.572147369384766,
+          "C_axis_only": 0.6502975821495056
+        }
+      },
+      "predicates": {
+        "A_deep_at_or_below_limit": true,
+        "A_center_at_or_below_limit": true,
+        "B_deep_at_or_below_limit": true,
+        "B_center_at_or_below_limit": true,
+        "C_deep_positive": true,
+        "C_center_positive": true,
+        "B_over_C_deep_suppressed": true,
+        "axis_only_C_comparable": true,
+        "axis_only_not_stale_suppressed": true
+      },
+      "pass": true
+    },
+    {
+      "run": 2,
+      "frame": 180,
+      "values_m_s": {
+        "A_deep": 0.0,
+        "A_center": 0.0,
+        "B_deep": 8.352522854693234e-06,
+        "B_center": 8.352522854693234e-06,
+        "C_deep": 8.826881408691406,
+        "C_center": 8.080873489379883,
+        "B_axis_only": 4.513385772705078,
+        "C_axis_only": 0.9761605858802795
+      },
+      "ratios": {
+        "B_over_C_deep_maximum": 9.462597794130219e-07,
+        "B_over_C_axis_only_maximum": 4.62360992442141,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 8.826881408691406,
+          "C_center": 8.080873489379883,
+          "B_axis_only": 4.513385772705078,
+          "C_axis_only": 0.9761605858802795
+        }
+      },
+      "predicates": {
+        "A_deep_at_or_below_limit": true,
+        "A_center_at_or_below_limit": true,
+        "B_deep_at_or_below_limit": true,
+        "B_center_at_or_below_limit": true,
+        "C_deep_positive": true,
+        "C_center_positive": true,
+        "B_over_C_deep_suppressed": true,
+        "axis_only_C_comparable": true,
+        "axis_only_not_stale_suppressed": true
+      },
+      "pass": true
+    },
+    {
+      "run": 2,
+      "frame": 200,
+      "values_m_s": {
+        "A_deep": 0.0,
+        "A_center": 0.0,
+        "B_deep": 8.352522854693234e-06,
+        "B_center": 8.352522854693234e-06,
+        "C_deep": 7.767152309417725,
+        "C_center": 7.767152309417725,
+        "B_axis_only": 4.713141918182373,
+        "C_axis_only": 1.166986107826233
+      },
+      "ratios": {
+        "B_over_C_deep_maximum": 1.0753648856049525e-06,
+        "B_over_C_axis_only_maximum": 4.038730098477035,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 7.767152309417725,
+          "C_center": 7.767152309417725,
+          "B_axis_only": 4.713141918182373,
+          "C_axis_only": 1.166986107826233
+        }
+      },
+      "predicates": {
+        "A_deep_at_or_below_limit": true,
+        "A_center_at_or_below_limit": true,
+        "B_deep_at_or_below_limit": true,
+        "B_center_at_or_below_limit": true,
+        "C_deep_positive": true,
+        "C_center_positive": true,
+        "B_over_C_deep_suppressed": true,
+        "axis_only_C_comparable": true,
+        "axis_only_not_stale_suppressed": true
+      },
+      "pass": true
+    },
+    {
+      "run": 3,
+      "frame": 60,
+      "values_m_s": {
+        "A_deep": 0.0,
+        "A_center": 0.0,
+        "B_deep": 8.352522854693234e-06,
+        "B_center": 8.352522854693234e-06,
+        "C_deep": 8.357105255126953,
+        "C_center": 8.357105255126953,
+        "B_axis_only": 4.59628438949585,
+        "C_axis_only": 0.9084175229072571
+      },
+      "ratios": {
+        "B_over_C_deep_maximum": 9.994516761134596e-07,
+        "B_over_C_axis_only_maximum": 5.059660644574661,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 8.357105255126953,
+          "C_center": 8.357105255126953,
+          "B_axis_only": 4.59628438949585,
+          "C_axis_only": 0.9084175229072571
+        }
+      },
+      "predicates": {
+        "A_deep_at_or_below_limit": true,
+        "A_center_at_or_below_limit": true,
+        "B_deep_at_or_below_limit": true,
+        "B_center_at_or_below_limit": true,
+        "C_deep_positive": true,
+        "C_center_positive": true,
+        "B_over_C_deep_suppressed": true,
+        "axis_only_C_comparable": true,
+        "axis_only_not_stale_suppressed": true
+      },
+      "pass": true
+    },
+    {
+      "run": 3,
+      "frame": 120,
+      "values_m_s": {
+        "A_deep": 0.0,
+        "A_center": 0.0,
+        "B_deep": 8.352522854693234e-06,
+        "B_center": 8.352522854693234e-06,
+        "C_deep": 9.09351921081543,
+        "C_center": 8.175348281860352,
+        "B_axis_only": 4.572147369384766,
+        "C_axis_only": 0.6502975821495056
+      },
+      "ratios": {
+        "B_over_C_deep_maximum": 9.185137965903357e-07,
+        "B_over_C_axis_only_maximum": 7.030854019588856,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 9.09351921081543,
+          "C_center": 8.175348281860352,
+          "B_axis_only": 4.572147369384766,
+          "C_axis_only": 0.6502975821495056
+        }
+      },
+      "predicates": {
+        "A_deep_at_or_below_limit": true,
+        "A_center_at_or_below_limit": true,
+        "B_deep_at_or_below_limit": true,
+        "B_center_at_or_below_limit": true,
+        "C_deep_positive": true,
+        "C_center_positive": true,
+        "B_over_C_deep_suppressed": true,
+        "axis_only_C_comparable": true,
+        "axis_only_not_stale_suppressed": true
+      },
+      "pass": true
+    },
+    {
+      "run": 3,
+      "frame": 180,
+      "values_m_s": {
+        "A_deep": 0.0,
+        "A_center": 0.0,
+        "B_deep": 8.352522854693234e-06,
+        "B_center": 8.352522854693234e-06,
+        "C_deep": 8.826881408691406,
+        "C_center": 8.080873489379883,
+        "B_axis_only": 4.513385772705078,
+        "C_axis_only": 0.9761605858802795
+      },
+      "ratios": {
+        "B_over_C_deep_maximum": 9.462597794130219e-07,
+        "B_over_C_axis_only_maximum": 4.62360992442141,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 8.826881408691406,
+          "C_center": 8.080873489379883,
+          "B_axis_only": 4.513385772705078,
+          "C_axis_only": 0.9761605858802795
+        }
+      },
+      "predicates": {
+        "A_deep_at_or_below_limit": true,
+        "A_center_at_or_below_limit": true,
+        "B_deep_at_or_below_limit": true,
+        "B_center_at_or_below_limit": true,
+        "C_deep_positive": true,
+        "C_center_positive": true,
+        "B_over_C_deep_suppressed": true,
+        "axis_only_C_comparable": true,
+        "axis_only_not_stale_suppressed": true
+      },
+      "pass": true
+    },
+    {
+      "run": 3,
+      "frame": 200,
+      "values_m_s": {
+        "A_deep": 0.0,
+        "A_center": 0.0,
+        "B_deep": 8.352522854693234e-06,
+        "B_center": 8.352522854693234e-06,
+        "C_deep": 7.767152309417725,
+        "C_center": 7.767152309417725,
+        "B_axis_only": 4.713141918182373,
+        "C_axis_only": 1.166986107826233
+      },
+      "ratios": {
+        "B_over_C_deep_maximum": 1.0753648856049525e-06,
+        "B_over_C_axis_only_maximum": 4.038730098477035,
+        "values_m_s": {
+          "A_deep": 0.0,
+          "A_center": 0.0,
+          "B_deep": 8.352522854693234e-06,
+          "B_center": 8.352522854693234e-06,
+          "C_deep": 7.767152309417725,
+          "C_center": 7.767152309417725,
+          "B_axis_only": 4.713141918182373,
+          "C_axis_only": 1.166986107826233
+        }
+      },
+      "predicates": {
+        "A_deep_at_or_below_limit": true,
+        "A_center_at_or_below_limit": true,
+        "B_deep_at_or_below_limit": true,
+        "B_center_at_or_below_limit": true,
+        "C_deep_positive": true,
+        "C_center_positive": true,
+        "B_over_C_deep_suppressed": true,
+        "axis_only_C_comparable": true,
+        "axis_only_not_stale_suppressed": true
+      },
+      "pass": true
+    }
+  ],
+  "runtime": {
+    "1": {
+      "A_axis_on": {
+        "active_blocks_final": 26,
+        "source_fuel": 0.800000011920929,
+        "outcome": {
+          "schema": "campfire.kit-shutdown-outcome.v1",
+          "input_valid": true,
+          "functional_status": "pass",
+          "lifecycle_status": "normal_exit",
+          "performance_sample_accepted": true,
+          "normal_exit_sample_accepted": true,
+          "application_shutdown_marker": "shutdown_complete",
+          "shutdown_complete_reached": true,
+          "os_process_normal_exit": true,
+          "known_signature_name": null,
+          "reasons": []
+        },
+        "runner_peak_private_bytes": null,
+        "spatial_peak_rss_bytes": 6388039680,
+        "spatial_peak_rss_delta_bytes": 288927744
+      },
+      "B_rotate_y40_on": {
+        "active_blocks_final": 24,
+        "source_fuel": 0.800000011920929,
+        "outcome": {
+          "schema": "campfire.kit-shutdown-outcome.v1",
+          "input_valid": true,
+          "functional_status": "pass",
+          "lifecycle_status": "normal_exit",
+          "performance_sample_accepted": true,
+          "normal_exit_sample_accepted": true,
+          "application_shutdown_marker": "shutdown_complete",
+          "shutdown_complete_reached": true,
+          "os_process_normal_exit": true,
+          "known_signature_name": null,
+          "reasons": []
+        },
+        "runner_peak_private_bytes": null,
+        "spatial_peak_rss_bytes": 6637117440,
+        "spatial_peak_rss_delta_bytes": 659886080
+      },
+      "C_rotate_y40_off": {
+        "active_blocks_final": 58,
+        "source_fuel": 0.800000011920929,
+        "outcome": {
+          "schema": "campfire.kit-shutdown-outcome.v1",
+          "input_valid": true,
+          "functional_status": "pass",
+          "lifecycle_status": "normal_exit",
+          "performance_sample_accepted": true,
+          "normal_exit_sample_accepted": true,
+          "application_shutdown_marker": "shutdown_complete",
+          "shutdown_complete_reached": true,
+          "os_process_normal_exit": true,
+          "known_signature_name": null,
+          "reasons": []
+        },
+        "runner_peak_private_bytes": null,
+        "spatial_peak_rss_bytes": 6722404352,
+        "spatial_peak_rss_delta_bytes": 631123968
+      }
+    },
+    "2": {
+      "A_axis_on": {
+        "active_blocks_final": 26,
+        "source_fuel": 0.800000011920929,
+        "outcome": {
+          "schema": "campfire.kit-shutdown-outcome.v1",
+          "input_valid": true,
+          "functional_status": "pass",
+          "lifecycle_status": "normal_exit",
+          "performance_sample_accepted": true,
+          "normal_exit_sample_accepted": true,
+          "application_shutdown_marker": "shutdown_complete",
+          "shutdown_complete_reached": true,
+          "os_process_normal_exit": true,
+          "known_signature_name": null,
+          "reasons": []
+        },
+        "runner_peak_private_bytes": null,
+        "spatial_peak_rss_bytes": 6572273664,
+        "spatial_peak_rss_delta_bytes": 517341184
+      },
+      "B_rotate_y40_on": {
+        "active_blocks_final": 24,
+        "source_fuel": 0.800000011920929,
+        "outcome": {
+          "schema": "campfire.kit-shutdown-outcome.v1",
+          "input_valid": true,
+          "functional_status": "pass",
+          "lifecycle_status": "normal_exit",
+          "performance_sample_accepted": true,
+          "normal_exit_sample_accepted": true,
+          "application_shutdown_marker": "shutdown_complete",
+          "shutdown_complete_reached": true,
+          "os_process_normal_exit": true,
+          "known_signature_name": null,
+          "reasons": []
+        },
+        "runner_peak_private_bytes": null,
+        "spatial_peak_rss_bytes": 6810054656,
+        "spatial_peak_rss_delta_bytes": 615243776
+      },
+      "C_rotate_y40_off": {
+        "active_blocks_final": 58,
+        "source_fuel": 0.800000011920929,
+        "outcome": {
+          "schema": "campfire.kit-shutdown-outcome.v1",
+          "input_valid": true,
+          "functional_status": "pass",
+          "lifecycle_status": "normal_exit",
+          "performance_sample_accepted": true,
+          "normal_exit_sample_accepted": true,
+          "application_shutdown_marker": "shutdown_complete",
+          "shutdown_complete_reached": true,
+          "os_process_normal_exit": true,
+          "known_signature_name": null,
+          "reasons": []
+        },
+        "runner_peak_private_bytes": null,
+        "spatial_peak_rss_bytes": 6649655296,
+        "spatial_peak_rss_delta_bytes": 604405760
+      }
+    },
+    "3": {
+      "A_axis_on": {
+        "active_blocks_final": 26,
+        "source_fuel": 0.800000011920929,
+        "outcome": {
+          "schema": "campfire.kit-shutdown-outcome.v1",
+          "input_valid": true,
+          "functional_status": "pass",
+          "lifecycle_status": "normal_exit",
+          "performance_sample_accepted": true,
+          "normal_exit_sample_accepted": true,
+          "application_shutdown_marker": "shutdown_complete",
+          "shutdown_complete_reached": true,
+          "os_process_normal_exit": true,
+          "known_signature_name": null,
+          "reasons": []
+        },
+        "runner_peak_private_bytes": null,
+        "spatial_peak_rss_bytes": 6585020416,
+        "spatial_peak_rss_delta_bytes": 528740352
+      },
+      "B_rotate_y40_on": {
+        "active_blocks_final": 24,
+        "source_fuel": 0.800000011920929,
+        "outcome": {
+          "schema": "campfire.kit-shutdown-outcome.v1",
+          "input_valid": true,
+          "functional_status": "pass",
+          "lifecycle_status": "normal_exit",
+          "performance_sample_accepted": true,
+          "normal_exit_sample_accepted": true,
+          "application_shutdown_marker": "shutdown_complete",
+          "shutdown_complete_reached": true,
+          "os_process_normal_exit": true,
+          "known_signature_name": null,
+          "reasons": []
+        },
+        "runner_peak_private_bytes": null,
+        "spatial_peak_rss_bytes": 6621257728,
+        "spatial_peak_rss_delta_bytes": 703864832
+      },
+      "C_rotate_y40_off": {
+        "active_blocks_final": 58,
+        "source_fuel": 0.800000011920929,
+        "outcome": {
+          "schema": "campfire.kit-shutdown-outcome.v1",
+          "input_valid": true,
+          "functional_status": "pass",
+          "lifecycle_status": "normal_exit",
+          "performance_sample_accepted": true,
+          "normal_exit_sample_accepted": true,
+          "application_shutdown_marker": "shutdown_complete",
+          "shutdown_complete_reached": true,
+          "os_process_normal_exit": true,
+          "known_signature_name": null,
+          "reasons": []
+        },
+        "runner_peak_private_bytes": null,
+        "spatial_peak_rss_bytes": 6863147008,
+        "spatial_peak_rss_delta_bytes": 619130880
+      }
+    }
+  },
+  "condition_input_audit": {
+    "A_axis_on": {
+      "mode": "phase6ec_rotated_mesh",
+      "source_sha256": "BC65721F4C6D4ECF1F35C736F2DD10F7A47C9F2B361E45898032E869D894D5F9",
+      "collider": {
+        "path": "/World/ColliderReferenceMesh",
+        "type": "Mesh",
+        "applied_schemas": [
+          "PhysicsCollisionAPI",
+          "PhysicsMeshCollisionAPI"
+        ],
+        "rigid_body_api": false,
+        "collision_enabled": true,
+        "approximation": "convexDecomposition",
+        "world_bbox_min": [
+          -0.8999999761581421,
+          -0.1599999964237213,
+          0.875
+        ],
+        "world_bbox_max": [
+          0.8999999761581421,
+          0.1599999964237213,
+          1.1950000524520874
+        ]
+      },
+      "emitter": {
+        "path": "/World/Flow/Emitter",
+        "type": "FlowEmitterSphere",
+        "world_origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "radius": 0.10000000149011612,
+        "fuel": 0.800000011920929,
+        "allocationScale": 1.5,
+        "applyPostPressure": false,
+        "coupleRateVelocity": 2.0,
+        "physicsVelocityScale": 0.0,
+        "coupleRateFuel": 2.0,
+        "coupleRateTemperature": 10.0,
+        "coupleRateSmoke": 1.0,
+        "coupleRateBurn": 0.0,
+        "target_velocity": "(0, 0, 0.3)"
+      },
+      "simulate": {
+        "layer": 0,
+        "densityCellSize": 0.02500000037252903,
+        "stepsPerSecond": 60.0,
+        "forceSimulate": true,
+        "simulateWhenPaused": false,
+        "physicsCollisionEnabled": true,
+        "physicsConvexCollision": true,
+        "velocitySubSteps": 1
+      }
+    },
+    "B_rotate_y40_on": {
+      "mode": "phase6ec_rotated_mesh",
+      "source_sha256": "CE66FF32158BE1513748CB653217A66727D9867DB0BDE715C28BBF587E7359CB",
+      "collider": {
+        "path": "/World/ColliderReferenceMesh",
+        "type": "Mesh",
+        "applied_schemas": [
+          "PhysicsCollisionAPI",
+          "PhysicsMeshCollisionAPI"
+        ],
+        "rigid_body_api": false,
+        "collision_enabled": true,
+        "approximation": "convexDecomposition",
+        "world_bbox_min": [
+          -0.7922859980930038,
+          -0.1599999964237213,
+          0.33392405570832895
+        ],
+        "world_bbox_max": [
+          0.7922860318085558,
+          0.1599999964237213,
+          1.736075984472301
+        ]
+      },
+      "emitter": {
+        "path": "/World/Flow/Emitter",
+        "type": "FlowEmitterSphere",
+        "world_origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "radius": 0.10000000149011612,
+        "fuel": 0.800000011920929,
+        "allocationScale": 1.5,
+        "applyPostPressure": false,
+        "coupleRateVelocity": 2.0,
+        "physicsVelocityScale": 0.0,
+        "coupleRateFuel": 2.0,
+        "coupleRateTemperature": 10.0,
+        "coupleRateSmoke": 1.0,
+        "coupleRateBurn": 0.0,
+        "target_velocity": "(0, 0, 0.3)"
+      },
+      "simulate": {
+        "layer": 0,
+        "densityCellSize": 0.02500000037252903,
+        "stepsPerSecond": 60.0,
+        "forceSimulate": true,
+        "simulateWhenPaused": false,
+        "physicsCollisionEnabled": true,
+        "physicsConvexCollision": true,
+        "velocitySubSteps": 1
+      }
+    },
+    "C_rotate_y40_off": {
+      "mode": "phase6ec_rotated_mesh_collision_off",
+      "source_sha256": "CE66FF32158BE1513748CB653217A66727D9867DB0BDE715C28BBF587E7359CB",
+      "collider": {
+        "path": "/World/ColliderReferenceMesh",
+        "type": "Mesh",
+        "applied_schemas": [
+          "PhysicsCollisionAPI",
+          "PhysicsMeshCollisionAPI"
+        ],
+        "rigid_body_api": false,
+        "collision_enabled": true,
+        "approximation": "convexDecomposition",
+        "world_bbox_min": [
+          -0.7922859980930038,
+          -0.1599999964237213,
+          0.33392405570832895
+        ],
+        "world_bbox_max": [
+          0.7922860318085558,
+          0.1599999964237213,
+          1.736075984472301
+        ]
+      },
+      "emitter": {
+        "path": "/World/Flow/Emitter",
+        "type": "FlowEmitterSphere",
+        "world_origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "radius": 0.10000000149011612,
+        "fuel": 0.800000011920929,
+        "allocationScale": 1.5,
+        "applyPostPressure": false,
+        "coupleRateVelocity": 2.0,
+        "physicsVelocityScale": 0.0,
+        "coupleRateFuel": 2.0,
+        "coupleRateTemperature": 10.0,
+        "coupleRateSmoke": 1.0,
+        "coupleRateBurn": 0.0,
+        "target_velocity": "(0, 0, 0.3)"
+      },
+      "simulate": {
+        "layer": 0,
+        "densityCellSize": 0.02500000037252903,
+        "stepsPerSecond": 60.0,
+        "forceSimulate": true,
+        "simulateWhenPaused": false,
+        "physicsCollisionEnabled": false,
+        "physicsConvexCollision": true,
+        "velocitySubSteps": 1
+      }
+    }
+  },
+  "files": [
+    {
+      "run": 1,
+      "condition": "A_axis_on",
+      "frame": 60,
+      "path": "spatial/run_1/A_axis_on/A_axis_on_f0060_velocity.npz",
+      "sha256": "685653BBF8BE25CCBB5193370D7417BB9548D79979B7FAE554C6249DA7989843",
+      "bytes": 76922,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 1,
+      "condition": "A_axis_on",
+      "frame": 120,
+      "path": "spatial/run_1/A_axis_on/A_axis_on_f0120_velocity.npz",
+      "sha256": "B6309A7382A659847EDA81AA8B99EA845AC84E03EDD010E2A85AA94FB20EE038",
+      "bytes": 76882,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 1,
+      "condition": "A_axis_on",
+      "frame": 180,
+      "path": "spatial/run_1/A_axis_on/A_axis_on_f0180_velocity.npz",
+      "sha256": "6EE5ADBED2F6C715534440F66870F80002D3CD43208D48C7EEECD0699EA3CC85",
+      "bytes": 76796,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 1,
+      "condition": "A_axis_on",
+      "frame": 200,
+      "path": "spatial/run_1/A_axis_on/A_axis_on_f0200_velocity.npz",
+      "sha256": "581444FFF164BB4D37AD8C7804A6499E0A4A048E881573643BB5F3A3D15B1D35",
+      "bytes": 76833,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 1,
+      "condition": "B_rotate_y40_on",
+      "frame": 60,
+      "path": "spatial/run_1/B_rotate_y40_on/B_rotate_y40_on_f0060_velocity.npz",
+      "sha256": "DA88029C79CE98431016201829812F2DA075085A1AFD18E8968E080F3CA4ADCE",
+      "bytes": 131245,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 1,
+      "condition": "B_rotate_y40_on",
+      "frame": 120,
+      "path": "spatial/run_1/B_rotate_y40_on/B_rotate_y40_on_f0120_velocity.npz",
+      "sha256": "A8C12FA54390B84B6020A4C8C28082C005608E4747E606B9A17D922880FDCD23",
+      "bytes": 131263,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 1,
+      "condition": "B_rotate_y40_on",
+      "frame": 180,
+      "path": "spatial/run_1/B_rotate_y40_on/B_rotate_y40_on_f0180_velocity.npz",
+      "sha256": "D8D9ECE3A96BFFA23BB5113B12DD3A3A84EBBA3D333F5A7637B4D0533A3B03C7",
+      "bytes": 131312,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 1,
+      "condition": "B_rotate_y40_on",
+      "frame": 200,
+      "path": "spatial/run_1/B_rotate_y40_on/B_rotate_y40_on_f0200_velocity.npz",
+      "sha256": "419B90A920C25404A14C5398C5AFF511D348DFAB8927DA83AF0F561B605294EF",
+      "bytes": 131312,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 1,
+      "condition": "C_rotate_y40_off",
+      "frame": 60,
+      "path": "spatial/run_1/C_rotate_y40_off/C_rotate_y40_off_f0060_velocity.npz",
+      "sha256": "B0AF2B7608F2209B32227878963E7E8C5E514CDDAFEF963548FA1A666E4C0498",
+      "bytes": 144785,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 1,
+      "condition": "C_rotate_y40_off",
+      "frame": 120,
+      "path": "spatial/run_1/C_rotate_y40_off/C_rotate_y40_off_f0120_velocity.npz",
+      "sha256": "24763CF8B1F9EFC6068F4714089DD316410EA290073E934452C0DCA70692EF61",
+      "bytes": 144949,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 1,
+      "condition": "C_rotate_y40_off",
+      "frame": 180,
+      "path": "spatial/run_1/C_rotate_y40_off/C_rotate_y40_off_f0180_velocity.npz",
+      "sha256": "3037AC6EC776AF1B0A67CF3A2C54EA6BA05CBABF57D234B7A7C13F869BC1674F",
+      "bytes": 144765,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 1,
+      "condition": "C_rotate_y40_off",
+      "frame": 200,
+      "path": "spatial/run_1/C_rotate_y40_off/C_rotate_y40_off_f0200_velocity.npz",
+      "sha256": "106C2F5CE2FCB2BB4A0A2ED10693C765DEDBA10CFE9121F941B49AC3A20A0767",
+      "bytes": 145131,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 2,
+      "condition": "A_axis_on",
+      "frame": 60,
+      "path": "spatial/run_2/A_axis_on/A_axis_on_f0060_velocity.npz",
+      "sha256": "685653BBF8BE25CCBB5193370D7417BB9548D79979B7FAE554C6249DA7989843",
+      "bytes": 76922,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 2,
+      "condition": "A_axis_on",
+      "frame": 120,
+      "path": "spatial/run_2/A_axis_on/A_axis_on_f0120_velocity.npz",
+      "sha256": "B6309A7382A659847EDA81AA8B99EA845AC84E03EDD010E2A85AA94FB20EE038",
+      "bytes": 76882,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 2,
+      "condition": "A_axis_on",
+      "frame": 180,
+      "path": "spatial/run_2/A_axis_on/A_axis_on_f0180_velocity.npz",
+      "sha256": "6EE5ADBED2F6C715534440F66870F80002D3CD43208D48C7EEECD0699EA3CC85",
+      "bytes": 76796,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 2,
+      "condition": "A_axis_on",
+      "frame": 200,
+      "path": "spatial/run_2/A_axis_on/A_axis_on_f0200_velocity.npz",
+      "sha256": "581444FFF164BB4D37AD8C7804A6499E0A4A048E881573643BB5F3A3D15B1D35",
+      "bytes": 76833,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 2,
+      "condition": "B_rotate_y40_on",
+      "frame": 60,
+      "path": "spatial/run_2/B_rotate_y40_on/B_rotate_y40_on_f0060_velocity.npz",
+      "sha256": "DA88029C79CE98431016201829812F2DA075085A1AFD18E8968E080F3CA4ADCE",
+      "bytes": 131245,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 2,
+      "condition": "B_rotate_y40_on",
+      "frame": 120,
+      "path": "spatial/run_2/B_rotate_y40_on/B_rotate_y40_on_f0120_velocity.npz",
+      "sha256": "A8C12FA54390B84B6020A4C8C28082C005608E4747E606B9A17D922880FDCD23",
+      "bytes": 131263,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 2,
+      "condition": "B_rotate_y40_on",
+      "frame": 180,
+      "path": "spatial/run_2/B_rotate_y40_on/B_rotate_y40_on_f0180_velocity.npz",
+      "sha256": "D8D9ECE3A96BFFA23BB5113B12DD3A3A84EBBA3D333F5A7637B4D0533A3B03C7",
+      "bytes": 131312,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 2,
+      "condition": "B_rotate_y40_on",
+      "frame": 200,
+      "path": "spatial/run_2/B_rotate_y40_on/B_rotate_y40_on_f0200_velocity.npz",
+      "sha256": "419B90A920C25404A14C5398C5AFF511D348DFAB8927DA83AF0F561B605294EF",
+      "bytes": 131312,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 2,
+      "condition": "C_rotate_y40_off",
+      "frame": 60,
+      "path": "spatial/run_2/C_rotate_y40_off/C_rotate_y40_off_f0060_velocity.npz",
+      "sha256": "B0AF2B7608F2209B32227878963E7E8C5E514CDDAFEF963548FA1A666E4C0498",
+      "bytes": 144785,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 2,
+      "condition": "C_rotate_y40_off",
+      "frame": 120,
+      "path": "spatial/run_2/C_rotate_y40_off/C_rotate_y40_off_f0120_velocity.npz",
+      "sha256": "24763CF8B1F9EFC6068F4714089DD316410EA290073E934452C0DCA70692EF61",
+      "bytes": 144949,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 2,
+      "condition": "C_rotate_y40_off",
+      "frame": 180,
+      "path": "spatial/run_2/C_rotate_y40_off/C_rotate_y40_off_f0180_velocity.npz",
+      "sha256": "3037AC6EC776AF1B0A67CF3A2C54EA6BA05CBABF57D234B7A7C13F869BC1674F",
+      "bytes": 144765,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 2,
+      "condition": "C_rotate_y40_off",
+      "frame": 200,
+      "path": "spatial/run_2/C_rotate_y40_off/C_rotate_y40_off_f0200_velocity.npz",
+      "sha256": "106C2F5CE2FCB2BB4A0A2ED10693C765DEDBA10CFE9121F941B49AC3A20A0767",
+      "bytes": 145131,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 3,
+      "condition": "A_axis_on",
+      "frame": 60,
+      "path": "spatial/run_3/A_axis_on/A_axis_on_f0060_velocity.npz",
+      "sha256": "685653BBF8BE25CCBB5193370D7417BB9548D79979B7FAE554C6249DA7989843",
+      "bytes": 76922,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 3,
+      "condition": "A_axis_on",
+      "frame": 120,
+      "path": "spatial/run_3/A_axis_on/A_axis_on_f0120_velocity.npz",
+      "sha256": "B6309A7382A659847EDA81AA8B99EA845AC84E03EDD010E2A85AA94FB20EE038",
+      "bytes": 76882,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 3,
+      "condition": "A_axis_on",
+      "frame": 180,
+      "path": "spatial/run_3/A_axis_on/A_axis_on_f0180_velocity.npz",
+      "sha256": "6EE5ADBED2F6C715534440F66870F80002D3CD43208D48C7EEECD0699EA3CC85",
+      "bytes": 76796,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 3,
+      "condition": "A_axis_on",
+      "frame": 200,
+      "path": "spatial/run_3/A_axis_on/A_axis_on_f0200_velocity.npz",
+      "sha256": "581444FFF164BB4D37AD8C7804A6499E0A4A048E881573643BB5F3A3D15B1D35",
+      "bytes": 76833,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 3,
+      "condition": "B_rotate_y40_on",
+      "frame": 60,
+      "path": "spatial/run_3/B_rotate_y40_on/B_rotate_y40_on_f0060_velocity.npz",
+      "sha256": "DA88029C79CE98431016201829812F2DA075085A1AFD18E8968E080F3CA4ADCE",
+      "bytes": 131245,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 3,
+      "condition": "B_rotate_y40_on",
+      "frame": 120,
+      "path": "spatial/run_3/B_rotate_y40_on/B_rotate_y40_on_f0120_velocity.npz",
+      "sha256": "A8C12FA54390B84B6020A4C8C28082C005608E4747E606B9A17D922880FDCD23",
+      "bytes": 131263,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 3,
+      "condition": "B_rotate_y40_on",
+      "frame": 180,
+      "path": "spatial/run_3/B_rotate_y40_on/B_rotate_y40_on_f0180_velocity.npz",
+      "sha256": "D8D9ECE3A96BFFA23BB5113B12DD3A3A84EBBA3D333F5A7637B4D0533A3B03C7",
+      "bytes": 131312,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 3,
+      "condition": "B_rotate_y40_on",
+      "frame": 200,
+      "path": "spatial/run_3/B_rotate_y40_on/B_rotate_y40_on_f0200_velocity.npz",
+      "sha256": "419B90A920C25404A14C5398C5AFF511D348DFAB8927DA83AF0F561B605294EF",
+      "bytes": 131312,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 3,
+      "condition": "C_rotate_y40_off",
+      "frame": 60,
+      "path": "spatial/run_3/C_rotate_y40_off/C_rotate_y40_off_f0060_velocity.npz",
+      "sha256": "B0AF2B7608F2209B32227878963E7E8C5E514CDDAFEF963548FA1A666E4C0498",
+      "bytes": 144785,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 3,
+      "condition": "C_rotate_y40_off",
+      "frame": 120,
+      "path": "spatial/run_3/C_rotate_y40_off/C_rotate_y40_off_f0120_velocity.npz",
+      "sha256": "24763CF8B1F9EFC6068F4714089DD316410EA290073E934452C0DCA70692EF61",
+      "bytes": 144949,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 3,
+      "condition": "C_rotate_y40_off",
+      "frame": 180,
+      "path": "spatial/run_3/C_rotate_y40_off/C_rotate_y40_off_f0180_velocity.npz",
+      "sha256": "3037AC6EC776AF1B0A67CF3A2C54EA6BA05CBABF57D234B7A7C13F869BC1674F",
+      "bytes": 144765,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    },
+    {
+      "run": 3,
+      "condition": "C_rotate_y40_off",
+      "frame": 200,
+      "path": "spatial/run_3/C_rotate_y40_off/C_rotate_y40_off_f0200_velocity.npz",
+      "sha256": "106C2F5CE2FCB2BB4A0A2ED10693C765DEDBA10CFE9121F941B49AC3A20A0767",
+      "bytes": 145131,
+      "velocity_voxel_size_m": 0.05000000074505806,
+      "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+      "geometry_labels_are_flow_occupancy": false
+    }
+  ],
+  "storage": {
+    "npz_bytes": 4236585,
+    "raw_archive": {
+      "path": "velocity_samples.zip",
+      "bytes": 4243855,
+      "sha256": "C4F5537225A5A7F1259CF47E9CAA8C299D2A3103A4F74424FC3D8932A07B9A0C",
+      "entry_count": 36
+    }
+  },
+  "gates": {
+    "all_nine_processes_and_36_velocity_samples_present": true,
+    "predeclared_contract_used_without_runtime_threshold_derivation": true,
+    "exact_mesh_and_only_declared_stage_differences": true,
+    "all_sample_numeric_gates_pass": true,
+    "active_blocks_and_source_fuel_preserved": true,
+    "functional_pass": true,
+    "normal_os_exit_only": true,
+    "fatal_dump_upload_residual_zero": true,
+    "public_flow_occupancy_mask_not_claimed": true,
+    "phase6ec_history_unchanged": true
+  },
+  "qualification": {
+    "pass": true,
+    "worst_case": {
+      "A_deep_maximum_m_s": 0.0,
+      "A_center_maximum_m_s": 0.0,
+      "B_deep_maximum_m_s": 8.352522854693234e-06,
+      "B_center_maximum_m_s": 8.352522854693234e-06,
+      "C_deep_minimum_m_s": 7.767152309417725,
+      "C_center_minimum_m_s": 7.767152309417725,
+      "B_over_C_deep_ratio": 1.0753648856049525e-06,
+      "C_axis_only_minimum_m_s": 0.6502975821495056,
+      "B_over_C_axis_only_ratio_minimum": 4.038730098477035
+    },
+    "phase6ec_gate_changed": false,
+    "phase6ec_failure_reinterpreted": false,
+    "arbitrary_axis_rotation_qualified": false,
+    "dynamic_transform_qualified": false,
+    "render_surface_qualified": false,
+    "physx_shared_proxy_qualified": false,
+    "twenty_log_performance_qualified": false
+  },
+  "production_change": false
+}
