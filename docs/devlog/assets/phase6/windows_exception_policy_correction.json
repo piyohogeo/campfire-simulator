@@ -1,0 +1,80 @@
+{
+  "schema": "campfire.phase6ed.windows-exception-policy-correction.v1",
+  "phase": "phase6ed",
+  "date": "2026-08-11",
+  "scope": "Phase 6EB Windows exception evidence extraction only",
+  "old_pattern": "(?i)(exception code|0xC[0-9A-F]{7}|access violation)",
+  "new_contract": {
+    "streaming": "System.IO.File.ReadLines UTF-8",
+    "positive_contexts": [
+      "exception code / exception_code / ExceptionCode followed by 0xC........",
+      "unhandled exception followed by 0xC........",
+      "process exited with code 0xC........",
+      "access violation text",
+      "0xC0000005 outside hardware/address/hash/color/bitmask value context"
+    ],
+    "missing_or_unreadable": "evidence unavailable; no_windows_exception=false; fail closed",
+    "fault_fields": "unparsed only when real exception evidence is present and module/offset cannot be parsed"
+  },
+  "false_positive": {
+    "line": "Sub System Id : 0xC75C1462",
+    "meaning": "RTX 2070 PCI subsystem identifier",
+    "old_result": "windows_exception_present=true",
+    "corrected_result": "windows_exception_present=false"
+  },
+  "fixtures": {
+    "existing_phase6eb": {"passed": 24, "total": 24},
+    "new_contracts": {"passed": 7, "total": 7},
+    "total": {"passed": 31, "total": 31},
+    "negative_examples": [
+      "Sub System Id : 0xC75C1462",
+      "Sub System Id : 0xC0000005",
+      "Device Id : 0xC1234567",
+      "Vendor Id : 0xC0000005",
+      "color = 0xCAFEBABE",
+      "hash = ABCD0xC1234567"
+    ],
+    "positive_examples": [
+      "Exception code: 0xC0000005",
+      "Unhandled exception 0xC0000409",
+      "Process exited with code 0xC0000005",
+      "Access violation reading location 0x00000000",
+      "Crash Reporter exception_code=0xC0000005"
+    ]
+  },
+  "phase6ec_condition_a_offline_reclassification": {
+    "kit_or_flow_started": false,
+    "source_artifacts_unchanged": true,
+    "windows_exception_present": false,
+    "no_windows_exception": true,
+    "fault_module": null,
+    "fault_offset": null,
+    "functional_status": "pass",
+    "lifecycle_status": "normal_exit",
+    "performance_sample_accepted": true,
+    "os_process_normal_exit": true,
+    "gates_passed": 13,
+    "gates_total": 13
+  },
+  "verification": {
+    "phase6ea_resource_safety": {"passed": 7, "total": 7, "seconds": 10.731},
+    "phase6ea_static_contract": {"passed": 6, "total": 6, "seconds": 0.061},
+    "phase6eb_contract": {"passed": 31, "total": 31, "seconds": 9.228},
+    "standard_suite": {"processes_passed": 8, "processes_total": 8, "tests_passed": 78, "tests_total": 78, "seconds": 308.5},
+    "devlog": {"local_references": 369, "missing_references": 0, "json_files": 182, "svg_files": 148, "duplicate_ids": 0, "replacement_characters": 0},
+    "residual_processes": {"kit": 0, "cdb": 0, "test_helpers": 0},
+    "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A"
+  },
+  "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "phase6ec_restarted": false,
+  "latest_demo_changed": false,
+  "unchanged_boundaries": [
+    "NGX known signature",
+    "60 second grace",
+    "CDB 45 second / 512 MiB guard",
+    "PID path start-time checks",
+    "full dump repeat suppression",
+    "Phase 6EA resource safety",
+    "functional lifecycle performance classification axes"
+  ]
+}

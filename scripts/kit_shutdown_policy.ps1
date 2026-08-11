@@ -14,6 +14,67 @@ function Test-CampfireLogPattern {
     return [bool](Select-String -LiteralPath $Path -Pattern $Pattern -Encoding UTF8 -Quiet)
 }
 
+function Get-CampfireWindowsExceptionEvidence {
+    param([Parameter(Mandatory = $true)][string]$Path)
+    $result = [ordered]@{
+        available = $false
+        windows_exception_present = $false
+        access_violation_present = $false
+        kind = $null
+        line_number = $null
+        matched_text = $null
+        error = $null
+    }
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+        $result.error = "log_missing_or_not_file"
+        return [pscustomobject]$result
+    }
+    $explicitContextPattern = '(?i)(?:\bexception\s*[_ ]?code\s*[:=]\s*|\bunhandled\s+exception\b[^\r\n]*?|\bprocess\s+exited\s+with\s+(?:exit\s+)?code\s*[:=]?\s*)0xC[0-9A-F]{7}\b'
+    $accessViolationPattern = '(?i)\baccess\s+violation\b'
+    $accessViolationCodePattern = '(?i)\b0xC0000005\b'
+    $benignValueContextPattern = '(?i)\b(?:sub\s*system\s+id|device\s+id|vendor\s+id|bus\s+id|gpu\s+uuid|uuid|driver|firmware|pci|address|hash|colou?r|bitmask|mask)\b[^\r\n]*?(?:[:=]\s*)?0xC0000005\b'
+    try {
+        $lineNumber = 0
+        foreach ($line in [IO.File]::ReadLines([IO.Path]::GetFullPath($Path), [Text.Encoding]::UTF8)) {
+            $lineNumber += 1
+            $match = [regex]::Match($line, $accessViolationPattern)
+            if ($match.Success) {
+                $result.available = $true
+                $result.windows_exception_present = $true
+                $result.access_violation_present = $true
+                $result.kind = "access_violation_text"
+                $result.line_number = $lineNumber
+                $result.matched_text = $match.Value
+                return [pscustomobject]$result
+            }
+            $match = [regex]::Match($line, $explicitContextPattern)
+            if ($match.Success) {
+                $result.available = $true
+                $result.windows_exception_present = $true
+                $result.access_violation_present = [regex]::IsMatch($match.Value, $accessViolationCodePattern)
+                $result.kind = "explicit_exception_context"
+                $result.line_number = $lineNumber
+                $result.matched_text = $match.Value
+                return [pscustomobject]$result
+            }
+            $match = [regex]::Match($line, $accessViolationCodePattern)
+            if ($match.Success -and -not [regex]::IsMatch($line, $benignValueContextPattern)) {
+                $result.available = $true
+                $result.windows_exception_present = $true
+                $result.access_violation_present = $true
+                $result.kind = "access_violation_code"
+                $result.line_number = $lineNumber
+                $result.matched_text = $match.Value
+                return [pscustomobject]$result
+            }
+        }
+        $result.available = $true
+    } catch {
+        $result.error = "log_unreadable:$($_.Exception.GetType().Name)"
+    }
+    return [pscustomobject]$result
+}
+
 function Get-CampfireLifecycleMarker([string]$LifecyclePath) {
     if (-not (Test-Path -LiteralPath $LifecyclePath -PathType Leaf)) { return $null }
     try { return (Get-Content -LiteralPath $LifecyclePath -Raw -Encoding UTF8 | ConvertFrom-Json).lifecycle_marker } catch { return $null }
@@ -274,8 +335,9 @@ function Invoke-CampfireShutdownOutcomeClassification {
         [Parameter(Mandatory = $true)][string]$ProductionHashAfter,
         [Parameter(Mandatory = $true)][string]$OutputDir
     )
-    $windowsException = Test-CampfireLogPattern -Path $LogPath -Pattern "(?i)(exception code|0xC[0-9A-F]{7}|access violation)"
-    $accessViolation = Test-CampfireLogPattern -Path $LogPath -Pattern "(?i)(0xC0000005|access violation)"
+    $windowsExceptionEvidence = Get-CampfireWindowsExceptionEvidence -Path $LogPath
+    $windowsException = [bool]$windowsExceptionEvidence.windows_exception_present
+    $accessViolation = [bool]$windowsExceptionEvidence.access_violation_present
     $deviceFailure = Test-CampfireLogPattern -Path $LogPath -Pattern "(?i)(device lost|\bTDR\b)"
     $cudaFailure = Test-CampfireLogPattern -Path $LogPath -Pattern "(?i)CUDA illegal address"
     $contract = if ($null -ne $ProbeReport -and $null -ne $ProbeReport.completion_contract) { $ProbeReport.completion_contract } else { [pscustomobject]@{} }
@@ -286,6 +348,9 @@ function Invoke-CampfireShutdownOutcomeClassification {
     foreach ($field in @(
         @{ Name="dump_count"; Value=$DumpCount },
         @{ Name="windows_exception_present"; Value=$windowsException },
+        @{ Name="windows_exception_evidence_available"; Value=[bool]$windowsExceptionEvidence.available },
+        @{ Name="windows_exception_evidence_kind"; Value=$windowsExceptionEvidence.kind },
+        @{ Name="windows_exception_evidence_line_number"; Value=$windowsExceptionEvidence.line_number },
         @{ Name="fault_module"; Value=if ($windowsException) { "unparsed" } else { $null } },
         @{ Name="fault_offset"; Value=if ($windowsException) { "unparsed" } else { $null } }
     )) {
@@ -306,7 +371,7 @@ function Invoke-CampfireShutdownOutcomeClassification {
             production_app_unchanged = ($ProductionHashBefore -eq $ProductionHashAfter)
             no_fatal = ($FatalLines.Count -eq 0)
             no_crash_dump = ($DumpCount -eq 0)
-            no_windows_exception = -not $windowsException
+            no_windows_exception = ([bool]$windowsExceptionEvidence.available -and -not $windowsException)
             no_access_violation = -not $accessViolation
             no_device_lost_or_tdr = -not $deviceFailure
             no_cuda_illegal_address = -not $cudaFailure

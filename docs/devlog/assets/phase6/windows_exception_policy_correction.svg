@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6ED Windows exception policy correction</title>
+  <desc id="desc">The old generic hexadecimal match falsely classified an RTX 2070 subsystem identifier. The corrected policy requires explicit exception context and reclassifies saved Phase 6EC condition A as normal exit.</desc>
+  <style>.bg{fill:#0b1220}.title{fill:#f8fafc;font:700 34px sans-serif}.sub{fill:#a8b6c8;font:19px sans-serif}.head{fill:#f8fafc;font:700 21px sans-serif}.body{fill:#d5deea;font:17px sans-serif}.mono{fill:#d5deea;font:16px monospace}.bad{fill:#9f1239}.good{fill:#166534}.neutral{fill:#1e3a5f}.arrow{stroke:#64748b;stroke-width:5;marker-end:url(#tip)}.tag{fill:#fbbf24;font:700 18px sans-serif}</style>
+  <defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/></marker></defs>
+  <rect width="1200" height="620" class="bg"/>
+  <text x="48" y="58" class="title">Phase 6ED — explicit Windows exception evidence</text>
+  <text x="48" y="92" class="sub">A hexadecimal hardware identifier is no longer enough to declare a crash.</text>
+  <rect x="55" y="140" width="310" height="145" rx="12" class="bad"/>
+  <text x="78" y="178" class="head">Old generic match</text>
+  <text x="78" y="216" class="mono">0xC[0-9A-F]{7}</text>
+  <text x="78" y="250" class="body">RTX 2070 Sub System Id → exception</text>
+  <line x1="380" y1="212" x2="500" y2="212" class="arrow"/>
+  <rect x="515" y="140" width="630" height="145" rx="12" class="good"/>
+  <text x="540" y="178" class="head">New positive-context contract</text>
+  <text x="540" y="216" class="body">Exception code · Unhandled exception · process exit code</text>
+  <text x="540" y="250" class="body">Access violation · guarded 0xC0000005 · line-streamed</text>
+  <text x="55" y="345" class="tag">Saved Phase 6EC A · read-only offline reclassification</text>
+  <rect x="55" y="380" width="1090" height="125" rx="12" class="neutral"/>
+  <text x="80" y="420" class="mono">windows_exception_present=false · fault module/offset=null</text>
+  <text x="80" y="455" class="mono">functional=pass · lifecycle=normal_exit · performance accepted</text>
+  <text x="80" y="487" class="body">Source artifact SHA-256 unchanged · production SHA-256 unchanged · Kit/Flow not started</text>
+  <text x="55" y="555" class="sub">31 / 31 contracts pass · Phase 6EC remains stopped until a new artifact root starts from A.</text>
+</svg>

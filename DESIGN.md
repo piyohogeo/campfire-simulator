@@ -3016,6 +3016,15 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 再開条件は独立したPhase 6EB policy correctionで、明示的exception文脈と16進hardware identifierを分離し、この実log行をnegative fixtureに追加すること。6EA/6EB safety code、production app/default、Flow、V3、Resident、wood authority、latest demoは今回不変。Production app SHA-256は前後`94162F82...F02A`。詳細は`docs/design/static_rotated_cylinder_flow_collision.md`。
 - Phase 6EC 7/7、Phase 6EA 7/7・6/6、Phase 6EB 24/24、Release build 6.94秒、Phase 0 RTX、Phase 3 dry/wet mass balance 0・authority hash確定・active blocks final 252、標準suite 8 process・78/78件・303.1秒に合格した。日誌は341 reference／JSON 181／SVG 147、欠落・parse・replacement character・duplicate ID 0。Kit/CDB残留は0。Browser接続がなかったため日誌の実レンダリング確認は静的検査で代替した。
 
+## Phase 6ED Phase 6EB Windows exception policy correction
+
+### 2026-08-11: explicit exception contextへ限定し、保存済みAをoffline再分類
+
+- 旧`(?i)(exception code|0xC[0-9A-F]{7}|access violation)`は文脈なしの16進値を拾い、RTX 2070 PCI subsystem identifier `Sub System Id : 0xC75C1462`を例外と誤認した。新検出器はUTF-8 logを`File.ReadLines()`で行単位に走査し、exception code／exception_code、Unhandled exception、process exit code、access violationをpositive contextとする。
+- `0xC0000005`はaccess-violation codeとして検出するが、Sub System／Device／Vendor／Bus ID、UUID、driver／firmware／PCI、address、hash、color、bitmaskの値文脈ではnegative。その他の`0xC........`は裸の値では検出しない。Missing/read不能logはevidence unavailableとして`no_windows_exception=false`となりfail closedする。
+- Positive例外だけが`windows_exception_present=true`を設定し、module/offsetを解析できなければ`unparsed`にする。False positive、空log、missing/read不能だけを理由に架空のfault module/offsetを設定しない。NGX signature、60秒grace、CDB guard、PID identity、dump抑制、Phase 6EA safety、3軸分類は不変。
+- 既存24件と追加7件の31/31 contractが合格。保存済みPhase 6EC Aをread-only再分類し、source 3ファイルSHA不変、`windows_exception_present=false`、`no_windows_exception=true`、fault fields null、functional pass、normal exit、performance acceptedの13/13 gateを確認した。offline再分類ではKit／Flowを起動せず、Phase 6EC scenarioは未実行。指定済み標準suiteの隔離headless Kit testだけを実行した。Phase 6EA 7/7・6/6、標準suite 8 process・78/78件（308.5秒）、日誌369 reference／JSON 182／SVG 148も合格し、Kit／CDB／fixture helper残留は0、production app SHA-256は不変だった。詳細は`docs/design/windows_exception_policy_correction.md`。
+
 ## Phase 6DZ rotated Cylinder Flow-collision safe stop
 
 ### 2026-08-11: 回転前のaxis controlが正常OS exitへ到達せず停止

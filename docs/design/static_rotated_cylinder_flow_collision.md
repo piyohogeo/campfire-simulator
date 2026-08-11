@@ -34,7 +34,7 @@ Sub System Id : 0xC75C1462
 
 現時点では静的回転collisionは未評価であり、合格とも不成立とも言えない。準備stage、transform、Emitter clearanceは合格したが、Flow readback比較はAだけである。Phase 6DRの貫通疑惑に対する説明もPhase 6DYまでの「軸平行Mesh proxyなら遮蔽する」から更新しない。
 
-再開には別の独立PhaseでPhase 6EBのWindows exception evidenceを、明示的なexception文脈と単なる16進hardware IDに分離する必要がある。少なくとも上記`Sub System Id`行をnegative fixtureへ追加し、実際のexception code、access violation、未知module/offsetを引き続きfail closedにすること。その承認・検証後、新artifact rootでAから開始する。現在artifactのAは正式母集団へ再利用しない。
+Phase 6EDでPhase 6EBのWindows exception evidenceを明示的exception文脈と16進hardware IDに分離し、上記`Sub System Id`行を含むnegative fixtureと実例外positive fixtureは31/31で合格した。保存Aのread-only offline再分類もnormal exitになった。ただしPhase 6ECはまだ再実行していない。次は新artifact rootでAから開始し、現在artifactのAは回転比較の正式母集団へ再利用しない。
 
 今回、production app、Flow既定、V3、Resident session、wood authority、Emitter schemaは変更していない。Production app SHA-256は前後とも`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`である。画面上の合格結果がないため動画とlatest demo pointerは変更しない。
 

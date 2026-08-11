@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6ec">最新記録</a>
+        <a href="#phase-6ed">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6ec">Phase 6ECを読む</a>
+        <a class="button primary" href="#phase-6ed">Phase 6EDを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6EC rotation safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6ED exception policy correction</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>unknown · false-positive boundary</strong></div>
-        <div><span>Production</span><strong>unchanged · rotation not run</strong></div>
+        <div><span>Lifecycle</span><strong>explicit evidence · fail closed</strong></div>
+        <div><span>Production</span><strong>unchanged · Phase 6EC still stopped</strong></div>
       </div>
     </div>
   </header>
@@ -56,6 +56,19 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6ed" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報"><span class="phase-number compact">6ED</span><p><time datetime="2026-08-11">2026.08.11</time></p><span class="pill current">Exception policy correction</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6ED · Phase 6EB Windows exception policy correction</p><h2>16進値ではなく、<br>例外の文脈を判定する。</h2><p>Phase 6ECを止めたRTX 2070のPCI Subsystem ID誤検出を修正しました。裸の<code>0xC........</code>ではなく、exception code、Unhandled exception、process exit code、access violationというpositive contextを要求します。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/windows_exception_policy_correction.svg"><img src="assets/phase6/windows_exception_policy_correction.svg" alt="Phase 6EDがGPU subsystem IDと本物のWindows例外を文脈で分離する図" loading="lazy"></a><figcaption><div><strong>31 / 31 policy contracts</strong><span>saved Phase 6EC A · offline 13 / 13</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Positive evidence</p><h3>Explicit exception context only</h3><p><code>Exception code</code>、<code>exception_code</code>、Unhandled exception、process exit code、access violationを行単位で検出します。大文字小文字、空白、timestamp/logger prefixにも対応します。</p></section><section class="note"><p class="note-label">Fail closed</p><h3>欠落logを「例外なし」にしない</h3><p>空logはreadable negativeですが、missing／read不能はevidence不足です。例外flagはfalseでも<code>no_windows_exception=false</code>となりunknownへ停止します。実例外だけがunknown module/offsetを<code>unparsed</code>にします。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Read-only correction</p><h3>保存済みAはnormal exitへ再分類。</h3><p>元の<code>kit.log</code>、raw、runner evidenceのSHA-256を前後比較し、すべて不変でした。新policyでは<code>windows_exception_present=false</code>、fault fields null、<code>functional_status=pass</code>、<code>lifecycle_status=normal_exit</code>、性能sample acceptedです。</p><p>NGX signature、60秒grace、CDB guard、PID確認、dump抑制、Phase 6EA safety、3軸分類は変更していません。offline再分類ではKit／Flowを起動せず、Phase 6EC A/B/Cも起動していません。指定回帰のheadless標準suiteは78 / 78で、latest demoも維持します。Phase 6EA 7 / 7・6 / 6、日誌369 referenceの静的検査も合格しました。</p><p><a href="assets/phase6/windows_exception_policy_correction.json">correction JSON</a> · <a href="assets/phase6/windows_exception_policy_correction.svg">境界SVG</a> · <a href="../design/windows_exception_policy_correction.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Existing policy</strong><small>24 / 24</small></p></div><div role="listitem"><span>✓</span><p><strong>New fixtures</strong><small>7 / 7</small></p></div><div role="listitem"><span>✓</span><p><strong>Offline A</strong><small>13 / 13</small></p></div><div role="listitem"><span>✓</span><p><strong>Regression</strong><small>78 / 78</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>SHA不変</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Next</p><h3>自動再開せず、新rootのAから。</h3><p>本correctionを独立コミットにした後でのみ、別作業としてPhase 6ECを新artifact rootのAから開始できます。今回の保存Aは正式比較母集団へ再利用しません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6ec" class="section entry-section phase-six">

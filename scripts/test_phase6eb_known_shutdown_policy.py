@@ -30,6 +30,7 @@ RUNNER = (ROOT / "scripts" / "run_phase6dw_gpu_renderer_case.ps1").read_text(enc
 FLOW_RUNNER = (ROOT / "scripts" / "run_phase6dt_flow_collision_case.ps1").read_text(encoding="utf-8")
 PROBE = (ROOT / "scripts" / "probe_phase6dw_gpu_renderer_lifecycle.py").read_text(encoding="utf-8")
 FLOW_PROBE = (ROOT / "scripts" / "probe_phase6dt_flow_collision_reference.py").read_text(encoding="utf-8")
+EXCEPTION_PROBE = ROOT / "scripts" / "probe_phase6eb_windows_exception_policy.ps1"
 
 
 def _base(candidate: str = "known_ngx_shutdown_residual") -> dict:
@@ -240,6 +241,116 @@ class Phase6EbRunnerSafetyContract(unittest.TestCase):
             self.assertIn('"completion_contract"', text)
             self.assertIn('"shutdown_requested"', text)
             self.assertLess(text.index('"completion_contract"'), text.rindex("post_uncancellable_quit"))
+
+
+class Phase6EbWindowsExceptionEvidenceContract(unittest.TestCase):
+    def _probe(self, text: str | None, *, exclusive: bool = False) -> dict:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "kit.log"
+            output = root / "evidence.json"
+            if text is not None:
+                source.write_text(text, encoding="utf-8")
+            command = [
+                "powershell.exe",
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                str(EXCEPTION_PROBE),
+                "-LogPath",
+                str(source),
+                "-OutputPath",
+                str(output),
+            ]
+            if exclusive:
+                command.append("-HoldLogExclusively")
+            run = subprocess.run(command, timeout=20, check=False, capture_output=True, text=True)
+            self.assertEqual(run.returncode, 0, run.stderr)
+            return json.loads(output.read_text(encoding="utf-8"))
+
+    def test_25_hardware_and_generic_hex_values_are_negative(self) -> None:
+        fixtures = (
+            "Sub System Id : 0xC75C1462",
+            "Sub System Id : 0xC0000005",
+            "Device Id : 0xC1234567",
+            "Vendor Id : 0xC0000005",
+            "Bus Id : 0xC1234567",
+            "GPU UUID: GPU-0xC1234567",
+            "driver firmware PCI identifier = 0xC0000005",
+            "color = 0xCAFEBABE",
+            "hash = ABCD0xC1234567",
+            "address = 0xC0000005",
+            "bitmask = 0xC0000005",
+            "0xC0000409",
+        )
+        for fixture in fixtures:
+            with self.subTest(fixture=fixture):
+                evidence = self._probe(fixture + "\n")
+                self.assertTrue(evidence["available"])
+                self.assertFalse(evidence["windows_exception_present"])
+                self.assertFalse(evidence["access_violation_present"])
+
+    def test_26_explicit_exception_contexts_are_positive(self) -> None:
+        fixtures = (
+            "Exception code: 0xC0000005",
+            "Unhandled exception 0xC0000409",
+            "Process exited with code 0xC0000005",
+            "Access violation reading location 0x00000000",
+            "Crash Reporter exception_code=0xC0000005",
+            "0xC0000005",
+        )
+        for fixture in fixtures:
+            with self.subTest(fixture=fixture):
+                evidence = self._probe(fixture + "\n")
+                self.assertTrue(evidence["available"])
+                self.assertTrue(evidence["windows_exception_present"])
+                self.assertIsNotNone(evidence["kind"])
+
+    def test_27_case_whitespace_timestamp_and_logger_prefixes(self) -> None:
+        fixtures = (
+            "  exception CODE : 0xc0000409  ",
+            "2026-08-11T07:07:00Z [Error] Unhandled Exception 0XC0000409",
+            "[crash.reporter] EXCEPTION_CODE = 0xc0000005",
+            "[launcher] process EXITED with CODE 0Xc0000005",
+        )
+        for fixture in fixtures:
+            with self.subTest(fixture=fixture):
+                self.assertTrue(self._probe(fixture + "\n")["windows_exception_present"])
+
+    def test_28_hardware_and_real_exception_can_coexist(self) -> None:
+        evidence = self._probe(
+            "Sub System Id : 0xC0000005\n"
+            "Device Id : 0xC1234567\n"
+            "2026-08-11 [Error] Exception code: 0xC0000409\n"
+        )
+        self.assertTrue(evidence["windows_exception_present"])
+        self.assertEqual(evidence["line_number"], 3)
+        self.assertEqual(evidence["kind"], "explicit_exception_context")
+
+    def test_29_empty_missing_and_unreadable_logs_are_distinct(self) -> None:
+        empty = self._probe("")
+        self.assertTrue(empty["available"])
+        self.assertFalse(empty["windows_exception_present"])
+        missing = self._probe(None)
+        self.assertFalse(missing["available"])
+        self.assertFalse(missing["windows_exception_present"])
+        self.assertEqual(missing["error"], "log_missing_or_not_file")
+        unreadable = self._probe("locked\n", exclusive=True)
+        self.assertFalse(unreadable["available"])
+        self.assertFalse(unreadable["windows_exception_present"])
+        self.assertTrue(unreadable["error"].startswith("log_unreadable:"))
+
+    def test_30_detection_is_streamed_and_naked_generic_pattern_is_removed(self) -> None:
+        self.assertIn("[IO.File]::ReadLines", POLICY)
+        self.assertNotIn('Pattern "(?i)(exception code|0xC[0-9A-F]{7}|access violation)"', POLICY)
+        function = POLICY[POLICY.index("function Get-CampfireWindowsExceptionEvidence"):POLICY.index("function Get-CampfireLifecycleMarker")]
+        self.assertNotIn("Get-Content", function)
+        self.assertNotIn("ReadAllText", function)
+
+    def test_31_missing_exception_evidence_fails_closed_without_fake_fault(self) -> None:
+        self.assertIn("no_windows_exception = ([bool]$windowsExceptionEvidence.available -and -not $windowsException)", POLICY)
+        self.assertIn('Value=if ($windowsException) { "unparsed" } else { $null }', POLICY)
 
 
 if __name__ == "__main__":

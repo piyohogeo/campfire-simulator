@@ -147,3 +147,9 @@ Phase 6EBのfixtureはnormal、既知NGX、未知signature、shutdown marker欠�
 Phase 6ECのexact Phase 6DY controlはprobe完了、`shutdown_complete`、OS exit 0、fatal/dump/upload 0だったが、GPU inventoryの`Sub System Id : 0xC75C1462`が一般的な`0xC[0-9A-F]{7}`patternに一致し、`windows_exception_present=true`となった。現logで一致したのはこの1行だけであり、観測上はPCI subsystem identifierである。ただしPhase 6ECは本policyを変更しないため、結果は`unknown_shutdown_failure`のまま保持し、同条件を再実行していない。
 
 再開前の別Phaseでは、Windows exceptionを明示的文脈、Crash Reporter、exit code、access violation等で検出しつつ、hardware identifierをnegative fixtureで除外する必要がある。この修正がないままlog levelを下げて証拠行を隠す回避は採用しない。既知NGX signature判定、full-dump抑制、PID/path/start-time、Phase 6EA resource guardは変更対象ではない。
+
+### Phase 6ED correction
+
+上記blockerはPhase 6EDでpolicy evidence抽出だけを修正した。任意の裸`0xC........`をpositiveにせず、exception code／Unhandled exception／process exit code／access violationの明示的文脈を要求する。`0xC0000005`もRTX 2070 subsystem ID、Device/Vendor/Bus ID、UUID、PCI、driver/firmware、address/hash/color/bitmask値ならnegativeとする。走査は`File.ReadLines()`であり、log全体をメモリへ保持しない。
+
+空logはreadableなnegative evidence。欠落／read不能logは`windows_exception_present=false`でもevidence unavailableなので`no_windows_exception=false`となり、引き続きunknownへfail closedする。実例外だけがfault module/offsetを`unparsed`にする。既存24件を含む31/31 contractとPhase 6EC Aのread-only offline再分類13/13が合格した。保存runはnormal exitへ評価可能になったが、Phase 6EC A/B/C自体はまだ再実行していない。
