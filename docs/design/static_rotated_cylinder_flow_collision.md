@@ -38,7 +38,9 @@ Phase 6EDでPhase 6EBのWindows exception evidenceを明示的exception文脈と
 
 最初の再開root 2ではAの4 sampleと`shutdown_complete`まで到達したが、inline case-runner PowerShellが7 GiB超へ増加したためB/C前に安全停止した。これはFlow遮蔽の合否ではない。root 2は再利用せず、各case runnerをPhase 6EA guarded helperの別process、直接stdout/stderr、720秒、512 MiBへ隔離してから、さらに新しいrootでAから開始する。Phase 6ED exception policyは変更していない。
 
-guarded runnerによるroot 3のAはpeak 95,330,304 bytesで終了したが、正常exit直後の`kit.log`が一時的にread不能でexception evidence unavailableとなり、Phase 6EDどおりfail closedした。直後のread-only offline probeでは同logはavailable／例外なしだった。Phase 6ED matcherは変更せず、shared diagnostic runnerに最大5秒のbounded log-readiness待機だけを追加する。上限後はunknownのままであり、root 3も再利用しない。
+guarded runnerによるroot 3のAはpeak 95,330,304 bytesで終了したが、正常exit直後の`kit.log`が一時的にread不能でexception evidence unavailableとなり、Phase 6EDどおりfail closedした。直後のread-only offline probeでは同logはavailable／例外なしだった。Phase 6ED matcherは変更せず、shared diagnostic runnerにbounded log-readiness待機だけを追加する。上限後はunknownのままであり、root 3も再利用しない。
+
+root 4ではAのlog readinessに4.33秒を要し、Bは初期5秒上限を超えた。B自体はprobe `ok`、4 sample、OS exit 0、fatal／dump 0で、保存logの直後offline判定もavailable／例外なしだった。root 4を正式母集団外として保持し、readiness上限だけを15秒へ変更する。exception matcher、known signature、fail-closed分類は変更しない。
 
 今回、production app、Flow既定、V3、Resident session、wood authority、Emitter schemaは変更していない。Production app SHA-256は前後とも`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`である。画面上の合格結果がないため動画とlatest demo pointerは変更しない。
 

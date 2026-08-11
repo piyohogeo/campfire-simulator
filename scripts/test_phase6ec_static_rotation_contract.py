@@ -73,7 +73,7 @@ class Phase6EcStaticRotationContract(unittest.TestCase):
     def test_shared_case_runner_bounds_post_exit_log_readiness(self) -> None:
         case_runner = (ROOT / "scripts" / "run_phase6dt_flow_collision_case.ps1").read_text(encoding="utf-8")
         self.assertIn('Get-CampfireWindowsExceptionEvidence -Path $log', case_runner)
-        self.assertIn('maximum_wait_seconds = 5', case_runner)
+        self.assertIn('maximum_wait_seconds = 15', case_runner)
         self.assertIn('Start-Sleep -Milliseconds 100', case_runner)
         self.assertIn('log_evidence_readiness = $logEvidenceReadiness', case_runner)
         self.assertIn('Invoke-CampfireShutdownOutcomeClassification', case_runner)

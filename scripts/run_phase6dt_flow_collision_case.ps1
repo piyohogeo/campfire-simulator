@@ -103,7 +103,7 @@ $logEvidenceReadiness = [ordered]@{
     attempts = 0
     waited_seconds = 0.0
     last_error = $null
-    maximum_wait_seconds = 5
+    maximum_wait_seconds = 15
 }
 $logReadyStopwatch = [Diagnostics.Stopwatch]::StartNew()
 do {
