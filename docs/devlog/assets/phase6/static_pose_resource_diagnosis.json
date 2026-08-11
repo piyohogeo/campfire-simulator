@@ -1,0 +1,116 @@
+{
+  "schema": "campfire.phase6eh.resource-guard-diagnosis.v1",
+  "phase": "phase6eh",
+  "status": "safe_stop",
+  "generated_utc": "2026-08-11T11:42:30.987302+00:00",
+  "scope": "production-neutral Phase 6EG resource and lifecycle diagnosis",
+  "observed_facts": {
+    "old_guard_target": "direct runner PowerShell process only",
+    "old_guard_was_tree_aggregate": false,
+    "old_runner_pid": 16948,
+    "old_kit_pid": 4688,
+    "old_runner_private_limit_bytes": 536870912,
+    "old_runner_observed_peak_bytes": 552259584,
+    "old_growth_phase": "after 330 second Kit hang, during lightweight shutdown diagnostic",
+    "old_collector_started": false,
+    "old_p0_p2_runner_peaks_available": false,
+    "old_p0_p2_kit_peak_rss_range_bytes": [
+      6617702400,
+      6744616960
+    ],
+    "old_p0_p2_collector_rss_delta_range_bytes": [
+      578588672,
+      678457344
+    ],
+    "calibration": {
+      "P0_identity": {
+        "duration_seconds": 42.40033769607544,
+        "runner_peak_private_bytes": 95510528,
+        "kit_peak_private_bytes": 11265826816,
+        "tree_peak_private_bytes": 11413110784,
+        "stop_reason": null
+      },
+      "P3_z33": {
+        "duration_seconds": 37.943711280822754,
+        "runner_peak_private_bytes": 95969280,
+        "kit_peak_private_bytes": 11424907264,
+        "tree_peak_private_bytes": 11724754944,
+        "stop_reason": null
+      }
+    },
+    "calibration_formal_restart_safe": true,
+    "formal_completed_normal_exit_processes": 12,
+    "formal_planned_processes": 36,
+    "formal_failed_condition": "run_2/P2_roll_x17_off",
+    "formal_failed_last_marker": "timeline_stopped",
+    "formal_failed_runner_peak_private_bytes": 558338048,
+    "formal_failed_kit_peak_private_bytes": 11991515136,
+    "formal_failed_tree_peak_private_bytes": 12143800320,
+    "formal_failed_guard_reason": "runner_private_limit",
+    "runner_growth_first_timestamp_utc_epoch": 1786448362.2610748,
+    "runner_growth_first_private_bytes": 139534336,
+    "nvidia_smi_first_timestamp_utc_epoch": 1786448361.3297834,
+    "nvidia_smi_peak_private_bytes": 16203776,
+    "cdb_process_observed": false,
+    "process_identity_key": [
+      "pid",
+      "create_time_utc_epoch"
+    ],
+    "machine_min_available_physical_bytes": 106324516864,
+    "machine_min_estimated_commit_headroom_bytes": 124983771136,
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0
+  },
+  "cause_classification": {
+    "confirmed": [
+      "512 MiB guarded the runner PowerShell, not Kit or a process-tree aggregate",
+      "the second growth began after the lightweight diagnostic invoked GPU inventory",
+      "Kit memory was bounded while runner PowerShell crossed its unchanged 512 MiB limit",
+      "P3 stage-open and full run-1 P0-P5 ON/OFF completed under separated budgets"
+    ],
+    "strong_inference": [
+      "in-process native nvidia-smi invocation under the hung-Kit diagnostic boundary triggered the PowerShell allocation growth",
+      "the original P3 stop was a transient stage-open/lifecycle hang followed by the same diagnostic boundary, not a pose-specific collision failure"
+    ],
+    "unconfirmed": [
+      "the internal Windows PowerShell/native-command allocation mechanism",
+      "whether a future independent process would reproduce the same stage-close hang"
+    ]
+  },
+  "correction": {
+    "gpu_inventory_transport": "short-lived guarded nvidia-smi helper",
+    "stdout_stderr": "direct to files; stdout parsed with File.ReadLines",
+    "helper_timeout_seconds": 15,
+    "helper_private_limit_bytes": 134217728,
+    "runner_limit_unchanged_bytes": 536870912,
+    "formal_kit_limit_bytes": 15032385536,
+    "formal_tree_limit_bytes": 17179869184,
+    "formal_machine_available_floor_bytes": 8589934592,
+    "formal_commit_headroom_floor_bytes": 8589934592
+  },
+  "qualification": {
+    "phase6eg_qualified": false,
+    "completed_fraction": "12/36",
+    "prior_p0_p2_samples_reused": false,
+    "second_root_samples_reused_after_failure": false,
+    "collision_failure_observed": false,
+    "restart_condition": "new artifact root after isolated GPU-inventory policy regression and explicit approval; start from process 1"
+  },
+  "pending_after_phase6eg": {
+    "name": "PointEmitter-CollisionProxy coexistence",
+    "blocked_until": "all Phase 6EG qualification processes pass",
+    "summary": "Evaluate emitter center and influence-radius distance to the actual Mesh, exclude emitters inside self/other colliders, sweep 0/0.25/0.5/1.0/1.5 Flow-cell offsets, and compare supply efficiency, active blocks, deep intrusion, overhead penetration, and visible flame lift.",
+    "implemented_in_phase6eh": false
+  },
+  "production": {
+    "changed": false,
+    "app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A"
+  },
+  "artifacts": {
+    "calibration": "artifacts/phase6eg-resource-calibration-3",
+    "formal_safe_stop": "artifacts/phase6eg-static-pose-qualification-2",
+    "raw_memory_trace_committed": false
+  }
+}

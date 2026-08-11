@@ -96,10 +96,46 @@ class Phase6EgContractTests(unittest.TestCase):
     def test_guarded_runner_and_fail_closed_contract_are_reused(self):
         source = (SCRIPTS / "run_phase6eg_static_pose_set_qualification.ps1").read_text(encoding="utf-8")
         self.assertIn("phase6ea_diagnostic_common.ps1", source)
-        self.assertIn("Invoke-Phase6EaGuardedHelper", source)
+        self.assertIn("phase6eg_resource_guard.py", source)
+        self.assertIn("runner_private_bytes = 536870912", source)
+        self.assertIn("kit_private_bytes = 15032385536", source)
+        self.assertIn("tree_private_bytes = 17179869184", source)
         self.assertIn("run_phase6dt_flow_collision_case.ps1", source)
         self.assertIn('lifecycle_status -ne "normal_exit"', source)
         self.assertIn("automatic_retry = $false", source)
+
+    def test_resource_guard_separates_runner_kit_diagnostic_and_tree_budgets(self):
+        source = (SCRIPTS / "phase6eg_resource_guard.py").read_text(encoding="utf-8")
+        calibration = (SCRIPTS / "run_phase6eg_resource_calibration.ps1").read_text(encoding="utf-8")
+        self.assertIn('"runner_private_limit"', source)
+        self.assertIn('"kit_private_limit"', source)
+        self.assertIn('"diagnostic_private_limit"', source)
+        self.assertIn('"tree_private_limit"', source)
+        self.assertIn('identity = (row["pid"], row["create_time_utc_epoch"])', source)
+        self.assertIn('trace.write(json.dumps(record', source)
+        self.assertIn('"nvidia-smi.exe"', source)
+        self.assertIn('current.create_time() != root_identity["create_time_utc_epoch"]', source)
+        self.assertIn('"536870912"', calibration)
+        self.assertIn('"12884901888"', calibration)
+
+    def test_stage_open_calibration_reuses_the_existing_probe_lifecycle(self):
+        probe = (SCRIPTS / "probe_phase6dt_flow_collision_reference.py").read_text(encoding="utf-8")
+        runner = (SCRIPTS / "run_phase6dt_flow_collision_case.ps1").read_text(encoding="utf-8")
+        calibration = (SCRIPTS / "run_phase6eg_resource_calibration.ps1").read_text(encoding="utf-8")
+        self.assertIn('settings.get_as_bool("/phase6egResourceProbe/stageOpenOnly")', probe)
+        self.assertIn('"stage_open_probe_complete"', probe)
+        self.assertIn("await context.close_stage_async()", probe)
+        self.assertIn("-StageOpenOnly", calibration)
+        self.assertIn("run_phase6dt_flow_collision_case.ps1", calibration)
+        self.assertIn("phase6egResourceProbe/stageOpenOnly", runner)
+
+    def test_shutdown_gpu_inventory_is_isolated_from_the_runner(self):
+        policy = (SCRIPTS / "kit_shutdown_policy.ps1").read_text(encoding="utf-8")
+        self.assertIn("Get-CampfireGpuInventory -OutputDir $output", policy)
+        self.assertIn("Invoke-Phase6EaGuardedHelper -FilePath $executable", policy)
+        self.assertIn("-TimeoutSeconds 15 -PrivateBytesLimit 128MB", policy)
+        self.assertIn("[IO.File]::ReadLines($stdout", policy)
+        self.assertNotIn("$lines = & nvidia-smi", policy)
 
     def test_synthetic_qualified_population_passes(self):
         pose_summary, checks, _ = ANALYZER.evaluate(_synthetic_samples(), CONTRACT)
@@ -138,6 +174,24 @@ class Phase6EgContractTests(unittest.TestCase):
         self.assertNotIn("static_pose_set_qualification.svg", section)
         self.assertNotIn("static_pose_set_velocity_samples.zip", section)
         self.assertIn("latest_demo.json", devlog)
+
+    def test_phase6eh_records_the_second_safe_stop_and_pending_point_work(self):
+        report = json.loads(
+            (ROOT / "docs" / "devlog" / "assets" / "phase6" / "static_pose_resource_diagnosis.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual("safe_stop", report["status"])
+        self.assertEqual("12/36", report["qualification"]["completed_fraction"])
+        self.assertFalse(report["qualification"]["phase6eg_qualified"])
+        self.assertEqual("runner_private_limit", report["observed_facts"]["formal_failed_guard_reason"])
+        self.assertFalse(report["observed_facts"]["cdb_process_observed"])
+        self.assertEqual(536870912, report["correction"]["runner_limit_unchanged_bytes"])
+        self.assertFalse(report["pending_after_phase6eg"]["implemented_in_phase6eh"])
+        devlog = (ROOT / "docs" / "devlog" / "index.html").read_text(encoding="utf-8")
+        self.assertIn('id="phase-6eh"', devlog)
+        self.assertIn("static_pose_resource_diagnosis.svg", devlog)
+        self.assertIn("PointEmitter–CollisionProxy", devlog)
 
 
 if __name__ == "__main__":

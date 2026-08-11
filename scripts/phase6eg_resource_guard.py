@@ -1,0 +1,250 @@
+"""Low-overhead process-tree resource guard for Phase 6EG diagnostics.
+
+The Phase 6EA helper limit remains a strict per-runner-process limit.  This
+guard adds separate, explicitly named budgets for Kit, diagnostic children,
+and the de-duplicated process tree while streaming every sample to JSONL.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import signal
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+import psutil
+
+
+MIB = 1024 * 1024
+DIAGNOSTIC_NAMES = {
+    "cdb.exe",
+    "windbg.exe",
+    "windbgx.exe",
+    "procdump.exe",
+    "nvidia-smi.exe",
+}
+
+
+def _parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--trace", type=Path, required=True)
+    parser.add_argument("--summary", type=Path, required=True)
+    parser.add_argument("--stdout", type=Path, required=True)
+    parser.add_argument("--stderr", type=Path, required=True)
+    parser.add_argument("--timeout-seconds", type=float, required=True)
+    parser.add_argument("--sample-seconds", type=float, default=0.25)
+    parser.add_argument("--runner-private-limit", type=int, default=512 * MIB)
+    parser.add_argument("--kit-private-limit", type=int, default=12 * 1024 * MIB)
+    parser.add_argument("--diagnostic-private-limit", type=int, default=512 * MIB)
+    parser.add_argument("--tree-private-limit", type=int, default=14 * 1024 * MIB)
+    parser.add_argument("--available-memory-floor", type=int, default=8 * 1024 * MIB)
+    parser.add_argument("--commit-headroom-floor", type=int, default=8 * 1024 * MIB)
+    parser.add_argument("command", nargs=argparse.REMAINDER)
+    return parser
+
+
+def _memory_row(process: psutil.Process, root_pid: int, timestamp: float) -> dict | None:
+    try:
+        info = process.memory_info()
+        private = int(getattr(info, "private", getattr(info, "pagefile", info.vms)))
+        return {
+            "timestamp_utc_epoch": timestamp,
+            "pid": process.pid,
+            "parent_pid": process.ppid(),
+            "create_time_utc_epoch": process.create_time(),
+            "name": process.name(),
+            "path": process.exe(),
+            "role": (
+                "runner"
+                if process.pid == root_pid
+                else "kit"
+                if process.name().lower() == "kit.exe"
+                else "diagnostic"
+                if process.name().lower() in DIAGNOSTIC_NAMES
+                else "child"
+            ),
+            "private_bytes": private,
+            "working_set_bytes": int(info.rss),
+            "peak_working_set_bytes": int(getattr(info, "peak_wset", info.rss)),
+            "commit_bytes": int(getattr(info, "pagefile", private)),
+        }
+    except (psutil.AccessDenied, psutil.NoSuchProcess, psutil.ZombieProcess, OSError):
+        return None
+
+
+def _tree_rows(root: psutil.Process, timestamp: float) -> list[dict]:
+    candidates = [root]
+    try:
+        candidates.extend(root.children(recursive=True))
+    except (psutil.AccessDenied, psutil.NoSuchProcess):
+        pass
+    rows: list[dict] = []
+    identities: set[tuple[int, float]] = set()
+    for process in candidates:
+        row = _memory_row(process, root.pid, timestamp)
+        if row is None:
+            continue
+        identity = (row["pid"], row["create_time_utc_epoch"])
+        if identity in identities:
+            continue
+        identities.add(identity)
+        rows.append(row)
+    return rows
+
+
+def _terminate_tree(root: psutil.Process) -> None:
+    try:
+        descendants = root.children(recursive=True)
+    except (psutil.AccessDenied, psutil.NoSuchProcess):
+        descendants = []
+    for process in reversed(descendants):
+        try:
+            process.kill()
+        except (psutil.AccessDenied, psutil.NoSuchProcess):
+            pass
+    try:
+        root.kill()
+    except (psutil.AccessDenied, psutil.NoSuchProcess):
+        pass
+    psutil.wait_procs(descendants + [root], timeout=10)
+
+
+def _write_json(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".partial")
+    temporary.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    os.replace(temporary, path)
+
+
+def run(arguments: argparse.Namespace) -> int:
+    command = list(arguments.command)
+    if command and command[0] == "--":
+        command = command[1:]
+    if not command:
+        raise SystemExit("guarded command is required after --")
+    for path in (arguments.trace, arguments.summary, arguments.stdout, arguments.stderr):
+        path.parent.mkdir(parents=True, exist_ok=True)
+
+    started = time.time()
+    peaks: dict[str, int] = {"runner": 0, "kit": 0, "diagnostic": 0, "child": 0, "tree": 0}
+    peak_rows: dict[str, dict | None] = {key: None for key in peaks}
+    stop_reason = None
+    exit_code = None
+    sample_count = 0
+    root: psutil.Process | None = None
+    popen: subprocess.Popen | None = None
+
+    with arguments.stdout.open("wb", buffering=0) as stdout, arguments.stderr.open("wb", buffering=0) as stderr, arguments.trace.open("w", encoding="utf-8", buffering=1) as trace:
+        creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+        popen = subprocess.Popen(command, stdout=stdout, stderr=stderr, creationflags=creationflags)
+        root = psutil.Process(popen.pid)
+        root_identity = {"pid": root.pid, "create_time_utc_epoch": root.create_time(), "path": root.exe()}
+        while popen.poll() is None:
+            timestamp = time.time()
+            rows = _tree_rows(root, timestamp)
+            tree_private = sum(row["private_bytes"] for row in rows)
+            virtual = psutil.virtual_memory()
+            swap = psutil.swap_memory()
+            commit_headroom = int(virtual.available + swap.free)
+            record = {
+                "schema": "campfire.phase6eg.resource-sample.v1",
+                "sample_index": sample_count,
+                "timestamp_utc_epoch": timestamp,
+                "root": root_identity,
+                "processes": rows,
+                "tree_private_bytes": tree_private,
+                "machine": {
+                    "available_physical_bytes": int(virtual.available),
+                    "physical_total_bytes": int(virtual.total),
+                    "swap_free_bytes": int(swap.free),
+                    "swap_total_bytes": int(swap.total),
+                    "estimated_commit_headroom_bytes": commit_headroom,
+                },
+            }
+            trace.write(json.dumps(record, separators=(",", ":")) + "\n")
+            sample_count += 1
+            for row in rows:
+                role = row["role"]
+                if row["private_bytes"] > peaks[role]:
+                    peaks[role] = row["private_bytes"]
+                    peak_rows[role] = row
+            if tree_private > peaks["tree"]:
+                peaks["tree"] = tree_private
+                peak_rows["tree"] = {"timestamp_utc_epoch": timestamp, "processes": rows}
+
+            runner_peak = max((row["private_bytes"] for row in rows if row["role"] == "runner"), default=0)
+            kit_peak = max((row["private_bytes"] for row in rows if row["role"] == "kit"), default=0)
+            diagnostic_peak = max((row["private_bytes"] for row in rows if row["role"] == "diagnostic"), default=0)
+            if runner_peak > arguments.runner_private_limit:
+                stop_reason = "runner_private_limit"
+            elif kit_peak > arguments.kit_private_limit:
+                stop_reason = "kit_private_limit"
+            elif diagnostic_peak > arguments.diagnostic_private_limit:
+                stop_reason = "diagnostic_private_limit"
+            elif tree_private > arguments.tree_private_limit:
+                stop_reason = "tree_private_limit"
+            elif virtual.available < arguments.available_memory_floor:
+                stop_reason = "available_memory_floor"
+            elif commit_headroom < arguments.commit_headroom_floor:
+                stop_reason = "commit_headroom_floor"
+            elif timestamp - started >= arguments.timeout_seconds:
+                stop_reason = "timeout"
+            if stop_reason:
+                _terminate_tree(root)
+                break
+            time.sleep(arguments.sample_seconds)
+        try:
+            exit_code = popen.wait(timeout=10)
+        except subprocess.TimeoutExpired:
+            stop_reason = stop_reason or "exit_wait_timeout"
+            _terminate_tree(root)
+            exit_code = popen.poll()
+
+    process_absent = True
+    if root is not None:
+        try:
+            current = psutil.Process(root.pid)
+            process_absent = current.create_time() != root_identity["create_time_utc_epoch"]
+        except (psutil.AccessDenied, psutil.NoSuchProcess, psutil.ZombieProcess, OSError):
+            process_absent = True
+    summary = {
+        "schema": "campfire.phase6eg.resource-guard.v1",
+        "status": "ok" if stop_reason is None and exit_code == 0 and process_absent else "failed",
+        "command": command,
+        "root": root_identity,
+        "exit_code": exit_code,
+        "stop_reason": stop_reason,
+        "process_absent": process_absent,
+        "duration_seconds": time.time() - started,
+        "sample_count": sample_count,
+        "peaks": peaks,
+        "peak_evidence": peak_rows,
+        "limits": {
+            "runner_private_bytes": arguments.runner_private_limit,
+            "kit_private_bytes": arguments.kit_private_limit,
+            "diagnostic_private_bytes": arguments.diagnostic_private_limit,
+            "tree_private_bytes": arguments.tree_private_limit,
+            "available_memory_floor_bytes": arguments.available_memory_floor,
+            "commit_headroom_floor_bytes": arguments.commit_headroom_floor,
+            "timeout_seconds": arguments.timeout_seconds,
+        },
+        "trace_path": str(arguments.trace.resolve()),
+        "stdout_path": str(arguments.stdout.resolve()),
+        "stderr_path": str(arguments.stderr.resolve()),
+        "deduplication_key": ["pid", "create_time_utc_epoch"],
+        "large_output_buffered_in_parent": False,
+    }
+    _write_json(arguments.summary, summary)
+    return 0 if summary["status"] == "ok" else 2
+
+
+def main() -> int:
+    return run(_parser().parse_args())
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

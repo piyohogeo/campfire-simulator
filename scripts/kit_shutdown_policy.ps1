@@ -93,17 +93,40 @@ function Get-CampfireCdbPath {
 }
 
 function Get-CampfireGpuInventory {
+    param([Parameter(Mandatory = $true)][string]$OutputDir)
+    $output = [IO.Path]::GetFullPath($OutputDir)
+    $stdout = Join-Path $output "gpu-inventory.stdout.csv"
+    $stderr = Join-Path $output "gpu-inventory.stderr.log"
+    $guard = $null
+    $errorMessage = $null
     $rows = @()
     try {
-        $lines = & nvidia-smi --query-gpu=index,uuid,name,pci.bus_id,driver_version,display_active --format=csv,noheader,nounits 2>$null
-        foreach ($line in @($lines)) {
+        $executable = (Get-Command nvidia-smi.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source
+        $guard = Invoke-Phase6EaGuardedHelper -FilePath $executable -ArgumentList @("--query-gpu=index,uuid,name,pci.bus_id,driver_version,display_active", "--format=csv,noheader,nounits") -StdoutPath $stdout -StderrPath $stderr -TimeoutSeconds 15 -PrivateBytesLimit 128MB
+        if ($guard.timed_out -or $guard.private_bytes_exceeded -or -not $guard.process_absent -or $guard.exit_code_error -ne $null -or $guard.exit_code -ne 0) {
+            throw "guarded nvidia-smi inventory failed"
+        }
+        foreach ($line in [IO.File]::ReadLines($stdout, [Text.Encoding]::UTF8)) {
             $values = @($line -split ',\s*')
             if ($values.Count -eq 6) {
                 $rows += [ordered]@{ index=$values[0]; uuid=$values[1]; name=$values[2]; pci_bus_id=$values[3]; driver_version=$values[4]; display_active=$values[5] }
             }
         }
-    } catch {}
-    return @($rows)
+    } catch { $errorMessage = $_.Exception.Message }
+    return [pscustomobject]@{
+        rows = @($rows)
+        evidence = [ordered]@{
+            isolated_process = $true
+            stdout_direct_to_file = $true
+            stderr_direct_to_file = $true
+            timeout_seconds = 15
+            private_bytes_limit = 134217728
+            guard = $guard
+            error = $errorMessage
+            stdout_path = $stdout
+            stderr_path = $stderr
+        }
+    }
 }
 
 function Invoke-CampfireLightweightNgxDiagnostic {
@@ -169,6 +192,7 @@ function Invoke-CampfireLightweightNgxDiagnostic {
             }
             known_chain = "gpu.foundation shutdown -> NGX D3D12 shutdown -> NvTelemetryAPI64 UninitializeTelemetry -> telemetry worker WaitNamedPipeW"
         }
+        $gpuInventoryCapture = Get-CampfireGpuInventory -OutputDir $output
         $report = [ordered]@{
             schema = "campfire.kit-lightweight-shutdown-diagnostic.v2"
             timestamp_local = (Get-Date).ToString("o")
@@ -187,7 +211,8 @@ function Invoke-CampfireLightweightNgxDiagnostic {
             lifecycle_history = if ($null -ne $lifecycle -and $null -ne $lifecycle.lifecycle_history) { @($lifecycle.lifecycle_history) } else { @() }
             completion_contract = if ($null -ne $lifecycle -and $null -ne $lifecycle.completion_contract) { $lifecycle.completion_contract } else { $null }
             final_log_lines = @($lastLog)
-            gpu_inventory = @(Get-CampfireGpuInventory)
+            gpu_inventory = @($gpuInventoryCapture.rows)
+            gpu_inventory_capture = $gpuInventoryCapture.evidence
             debugger = [ordered]@{
                 cdb_path = $cdb
                 noninvasive_attach = $true

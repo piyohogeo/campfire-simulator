@@ -31,7 +31,8 @@ param(
     [switch]$Capture,
     [string]$SpatialOutputRoot = "",
     [string]$SpatialCondition = "",
-    [switch]$SpatialVelocityOnly
+    [switch]$SpatialVelocityOnly,
+    [switch]$StageOpenOnly
 )
 
 $ErrorActionPreference = "Stop"
@@ -103,6 +104,7 @@ $arguments = @(
     "--/phase6ee/spatialOutputRoot=$spatialRoot",
     "--/phase6ee/condition=$SpatialCondition",
     "--/phase6ee/spatialVelocityOnly=$($SpatialVelocityOnly.IsPresent.ToString().ToLowerInvariant())",
+    "--/phase6egResourceProbe/stageOpenOnly=$($StageOpenOnly.IsPresent.ToString().ToLowerInvariant())",
     "--/rtx/flow/enabled=true",
     "--/log/file=$log",
     "--/log/fileLogLevel=Info"

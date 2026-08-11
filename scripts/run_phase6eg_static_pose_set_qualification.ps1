@@ -21,11 +21,12 @@ $contractPath = Join-Path $PSScriptRoot "phase6eg_static_pose_set_contract.json"
 $analyzer = Join-Path $PSScriptRoot "analyze_phase6eg_static_pose_set_qualification.py"
 $prepareProbe = Join-Path $PSScriptRoot "prepare_phase6eg_static_pose_set.py"
 $flowRunner = Join-Path $PSScriptRoot "run_phase6dt_flow_collision_case.ps1"
+$resourceGuard = Join-Path $PSScriptRoot "phase6eg_resource_guard.py"
 $referenceNpz = Join-Path $root "artifacts\phase6ef-static-y40-qualification-1\spatial\run_1\B_rotate_y40_on\B_rotate_y40_on_f0060_velocity.npz"
 $qualifiedSourceHash = "BC65721F4C6D4ECF1F35C736F2DD10F7A47C9F2B361E45898032E869D894D5F9"
 if (-not $SourceStage) { $SourceStage = Join-Path $root "artifacts\phase6dy-calibrated-stage-open-1\prepared-stages\D_cylinder_decomposition.usda" }
 $source = [IO.Path]::GetFullPath($SourceStage)
-foreach ($required in @($kit, $emptyApp, $productionApp, $contractPath, $analyzer, $prepareProbe, $flowRunner, $referenceNpz, $source)) {
+foreach ($required in @($kit, $emptyApp, $productionApp, $contractPath, $analyzer, $prepareProbe, $flowRunner, $resourceGuard, $referenceNpz, $source)) {
     if (-not (Test-Path -LiteralPath $required -PathType Leaf)) { throw "Phase 6EG input missing: $required" }
 }
 if ((Get-FileHash -Algorithm SHA256 -LiteralPath $source).Hash -ne $qualifiedSourceHash) { throw "Phase 6EG source is not the qualified Phase 6DY stage" }
@@ -48,6 +49,16 @@ $caseRunnerLogRoot = Join-Path $OutputRoot "case-runner-logs"
 $powershell = (Get-Process -Id $PID).Path
 $completed = @()
 $outcomes = @()
+$currentCondition = "none"
+$resourceOutcomePath = Join-Path $OutputRoot "resource_outcomes.json"
+$formalResourceLimits = [ordered]@{
+    runner_private_bytes = 536870912
+    kit_private_bytes = 15032385536
+    diagnostic_private_bytes = 536870912
+    tree_private_bytes = 17179869184
+    available_memory_floor_bytes = 8589934592
+    commit_headroom_floor_bytes = 8589934592
+}
 
 function Write-SafeStop([string]$Step, [string]$Condition, [string]$Message) {
     $payload = [ordered]@{
@@ -91,6 +102,8 @@ function Invoke-Phase6EgCase {
     $logStem = "run_${RunIndex}_$Condition"
     $stdout = Join-Path $caseRunnerLogRoot "$logStem.stdout.log"
     $stderr = Join-Path $caseRunnerLogRoot "$logStem.stderr.log"
+    $trace = Join-Path $caseRunnerLogRoot "$logStem.memory.jsonl"
+    $guardSummary = Join-Path $caseRunnerLogRoot "$logStem.guard.json"
     $arguments = @(
         "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass",
         "-File", $flowRunner,
@@ -103,9 +116,27 @@ function Invoke-Phase6EgCase {
         "-SpatialCondition", $Condition,
         "-SpatialVelocityOnly"
     )
-    $guard = Invoke-Phase6EaGuardedHelper -FilePath $powershell -ArgumentList $arguments -StdoutPath $stdout -StderrPath $stderr -TimeoutSeconds 720 -PrivateBytesLimit 512MB
-    if ($guard.timed_out -or $guard.private_bytes_exceeded -or -not $guard.process_absent -or $guard.exit_code_error -ne $null -or $guard.exit_code -ne 0) {
-        throw "guarded case failed: timed_out=$($guard.timed_out) private_bytes_exceeded=$($guard.private_bytes_exceeded) process_absent=$($guard.process_absent) exit_code=$($guard.exit_code) peak_private_bytes=$($guard.peak_private_bytes)"
+    $guardArguments = @(
+        $resourceGuard,
+        "--trace", $trace,
+        "--summary", $guardSummary,
+        "--stdout", $stdout,
+        "--stderr", $stderr,
+        "--timeout-seconds", "720",
+        "--runner-private-limit", "$($formalResourceLimits.runner_private_bytes)",
+        "--kit-private-limit", "$($formalResourceLimits.kit_private_bytes)",
+        "--diagnostic-private-limit", "$($formalResourceLimits.diagnostic_private_bytes)",
+        "--tree-private-limit", "$($formalResourceLimits.tree_private_bytes)",
+        "--available-memory-floor", "$($formalResourceLimits.available_memory_floor_bytes)",
+        "--commit-headroom-floor", "$($formalResourceLimits.commit_headroom_floor_bytes)",
+        "--", $powershell
+    ) + $arguments
+    & python @guardArguments
+    $guardLauncherExit = $LASTEXITCODE
+    if (-not (Test-Path -LiteralPath $guardSummary -PathType Leaf)) { throw "Phase 6EG resource guard did not write $guardSummary" }
+    $guard = Get-Content -Raw -Encoding UTF8 $guardSummary | ConvertFrom-Json
+    if ($guardLauncherExit -ne 0 -or $guard.status -ne "ok" -or -not $guard.process_absent -or $guard.exit_code -ne 0) {
+        throw "guarded case failed: status=$($guard.status) stop_reason=$($guard.stop_reason) process_absent=$($guard.process_absent) exit_code=$($guard.exit_code) runner_peak=$($guard.peaks.runner) kit_peak=$($guard.peaks.kit) tree_peak=$($guard.peaks.tree)"
     }
     $evidencePath = Join-Path $caseOutput "runner_evidence.json"
     $rawPath = Join-Path $caseOutput "raw.json"
@@ -127,11 +158,16 @@ function Invoke-Phase6EgCase {
         exit_code = $evidence.process_exit_code
         active_blocks_final = $raw.active_blocks_final
         source_fuel = $raw.stage_audit.emitter.fuel
-        runner_peak_private_bytes = $guard.peak_private_bytes
+        runner_peak_private_bytes = $guard.peaks.runner
+        kit_peak_private_bytes = $guard.peaks.kit
+        diagnostic_peak_private_bytes = $guard.peaks.diagnostic
+        tree_peak_private_bytes = $guard.peaks.tree
+        resource_trace = $trace
         spatial_peak_rss_bytes = $manifest.peak_rss_bytes
         spatial_peak_rss_delta_bytes = $manifest.peak_rss_delta_bytes
     }
     $script:completed += "run_${RunIndex}/$Condition"
+    [IO.File]::WriteAllText($resourceOutcomePath, (([ordered]@{ schema="campfire.phase6eg.resource-outcomes.v1"; limits=$formalResourceLimits; outcomes=@($script:outcomes) } | ConvertTo-Json -Depth 12) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
 }
 
 $prepareArgs = @(
@@ -176,11 +212,12 @@ if ($preflight.status -ne "ok" -or @($preflight.gates.psobject.Properties | Wher
 try {
     for ($runIndex = 1; $runIndex -le 3; $runIndex++) {
         foreach ($condition in @($contract.formal_order[$runIndex - 1])) {
+            $currentCondition = "run_${runIndex}/$condition"
             Invoke-Phase6EgCase -RunIndex $runIndex -Condition ([string]$condition)
         }
     }
 } catch {
-    Write-SafeStop "formal_flow_readback" ([string]$condition) $_.Exception.Message
+    Write-SafeStop "formal_flow_readback" $currentCondition $_.Exception.Message
     throw
 }
 
@@ -200,6 +237,7 @@ $matrix = [ordered]@{
     formal_order = @($contract.formal_order)
     completed = @($completed)
     outcomes = @($outcomes)
+    resource_limits = $formalResourceLimits
     report = (Join-Path $OutputRoot "report.json")
     production_app_sha256_before = $productionHashBefore
     production_app_sha256_after = $productionHashAfter

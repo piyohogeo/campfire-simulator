@@ -61,6 +61,9 @@ def _settings() -> dict:
         "phase6ee_spatial_velocity_only": bool(
             settings.get_as_bool("/phase6ee/spatialVelocityOnly")
         ),
+        "phase6eg_stage_open_only": bool(
+            settings.get_as_bool("/phase6egResourceProbe/stageOpenOnly")
+        ),
     }
 
 
@@ -796,6 +799,27 @@ async def _run() -> None:
             preparation.get("audit_collider_path"),
         )
         report["effective_stage_audit"] = effective
+        if arguments["phase6eg_stage_open_only"]:
+            for _ in range(3):
+                await app.next_update_async()
+            report["measurement_gates"] = {
+                "stage_connected": True,
+                "source_hash_preserved": _sha256(arguments["source"])
+                == preparation["source_sha256"],
+                "stage_open_only": True,
+            }
+            report["status"] = "ok"
+            report["completion_contract"]["results_saved"] = True
+            report["lifecycle_marker"] = "stage_open_probe_complete"
+            report["lifecycle_history"].append(
+                {
+                    "marker": "stage_open_probe_complete",
+                    "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+                }
+            )
+            _write(output, report)
+            exit_code = 0
+            return
         local_rois = None
         local_to_world = None
         spatial_mesh = None
