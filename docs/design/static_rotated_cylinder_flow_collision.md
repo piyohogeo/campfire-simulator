@@ -42,6 +42,24 @@ guarded runnerによるroot 3のAはpeak 95,330,304 bytesで終了したが、�
 
 root 4ではAのlog readinessに4.33秒を要し、Bは初期5秒上限を超えた。B自体はprobe `ok`、4 sample、OS exit 0、fatal／dump 0で、保存logの直後offline判定もavailable／例外なしだった。root 4を正式母集団外として保持し、readiness上限だけを15秒へ変更する。exception matcher、known signature、fail-closed分類は変更しない。
 
+## A/B/C数値結果とsafe stop
+
+新しいroot 5では、A axis-aligned collision ON、B Y40 collision ON、C Y40 collision OFFを各独立processで実行できた。全条件はframe 60／120／180／200の4 public NanoVDB sample、`shutdown_complete`、OS exit 0、functional pass、normal exit、performance sample acceptedへ到達し、fatal、dump、automatic upload、残留processは0だった。active blocks finalはA 26、B 24、C 58、source fuelは全て0.8である。
+
+| transformed core maximum | A axis ON | B Y40 ON | C Y40 OFF | B / C |
+|---|---:|---:|---:|---:|
+| temperature | 0.563477 | 0.644043 | 1.000000 | 0.644043 |
+| fuel | 0 | 0.000000775 | 0.0241547 | 0.0000321 |
+| burn | 0.0173950 | 0.0149612 | 0.0632935 | 0.236379 |
+| smoke | 0.533691 | 0.316895 | 1.265625 | 0.250386 |
+| velocity (m/s) | 0 | 0.718810 | 9.093519 | 0.0790464 |
+
+Bのcore velocityは4 sample全てで非ゼロで、0.479487、0.580705、0.718810、0.616890 m/sだった。Cは8.357105、9.093519、8.826881、7.767152 m/sであり、回転CollisionProxyはOFFより速度とscalarを大きく抑制した。しかし事前固定した合格条件はA/Bともcore velocity `<=1e-5 m/s`である。Aだけが合格しBは不合格なので、Y40 Meshが軸平行と同等にFlowを遮蔽したとは扱わない。
+
+これは「回転proxyがまったく認識されない」という結果ではない。scalar最大値比とvelocity比は明確な抑制を示す。一方、残存速度が回転Mesh取り込み、convex decomposition、Eulerian格子サンプリング、またはROI境界のどこから生じるかは未確認である。公開証拠なしに内部実装を断定しない。次段の任意軸回転、RenderSurface、PhysX共用、dynamic transform、Phase 6DR統合、20本性能は開始しない。数値gate不合格のためvisual processは起動せず、動画とlatest demo pointerも変更しない。
+
+最終回帰はRelease build 7.09秒、Phase 0 RTX 19.4秒、Phase 3 dry/wet mass balance error 0、authority SHA-256 `0dec57f3...e84be10`／`148585f8...d2b20c9`、Flow active blocks final 227／peak 321、peak fuel input 1.0、Phase 6EC 9/9、Phase 6EA resource safety 7/7・静的6/6、Phase 6EB/6ED 31/31、標準suite 8 process・78/78件・309.8秒に合格した。日誌検査は513 reference（312 unique）、JSON 183、SVG 149、欠落・parse failure・replacement character・duplicate ID 0だった。
+
 今回、production app、Flow既定、V3、Resident session、wood authority、Emitter schemaは変更していない。Production app SHA-256は前後とも`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`である。画面上の合格結果がないため動画とlatest demo pointerは変更しない。
 
 回帰はPhase 6EC contract 7/7、Phase 6EA resource safety 7/7（10.5秒、128 MiB sparse hash peak private bytes 75,849,728）、Phase 6EA静的契約6/6、Phase 6EB契約24/24、Release build 6.94秒、標準suite 8 process・78/78件・303.1秒に合格した。Phase 0は17.4秒で合格しRTX readyは14.176秒。Phase 3はdry/wet mass balance error 0、authority SHA-256 `0dec57...be10`／`148585...20c9`、Flow active blocks final 252／peak 405、peak fuel input 1.0だった。日誌静的検査は341 local reference、JSON 181、SVG 147、欠落・parse failure・replacement character・duplicate ID 0。接続可能なBrowser instanceがなかったため実レンダリング確認はできず、静的検査で代替した。全run後のKit/CDB残留は0だった。

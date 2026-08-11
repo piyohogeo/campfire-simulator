@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="480" viewBox="0 0 1000 480">
+<style>.bg{fill:#10151d}.title{fill:#f6f7fb;font:700 28px sans-serif}.sub{fill:#b8c3d4;font:16px sans-serif}.label{fill:#e8edf5;font:17px sans-serif}.value{fill:#d8e1ed;font:15px monospace}.bar0{fill:#4aa3df}.bar1{fill:#4fc38b}.bar2{fill:#ef9b45}.gate{fill:#9ee6ba;font:700 18px sans-serif}</style>
+<rect width="1000" height="480" class="bg"/>
+<text x="34" y="45" class="title">Phase 6EC — rotated Mesh collision</text>
+<text x="34" y="76" class="sub">Temperature maximum inside the centerline core; four public NanoVDB samples</text>
+<text x="34" y="142" class="label">axis ON</text><rect x="190" y="118" width="405.70" height="36" rx="5" class="bar0"/><text x="607.70" y="143" class="value">0.563477</text><text x="34" y="234" class="label">Y40 ON</text><rect x="190" y="210" width="463.71" height="36" rx="5" class="bar1"/><text x="665.71" y="235" class="value">0.644043</text><text x="34" y="326" class="label">Y40 OFF</text><rect x="190" y="302" width="720.00" height="36" rx="5" class="bar2"/><text x="922.00" y="327" class="value">1</text>
+<text x="34" y="420" class="gate">Y40 ON / OFF = 0.644 · qualified=false</text>
+<text x="34" y="452" class="sub">Collision OFF is the positive passage control; ON values below 1e-6 are treated as numerical zero.</text>
+</svg>

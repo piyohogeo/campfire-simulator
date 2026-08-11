@@ -1,0 +1,280 @@
+{
+  "schema": "campfire.phase6ec.static-rotated-cylinder-report.v1",
+  "phase": "phase6ec",
+  "purpose": "qualify one static Y40 closed-Mesh Flow CollisionProxy rotation",
+  "noise_thresholds": {
+    "scalar": 1e-06,
+    "velocity_m_s": 1e-05
+  },
+  "cases": {
+    "axis_on": {
+      "status": "ok",
+      "active_blocks_final": 26,
+      "sample_frames": [
+        60,
+        120,
+        180,
+        200
+      ],
+      "physics_collision_enabled": true,
+      "emitter_fuel": 2.0,
+      "source_fuel": 0.800000011920929,
+      "local_to_world": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "core_maximum": {
+        "temperature": 0.5634765625,
+        "fuel": 0.0,
+        "burn": 0.01739501953125,
+        "smoke": 0.53369140625,
+        "velocity": 0.0
+      },
+      "inside_mean": {
+        "temperature": 0.012883675647007466,
+        "fuel": 1.8549138136064156e-05,
+        "burn": 0.0001897076464188019,
+        "smoke": 0.008163643355533087,
+        "velocity": 0.02082814836508564
+      },
+      "rotated_only_maximum": null,
+      "axis_only_maximum": null,
+      "lifecycle": {
+        "schema": "campfire.kit-shutdown-outcome.v1",
+        "input_valid": true,
+        "functional_status": "pass",
+        "lifecycle_status": "normal_exit",
+        "performance_sample_accepted": true,
+        "normal_exit_sample_accepted": true,
+        "application_shutdown_marker": "shutdown_complete",
+        "shutdown_complete_reached": true,
+        "os_process_normal_exit": true,
+        "known_signature_name": null,
+        "reasons": []
+      }
+    },
+    "rotated_on": {
+      "status": "ok",
+      "active_blocks_final": 24,
+      "sample_frames": [
+        60,
+        120,
+        180,
+        200
+      ],
+      "physics_collision_enabled": true,
+      "emitter_fuel": 2.0,
+      "source_fuel": 0.800000011920929,
+      "local_to_world": [
+        [
+          0.7660444431189781,
+          0.0,
+          -0.6427876096865394,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.6427876096865394,
+          0.0,
+          0.7660444431189781,
+          0.0
+        ],
+        [
+          -0.6652851760255681,
+          0.0,
+          0.24214400137185765,
+          1.0
+        ]
+      ],
+      "core_maximum": {
+        "temperature": 0.64404296875,
+        "fuel": 7.748603820800781e-07,
+        "burn": 0.01496124267578125,
+        "smoke": 0.31689453125,
+        "velocity": 0.718810120431623
+      },
+      "inside_mean": {
+        "temperature": 0.012222282775461902,
+        "fuel": 2.2509682651671193e-06,
+        "burn": 0.0002091363205952467,
+        "smoke": 0.005396432201550956,
+        "velocity": 0.03968482812306536
+      },
+      "rotated_only_maximum": {
+        "temperature": 1.0,
+        "fuel": 0.0081939697265625,
+        "burn": 0.06329345703125,
+        "smoke": 2.3671875,
+        "velocity": 3.162396668265103
+      },
+      "axis_only_maximum": {
+        "temperature": 1.0,
+        "fuel": 0.0077362060546875,
+        "burn": 0.06329345703125,
+        "smoke": 1.0517578125,
+        "velocity": 5.354811279540372
+      },
+      "lifecycle": {
+        "schema": "campfire.kit-shutdown-outcome.v1",
+        "input_valid": true,
+        "functional_status": "pass",
+        "lifecycle_status": "normal_exit",
+        "performance_sample_accepted": true,
+        "normal_exit_sample_accepted": true,
+        "application_shutdown_marker": "shutdown_complete",
+        "shutdown_complete_reached": true,
+        "os_process_normal_exit": true,
+        "known_signature_name": null,
+        "reasons": []
+      }
+    },
+    "rotated_off": {
+      "status": "ok",
+      "active_blocks_final": 58,
+      "sample_frames": [
+        60,
+        120,
+        180,
+        200
+      ],
+      "physics_collision_enabled": false,
+      "emitter_fuel": 2.0,
+      "source_fuel": 0.800000011920929,
+      "local_to_world": [
+        [
+          0.7660444431189781,
+          0.0,
+          -0.6427876096865394,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.6427876096865394,
+          0.0,
+          0.7660444431189781,
+          0.0
+        ],
+        [
+          -0.6652851760255681,
+          0.0,
+          0.24214400137185765,
+          1.0
+        ]
+      ],
+      "core_maximum": {
+        "temperature": 1.0,
+        "fuel": 0.0241546630859375,
+        "burn": 0.06329345703125,
+        "smoke": 1.265625,
+        "velocity": 9.093519384861752
+      },
+      "inside_mean": {
+        "temperature": 0.04992818417034747,
+        "fuel": 4.6180390899526325e-05,
+        "burn": 0.0008194823233021969,
+        "smoke": 0.025506870353191366,
+        "velocity": 0.5515448539829609
+      },
+      "rotated_only_maximum": {
+        "temperature": 1.0,
+        "fuel": 0.029571533203125,
+        "burn": 0.06329345703125,
+        "smoke": 1.2001953125,
+        "velocity": 9.406457296729645
+      },
+      "axis_only_maximum": {
+        "temperature": 1.0,
+        "fuel": 0.00021123886108398438,
+        "burn": 0.01207733154296875,
+        "smoke": 0.6865234375,
+        "velocity": 4.067403806561239
+      },
+      "lifecycle": {
+        "schema": "campfire.kit-shutdown-outcome.v1",
+        "input_valid": true,
+        "functional_status": "pass",
+        "lifecycle_status": "normal_exit",
+        "performance_sample_accepted": true,
+        "normal_exit_sample_accepted": true,
+        "application_shutdown_marker": "shutdown_complete",
+        "shutdown_complete_reached": true,
+        "os_process_normal_exit": true,
+        "known_signature_name": null,
+        "reasons": []
+      }
+    }
+  },
+  "comparison": {
+    "rotated_on_over_off_core_maximum": {
+      "temperature": 0.64404296875,
+      "fuel": 3.2079121920404296e-05,
+      "burn": 0.23637897782063644,
+      "smoke": 0.2503858024691358,
+      "velocity": 0.07904641646536183
+    },
+    "rotated_on_over_off_rotated_only_maximum": {
+      "temperature": 1.0,
+      "fuel": 0.2770897832817337,
+      "burn": 1.0,
+      "smoke": 1.9723352318958502,
+      "velocity": 0.3361942300386116
+    },
+    "interpretation": "The transformed core is the qualification gate; alignment-only ROIs are supporting evidence for stale-position discrimination."
+  },
+  "gates": {
+    "prepared_stage_contract": true,
+    "all_probe_results_complete": true,
+    "all_functional_classifications_pass": true,
+    "no_unknown_shutdown_failure": true,
+    "no_two_consecutive_known_residuals": true,
+    "active_blocks_nonzero": true,
+    "fuel_input_preserved": true,
+    "collision_switch_is_only_control_difference": true,
+    "axis_core_velocity_suppressed": true,
+    "rotated_core_velocity_suppressed": false,
+    "collision_off_positive_control_scalar_passage": true,
+    "collision_off_positive_control_velocity": true,
+    "rotated_core_scalar_reduced_vs_collision_off": true,
+    "rotated_transform_shared_by_on_off": true,
+    "rotation_differs_from_axis_control": true
+  },
+  "qualified": false,
+  "performance_samples": {
+    "axis_on": true,
+    "rotated_on": true,
+    "rotated_off": true
+  },
+  "production_change": false
+}
