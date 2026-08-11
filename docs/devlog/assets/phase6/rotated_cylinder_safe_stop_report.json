@@ -1,0 +1,138 @@
+{
+  "schema": "campfire.phase6dz.rotated-cylinder-safe-stop-report.v1",
+  "phase": "phase6dz",
+  "status": "safe_stop",
+  "decision": "hold_phase_b_and_later",
+  "failed_condition": "axis_control_start",
+  "failed_step": "stage_open",
+  "automatic_retry": false,
+  "offline": {
+    "source_sha256": "BC65721F4C6D4ECF1F35C736F2DD10F7A47C9F2B361E45898032E869D894D5F9",
+    "case_count": 7,
+    "local_geometry_sha256": "662163A79B8E77EFBDACF34775ADF3F8BB9967232B5F8534124DD30E2E676FF0",
+    "gates": {
+      "local_geometry_sha256_equal": true,
+      "schema_and_approximation_equal": true,
+      "controls_byte_identical": true,
+      "controls_audit_identical": true,
+      "all_transforms_right_handed_unit_scale": true,
+      "all_centers_preserved": true,
+      "convex_hull_absent": true
+    },
+    "conditions": {
+      "axis_control_start": {
+        "rotation_xyz_deg": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "stage_sha256": "45CABF115369E538949437599743AAD102CD9CBD3108499A49C4962EFCE26848",
+        "physics_approximation": "convexDecomposition",
+        "transform_ops": []
+      },
+      "rotate_x17": {
+        "rotation_xyz_deg": [
+          17.0,
+          0.0,
+          0.0
+        ],
+        "stage_sha256": "42295E78D942A1E6B23D08D3EBDC6BE241B7D7138503EB220FDD718D644EED72",
+        "physics_approximation": "convexDecomposition",
+        "transform_ops": [
+          "xformOp:transform"
+        ]
+      },
+      "rotate_y12": {
+        "rotation_xyz_deg": [
+          0.0,
+          12.0,
+          0.0
+        ],
+        "stage_sha256": "145BB5C6312BFA9885B9DB92B9BB38CC343F8945EDABBF6E0DAE3BAC270BBC29",
+        "physics_approximation": "convexDecomposition",
+        "transform_ops": [
+          "xformOp:transform"
+        ]
+      },
+      "rotate_z90_log02": {
+        "rotation_xyz_deg": [
+          0.0,
+          0.0,
+          90.0
+        ],
+        "stage_sha256": "78F4FF90A3239EADAD8AE9E11988564D3083008584B70952CF3696361332E89D",
+        "physics_approximation": "convexDecomposition",
+        "transform_ops": [
+          "xformOp:transform"
+        ]
+      },
+      "phase6dr_z37": {
+        "rotation_xyz_deg": [
+          0.0,
+          0.0,
+          37.0
+        ],
+        "stage_sha256": "FB18075F4FE8A88711C0A8F7CB18BE126328B1C160A6BA2A67C1EC9A78707F0D",
+        "physics_approximation": "convexDecomposition",
+        "transform_ops": [
+          "xformOp:transform"
+        ]
+      },
+      "rotate_xyz_17_12_37": {
+        "rotation_xyz_deg": [
+          17.0,
+          12.0,
+          37.0
+        ],
+        "stage_sha256": "8E9F64903226BEC0A96C9C53271CC5E677DA38FC5770220F00C4CCF8ACE7FA69",
+        "physics_approximation": "convexDecomposition",
+        "transform_ops": [
+          "xformOp:transform"
+        ]
+      },
+      "axis_control_end": {
+        "rotation_xyz_deg": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "stage_sha256": "45CABF115369E538949437599743AAD102CD9CBD3108499A49C4962EFCE26848",
+        "physics_approximation": "convexDecomposition",
+        "transform_ops": []
+      }
+    }
+  },
+  "runtime_control": {
+    "duration_seconds": 420.0924631,
+    "timed_out": true,
+    "process_exit_code": -1,
+    "probe_status": "ok",
+    "last_lifecycle_marker": "shutdown_requested",
+    "reached_first_viewport_frame": true,
+    "reached_stage_close": true,
+    "reached_renderer_drain": true,
+    "plugin_shutdown_log_count": 2,
+    "normal_os_exit": false,
+    "isolated_process_terminated_after_path_verification": true,
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "selected_render_gpu": "NVIDIA GeForce RTX 3090"
+  },
+  "production": {
+    "app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "changed": false
+  },
+  "not_executed": [
+    "all rotated stage-open conditions",
+    "all Flow public readback conditions",
+    "Phase B transform hierarchy",
+    "Phase C RenderSurface coexistence",
+    "Phase D PhysX sharing",
+    "Phase E dynamic transform",
+    "Phase F default-off integration",
+    "Phase G 20-log performance"
+  ],
+  "restart_condition": "Re-establish a normal OS exit for the unchanged Phase 6DY axis-aligned control through the calibrated Phase 6DW lifecycle before executing any rotation."
+}

@@ -2981,3 +2981,13 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 8/8 processでfatal／dump／upload／timeout 0、Box前後時系列一致、RTX 3090／CUDA 0、production app SHA-256 `94162F82...F02A`前後一致。productionコード／app composition／既定値は不変。Phase 0 RTXは不要。詳細は`docs/design/calibrated_stage_open_ablation.md`。
 - Phase 6DUは次の独立Phaseでstatic Cylinder decompositionを起点に再開可能。Cylinder Hull、rotation、PhysX共用、dynamic transform、Phase 6DR統合、20本性能はまだ行わない。映像上のproduction変更がないため新動画とlatest demo更新は行わない。
 - Release build `6.80 s`、lifecycle contract `6 / 6`、Flow collider targeted test `1 / 1`・`0.073 s`、標準suite 8 process・`78 / 78`件・`305.9 s`（collapse `179.5 s`）が合格した。
+
+## Phase 6DZ rotated Cylinder Flow-collision safe stop
+
+### 2026-08-11: 回転前のaxis controlが正常OS exitへ到達せず停止
+
+- Phase 6DYの合格済みCylinder decompositionを唯一のsourceとし、axis control前後、X 17°、Y 12°、実4本配置相当Z 90°、Phase 6DR Log_00相当Z 37°、XYZ 17°/12°/37°の7 stageをoffline生成した。全条件でlocal geometry SHA-256 `662163A7...76FF0`、26 vertices／36 faces／120 indices、collision schema、`convexDecomposition`は同一。回転は中心を保つ単一`xformOp:transform`だけで、unit scale／right-handed、control byte一致、Cylinder Hull不在を確認した。
+- runtimeはPhase 6DW runner／probeを変更せず直接再利用した。最初の未回転controlはpure OpenUSD、USD context、Hydra、first renderer update／viewport frame、stage close、renderer drain、`shutdown_requested`まで到達したが、420.092秒で正常OS exit未達となった。残留した隔離`kit.exe`はpath確認後に停止した。
+- fatal／dump／automatic upload attempt／device lost／TDRは0、RTX 3090／CUDA 0、production app SHA-256 `94162F82...F02A`前後一致。これはrotationやFlow遮蔽の不成立ではなく、未変更controlの終了lifecycle不成立である。回転5条件、exit control、全Flow readback、Phase B〜Gは開始していない。
+- Phase 6DZはsafe stop。再開条件は、byte-identicalなPhase 6DY axis controlが校正済みPhase 6DW lifecycleで正常OS exitへ戻ること。同じ失敗runを自動再実行せず、`shutdown_requested`後のprocess残留境界を先に分類する。productionコード／app composition／既定値／latest demoは不変。詳細は`docs/design/rotated_cylinder_flow_collision.md`。
+- Release build `6.86 s`、Phase 6DY lifecycle `6 / 6`、Phase 6DZ rotation contract `5 / 5`、Flow collider targeted `1 / 1`、標準suite 8 process・`78 / 78`件・`293.4 s`（collapse `171.6 s`）、日誌332参照の静的検査が合格した。production app composition不変かつcontrol safe stopのためPhase 0 RTXは実行していない。

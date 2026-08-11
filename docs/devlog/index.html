@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6dy">最新記録</a>
+        <a href="#phase-6dz">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6dy">Phase 6DYを読む</a>
+        <a class="button primary" href="#phase-6dz">Phase 6DZを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6DY calibrated stage-open</strong></div>
+        <div><span>現在地</span><strong>Phase 6DZ rotation safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>8 / 8 normal exits</strong></div>
-        <div><span>Production</span><strong>unchanged · static Cylinder qualified</strong></div>
+        <div><span>Lifecycle</span><strong>control OS exit timeout</strong></div>
+        <div><span>Production</span><strong>unchanged · phases B–G held</strong></div>
       </div>
     </div>
   </header>
@@ -56,6 +56,19 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6dz" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報"><span class="phase-number compact">6DZ</span><p><time datetime="2026-08-11">2026.08.11</time></p><span class="pill current">Control safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6DZ · rotated Cylinder boundary</p><h2>回転を試す前に、<br>未回転controlの終了異常を検出した。</h2><p>Phase 6DYの円筒geometryとschemaを固定し、transformだけが異なる7 stageを準備しました。しかし最初の未回転controlがstage closeとrenderer drain後も正常なOS process終了へ到達しなかったため、回転条件とFlow readbackを開始せず停止しています。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/rotated_cylinder_safe_stop_report.svg"><img src="assets/phase6/rotated_cylinder_safe_stop_report.svg" alt="Phase 6DZが未回転controlのOS終了timeoutで後続回転条件を安全停止したことを示す図" loading="lazy"></a><figcaption><div><strong>Offline 7 / 7 · runtime control STOP</strong><span>420.092 s · fatal / dump / upload 0</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Offline isolation</p><h3>差分はworld transformだけ</h3><p>全7 stageでlocal geometry SHA-256、26頂点・36面・120 index、collision schema、<code>convexDecomposition</code>が一致しました。回転は中心を保つ単一transformでunit scale／right-handed。前後controlはbyte-identicalで、Cylinder Hullは生成していません。</p></section><section class="note caution"><p class="note-label">Runtime control</p><h3>teardown marker後もprocessが残留</h3><p>pure OpenUSD、USD context、Hydra、first renderer／viewport frame、stage close、renderer drain、<code>shutdown_requested</code>までは到達しました。ところが正常OS exitが420秒以内に成立せず、校正runnerがtimeoutとして拒否しました。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Safe-stop classification</p><h3>rotation不成立とは判定しない。</h3><p>これは未回転controlで起きた終了lifecycle異常です。fatal、dump、自動upload、device lost、TDRは0で、RTX 3090／CUDA 0を選択し、production app SHA-256は前後一致しました。残留した隔離Kitは実行path確認後に停止しています。</p><p>回転5条件、exit control、public Flow readback、Phase B〜Gは未実行です。再開には同一axis controlの正常OS exitを再確立する必要があります。Release build 6.86秒、lifecycle 6 / 6、rotation contract 5 / 5、Flow collider 1 / 1、標準suite 8 process・78 / 78件（293.4秒）と日誌静的検査は合格しました。</p><p><a href="assets/phase6/rotated_cylinder_safe_stop_report.json">集計JSON</a> · <a href="assets/phase6/rotated_cylinder_safe_stop_report.svg">lifecycle SVG</a> · <a href="../design/rotated_cylinder_flow_collision.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Offline stages</strong><small>7 / 7 isolation gates</small></p></div><div role="listitem"><span>✓</span><p><strong>Stage teardown</strong><small>close / drain到達</small></p></div><div role="listitem"><span>!</span><p><strong>OS exit</strong><small>420.092 s timeout</small></p></div><div role="listitem"><span>—</span><p><strong>Rotation / Flow</strong><small>未実行</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>SHA-256不変</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Restart condition</p><h3>同一controlの正常終了を先に取り戻す。</h3><p><code>shutdown_requested</code>後にprocessが残る境界を分類し、byte-identicalなaxis controlが正常OS exitした後だけ回転へ進みます。映像上の新しい成功状態はないため動画は作らず、latest demo pointerも変更していません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6dy" class="section entry-section phase-six">

@@ -25,7 +25,7 @@ import omni.timeline
 import omni.usd
 import omni.volume
 from omni.flowusd import _flowusd
-from pxr import PhysxSchema, Sdf, Usd, UsdGeom, UsdPhysics
+from pxr import Gf, PhysxSchema, Sdf, Usd, UsdGeom, UsdPhysics
 
 
 CHANNELS = ("temperature", "fuel", "burn", "smoke", "velocity", "divergence")
@@ -274,7 +274,7 @@ def _prepare_stage(arguments: dict) -> tuple[Path, dict]:
                 _set(simulate, "physicsCollisionEnabled", False)
                 changes.append("disable_Flow_physicsCollisionEnabled")
         changes[0:0] = ("disable_original_Cube_collision", "define_equivalent_Mesh")
-    elif mode == "phase6dy_prepared_mesh":
+    elif mode in ("phase6dy_prepared_mesh", "phase6dz_rotated_mesh"):
         collider = stage.GetPrimAtPath("/World/ColliderReferenceMesh")
         if not collider or not collider.IsValid():
             raise RuntimeError("Phase 6DY prepared Mesh is missing")
@@ -298,7 +298,8 @@ def _prepare_stage(arguments: dict) -> tuple[Path, dict]:
         "offline_changes": changes,
         "audit_collider_path": (
             "/World/ColliderReferenceMesh"
-            if mode.startswith("phase6ds_mesh_") or mode == "phase6dy_prepared_mesh"
+            if mode.startswith("phase6ds_mesh_")
+            or mode in ("phase6dy_prepared_mesh", "phase6dz_rotated_mesh")
             else paths["collider"]
         ),
     }
@@ -469,7 +470,105 @@ def _sample_grid(grid, roi: dict, vector: bool) -> dict:
     }
 
 
-def _save_and_sample(flow, volume, buffer, channel: str, path: Path, rois: dict) -> dict:
+def _phase6dz_local_rois() -> dict:
+    center_z = 1.035
+    radius = 0.16
+    velocity_cell = 0.05
+    return {
+        "cylinder_inside": {
+            "local_min": [-0.75, -radius, center_z - radius],
+            "local_max": [0.75, radius, center_z + radius],
+            "cylindrical": True,
+        },
+        "cylinder_core": {
+            "local_min": [-0.65, -radius + velocity_cell, center_z - radius + velocity_cell],
+            "local_max": [0.65, radius - velocity_cell, center_z + radius - velocity_cell],
+            "cylindrical": True,
+        },
+        "outside_above": {
+            "local_min": [-0.35, -0.10, center_z + radius + velocity_cell],
+            "local_max": [0.35, 0.10, center_z + radius + 0.42],
+            "cylindrical": False,
+        },
+    }
+
+
+def _matrix_list(matrix: Gf.Matrix4d) -> list[list[float]]:
+    return [[float(matrix[row][column]) for column in range(4)] for row in range(4)]
+
+
+def _local_roi_contains(local: Gf.Vec3d, bounds: dict) -> bool:
+    if not all(
+        bounds["local_min"][axis] <= local[axis] <= bounds["local_max"][axis]
+        for axis in range(3)
+    ):
+        return False
+    if bounds["cylindrical"]:
+        return math.hypot(local[1], local[2] - 1.035) <= 0.16
+    return True
+
+
+def _world_aabb(bounds: dict, local_to_world: Gf.Matrix4d) -> tuple[list[float], list[float]]:
+    corners = []
+    for x in (bounds["local_min"][0], bounds["local_max"][0]):
+        for y in (bounds["local_min"][1], bounds["local_max"][1]):
+            for z in (bounds["local_min"][2], bounds["local_max"][2]):
+                corners.append(local_to_world.Transform(Gf.Vec3d(x, y, z)))
+    return (
+        [min(float(point[axis]) for point in corners) for axis in range(3)],
+        [max(float(point[axis]) for point in corners) for axis in range(3)],
+    )
+
+
+def _sample_local_grid(grid, rois: dict, local_to_world: Gf.Matrix4d, vector: bool) -> dict:
+    world_to_local = local_to_world.GetInverse()
+    accessor = grid.getAccessor()
+    results = {}
+    for name, bounds in rois.items():
+        minimum, maximum = _world_aabb(bounds, local_to_world)
+        lo = grid.applyInverseMap(nanovdb.math.Vec3d(*minimum))
+        hi = grid.applyInverseMap(nanovdb.math.Vec3d(*maximum))
+        index_min = [math.floor(min(_component(lo, axis), _component(hi, axis))) - 1 for axis in range(3)]
+        index_max = [math.ceil(max(_component(lo, axis), _component(hi, axis))) + 1 for axis in range(3)]
+        values = []
+        for i in range(index_min[0], index_max[0] + 1):
+            for j in range(index_min[1], index_max[1] + 1):
+                for k in range(index_min[2], index_max[2] + 1):
+                    world = grid.applyMap(nanovdb.math.Vec3d(float(i), float(j), float(k)))
+                    point = Gf.Vec3d(*[_component(world, axis) for axis in range(3)])
+                    if not _local_roi_contains(world_to_local.Transform(point), bounds):
+                        continue
+                    value = accessor.getValue(i, j, k)
+                    if vector:
+                        value = math.sqrt(sum(_component(value, axis) ** 2 for axis in range(3)))
+                    else:
+                        value = float(value)
+                    values.append(value)
+        if not values:
+            results[name] = {"available": False, "reason": "local Cylinder ROI contained no grid samples"}
+            continue
+        ordered = sorted(values)
+        results[name] = {
+            "available": True,
+            "voxel_count": len(values),
+            "nonzero_voxel_count": sum(abs(value) > 1.0e-12 for value in values),
+            "mean": statistics.fmean(values),
+            "p95": ordered[min(len(ordered) - 1, math.ceil(len(ordered) * 0.95) - 1)],
+            "maximum": max(values),
+        }
+    return results
+
+
+def _save_and_sample(
+    flow,
+    volume,
+    buffer,
+    channel: str,
+    path: Path,
+    rois: dict,
+    local_rois: dict | None = None,
+    local_to_world: Gf.Matrix4d | None = None,
+) -> dict:
     grid_data = flow.buffer_to_volume(buffer)
     parameters = omni.volume.SaveVolumeParameters()
     parameters.flags = omni.volume.kNanoVDBCodecNone
@@ -484,6 +583,8 @@ def _save_and_sample(flow, volume, buffer, channel: str, path: Path, rois: dict)
         "voxel_size": [_component(voxel_size, axis) for axis in range(3)],
         "rois": {name: _sample_grid(grid, roi, vector) for name, roi in rois.items()},
     }
+    if local_rois is not None and local_to_world is not None:
+        result["local_rois"] = _sample_local_grid(grid, local_rois, local_to_world, vector)
     path.unlink(missing_ok=True)
     return result
 
@@ -581,6 +682,20 @@ async def _run() -> None:
             preparation.get("audit_collider_path"),
         )
         report["effective_stage_audit"] = effective
+        local_rois = None
+        local_to_world = None
+        if arguments["mode"] == "phase6dz_rotated_mesh":
+            collider = stage.GetPrimAtPath(preparation["audit_collider_path"])
+            local_to_world = UsdGeom.XformCache().GetLocalToWorldTransform(collider)
+            local_rois = _phase6dz_local_rois()
+            report["local_roi_contract"] = {
+                "coordinate_space": "qualified Cylinder local space",
+                "world_to_local_sampling": True,
+                "local_to_world": _matrix_list(local_to_world),
+                "definitions": local_rois,
+                "scalar_noise_threshold": 1.0e-6,
+                "velocity_noise_threshold_m_s": 1.0e-5,
+            }
 
         viewport = None
         for _ in range(240):
@@ -635,7 +750,16 @@ async def _run() -> None:
                 sample["channels"][channel] = {
                     "available": True,
                     "word_count": int(array.size),
-                    **_save_and_sample(flow, volume, array, channel, nvdb, report["rois"]),
+                    **_save_and_sample(
+                        flow,
+                        volume,
+                        array,
+                        channel,
+                        nvdb,
+                        report["rois"],
+                        local_rois,
+                        local_to_world,
+                    ),
                 }
             report["samples"].append(sample)
             _write(output, report)

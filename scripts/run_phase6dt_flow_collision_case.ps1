@@ -19,7 +19,8 @@ param(
         "phase6ds_mesh_reference_collision_disabled",
         "phase6ds_mesh_flow_collision_disabled",
         "phase6ds_physx_api_force_false",
-        "phase6dy_prepared_mesh"
+        "phase6dy_prepared_mesh",
+        "phase6dz_rotated_mesh"
     )][string]$Mode,
     [Parameter(Mandatory = $true)][string]$SourceStage,
     [Parameter(Mandatory = $true)][string]$OutputDir,

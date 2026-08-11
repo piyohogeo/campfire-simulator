@@ -1,5 +1,10 @@
 # Changelog
 
+- Prepared Phase 6DZ's seven rotation-isolation stages from the qualified Phase 6DY Cylinder. All retain the same local geometry SHA-256, schemas, `convexDecomposition`, unit scale, and pivot; start/end controls are byte-identical and cylindrical `convexHull` remains excluded.
+- Stopped Phase 6DZ on the unchanged axis-aligned entry control: it reached OpenUSD, USD context, Hydra, first viewport frame, stage close, renderer drain, and `shutdown_requested`, but the Kit process did not reach normal OS exit within 420.092 seconds. No rotated or Flow-readback condition was started.
+- Recorded fatal/dump/upload/device-lost/TDR 0, RTX 3090/CUDA 0, and unchanged production app SHA-256. The isolated remaining Kit process was path-verified and terminated; Phases B–G remain held pending a normal control exit.
+- Passed the Release build in `6.86 s`, Phase 6DY lifecycle contract `6 / 6`, Phase 6DZ rotation contract `5 / 5`, the focused Flow collider test `1 / 1`, and all eight standard processes with `78 / 78` tests in `293.4 s`. Devlog static validation found 332 unique references with zero missing, JSON, SVG, or replacement-character failures.
+
 - Reused the unchanged Phase 6DW runner/probe directly for Phase 6DY and qualified the five-process A-E Box-to-Cylinder matrix through pure OpenUSD, USD context, Hydra, first viewport frame, ordered close/drain, plugin shutdown, and normal OS exit.
 - Isolated Box `convexHull` as an approximation-only change and a closed 12-segment Cylinder `convexDecomposition` as a topology-only change. Both opened and exited normally; the historically failed cylindrical Hull condition remained excluded.
 - Completed three public NanoVDB readback controls around the Cylinder. The cylinder-contained core had zero temperature, fuel, burn, smoke, and velocity at frames 60/120/180/200; nonzero values in the wider Box ROI are consistent with lateral bypass, while a small above-cylinder residual remains.
