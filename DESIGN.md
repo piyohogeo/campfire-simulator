@@ -2937,3 +2937,12 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - Flow sampleと有効なrender frameの前に停止したため、静的遮蔽、`convexDecomposition`比較、0／37／53度回転、共存、PhysX filtering、stage reload、RenderSurface再利用は未判定である。これは「Cylinder Meshでも遮蔽しない」という結果ではない。
 - production、既定値、Flow／Kit／PhysX version、Phase V3T-R／V3T-M safe stop、latest demoは不変。dynamic Transform、Phase 6DR実配置、20本性能、production統合へは進まない。詳細は`docs/design/static_cylindrical_flow_collision_proxy.md`。
 - Release buildは`6.78 s`、Flow scene collider targeted Kit testは`1 / 1`件・`0.093 s`で合格した。productionコードとapp compositionは不変のため、Phase 0 RTXと標準suite全体は再実行していない。
+
+## Phase 6DV stage-open crash classification
+
+### 2026-08-11: 同一Fabric faultを確認し、known-good harness異常で安全停止
+
+- Phase 6DT除外dumpとPhase 6DU dumpを公開MINIDUMP ExceptionStream／ModuleListStreamでread-only解析した。両者は`0xC0000005`、`omni.fabric.plugin.dll+0xD6960`、read target `0x20`で一致し、`opening_prebuilt_stage`の低信頼Fabric→UsdRT→RTX Hydra stack prefixも一致した。WinDbg/CDBとmatching symbolは環境に存在せず、関数・native objectは未確認である。
+- Phase 6DTのknown-good Box stageをPhase 6DU相当のisolated app／launcherでpure OpenUSDに読み込み、stage監査は合格した。一方、renderer plugin shutdown後もKit OS processが長時間残留し、renderer readinessを8 frame先行させても正常exitを得られなかった。既知正常条件の異常としてHydra接続とBox→Cylinder差分matrixを開始せず安全停止した。
+- したがって円筒topologyまたは`convexHull`を原因とは確定しない。構造の異なる2 stageで同じsignatureが出た事実はFabric/Hydra engine追加またはrenderer初期化・寿命境界を強く示すが、harness control未成立のため根本条件は未確定である。
+- Phase 6DUは再開不可。same-launcher known-good BoxがHydra接続から正常OS exitまで通った後に限り、Box hull、Cylinder decomposition、Cylinder hull、hierarchy、RenderSurface、analytic siblingを別processで一項目ずつ評価する。production、Flow 110.0.0、V3既定、Resident session、collision契約、latest demoは不変。詳細は`docs/design/stage_open_crash_classification.md`。

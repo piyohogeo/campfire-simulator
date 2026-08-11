@@ -1,5 +1,11 @@
 # Changelog
 
+- Added production-neutral Phase 6DV read-only MINIDUMP analysis and classified the preserved Phase 6DT/6DU stage-open crashes as the same `0xC0000005` read of `0x20` at `omni.fabric.plugin.dll+0xD6960`; matching debugger symbols were unavailable, so function-level attribution remains unqualified.
+- Reopened the Phase 6DT known-good Box through pure OpenUSD in the Phase 6DU-equivalent isolated launcher, but stopped before Hydra ablation because two controls reached probe/plugin shutdown yet failed to produce a normal OS process exit, including one with an eight-frame renderer-readiness prelude.
+- Preserved the no-retry boundary: the failed Phase 6DU Cylinder condition was not rerun, no new dump or automatic upload occurred, the production app hash remained unchanged, and Cylinder Flow collision remains unqualified.
+- Added a staged Box-to-Cylinder ablation runner and fine-grained OpenUSD/context/Hydra/viewport lifecycle markers for a future restart, while holding Phase 6DU until a known-good Box completes the same harness with a normal exit.
+- Passed the Release build in `6.01 s`, the focused Flow-scene collider contract `1 / 1` in `0.073 s`, and static devlog JSON/SVG/HTML checks; browser rendering remained unavailable because no browser binding was connected.
+
 - Added the production-neutral Phase 6DU static cylindrical Mesh proxy probe with a 12-segment, closed-manifold `0.16 m × 1.8 m` cylinder, local-cylinder ROIs, stage-before-connect authoring, public readback path, and crash-safe isolated runner.
 - Passed every offline geometry gate (`26` vertices, `36` faces, finite, outward winding, no degenerate/open edges), exact analytic/render/proxy transform parity, and a `0.190 m` emitter surface gap before the first runtime preflight.
 - Stopped the first `convexHull` preflight at a native stage-open `0xC0000005` in the Fabric/Hydra/RTX boundary, preserved the 1,516,001-byte dump outside Git, detected zero upload attempts, and did not retry or continue to rotation/coexistence conditions.

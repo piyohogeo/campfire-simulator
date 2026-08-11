@@ -1,0 +1,231 @@
+{
+  "schema": "campfire.phase6dv.stage-open-classification-report.v1",
+  "phase": "phase6dv",
+  "status": "safe_stop_known_good_harness_anomaly",
+  "production_code_changed": false,
+  "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "versions": {
+    "kit": "110.2.0+feature.342835.698af100.gl",
+    "flow": "110.0.0",
+    "physx": "110.1.1",
+    "hydra_rtx": "1.0.4",
+    "usdrt_scenegraph": "7.6.3",
+    "driver": "591.86",
+    "gpu": "NVIDIA GeForce RTX 3090"
+  },
+  "debugger": {
+    "windbg_or_cdb_available": false,
+    "method": "public MINIDUMP ExceptionStream and ModuleListStream; no symbols",
+    "limitation": "Function names and native locals are not qualified without WinDbg/CDB symbols."
+  },
+  "crash_signature": {
+    "same_between_phase6dt_and_phase6du": true,
+    "thread_id": 26136,
+    "exception_code": "0xC0000005",
+    "exception_flags": 0,
+    "instruction_address": "0x00007FF865366960",
+    "parameters": [
+      "0x0",
+      "0x20"
+    ],
+    "fault_module": "omni.fabric.plugin.dll",
+    "fault_module_offset": "0xD6960",
+    "access_kind": "read",
+    "access_target": "0x20",
+    "low_confidence_log_stack_prefix": [
+      "omni.fabric.plugin.dll+0xCE5B0 (symbol-relative log label)",
+      "usdrt.hydra.fabric_scene_delegate.plugin.dll+0xE5415",
+      "usdrt.hydra.fabric_scene_delegate.plugin.dll+0x204AE",
+      "omni.hydra.usdrt_delegate.plugin.dll+0x4FD3",
+      "rtx.hydra.dll+0xF36"
+    ],
+    "preferred_instruction_location": "omni.fabric.plugin.dll+0xD6960 from MINIDUMP ExceptionStream"
+  },
+  "process_results": [
+    {
+      "label": "6DT known-good Box / original harness",
+      "artifact": "artifacts/phase6dt-reference-audit-2/phase6ds_mesh_usd_mesh_collision/run-1",
+      "qualified": true,
+      "probe_status": "ok",
+      "last_marker": "shutdown_complete",
+      "process_exit_code": 0,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "upload_attempt_count": 0,
+      "production_changed": false,
+      "note": "Historical positive control reached Flow readback and shutdown."
+    },
+    {
+      "label": "6DU Cylinder hull / original failed preflight",
+      "artifact": "artifacts/phase6du-static-cylinder-1/mesh_hull/run-1",
+      "qualified": false,
+      "probe_status": "running",
+      "last_marker": "opening_prebuilt_stage",
+      "process_exit_code": -1073741819,
+      "fatal_count": 1,
+      "dump_count": 1,
+      "upload_attempt_count": 0,
+      "production_changed": false,
+      "note": "Preserved historical crash; not rerun."
+    },
+    {
+      "label": "6DV Box OpenUSD-only / first cold attempt",
+      "artifact": "artifacts/phase6dv-stage-open-classification-1/box_offline/run-1",
+      "qualified": false,
+      "probe_status": "ok",
+      "last_marker": "shutdown_complete",
+      "process_exit_code": null,
+      "fatal_count": null,
+      "dump_count": null,
+      "upload_attempt_count": null,
+      "production_changed": null,
+      "note": "Probe reached shutdown_complete, but the outer 330 s command ended before runner evidence was written."
+    },
+    {
+      "label": "6DV Box OpenUSD-only / no readiness prelude",
+      "artifact": "artifacts/phase6dv-stage-open-classification-1/box_offline/run-2",
+      "qualified": false,
+      "probe_status": "ok",
+      "last_marker": "shutdown_complete",
+      "process_exit_code": -1,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "upload_attempt_count": 0,
+      "production_changed": false,
+      "note": "Pure OpenUSD completed; isolated Kit was terminated after prolonged post-plugin-shutdown residue."
+    },
+    {
+      "label": "6DV Box OpenUSD-only / 8-frame renderer readiness",
+      "artifact": "artifacts/phase6dv-stage-open-classification-1/box_offline/run-3",
+      "qualified": false,
+      "probe_status": "ok",
+      "last_marker": "shutdown_complete",
+      "process_exit_code": -1,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "upload_attempt_count": 0,
+      "production_changed": false,
+      "note": "Pure OpenUSD completed; the same process residue remained for more than seven minutes."
+    }
+  ],
+  "normalized_stage_difference": [
+    {
+      "boundary": "collision shape",
+      "phase6dt_known_good": "Box Mesh; 8 vertices, 6 faces, 24 indices",
+      "phase6du_failed": "closed 12-segment Cylinder Mesh; 26 vertices, 36 faces, 120 indices",
+      "classification": "unresolved; not ablated after harness anomaly"
+    },
+    {
+      "boundary": "extent",
+      "phase6dt_known_good": "world-space [-1,-1,0.875] to [1,1,1.125]",
+      "phase6du_failed": "local [-0.9,-0.16,-0.16] to [0.9,0.16,0.16]",
+      "classification": "offline values valid"
+    },
+    {
+      "boundary": "transform hierarchy",
+      "phase6dt_known_good": "/World/ColliderReferenceMesh, no parent transform",
+      "phase6du_failed": "/World/Log/FlowCollisionProxy under translate Z=1",
+      "classification": "unresolved"
+    },
+    {
+      "boundary": "collision schemas",
+      "phase6dt_known_good": "PhysicsCollisionAPI + PhysicsMeshCollisionAPI",
+      "phase6du_failed": "PhysicsCollisionAPI + PhysicsMeshCollisionAPI",
+      "classification": "same required API pair"
+    },
+    {
+      "boundary": "approximation",
+      "phase6dt_known_good": "convexDecomposition",
+      "phase6du_failed": "convexHull",
+      "classification": "unresolved"
+    },
+    {
+      "boundary": "render/material",
+      "phase6dt_known_good": "invisible collision Mesh; disabled original Cube remains",
+      "phase6du_failed": "invisible proxy plus visible material-bound RenderSurface",
+      "classification": "unresolved"
+    },
+    {
+      "boundary": "analytic sibling",
+      "phase6dt_known_good": "disabled original Cube",
+      "phase6du_failed": "non-collision analytic Cylinder sibling",
+      "classification": "unresolved; no overlapping collision API"
+    },
+    {
+      "boundary": "visibility/purpose",
+      "phase6dt_known_good": "invisible / default",
+      "phase6du_failed": "proxy invisible / default",
+      "classification": "equivalent for collision proxy"
+    },
+    {
+      "boundary": "authoring",
+      "phase6dt_known_good": "flatten existing Phase 6DS stage, patch before connection",
+      "phase6du_failed": "create complete fresh stage before connection",
+      "classification": "both offline-before-connect; construction route differs"
+    }
+  ],
+  "confirmed": [
+    "Both preserved crashes are 0xC0000005 reads of 0x20 at omni.fabric.plugin.dll+0xD6960.",
+    "Their low-confidence native stack prefixes and opening_prebuilt_stage markers match.",
+    "The known-good Phase 6DT Box stage opens and audits through pure OpenUSD in the Phase 6DV process.",
+    "No Phase 6DV stage was connected to Hydra after the known-good process failed the normal-exit boundary.",
+    "No new dump or automatic upload attempt occurred, and the production app hash remained unchanged."
+  ],
+  "strong_inference": [
+    "The repeated signature across structurally different stages is more consistent with a shared Fabric/Hydra engine-add or initialization/lifetime boundary than a proven Cylinder-topology defect.",
+    "The new post-shutdown residue is harness/renderer-lifecycle behavior, not evidence that the OpenUSD Box stage is invalid."
+  ],
+  "unconfirmed": [
+    "The native call stack below module+offset because WinDbg/CDB and matching private symbols are unavailable.",
+    "Whether Box versus Cylinder topology, convexHull, hierarchy, render sibling, or analytic sibling is the first stage-content discriminator.",
+    "Whether renderer readiness, context scheduling, process teardown, or a fixed-build Fabric race is the root cause.",
+    "Cylinder Flow occlusion, rotation, decomposition, shared PhysX proxy, dynamic transform, and 20-log cost."
+  ],
+  "restart_decision": {
+    "phase6du_may_resume": false,
+    "reason": "The same-launcher known-good process did not produce a normal OS exit; the user-requested safe-stop condition was met before Hydra ablation.",
+    "minimum_next_information": [
+      "A known-good Box stage-open runner that reaches normal process exit with durable pre/post-Hydra markers.",
+      "WinDbg/CDB or NVIDIA/Kit symbols for omni.fabric.plugin.dll build 698af100, or an NVIDIA crash report using the two preserved dump hashes.",
+      "Only after that control passes: Box hull, Cylinder decomposition, Cylinder hull, hierarchy, RenderSurface, and analytic-sibling ablations in separate processes."
+    ]
+  },
+  "regression": {
+    "release_build": {
+      "status": "passed",
+      "seconds": 6.01
+    },
+    "targeted_flow_collider_test": {
+      "status": "passed",
+      "test": "campfire.app.tests.test_scene.TestScene.test_flow_scene_has_emitter_simulation_and_colliders",
+      "passed": 1,
+      "total": 1,
+      "seconds": 0.073
+    },
+    "static_devlog": {
+      "status": "passed",
+      "checks": [
+        "UTF-8 HTML",
+        "Phase order",
+        "asset references",
+        "JSON",
+        "SVG XML"
+      ],
+      "browser_render": "unavailable; no browser binding was connected in this session"
+    },
+    "phase0_rtx": "not rerun; no production code or app composition changed",
+    "standard_suite": "not rerun; no shared production code changed"
+  },
+  "gates": {
+    "preserved_dump_signature_parsed": true,
+    "same_signature_classified": true,
+    "pure_openusd_known_good_opened": true,
+    "known_good_normal_process_exit": false,
+    "hydra_stage_ablation_started": false,
+    "failed_cylinder_condition_rerun": false,
+    "new_crash_or_dump": false,
+    "automatic_upload_attempt": false,
+    "production_hash_unchanged": true,
+    "phase6du_resume_qualified": false
+  }
+}
