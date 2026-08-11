@@ -1,5 +1,12 @@
 # Changelog
 
+- Reused the unchanged Phase 6DW runner/probe directly for Phase 6DY and qualified the five-process A-E Box-to-Cylinder matrix through pure OpenUSD, USD context, Hydra, first viewport frame, ordered close/drain, plugin shutdown, and normal OS exit.
+- Isolated Box `convexHull` as an approximation-only change and a closed 12-segment Cylinder `convexDecomposition` as a topology-only change. Both opened and exited normally; the historically failed cylindrical Hull condition remained excluded.
+- Completed three public NanoVDB readback controls around the Cylinder. The cylinder-contained core had zero temperature, fuel, burn, smoke, and velocity at frames 60/120/180/200; nonzero values in the wider Box ROI are consistent with lateral bypass, while a small above-cylinder residual remains.
+- Recorded 8/8 normal processes, fatal/dump/upload/timeout 0, identical Box before/after time series, RTX 3090/CUDA 0, and unchanged production SHA-256. Production code, app composition, defaults, and the latest-demo pointer remain unchanged.
+- Passed the Release build in `6.80 s`, the six-test lifecycle contract, the focused Flow collider contract `1 / 1` in `0.073 s`, and all eight standard processes with `78 / 78` tests in `305.9 s`.
+- Passed static devlog validation with 330 unique local references, zero missing references, zero JSON/SVG failures, and zero UTF-8 replacement characters.
+
 - Added the production-neutral Phase 6DX stage-open safe preflight and limited its executable matrix to the known-good Box, a Box approximation-only change, and a Cylinder-topology-only change; the previously failed cylindrical Hull branch was not runnable.
 - Stopped on the first known-good Box control after a bounded 420.474-second timeout at `renderer_readiness_warmup_started`, before stage preparation, OpenUSD open, USD-context connection, Hydra attachment, or any Box-to-Cylinder ablation.
 - Classified the newly added no-window pre-stage viewport-frame wait as an invalid harness boundary relative to the qualified Phase 6DW ordering. No crash, dump, upload attempt, production hash change, or topology result occurred, and Phase 6DU remains paused.

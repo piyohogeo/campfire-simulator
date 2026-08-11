@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="610" viewBox="0 0 1200 610" role="img" aria-labelledby="title desc">
+<title id="title">Phase 6DY calibrated Box-to-Cylinder stage-open results</title>
+<desc id="desc">All five stage-open processes exited normally and the cylinder-contained Flow ROI remained zero at frame 200.</desc>
+<rect width="1200" height="610" fill="#0e1118"/>
+<text x="54" y="62" fill="#f4f7fb" font-family="Segoe UI, sans-serif" font-size="30" font-weight="700">Phase 6DY · calibrated Box → Cylinder boundary</text>
+<text x="54" y="99" fill="#9eabc1" font-family="Segoe UI, sans-serif" font-size="18">Phase 6DW lifecycle reused directly · Cylinder Hull still excluded</text>
+<rect x="54" y="126" width="690" height="354" rx="12" fill="#151b27" stroke="#354158"/>
+<text x="76" y="164" fill="#a8e6cf" font-family="Segoe UI, sans-serif" font-size="18" font-weight="700">STAGE-OPEN MATRIX · 5 / 5 NORMAL OS EXITS</text>
+<text x="54" y="215" fill="#dbe5f5" font-family="Segoe UI, sans-serif" font-size="15">A_box_decomposition</text><rect x="290" y="196" width="385.5" height="27" rx="5" fill="#4cc9a4"/><text x="685.5" y="215" fill="#f4f7fb" font-family="Segoe UI, sans-serif" font-size="14">14.44s · exit 0</text><text x="54" y="263" fill="#dbe5f5" font-family="Segoe UI, sans-serif" font-size="15">B_box_hull</text><rect x="290" y="244" width="390.8" height="27" rx="5" fill="#4cc9a4"/><text x="690.8" y="263" fill="#f4f7fb" font-family="Segoe UI, sans-serif" font-size="14">14.64s · exit 0</text><text x="54" y="311" fill="#dbe5f5" font-family="Segoe UI, sans-serif" font-size="15">C_box_decomposition</text><rect x="290" y="292" width="383.7" height="27" rx="5" fill="#4cc9a4"/><text x="683.7" y="311" fill="#f4f7fb" font-family="Segoe UI, sans-serif" font-size="14">14.38s · exit 0</text><text x="54" y="359" fill="#dbe5f5" font-family="Segoe UI, sans-serif" font-size="15">D_cylinder_decomposition</text><rect x="290" y="340" width="420.0" height="27" rx="5" fill="#4cc9a4"/><text x="720.0" y="359" fill="#f4f7fb" font-family="Segoe UI, sans-serif" font-size="14">15.73s · exit 0</text><text x="54" y="407" fill="#dbe5f5" font-family="Segoe UI, sans-serif" font-size="15">E_box_decomposition</text><rect x="290" y="388" width="381.8" height="27" rx="5" fill="#4cc9a4"/><text x="681.8" y="407" fill="#f4f7fb" font-family="Segoe UI, sans-serif" font-size="14">14.30s · exit 0</text>
+<rect x="770" y="126" width="376" height="354" rx="12" fill="#151b27" stroke="#354158"/>
+<text x="794" y="164" fill="#ffcc80" font-family="Segoe UI, sans-serif" font-size="18" font-weight="700">CYLINDER CORE · FRAME 200</text>
+<text x="794" y="213" fill="#f4f7fb" font-family="Segoe UI, sans-serif" font-size="20">temperature mean</text><text x="1110" y="213" text-anchor="end" fill="#a8e6cf" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">0</text>
+<text x="794" y="254" fill="#f4f7fb" font-family="Segoe UI, sans-serif" font-size="20">velocity mean</text><text x="1110" y="254" text-anchor="end" fill="#a8e6cf" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">0</text>
+<text x="794" y="295" fill="#f4f7fb" font-family="Segoe UI, sans-serif" font-size="20">nonzero scalar voxels</text><text x="1110" y="295" text-anchor="end" fill="#a8e6cf" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">0</text>
+<line x1="794" y1="326" x2="1110" y2="326" stroke="#354158"/>
+<text x="794" y="366" fill="#f4f7fb" font-family="Segoe UI, sans-serif" font-size="19">cylinder-above temp mean</text>
+<text x="1110" y="366" text-anchor="end" fill="#ffcc80" font-family="Segoe UI, sans-serif" font-size="20" font-weight="700">1.09e-05</text>
+<text x="794" y="407" fill="#9eabc1" font-family="Segoe UI, sans-serif" font-size="16">Wide Box ROI sees lateral flow;</text>
+<text x="794" y="433" fill="#9eabc1" font-family="Segoe UI, sans-serif" font-size="16">contained core distinguishes penetration.</text>
+<rect x="54" y="510" width="1092" height="62" rx="10" fill="#1a2130"/>
+<text x="78" y="548" fill="#dbe5f5" font-family="Segoe UI, sans-serif" font-size="17">fatal 0 · dump 0 · upload 0 · production SHA-256 unchanged · Box controls identical before/after</text>
+</svg>

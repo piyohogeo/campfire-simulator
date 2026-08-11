@@ -274,6 +274,11 @@ def _prepare_stage(arguments: dict) -> tuple[Path, dict]:
                 _set(simulate, "physicsCollisionEnabled", False)
                 changes.append("disable_Flow_physicsCollisionEnabled")
         changes[0:0] = ("disable_original_Cube_collision", "define_equivalent_Mesh")
+    elif mode == "phase6dy_prepared_mesh":
+        collider = stage.GetPrimAtPath("/World/ColliderReferenceMesh")
+        if not collider or not collider.IsValid():
+            raise RuntimeError("Phase 6DY prepared Mesh is missing")
+        changes.append("preserve_prequalified_phase6dy_mesh_and_enable_readback")
     elif mode == "phase6ds_physx_api_force_false":
         collider = stage.GetPrimAtPath(paths["collider"])
         if not PhysxSchema.PhysxCollisionAPI.Apply(collider):
@@ -293,7 +298,7 @@ def _prepare_stage(arguments: dict) -> tuple[Path, dict]:
         "offline_changes": changes,
         "audit_collider_path": (
             "/World/ColliderReferenceMesh"
-            if mode.startswith("phase6ds_mesh_")
+            if mode.startswith("phase6ds_mesh_") or mode == "phase6dy_prepared_mesh"
             else paths["collider"]
         ),
     }
@@ -544,6 +549,21 @@ async def _run() -> None:
             if preparation["source_kind"] == "reference"
             else _phase6ds_rois()
         )
+        if arguments["mode"] == "phase6dy_prepared_mesh":
+            # Applied identically to Box and Cylinder runs.  The core cuboid is
+            # fully inside the 0.16 m radius Cylinder and 0.30 m from both caps.
+            report["rois"].update(
+                {
+                    "cylinder_core": {
+                        "minimum": [-0.60, -0.08, 0.955],
+                        "maximum": [0.60, 0.08, 1.115],
+                    },
+                    "cylinder_above": {
+                        "minimum": [-0.60, -0.08, 1.245],
+                        "maximum": [0.60, 0.08, 1.40],
+                    },
+                }
+            )
         del offline
         report["extensions"] = _extension_inventory(app)
         _write(output, report)

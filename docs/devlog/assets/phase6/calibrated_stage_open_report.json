@@ -1,0 +1,4106 @@
+{
+  "schema": "campfire.phase6dy.calibrated-stage-open-report.v1",
+  "phase": "phase6dy",
+  "status": "qualified_safe_stop",
+  "source_phase": "phase6dt",
+  "lifecycle_reuse": {
+    "runner": "scripts/run_phase6dw_gpu_renderer_case.ps1",
+    "probe": "scripts/probe_phase6dw_gpu_renderer_lifecycle.py",
+    "implementation_changed": false,
+    "pre_stage_viewport_frame_wait": false,
+    "static_contract_tests": 6
+  },
+  "source_stage_sha256": "2ED926A1EAF14356A44487D2426E712002A61FBD6937C5C5A797F74E68861862",
+  "stage_open_results": [
+    {
+      "condition": "A_box_decomposition",
+      "stage_sha256": "C3860B27E8C9F625AB9FD6322C46DD44E09D1725067D75F211D9A7559E23D908",
+      "physics_approximation": "convexDecomposition",
+      "vertex_count": 8,
+      "face_count": 6,
+      "index_count": 24,
+      "closed_manifold": true,
+      "winding": "outward",
+      "degenerate_face_count": 0,
+      "extent_matches": true,
+      "audit": {
+        "collider_path": "/World/ColliderReferenceMesh",
+        "collider_type": "Mesh",
+        "applied_schemas": [
+          "PhysicsCollisionAPI",
+          "PhysicsMeshCollisionAPI"
+        ],
+        "has_collision_api": true,
+        "has_mesh_collision_api": true,
+        "physics_collision_enabled": true,
+        "physics_approximation": "convexDecomposition",
+        "parent_path": "/World",
+        "transform_ops": [],
+        "visibility": "invisible",
+        "purpose": "default",
+        "render_surface_present": false,
+        "analytic_sibling_present": false,
+        "rigid_body_api": false,
+        "geometry": {
+          "vertex_count": 8,
+          "face_count": 6,
+          "index_count": 24,
+          "closed_manifold": true,
+          "non_two_manifold_edge_count": 0,
+          "degenerate_face_count": 0,
+          "signed_volume": 1.0,
+          "winding": "outward",
+          "computed_extent": [
+            [
+              -1.0,
+              -1.0,
+              0.875
+            ],
+            [
+              1.0,
+              1.0,
+              1.125
+            ]
+          ],
+          "authored_extent": [
+            [
+              -1.0,
+              -1.0,
+              0.875
+            ],
+            [
+              1.0,
+              1.0,
+              1.125
+            ]
+          ],
+          "extent_matches": true
+        }
+      },
+      "duration_seconds": 14.443327,
+      "process_exit_code": 0,
+      "timed_out": false,
+      "last_marker": "shutdown_requested",
+      "marker_names": [
+        "kit_started",
+        "kit_updates_complete",
+        "pure_openusd_open_started",
+        "pure_openusd_open_complete",
+        "renderer_readiness_started",
+        "renderer_readiness_complete",
+        "usd_context_connection_started",
+        "usd_context_connection_complete",
+        "hydra_delegate_connection_observed",
+        "first_renderer_update_started",
+        "first_renderer_update_complete",
+        "first_viewport_frame_started",
+        "first_viewport_frame_complete",
+        "condition_complete",
+        "timeline_stopped",
+        "stage_close_started",
+        "stage_close_complete",
+        "renderer_drain_started",
+        "renderer_drain_complete",
+        "shutdown_requested"
+      ],
+      "lifecycle_history": [
+        {
+          "marker": "kit_started",
+          "timestamp_utc": "2026-08-11T02:52:43.634612+00:00"
+        },
+        {
+          "marker": "kit_updates_complete",
+          "timestamp_utc": "2026-08-11T02:52:43.660711+00:00"
+        },
+        {
+          "marker": "pure_openusd_open_started",
+          "timestamp_utc": "2026-08-11T02:52:43.661712+00:00"
+        },
+        {
+          "marker": "pure_openusd_open_complete",
+          "timestamp_utc": "2026-08-11T02:52:43.752399+00:00"
+        },
+        {
+          "marker": "renderer_readiness_started",
+          "timestamp_utc": "2026-08-11T02:52:43.754399+00:00"
+        },
+        {
+          "marker": "renderer_readiness_complete",
+          "timestamp_utc": "2026-08-11T02:52:43.759406+00:00"
+        },
+        {
+          "marker": "usd_context_connection_started",
+          "timestamp_utc": "2026-08-11T02:52:43.773416+00:00"
+        },
+        {
+          "marker": "usd_context_connection_complete",
+          "timestamp_utc": "2026-08-11T02:52:46.294449+00:00"
+        },
+        {
+          "marker": "hydra_delegate_connection_observed",
+          "timestamp_utc": "2026-08-11T02:52:46.306476+00:00"
+        },
+        {
+          "marker": "first_renderer_update_started",
+          "timestamp_utc": "2026-08-11T02:52:46.317987+00:00"
+        },
+        {
+          "marker": "first_renderer_update_complete",
+          "timestamp_utc": "2026-08-11T02:52:52.683694+00:00"
+        },
+        {
+          "marker": "first_viewport_frame_started",
+          "timestamp_utc": "2026-08-11T02:52:52.684694+00:00"
+        },
+        {
+          "marker": "first_viewport_frame_complete",
+          "timestamp_utc": "2026-08-11T02:52:52.744375+00:00"
+        },
+        {
+          "marker": "condition_complete",
+          "timestamp_utc": "2026-08-11T02:52:52.745879+00:00"
+        },
+        {
+          "marker": "timeline_stopped",
+          "timestamp_utc": "2026-08-11T02:52:52.746383+00:00"
+        },
+        {
+          "marker": "stage_close_started",
+          "timestamp_utc": "2026-08-11T02:52:52.759408+00:00"
+        },
+        {
+          "marker": "stage_close_complete",
+          "timestamp_utc": "2026-08-11T02:52:54.185061+00:00"
+        },
+        {
+          "marker": "renderer_drain_started",
+          "timestamp_utc": "2026-08-11T02:52:54.191566+00:00"
+        },
+        {
+          "marker": "renderer_drain_complete",
+          "timestamp_utc": "2026-08-11T02:52:54.265769+00:00"
+        },
+        {
+          "marker": "shutdown_requested",
+          "timestamp_utc": "2026-08-11T02:52:54.328956+00:00"
+        }
+      ],
+      "selected_device_log_lines": [
+        "2026-08-11T02:52:43Z [999ms] [Info] [omni.rtx] Active GPU: NVIDIA GeForce RTX 3090",
+        "| 0   | NVIDIA GeForce RTX 3090          | Yes: 0 |     | 24322   MB | 10de      | 74b20100.. |",
+        "| 1   | NVIDIA GeForce RTX 2070          |        |     | 8006    MB | 10de      | 41d10100.. |",
+        "2026-08-11T02:52:43Z [1,301ms] [Info] [omni.rtx]  - CUDA device index: 0",
+        "2026-08-11T02:52:43Z [1,391ms] [Info] [omni.kit.renderer.plugin] Reducing '/app/runLoops/present/rateLimitFrequency' from 120.000000 to primary monitor's refresh rate of 59.000000 ('ViewSonic VX3276-FHD', '\\\\.\\DISPLAY2\\Monitor0')",
+        "2026-08-11T02:52:43Z [1,738ms] [Info] [omni.usd] UsdManager::getHydraEngineDeviceMask - engine: 'rtx', mask: 1",
+        "2026-08-11T02:52:51Z [9,786ms] [Info] [omni.rtx] View 0 (/Render/OmniverseKit/HydraTextures/omni_kit_widget_viewport_ViewportTexture_0) assigned to device 0"
+      ],
+      "fatal_count": 0,
+      "dump_count": 0,
+      "upload_attempt_count": 0,
+      "production_changed": false
+    },
+    {
+      "condition": "B_box_hull",
+      "stage_sha256": "837AD0CCD2AF3BCB6239371FCD3059CEFF03C5076581AF8B44DC8439559E365F",
+      "physics_approximation": "convexHull",
+      "vertex_count": 8,
+      "face_count": 6,
+      "index_count": 24,
+      "closed_manifold": true,
+      "winding": "outward",
+      "degenerate_face_count": 0,
+      "extent_matches": true,
+      "audit": {
+        "collider_path": "/World/ColliderReferenceMesh",
+        "collider_type": "Mesh",
+        "applied_schemas": [
+          "PhysicsCollisionAPI",
+          "PhysicsMeshCollisionAPI"
+        ],
+        "has_collision_api": true,
+        "has_mesh_collision_api": true,
+        "physics_collision_enabled": true,
+        "physics_approximation": "convexHull",
+        "parent_path": "/World",
+        "transform_ops": [],
+        "visibility": "invisible",
+        "purpose": "default",
+        "render_surface_present": false,
+        "analytic_sibling_present": false,
+        "rigid_body_api": false,
+        "geometry": {
+          "vertex_count": 8,
+          "face_count": 6,
+          "index_count": 24,
+          "closed_manifold": true,
+          "non_two_manifold_edge_count": 0,
+          "degenerate_face_count": 0,
+          "signed_volume": 1.0,
+          "winding": "outward",
+          "computed_extent": [
+            [
+              -1.0,
+              -1.0,
+              0.875
+            ],
+            [
+              1.0,
+              1.0,
+              1.125
+            ]
+          ],
+          "authored_extent": [
+            [
+              -1.0,
+              -1.0,
+              0.875
+            ],
+            [
+              1.0,
+              1.0,
+              1.125
+            ]
+          ],
+          "extent_matches": true
+        }
+      },
+      "duration_seconds": 14.6396423,
+      "process_exit_code": 0,
+      "timed_out": false,
+      "last_marker": "shutdown_requested",
+      "marker_names": [
+        "kit_started",
+        "kit_updates_complete",
+        "pure_openusd_open_started",
+        "pure_openusd_open_complete",
+        "renderer_readiness_started",
+        "renderer_readiness_complete",
+        "usd_context_connection_started",
+        "usd_context_connection_complete",
+        "hydra_delegate_connection_observed",
+        "first_renderer_update_started",
+        "first_renderer_update_complete",
+        "first_viewport_frame_started",
+        "first_viewport_frame_complete",
+        "condition_complete",
+        "timeline_stopped",
+        "stage_close_started",
+        "stage_close_complete",
+        "renderer_drain_started",
+        "renderer_drain_complete",
+        "shutdown_requested"
+      ],
+      "lifecycle_history": [
+        {
+          "marker": "kit_started",
+          "timestamp_utc": "2026-08-11T02:52:58.461656+00:00"
+        },
+        {
+          "marker": "kit_updates_complete",
+          "timestamp_utc": "2026-08-11T02:52:58.499304+00:00"
+        },
+        {
+          "marker": "pure_openusd_open_started",
+          "timestamp_utc": "2026-08-11T02:52:58.500804+00:00"
+        },
+        {
+          "marker": "pure_openusd_open_complete",
+          "timestamp_utc": "2026-08-11T02:52:58.585870+00:00"
+        },
+        {
+          "marker": "renderer_readiness_started",
+          "timestamp_utc": "2026-08-11T02:52:58.587876+00:00"
+        },
+        {
+          "marker": "renderer_readiness_complete",
+          "timestamp_utc": "2026-08-11T02:52:58.599394+00:00"
+        },
+        {
+          "marker": "usd_context_connection_started",
+          "timestamp_utc": "2026-08-11T02:52:58.604899+00:00"
+        },
+        {
+          "marker": "usd_context_connection_complete",
+          "timestamp_utc": "2026-08-11T02:53:01.496425+00:00"
+        },
+        {
+          "marker": "hydra_delegate_connection_observed",
+          "timestamp_utc": "2026-08-11T02:53:01.513966+00:00"
+        },
+        {
+          "marker": "first_renderer_update_started",
+          "timestamp_utc": "2026-08-11T02:53:01.528633+00:00"
+        },
+        {
+          "marker": "first_renderer_update_complete",
+          "timestamp_utc": "2026-08-11T02:53:08.607242+00:00"
+        },
+        {
+          "marker": "first_viewport_frame_started",
+          "timestamp_utc": "2026-08-11T02:53:08.608745+00:00"
+        },
+        {
+          "marker": "first_viewport_frame_complete",
+          "timestamp_utc": "2026-08-11T02:53:08.654369+00:00"
+        },
+        {
+          "marker": "condition_complete",
+          "timestamp_utc": "2026-08-11T02:53:08.655933+00:00"
+        },
+        {
+          "marker": "timeline_stopped",
+          "timestamp_utc": "2026-08-11T02:53:08.656937+00:00"
+        },
+        {
+          "marker": "stage_close_started",
+          "timestamp_utc": "2026-08-11T02:53:08.662940+00:00"
+        },
+        {
+          "marker": "stage_close_complete",
+          "timestamp_utc": "2026-08-11T02:53:09.079341+00:00"
+        },
+        {
+          "marker": "renderer_drain_started",
+          "timestamp_utc": "2026-08-11T02:53:09.086924+00:00"
+        },
+        {
+          "marker": "renderer_drain_complete",
+          "timestamp_utc": "2026-08-11T02:53:09.155588+00:00"
+        },
+        {
+          "marker": "shutdown_requested",
+          "timestamp_utc": "2026-08-11T02:53:09.222188+00:00"
+        }
+      ],
+      "selected_device_log_lines": [
+        "2026-08-11T02:52:57Z [967ms] [Info] [omni.rtx] Active GPU: NVIDIA GeForce RTX 3090",
+        "| 0   | NVIDIA GeForce RTX 3090          | Yes: 0 |     | 24322   MB | 10de      | 74b20100.. |",
+        "| 1   | NVIDIA GeForce RTX 2070          |        |     | 8006    MB | 10de      | 41d10100.. |",
+        "2026-08-11T02:52:58Z [1,285ms] [Info] [omni.rtx]  - CUDA device index: 0",
+        "2026-08-11T02:52:58Z [1,384ms] [Info] [omni.kit.renderer.plugin] Reducing '/app/runLoops/present/rateLimitFrequency' from 120.000000 to primary monitor's refresh rate of 59.000000 ('ViewSonic VX3276-FHD', '\\\\.\\DISPLAY2\\Monitor0')",
+        "2026-08-11T02:52:58Z [1,743ms] [Info] [omni.usd] UsdManager::getHydraEngineDeviceMask - engine: 'rtx', mask: 1",
+        "2026-08-11T02:53:07Z [10,887ms] [Info] [omni.rtx] View 0 (/Render/OmniverseKit/HydraTextures/omni_kit_widget_viewport_ViewportTexture_0) assigned to device 0"
+      ],
+      "fatal_count": 0,
+      "dump_count": 0,
+      "upload_attempt_count": 0,
+      "production_changed": false
+    },
+    {
+      "condition": "C_box_decomposition",
+      "stage_sha256": "C3860B27E8C9F625AB9FD6322C46DD44E09D1725067D75F211D9A7559E23D908",
+      "physics_approximation": "convexDecomposition",
+      "vertex_count": 8,
+      "face_count": 6,
+      "index_count": 24,
+      "closed_manifold": true,
+      "winding": "outward",
+      "degenerate_face_count": 0,
+      "extent_matches": true,
+      "audit": {
+        "collider_path": "/World/ColliderReferenceMesh",
+        "collider_type": "Mesh",
+        "applied_schemas": [
+          "PhysicsCollisionAPI",
+          "PhysicsMeshCollisionAPI"
+        ],
+        "has_collision_api": true,
+        "has_mesh_collision_api": true,
+        "physics_collision_enabled": true,
+        "physics_approximation": "convexDecomposition",
+        "parent_path": "/World",
+        "transform_ops": [],
+        "visibility": "invisible",
+        "purpose": "default",
+        "render_surface_present": false,
+        "analytic_sibling_present": false,
+        "rigid_body_api": false,
+        "geometry": {
+          "vertex_count": 8,
+          "face_count": 6,
+          "index_count": 24,
+          "closed_manifold": true,
+          "non_two_manifold_edge_count": 0,
+          "degenerate_face_count": 0,
+          "signed_volume": 1.0,
+          "winding": "outward",
+          "computed_extent": [
+            [
+              -1.0,
+              -1.0,
+              0.875
+            ],
+            [
+              1.0,
+              1.0,
+              1.125
+            ]
+          ],
+          "authored_extent": [
+            [
+              -1.0,
+              -1.0,
+              0.875
+            ],
+            [
+              1.0,
+              1.0,
+              1.125
+            ]
+          ],
+          "extent_matches": true
+        }
+      },
+      "duration_seconds": 14.3753738,
+      "process_exit_code": 0,
+      "timed_out": false,
+      "last_marker": "shutdown_requested",
+      "marker_names": [
+        "kit_started",
+        "kit_updates_complete",
+        "pure_openusd_open_started",
+        "pure_openusd_open_complete",
+        "renderer_readiness_started",
+        "renderer_readiness_complete",
+        "usd_context_connection_started",
+        "usd_context_connection_complete",
+        "hydra_delegate_connection_observed",
+        "first_renderer_update_started",
+        "first_renderer_update_complete",
+        "first_viewport_frame_started",
+        "first_viewport_frame_complete",
+        "condition_complete",
+        "timeline_stopped",
+        "stage_close_started",
+        "stage_close_complete",
+        "renderer_drain_started",
+        "renderer_drain_complete",
+        "shutdown_requested"
+      ],
+      "lifecycle_history": [
+        {
+          "marker": "kit_started",
+          "timestamp_utc": "2026-08-11T02:53:13.636347+00:00"
+        },
+        {
+          "marker": "kit_updates_complete",
+          "timestamp_utc": "2026-08-11T02:53:13.667089+00:00"
+        },
+        {
+          "marker": "pure_openusd_open_started",
+          "timestamp_utc": "2026-08-11T02:53:13.668158+00:00"
+        },
+        {
+          "marker": "pure_openusd_open_complete",
+          "timestamp_utc": "2026-08-11T02:53:13.747906+00:00"
+        },
+        {
+          "marker": "renderer_readiness_started",
+          "timestamp_utc": "2026-08-11T02:53:13.749906+00:00"
+        },
+        {
+          "marker": "renderer_readiness_complete",
+          "timestamp_utc": "2026-08-11T02:53:13.755428+00:00"
+        },
+        {
+          "marker": "usd_context_connection_started",
+          "timestamp_utc": "2026-08-11T02:53:13.765945+00:00"
+        },
+        {
+          "marker": "usd_context_connection_complete",
+          "timestamp_utc": "2026-08-11T02:53:16.646853+00:00"
+        },
+        {
+          "marker": "hydra_delegate_connection_observed",
+          "timestamp_utc": "2026-08-11T02:53:16.660990+00:00"
+        },
+        {
+          "marker": "first_renderer_update_started",
+          "timestamp_utc": "2026-08-11T02:53:16.677572+00:00"
+        },
+        {
+          "marker": "first_renderer_update_complete",
+          "timestamp_utc": "2026-08-11T02:53:23.412690+00:00"
+        },
+        {
+          "marker": "first_viewport_frame_started",
+          "timestamp_utc": "2026-08-11T02:53:23.413690+00:00"
+        },
+        {
+          "marker": "first_viewport_frame_complete",
+          "timestamp_utc": "2026-08-11T02:53:23.475839+00:00"
+        },
+        {
+          "marker": "condition_complete",
+          "timestamp_utc": "2026-08-11T02:53:23.476839+00:00"
+        },
+        {
+          "marker": "timeline_stopped",
+          "timestamp_utc": "2026-08-11T02:53:23.483339+00:00"
+        },
+        {
+          "marker": "stage_close_started",
+          "timestamp_utc": "2026-08-11T02:53:23.498918+00:00"
+        },
+        {
+          "marker": "stage_close_complete",
+          "timestamp_utc": "2026-08-11T02:53:23.847788+00:00"
+        },
+        {
+          "marker": "renderer_drain_started",
+          "timestamp_utc": "2026-08-11T02:53:23.856713+00:00"
+        },
+        {
+          "marker": "renderer_drain_complete",
+          "timestamp_utc": "2026-08-11T02:53:23.931223+00:00"
+        },
+        {
+          "marker": "shutdown_requested",
+          "timestamp_utc": "2026-08-11T02:53:23.992942+00:00"
+        }
+      ],
+      "selected_device_log_lines": [
+        "2026-08-11T02:53:13Z [1,126ms] [Info] [omni.rtx] Active GPU: NVIDIA GeForce RTX 3090",
+        "| 0   | NVIDIA GeForce RTX 3090          | Yes: 0 |     | 24322   MB | 10de      | 74b20100.. |",
+        "| 1   | NVIDIA GeForce RTX 2070          |        |     | 8006    MB | 10de      | 41d10100.. |",
+        "2026-08-11T02:53:13Z [1,420ms] [Info] [omni.rtx]  - CUDA device index: 0",
+        "2026-08-11T02:53:13Z [1,522ms] [Info] [omni.kit.renderer.plugin] Reducing '/app/runLoops/present/rateLimitFrequency' from 120.000000 to primary monitor's refresh rate of 59.000000 ('ViewSonic VX3276-FHD', '\\\\.\\DISPLAY2\\Monitor0')",
+        "2026-08-11T02:53:13Z [1,855ms] [Info] [omni.usd] UsdManager::getHydraEngineDeviceMask - engine: 'rtx', mask: 1",
+        "2026-08-11T02:53:22Z [10,639ms] [Info] [omni.rtx] View 0 (/Render/OmniverseKit/HydraTextures/omni_kit_widget_viewport_ViewportTexture_0) assigned to device 0"
+      ],
+      "fatal_count": 0,
+      "dump_count": 0,
+      "upload_attempt_count": 0,
+      "production_changed": false
+    },
+    {
+      "condition": "D_cylinder_decomposition",
+      "stage_sha256": "BC65721F4C6D4ECF1F35C736F2DD10F7A47C9F2B361E45898032E869D894D5F9",
+      "physics_approximation": "convexDecomposition",
+      "vertex_count": 26,
+      "face_count": 36,
+      "index_count": 120,
+      "closed_manifold": true,
+      "winding": "outward",
+      "degenerate_face_count": 0,
+      "extent_matches": true,
+      "audit": {
+        "collider_path": "/World/ColliderReferenceMesh",
+        "collider_type": "Mesh",
+        "applied_schemas": [
+          "PhysicsCollisionAPI",
+          "PhysicsMeshCollisionAPI"
+        ],
+        "has_collision_api": true,
+        "has_mesh_collision_api": true,
+        "physics_collision_enabled": true,
+        "physics_approximation": "convexDecomposition",
+        "parent_path": "/World",
+        "transform_ops": [],
+        "visibility": "invisible",
+        "purpose": "default",
+        "render_surface_present": false,
+        "analytic_sibling_present": false,
+        "rigid_body_api": false,
+        "geometry": {
+          "vertex_count": 26,
+          "face_count": 36,
+          "index_count": 120,
+          "closed_manifold": true,
+          "non_two_manifold_edge_count": 0,
+          "degenerate_face_count": 0,
+          "signed_volume": 0.13824000861495725,
+          "winding": "outward",
+          "computed_extent": [
+            [
+              -0.8999999761581421,
+              -0.1599999964237213,
+              0.875
+            ],
+            [
+              0.8999999761581421,
+              0.1599999964237213,
+              1.1950000524520874
+            ]
+          ],
+          "authored_extent": [
+            [
+              -0.8999999761581421,
+              -0.1599999964237213,
+              0.875
+            ],
+            [
+              0.8999999761581421,
+              0.1599999964237213,
+              1.1950000524520874
+            ]
+          ],
+          "extent_matches": true
+        }
+      },
+      "duration_seconds": 15.734789099999999,
+      "process_exit_code": 0,
+      "timed_out": false,
+      "last_marker": "shutdown_requested",
+      "marker_names": [
+        "kit_started",
+        "kit_updates_complete",
+        "pure_openusd_open_started",
+        "pure_openusd_open_complete",
+        "renderer_readiness_started",
+        "renderer_readiness_complete",
+        "usd_context_connection_started",
+        "usd_context_connection_complete",
+        "hydra_delegate_connection_observed",
+        "first_renderer_update_started",
+        "first_renderer_update_complete",
+        "first_viewport_frame_started",
+        "first_viewport_frame_complete",
+        "condition_complete",
+        "timeline_stopped",
+        "stage_close_started",
+        "stage_close_complete",
+        "renderer_drain_started",
+        "renderer_drain_complete",
+        "shutdown_requested"
+      ],
+      "lifecycle_history": [
+        {
+          "marker": "kit_started",
+          "timestamp_utc": "2026-08-11T02:53:28.232296+00:00"
+        },
+        {
+          "marker": "kit_updates_complete",
+          "timestamp_utc": "2026-08-11T02:53:28.259039+00:00"
+        },
+        {
+          "marker": "pure_openusd_open_started",
+          "timestamp_utc": "2026-08-11T02:53:28.260042+00:00"
+        },
+        {
+          "marker": "pure_openusd_open_complete",
+          "timestamp_utc": "2026-08-11T02:53:28.334606+00:00"
+        },
+        {
+          "marker": "renderer_readiness_started",
+          "timestamp_utc": "2026-08-11T02:53:28.336612+00:00"
+        },
+        {
+          "marker": "renderer_readiness_complete",
+          "timestamp_utc": "2026-08-11T02:53:28.346633+00:00"
+        },
+        {
+          "marker": "usd_context_connection_started",
+          "timestamp_utc": "2026-08-11T02:53:28.356655+00:00"
+        },
+        {
+          "marker": "usd_context_connection_complete",
+          "timestamp_utc": "2026-08-11T02:53:31.268221+00:00"
+        },
+        {
+          "marker": "hydra_delegate_connection_observed",
+          "timestamp_utc": "2026-08-11T02:53:31.272722+00:00"
+        },
+        {
+          "marker": "first_renderer_update_started",
+          "timestamp_utc": "2026-08-11T02:53:31.287257+00:00"
+        },
+        {
+          "marker": "first_renderer_update_complete",
+          "timestamp_utc": "2026-08-11T02:53:37.964350+00:00"
+        },
+        {
+          "marker": "first_viewport_frame_started",
+          "timestamp_utc": "2026-08-11T02:53:37.965353+00:00"
+        },
+        {
+          "marker": "first_viewport_frame_complete",
+          "timestamp_utc": "2026-08-11T02:53:38.039951+00:00"
+        },
+        {
+          "marker": "condition_complete",
+          "timestamp_utc": "2026-08-11T02:53:38.041453+00:00"
+        },
+        {
+          "marker": "timeline_stopped",
+          "timestamp_utc": "2026-08-11T02:53:38.048961+00:00"
+        },
+        {
+          "marker": "stage_close_started",
+          "timestamp_utc": "2026-08-11T02:53:38.056613+00:00"
+        },
+        {
+          "marker": "stage_close_complete",
+          "timestamp_utc": "2026-08-11T02:53:40.100409+00:00"
+        },
+        {
+          "marker": "renderer_drain_started",
+          "timestamp_utc": "2026-08-11T02:53:40.106415+00:00"
+        },
+        {
+          "marker": "renderer_drain_complete",
+          "timestamp_utc": "2026-08-11T02:53:40.175950+00:00"
+        },
+        {
+          "marker": "shutdown_requested",
+          "timestamp_utc": "2026-08-11T02:53:40.241620+00:00"
+        }
+      ],
+      "selected_device_log_lines": [
+        "2026-08-11T02:53:27Z [958ms] [Info] [omni.rtx] Active GPU: NVIDIA GeForce RTX 3090",
+        "| 0   | NVIDIA GeForce RTX 3090          | Yes: 0 |     | 24322   MB | 10de      | 74b20100.. |",
+        "| 1   | NVIDIA GeForce RTX 2070          |        |     | 8006    MB | 10de      | 41d10100.. |",
+        "2026-08-11T02:53:28Z [1,262ms] [Info] [omni.rtx]  - CUDA device index: 0",
+        "2026-08-11T02:53:28Z [1,362ms] [Info] [omni.kit.renderer.plugin] Reducing '/app/runLoops/present/rateLimitFrequency' from 120.000000 to primary monitor's refresh rate of 59.000000 ('ViewSonic VX3276-FHD', '\\\\.\\DISPLAY2\\Monitor0')",
+        "2026-08-11T02:53:28Z [1,681ms] [Info] [omni.usd] UsdManager::getHydraEngineDeviceMask - engine: 'rtx', mask: 1",
+        "2026-08-11T02:53:37Z [10,431ms] [Info] [omni.rtx] View 0 (/Render/OmniverseKit/HydraTextures/omni_kit_widget_viewport_ViewportTexture_0) assigned to device 0"
+      ],
+      "fatal_count": 0,
+      "dump_count": 0,
+      "upload_attempt_count": 0,
+      "production_changed": false
+    },
+    {
+      "condition": "E_box_decomposition",
+      "stage_sha256": "C3860B27E8C9F625AB9FD6322C46DD44E09D1725067D75F211D9A7559E23D908",
+      "physics_approximation": "convexDecomposition",
+      "vertex_count": 8,
+      "face_count": 6,
+      "index_count": 24,
+      "closed_manifold": true,
+      "winding": "outward",
+      "degenerate_face_count": 0,
+      "extent_matches": true,
+      "audit": {
+        "collider_path": "/World/ColliderReferenceMesh",
+        "collider_type": "Mesh",
+        "applied_schemas": [
+          "PhysicsCollisionAPI",
+          "PhysicsMeshCollisionAPI"
+        ],
+        "has_collision_api": true,
+        "has_mesh_collision_api": true,
+        "physics_collision_enabled": true,
+        "physics_approximation": "convexDecomposition",
+        "parent_path": "/World",
+        "transform_ops": [],
+        "visibility": "invisible",
+        "purpose": "default",
+        "render_surface_present": false,
+        "analytic_sibling_present": false,
+        "rigid_body_api": false,
+        "geometry": {
+          "vertex_count": 8,
+          "face_count": 6,
+          "index_count": 24,
+          "closed_manifold": true,
+          "non_two_manifold_edge_count": 0,
+          "degenerate_face_count": 0,
+          "signed_volume": 1.0,
+          "winding": "outward",
+          "computed_extent": [
+            [
+              -1.0,
+              -1.0,
+              0.875
+            ],
+            [
+              1.0,
+              1.0,
+              1.125
+            ]
+          ],
+          "authored_extent": [
+            [
+              -1.0,
+              -1.0,
+              0.875
+            ],
+            [
+              1.0,
+              1.0,
+              1.125
+            ]
+          ],
+          "extent_matches": true
+        }
+      },
+      "duration_seconds": 14.303886299999998,
+      "process_exit_code": 0,
+      "timed_out": false,
+      "last_marker": "shutdown_requested",
+      "marker_names": [
+        "kit_started",
+        "kit_updates_complete",
+        "pure_openusd_open_started",
+        "pure_openusd_open_complete",
+        "renderer_readiness_started",
+        "renderer_readiness_complete",
+        "usd_context_connection_started",
+        "usd_context_connection_complete",
+        "hydra_delegate_connection_observed",
+        "first_renderer_update_started",
+        "first_renderer_update_complete",
+        "first_viewport_frame_started",
+        "first_viewport_frame_complete",
+        "condition_complete",
+        "timeline_stopped",
+        "stage_close_started",
+        "stage_close_complete",
+        "renderer_drain_started",
+        "renderer_drain_complete",
+        "shutdown_requested"
+      ],
+      "lifecycle_history": [
+        {
+          "marker": "kit_started",
+          "timestamp_utc": "2026-08-11T02:53:44.341514+00:00"
+        },
+        {
+          "marker": "kit_updates_complete",
+          "timestamp_utc": "2026-08-11T02:53:44.374115+00:00"
+        },
+        {
+          "marker": "pure_openusd_open_started",
+          "timestamp_utc": "2026-08-11T02:53:44.374615+00:00"
+        },
+        {
+          "marker": "pure_openusd_open_complete",
+          "timestamp_utc": "2026-08-11T02:53:44.474267+00:00"
+        },
+        {
+          "marker": "renderer_readiness_started",
+          "timestamp_utc": "2026-08-11T02:53:44.477274+00:00"
+        },
+        {
+          "marker": "renderer_readiness_complete",
+          "timestamp_utc": "2026-08-11T02:53:44.489858+00:00"
+        },
+        {
+          "marker": "usd_context_connection_started",
+          "timestamp_utc": "2026-08-11T02:53:44.508953+00:00"
+        },
+        {
+          "marker": "usd_context_connection_complete",
+          "timestamp_utc": "2026-08-11T02:53:47.322566+00:00"
+        },
+        {
+          "marker": "hydra_delegate_connection_observed",
+          "timestamp_utc": "2026-08-11T02:53:47.337101+00:00"
+        },
+        {
+          "marker": "first_renderer_update_started",
+          "timestamp_utc": "2026-08-11T02:53:47.355691+00:00"
+        },
+        {
+          "marker": "first_renderer_update_complete",
+          "timestamp_utc": "2026-08-11T02:53:54.002735+00:00"
+        },
+        {
+          "marker": "first_viewport_frame_started",
+          "timestamp_utc": "2026-08-11T02:53:54.003734+00:00"
+        },
+        {
+          "marker": "first_viewport_frame_complete",
+          "timestamp_utc": "2026-08-11T02:53:54.051780+00:00"
+        },
+        {
+          "marker": "condition_complete",
+          "timestamp_utc": "2026-08-11T02:53:54.053785+00:00"
+        },
+        {
+          "marker": "timeline_stopped",
+          "timestamp_utc": "2026-08-11T02:53:54.061298+00:00"
+        },
+        {
+          "marker": "stage_close_started",
+          "timestamp_utc": "2026-08-11T02:53:54.067316+00:00"
+        },
+        {
+          "marker": "stage_close_complete",
+          "timestamp_utc": "2026-08-11T02:53:54.696299+00:00"
+        },
+        {
+          "marker": "renderer_drain_started",
+          "timestamp_utc": "2026-08-11T02:53:54.705313+00:00"
+        },
+        {
+          "marker": "renderer_drain_complete",
+          "timestamp_utc": "2026-08-11T02:53:54.772104+00:00"
+        },
+        {
+          "marker": "shutdown_requested",
+          "timestamp_utc": "2026-08-11T02:53:54.831754+00:00"
+        }
+      ],
+      "selected_device_log_lines": [
+        "2026-08-11T02:53:43Z [960ms] [Info] [omni.rtx] Active GPU: NVIDIA GeForce RTX 3090",
+        "| 0   | NVIDIA GeForce RTX 3090          | Yes: 0 |     | 24322   MB | 10de      | 74b20100.. |",
+        "| 1   | NVIDIA GeForce RTX 2070          |        |     | 8006    MB | 10de      | 41d10100.. |",
+        "2026-08-11T02:53:44Z [1,290ms] [Info] [omni.rtx]  - CUDA device index: 0",
+        "2026-08-11T02:53:44Z [1,390ms] [Info] [omni.kit.renderer.plugin] Reducing '/app/runLoops/present/rateLimitFrequency' from 120.000000 to primary monitor's refresh rate of 59.000000 ('ViewSonic VX3276-FHD', '\\\\.\\DISPLAY2\\Monitor0')",
+        "2026-08-11T02:53:44Z [1,750ms] [Info] [omni.usd] UsdManager::getHydraEngineDeviceMask - engine: 'rtx', mask: 1",
+        "2026-08-11T02:53:53Z [10,400ms] [Info] [omni.rtx] View 0 (/Render/OmniverseKit/HydraTextures/omni_kit_widget_viewport_ViewportTexture_0) assigned to device 0"
+      ],
+      "fatal_count": 0,
+      "dump_count": 0,
+      "upload_attempt_count": 0,
+      "production_changed": false
+    }
+  ],
+  "normalized_differences": {
+    "A_to_B": [
+      {
+        "path": "physics_approximation",
+        "left": "convexDecomposition",
+        "right": "convexHull"
+      }
+    ],
+    "A_to_D": [
+      {
+        "path": "geometry.authored_extent",
+        "left": [
+          [
+            -1.0,
+            -1.0,
+            0.875
+          ],
+          [
+            1.0,
+            1.0,
+            1.125
+          ]
+        ],
+        "right": [
+          [
+            -0.8999999761581421,
+            -0.1599999964237213,
+            0.875
+          ],
+          [
+            0.8999999761581421,
+            0.1599999964237213,
+            1.1950000524520874
+          ]
+        ]
+      },
+      {
+        "path": "geometry.computed_extent",
+        "left": [
+          [
+            -1.0,
+            -1.0,
+            0.875
+          ],
+          [
+            1.0,
+            1.0,
+            1.125
+          ]
+        ],
+        "right": [
+          [
+            -0.8999999761581421,
+            -0.1599999964237213,
+            0.875
+          ],
+          [
+            0.8999999761581421,
+            0.1599999964237213,
+            1.1950000524520874
+          ]
+        ]
+      },
+      {
+        "path": "geometry.face_count",
+        "left": 6,
+        "right": 36
+      },
+      {
+        "path": "geometry.index_count",
+        "left": 24,
+        "right": 120
+      },
+      {
+        "path": "geometry.signed_volume",
+        "left": 1.0,
+        "right": 0.13824000861495725
+      },
+      {
+        "path": "geometry.vertex_count",
+        "left": 8,
+        "right": 26
+      }
+    ]
+  },
+  "control_sha256_equal": true,
+  "control_audit_equal": true,
+  "flow_readback_results": [
+    {
+      "condition": "box_before",
+      "status": "ok",
+      "sample_frames": [
+        60,
+        120,
+        180,
+        200
+      ],
+      "active_blocks_final": 24,
+      "lifecycle_marker": "shutdown_complete",
+      "process_exit_code": 0,
+      "timed_out": false,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "upload_attempt_count": 0,
+      "production_changed": false,
+      "stage_audit": {
+        "up_axis": "Z",
+        "meters_per_unit": 1.0,
+        "collider": {
+          "path": "/World/ColliderReferenceMesh",
+          "type": "Mesh",
+          "applied_schemas": [
+            "PhysicsCollisionAPI",
+            "PhysicsMeshCollisionAPI"
+          ],
+          "rigid_body_api": false,
+          "collision_enabled": true,
+          "approximation": "convexDecomposition",
+          "world_bbox_min": [
+            -1.0,
+            -1.0,
+            0.875
+          ],
+          "world_bbox_max": [
+            1.0,
+            1.0,
+            1.125
+          ]
+        },
+        "emitter": {
+          "path": "/World/Flow/Emitter",
+          "type": "FlowEmitterSphere",
+          "world_origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "radius": 0.10000000149011612,
+          "allocationScale": 1.5,
+          "applyPostPressure": false,
+          "coupleRateVelocity": 2.0,
+          "physicsVelocityScale": 0.0,
+          "coupleRateFuel": 2.0,
+          "coupleRateTemperature": 10.0,
+          "coupleRateSmoke": 1.0,
+          "coupleRateBurn": 0.0,
+          "target_velocity": "(0, 0, 0.3)"
+        },
+        "simulate": {
+          "layer": 0,
+          "densityCellSize": 0.02500000037252903,
+          "stepsPerSecond": 60.0,
+          "forceSimulate": true,
+          "simulateWhenPaused": false,
+          "physicsCollisionEnabled": true,
+          "physicsConvexCollision": true,
+          "velocitySubSteps": 1
+        },
+        "physics_scene_paths": [
+          "/World/PhysicsScene"
+        ],
+        "flow_prim_types": [
+          {
+            "path": "/World/Flow/Emitter",
+            "type": "FlowEmitterSphere"
+          },
+          {
+            "path": "/World/Flow/Simulate",
+            "type": "FlowSimulate"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection",
+            "type": "FlowAdvectionCombustionParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/temperature",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/fuel",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/burn",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/smoke",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/velocity",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/divergence",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/vorticity",
+            "type": "FlowVorticityParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/pressure",
+            "type": "FlowPressureParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/summaryAllocate",
+            "type": "FlowSummaryAllocateParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/nanoVdbExport",
+            "type": "FlowSparseNanoVdbExportParams"
+          },
+          {
+            "path": "/World/Flow/Offscreen",
+            "type": "FlowOffscreen"
+          },
+          {
+            "path": "/World/Flow/Offscreen/colormap",
+            "type": "FlowRayMarchColormapParams"
+          },
+          {
+            "path": "/World/Flow/Offscreen/shadow",
+            "type": "FlowShadowParams"
+          },
+          {
+            "path": "/World/Flow/Offscreen/debugVolume",
+            "type": "FlowDebugVolumeParams"
+          },
+          {
+            "path": "/World/Flow/Render",
+            "type": "FlowRender"
+          },
+          {
+            "path": "/World/Flow/Render/rayMarch",
+            "type": "FlowRayMarchParams"
+          },
+          {
+            "path": "/World/Flow/Render/rayMarch/cloud",
+            "type": "FlowRayMarchCloudParams"
+          },
+          {
+            "path": "/World/Flow/Render/renderSettings",
+            "type": "FlowRenderSettingsParams"
+          }
+        ]
+      },
+      "density_cell_size_m": 0.02500000037252903,
+      "velocity_cell_size_m": 0.05000000074505806,
+      "rois": {
+        "below": {
+          "minimum": [
+            -0.3,
+            -0.3,
+            0.67
+          ],
+          "maximum": [
+            0.3,
+            0.3,
+            0.8
+          ]
+        },
+        "inside": {
+          "minimum": [
+            -0.3,
+            -0.3,
+            0.875
+          ],
+          "maximum": [
+            0.3,
+            0.3,
+            1.125
+          ]
+        },
+        "inside_core": {
+          "minimum": [
+            -0.3,
+            -0.3,
+            0.93
+          ],
+          "maximum": [
+            0.3,
+            0.3,
+            1.07
+          ]
+        },
+        "above": {
+          "minimum": [
+            -0.3,
+            -0.3,
+            1.125
+          ],
+          "maximum": [
+            0.3,
+            0.3,
+            1.32
+          ]
+        },
+        "above_far": {
+          "minimum": [
+            -0.3,
+            -0.3,
+            1.18
+          ],
+          "maximum": [
+            0.3,
+            0.3,
+            1.55
+          ]
+        },
+        "cylinder_core": {
+          "minimum": [
+            -0.6,
+            -0.08,
+            0.955
+          ],
+          "maximum": [
+            0.6,
+            0.08,
+            1.115
+          ]
+        },
+        "cylinder_above": {
+          "minimum": [
+            -0.6,
+            -0.08,
+            1.245
+          ],
+          "maximum": [
+            0.6,
+            0.08,
+            1.4
+          ]
+        }
+      },
+      "series": {
+        "temperature": {
+          "inside_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "above": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_above": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ]
+        },
+        "fuel": {
+          "inside_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "above": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_above": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ]
+        },
+        "burn": {
+          "inside_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "above": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_above": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ]
+        },
+        "smoke": {
+          "inside_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "above": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_above": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ]
+        },
+        "velocity": {
+          "inside_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "above": [
+            {
+              "frame": 60,
+              "mean": 0.0119950336982855,
+              "p95": 0.036195448000556185,
+              "maximum": 0.14453482225754116,
+              "nonzero_voxel_count": 484
+            },
+            {
+              "frame": 120,
+              "mean": 0.010389136888553108,
+              "p95": 0.03516237182638231,
+              "maximum": 0.13644412384553284,
+              "nonzero_voxel_count": 484
+            },
+            {
+              "frame": 180,
+              "mean": 0.010234303662844762,
+              "p95": 0.029930078038240045,
+              "maximum": 0.1354106039373998,
+              "nonzero_voxel_count": 484
+            },
+            {
+              "frame": 200,
+              "mean": 0.010416241348258522,
+              "p95": 0.03152925290748479,
+              "maximum": 0.13697845733674258,
+              "nonzero_voxel_count": 484
+            }
+          ],
+          "cylinder_core": [
+            {
+              "frame": 60,
+              "mean": 0.026499496076463964,
+              "p95": 0.2403992934186358,
+              "maximum": 0.35134733536229745,
+              "nonzero_voxel_count": 69
+            },
+            {
+              "frame": 120,
+              "mean": 0.024242511263991073,
+              "p95": 0.21300375193454954,
+              "maximum": 0.34278792283136256,
+              "nonzero_voxel_count": 69
+            },
+            {
+              "frame": 180,
+              "mean": 0.023960530754625647,
+              "p95": 0.23016503342940034,
+              "maximum": 0.335715977708727,
+              "nonzero_voxel_count": 69
+            },
+            {
+              "frame": 200,
+              "mean": 0.024269844627950562,
+              "p95": 0.23139860792568148,
+              "maximum": 0.33792467866586706,
+              "nonzero_voxel_count": 69
+            }
+          ],
+          "cylinder_above": [
+            {
+              "frame": 60,
+              "mean": 0.0034262955874374383,
+              "p95": 0.01454846220449942,
+              "maximum": 0.016681847025103055,
+              "nonzero_voxel_count": 207
+            },
+            {
+              "frame": 120,
+              "mean": 0.003221250990887978,
+              "p95": 0.011275402393777646,
+              "maximum": 0.013787285391196958,
+              "nonzero_voxel_count": 207
+            },
+            {
+              "frame": 180,
+              "mean": 0.003162360845066814,
+              "p95": 0.011532816590728792,
+              "maximum": 0.013553295136987779,
+              "nonzero_voxel_count": 207
+            },
+            {
+              "frame": 200,
+              "mean": 0.0031807708176703306,
+              "p95": 0.012085897717629263,
+              "maximum": 0.01388473927866558,
+              "nonzero_voxel_count": 207
+            }
+          ]
+        }
+      },
+      "final": {
+        "temperature": {
+          "inside_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "above": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_above": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          }
+        },
+        "fuel": {
+          "inside_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "above": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_above": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          }
+        },
+        "burn": {
+          "inside_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "above": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_above": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          }
+        },
+        "smoke": {
+          "inside_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "above": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_above": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          }
+        },
+        "velocity": {
+          "inside_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "above": {
+            "mean": 0.010416241348258522,
+            "p95": 0.03152925290748479,
+            "maximum": 0.13697845733674258,
+            "nonzero_voxel_count": 484
+          },
+          "cylinder_core": {
+            "mean": 0.024269844627950562,
+            "p95": 0.23139860792568148,
+            "maximum": 0.33792467866586706,
+            "nonzero_voxel_count": 69
+          },
+          "cylinder_above": {
+            "mean": 0.0031807708176703306,
+            "p95": 0.012085897717629263,
+            "maximum": 0.01388473927866558,
+            "nonzero_voxel_count": 207
+          }
+        }
+      }
+    },
+    {
+      "condition": "cylinder_decomposition",
+      "status": "ok",
+      "sample_frames": [
+        60,
+        120,
+        180,
+        200
+      ],
+      "active_blocks_final": 26,
+      "lifecycle_marker": "shutdown_complete",
+      "process_exit_code": 0,
+      "timed_out": false,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "upload_attempt_count": 0,
+      "production_changed": false,
+      "stage_audit": {
+        "up_axis": "Z",
+        "meters_per_unit": 1.0,
+        "collider": {
+          "path": "/World/ColliderReferenceMesh",
+          "type": "Mesh",
+          "applied_schemas": [
+            "PhysicsCollisionAPI",
+            "PhysicsMeshCollisionAPI"
+          ],
+          "rigid_body_api": false,
+          "collision_enabled": true,
+          "approximation": "convexDecomposition",
+          "world_bbox_min": [
+            -0.8999999761581421,
+            -0.1599999964237213,
+            0.875
+          ],
+          "world_bbox_max": [
+            0.8999999761581421,
+            0.1599999964237213,
+            1.1950000524520874
+          ]
+        },
+        "emitter": {
+          "path": "/World/Flow/Emitter",
+          "type": "FlowEmitterSphere",
+          "world_origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "radius": 0.10000000149011612,
+          "allocationScale": 1.5,
+          "applyPostPressure": false,
+          "coupleRateVelocity": 2.0,
+          "physicsVelocityScale": 0.0,
+          "coupleRateFuel": 2.0,
+          "coupleRateTemperature": 10.0,
+          "coupleRateSmoke": 1.0,
+          "coupleRateBurn": 0.0,
+          "target_velocity": "(0, 0, 0.3)"
+        },
+        "simulate": {
+          "layer": 0,
+          "densityCellSize": 0.02500000037252903,
+          "stepsPerSecond": 60.0,
+          "forceSimulate": true,
+          "simulateWhenPaused": false,
+          "physicsCollisionEnabled": true,
+          "physicsConvexCollision": true,
+          "velocitySubSteps": 1
+        },
+        "physics_scene_paths": [
+          "/World/PhysicsScene"
+        ],
+        "flow_prim_types": [
+          {
+            "path": "/World/Flow/Emitter",
+            "type": "FlowEmitterSphere"
+          },
+          {
+            "path": "/World/Flow/Simulate",
+            "type": "FlowSimulate"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection",
+            "type": "FlowAdvectionCombustionParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/temperature",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/fuel",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/burn",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/smoke",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/velocity",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/divergence",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/vorticity",
+            "type": "FlowVorticityParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/pressure",
+            "type": "FlowPressureParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/summaryAllocate",
+            "type": "FlowSummaryAllocateParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/nanoVdbExport",
+            "type": "FlowSparseNanoVdbExportParams"
+          },
+          {
+            "path": "/World/Flow/Offscreen",
+            "type": "FlowOffscreen"
+          },
+          {
+            "path": "/World/Flow/Offscreen/colormap",
+            "type": "FlowRayMarchColormapParams"
+          },
+          {
+            "path": "/World/Flow/Offscreen/shadow",
+            "type": "FlowShadowParams"
+          },
+          {
+            "path": "/World/Flow/Offscreen/debugVolume",
+            "type": "FlowDebugVolumeParams"
+          },
+          {
+            "path": "/World/Flow/Render",
+            "type": "FlowRender"
+          },
+          {
+            "path": "/World/Flow/Render/rayMarch",
+            "type": "FlowRayMarchParams"
+          },
+          {
+            "path": "/World/Flow/Render/rayMarch/cloud",
+            "type": "FlowRayMarchCloudParams"
+          },
+          {
+            "path": "/World/Flow/Render/renderSettings",
+            "type": "FlowRenderSettingsParams"
+          }
+        ]
+      },
+      "density_cell_size_m": 0.02500000037252903,
+      "velocity_cell_size_m": 0.05000000074505806,
+      "rois": {
+        "below": {
+          "minimum": [
+            -0.3,
+            -0.3,
+            0.67
+          ],
+          "maximum": [
+            0.3,
+            0.3,
+            0.8
+          ]
+        },
+        "inside": {
+          "minimum": [
+            -0.3,
+            -0.3,
+            0.875
+          ],
+          "maximum": [
+            0.3,
+            0.3,
+            1.125
+          ]
+        },
+        "inside_core": {
+          "minimum": [
+            -0.3,
+            -0.3,
+            0.93
+          ],
+          "maximum": [
+            0.3,
+            0.3,
+            1.07
+          ]
+        },
+        "above": {
+          "minimum": [
+            -0.3,
+            -0.3,
+            1.125
+          ],
+          "maximum": [
+            0.3,
+            0.3,
+            1.32
+          ]
+        },
+        "above_far": {
+          "minimum": [
+            -0.3,
+            -0.3,
+            1.18
+          ],
+          "maximum": [
+            0.3,
+            0.3,
+            1.55
+          ]
+        },
+        "cylinder_core": {
+          "minimum": [
+            -0.6,
+            -0.08,
+            0.955
+          ],
+          "maximum": [
+            0.6,
+            0.08,
+            1.115
+          ]
+        },
+        "cylinder_above": {
+          "minimum": [
+            -0.6,
+            -0.08,
+            1.245
+          ],
+          "maximum": [
+            0.6,
+            0.08,
+            1.4
+          ]
+        }
+      },
+      "series": {
+        "temperature": {
+          "inside_core": [
+            {
+              "frame": 60,
+              "mean": 0.022889661811475268,
+              "p95": 0.1593017578125,
+              "maximum": 0.5380859375,
+              "nonzero_voxel_count": 1434
+            },
+            {
+              "frame": 120,
+              "mean": 0.019194267692998587,
+              "p95": 0.1484375,
+              "maximum": 0.537109375,
+              "nonzero_voxel_count": 1433
+            },
+            {
+              "frame": 180,
+              "mean": 0.020140708619570236,
+              "p95": 0.159423828125,
+              "maximum": 0.55322265625,
+              "nonzero_voxel_count": 1430
+            },
+            {
+              "frame": 200,
+              "mean": 0.020249247731243054,
+              "p95": 0.16015625,
+              "maximum": 0.54296875,
+              "nonzero_voxel_count": 1430
+            }
+          ],
+          "above": [
+            {
+              "frame": 60,
+              "mean": 0.009459721723779162,
+              "p95": 0.06640625,
+              "maximum": 0.2296142578125,
+              "nonzero_voxel_count": 2199
+            },
+            {
+              "frame": 120,
+              "mean": 0.007494292167386846,
+              "p95": 0.051025390625,
+              "maximum": 0.255615234375,
+              "nonzero_voxel_count": 2299
+            },
+            {
+              "frame": 180,
+              "mean": 0.007054620012218425,
+              "p95": 0.038360595703125,
+              "maximum": 0.259033203125,
+              "nonzero_voxel_count": 2386
+            },
+            {
+              "frame": 200,
+              "mean": 0.007638495746429566,
+              "p95": 0.04962158203125,
+              "maximum": 0.279296875,
+              "nonzero_voxel_count": 2449
+            }
+          ],
+          "cylinder_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_above": [
+            {
+              "frame": 60,
+              "mean": 2.2733706712964337e-07,
+              "p95": 0.0,
+              "maximum": 6.443262100219727e-05,
+              "nonzero_voxel_count": 50
+            },
+            {
+              "frame": 120,
+              "mean": 6.001922014153354e-06,
+              "p95": 0.0,
+              "maximum": 0.002452850341796875,
+              "nonzero_voxel_count": 92
+            },
+            {
+              "frame": 180,
+              "mean": 6.249640608751786e-06,
+              "p95": 4.172325134277344e-06,
+              "maximum": 0.00174713134765625,
+              "nonzero_voxel_count": 163
+            },
+            {
+              "frame": 200,
+              "mean": 1.0891163602788397e-05,
+              "p95": 4.649162292480469e-06,
+              "maximum": 0.006641387939453125,
+              "nonzero_voxel_count": 171
+            }
+          ]
+        },
+        "fuel": {
+          "inside_core": [
+            {
+              "frame": 60,
+              "mean": 8.811121401579484e-09,
+              "p95": 0.0,
+              "maximum": 3.2186508178710938e-06,
+              "nonzero_voxel_count": 94
+            },
+            {
+              "frame": 120,
+              "mean": 2.6974200300999085e-08,
+              "p95": 0.0,
+              "maximum": 1.0073184967041016e-05,
+              "nonzero_voxel_count": 114
+            },
+            {
+              "frame": 180,
+              "mean": 6.059617761853512e-08,
+              "p95": 0.0,
+              "maximum": 3.6776065826416016e-05,
+              "nonzero_voxel_count": 123
+            },
+            {
+              "frame": 200,
+              "mean": 7.857897781920118e-08,
+              "p95": 5.960464477539063e-08,
+              "maximum": 2.6404857635498047e-05,
+              "nonzero_voxel_count": 137
+            }
+          ],
+          "above": [
+            {
+              "frame": 60,
+              "mean": 6.337923003054296e-10,
+              "p95": 0.0,
+              "maximum": 2.384185791015625e-07,
+              "nonzero_voxel_count": 32
+            },
+            {
+              "frame": 120,
+              "mean": 7.746350337066361e-10,
+              "p95": 0.0,
+              "maximum": 2.980232238769531e-07,
+              "nonzero_voxel_count": 36
+            },
+            {
+              "frame": 180,
+              "mean": 3.295719961588234e-09,
+              "p95": 0.0,
+              "maximum": 2.6226043701171875e-06,
+              "nonzero_voxel_count": 60
+            },
+            {
+              "frame": 200,
+              "mean": 7.91536161714781e-09,
+              "p95": 0.0,
+              "maximum": 3.4570693969726562e-06,
+              "nonzero_voxel_count": 76
+            }
+          ],
+          "cylinder_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_above": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ]
+        },
+        "burn": {
+          "inside_core": [
+            {
+              "frame": 60,
+              "mean": 0.00040889457854070827,
+              "p95": 0.0019931793212890625,
+              "maximum": 0.0146636962890625,
+              "nonzero_voxel_count": 1397
+            },
+            {
+              "frame": 120,
+              "mean": 0.0003283626641127473,
+              "p95": 0.0011568069458007812,
+              "maximum": 0.01739501953125,
+              "nonzero_voxel_count": 1434
+            },
+            {
+              "frame": 180,
+              "mean": 0.00021326016838924645,
+              "p95": 0.0007610321044921875,
+              "maximum": 0.0113677978515625,
+              "nonzero_voxel_count": 1460
+            },
+            {
+              "frame": 200,
+              "mean": 0.00021493869828366602,
+              "p95": 0.0007090568542480469,
+              "maximum": 0.00835418701171875,
+              "nonzero_voxel_count": 1456
+            }
+          ],
+          "above": [
+            {
+              "frame": 60,
+              "mean": 0.0002417001021156239,
+              "p95": 0.0013799667358398438,
+              "maximum": 0.006862640380859375,
+              "nonzero_voxel_count": 2119
+            },
+            {
+              "frame": 120,
+              "mean": 0.00021373912945586926,
+              "p95": 0.00092315673828125,
+              "maximum": 0.006153106689453125,
+              "nonzero_voxel_count": 2305
+            },
+            {
+              "frame": 180,
+              "mean": 0.0001789777766779375,
+              "p95": 0.00080108642578125,
+              "maximum": 0.004207611083984375,
+              "nonzero_voxel_count": 2510
+            },
+            {
+              "frame": 200,
+              "mean": 0.00017209721479163504,
+              "p95": 0.0007715225219726562,
+              "maximum": 0.00357818603515625,
+              "nonzero_voxel_count": 2632
+            }
+          ],
+          "cylinder_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_above": [
+            {
+              "frame": 60,
+              "mean": 3.825688193030391e-08,
+              "p95": 0.0,
+              "maximum": 1.1980533599853516e-05,
+              "nonzero_voxel_count": 42
+            },
+            {
+              "frame": 120,
+              "mean": 5.541963780179936e-07,
+              "p95": 0.0,
+              "maximum": 0.00021219253540039062,
+              "nonzero_voxel_count": 87
+            },
+            {
+              "frame": 180,
+              "mean": 1.6368933120155528e-06,
+              "p95": 2.1457672119140625e-06,
+              "maximum": 0.0002837181091308594,
+              "nonzero_voxel_count": 181
+            },
+            {
+              "frame": 200,
+              "mean": 2.308728847097843e-06,
+              "p95": 2.8014183044433594e-06,
+              "maximum": 0.0008020401000976562,
+              "nonzero_voxel_count": 202
+            }
+          ]
+        },
+        "smoke": {
+          "inside_core": [
+            {
+              "frame": 60,
+              "mean": 0.00014930805772373943,
+              "p95": 0.0,
+              "maximum": 0.0899658203125,
+              "nonzero_voxel_count": 17
+            },
+            {
+              "frame": 120,
+              "mean": 7.224247451089956e-05,
+              "p95": 0.0,
+              "maximum": 0.087158203125,
+              "nonzero_voxel_count": 24
+            },
+            {
+              "frame": 180,
+              "mean": 0.00010236542256432805,
+              "p95": 0.0,
+              "maximum": 0.0994873046875,
+              "nonzero_voxel_count": 27
+            },
+            {
+              "frame": 200,
+              "mean": 9.697238529111578e-05,
+              "p95": 0.0,
+              "maximum": 0.12091064453125,
+              "nonzero_voxel_count": 33
+            }
+          ],
+          "above": [
+            {
+              "frame": 60,
+              "mean": 1.690112800814479e-10,
+              "p95": 0.0,
+              "maximum": 7.152557373046875e-07,
+              "nonzero_voxel_count": 1
+            },
+            {
+              "frame": 120,
+              "mean": 7.605507603665156e-10,
+              "p95": 0.0,
+              "maximum": 3.2186508178710938e-06,
+              "nonzero_voxel_count": 1
+            },
+            {
+              "frame": 180,
+              "mean": 2.5351692012217184e-10,
+              "p95": 0.0,
+              "maximum": 3.5762786865234375e-07,
+              "nonzero_voxel_count": 3
+            },
+            {
+              "frame": 200,
+              "mean": 5.35202386924585e-10,
+              "p95": 0.0,
+              "maximum": 1.1324882507324219e-06,
+              "nonzero_voxel_count": 3
+            }
+          ],
+          "cylinder_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_above": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ]
+        },
+        "velocity": {
+          "inside_core": [
+            {
+              "frame": 60,
+              "mean": 0.21230025775945766,
+              "p95": 1.3534092456227682,
+              "maximum": 3.3715372403019606,
+              "nonzero_voxel_count": 165
+            },
+            {
+              "frame": 120,
+              "mean": 0.19966450799146737,
+              "p95": 1.2091538479422435,
+              "maximum": 3.338562020645444,
+              "nonzero_voxel_count": 165
+            },
+            {
+              "frame": 180,
+              "mean": 0.21067094502034817,
+              "p95": 1.2658024666423915,
+              "maximum": 3.5195969080384013,
+              "nonzero_voxel_count": 165
+            },
+            {
+              "frame": 200,
+              "mean": 0.21440026154953212,
+              "p95": 1.4848574234013667,
+              "maximum": 3.560074005805153,
+              "nonzero_voxel_count": 165
+            }
+          ],
+          "above": [
+            {
+              "frame": 60,
+              "mean": 0.18895410513395242,
+              "p95": 1.2119890965413387,
+              "maximum": 2.5255463704532968,
+              "nonzero_voxel_count": 462
+            },
+            {
+              "frame": 120,
+              "mean": 0.19937245670739062,
+              "p95": 1.51295496346869,
+              "maximum": 2.265884856213976,
+              "nonzero_voxel_count": 462
+            },
+            {
+              "frame": 180,
+              "mean": 0.18652714591723302,
+              "p95": 1.495453442597438,
+              "maximum": 2.9039225335556353,
+              "nonzero_voxel_count": 462
+            },
+            {
+              "frame": 200,
+              "mean": 0.18538238354701986,
+              "p95": 1.4717250581568273,
+              "maximum": 2.782770619903582,
+              "nonzero_voxel_count": 462
+            }
+          ],
+          "cylinder_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_above": [
+            {
+              "frame": 60,
+              "mean": 0.005232586474279424,
+              "p95": 0.014661739190976105,
+              "maximum": 0.028532304117921573,
+              "nonzero_voxel_count": 207
+            },
+            {
+              "frame": 120,
+              "mean": 0.007789171007769469,
+              "p95": 0.01960844787413979,
+              "maximum": 0.057330931039473836,
+              "nonzero_voxel_count": 207
+            },
+            {
+              "frame": 180,
+              "mean": 0.008293335704836384,
+              "p95": 0.020487561247083553,
+              "maximum": 0.10356962741237355,
+              "nonzero_voxel_count": 207
+            },
+            {
+              "frame": 200,
+              "mean": 0.004639943829030476,
+              "p95": 0.011600765925359791,
+              "maximum": 0.03829391735228579,
+              "nonzero_voxel_count": 207
+            }
+          ]
+        }
+      },
+      "final": {
+        "temperature": {
+          "inside_core": {
+            "mean": 0.020249247731243054,
+            "p95": 0.16015625,
+            "maximum": 0.54296875,
+            "nonzero_voxel_count": 1430
+          },
+          "above": {
+            "mean": 0.007638495746429566,
+            "p95": 0.04962158203125,
+            "maximum": 0.279296875,
+            "nonzero_voxel_count": 2449
+          },
+          "cylinder_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_above": {
+            "mean": 1.0891163602788397e-05,
+            "p95": 4.649162292480469e-06,
+            "maximum": 0.006641387939453125,
+            "nonzero_voxel_count": 171
+          }
+        },
+        "fuel": {
+          "inside_core": {
+            "mean": 7.857897781920118e-08,
+            "p95": 5.960464477539063e-08,
+            "maximum": 2.6404857635498047e-05,
+            "nonzero_voxel_count": 137
+          },
+          "above": {
+            "mean": 7.91536161714781e-09,
+            "p95": 0.0,
+            "maximum": 3.4570693969726562e-06,
+            "nonzero_voxel_count": 76
+          },
+          "cylinder_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_above": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          }
+        },
+        "burn": {
+          "inside_core": {
+            "mean": 0.00021493869828366602,
+            "p95": 0.0007090568542480469,
+            "maximum": 0.00835418701171875,
+            "nonzero_voxel_count": 1456
+          },
+          "above": {
+            "mean": 0.00017209721479163504,
+            "p95": 0.0007715225219726562,
+            "maximum": 0.00357818603515625,
+            "nonzero_voxel_count": 2632
+          },
+          "cylinder_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_above": {
+            "mean": 2.308728847097843e-06,
+            "p95": 2.8014183044433594e-06,
+            "maximum": 0.0008020401000976562,
+            "nonzero_voxel_count": 202
+          }
+        },
+        "smoke": {
+          "inside_core": {
+            "mean": 9.697238529111578e-05,
+            "p95": 0.0,
+            "maximum": 0.12091064453125,
+            "nonzero_voxel_count": 33
+          },
+          "above": {
+            "mean": 5.35202386924585e-10,
+            "p95": 0.0,
+            "maximum": 1.1324882507324219e-06,
+            "nonzero_voxel_count": 3
+          },
+          "cylinder_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_above": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          }
+        },
+        "velocity": {
+          "inside_core": {
+            "mean": 0.21440026154953212,
+            "p95": 1.4848574234013667,
+            "maximum": 3.560074005805153,
+            "nonzero_voxel_count": 165
+          },
+          "above": {
+            "mean": 0.18538238354701986,
+            "p95": 1.4717250581568273,
+            "maximum": 2.782770619903582,
+            "nonzero_voxel_count": 462
+          },
+          "cylinder_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_above": {
+            "mean": 0.004639943829030476,
+            "p95": 0.011600765925359791,
+            "maximum": 0.03829391735228579,
+            "nonzero_voxel_count": 207
+          }
+        }
+      }
+    },
+    {
+      "condition": "box_after",
+      "status": "ok",
+      "sample_frames": [
+        60,
+        120,
+        180,
+        200
+      ],
+      "active_blocks_final": 24,
+      "lifecycle_marker": "shutdown_complete",
+      "process_exit_code": 0,
+      "timed_out": false,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "upload_attempt_count": 0,
+      "production_changed": false,
+      "stage_audit": {
+        "up_axis": "Z",
+        "meters_per_unit": 1.0,
+        "collider": {
+          "path": "/World/ColliderReferenceMesh",
+          "type": "Mesh",
+          "applied_schemas": [
+            "PhysicsCollisionAPI",
+            "PhysicsMeshCollisionAPI"
+          ],
+          "rigid_body_api": false,
+          "collision_enabled": true,
+          "approximation": "convexDecomposition",
+          "world_bbox_min": [
+            -1.0,
+            -1.0,
+            0.875
+          ],
+          "world_bbox_max": [
+            1.0,
+            1.0,
+            1.125
+          ]
+        },
+        "emitter": {
+          "path": "/World/Flow/Emitter",
+          "type": "FlowEmitterSphere",
+          "world_origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "radius": 0.10000000149011612,
+          "allocationScale": 1.5,
+          "applyPostPressure": false,
+          "coupleRateVelocity": 2.0,
+          "physicsVelocityScale": 0.0,
+          "coupleRateFuel": 2.0,
+          "coupleRateTemperature": 10.0,
+          "coupleRateSmoke": 1.0,
+          "coupleRateBurn": 0.0,
+          "target_velocity": "(0, 0, 0.3)"
+        },
+        "simulate": {
+          "layer": 0,
+          "densityCellSize": 0.02500000037252903,
+          "stepsPerSecond": 60.0,
+          "forceSimulate": true,
+          "simulateWhenPaused": false,
+          "physicsCollisionEnabled": true,
+          "physicsConvexCollision": true,
+          "velocitySubSteps": 1
+        },
+        "physics_scene_paths": [
+          "/World/PhysicsScene"
+        ],
+        "flow_prim_types": [
+          {
+            "path": "/World/Flow/Emitter",
+            "type": "FlowEmitterSphere"
+          },
+          {
+            "path": "/World/Flow/Simulate",
+            "type": "FlowSimulate"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection",
+            "type": "FlowAdvectionCombustionParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/temperature",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/fuel",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/burn",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/smoke",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/velocity",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/divergence",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/vorticity",
+            "type": "FlowVorticityParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/pressure",
+            "type": "FlowPressureParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/summaryAllocate",
+            "type": "FlowSummaryAllocateParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/nanoVdbExport",
+            "type": "FlowSparseNanoVdbExportParams"
+          },
+          {
+            "path": "/World/Flow/Offscreen",
+            "type": "FlowOffscreen"
+          },
+          {
+            "path": "/World/Flow/Offscreen/colormap",
+            "type": "FlowRayMarchColormapParams"
+          },
+          {
+            "path": "/World/Flow/Offscreen/shadow",
+            "type": "FlowShadowParams"
+          },
+          {
+            "path": "/World/Flow/Offscreen/debugVolume",
+            "type": "FlowDebugVolumeParams"
+          },
+          {
+            "path": "/World/Flow/Render",
+            "type": "FlowRender"
+          },
+          {
+            "path": "/World/Flow/Render/rayMarch",
+            "type": "FlowRayMarchParams"
+          },
+          {
+            "path": "/World/Flow/Render/rayMarch/cloud",
+            "type": "FlowRayMarchCloudParams"
+          },
+          {
+            "path": "/World/Flow/Render/renderSettings",
+            "type": "FlowRenderSettingsParams"
+          }
+        ]
+      },
+      "density_cell_size_m": 0.02500000037252903,
+      "velocity_cell_size_m": 0.05000000074505806,
+      "rois": {
+        "below": {
+          "minimum": [
+            -0.3,
+            -0.3,
+            0.67
+          ],
+          "maximum": [
+            0.3,
+            0.3,
+            0.8
+          ]
+        },
+        "inside": {
+          "minimum": [
+            -0.3,
+            -0.3,
+            0.875
+          ],
+          "maximum": [
+            0.3,
+            0.3,
+            1.125
+          ]
+        },
+        "inside_core": {
+          "minimum": [
+            -0.3,
+            -0.3,
+            0.93
+          ],
+          "maximum": [
+            0.3,
+            0.3,
+            1.07
+          ]
+        },
+        "above": {
+          "minimum": [
+            -0.3,
+            -0.3,
+            1.125
+          ],
+          "maximum": [
+            0.3,
+            0.3,
+            1.32
+          ]
+        },
+        "above_far": {
+          "minimum": [
+            -0.3,
+            -0.3,
+            1.18
+          ],
+          "maximum": [
+            0.3,
+            0.3,
+            1.55
+          ]
+        },
+        "cylinder_core": {
+          "minimum": [
+            -0.6,
+            -0.08,
+            0.955
+          ],
+          "maximum": [
+            0.6,
+            0.08,
+            1.115
+          ]
+        },
+        "cylinder_above": {
+          "minimum": [
+            -0.6,
+            -0.08,
+            1.245
+          ],
+          "maximum": [
+            0.6,
+            0.08,
+            1.4
+          ]
+        }
+      },
+      "series": {
+        "temperature": {
+          "inside_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "above": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_above": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ]
+        },
+        "fuel": {
+          "inside_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "above": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_above": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ]
+        },
+        "burn": {
+          "inside_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "above": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_above": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ]
+        },
+        "smoke": {
+          "inside_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "above": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "cylinder_above": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ]
+        },
+        "velocity": {
+          "inside_core": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "above": [
+            {
+              "frame": 60,
+              "mean": 0.0119950336982855,
+              "p95": 0.036195448000556185,
+              "maximum": 0.14453482225754116,
+              "nonzero_voxel_count": 484
+            },
+            {
+              "frame": 120,
+              "mean": 0.010389136888553108,
+              "p95": 0.03516237182638231,
+              "maximum": 0.13644412384553284,
+              "nonzero_voxel_count": 484
+            },
+            {
+              "frame": 180,
+              "mean": 0.010234303662844762,
+              "p95": 0.029930078038240045,
+              "maximum": 0.1354106039373998,
+              "nonzero_voxel_count": 484
+            },
+            {
+              "frame": 200,
+              "mean": 0.010416241348258522,
+              "p95": 0.03152925290748479,
+              "maximum": 0.13697845733674258,
+              "nonzero_voxel_count": 484
+            }
+          ],
+          "cylinder_core": [
+            {
+              "frame": 60,
+              "mean": 0.026499496076463964,
+              "p95": 0.2403992934186358,
+              "maximum": 0.35134733536229745,
+              "nonzero_voxel_count": 69
+            },
+            {
+              "frame": 120,
+              "mean": 0.024242511263991073,
+              "p95": 0.21300375193454954,
+              "maximum": 0.34278792283136256,
+              "nonzero_voxel_count": 69
+            },
+            {
+              "frame": 180,
+              "mean": 0.023960530754625647,
+              "p95": 0.23016503342940034,
+              "maximum": 0.335715977708727,
+              "nonzero_voxel_count": 69
+            },
+            {
+              "frame": 200,
+              "mean": 0.024269844627950562,
+              "p95": 0.23139860792568148,
+              "maximum": 0.33792467866586706,
+              "nonzero_voxel_count": 69
+            }
+          ],
+          "cylinder_above": [
+            {
+              "frame": 60,
+              "mean": 0.0034262955874374383,
+              "p95": 0.01454846220449942,
+              "maximum": 0.016681847025103055,
+              "nonzero_voxel_count": 207
+            },
+            {
+              "frame": 120,
+              "mean": 0.003221250990887978,
+              "p95": 0.011275402393777646,
+              "maximum": 0.013787285391196958,
+              "nonzero_voxel_count": 207
+            },
+            {
+              "frame": 180,
+              "mean": 0.003162360845066814,
+              "p95": 0.011532816590728792,
+              "maximum": 0.013553295136987779,
+              "nonzero_voxel_count": 207
+            },
+            {
+              "frame": 200,
+              "mean": 0.0031807708176703306,
+              "p95": 0.012085897717629263,
+              "maximum": 0.01388473927866558,
+              "nonzero_voxel_count": 207
+            }
+          ]
+        }
+      },
+      "final": {
+        "temperature": {
+          "inside_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "above": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_above": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          }
+        },
+        "fuel": {
+          "inside_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "above": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_above": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          }
+        },
+        "burn": {
+          "inside_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "above": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_above": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          }
+        },
+        "smoke": {
+          "inside_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "above": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "cylinder_above": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          }
+        },
+        "velocity": {
+          "inside_core": {
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0,
+            "nonzero_voxel_count": 0
+          },
+          "above": {
+            "mean": 0.010416241348258522,
+            "p95": 0.03152925290748479,
+            "maximum": 0.13697845733674258,
+            "nonzero_voxel_count": 484
+          },
+          "cylinder_core": {
+            "mean": 0.024269844627950562,
+            "p95": 0.23139860792568148,
+            "maximum": 0.33792467866586706,
+            "nonzero_voxel_count": 69
+          },
+          "cylinder_above": {
+            "mean": 0.0031807708176703306,
+            "p95": 0.012085897717629263,
+            "maximum": 0.01388473927866558,
+            "nonzero_voxel_count": 207
+          }
+        }
+      }
+    }
+  ],
+  "flow_classification": {
+    "sample_frames": [
+      60,
+      120,
+      180,
+      200
+    ],
+    "box_before_after_equal": true,
+    "cylinder_core_scalar_all_samples_zero": true,
+    "cylinder_core_velocity_all_samples_zero": true,
+    "final_cylinder_core_temperature_mean": 0.0,
+    "final_cylinder_above_temperature_mean": 1.0891163602788397e-05,
+    "final_wide_inside_temperature_mean": 0.020249247731243054,
+    "interpretation": "The nonzero scalar values in the wider Box ROI are outside the cylindrical solid and are consistent with lateral bypass. The contained core remained zero. A very small scalar residual appeared above the cylinder, so perfect global occlusion is not claimed."
+  },
+  "safety": {
+    "stage_matrix_complete": true,
+    "flow_matrix_complete": true,
+    "processes": 8,
+    "normal_exit_count": 8,
+    "timeout_count": 0,
+    "fatal_count": 0,
+    "dump_count": 0,
+    "upload_attempt_count": 0,
+    "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "production_changed": false
+  },
+  "classification": {
+    "observed": [
+      "All A-E processes reached pure OpenUSD open, USD context connection, Hydra observation, first renderer update, first viewport frame, stage close, renderer drain, and normal OS exit.",
+      "Changing only the Box approximation to convexHull did not reproduce the historical cylindrical Hull crash.",
+      "The closed 12-segment cylindrical topology with convexDecomposition opened, rendered, closed, and exited normally.",
+      "The public Flow readback completed between matching Box controls; all scalar and velocity samples inside the cylinder-contained core were zero."
+    ],
+    "strong_inference": [
+      "The Phase 6DX timeout was caused by its pre-stage viewport-frame wait rather than the tested stage content.",
+      "The cylindrical topology is safe for this static axis-aligned Flow-only convexDecomposition boundary on the current fixed environment.",
+      "Nonzero values in the wider Box ROI during the Cylinder run represent space outside the cylinder and are consistent with lateral bypass rather than solid-volume penetration."
+    ],
+    "unconfirmed": [
+      "Cylinder convexHull remains untested after its historical crash and is not qualified by the Box convexHull result.",
+      "Rotation, PhysX sharing, analytic siblings, dynamic transforms, Phase 6DR integration, and 20-log performance remain untested.",
+      "No public evidence identifies the historical omni.fabric.plugin.dll fault's root cause."
+    ]
+  },
+  "decision": "Phase 6DU may resume only in a new independent phase from the qualified static axis-aligned Cylinder convexDecomposition configuration. Cylinder convexHull must remain excluded until separately approved and guarded by controls.",
+  "regression": {
+    "release_build": {
+      "status": "passed",
+      "seconds": 6.8
+    },
+    "lifecycle_contract": {
+      "status": "passed",
+      "passed": 6,
+      "total": 6
+    },
+    "flow_collider_runtime_target": {
+      "status": "passed",
+      "processes": 3,
+      "public_readback_samples": 12
+    },
+    "flow_collider_unit_target": {
+      "status": "passed",
+      "test": "campfire.app.tests.test_scene.TestScene.test_flow_scene_has_emitter_simulation_and_colliders",
+      "passed": 1,
+      "total": 1,
+      "seconds": 0.073
+    },
+    "standard_suite": {
+      "status": "passed",
+      "passed": 78,
+      "total": 78,
+      "seconds": 305.9
+    },
+    "static_devlog": {
+      "status": "passed",
+      "unique_local_references": 330,
+      "missing_references": 0,
+      "json_failures": 0,
+      "svg_failures": 0,
+      "utf8_replacement_characters": 0
+    },
+    "phase0_rtx": "not required; production code/app composition unchanged and renderer lifecycle stayed normal"
+  },
+  "production_changed": false,
+  "latest_demo_changed": false
+}

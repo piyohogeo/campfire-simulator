@@ -2969,3 +2969,15 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - fatal／native crash／dump／automatic upload attemptは0。RTX 3090／CUDA 0が選択され、production app SHA-256は`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`で前後一致した。
 - Phase 6DUは再開しない。次の独立harnessはPhase 6DWで合格したreadiness順をそのまま使い、known-good Boxの正常OS exitを得てから一差分ablationへ進む。失敗済みCylinder Hullは引き続き自動再試行しない。詳細は`docs/design/stage_open_safe_preflight.md`。映像差がないためlatest demoは変更していない。
 - Release buildは`6.79 s`、標準suiteは8 process・`78 / 78`件・`304.5 s`、JSON／SVG／HTML静的検査は合格した。browser connectionがないため実ブラウザ描画は未確認。productionコードとapp compositionは不変で、runtime matrixはcontrolで安全停止済みのためPhase 0 RTXは再実行していない。
+
+## Phase 6DY calibrated Box-to-Cylinder stage-open ablation
+
+### 2026-08-11: Phase 6DW lifecycleでBox HullとCylinder decompositionを正常終了まで分類
+
+- Phase 6DWの既存runner／probeを変更せず直接呼び、A Box decomposition、B Box hull、C control、D Cylinder decomposition、E exit controlを各独立processで実行した。static testはpure OpenUSD→USD context→renderer update→stage接続後viewport frame→stage close→renderer drainのmarker順、pre-stage frame wait 0、fail-fast、no retryを6/6で確認した。
+- A/C/Eは同一SHA-256／同一audit。A→Bは`physics:approximation`だけ、A→Dは閉じた12分割円筒のtopology／extentだけを変更した。Dは26 vertices／36 faces／120 indices、outward、degenerate 0、extent一致、static・axis-aligned・Flow-only・単一proxyで、RenderSurface／analytic sibling／RigidBody／rotationはない。
+- A〜Eは`14.304〜15.735 s`で全てpure OpenUSD、USD context、Hydra、first renderer update、first viewport frame、stage close、renderer drain、plugin shutdown、正常OS exitへ到達した。Box Hullはstage-open可能。Cylinder decompositionもstage-open可能。失敗済みCylinder Hullは実行しておらず未qualifiedのままである。
+- A→D→Eの公開NanoVDB readbackも3/3正常終了した。density cell `0.025 m`、velocity cell `0.0500000007 m`、frame 60/120/180/200で、円筒半径内の共通core ROIはtemperature／fuel／burn／smoke／velocityが全sample 0。広いBox用ROIの非zero値は円筒外側を含み、側方回り込みと整合する。frame 200の円筒直上temperature meanは`1.0891e-5`であるため完全なglobal occlusionとは呼ばない。
+- 8/8 processでfatal／dump／upload／timeout 0、Box前後時系列一致、RTX 3090／CUDA 0、production app SHA-256 `94162F82...F02A`前後一致。productionコード／app composition／既定値は不変。Phase 0 RTXは不要。詳細は`docs/design/calibrated_stage_open_ablation.md`。
+- Phase 6DUは次の独立Phaseでstatic Cylinder decompositionを起点に再開可能。Cylinder Hull、rotation、PhysX共用、dynamic transform、Phase 6DR統合、20本性能はまだ行わない。映像上のproduction変更がないため新動画とlatest demo更新は行わない。
+- Release build `6.80 s`、lifecycle contract `6 / 6`、Flow collider targeted test `1 / 1`・`0.073 s`、標準suite 8 process・`78 / 78`件・`305.9 s`（collapse `179.5 s`）が合格した。
