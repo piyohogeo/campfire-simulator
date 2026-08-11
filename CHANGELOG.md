@@ -1,5 +1,11 @@
 # Changelog
 
+- Safely stopped the production-neutral Phase 6EG representative static-pose qualification after 6/36 normal-exit processes. P0 identity, P1 Y40, and P2 long-axis roll ON/OFF completed one diagnostic run each; P3 Z33 ON stopped at `opening_prebuilt_stage` before Flow sampling when the existing guarded helper crossed its 512 MiB Private Bytes ceiling.
+- Preserved the predeclared six-pose matrices, three-run/36-process order, exact authored-Mesh distance, and Phase 6EF gates without post-result changes. Offline pose audits all passed, including exact emitter clearances of 0.111532–0.230156 m and expected deep/center NanoVDB samples.
+- Recorded the completed one-run pairs as diagnostic-only: worst deep ON was 0 for P0, `8.352523e-6 m/s` for P1, and `7.300535e-6 m/s` for P2, with paired OFF minima `7.767152 m/s`. Phase 6EG remains unqualified; P3 collision behavior was not assessed and no formal SVG/ZIP was generated.
+- Classified the interruption as a resource-guard abort rather than a collision failure. The process tree was absent afterward, automatic retry remained disabled, production SHA-256 was unchanged, and no production, Flow, V3, Resident, authority, emitter, geometry, or resolution setting changed.
+- Passed Release build, Phase 0 RTX, Phase 3 authority/mass-balance/Flow input, 88/88 focused contracts, and the 8-process 78/78 standard suite after the safe stop. No Phase 6EG Kit/CDB process remained.
+
 - Qualified only the production-neutral static Y40-degree Mesh CollisionProxy judgment in Phase 6EF. A/B/C each ran three times in rotated order; all nine processes reached functional pass, normal OS exit, and zero fatal/dump/upload/residual evidence.
 - Applied the predeclared authored-Mesh gate without changing Phase 6EC history: A deep/center velocity remained 0, B worst deep/center was `8.352523e-6 m/s`, C positive-control minima were `7.767152 m/s`, and the worst B/C deep ratio was `1.075365e-6`.
 - Kept the one-voxel boundary band visible in the report (B maximum `3.162397 m/s`) while excluding it from the deep-zero gate. The qualification is limited to Flow 110.0.0, the fixed current resolution, the exact 26-vertex closed Mesh, and static Y40; arbitrary-axis and dynamic rotation remain unqualified.

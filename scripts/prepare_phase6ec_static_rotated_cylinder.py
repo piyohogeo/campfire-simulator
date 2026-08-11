@@ -293,4 +293,5 @@ def _main() -> None:
         app.post_uncancellable_quit(exit_code)
 
 
-_main()
+if __name__ == "__main__":
+    _main()

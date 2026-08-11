@@ -1,0 +1,4434 @@
+{
+  "schema": "campfire.phase6eg.safe-stop-summary.v1",
+  "phase": "phase6eg",
+  "status": "safe_stop",
+  "qualified": false,
+  "formal_population_accepted": false,
+  "reason": "the P3 Z33 collision-ON helper crossed the predeclared 512 MiB Private Bytes guard before stage-open/functional evidence completed",
+  "safe_stop": {
+    "schema": "campfire.phase6eg.safe-stop.v1",
+    "phase": "phase6eg",
+    "status": "safe_stop",
+    "step": "formal_flow_readback",
+    "condition": "run_1/P2_roll_x17_off",
+    "completed": [
+      "run_1/P0_identity_on",
+      "run_1/P0_identity_off",
+      "run_1/P1_y40_on",
+      "run_1/P1_y40_off",
+      "run_1/P2_roll_x17_on",
+      "run_1/P2_roll_x17_off"
+    ],
+    "automatic_retry": false,
+    "error": "guarded case failed: timed_out=False private_bytes_exceeded=True process_absent=True exit_code=4294967295 peak_private_bytes=552259584",
+    "contract_sha256": "4BAED82160A08C061D479BCCA6B6A46866DE88F5046851D2AF140D36D8C80687",
+    "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "timestamp_local": "2026-08-11T19:37:38.8734737+09:00"
+  },
+  "safe_stop_condition_recording": {
+    "recorded_value": "run_1/P2_roll_x17_off",
+    "recorded_value_is_last_completed_not_failed": true,
+    "failed_condition_from_incomplete_raw": "P3_z33_on",
+    "runner_corrected_for_future_roots": true
+  },
+  "incomplete_conditions": [
+    {
+      "run": 1,
+      "condition": "P3_z33_on",
+      "raw_status": "running",
+      "last_lifecycle_marker": "opening_prebuilt_stage",
+      "active_blocks_final": null,
+      "source_fuel": 0.800000011920929,
+      "runner_evidence_present": false
+    }
+  ],
+  "resource_guard": {
+    "limit_bytes": 536870912,
+    "observed_peak_private_bytes": 552259584,
+    "target_process_tree_absent_after_abort": true,
+    "automatic_retry": false
+  },
+  "preflight": {
+    "schema": "campfire.phase6eg.static-pose-preflight.v1",
+    "phase": "phase6eg",
+    "status": "ok",
+    "timestamp_utc": "2026-08-11T10:26:04.199783+00:00",
+    "source_sha256": "BC65721F4C6D4ECF1F35C736F2DD10F7A47C9F2B361E45898032E869D894D5F9",
+    "contract_sha256": "4BAED82160A08C061D479BCCA6B6A46866DE88F5046851D2AF140D36D8C80687",
+    "reference_npz_sha256": "DA88029C79CE98431016201829812F2DA075085A1AFD18E8968E080F3CA4ADCE",
+    "flow_internal_occupancy_mask_public_api_available": false,
+    "poses": {
+      "P0_identity": {
+        "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\prepared-stages\\P0_identity.usda",
+        "stage_sha256": "BC65721F4C6D4ECF1F35C736F2DD10F7A47C9F2B361E45898032E869D894D5F9",
+        "declared_kind": "identity axis-aligned control",
+        "declared_parameters": {
+          "euler_degrees": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "authored_local_to_world_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "quaternion_wxyz": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "audit": {
+          "local_geometry_sha256": "662163A79B8E77EFBDACF34775ADF3F8BB9967232B5F8534124DD30E2E676FF0",
+          "geometry": {
+            "vertex_count": 26,
+            "face_count": 36,
+            "index_count": 120,
+            "closed_manifold": true,
+            "non_two_manifold_edge_count": 0,
+            "authored_local_extent": [
+              [
+                -0.8999999761581421,
+                -0.1599999964237213,
+                0.875
+              ],
+              [
+                0.8999999761581421,
+                0.1599999964237213,
+                1.1950000524520874
+              ]
+            ],
+            "computed_world_extent": [
+              [
+                -0.8999999761581421,
+                -0.1599999964237213,
+                0.875
+              ],
+              [
+                0.8999999761581421,
+                0.1599999964237213,
+                1.1950000524520874
+              ]
+            ]
+          },
+          "applied_schemas": [
+            "PhysicsCollisionAPI",
+            "PhysicsMeshCollisionAPI"
+          ],
+          "physics_collision_enabled": true,
+          "physics_approximation": "convexDecomposition",
+          "transform_ops": [],
+          "local_to_world": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "center_world": [
+            0.0,
+            0.0,
+            1.035
+          ],
+          "rotation_determinant": 1.0,
+          "rotation_row_lengths": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "right_handed_unit_scale": true,
+          "emitter_clearance": {
+            "emitter_position": [
+              0.0,
+              0.0,
+              0.550000011920929
+            ],
+            "emitter_radius": 0.10000000149011612,
+            "cylinder_axis_world": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "nearest_axis_parameter": 0.0,
+            "centerline_distance": 0.48499998807907096,
+            "surface_gap_m": 0.22499998658895481,
+            "gap_velocity_cells": 4.499999731779096,
+            "outside": true,
+            "minimum_two_velocity_cells": true
+          },
+          "flow": {
+            "density_cell_size": 0.02500000037252903,
+            "physics_collision_enabled": true,
+            "physics_convex_collision": true,
+            "emitter_fuel": 0.800000011920929
+          },
+          "render_surface_present": false,
+          "rigid_body_api": false,
+          "disabled_analytic_reference_present": true
+        },
+        "exact_mesh_emitter_clearance": {
+          "emitter_position_world_m": [
+            0.0,
+            0.0,
+            0.550000011920929
+          ],
+          "emitter_radius_m": 0.10000000149011612,
+          "emitter_center_local_m": [
+            0.0,
+            0.0,
+            0.550000011920929
+          ],
+          "emitter_center_mesh_signed_distance_m": 0.32499998807907104,
+          "emitter_center_inside_mesh": false,
+          "nearest_face_class": "side",
+          "sphere_surface_gap_to_exact_mesh_m": 0.22499998658895493,
+          "gap_velocity_voxels": 4.4999997317790985
+        },
+        "expected_public_velocity_grid_sampling": {
+          "grid_index_minimum": [
+            -22,
+            -8,
+            13
+          ],
+          "grid_index_maximum": [
+            22,
+            8,
+            28
+          ],
+          "candidate_voxel_count": 12240,
+          "inside_voxel_count": 1120,
+          "expected_deep_interior_voxel_count": 462,
+          "expected_center_axis_voxel_count": 33,
+          "note": "offline expectation from the affine map of a Phase 6EF public velocity NanoVDB sample; formal runs verify actual samples"
+        },
+        "gates": {
+          "matrix_matches_contract": true,
+          "rigid_orthonormal": true,
+          "determinant_positive_one": true,
+          "center_preserved": true,
+          "topology_unchanged": true,
+          "geometry_hash_unchanged": true,
+          "closed_manifold": true,
+          "extent_in_qualified_scene_envelope": true,
+          "emitter_outside_exact_mesh": true,
+          "emitter_clearance_at_least_two_velocity_voxels": true,
+          "deep_samples_expected": true,
+          "center_axis_samples_expected": true,
+          "flow_contract_preserved": true,
+          "flow_only_no_render_surface_or_rigid_body": true
+        }
+      },
+      "P1_y40": {
+        "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\prepared-stages\\P1_y40.usda",
+        "stage_sha256": "5741C600FB895B075B60E391DF13E19298FF449E8CFFDF1CF80312C924CFC9E1",
+        "declared_kind": "Phase 6EF qualified Y40 control",
+        "declared_parameters": {
+          "axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "angle_degrees": 40.0
+        },
+        "authored_local_to_world_matrix": [
+          [
+            0.766044443118978,
+            0.0,
+            -0.6427876096865393,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.6427876096865393,
+            0.0,
+            0.766044443118978,
+            0.0
+          ],
+          [
+            -0.665285176025568,
+            0.0,
+            0.24214400137185776,
+            1.0
+          ]
+        ],
+        "quaternion_wxyz": [
+          0.9396926207859084,
+          0.0,
+          0.34202014332566877,
+          0.0
+        ],
+        "audit": {
+          "local_geometry_sha256": "662163A79B8E77EFBDACF34775ADF3F8BB9967232B5F8534124DD30E2E676FF0",
+          "geometry": {
+            "vertex_count": 26,
+            "face_count": 36,
+            "index_count": 120,
+            "closed_manifold": true,
+            "non_two_manifold_edge_count": 0,
+            "authored_local_extent": [
+              [
+                -0.8999999761581421,
+                -0.1599999964237213,
+                0.875
+              ],
+              [
+                0.8999999761581421,
+                0.1599999964237213,
+                1.1950000524520874
+              ]
+            ],
+            "computed_world_extent": [
+              [
+                -0.7922859980930037,
+                -0.1599999964237213,
+                0.33392405570832906
+              ],
+              [
+                0.7922860318085558,
+                0.1599999964237213,
+                1.736075984472301
+              ]
+            ]
+          },
+          "applied_schemas": [
+            "PhysicsCollisionAPI",
+            "PhysicsMeshCollisionAPI"
+          ],
+          "physics_collision_enabled": true,
+          "physics_approximation": "convexDecomposition",
+          "transform_ops": [
+            "xformOp:transform"
+          ],
+          "local_to_world": [
+            [
+              0.766044443118978,
+              0.0,
+              -0.6427876096865393,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.6427876096865393,
+              0.0,
+              0.766044443118978,
+              0.0
+            ],
+            [
+              -0.665285176025568,
+              0.0,
+              0.24214400137185776,
+              1.0
+            ]
+          ],
+          "center_world": [
+            0.0,
+            0.0,
+            1.035
+          ],
+          "rotation_determinant": 0.9999999999999999,
+          "rotation_row_lengths": [
+            0.9999999999999999,
+            1.0,
+            0.9999999999999999
+          ],
+          "right_handed_unit_scale": true,
+          "emitter_clearance": {
+            "emitter_position": [
+              0.0,
+              0.0,
+              0.550000011920929
+            ],
+            "emitter_radius": 0.10000000149011612,
+            "cylinder_axis_world": [
+              0.7660444431189782,
+              0.0,
+              -0.6427876096865394
+            ],
+            "nearest_axis_parameter": 0.3117519830353461,
+            "centerline_distance": 0.37153154578074293,
+            "surface_gap_m": 0.11153154429062681,
+            "gap_velocity_cells": 2.230630885812536,
+            "outside": true,
+            "minimum_two_velocity_cells": true
+          },
+          "flow": {
+            "density_cell_size": 0.02500000037252903,
+            "physics_collision_enabled": true,
+            "physics_convex_collision": true,
+            "emitter_fuel": 0.800000011920929
+          },
+          "render_surface_present": false,
+          "rigid_body_api": false,
+          "disabled_analytic_reference_present": true
+        },
+        "exact_mesh_emitter_clearance": {
+          "emitter_position_world_m": [
+            0.0,
+            0.0,
+            0.550000011920929
+          ],
+          "emitter_radius_m": 0.10000000149011612,
+          "emitter_center_local_m": [
+            0.311751983035346,
+            0.0,
+            0.663468454219257
+          ],
+          "emitter_center_mesh_signed_distance_m": 0.21153154578074296,
+          "emitter_center_inside_mesh": false,
+          "nearest_face_class": "side",
+          "sphere_surface_gap_to_exact_mesh_m": 0.11153154429062684,
+          "gap_velocity_voxels": 2.2306308858125368
+        },
+        "expected_public_velocity_grid_sampling": {
+          "grid_index_minimum": [
+            -20,
+            -8,
+            2
+          ],
+          "grid_index_maximum": [
+            20,
+            8,
+            39
+          ],
+          "candidate_voxel_count": 26486,
+          "inside_voxel_count": 1103,
+          "expected_deep_interior_voxel_count": 491,
+          "expected_center_axis_voxel_count": 34,
+          "note": "offline expectation from the affine map of a Phase 6EF public velocity NanoVDB sample; formal runs verify actual samples"
+        },
+        "gates": {
+          "matrix_matches_contract": true,
+          "rigid_orthonormal": true,
+          "determinant_positive_one": true,
+          "center_preserved": true,
+          "topology_unchanged": true,
+          "geometry_hash_unchanged": true,
+          "closed_manifold": true,
+          "extent_in_qualified_scene_envelope": true,
+          "emitter_outside_exact_mesh": true,
+          "emitter_clearance_at_least_two_velocity_voxels": true,
+          "deep_samples_expected": true,
+          "center_axis_samples_expected": true,
+          "flow_contract_preserved": true,
+          "flow_only_no_render_surface_or_rigid_body": true
+        }
+      },
+      "P2_roll_x17": {
+        "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\prepared-stages\\P2_roll_x17.usda",
+        "stage_sha256": "42295E78D942A1E6B23D08D3EBDC6BE241B7D7138503EB220FDD718D644EED72",
+        "declared_kind": "asymmetric long-axis roll changing low-poly cross-section grid phase",
+        "declared_parameters": {
+          "axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "angle_degrees": 17.0
+        },
+        "authored_local_to_world_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.9563047559630354,
+            0.29237170472273677,
+            0.0
+          ],
+          [
+            0.0,
+            -0.29237170472273677,
+            0.9563047559630354,
+            0.0
+          ],
+          [
+            0.0,
+            0.30260471438803255,
+            0.045224577578258374,
+            1.0
+          ]
+        ],
+        "quaternion_wxyz": [
+          0.9890158633619168,
+          0.14780941112961063,
+          0.0,
+          0.0
+        ],
+        "audit": {
+          "local_geometry_sha256": "662163A79B8E77EFBDACF34775ADF3F8BB9967232B5F8534124DD30E2E676FF0",
+          "geometry": {
+            "vertex_count": 26,
+            "face_count": 36,
+            "index_count": 120,
+            "closed_manifold": true,
+            "non_two_manifold_edge_count": 0,
+            "authored_local_extent": [
+              [
+                -0.8999999761581421,
+                -0.1599999964237213,
+                0.875
+              ],
+              [
+                0.8999999761581421,
+                0.1599999964237213,
+                1.1950000524520874
+              ]
+            ],
+            "computed_world_extent": [
+              [
+                -0.8999999761581421,
+                -0.15589921362561104,
+                0.8791007720154006
+              ],
+              [
+                0.8999999761581421,
+                0.15589921571681645,
+                1.190899221144575
+              ]
+            ]
+          },
+          "applied_schemas": [
+            "PhysicsCollisionAPI",
+            "PhysicsMeshCollisionAPI"
+          ],
+          "physics_collision_enabled": true,
+          "physics_approximation": "convexDecomposition",
+          "transform_ops": [
+            "xformOp:transform"
+          ],
+          "local_to_world": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.9563047559630354,
+              0.29237170472273677,
+              0.0
+            ],
+            [
+              0.0,
+              -0.29237170472273677,
+              0.9563047559630354,
+              0.0
+            ],
+            [
+              0.0,
+              0.30260471438803255,
+              0.045224577578258374,
+              1.0
+            ]
+          ],
+          "center_world": [
+            0.0,
+            0.0,
+            1.035
+          ],
+          "rotation_determinant": 1.0,
+          "rotation_row_lengths": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "right_handed_unit_scale": true,
+          "emitter_clearance": {
+            "emitter_position": [
+              0.0,
+              0.0,
+              0.550000011920929
+            ],
+            "emitter_radius": 0.10000000149011612,
+            "cylinder_axis_world": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "nearest_axis_parameter": 0.0,
+            "centerline_distance": 0.48499998807907096,
+            "surface_gap_m": 0.22499998658895481,
+            "gap_velocity_cells": 4.499999731779096,
+            "outside": true,
+            "minimum_two_velocity_cells": true
+          },
+          "flow": {
+            "density_cell_size": 0.02500000037252903,
+            "physics_collision_enabled": true,
+            "physics_convex_collision": true,
+            "emitter_fuel": 0.800000011920929
+          },
+          "render_surface_present": false,
+          "rigid_body_api": false,
+          "disabled_analytic_reference_present": true
+        },
+        "exact_mesh_emitter_clearance": {
+          "emitter_position_world_m": [
+            0.0,
+            0.0,
+            0.550000011920929
+          ],
+          "emitter_radius_m": 0.10000000149011612,
+          "emitter_center_local_m": [
+            0.0,
+            -0.141800273305185,
+            0.5711922047579687
+          ],
+          "emitter_center_mesh_signed_distance_m": 0.330156394403267,
+          "emitter_center_inside_mesh": false,
+          "nearest_face_class": "side",
+          "sphere_surface_gap_to_exact_mesh_m": 0.23015639291315088,
+          "gap_velocity_voxels": 4.603127858263017
+        },
+        "expected_public_velocity_grid_sampling": {
+          "grid_index_minimum": [
+            -22,
+            -8,
+            13
+          ],
+          "grid_index_maximum": [
+            22,
+            8,
+            28
+          ],
+          "candidate_voxel_count": 12240,
+          "inside_voxel_count": 1120,
+          "expected_deep_interior_voxel_count": 495,
+          "expected_center_axis_voxel_count": 33,
+          "note": "offline expectation from the affine map of a Phase 6EF public velocity NanoVDB sample; formal runs verify actual samples"
+        },
+        "gates": {
+          "matrix_matches_contract": true,
+          "rigid_orthonormal": true,
+          "determinant_positive_one": true,
+          "center_preserved": true,
+          "topology_unchanged": true,
+          "geometry_hash_unchanged": true,
+          "closed_manifold": true,
+          "extent_in_qualified_scene_envelope": true,
+          "emitter_outside_exact_mesh": true,
+          "emitter_clearance_at_least_two_velocity_voxels": true,
+          "deep_samples_expected": true,
+          "center_axis_samples_expected": true,
+          "flow_contract_preserved": true,
+          "flow_only_no_render_surface_or_rigid_body": true
+        }
+      },
+      "P3_z33": {
+        "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\prepared-stages\\P3_z33.usda",
+        "stage_sha256": "37A2B2969875F44ED70380E1189B69ACDF32E5CCDD315C2A7CAE8DC35273BD96",
+        "declared_kind": "non-Y single-axis rotation",
+        "declared_parameters": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "angle_degrees": 33.0
+        },
+        "authored_local_to_world_matrix": [
+          [
+            0.838670567945424,
+            0.5446390350150271,
+            0.0,
+            0.0
+          ],
+          [
+            -0.5446390350150271,
+            0.838670567945424,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "quaternion_wxyz": [
+          0.958819734868193,
+          0.0,
+          0.0,
+          0.28401534470392265
+        ],
+        "audit": {
+          "local_geometry_sha256": "662163A79B8E77EFBDACF34775ADF3F8BB9967232B5F8534124DD30E2E676FF0",
+          "geometry": {
+            "vertex_count": 26,
+            "face_count": 36,
+            "index_count": 120,
+            "closed_manifold": true,
+            "non_two_manifold_edge_count": 0,
+            "authored_local_extent": [
+              [
+                -0.8999999761581421,
+                -0.1599999964237213,
+                0.875
+              ],
+              [
+                0.8999999761581421,
+                0.1599999964237213,
+                1.1950000524520874
+              ]
+            ],
+            "computed_world_extent": [
+              [
+                -0.8419457348100405,
+                -0.6243624064002661,
+                0.875
+              ],
+              [
+                0.8419457348100405,
+                0.6243624064002661,
+                1.1950000524520874
+              ]
+            ]
+          },
+          "applied_schemas": [
+            "PhysicsCollisionAPI",
+            "PhysicsMeshCollisionAPI"
+          ],
+          "physics_collision_enabled": true,
+          "physics_approximation": "convexDecomposition",
+          "transform_ops": [
+            "xformOp:transform"
+          ],
+          "local_to_world": [
+            [
+              0.838670567945424,
+              0.5446390350150271,
+              0.0,
+              0.0
+            ],
+            [
+              -0.5446390350150271,
+              0.838670567945424,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "center_world": [
+            0.0,
+            0.0,
+            1.035
+          ],
+          "rotation_determinant": 1.0,
+          "rotation_row_lengths": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "right_handed_unit_scale": true,
+          "emitter_clearance": {
+            "emitter_position": [
+              0.0,
+              0.0,
+              0.550000011920929
+            ],
+            "emitter_radius": 0.10000000149011612,
+            "cylinder_axis_world": [
+              0.838670567945424,
+              0.5446390350150271,
+              0.0
+            ],
+            "nearest_axis_parameter": 0.0,
+            "centerline_distance": 0.48499998807907096,
+            "surface_gap_m": 0.22499998658895481,
+            "gap_velocity_cells": 4.499999731779096,
+            "outside": true,
+            "minimum_two_velocity_cells": true
+          },
+          "flow": {
+            "density_cell_size": 0.02500000037252903,
+            "physics_collision_enabled": true,
+            "physics_convex_collision": true,
+            "emitter_fuel": 0.800000011920929
+          },
+          "render_surface_present": false,
+          "rigid_body_api": false,
+          "disabled_analytic_reference_present": true
+        },
+        "exact_mesh_emitter_clearance": {
+          "emitter_position_world_m": [
+            0.0,
+            0.0,
+            0.550000011920929
+          ],
+          "emitter_radius_m": 0.10000000149011612,
+          "emitter_center_local_m": [
+            0.0,
+            0.0,
+            0.550000011920929
+          ],
+          "emitter_center_mesh_signed_distance_m": 0.32499998807907104,
+          "emitter_center_inside_mesh": false,
+          "nearest_face_class": "side",
+          "sphere_surface_gap_to_exact_mesh_m": 0.22499998658895493,
+          "gap_velocity_voxels": 4.4999997317790985
+        },
+        "expected_public_velocity_grid_sampling": {
+          "grid_index_minimum": [
+            -21,
+            -17,
+            13
+          ],
+          "grid_index_maximum": [
+            21,
+            17,
+            28
+          ],
+          "candidate_voxel_count": 24080,
+          "inside_voxel_count": 1102,
+          "expected_deep_interior_voxel_count": 474,
+          "expected_center_axis_voxel_count": 27,
+          "note": "offline expectation from the affine map of a Phase 6EF public velocity NanoVDB sample; formal runs verify actual samples"
+        },
+        "gates": {
+          "matrix_matches_contract": true,
+          "rigid_orthonormal": true,
+          "determinant_positive_one": true,
+          "center_preserved": true,
+          "topology_unchanged": true,
+          "geometry_hash_unchanged": true,
+          "closed_manifold": true,
+          "extent_in_qualified_scene_envelope": true,
+          "emitter_outside_exact_mesh": true,
+          "emitter_clearance_at_least_two_velocity_voxels": true,
+          "deep_samples_expected": true,
+          "center_axis_samples_expected": true,
+          "flow_contract_preserved": true,
+          "flow_only_no_render_surface_or_rigid_body": true
+        }
+      },
+      "P4_y24_z31": {
+        "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\prepared-stages\\P4_y24_z31.usda",
+        "stage_sha256": "999C7F00BAF9EF40CA0EAC31BB633EA6FC15D278D11ABA54581FB1E1D1996310",
+        "declared_kind": "two-axis compound rotation",
+        "declared_parameters": {
+          "local_y_degrees": 24.0,
+          "then_world_z_degrees": 31.0
+        },
+        "authored_local_to_world_matrix": [
+          [
+            0.7830612939961841,
+            0.47051069384706956,
+            -0.40673664307580015,
+            0.0
+          ],
+          [
+            -0.5150380749100542,
+            0.8571673007021123,
+            0.0,
+            0.0
+          ],
+          [
+            0.3486413504419221,
+            0.2094848576451379,
+            0.9135454576426009,
+            0.0
+          ],
+          [
+            -0.3608437977073894,
+            -0.21681682766271773,
+            0.08948045133990812,
+            1.0
+          ]
+        ],
+        "quaternion_wxyz": [
+          0.9425728158000444,
+          -0.05556198262182262,
+          0.2003500368500885,
+          0.26139857638494535
+        ],
+        "audit": {
+          "local_geometry_sha256": "662163A79B8E77EFBDACF34775ADF3F8BB9967232B5F8534124DD30E2E676FF0",
+          "geometry": {
+            "vertex_count": 26,
+            "face_count": 36,
+            "index_count": 120,
+            "closed_manifold": true,
+            "non_two_manifold_edge_count": 0,
+            "authored_local_extent": [
+              [
+                -0.8999999761581421,
+                -0.1599999964237213,
+                0.875
+              ],
+              [
+                0.8999999761581421,
+                0.1599999964237213,
+                1.1950000524520874
+              ]
+            ],
+            "computed_world_extent": [
+              [
+                -0.8040122291210416,
+                -0.5606063852836938,
+                0.522769757706321
+              ],
+              [
+                0.8040122266273643,
+                0.5606063712990709,
+                1.5472302902110453
+              ]
+            ]
+          },
+          "applied_schemas": [
+            "PhysicsCollisionAPI",
+            "PhysicsMeshCollisionAPI"
+          ],
+          "physics_collision_enabled": true,
+          "physics_approximation": "convexDecomposition",
+          "transform_ops": [
+            "xformOp:transform"
+          ],
+          "local_to_world": [
+            [
+              0.7830612939961841,
+              0.47051069384706956,
+              -0.40673664307580015,
+              0.0
+            ],
+            [
+              -0.5150380749100542,
+              0.8571673007021123,
+              0.0,
+              0.0
+            ],
+            [
+              0.3486413504419221,
+              0.2094848576451379,
+              0.9135454576426009,
+              0.0
+            ],
+            [
+              -0.3608437977073894,
+              -0.21681682766271773,
+              0.08948045133990812,
+              1.0
+            ]
+          ],
+          "center_world": [
+            0.0,
+            0.0,
+            1.035
+          ],
+          "rotation_determinant": 1.0,
+          "rotation_row_lengths": [
+            0.9999999999999999,
+            1.0,
+            0.9999999999999999
+          ],
+          "right_handed_unit_scale": true,
+          "emitter_clearance": {
+            "emitter_position": [
+              0.0,
+              0.0,
+              0.550000011920929
+            ],
+            "emitter_radius": 0.10000000149011612,
+            "cylinder_axis_world": [
+              0.7830612939961843,
+              0.47051069384706967,
+              -0.40673664307580026
+            ],
+            "nearest_axis_parameter": 0.19726726704308448,
+            "centerline_distance": 0.4430695360663508,
+            "surface_gap_m": 0.18306953457623465,
+            "gap_velocity_cells": 3.661390691524693,
+            "outside": true,
+            "minimum_two_velocity_cells": true
+          },
+          "flow": {
+            "density_cell_size": 0.02500000037252903,
+            "physics_collision_enabled": true,
+            "physics_convex_collision": true,
+            "emitter_fuel": 0.800000011920929
+          },
+          "render_surface_present": false,
+          "rigid_body_api": false,
+          "disabled_analytic_reference_present": true
+        },
+        "exact_mesh_emitter_clearance": {
+          "emitter_position_world_m": [
+            0.0,
+            0.0,
+            0.550000011920929
+          ],
+          "emitter_radius_m": 0.10000000149011612,
+          "emitter_center_local_m": [
+            0.19726726704308442,
+            0.0,
+            0.591930463933649
+          ],
+          "emitter_center_mesh_signed_distance_m": 0.283069536066351,
+          "emitter_center_inside_mesh": false,
+          "nearest_face_class": "side",
+          "sphere_surface_gap_to_exact_mesh_m": 0.18306953457623487,
+          "gap_velocity_voxels": 3.6613906915246974
+        },
+        "expected_public_velocity_grid_sampling": {
+          "grid_index_minimum": [
+            -21,
+            -16,
+            6
+          ],
+          "grid_index_maximum": [
+            21,
+            16,
+            35
+          ],
+          "candidate_voxel_count": 42570,
+          "inside_voxel_count": 1099,
+          "expected_deep_interior_voxel_count": 479,
+          "expected_center_axis_voxel_count": 28,
+          "note": "offline expectation from the affine map of a Phase 6EF public velocity NanoVDB sample; formal runs verify actual samples"
+        },
+        "gates": {
+          "matrix_matches_contract": true,
+          "rigid_orthonormal": true,
+          "determinant_positive_one": true,
+          "center_preserved": true,
+          "topology_unchanged": true,
+          "geometry_hash_unchanged": true,
+          "closed_manifold": true,
+          "extent_in_qualified_scene_envelope": true,
+          "emitter_outside_exact_mesh": true,
+          "emitter_clearance_at_least_two_velocity_voxels": true,
+          "deep_samples_expected": true,
+          "center_axis_samples_expected": true,
+          "flow_contract_preserved": true,
+          "flow_only_no_render_surface_or_rigid_body": true
+        }
+      },
+      "P5_axis111_53": {
+        "stage": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\prepared-stages\\P5_axis111_53.usda",
+        "stage_sha256": "AF3BDE8F9E5E6420D56C0A103FDF9F8D8994EE969EC2C18062B21036BC23888A",
+        "declared_kind": "general axis-angle pose not near a grid axis",
+        "declared_parameters": {
+          "normalized_axis": [
+            0.5773502691896258,
+            0.5773502691896258,
+            0.5773502691896258
+          ],
+          "angle_degrees": 53.0
+        },
+        "authored_local_to_world_matrix": [
+          [
+            0.7345433487680323,
+            0.5938207523261825,
+            -0.3283641010942147,
+            0.0
+          ],
+          [
+            -0.3283641010942147,
+            0.7345433487680323,
+            0.5938207523261825,
+            0.0
+          ],
+          [
+            0.5938207523261825,
+            -0.3283641010942147,
+            0.7345433487680323,
+            0.0
+          ],
+          [
+            -0.6146044786575988,
+            0.3398568446325122,
+            0.2747476340250865,
+            1.0
+          ]
+        ],
+        "quaternion_wxyz": [
+          0.8949343616020251,
+          0.2576124275107704,
+          0.2576124275107704,
+          0.2576124275107704
+        ],
+        "audit": {
+          "local_geometry_sha256": "662163A79B8E77EFBDACF34775ADF3F8BB9967232B5F8534124DD30E2E676FF0",
+          "geometry": {
+            "vertex_count": 26,
+            "face_count": 36,
+            "index_count": 120,
+            "closed_manifold": true,
+            "non_two_manifold_edge_count": 0,
+            "authored_local_extent": [
+              [
+                -0.8999999761581421,
+                -0.1599999964237213,
+                0.875
+              ],
+              [
+                0.8999999761581421,
+                0.1599999964237213,
+                1.1950000524520874
+              ]
+            ],
+            "computed_world_extent": [
+              [
+                -0.7696403522333359,
+                -0.6624891065513921,
+                0.5901853317507193
+              ],
+              [
+                0.769640347985999,
+                0.6624891089000352,
+                1.479814662995417
+              ]
+            ]
+          },
+          "applied_schemas": [
+            "PhysicsCollisionAPI",
+            "PhysicsMeshCollisionAPI"
+          ],
+          "physics_collision_enabled": true,
+          "physics_approximation": "convexDecomposition",
+          "transform_ops": [
+            "xformOp:transform"
+          ],
+          "local_to_world": [
+            [
+              0.7345433487680323,
+              0.5938207523261825,
+              -0.3283641010942147,
+              0.0
+            ],
+            [
+              -0.3283641010942147,
+              0.7345433487680323,
+              0.5938207523261825,
+              0.0
+            ],
+            [
+              0.5938207523261825,
+              -0.3283641010942147,
+              0.7345433487680323,
+              0.0
+            ],
+            [
+              -0.6146044786575988,
+              0.3398568446325122,
+              0.2747476340250865,
+              1.0
+            ]
+          ],
+          "center_world": [
+            0.0,
+            0.0,
+            1.035
+          ],
+          "rotation_determinant": 1.0000000000000002,
+          "rotation_row_lengths": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "right_handed_unit_scale": true,
+          "emitter_clearance": {
+            "emitter_position": [
+              0.0,
+              0.0,
+              0.550000011920929
+            ],
+            "emitter_radius": 0.10000000149011612,
+            "cylinder_axis_world": [
+              0.7345433487680323,
+              0.5938207523261825,
+              -0.3283641010942147
+            ],
+            "nearest_axis_parameter": 0.15925658511628898,
+            "centerline_distance": 0.4581073329840914,
+            "surface_gap_m": 0.1981073314939753,
+            "gap_velocity_cells": 3.962146629879506,
+            "outside": true,
+            "minimum_two_velocity_cells": true
+          },
+          "flow": {
+            "density_cell_size": 0.02500000037252903,
+            "physics_collision_enabled": true,
+            "physics_convex_collision": true,
+            "emitter_fuel": 0.800000011920929
+          },
+          "render_surface_present": false,
+          "rigid_body_api": false,
+          "disabled_analytic_reference_present": true
+        },
+        "exact_mesh_emitter_clearance": {
+          "emitter_position_world_m": [
+            0.0,
+            0.0,
+            0.550000011920929
+          ],
+          "emitter_radius_m": 0.10000000149011612,
+          "emitter_center_local_m": [
+            0.15925658511628898,
+            -0.28800305779930335,
+            0.6787464846039435
+          ],
+          "emitter_center_mesh_signed_distance_m": 0.30108796310013486,
+          "emitter_center_inside_mesh": false,
+          "nearest_face_class": "side",
+          "sphere_surface_gap_to_exact_mesh_m": 0.20108796161001874,
+          "gap_velocity_voxels": 4.021759232200375
+        },
+        "expected_public_velocity_grid_sampling": {
+          "grid_index_minimum": [
+            -20,
+            -18,
+            7
+          ],
+          "grid_index_maximum": [
+            20,
+            18,
+            34
+          ],
+          "candidate_voxel_count": 42476,
+          "inside_voxel_count": 1105,
+          "expected_deep_interior_voxel_count": 481,
+          "expected_center_axis_voxel_count": 28,
+          "note": "offline expectation from the affine map of a Phase 6EF public velocity NanoVDB sample; formal runs verify actual samples"
+        },
+        "gates": {
+          "matrix_matches_contract": true,
+          "rigid_orthonormal": true,
+          "determinant_positive_one": true,
+          "center_preserved": true,
+          "topology_unchanged": true,
+          "geometry_hash_unchanged": true,
+          "closed_manifold": true,
+          "extent_in_qualified_scene_envelope": true,
+          "emitter_outside_exact_mesh": true,
+          "emitter_clearance_at_least_two_velocity_voxels": true,
+          "deep_samples_expected": true,
+          "center_axis_samples_expected": true,
+          "flow_contract_preserved": true,
+          "flow_only_no_render_surface_or_rigid_body": true
+        }
+      }
+    },
+    "gates": {
+      "six_predeclared_poses": true,
+      "all_pose_gates_pass": true,
+      "all_local_geometry_hashes_identical": true,
+      "formal_order_has_36_unique_run_condition_slots": true,
+      "thresholds_equal_phase6ef": true
+    }
+  },
+  "completed_normal_exit_process_count": 6,
+  "planned_process_count": 36,
+  "completed_pose_pairs_diagnostic_only": [
+    {
+      "pose": "P0_identity",
+      "run_count": 1,
+      "frames": [
+        {
+          "frame": 60,
+          "on": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3652,
+              "mean": 0.10102671238897508,
+              "p50": 0.0007517303456552327,
+              "p95": 0.5757871985435484,
+              "maximum": 6.178751468658447,
+              "threshold_counts": {
+                "1e-12": 2656,
+                "1e-06": 2656,
+                "1e-05": 2636,
+                "0.1": 378
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 658,
+              "mean": 0.027399282805442446,
+              "p50": 0.0,
+              "p95": 0.0100699505303055,
+              "maximum": 2.291821241378784,
+              "threshold_counts": {
+                "1e-12": 160,
+                "1e-06": 160,
+                "1e-05": 160,
+                "0.1": 18
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 33,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "rotated_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            }
+          },
+          "off": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3652,
+              "mean": 0.14794131845213765,
+              "p50": 0.012748789507895708,
+              "p95": 0.43975630104541774,
+              "maximum": 8.400203704833984,
+              "threshold_counts": {
+                "1e-12": 2752,
+                "1e-06": 2752,
+                "1e-05": 2752,
+                "0.1": 697
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 658,
+              "mean": 0.32390474942357117,
+              "p50": 0.029105504974722862,
+              "p95": 1.1492775142192841,
+              "maximum": 7.976940155029297,
+              "threshold_counts": {
+                "1e-12": 576,
+                "1e-06": 576,
+                "1e-05": 576,
+                "0.1": 208
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.5289954795014291,
+              "p50": 0.048390498384833336,
+              "p95": 3.6433016061782824,
+              "maximum": 8.357105255126953,
+              "threshold_counts": {
+                "1e-12": 448,
+                "1e-06": 448,
+                "1e-05": 448,
+                "0.1": 177
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 33,
+              "mean": 0.7486991144462742,
+              "p50": 0.05481991916894913,
+              "p95": 5.243395519256591,
+              "maximum": 8.357105255126953,
+              "threshold_counts": {
+                "1e-12": 32,
+                "1e-06": 32,
+                "1e-05": 32,
+                "0.1": 13
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.5289954795014291,
+              "p50": 0.048390498384833336,
+              "p95": 3.6433016061782824,
+              "maximum": 8.357105255126953,
+              "threshold_counts": {
+                "1e-12": 448,
+                "1e-06": 448,
+                "1e-05": 448,
+                "0.1": 177
+              }
+            },
+            "rotated_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.5289954795014291,
+              "p50": 0.048390498384833336,
+              "p95": 3.6433016061782824,
+              "maximum": 8.357105255126953,
+              "threshold_counts": {
+                "1e-12": 448,
+                "1e-06": 448,
+                "1e-05": 448,
+                "0.1": 177
+              }
+            }
+          },
+          "on_over_off_deep_maximum_ratio": 0.0,
+          "gates": {
+            "on_deep_at_or_below_limit": true,
+            "on_center_at_or_below_limit": true,
+            "off_deep_at_or_above_positive_minimum": true,
+            "off_center_at_or_above_positive_minimum": true,
+            "on_over_off_ratio_at_or_below_limit": true
+          },
+          "diagnostic_pass": true,
+          "files": {
+            "on": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P0_identity_on\\P0_identity_on_f0060_velocity.npz",
+              "sha256": "378D5FD13487167FB8BAB22AF54C4F8D4930FACA343F74D35D43FB3543B0C0E8",
+              "bytes": 76931,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+              "geometry_labels_are_flow_occupancy": false
+            },
+            "off": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P0_identity_off\\P0_identity_off_f0060_velocity.npz",
+              "sha256": "ED8C12A51F7A87B201C8165D82CFA656DD138112ECCCCB8378741F254C5FD1F4",
+              "bytes": 85357,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+              "geometry_labels_are_flow_occupancy": false
+            }
+          }
+        },
+        {
+          "frame": 120,
+          "on": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3652,
+              "mean": 0.10208898497955582,
+              "p50": 0.0010580260423012078,
+              "p95": 0.5687298476696014,
+              "maximum": 6.180800914764404,
+              "threshold_counts": {
+                "1e-12": 2656,
+                "1e-06": 2656,
+                "1e-05": 2654,
+                "0.1": 357
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 658,
+              "mean": 0.029177526538408896,
+              "p50": 0.0,
+              "p95": 0.01157784797251223,
+              "maximum": 2.391477108001709,
+              "threshold_counts": {
+                "1e-12": 160,
+                "1e-06": 160,
+                "1e-05": 160,
+                "0.1": 21
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 33,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "rotated_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            }
+          },
+          "off": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3652,
+              "mean": 0.14119166243374912,
+              "p50": 0.009991113562136889,
+              "p95": 0.46204303652048095,
+              "maximum": 9.40645694732666,
+              "threshold_counts": {
+                "1e-12": 2752,
+                "1e-06": 2752,
+                "1e-05": 2752,
+                "0.1": 578
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 658,
+              "mean": 0.23689505298682814,
+              "p50": 0.01797431893646717,
+              "p95": 1.072663557529449,
+              "maximum": 8.928284645080566,
+              "threshold_counts": {
+                "1e-12": 576,
+                "1e-06": 576,
+                "1e-05": 576,
+                "0.1": 150
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.44988683887628345,
+              "p50": 0.029123817570507526,
+              "p95": 3.1661745786666824,
+              "maximum": 8.175348281860352,
+              "threshold_counts": {
+                "1e-12": 448,
+                "1e-06": 448,
+                "1e-05": 448,
+                "0.1": 132
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 33,
+              "mean": 0.7210899372091235,
+              "p50": 0.03314362093806267,
+              "p95": 5.097230434417719,
+              "maximum": 8.175348281860352,
+              "threshold_counts": {
+                "1e-12": 32,
+                "1e-06": 32,
+                "1e-05": 32,
+                "0.1": 9
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.44988683887628345,
+              "p50": 0.029123817570507526,
+              "p95": 3.1661745786666824,
+              "maximum": 8.175348281860352,
+              "threshold_counts": {
+                "1e-12": 448,
+                "1e-06": 448,
+                "1e-05": 448,
+                "0.1": 132
+              }
+            },
+            "rotated_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.44988683887628345,
+              "p50": 0.029123817570507526,
+              "p95": 3.1661745786666824,
+              "maximum": 8.175348281860352,
+              "threshold_counts": {
+                "1e-12": 448,
+                "1e-06": 448,
+                "1e-05": 448,
+                "0.1": 132
+              }
+            }
+          },
+          "on_over_off_deep_maximum_ratio": 0.0,
+          "gates": {
+            "on_deep_at_or_below_limit": true,
+            "on_center_at_or_below_limit": true,
+            "off_deep_at_or_above_positive_minimum": true,
+            "off_center_at_or_above_positive_minimum": true,
+            "on_over_off_ratio_at_or_below_limit": true
+          },
+          "diagnostic_pass": true,
+          "files": {
+            "on": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P0_identity_on\\P0_identity_on_f0120_velocity.npz",
+              "sha256": "BA8FF36CA41A8000FBB5C21134B68BB360CDF562F6356CCD3BF42F5030017B8F",
+              "bytes": 76891,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+              "geometry_labels_are_flow_occupancy": false
+            },
+            "off": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P0_identity_off\\P0_identity_off_f0120_velocity.npz",
+              "sha256": "69CFB2A99F22FD93F10B343F034F20DBDAA787744C9E833C03DFDF1D9EDA799D",
+              "bytes": 85633,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+              "geometry_labels_are_flow_occupancy": false
+            }
+          }
+        },
+        {
+          "frame": 180,
+          "on": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3652,
+              "mean": 0.10725386104159809,
+              "p50": 0.001057548332028091,
+              "p95": 0.6153807222843164,
+              "maximum": 6.2074785232543945,
+              "threshold_counts": {
+                "1e-12": 2656,
+                "1e-06": 2656,
+                "1e-05": 2656,
+                "0.1": 370
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 658,
+              "mean": 0.030083512851918782,
+              "p50": 0.0,
+              "p95": 0.013362914137542238,
+              "maximum": 2.831104278564453,
+              "threshold_counts": {
+                "1e-12": 160,
+                "1e-06": 160,
+                "1e-05": 160,
+                "0.1": 23
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 33,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "rotated_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            }
+          },
+          "off": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3652,
+              "mean": 0.1427565315331058,
+              "p50": 0.012039880268275738,
+              "p95": 0.45101854503154704,
+              "maximum": 8.98449993133545,
+              "threshold_counts": {
+                "1e-12": 2752,
+                "1e-06": 2752,
+                "1e-05": 2752,
+                "0.1": 563
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 658,
+              "mean": 0.2588937605429005,
+              "p50": 0.026376770809292793,
+              "p95": 1.0998111486434936,
+              "maximum": 8.599034309387207,
+              "threshold_counts": {
+                "1e-12": 576,
+                "1e-06": 576,
+                "1e-05": 576,
+                "0.1": 163
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.4204971076587005,
+              "p50": 0.03754640929400921,
+              "p95": 1.9447259902954082,
+              "maximum": 8.826881408691406,
+              "threshold_counts": {
+                "1e-12": 448,
+                "1e-06": 448,
+                "1e-05": 448,
+                "0.1": 135
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 33,
+              "mean": 0.6094767968664228,
+              "p50": 0.04260695353150368,
+              "p95": 3.8345689535140917,
+              "maximum": 8.080873489379883,
+              "threshold_counts": {
+                "1e-12": 32,
+                "1e-06": 32,
+                "1e-05": 32,
+                "0.1": 11
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.4204971076587005,
+              "p50": 0.03754640929400921,
+              "p95": 1.9447259902954082,
+              "maximum": 8.826881408691406,
+              "threshold_counts": {
+                "1e-12": 448,
+                "1e-06": 448,
+                "1e-05": 448,
+                "0.1": 135
+              }
+            },
+            "rotated_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.4204971076587005,
+              "p50": 0.03754640929400921,
+              "p95": 1.9447259902954082,
+              "maximum": 8.826881408691406,
+              "threshold_counts": {
+                "1e-12": 448,
+                "1e-06": 448,
+                "1e-05": 448,
+                "0.1": 135
+              }
+            }
+          },
+          "on_over_off_deep_maximum_ratio": 0.0,
+          "gates": {
+            "on_deep_at_or_below_limit": true,
+            "on_center_at_or_below_limit": true,
+            "off_deep_at_or_above_positive_minimum": true,
+            "off_center_at_or_above_positive_minimum": true,
+            "on_over_off_ratio_at_or_below_limit": true
+          },
+          "diagnostic_pass": true,
+          "files": {
+            "on": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P0_identity_on\\P0_identity_on_f0180_velocity.npz",
+              "sha256": "DD189020BBD6C27B7BAF4E41EB00CABA5DE196617F59F3958075279646B0D27C",
+              "bytes": 76805,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+              "geometry_labels_are_flow_occupancy": false
+            },
+            "off": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P0_identity_off\\P0_identity_off_f0180_velocity.npz",
+              "sha256": "19AA557CF248B67A77DB85CD50C6BDA8BC81E28BDA4CD288588C653A7B813677",
+              "bytes": 85258,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+              "geometry_labels_are_flow_occupancy": false
+            }
+          }
+        },
+        {
+          "frame": 200,
+          "on": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3652,
+              "mean": 0.10798625145849029,
+              "p50": 0.0010036216699518263,
+              "p95": 0.6188430488109586,
+              "maximum": 6.1561079025268555,
+              "threshold_counts": {
+                "1e-12": 2656,
+                "1e-06": 2656,
+                "1e-05": 2656,
+                "0.1": 366
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 658,
+              "mean": 0.03085535741824707,
+              "p50": 0.0,
+              "p95": 0.01472094655036926,
+              "maximum": 2.7337613105773926,
+              "threshold_counts": {
+                "1e-12": 160,
+                "1e-06": 160,
+                "1e-05": 160,
+                "0.1": 21
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 33,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "rotated_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            }
+          },
+          "off": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3652,
+              "mean": 0.12632806001510702,
+              "p50": 0.010595818515866995,
+              "p95": 0.4032489180564879,
+              "maximum": 8.378881454467773,
+              "threshold_counts": {
+                "1e-12": 2752,
+                "1e-06": 2752,
+                "1e-05": 2752,
+                "0.1": 493
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 658,
+              "mean": 0.27441265329854464,
+              "p50": 0.025226554833352566,
+              "p95": 1.2706607520580278,
+              "maximum": 7.295466423034668,
+              "threshold_counts": {
+                "1e-12": 576,
+                "1e-06": 576,
+                "1e-05": 576,
+                "0.1": 182
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.530060132396472,
+              "p50": 0.04692734405398369,
+              "p95": 2.872638392448425,
+              "maximum": 7.767152309417725,
+              "threshold_counts": {
+                "1e-12": 448,
+                "1e-06": 448,
+                "1e-05": 448,
+                "0.1": 169
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 33,
+              "mean": 0.785112209801534,
+              "p50": 0.04917893186211586,
+              "p95": 5.263470745086666,
+              "maximum": 7.767152309417725,
+              "threshold_counts": {
+                "1e-12": 32,
+                "1e-06": 32,
+                "1e-05": 32,
+                "0.1": 13
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.530060132396472,
+              "p50": 0.04692734405398369,
+              "p95": 2.872638392448425,
+              "maximum": 7.767152309417725,
+              "threshold_counts": {
+                "1e-12": 448,
+                "1e-06": 448,
+                "1e-05": 448,
+                "0.1": 169
+              }
+            },
+            "rotated_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.530060132396472,
+              "p50": 0.04692734405398369,
+              "p95": 2.872638392448425,
+              "maximum": 7.767152309417725,
+              "threshold_counts": {
+                "1e-12": 448,
+                "1e-06": 448,
+                "1e-05": 448,
+                "0.1": 169
+              }
+            }
+          },
+          "on_over_off_deep_maximum_ratio": 0.0,
+          "gates": {
+            "on_deep_at_or_below_limit": true,
+            "on_center_at_or_below_limit": true,
+            "off_deep_at_or_above_positive_minimum": true,
+            "off_center_at_or_above_positive_minimum": true,
+            "on_over_off_ratio_at_or_below_limit": true
+          },
+          "diagnostic_pass": true,
+          "files": {
+            "on": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P0_identity_on\\P0_identity_on_f0200_velocity.npz",
+              "sha256": "1DCC3727C4ED2AA8C287BCE5368F534417062B537F548D6D98D4401A0C1487A1",
+              "bytes": 76842,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+              "geometry_labels_are_flow_occupancy": false
+            },
+            "off": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P0_identity_off\\P0_identity_off_f0200_velocity.npz",
+              "sha256": "0C7B666DD4B33331198E45D45B3F6BB62463BFA8E3EF237EAF703E4EB048769A",
+              "bytes": 85385,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+              "geometry_labels_are_flow_occupancy": false
+            }
+          }
+        }
+      ],
+      "diagnostic_pass": true,
+      "qualification": false,
+      "reason": "only one of three predeclared independent runs completed"
+    },
+    {
+      "pose": "P1_y40",
+      "run_count": 1,
+      "frames": [
+        {
+          "frame": 60,
+          "on": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3748,
+              "mean": 0.19734043800919543,
+              "p50": 0.004924028879031539,
+              "p95": 1.1429904520511627,
+              "maximum": 6.282830715179443,
+              "threshold_counts": {
+                "1e-12": 3078,
+                "1e-06": 3054,
+                "1e-05": 2928,
+                "0.1": 704
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 612,
+              "mean": 0.04890612699087125,
+              "p50": 3.516674041748047e-06,
+              "p95": 0.09299651384353615,
+              "maximum": 3.1623966693878174,
+              "threshold_counts": {
+                "1e-12": 474,
+                "1e-06": 423,
+                "1e-05": 174,
+                "0.1": 30
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 491,
+              "mean": 2.874585539357287e-06,
+              "p50": 2.086162567138672e-06,
+              "p95": 7.91687944001751e-06,
+              "maximum": 8.352522854693234e-06,
+              "threshold_counts": {
+                "1e-12": 396,
+                "1e-06": 337,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 34,
+              "mean": 3.173803520439833e-06,
+              "p50": 2.3543834686279297e-06,
+              "p95": 7.91687944001751e-06,
+              "maximum": 8.352522854693234e-06,
+              "threshold_counts": {
+                "1e-12": 30,
+                "1e-06": 27,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 264,
+              "mean": 0.10497786494651574,
+              "p50": 0.0023532062768936157,
+              "p95": 0.6836528569459914,
+              "maximum": 4.59628438949585,
+              "threshold_counts": {
+                "1e-12": 234,
+                "1e-06": 207,
+                "1e-05": 138,
+                "0.1": 26
+              }
+            },
+            "rotated_only": {
+              "available": true,
+              "voxel_count": 362,
+              "mean": 2.991355431832287e-06,
+              "p50": 2.6226043701171875e-06,
+              "p95": 7.8860622124921e-06,
+              "maximum": 7.91687944001751e-06,
+              "threshold_counts": {
+                "1e-12": 288,
+                "1e-06": 259,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_only": {
+              "available": true,
+              "voxel_count": 134,
+              "mean": 0.20417589345276216,
+              "p50": 0.008466081693768501,
+              "p95": 0.9190354853868481,
+              "maximum": 4.59628438949585,
+              "threshold_counts": {
+                "1e-12": 127,
+                "1e-06": 125,
+                "1e-05": 120,
+                "0.1": 26
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 77,
+              "mean": 2.4289570762460234e-06,
+              "p50": 2.086162567138672e-06,
+              "p95": 7.562277005490614e-06,
+              "maximum": 8.352522854693234e-06,
+              "threshold_counts": {
+                "1e-12": 62,
+                "1e-06": 46,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            }
+          },
+          "off": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3748,
+              "mean": 0.19811091003039993,
+              "p50": 0.02825654298067093,
+              "p95": 0.8240388214588154,
+              "maximum": 9.778183937072754,
+              "threshold_counts": {
+                "1e-12": 3535,
+                "1e-06": 3535,
+                "1e-05": 3535,
+                "0.1": 1040
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 612,
+              "mean": 0.3538290829035557,
+              "p50": 0.05043712444603443,
+              "p95": 1.5468631207942944,
+              "maximum": 8.400203704833984,
+              "threshold_counts": {
+                "1e-12": 612,
+                "1e-06": 612,
+                "1e-05": 612,
+                "0.1": 227
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 491,
+              "mean": 0.7269348943427721,
+              "p50": 0.06111787259578705,
+              "p95": 5.433024644851685,
+              "maximum": 8.357105255126953,
+              "threshold_counts": {
+                "1e-12": 491,
+                "1e-06": 491,
+                "1e-05": 491,
+                "0.1": 181
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 34,
+              "mean": 1.3650263613911675,
+              "p50": 0.047380488365888596,
+              "p95": 8.047443103790282,
+              "maximum": 8.357105255126953,
+              "threshold_counts": {
+                "1e-12": 34,
+                "1e-06": 34,
+                "1e-05": 34,
+                "0.1": 11
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 264,
+              "mean": 0.9157343498522867,
+              "p50": 0.19763849675655365,
+              "p95": 5.673716807365416,
+              "maximum": 8.357105255126953,
+              "threshold_counts": {
+                "1e-12": 264,
+                "1e-06": 264,
+                "1e-05": 264,
+                "0.1": 177
+              }
+            },
+            "rotated_only": {
+              "available": true,
+              "voxel_count": 362,
+              "mean": 0.1806536063099105,
+              "p50": 0.041630081832408905,
+              "p95": 0.5806703567504881,
+              "maximum": 7.998531818389893,
+              "threshold_counts": {
+                "1e-12": 362,
+                "1e-06": 362,
+                "1e-05": 362,
+                "0.1": 60
+              }
+            },
+            "axis_only": {
+              "available": true,
+              "voxel_count": 134,
+              "mean": 0.11208126883703604,
+              "p50": 0.07931675389409065,
+              "p95": 0.3233177840709683,
+              "maximum": 0.9084175229072571,
+              "threshold_counts": {
+                "1e-12": 134,
+                "1e-06": 134,
+                "1e-05": 134,
+                "0.1": 53
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 77,
+              "mean": 2.5016940393811695,
+              "p50": 1.285954236984253,
+              "p95": 7.403823375701904,
+              "maximum": 8.357105255126953,
+              "threshold_counts": {
+                "1e-12": 77,
+                "1e-06": 77,
+                "1e-05": 77,
+                "0.1": 77
+              }
+            }
+          },
+          "on_over_off_deep_maximum_ratio": 9.994516761134596e-07,
+          "gates": {
+            "on_deep_at_or_below_limit": true,
+            "on_center_at_or_below_limit": true,
+            "off_deep_at_or_above_positive_minimum": true,
+            "off_center_at_or_above_positive_minimum": true,
+            "on_over_off_ratio_at_or_below_limit": true
+          },
+          "diagnostic_pass": true,
+          "files": {
+            "on": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P1_y40_on\\P1_y40_on_f0060_velocity.npz",
+              "sha256": "E5FF88B5ED34D1F27EDD694062A6824729FB290ACF8641612B087B2EAA13A5C8",
+              "bytes": 131288,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+              "geometry_labels_are_flow_occupancy": false
+            },
+            "off": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P1_y40_off\\P1_y40_off_f0060_velocity.npz",
+              "sha256": "DD6EFCCAE21FB35842334070F1F7DD763C4A30030024C42430674BBA1C0D23DC",
+              "bytes": 144829,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+              "geometry_labels_are_flow_occupancy": false
+            }
+          }
+        },
+        {
+          "frame": 120,
+          "on": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3748,
+              "mean": 0.18514060666444235,
+              "p50": 0.005215097218751907,
+              "p95": 1.0518907427787765,
+              "maximum": 6.304191589355469,
+              "threshold_counts": {
+                "1e-12": 3078,
+                "1e-06": 3054,
+                "1e-05": 2928,
+                "0.1": 679
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 612,
+              "mean": 0.04691973762480445,
+              "p50": 3.516674041748047e-06,
+              "p95": 0.06827705502510055,
+              "maximum": 2.8901114463806152,
+              "threshold_counts": {
+                "1e-12": 474,
+                "1e-06": 423,
+                "1e-05": 174,
+                "0.1": 27
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 491,
+              "mean": 2.874585539357287e-06,
+              "p50": 2.086162567138672e-06,
+              "p95": 7.91687944001751e-06,
+              "maximum": 8.352522854693234e-06,
+              "threshold_counts": {
+                "1e-12": 396,
+                "1e-06": 337,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 34,
+              "mean": 3.173803520439833e-06,
+              "p50": 2.3543834686279297e-06,
+              "p95": 7.91687944001751e-06,
+              "maximum": 8.352522854693234e-06,
+              "threshold_counts": {
+                "1e-12": 30,
+                "1e-06": 27,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 264,
+              "mean": 0.11043836927387671,
+              "p50": 0.0018818179378286004,
+              "p95": 0.7009601593017573,
+              "maximum": 4.572147369384766,
+              "threshold_counts": {
+                "1e-12": 234,
+                "1e-06": 207,
+                "1e-05": 138,
+                "0.1": 27
+              }
+            },
+            "rotated_only": {
+              "available": true,
+              "voxel_count": 362,
+              "mean": 2.991355431832287e-06,
+              "p50": 2.6226043701171875e-06,
+              "p95": 7.8860622124921e-06,
+              "maximum": 7.91687944001751e-06,
+              "threshold_counts": {
+                "1e-12": 288,
+                "1e-06": 259,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_only": {
+              "available": true,
+              "voxel_count": 134,
+              "mean": 0.21568552381532796,
+              "p50": 0.008653231430798769,
+              "p95": 0.9685306847095481,
+              "maximum": 4.572147369384766,
+              "threshold_counts": {
+                "1e-12": 127,
+                "1e-06": 125,
+                "1e-05": 120,
+                "0.1": 27
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 77,
+              "mean": 2.4289570762460234e-06,
+              "p50": 2.086162567138672e-06,
+              "p95": 7.562277005490614e-06,
+              "maximum": 8.352522854693234e-06,
+              "threshold_counts": {
+                "1e-12": 62,
+                "1e-06": 46,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            }
+          },
+          "off": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3748,
+              "mean": 0.20669143113709332,
+              "p50": 0.025400256738066673,
+              "p95": 0.8836827695369694,
+              "maximum": 9.101585388183594,
+              "threshold_counts": {
+                "1e-12": 3535,
+                "1e-06": 3535,
+                "1e-05": 3535,
+                "0.1": 884
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 612,
+              "mean": 0.3653148730579167,
+              "p50": 0.0459979884326458,
+              "p95": 1.5045440256595606,
+              "maximum": 9.40645694732666,
+              "threshold_counts": {
+                "1e-12": 612,
+                "1e-06": 612,
+                "1e-05": 612,
+                "0.1": 226
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 491,
+              "mean": 0.6384852904676557,
+              "p50": 0.0748777985572815,
+              "p95": 4.057732939720154,
+              "maximum": 9.09351921081543,
+              "threshold_counts": {
+                "1e-12": 491,
+                "1e-06": 491,
+                "1e-05": 491,
+                "0.1": 224
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 34,
+              "mean": 1.0413372923674828,
+              "p50": 0.07728883624076843,
+              "p95": 7.477409529685974,
+              "maximum": 8.175348281860352,
+              "threshold_counts": {
+                "1e-12": 34,
+                "1e-06": 34,
+                "1e-05": 34,
+                "0.1": 16
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 264,
+              "mean": 0.7804377439139044,
+              "p50": 0.09883799031376839,
+              "p95": 5.868278837203975,
+              "maximum": 8.175348281860352,
+              "threshold_counts": {
+                "1e-12": 264,
+                "1e-06": 264,
+                "1e-05": 264,
+                "0.1": 132
+              }
+            },
+            "rotated_only": {
+              "available": true,
+              "voxel_count": 362,
+              "mean": 0.23022292830302118,
+              "p50": 0.03429570607841015,
+              "p95": 0.5728920757770536,
+              "maximum": 9.09351921081543,
+              "threshold_counts": {
+                "1e-12": 362,
+                "1e-06": 362,
+                "1e-05": 362,
+                "0.1": 111
+              }
+            },
+            "axis_only": {
+              "available": true,
+              "voxel_count": 134,
+              "mean": 0.06915084215979189,
+              "p50": 0.04101226665079594,
+              "p95": 0.19588008597493164,
+              "maximum": 0.6502975821495056,
+              "threshold_counts": {
+                "1e-12": 134,
+                "1e-06": 134,
+                "1e-05": 134,
+                "0.1": 18
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 77,
+              "mean": 2.1900223851107157,
+              "p50": 0.9564407467842102,
+              "p95": 7.460234737396241,
+              "maximum": 8.175348281860352,
+              "threshold_counts": {
+                "1e-12": 77,
+                "1e-06": 77,
+                "1e-05": 77,
+                "0.1": 73
+              }
+            }
+          },
+          "on_over_off_deep_maximum_ratio": 9.185137965903357e-07,
+          "gates": {
+            "on_deep_at_or_below_limit": true,
+            "on_center_at_or_below_limit": true,
+            "off_deep_at_or_above_positive_minimum": true,
+            "off_center_at_or_above_positive_minimum": true,
+            "on_over_off_ratio_at_or_below_limit": true
+          },
+          "diagnostic_pass": true,
+          "files": {
+            "on": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P1_y40_on\\P1_y40_on_f0120_velocity.npz",
+              "sha256": "50B36A81F3E8260086842F9FD11A3B360DC6720E785ED2BCFB96C8E088BF25D4",
+              "bytes": 131306,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+              "geometry_labels_are_flow_occupancy": false
+            },
+            "off": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P1_y40_off\\P1_y40_off_f0120_velocity.npz",
+              "sha256": "106B447ACB07D5470BAB5242391D6BC95D5099639A0E3BF6DF63B72D5D027A79",
+              "bytes": 144993,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+              "geometry_labels_are_flow_occupancy": false
+            }
+          }
+        },
+        {
+          "frame": 180,
+          "on": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3748,
+              "mean": 0.17601731467409565,
+              "p50": 0.005023875972256064,
+              "p95": 0.9231731414794919,
+              "maximum": 6.322177886962891,
+              "threshold_counts": {
+                "1e-12": 3078,
+                "1e-06": 3054,
+                "1e-05": 2928,
+                "0.1": 646
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 612,
+              "mean": 0.0520394227782433,
+              "p50": 3.516674041748047e-06,
+              "p95": 0.08936493322253136,
+              "maximum": 2.914672613143921,
+              "threshold_counts": {
+                "1e-12": 474,
+                "1e-06": 423,
+                "1e-05": 174,
+                "0.1": 30
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 491,
+              "mean": 2.874585539357287e-06,
+              "p50": 2.086162567138672e-06,
+              "p95": 7.91687944001751e-06,
+              "maximum": 8.352522854693234e-06,
+              "threshold_counts": {
+                "1e-12": 396,
+                "1e-06": 337,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 34,
+              "mean": 3.173803520439833e-06,
+              "p50": 2.3543834686279297e-06,
+              "p95": 7.91687944001751e-06,
+              "maximum": 8.352522854693234e-06,
+              "threshold_counts": {
+                "1e-12": 30,
+                "1e-06": 27,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 264,
+              "mean": 0.12100088253032223,
+              "p50": 0.0022315102396532893,
+              "p95": 0.6521747678518292,
+              "maximum": 4.513385772705078,
+              "threshold_counts": {
+                "1e-12": 234,
+                "1e-06": 207,
+                "1e-05": 138,
+                "0.1": 29
+              }
+            },
+            "rotated_only": {
+              "available": true,
+              "voxel_count": 362,
+              "mean": 2.991355431832287e-06,
+              "p50": 2.6226043701171875e-06,
+              "p95": 7.8860622124921e-06,
+              "maximum": 7.91687944001751e-06,
+              "threshold_counts": {
+                "1e-12": 288,
+                "1e-06": 259,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_only": {
+              "available": true,
+              "voxel_count": 134,
+              "mean": 0.23638364004923393,
+              "p50": 0.008642352651804686,
+              "p95": 1.191741520166395,
+              "maximum": 4.513385772705078,
+              "threshold_counts": {
+                "1e-12": 127,
+                "1e-06": 125,
+                "1e-05": 120,
+                "0.1": 29
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 77,
+              "mean": 2.4289570762460234e-06,
+              "p50": 2.086162567138672e-06,
+              "p95": 7.562277005490614e-06,
+              "maximum": 8.352522854693234e-06,
+              "threshold_counts": {
+                "1e-12": 62,
+                "1e-06": 46,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            }
+          },
+          "off": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3748,
+              "mean": 0.18791347901862893,
+              "p50": 0.028081768192350864,
+              "p95": 0.6676595717668521,
+              "maximum": 9.44670295715332,
+              "threshold_counts": {
+                "1e-12": 3535,
+                "1e-06": 3535,
+                "1e-05": 3535,
+                "0.1": 806
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 612,
+              "mean": 0.3611853335618066,
+              "p50": 0.04277707450091839,
+              "p95": 1.7267936766147538,
+              "maximum": 8.536612510681152,
+              "threshold_counts": {
+                "1e-12": 612,
+                "1e-06": 612,
+                "1e-05": 612,
+                "0.1": 189
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 491,
+              "mean": 0.5673975967479653,
+              "p50": 0.05036107450723648,
+              "p95": 3.542444348335266,
+              "maximum": 8.826881408691406,
+              "threshold_counts": {
+                "1e-12": 491,
+                "1e-06": 491,
+                "1e-05": 491,
+                "0.1": 168
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 34,
+              "mean": 0.8422229201806819,
+              "p50": 0.0439100731164217,
+              "p95": 5.915677738189694,
+              "maximum": 8.080873489379883,
+              "threshold_counts": {
+                "1e-12": 34,
+                "1e-06": 34,
+                "1e-05": 34,
+                "0.1": 12
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 264,
+              "mean": 0.7272626450814476,
+              "p50": 0.10180923342704773,
+              "p95": 4.643258738517761,
+              "maximum": 8.826881408691406,
+              "threshold_counts": {
+                "1e-12": 264,
+                "1e-06": 264,
+                "1e-05": 264,
+                "0.1": 135
+              }
+            },
+            "rotated_only": {
+              "available": true,
+              "voxel_count": 362,
+              "mean": 0.17216718476394305,
+              "p50": 0.030655101872980595,
+              "p95": 0.4713052645325657,
+              "maximum": 7.1124982833862305,
+              "threshold_counts": {
+                "1e-12": 362,
+                "1e-06": 362,
+                "1e-05": 362,
+                "0.1": 56
+              }
+            },
+            "axis_only": {
+              "available": true,
+              "voxel_count": 134,
+              "mean": 0.08027545937489886,
+              "p50": 0.05663265846669674,
+              "p95": 0.239427604526281,
+              "maximum": 0.9761605858802795,
+              "threshold_counts": {
+                "1e-12": 134,
+                "1e-06": 134,
+                "1e-05": 134,
+                "0.1": 22
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 77,
+              "mean": 1.9382362758571452,
+              "p50": 0.9678394198417664,
+              "p95": 7.453444099426271,
+              "maximum": 8.826881408691406,
+              "threshold_counts": {
+                "1e-12": 77,
+                "1e-06": 77,
+                "1e-05": 77,
+                "0.1": 71
+              }
+            }
+          },
+          "on_over_off_deep_maximum_ratio": 9.462597794130219e-07,
+          "gates": {
+            "on_deep_at_or_below_limit": true,
+            "on_center_at_or_below_limit": true,
+            "off_deep_at_or_above_positive_minimum": true,
+            "off_center_at_or_above_positive_minimum": true,
+            "on_over_off_ratio_at_or_below_limit": true
+          },
+          "diagnostic_pass": true,
+          "files": {
+            "on": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P1_y40_on\\P1_y40_on_f0180_velocity.npz",
+              "sha256": "26146AB04D4A49E2F7C127AE5B25EF9175EF40470180D38D0657C9EE7D00BF9D",
+              "bytes": 131355,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+              "geometry_labels_are_flow_occupancy": false
+            },
+            "off": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P1_y40_off\\P1_y40_off_f0180_velocity.npz",
+              "sha256": "C2BDC13B1BC3C57C44134CAA8125591ACD20623DAD2187FD2BF5C5CC0C7A9A54",
+              "bytes": 144809,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+              "geometry_labels_are_flow_occupancy": false
+            }
+          }
+        },
+        {
+          "frame": 200,
+          "on": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3748,
+              "mean": 0.177486230832439,
+              "p50": 0.004745036829262972,
+              "p95": 0.9533458799123762,
+              "maximum": 6.332172870635986,
+              "threshold_counts": {
+                "1e-12": 3078,
+                "1e-06": 3054,
+                "1e-05": 2928,
+                "0.1": 636
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 612,
+              "mean": 0.04766709623196619,
+              "p50": 3.516674041748047e-06,
+              "p95": 0.10412837825715347,
+              "maximum": 2.903322458267212,
+              "threshold_counts": {
+                "1e-12": 474,
+                "1e-06": 423,
+                "1e-05": 174,
+                "0.1": 31
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 491,
+              "mean": 2.874585539357287e-06,
+              "p50": 2.086162567138672e-06,
+              "p95": 7.91687944001751e-06,
+              "maximum": 8.352522854693234e-06,
+              "threshold_counts": {
+                "1e-12": 396,
+                "1e-06": 337,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 34,
+              "mean": 3.173803520439833e-06,
+              "p50": 2.3543834686279297e-06,
+              "p95": 7.91687944001751e-06,
+              "maximum": 8.352522854693234e-06,
+              "threshold_counts": {
+                "1e-12": 30,
+                "1e-06": 27,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 264,
+              "mean": 0.13353700907643945,
+              "p50": 0.0021078772842884064,
+              "p95": 0.7592074781656264,
+              "maximum": 4.713141918182373,
+              "threshold_counts": {
+                "1e-12": 234,
+                "1e-06": 207,
+                "1e-05": 138,
+                "0.1": 29
+              }
+            },
+            "rotated_only": {
+              "available": true,
+              "voxel_count": 362,
+              "mean": 2.991355431832287e-06,
+              "p50": 2.6226043701171875e-06,
+              "p95": 7.8860622124921e-06,
+              "maximum": 7.91687944001751e-06,
+              "threshold_counts": {
+                "1e-12": 288,
+                "1e-06": 259,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_only": {
+              "available": true,
+              "voxel_count": 134,
+              "mean": 0.26076677247339775,
+              "p50": 0.008484463673084974,
+              "p95": 1.450593972206115,
+              "maximum": 4.713141918182373,
+              "threshold_counts": {
+                "1e-12": 127,
+                "1e-06": 125,
+                "1e-05": 120,
+                "0.1": 29
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 77,
+              "mean": 2.4289570762460234e-06,
+              "p50": 2.086162567138672e-06,
+              "p95": 7.562277005490614e-06,
+              "maximum": 8.352522854693234e-06,
+              "threshold_counts": {
+                "1e-12": 62,
+                "1e-06": 46,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            }
+          },
+          "off": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3748,
+              "mean": 0.19992889421059562,
+              "p50": 0.02276185154914856,
+              "p95": 0.8739326745271663,
+              "maximum": 9.486875534057617,
+              "threshold_counts": {
+                "1e-12": 3535,
+                "1e-06": 3535,
+                "1e-05": 3535,
+                "0.1": 855
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 612,
+              "mean": 0.3268618191450871,
+              "p50": 0.043295690789818764,
+              "p95": 1.3742532908916445,
+              "maximum": 7.414128303527832,
+              "threshold_counts": {
+                "1e-12": 612,
+                "1e-06": 612,
+                "1e-05": 612,
+                "0.1": 211
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 491,
+              "mean": 0.6556385874941703,
+              "p50": 0.06603535264730453,
+              "p95": 4.7365827560424805,
+              "maximum": 7.767152309417725,
+              "threshold_counts": {
+                "1e-12": 491,
+                "1e-06": 491,
+                "1e-05": 491,
+                "0.1": 196
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 34,
+              "mean": 1.1022157467874314,
+              "p50": 0.07295085117220879,
+              "p95": 6.694790434837341,
+              "maximum": 7.767152309417725,
+              "threshold_counts": {
+                "1e-12": 34,
+                "1e-06": 34,
+                "1e-05": 34,
+                "0.1": 15
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 264,
+              "mean": 0.9181107208414963,
+              "p50": 0.1671798676252365,
+              "p95": 5.944016933441161,
+              "maximum": 7.767152309417725,
+              "threshold_counts": {
+                "1e-12": 264,
+                "1e-06": 264,
+                "1e-05": 264,
+                "0.1": 169
+              }
+            },
+            "rotated_only": {
+              "available": true,
+              "voxel_count": 362,
+              "mean": 0.15065659869472542,
+              "p50": 0.03546706587076187,
+              "p95": 0.3416178107261657,
+              "maximum": 6.818838596343994,
+              "threshold_counts": {
+                "1e-12": 362,
+                "1e-06": 362,
+                "1e-05": 362,
+                "0.1": 75
+              }
+            },
+            "axis_only": {
+              "available": true,
+              "voxel_count": 134,
+              "mean": 0.109201151849841,
+              "p50": 0.06972809508442879,
+              "p95": 0.31102299243211745,
+              "maximum": 1.166986107826233,
+              "threshold_counts": {
+                "1e-12": 134,
+                "1e-06": 134,
+                "1e-05": 134,
+                "0.1": 46
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 77,
+              "mean": 2.537495713826124,
+              "p50": 1.47420334815979,
+              "p95": 7.402511119842529,
+              "maximum": 7.767152309417725,
+              "threshold_counts": {
+                "1e-12": 77,
+                "1e-06": 77,
+                "1e-05": 77,
+                "0.1": 77
+              }
+            }
+          },
+          "on_over_off_deep_maximum_ratio": 1.0753648856049525e-06,
+          "gates": {
+            "on_deep_at_or_below_limit": true,
+            "on_center_at_or_below_limit": true,
+            "off_deep_at_or_above_positive_minimum": true,
+            "off_center_at_or_above_positive_minimum": true,
+            "on_over_off_ratio_at_or_below_limit": true
+          },
+          "diagnostic_pass": true,
+          "files": {
+            "on": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P1_y40_on\\P1_y40_on_f0200_velocity.npz",
+              "sha256": "367AE481719E8E3B53B09D0AB2A4AB042CB6FCB03053306FA303654FD3B07B84",
+              "bytes": 131355,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+              "geometry_labels_are_flow_occupancy": false
+            },
+            "off": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P1_y40_off\\P1_y40_off_f0200_velocity.npz",
+              "sha256": "515D2C01E517314B6B507662B1F7EE41868A47DDE5D812982CEC72EA05407DFD",
+              "bytes": 145175,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 88,
+              "geometry_labels_are_flow_occupancy": false
+            }
+          }
+        }
+      ],
+      "diagnostic_pass": true,
+      "qualification": false,
+      "reason": "only one of three predeclared independent runs completed"
+    },
+    {
+      "pose": "P2_roll_x17",
+      "run_count": 1,
+      "frames": [
+        {
+          "frame": 60,
+          "on": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3757,
+              "mean": 0.0989440000443547,
+              "p50": 0.0007481362554244697,
+              "p95": 0.5344871163368208,
+              "maximum": 6.181899070739746,
+              "threshold_counts": {
+                "1e-12": 2848,
+                "1e-06": 2848,
+                "1e-05": 2750,
+                "0.1": 397
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 625,
+              "mean": 0.029745062400441384,
+              "p50": 3.516674041748047e-06,
+              "p95": 0.012628830038011048,
+              "maximum": 2.6380844116210938,
+              "threshold_counts": {
+                "1e-12": 544,
+                "1e-06": 384,
+                "1e-05": 160,
+                "0.1": 19
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 495,
+              "mean": 1.780058356058417e-06,
+              "p50": 8.344650268554688e-07,
+              "p95": 7.300534889509436e-06,
+              "maximum": 7.300534889509436e-06,
+              "threshold_counts": {
+                "1e-12": 416,
+                "1e-06": 224,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 33,
+              "mean": 2.8899221709280304e-07,
+              "p50": 2.980232238769531e-07,
+              "p95": 2.980232238769531e-07,
+              "maximum": 2.980232238769531e-07,
+              "threshold_counts": {
+                "1e-12": 32,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 1.8494069380726005e-06,
+              "p50": 8.344650268554688e-07,
+              "p95": 7.300534889509436e-06,
+              "maximum": 7.300534889509436e-06,
+              "threshold_counts": {
+                "1e-12": 384,
+                "1e-06": 224,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "rotated_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 1.8494069380726005e-06,
+              "p50": 8.344650268554688e-07,
+              "p95": 7.300534889509436e-06,
+              "maximum": 7.300534889509436e-06,
+              "threshold_counts": {
+                "1e-12": 384,
+                "1e-06": 224,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            }
+          },
+          "off": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3757,
+              "mean": 0.14468913395646915,
+              "p50": 0.012832973152399063,
+              "p95": 0.4317391932010648,
+              "maximum": 8.400203704833984,
+              "threshold_counts": {
+                "1e-12": 2848,
+                "1e-06": 2848,
+                "1e-05": 2848,
+                "0.1": 703
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 625,
+              "mean": 0.32591371557787063,
+              "p50": 0.02857980877161026,
+              "p95": 1.149543833732605,
+              "maximum": 7.976940155029297,
+              "threshold_counts": {
+                "1e-12": 544,
+                "1e-06": 544,
+                "1e-05": 544,
+                "0.1": 195
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 495,
+              "mean": 0.5127861907357595,
+              "p50": 0.04843803122639656,
+              "p95": 3.299374270439132,
+              "maximum": 8.357105255126953,
+              "threshold_counts": {
+                "1e-12": 480,
+                "1e-06": 480,
+                "1e-05": 480,
+                "0.1": 190
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 33,
+              "mean": 0.7486991144462742,
+              "p50": 0.05481991916894913,
+              "p95": 5.243395519256591,
+              "maximum": 8.357105255126953,
+              "threshold_counts": {
+                "1e-12": 32,
+                "1e-06": 32,
+                "1e-05": 32,
+                "0.1": 13
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.5289954795014291,
+              "p50": 0.048390498384833336,
+              "p95": 3.6433016061782824,
+              "maximum": 8.357105255126953,
+              "threshold_counts": {
+                "1e-12": 448,
+                "1e-06": 448,
+                "1e-05": 448,
+                "0.1": 177
+              }
+            },
+            "rotated_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.5289954795014291,
+              "p50": 0.048390498384833336,
+              "p95": 3.6433016061782824,
+              "maximum": 8.357105255126953,
+              "threshold_counts": {
+                "1e-12": 448,
+                "1e-06": 448,
+                "1e-05": 448,
+                "0.1": 177
+              }
+            }
+          },
+          "on_over_off_deep_maximum_ratio": 8.735722079162126e-07,
+          "gates": {
+            "on_deep_at_or_below_limit": true,
+            "on_center_at_or_below_limit": true,
+            "off_deep_at_or_above_positive_minimum": true,
+            "off_center_at_or_above_positive_minimum": true,
+            "on_over_off_ratio_at_or_below_limit": true
+          },
+          "diagnostic_pass": true,
+          "files": {
+            "on": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P2_roll_x17_on\\P2_roll_x17_on_f0060_velocity.npz",
+              "sha256": "0D7AE1A8C4D8F9E39B184CBCBE8ADE9D88B3C85F4AC4E1CCF339F6686075AF84",
+              "bytes": 86027,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+              "geometry_labels_are_flow_occupancy": false
+            },
+            "off": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P2_roll_x17_off\\P2_roll_x17_off_f0060_velocity.npz",
+              "sha256": "5B2DEF7BE4457625202F7A59578EBCEEAB294EEA618EDD9B327F7F376B086EBE",
+              "bytes": 93924,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+              "geometry_labels_are_flow_occupancy": false
+            }
+          }
+        },
+        {
+          "frame": 120,
+          "on": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3757,
+              "mean": 0.10422527705585487,
+              "p50": 0.0010907845571637154,
+              "p95": 0.5378024101257314,
+              "maximum": 6.171874523162842,
+              "threshold_counts": {
+                "1e-12": 2848,
+                "1e-06": 2848,
+                "1e-05": 2752,
+                "0.1": 370
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 625,
+              "mean": 0.036160685012326575,
+              "p50": 3.516674041748047e-06,
+              "p95": 0.014758364111185068,
+              "maximum": 2.980997323989868,
+              "threshold_counts": {
+                "1e-12": 544,
+                "1e-06": 384,
+                "1e-05": 160,
+                "0.1": 22
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 495,
+              "mean": 1.780058356058417e-06,
+              "p50": 8.344650268554688e-07,
+              "p95": 7.300534889509436e-06,
+              "maximum": 7.300534889509436e-06,
+              "threshold_counts": {
+                "1e-12": 416,
+                "1e-06": 224,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 33,
+              "mean": 2.8899221709280304e-07,
+              "p50": 2.980232238769531e-07,
+              "p95": 2.980232238769531e-07,
+              "maximum": 2.980232238769531e-07,
+              "threshold_counts": {
+                "1e-12": 32,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 1.8494069380726005e-06,
+              "p50": 8.344650268554688e-07,
+              "p95": 7.300534889509436e-06,
+              "maximum": 7.300534889509436e-06,
+              "threshold_counts": {
+                "1e-12": 384,
+                "1e-06": 224,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "rotated_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 1.8494069380726005e-06,
+              "p50": 8.344650268554688e-07,
+              "p95": 7.300534889509436e-06,
+              "maximum": 7.300534889509436e-06,
+              "threshold_counts": {
+                "1e-12": 384,
+                "1e-06": 224,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            }
+          },
+          "off": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3757,
+              "mean": 0.13805802281168375,
+              "p50": 0.009993251413106918,
+              "p95": 0.45078775882720945,
+              "maximum": 9.40645694732666,
+              "threshold_counts": {
+                "1e-12": 2848,
+                "1e-06": 2848,
+                "1e-05": 2848,
+                "0.1": 588
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 625,
+              "mean": 0.2388171205468476,
+              "p50": 0.018168317154049873,
+              "p95": 1.087204122543334,
+              "maximum": 8.928284645080566,
+              "threshold_counts": {
+                "1e-12": 544,
+                "1e-06": 544,
+                "1e-05": 544,
+                "0.1": 142
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 495,
+              "mean": 0.4332605335038306,
+              "p50": 0.02830779366195202,
+              "p95": 2.856616830825797,
+              "maximum": 8.175348281860352,
+              "threshold_counts": {
+                "1e-12": 480,
+                "1e-06": 480,
+                "1e-05": 480,
+                "0.1": 140
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 33,
+              "mean": 0.7210899372091235,
+              "p50": 0.03314362093806267,
+              "p95": 5.097230434417719,
+              "maximum": 8.175348281860352,
+              "threshold_counts": {
+                "1e-12": 32,
+                "1e-06": 32,
+                "1e-05": 32,
+                "0.1": 9
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.44988683887628345,
+              "p50": 0.029123817570507526,
+              "p95": 3.1661745786666824,
+              "maximum": 8.175348281860352,
+              "threshold_counts": {
+                "1e-12": 448,
+                "1e-06": 448,
+                "1e-05": 448,
+                "0.1": 132
+              }
+            },
+            "rotated_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.44988683887628345,
+              "p50": 0.029123817570507526,
+              "p95": 3.1661745786666824,
+              "maximum": 8.175348281860352,
+              "threshold_counts": {
+                "1e-12": 448,
+                "1e-06": 448,
+                "1e-05": 448,
+                "0.1": 132
+              }
+            }
+          },
+          "on_over_off_deep_maximum_ratio": 8.929937462980052e-07,
+          "gates": {
+            "on_deep_at_or_below_limit": true,
+            "on_center_at_or_below_limit": true,
+            "off_deep_at_or_above_positive_minimum": true,
+            "off_center_at_or_above_positive_minimum": true,
+            "on_over_off_ratio_at_or_below_limit": true
+          },
+          "diagnostic_pass": true,
+          "files": {
+            "on": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P2_roll_x17_on\\P2_roll_x17_on_f0120_velocity.npz",
+              "sha256": "4EFFEA9DD34C2043402264D718D52F550F91460BE682F9CD6F733B810BE829EF",
+              "bytes": 85861,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+              "geometry_labels_are_flow_occupancy": false
+            },
+            "off": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P2_roll_x17_off\\P2_roll_x17_off_f0120_velocity.npz",
+              "sha256": "93F52D7A3CB6CE20BDD9944FCF130D4EFE66B2F569D355D0875D4E6B2B7AB887",
+              "bytes": 94186,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+              "geometry_labels_are_flow_occupancy": false
+            }
+          }
+        },
+        {
+          "frame": 180,
+          "on": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3757,
+              "mean": 0.1119073321224326,
+              "p50": 0.0010083873057737947,
+              "p95": 0.6520489931106561,
+              "maximum": 6.160861015319824,
+              "threshold_counts": {
+                "1e-12": 2848,
+                "1e-06": 2848,
+                "1e-05": 2752,
+                "0.1": 408
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 625,
+              "mean": 0.03831543126915349,
+              "p50": 3.516674041748047e-06,
+              "p95": 0.015165542811155279,
+              "maximum": 2.8177289962768555,
+              "threshold_counts": {
+                "1e-12": 544,
+                "1e-06": 384,
+                "1e-05": 160,
+                "0.1": 18
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 495,
+              "mean": 1.780058356058417e-06,
+              "p50": 8.344650268554688e-07,
+              "p95": 7.300534889509436e-06,
+              "maximum": 7.300534889509436e-06,
+              "threshold_counts": {
+                "1e-12": 416,
+                "1e-06": 224,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 33,
+              "mean": 2.8899221709280304e-07,
+              "p50": 2.980232238769531e-07,
+              "p95": 2.980232238769531e-07,
+              "maximum": 2.980232238769531e-07,
+              "threshold_counts": {
+                "1e-12": 32,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 1.8494069380726005e-06,
+              "p50": 8.344650268554688e-07,
+              "p95": 7.300534889509436e-06,
+              "maximum": 7.300534889509436e-06,
+              "threshold_counts": {
+                "1e-12": 384,
+                "1e-06": 224,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "rotated_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 1.8494069380726005e-06,
+              "p50": 8.344650268554688e-07,
+              "p95": 7.300534889509436e-06,
+              "maximum": 7.300534889509436e-06,
+              "threshold_counts": {
+                "1e-12": 384,
+                "1e-06": 224,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            }
+          },
+          "off": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3757,
+              "mean": 0.13970600078794645,
+              "p50": 0.012171182781457901,
+              "p95": 0.429652720689773,
+              "maximum": 8.98449993133545,
+              "threshold_counts": {
+                "1e-12": 2848,
+                "1e-06": 2848,
+                "1e-05": 2848,
+                "0.1": 572
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 625,
+              "mean": 0.2637427669771016,
+              "p50": 0.02578073926270008,
+              "p95": 1.1037074565887448,
+              "maximum": 8.599034309387207,
+              "threshold_counts": {
+                "1e-12": 544,
+                "1e-06": 544,
+                "1e-05": 544,
+                "0.1": 155
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 495,
+              "mean": 0.40360106831284787,
+              "p50": 0.03820955008268356,
+              "p95": 1.782456290721893,
+              "maximum": 8.826881408691406,
+              "threshold_counts": {
+                "1e-12": 480,
+                "1e-06": 480,
+                "1e-05": 480,
+                "0.1": 143
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 33,
+              "mean": 0.6094767968664228,
+              "p50": 0.04260695353150368,
+              "p95": 3.8345689535140917,
+              "maximum": 8.080873489379883,
+              "threshold_counts": {
+                "1e-12": 32,
+                "1e-06": 32,
+                "1e-05": 32,
+                "0.1": 11
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.4204971076587005,
+              "p50": 0.03754640929400921,
+              "p95": 1.9447259902954082,
+              "maximum": 8.826881408691406,
+              "threshold_counts": {
+                "1e-12": 448,
+                "1e-06": 448,
+                "1e-05": 448,
+                "0.1": 135
+              }
+            },
+            "rotated_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.4204971076587005,
+              "p50": 0.03754640929400921,
+              "p95": 1.9447259902954082,
+              "maximum": 8.826881408691406,
+              "threshold_counts": {
+                "1e-12": 448,
+                "1e-06": 448,
+                "1e-05": 448,
+                "0.1": 135
+              }
+            }
+          },
+          "on_over_off_deep_maximum_ratio": 8.270797523484285e-07,
+          "gates": {
+            "on_deep_at_or_below_limit": true,
+            "on_center_at_or_below_limit": true,
+            "off_deep_at_or_above_positive_minimum": true,
+            "off_center_at_or_above_positive_minimum": true,
+            "on_over_off_ratio_at_or_below_limit": true
+          },
+          "diagnostic_pass": true,
+          "files": {
+            "on": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P2_roll_x17_on\\P2_roll_x17_on_f0180_velocity.npz",
+              "sha256": "78C4DE44062EDF7EBA52A85A3D932F019E9F429BB597B003C0693F167E237BC2",
+              "bytes": 85850,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+              "geometry_labels_are_flow_occupancy": false
+            },
+            "off": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P2_roll_x17_off\\P2_roll_x17_off_f0180_velocity.npz",
+              "sha256": "77BAFAF4202083E1D40FA3613484E6B1CDAC2FBEA7A41AD6C0D5E9252FA53397",
+              "bytes": 93798,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+              "geometry_labels_are_flow_occupancy": false
+            }
+          }
+        },
+        {
+          "frame": 200,
+          "on": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3757,
+              "mean": 0.1123289017200384,
+              "p50": 0.0010048969415947795,
+              "p95": 0.6382632970809918,
+              "maximum": 6.145833969116211,
+              "threshold_counts": {
+                "1e-12": 2848,
+                "1e-06": 2848,
+                "1e-05": 2752,
+                "0.1": 403
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 625,
+              "mean": 0.039621934885473456,
+              "p50": 3.516674041748047e-06,
+              "p95": 0.014780548214912398,
+              "maximum": 3.0230672359466553,
+              "threshold_counts": {
+                "1e-12": 544,
+                "1e-06": 384,
+                "1e-05": 160,
+                "0.1": 19
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 495,
+              "mean": 1.780058356058417e-06,
+              "p50": 8.344650268554688e-07,
+              "p95": 7.300534889509436e-06,
+              "maximum": 7.300534889509436e-06,
+              "threshold_counts": {
+                "1e-12": 416,
+                "1e-06": 224,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 33,
+              "mean": 2.8899221709280304e-07,
+              "p50": 2.980232238769531e-07,
+              "p95": 2.980232238769531e-07,
+              "maximum": 2.980232238769531e-07,
+              "threshold_counts": {
+                "1e-12": 32,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 1.8494069380726005e-06,
+              "p50": 8.344650268554688e-07,
+              "p95": 7.300534889509436e-06,
+              "maximum": 7.300534889509436e-06,
+              "threshold_counts": {
+                "1e-12": 384,
+                "1e-06": 224,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "rotated_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 1.8494069380726005e-06,
+              "p50": 8.344650268554688e-07,
+              "p95": 7.300534889509436e-06,
+              "maximum": 7.300534889509436e-06,
+              "threshold_counts": {
+                "1e-12": 384,
+                "1e-06": 224,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            }
+          },
+          "off": {
+            "outside_halo": {
+              "available": true,
+              "voxel_count": 3757,
+              "mean": 0.12338569702616888,
+              "p50": 0.010567490942776203,
+              "p95": 0.3841507613658893,
+              "maximum": 8.378881454467773,
+              "threshold_counts": {
+                "1e-12": 2848,
+                "1e-06": 2848,
+                "1e-05": 2848,
+                "0.1": 496
+              }
+            },
+            "boundary_0_to_1_voxel": {
+              "available": true,
+              "voxel_count": 625,
+              "mean": 0.2702540742777288,
+              "p50": 0.024676136672496796,
+              "p95": 1.2497273921966525,
+              "maximum": 7.295466423034668,
+              "threshold_counts": {
+                "1e-12": 544,
+                "1e-06": 544,
+                "1e-05": 544,
+                "0.1": 170
+              }
+            },
+            "deep_interior": {
+              "available": true,
+              "voxel_count": 495,
+              "mean": 0.5182676982101655,
+              "p50": 0.04690111055970192,
+              "p95": 2.865031433105468,
+              "maximum": 7.767152309417725,
+              "threshold_counts": {
+                "1e-12": 480,
+                "1e-06": 480,
+                "1e-05": 480,
+                "0.1": 181
+              }
+            },
+            "center_axis_near": {
+              "available": true,
+              "voxel_count": 33,
+              "mean": 0.785112209801534,
+              "p50": 0.04917893186211586,
+              "p95": 5.263470745086666,
+              "maximum": 7.767152309417725,
+              "threshold_counts": {
+                "1e-12": 32,
+                "1e-06": 32,
+                "1e-05": 32,
+                "0.1": 13
+              }
+            },
+            "axis_reference_deep": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.530060132396472,
+              "p50": 0.04692734405398369,
+              "p95": 2.872638392448425,
+              "maximum": 7.767152309417725,
+              "threshold_counts": {
+                "1e-12": 448,
+                "1e-06": 448,
+                "1e-05": 448,
+                "0.1": 169
+              }
+            },
+            "rotated_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "axis_only": {
+              "available": false,
+              "voxel_count": 0,
+              "mean": 0.0,
+              "p50": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "threshold_counts": {
+                "1e-12": 0,
+                "1e-06": 0,
+                "1e-05": 0,
+                "0.1": 0
+              }
+            },
+            "overlap": {
+              "available": true,
+              "voxel_count": 462,
+              "mean": 0.530060132396472,
+              "p50": 0.04692734405398369,
+              "p95": 2.872638392448425,
+              "maximum": 7.767152309417725,
+              "threshold_counts": {
+                "1e-12": 448,
+                "1e-06": 448,
+                "1e-05": 448,
+                "0.1": 169
+              }
+            }
+          },
+          "on_over_off_deep_maximum_ratio": 9.399242603569763e-07,
+          "gates": {
+            "on_deep_at_or_below_limit": true,
+            "on_center_at_or_below_limit": true,
+            "off_deep_at_or_above_positive_minimum": true,
+            "off_center_at_or_above_positive_minimum": true,
+            "on_over_off_ratio_at_or_below_limit": true
+          },
+          "diagnostic_pass": true,
+          "files": {
+            "on": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P2_roll_x17_on\\P2_roll_x17_on_f0200_velocity.npz",
+              "sha256": "790F55396F3C5C63DAA9C1C46E2023E109C5D9D8F2563B97602CB150B0BD85E7",
+              "bytes": 85881,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+              "geometry_labels_are_flow_occupancy": false
+            },
+            "off": {
+              "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-1\\spatial\\run_1\\P2_roll_x17_off\\P2_roll_x17_off_f0200_velocity.npz",
+              "sha256": "BDA9A0364F60D313DBD06069EE3C91877031C753A33D0929812A3EC272D5A026",
+              "bytes": 93944,
+              "velocity_voxel_size_m": 0.05000000074505806,
+              "actual_mesh_vs_ideal_cylinder_disagreement_count": 0,
+              "geometry_labels_are_flow_occupancy": false
+            }
+          }
+        }
+      ],
+      "diagnostic_pass": true,
+      "qualification": false,
+      "reason": "only one of three predeclared independent runs completed"
+    }
+  ],
+  "partial_numeric_checks_pass": true,
+  "formal_svg_generated": false,
+  "formal_npz_archive_generated": false,
+  "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "production_changed": false,
+  "interpretation": {
+    "P0_P1_P2_qualified": false,
+    "P3_collision_behavior_assessed": false,
+    "P3_failure_is_collision_failure": false,
+    "all_SO3_qualified": false,
+    "next_minimum_confirmation": "classify why the existing guarded helper exceeded 512 MiB during P3 stage-open without rerunning the condition automatically"
+  }
+}

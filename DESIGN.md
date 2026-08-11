@@ -3061,6 +3061,14 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - qualified範囲は`Flow 110.0.0、現行固定解像度、26頂点閉Mesh、static Y40°`のみである。任意軸回転へは次の一変数Phaseとして進めるが、dynamic transform、RenderSurface、PhysX共用、20本production性能は未qualifiedのままとする。production app SHA-256は`94162F82...F02A`で前後一致し、productionコード・既定値・latest demoは変更しない。詳細は`docs/design/static_y40_collision_qualification.md`。
 - 回帰はRelease build 5.97秒、Phase 0 RTX、Phase 3 mass balance 0・authority SHA維持・active blocks final/peak 281/312、targeted 67/67、標準suite 8 process・78/78件・303.2秒に合格した。Kit/CDB残留とPhase 6EFのfatal/dump/uploadは0だった。
 
+## Phase 6EG representative static-pose qualification safe stop
+
+- Phase 6EFの実Mesh距離・velocity gate・公開API境界を変更せず、P0 identity、P1 Y40°、P2 long-axis X17° roll、P3 Z33°、P4 Y24°→Z31°、P5 axis `(1,1,1)` 53°の行列と3 run・36 process順序をformal結果前に固定した。offline監査は全姿勢でorthonormal、determinant `+1`、center保存、26頂点・36面・120 index不変、Emitter clearance 0.111532～0.230156 m、deep/center sample期待値ありに合格した。
+- formalは6/36 processで安全停止した。P0/P1/P2のON/OFF各1 runはfunctional pass、normal exit、fuel 0.8、fatal/dump/upload/residual 0で、deep ON worstは0、`8.352523e-6`、`7.300535e-6 m/s`、OFF minimumは各`7.767152 m/s`だった。ただし3 run契約を満たさずdiagnostic-onlyである。
+- P3 Z33 ONは`opening_prebuilt_stage`でPhase 6EA guarded helperが512 MiB上限を超え、peak Private Bytes 552,259,584でprocess treeを停止した。Flow sampleとactive blockへ未到達なのでcollision不成立とは分類しない。同条件を自動再実行せずP4/P5にも進んでいない。Phase 6EGはunqualifiedで、正式SVG/ZIPとlatest demoを生成・更新しない。
+- production app SHA-256は`94162F82...ADF02A`で前後一致し、production、Flow既定、V3、Resident、wood authority、Emitter schema、Mesh、解像度は不変。再開前にP3 stage-open中のhelperメモリ超過を分類し、上限を便宜的に緩和せず新artifact rootを使う。詳細は`docs/design/static_pose_set_collision_qualification.md`を参照する。
+- 回帰はRelease build 6.69秒、Phase 0 RTX exit 0、Phase 3 mass balance 0・authority SHA維持・active blocks final/peak 265/316・peak fuel 1.0、targeted 88/88、標準suite 8 process・78/78件・311.9秒に合格した。Phase 6EG由来のKit/CDB残留は0だった。
+
 ## Phase 6DZ rotated Cylinder Flow-collision safe stop
 
 ### 2026-08-11: 回転前のaxis controlが正常OS exitへ到達せず停止
