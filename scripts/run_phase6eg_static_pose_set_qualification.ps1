@@ -150,6 +150,9 @@ function Invoke-Phase6EgCase {
     if ($raw.status -ne "ok" -or $raw.lifecycle_marker -ne "shutdown_complete") { throw "probe result or shutdown marker failed" }
     $manifest = Get-Content -Raw -Encoding UTF8 (Join-Path $spatialRoot "manifest.json") | ConvertFrom-Json
     if ($manifest.file_count -ne 4 -or @($manifest.files | Where-Object { $_.channel -ne "velocity" }).Count) { throw "velocity-only capture contract failed" }
+    $incrementalNumericGate = Join-Path $caseOutput "incremental_numeric_gate.json"
+    & python $analyzer --root $OutputRoot --contract $contractPath --check-run $RunIndex --check-condition $Condition --check-output $incrementalNumericGate
+    if ($LASTEXITCODE -ne 0) { throw "incremental numeric gate failed for run_${RunIndex}/$Condition" }
     $script:outcomes += [pscustomobject]@{
         run = $RunIndex
         condition = $Condition
@@ -162,7 +165,10 @@ function Invoke-Phase6EgCase {
         kit_peak_private_bytes = $guard.peaks.kit
         diagnostic_peak_private_bytes = $guard.peaks.diagnostic
         tree_peak_private_bytes = $guard.peaks.tree
+        minimum_available_physical_bytes = $guard.machine_minima.available_physical_bytes
+        minimum_commit_headroom_bytes = $guard.machine_minima.estimated_commit_headroom_bytes
         resource_trace = $trace
+        incremental_numeric_gate = $incrementalNumericGate
         spatial_peak_rss_bytes = $manifest.peak_rss_bytes
         spatial_peak_rss_delta_bytes = $manifest.peak_rss_delta_bytes
     }

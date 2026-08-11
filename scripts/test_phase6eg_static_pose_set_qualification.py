@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 import numpy as np
@@ -115,6 +117,7 @@ class Phase6EgContractTests(unittest.TestCase):
         self.assertIn('trace.write(json.dumps(record', source)
         self.assertIn('"nvidia-smi.exe"', source)
         self.assertIn('current.create_time() != root_identity["create_time_utc_epoch"]', source)
+        self.assertIn('"machine_minima": machine_minima', source)
         self.assertIn('"536870912"', calibration)
         self.assertIn('"12884901888"', calibration)
 
@@ -136,6 +139,45 @@ class Phase6EgContractTests(unittest.TestCase):
         self.assertIn("-TimeoutSeconds 15 -PrivateBytesLimit 128MB", policy)
         self.assertIn("[IO.File]::ReadLines($stdout", policy)
         self.assertNotIn("$lines = & nvidia-smi", policy)
+        self.assertIn("diagnostic_capture_succeeded = $diagnosticCaptureSucceeded", policy)
+        fixture = (SCRIPTS / "phase6eg_resource_guard_fixture.ps1").read_text(encoding="utf-8")
+        self.assertIn('"gpu_inventory_capture.json"', fixture)
+
+    def test_each_completed_process_runs_incremental_numeric_gate(self):
+        runner = (SCRIPTS / "run_phase6eg_static_pose_set_qualification.ps1").read_text(encoding="utf-8")
+        analyzer = (SCRIPTS / "analyze_phase6eg_static_pose_set_qualification.py").read_text(encoding="utf-8")
+        self.assertIn("--check-run $RunIndex --check-condition $Condition", runner)
+        self.assertIn("incremental numeric gate failed", runner)
+        self.assertIn("def evaluate_incremental", analyzer)
+        self.assertIn('"pair_available": pair_available', analyzer)
+
+    def test_incremental_numeric_gate_checks_condition_and_completed_pair(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            pair = root / "spatial" / "run_1" / "P1_y40_off"
+            pair.mkdir(parents=True)
+            for frame in ANALYZER.FRAMES:
+                (pair / f"P1_y40_off_f{frame:04d}_velocity.npz").touch()
+            on = {str(frame): _sample(0.0, 0.0, 0.2) for frame in ANALYZER.FRAMES}
+            off = {str(frame): _sample(0.2, 0.2, 0.2) for frame in ANALYZER.FRAMES}
+            with mock.patch.object(
+                ANALYZER,
+                "collect_condition",
+                side_effect=[(on, {str(frame): {} for frame in ANALYZER.FRAMES}), (off, {})],
+            ):
+                result = ANALYZER.evaluate_incremental(root, CONTRACT, 1, "P1_y40_on")
+            self.assertTrue(result["pass"])
+            self.assertTrue(result["pair_available"])
+            self.assertEqual(4, result["sample_count"])
+
+            failed_on = {str(frame): _sample(0.2, 0.2, 0.2) for frame in ANALYZER.FRAMES}
+            with mock.patch.object(
+                ANALYZER,
+                "collect_condition",
+                side_effect=[(failed_on, {}), (off, {})],
+            ):
+                failed = ANALYZER.evaluate_incremental(root, CONTRACT, 1, "P1_y40_on")
+            self.assertFalse(failed["pass"])
 
     def test_synthetic_qualified_population_passes(self):
         pose_summary, checks, _ = ANALYZER.evaluate(_synthetic_samples(), CONTRACT)
@@ -192,6 +234,20 @@ class Phase6EgContractTests(unittest.TestCase):
         self.assertIn('id="phase-6eh"', devlog)
         self.assertIn("static_pose_resource_diagnosis.svg", devlog)
         self.assertIn("PointEmitter–CollisionProxy", devlog)
+
+    def test_phase6ei_records_approved_restart_safe_stop(self):
+        report = json.loads(
+            (ROOT / "docs" / "devlog" / "assets" / "phase6" / "static_pose_restart_safe_stop.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual("safe_stop", report["status"])
+        self.assertFalse(report["qualification"]["phase6eg_qualified"])
+        self.assertEqual(0, report["qualification"]["accepted_processes"])
+        self.assertEqual("run_1/P0_identity_on", report["qualification"]["active_failed_condition"])
+        self.assertEqual("shutdown_complete", report["functional_evidence_before_rejection"]["last_durable_marker"])
+        self.assertEqual("runner_private_limit", report["resource_guard"]["stop_reason"])
+        self.assertFalse(report["pending_after_phase6eg"]["implemented"])
 
 
 if __name__ == "__main__":

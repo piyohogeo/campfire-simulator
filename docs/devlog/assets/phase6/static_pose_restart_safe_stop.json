@@ -1,0 +1,123 @@
+{
+  "schema": "campfire.phase6ei.phase6eg-restart-safe-stop.v1",
+  "phase": "phase6ei",
+  "status": "safe_stop",
+  "generated_utc": "2026-08-11T20:46:44.948698+00:00",
+  "purpose": "approved restart of the unchanged frozen Phase 6EG 36-process qualification",
+  "frozen_contract": {
+    "sha256": "4BAED82160A08C061D479BCCA6B6A46866DE88F5046851D2AF140D36D8C80687",
+    "planned_processes": 36,
+    "prior_samples_reused": false,
+    "thresholds_changed": false
+  },
+  "qualification": {
+    "phase6eg_qualified": false,
+    "accepted_processes": 0,
+    "active_failed_condition": "run_1/P0_identity_on",
+    "automatic_retry": false,
+    "later_processes_started": false,
+    "collision_failure_observed": false
+  },
+  "functional_evidence_before_rejection": {
+    "probe_status": "ok",
+    "last_durable_marker": "shutdown_complete",
+    "active_blocks_final": 26,
+    "source_fuel": 0.800000011920929,
+    "velocity_sample_count": 4,
+    "sample_frames": [
+      60,
+      120,
+      180,
+      200
+    ],
+    "normal_os_exit_proven": false,
+    "incremental_numeric_gate_reached": false
+  },
+  "resource_guard": {
+    "stop_reason": "runner_private_limit",
+    "runner_peak_private_bytes": 553889792,
+    "kit_peak_private_bytes": 12518674432,
+    "diagnostic_peak_private_bytes": 16855040,
+    "unique_tree_peak_private_bytes": 12617981952,
+    "minimum_available_physical_bytes": 90231648256,
+    "minimum_commit_headroom_bytes": 109237440512,
+    "limits": {
+      "runner_private_bytes": 536870912,
+      "kit_private_bytes": 15032385536,
+      "diagnostic_private_bytes": 536870912,
+      "tree_private_bytes": 17179869184,
+      "available_memory_floor_bytes": 8589934592,
+      "commit_headroom_floor_bytes": 8589934592,
+      "timeout_seconds": 720.0
+    },
+    "process_absent_after_cleanup": true,
+    "first_growth_sample": {
+      "sample_index": 798,
+      "timestamp_utc_epoch": 1786481028.039578,
+      "runner_private_bytes": 146931712,
+      "tree_private_bytes": 4547465216
+    },
+    "last_growth_sample": {
+      "sample_index": 868,
+      "timestamp_utc_epoch": 1786481049.9173825,
+      "runner_private_bytes": 553889792,
+      "tree_private_bytes": 4954423296
+    }
+  },
+  "gpu_inventory_preflight": {
+    "status": "ok",
+    "runner_peak_private_bytes": 74944512,
+    "observed_nvidia_smi_peak_private_bytes": 16044032,
+    "unique_tree_peak_private_bytes": 100392960,
+    "inner_helper_timed_out": false,
+    "inner_helper_private_limit_exceeded": false,
+    "inner_helper_process_absent": true,
+    "gpu_count": 2
+  },
+  "shutdown_diagnostic_boundary": {
+    "capture_lock_exists": true,
+    "gpu_inventory_stdout_exists": true,
+    "gpu_inventory_stdout_bytes": 210,
+    "lightweight_report_exists": false,
+    "cdb_stack_log_exists": false
+  },
+  "safety": {
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "device_lost_or_tdr_count": 0,
+    "kit_cdb_helper_residual_count": 0
+  },
+  "cause_classification": {
+    "observed_facts": [
+      "the isolated GPU inventory preflight passed below every resource limit",
+      "P0 completed Flow sampling and wrote shutdown_complete before OS-exit confirmation",
+      "the shutdown capture lock and 210-byte GPU inventory stdout were written",
+      "the runner crossed 512 MiB before the lightweight diagnostic report was written",
+      "Kit, unique-tree, physical-memory, and commit-headroom limits were not crossed"
+    ],
+    "strong_inference": [
+      "a parent-PowerShell return or post-processing boundary after the isolated GPU inventory helper still retains or allocates memory when diagnosing a hung Kit process"
+    ],
+    "unconfirmed": [
+      "the exact PowerShell/native allocation mechanism",
+      "whether isolating the complete lightweight shutdown diagnostic would remove the remaining parent-runner growth"
+    ]
+  },
+  "restart_boundary": "do not retry this condition; first isolate or durably mark the complete lightweight diagnostic boundary, then require a new explicit restart and new artifact root",
+  "pending_after_phase6eg": {
+    "name": "PointEmitter-CollisionProxy coexistence",
+    "blocked_until": "all 36 Phase 6EG processes qualify",
+    "implemented": false
+  },
+  "production": {
+    "changed": false,
+    "app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A"
+  },
+  "artifacts": {
+    "formal_safe_stop": "artifacts/phase6eg-static-pose-qualification-3",
+    "gpu_inventory_preflight": "artifacts/phase6eg-resume-preflight-2",
+    "raw_trace_committed": false
+  }
+}

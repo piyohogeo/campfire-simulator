@@ -64,6 +64,90 @@ def collect(root: Path, contract: dict) -> tuple[dict, dict]:
     return samples, metadata
 
 
+def collect_condition(root: Path, contract: dict, run_index: int, condition: str) -> tuple[dict, dict]:
+    thresholds = tuple(float(value) for value in contract["thresholds"]["reported_velocity_thresholds_m_s"])
+    samples = {}
+    metadata = {}
+    for frame in FRAMES:
+        path = root / "spatial" / f"run_{run_index}" / condition / f"{condition}_f{frame:04d}_velocity.npz"
+        if not path.is_file():
+            raise FileNotFoundError(path)
+        stats, info = phase6ef.sample_stats(path, thresholds)
+        samples[str(frame)] = stats
+        metadata[str(frame)] = info
+    return samples, metadata
+
+
+def evaluate_incremental(root: Path, contract: dict, run_index: int, condition: str) -> dict:
+    pose, collision_on = pose_from_condition(condition)
+    if pose not in contract["poses"]:
+        raise ValueError(f"undeclared Phase 6EG pose: {pose}")
+    if condition not in contract["formal_order"][run_index - 1]:
+        raise ValueError(f"condition is not in frozen run order: run={run_index} condition={condition}")
+    current, current_metadata = collect_condition(root, contract, run_index, condition)
+    paired_condition = f"{pose}_{'off' if collision_on else 'on'}"
+    paired_folder = root / "spatial" / f"run_{run_index}" / paired_condition
+    pair_available = all(
+        (paired_folder / f"{paired_condition}_f{frame:04d}_velocity.npz").is_file()
+        for frame in FRAMES
+    )
+    paired = collect_condition(root, contract, run_index, paired_condition)[0] if pair_available else None
+    limit = float(contract["thresholds"]["existing_velocity_limit_m_s"])
+    positive = float(contract["thresholds"]["collision_off_positive_minimum_m_s"])
+    suppression = float(contract["thresholds"]["on_to_off_deep_maximum_ratio"])
+    identity_positive = float(contract["thresholds"]["identity_only_comparison_minimum_off_m_s"])
+    identity_ratio_minimum = float(contract["thresholds"]["identity_only_on_to_off_minimum_ratio"])
+    checks = []
+    for frame in FRAMES:
+        key = str(frame)
+        item = current[key]
+        predicates = (
+            {
+                "on_deep_at_or_below_limit": item["deep_interior"]["maximum"] <= limit,
+                "on_center_at_or_below_limit": item["center_axis_near"]["maximum"] <= limit,
+            }
+            if collision_on
+            else {
+                "off_deep_at_or_above_positive_minimum": item["deep_interior"]["maximum"] >= positive,
+                "off_center_at_or_above_positive_minimum": item["center_axis_near"]["maximum"] >= positive,
+            }
+        )
+        pair_values = None
+        if paired is not None:
+            on = item if collision_on else paired[key]
+            off = paired[key] if collision_on else item
+            deep_ratio = _ratio(on["deep_interior"]["maximum"], off["deep_interior"]["maximum"])
+            identity_ratio = _ratio(on["axis_only"]["maximum"], off["axis_only"]["maximum"])
+            identity_comparable = off["axis_only"]["maximum"] >= identity_positive
+            predicates["on_over_off_deep_ratio_at_or_below_limit"] = deep_ratio is not None and deep_ratio <= suppression
+            if identity_comparable:
+                predicates["identity_only_not_stale_suppressed"] = identity_ratio is not None and identity_ratio >= identity_ratio_minimum
+            pair_values = {
+                "deep_ratio": deep_ratio,
+                "identity_ratio": identity_ratio,
+                "identity_comparable": identity_comparable,
+            }
+        checks.append({
+            "frame": frame,
+            "predicates": predicates,
+            "pair_values": pair_values,
+            "pass": all(predicates.values()),
+        })
+    return {
+        "schema": "campfire.phase6eg.incremental-numeric-gate.v1",
+        "run": run_index,
+        "condition": condition,
+        "pose": pose,
+        "collision_on": collision_on,
+        "sample_count": len(current),
+        "pair_available": pair_available,
+        "samples": current,
+        "sample_files": current_metadata,
+        "checks": checks,
+        "pass": len(current) == len(FRAMES) and all(check["pass"] for check in checks),
+    }
+
+
 def evaluate(samples: dict, contract: dict) -> tuple[dict, list[dict], dict]:
     limit = float(contract["thresholds"]["existing_velocity_limit_m_s"])
     positive = float(contract["thresholds"]["collision_off_positive_minimum_m_s"])
@@ -243,12 +327,24 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, required=True)
     parser.add_argument("--contract", type=Path, required=True)
-    parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--svg", type=Path, required=True)
-    parser.add_argument("--archive", type=Path, required=True)
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--svg", type=Path)
+    parser.add_argument("--archive", type=Path)
+    parser.add_argument("--check-run", type=int)
+    parser.add_argument("--check-condition")
+    parser.add_argument("--check-output", type=Path)
     args = parser.parse_args()
     root = args.root.resolve()
     contract = load_json(args.contract.resolve())
+    if args.check_condition is not None:
+        if args.check_run not in (1, 2, 3) or args.check_output is None:
+            parser.error("--check-condition requires --check-run 1..3 and --check-output")
+        payload = evaluate_incremental(root, contract, args.check_run, args.check_condition)
+        args.check_output.parent.mkdir(parents=True, exist_ok=True)
+        args.check_output.write_text(json.dumps(payload, ensure_ascii=False, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+        return 0 if payload["pass"] else 2
+    if args.output is None or args.svg is None or args.archive is None:
+        parser.error("full qualification requires --output, --svg, and --archive")
     preflight, preflight_checks = validate_preflight(root, contract)
     samples, metadata = collect(root, contract)
     pose_summary, numeric_checks, ratios = evaluate(samples, contract)

@@ -113,9 +113,11 @@ function Get-CampfireGpuInventory {
             }
         }
     } catch { $errorMessage = $_.Exception.Message }
+    $succeeded = $null -eq $errorMessage -and @($rows).Count -gt 0
     return [pscustomobject]@{
         rows = @($rows)
         evidence = [ordered]@{
+            succeeded = $succeeded
             isolated_process = $true
             stdout_direct_to_file = $true
             stderr_direct_to_file = $true
@@ -193,10 +195,11 @@ function Invoke-CampfireLightweightNgxDiagnostic {
             known_chain = "gpu.foundation shutdown -> NGX D3D12 shutdown -> NvTelemetryAPI64 UninitializeTelemetry -> telemetry worker WaitNamedPipeW"
         }
         $gpuInventoryCapture = Get-CampfireGpuInventory -OutputDir $output
+        $diagnosticCaptureSucceeded = $guardSucceeded -and [bool]$gpuInventoryCapture.evidence.succeeded
         $report = [ordered]@{
             schema = "campfire.kit-lightweight-shutdown-diagnostic.v2"
             timestamp_local = (Get-Date).ToString("o")
-            diagnostic_capture_succeeded = $guardSucceeded
+            diagnostic_capture_succeeded = $diagnosticCaptureSucceeded
             process_identity_verified = $true
             process_start_time_verified = $true
             process = [ordered]@{

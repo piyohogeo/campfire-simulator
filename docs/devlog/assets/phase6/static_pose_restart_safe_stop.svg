@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1050" height="390" viewBox="0 0 1050 390">
+<rect width="1050" height="390" fill="#101827"/><g font-family="Segoe UI, sans-serif">
+<text x="35" y="45" fill="#f8fafc" font-size="27">Phase 6EI — Phase 6EG restart safe stop</text>
+<text x="35" y="75" fill="#94a3b8" font-size="16">P0 reached shutdown_complete; parent runner crossed 512 MiB before normal OS exit.</text>
+<text x="35" y="118" fill="#e5e7eb" font-size="18">preflight runner</text><rect x="215" y="97" width="620" height="26" rx="6" fill="#253044"/><rect x="215" y="97" width="86.5" height="26" rx="6" fill="#22c55e"/><text x="850" y="118" fill="#e5e7eb" font-size="16">71.5 MiB</text><text x="35" y="190" fill="#e5e7eb" font-size="18">formal runner</text><rect x="215" y="169" width="620" height="26" rx="6" fill="#253044"/><rect x="215" y="169" width="620.0" height="26" rx="6" fill="#ef4444"/><text x="850" y="190" fill="#e5e7eb" font-size="16">528.2 MiB</text><text x="35" y="262" fill="#e5e7eb" font-size="18">formal Kit / 28</text><rect x="215" y="241" width="620" height="26" rx="6" fill="#253044"/><rect x="215" y="241" width="516.3" height="26" rx="6" fill="#60a5fa"/><text x="850" y="262" fill="#e5e7eb" font-size="16">426.4 MiB</text>
+<line x1="835" y1="88" x2="835" y2="310" stroke="#fbbf24" stroke-width="3" stroke-dasharray="8 6"/>
+<text x="700" y="340" fill="#fbbf24" font-size="16">512 MiB runner limit</text>
+<text x="35" y="370" fill="#94a3b8" font-size="15">0 / 36 accepted · no retry · production unchanged</text></g></svg>

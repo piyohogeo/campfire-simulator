@@ -132,6 +132,10 @@ def run(arguments: argparse.Namespace) -> int:
     started = time.time()
     peaks: dict[str, int] = {"runner": 0, "kit": 0, "diagnostic": 0, "child": 0, "tree": 0}
     peak_rows: dict[str, dict | None] = {key: None for key in peaks}
+    machine_minima = {
+        "available_physical_bytes": None,
+        "estimated_commit_headroom_bytes": None,
+    }
     stop_reason = None
     exit_code = None
     sample_count = 0
@@ -150,6 +154,18 @@ def run(arguments: argparse.Namespace) -> int:
             virtual = psutil.virtual_memory()
             swap = psutil.swap_memory()
             commit_headroom = int(virtual.available + swap.free)
+            machine_minima["available_physical_bytes"] = min(
+                int(virtual.available),
+                machine_minima["available_physical_bytes"]
+                if machine_minima["available_physical_bytes"] is not None
+                else int(virtual.available),
+            )
+            machine_minima["estimated_commit_headroom_bytes"] = min(
+                commit_headroom,
+                machine_minima["estimated_commit_headroom_bytes"]
+                if machine_minima["estimated_commit_headroom_bytes"] is not None
+                else commit_headroom,
+            )
             record = {
                 "schema": "campfire.phase6eg.resource-sample.v1",
                 "sample_index": sample_count,
@@ -223,6 +239,7 @@ def run(arguments: argparse.Namespace) -> int:
         "sample_count": sample_count,
         "peaks": peaks,
         "peak_evidence": peak_rows,
+        "machine_minima": machine_minima,
         "limits": {
             "runner_private_bytes": arguments.runner_private_limit,
             "kit_private_bytes": arguments.kit_private_limit,

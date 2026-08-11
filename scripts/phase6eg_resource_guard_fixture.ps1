@@ -25,6 +25,11 @@ if ($Mode -in @("cdb_path", "gpu_inventory")) {
         $inventoryOutput = Join-Path ([IO.Path]::GetDirectoryName($marker)) "gpu-inventory-fixture"
         New-Item -ItemType Directory -Path $inventoryOutput -Force | Out-Null
         $capture = Get-CampfireGpuInventory -OutputDir $inventoryOutput
+        [IO.File]::WriteAllText(
+            (Join-Path ([IO.Path]::GetDirectoryName($marker)) "gpu_inventory_capture.json"),
+            (($capture | ConvertTo-Json -Depth 12) + [Environment]::NewLine),
+            [Text.UTF8Encoding]::new($false)
+        )
         Write-Marker "gpu_inventory_complete"
         if ($capture.evidence.error) { throw $capture.evidence.error }
         if (@($capture.rows).Count -lt 1) { throw "GPU inventory fixture returned no rows" }
