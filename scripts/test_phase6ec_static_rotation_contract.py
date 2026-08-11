@@ -60,6 +60,16 @@ class Phase6EcStaticRotationContract(unittest.TestCase):
         self.assertNotIn("function Invoke-CampfireShutdownOutcomeClassification", self.runner)
         self.assertNotIn("CampfireKnownNgxSignature", self.runner)
 
+    def test_case_runner_is_process_isolated_and_resource_bounded(self) -> None:
+        self.assertIn('Invoke-Phase6EaGuardedHelper', self.runner)
+        self.assertIn('$caseRunnerPrivateBytesLimit = 512MB', self.runner)
+        self.assertIn('$caseRunnerTimeoutSeconds = 720', self.runner)
+        self.assertIn('case-runner-logs', self.runner)
+        self.assertIn('-StdoutPath $stdout', self.runner)
+        self.assertIn('-StderrPath $stderr', self.runner)
+        self.assertIn('private_bytes_exceeded', self.runner)
+        self.assertNotIn('& $flowRunner -Mode', self.runner)
+
 
 if __name__ == "__main__":
     unittest.main()

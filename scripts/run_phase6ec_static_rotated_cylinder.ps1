@@ -8,6 +8,7 @@ $ErrorActionPreference = "Stop"
 Set-StrictMode -Version 3.0
 $root = Split-Path -Parent $PSScriptRoot
 . (Join-Path $PSScriptRoot "isolated_kit_crash_safety.ps1")
+. (Join-Path $PSScriptRoot "phase6ea_diagnostic_common.ps1")
 if (-not $OutputRoot) { $OutputRoot = Join-Path $root "artifacts\phase6ec-static-rotation-1" }
 $OutputRoot = [IO.Path]::GetFullPath($OutputRoot)
 if (Test-Path -LiteralPath $OutputRoot) { throw "Phase 6EC refuses artifact root reuse: $OutputRoot" }
@@ -35,6 +36,10 @@ $prepareProbe = Join-Path $PSScriptRoot "prepare_phase6ec_static_rotated_cylinde
 $flowRunner = Join-Path $PSScriptRoot "run_phase6dt_flow_collision_case.ps1"
 $analyzer = Join-Path $PSScriptRoot "analyze_phase6ec_static_rotated_cylinder.py"
 $mediaBuilder = Join-Path $PSScriptRoot "build_phase6ec_static_rotation_media.py"
+$caseRunnerLogRoot = Join-Path $OutputRoot "case-runner-logs"
+$caseRunnerPrivateBytesLimit = 512MB
+$caseRunnerTimeoutSeconds = 720
+$powershell = (Get-Process -Id $PID).Path
 
 function Write-SafeStop([string]$Step, [string]$Condition, [object[]]$Completed, [string]$Message) {
     $payload = [ordered]@{
@@ -61,6 +66,38 @@ function Assert-NoResidual([int]$ProcessId, [string]$ExpectedExecutable) {
             throw "Phase 6EC left a Kit process after runner completion: $ProcessId"
         }
     }
+}
+
+function Invoke-Phase6EcCaseRunner {
+    param(
+        [Parameter(Mandatory = $true)][object]$Case,
+        [Parameter(Mandatory = $true)][string]$CaseOutput,
+        [switch]$Capture
+    )
+    New-Item -ItemType Directory -Path $caseRunnerLogRoot -Force | Out-Null
+    $stdout = Join-Path $caseRunnerLogRoot ($Case.label + ".stdout.log")
+    $stderr = Join-Path $caseRunnerLogRoot ($Case.label + ".stderr.log")
+    $arguments = @(
+        "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass",
+        "-File", $flowRunner,
+        "-Mode", $Case.mode,
+        "-SourceStage", (Join-Path $preparedRoot $Case.stage),
+        "-OutputDir", $CaseOutput,
+        "-AppKind", "reference",
+        "-RunIndex", "1"
+    )
+    if ($Capture) { $arguments += "-Capture" }
+    $guard = Invoke-Phase6EaGuardedHelper `
+        -FilePath $powershell `
+        -ArgumentList $arguments `
+        -StdoutPath $stdout `
+        -StderrPath $stderr `
+        -TimeoutSeconds $caseRunnerTimeoutSeconds `
+        -PrivateBytesLimit $caseRunnerPrivateBytesLimit
+    if ($guard.timed_out -or $guard.private_bytes_exceeded -or -not $guard.process_absent -or $guard.exit_code_error -ne $null -or $guard.exit_code -ne 0) {
+        throw "guarded Phase 6EC case runner failed: timed_out=$($guard.timed_out) private_bytes_exceeded=$($guard.private_bytes_exceeded) process_absent=$($guard.process_absent) exit_code=$($guard.exit_code) exit_code_error=$($guard.exit_code_error) peak_private_bytes=$($guard.peak_private_bytes)"
+    }
+    return $guard
 }
 
 $prepareArgs = @(
@@ -113,7 +150,7 @@ $consecutiveKnownResiduals = 0
 foreach ($case in $formalCases) {
     $caseOutput = Join-Path $OutputRoot ("formal\" + $case.label)
     try {
-        & $flowRunner -Mode $case.mode -SourceStage (Join-Path $preparedRoot $case.stage) -OutputDir $caseOutput -AppKind reference -RunIndex 1
+        $caseGuard = Invoke-Phase6EcCaseRunner -Case $case -CaseOutput $caseOutput
         $evidence = Get-Content -Raw -Encoding UTF8 (Join-Path $caseOutput "runner_evidence.json") | ConvertFrom-Json
         if ($null -eq $evidence.outcome -or $evidence.outcome.functional_status -ne "pass") { throw "functional classification did not pass" }
         $lifecycle = [string]$evidence.outcome.lifecycle_status
@@ -124,6 +161,7 @@ foreach ($case in $formalCases) {
             lifecycle_status = $lifecycle
             performance_sample_accepted = [bool]$evidence.outcome.performance_sample_accepted
             exit_code = $evidence.process_exit_code
+            runner_peak_private_bytes = $caseGuard.peak_private_bytes
         }
         $completed += $case.label
         if ($consecutiveKnownResiduals -ge 2) { throw "two consecutive known NGX shutdown residuals require Phase 6EB reinvestigation" }
@@ -149,7 +187,7 @@ if (-not $SkipVisualEvidence) {
     foreach ($case in $visualCases) {
         $caseOutput = Join-Path $OutputRoot ("visual\" + $case.label)
         try {
-            & $flowRunner -Mode $case.mode -SourceStage (Join-Path $preparedRoot $case.stage) -OutputDir $caseOutput -AppKind reference -RunIndex 1 -Capture
+            $caseGuard = Invoke-Phase6EcCaseRunner -Case $case -CaseOutput $caseOutput -Capture
             $evidence = Get-Content -Raw -Encoding UTF8 (Join-Path $caseOutput "runner_evidence.json") | ConvertFrom-Json
             if ($null -eq $evidence.outcome -or $evidence.outcome.functional_status -ne "pass") { throw "visual functional classification did not pass" }
             $lifecycle = [string]$evidence.outcome.lifecycle_status
@@ -160,6 +198,7 @@ if (-not $SkipVisualEvidence) {
                 lifecycle_status = $lifecycle
                 performance_sample_accepted = [bool]$evidence.outcome.performance_sample_accepted
                 exit_code = $evidence.process_exit_code
+                runner_peak_private_bytes = $caseGuard.peak_private_bytes
             }
             $visualCompleted += $case.label
             if ($consecutiveKnownResiduals -ge 2) { throw "two consecutive known NGX shutdown residuals require Phase 6EB reinvestigation" }

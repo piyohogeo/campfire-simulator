@@ -3025,6 +3025,14 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - Positive例外だけが`windows_exception_present=true`を設定し、module/offsetを解析できなければ`unparsed`にする。False positive、空log、missing/read不能だけを理由に架空のfault module/offsetを設定しない。NGX signature、60秒grace、CDB guard、PID identity、dump抑制、Phase 6EA safety、3軸分類は不変。
 - 既存24件と追加7件の31/31 contractが合格。保存済みPhase 6EC Aをread-only再分類し、source 3ファイルSHA不変、`windows_exception_present=false`、`no_windows_exception=true`、fault fields null、functional pass、normal exit、performance acceptedの13/13 gateを確認した。offline再分類ではKit／Flowを起動せず、Phase 6EC scenarioは未実行。指定済み標準suiteの隔離headless Kit testだけを実行した。Phase 6EA 7/7・6/6、標準suite 8 process・78/78件（308.5秒）、日誌369 reference／JSON 182／SVG 148も合格し、Kit／CDB／fixture helper残留は0、production app SHA-256は不変だった。詳細は`docs/design/windows_exception_policy_correction.md`。
 
+## Phase 6EC restart resource safe stop
+
+### 2026-08-11: A完了後のinline case-runnerをresource境界で停止
+
+- 新root `phase6ec-static-rotation-2`のoffline準備は合格し、Aはpublic NanoVDB 4 sample、active blocks 26、`shutdown_complete`、Kit OS process消滅まで到達した。一方、runner evidence確定前のinline case-runner PowerShell PID 45864がPrivate Bytes 7,193,456,640まで増加した。Kit／CDBは既に不在であり、PID pathと開始時刻を再確認して当該PowerShellだけを停止した。B/Cは開始せず、dumpは作らず、root 2は正式母集団外として保持する。
+- WinDbg path探索、GPU inventory、保存rawのlifecycle marker反復読取を各々10～30秒・256 MiB以下の短命helperで切り分け、単独ではpeak約68～92 MiBで終了した。したがって個々の関数を原因と断定せず、長時間inline case-runner hostの無制限resource境界を確定事実とする。
+- Phase 6EC runnerだけを変更し、各formal／visual case runnerをPhase 6EA `Invoke-Phase6EaGuardedHelper`の別processへ隔離した。stdout/stderrはファイルへ直接redirectし、timeout 720秒、Private Bytes 512 MiB、process-tree cleanupを適用する。Phase 6ED exception evidence、Phase 6EA helper実装、production app／Flow／wood／V3は変更しない。targeted contractは8/8合格。次はroot 2を再利用せず、新rootでAから開始する。
+
 ## Phase 6DZ rotated Cylinder Flow-collision safe stop
 
 ### 2026-08-11: 回転前のaxis controlが正常OS exitへ到達せず停止
