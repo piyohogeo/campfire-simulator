@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6eb">最新記録</a>
+        <a href="#phase-6ec">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6eb">Phase 6EBを読む</a>
+        <a class="button primary" href="#phase-6ec">Phase 6ECを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6EB known residual policy</strong></div>
+        <div><span>現在地</span><strong>Phase 6EC rotation safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>function / exit split</strong></div>
-        <div><span>Production</span><strong>unchanged · rotation restart ready</strong></div>
+        <div><span>Lifecycle</span><strong>unknown · false-positive boundary</strong></div>
+        <div><span>Production</span><strong>unchanged · rotation not run</strong></div>
       </div>
     </div>
   </header>
@@ -56,6 +56,19 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6ec" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報"><span class="phase-number compact">6EC</span><p><time datetime="2026-08-11">2026.08.11</time></p><span class="pill current">Rotation safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6EC · Static rotated Flow CollisionProxy</p><h2>回転stageは準備完了。<br>exact controlの分類誤検出で止めた。</h2><p>Phase 6DYの閉じたCylinder Meshをbyte-identical controlにし、中心を保つY40°だけを追加しました。ところが最初のaxis controlで、GPUのSubsystem IDがWindows exception形式として検出されたため、Phase 6EBのfail-closed規則どおり回転条件を開始せず停止しています。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/static_rotated_collision_safe_stop.svg"><img src="assets/phase6/static_rotated_collision_safe_stop.svg" alt="Phase 6ECがY40 stage準備後、axis controlのshutdown分類で安全停止した図" loading="lazy"></a><figcaption><div><strong>Offline 14 / 14 · runtime A rejected</strong><span>raw ok · blocks 26 · exit 0 · classified unknown</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Prepared rotation</p><h3>単一Y40°、Emitter gap 2.23 cells</h3><p>26頂点・36面・120 index、schema、<code>convexDecomposition</code>を固定。回転中心は<code>(0, 0, 1.035)</code> m、unit scale／right-handedで、Emitterとの表面間隔は0.111532 mです。</p></section><section class="note caution"><p class="note-label">Fail-closed reason</p><h3>Subsystem IDをexceptionと誤認</h3><p>唯一一致したlogは<code>Sub System Id : 0xC75C1462</code>でした。観測上はGPU inventoryですが、既存policy結果をこのPhaseで読み替えず、<code>unknown_shutdown_failure</code>として保持しました。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">What completed</p><h3>AのFlow計測は保存。B／Cは未開始。</h3><p>Aは<code>shutdown_complete</code>、active blocks 26、fuel 0.8、OS exit 0、residual／fatal／dump／upload 0でした。Core velocityは4 sampleとも0 m/sでしたが、温度・burn・smokeは拡散により非ゼロです。回転の判定には同一Y40姿勢のON/OFF比が必要なため、Aだけを使って合格とはしません。</p><p>Phase 6EC 7 / 7、Phase 6EA 7 / 7・6 / 6、Phase 6EB 24 / 24、Release build、Phase 0 RTX、Phase 3 mass balance 0、標準suite 78 / 78が合格しました。Phase 6EA／6EBの安全化コード、production、Flow既定、V3、Resident、wood authorityは変更していません。画面上の合格結果がないので動画は作らず、latest demoも維持します。</p><p><a href="assets/phase6/static_rotated_collision_safe_stop.json">safe-stop JSON</a> · <a href="assets/phase6/static_rotated_collision_safe_stop.svg">結果SVG</a> · <a href="../design/static_rotated_cylinder_flow_collision.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Offline stage</strong><small>14 / 14</small></p></div><div role="listitem"><span>✓</span><p><strong>A probe</strong><small>raw保存完了</small></p></div><div role="listitem"><span>!</span><p><strong>Classification</strong><small>unknown</small></p></div><div role="listitem"><span>—</span><p><strong>Y40 ON / OFF</strong><small>未実行</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>SHA不変</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Restart condition</p><h3>exception文脈とhardware IDを別Phaseで分離。</h3><p>この実logをnegative fixtureに追加し、本物のexception／access violationはfail closedのまま維持できることを確認後、新artifact rootでAから再開します。log levelを下げて該当行を隠す回避は採用しません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6eb" class="section entry-section phase-six">

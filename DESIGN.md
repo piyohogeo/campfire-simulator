@@ -3006,6 +3006,16 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 歴史baselineは24 process中normal exit 22、signature確認済みresidual 1、導入前の未分類residual 1。既知率4.17%は新schemaのrateではない。distribution前soakは別途必要。Production app SHA-256は`94162F82...F02A`で前後一致し、productionコード／既定値／latest demoは不変。
 - Phase 6EB固有contractは24/24、Phase 6DW `kit_only`の最終normal-exit smokeは1.423秒で合格した。既知hang自体は再実行しておらず、positive fixtureは保存済みWinDbg summaryのsignature contractを検証したもの。Phase 6EA resource safety 7/7、静的契約6/6、標準suite 8 process・78/78件・302.2秒も再合格した。日誌は338 local reference、JSON 180、SVG 146、欠落／parse failure／replacement character 0だった。
 
+## Phase 6EC static rotated Cylinder Flow-collision safe stop
+
+### 2026-08-11: Y40準備は合格、exact axis controlのfail-closed分類で停止
+
+- Phase 6DY qualified stage `BC6572...D894D5F9`をbyte-identicalなA controlとし、center-preserving Y40 transformだけを追加したstageを準備した。26 vertices／36 faces／120 indices、local geometry SHA-256 `662163A7...76FF0`、collision schema、`convexDecomposition`は同一で、offline gateは14/14。Emitter表面間隔は`0.111532 m`=`2.2306` velocity cellである。
+- 正式順序はA axis ON、B Y40 ON、C Y40 OFF。Aのpublic probeは`status=ok`、`shutdown_complete`、active blocks 26、fuel 0.8、exit 0、residual/fatal/dump/upload 0だった。Cylinder core velocityは4 sampleとも0 m/s。Scalarは非ゼロだったため、回転qualificationはB/Cの同一姿勢ON/OFF比で判定する設計とした。
+- Phase 6EBの既存Windows exception matcherがKit GPU inventoryの`Sub System Id : 0xC75C1462`だけに一致した。Outcomeは規則どおり`functional_status=fail`／`unknown_shutdown_failure`であり、Phase 6ECでnormalへ読み替えず、Aを再実行せず、B/Cと映像processを開始しなかった。
+- 再開条件は独立したPhase 6EB policy correctionで、明示的exception文脈と16進hardware identifierを分離し、この実log行をnegative fixtureに追加すること。6EA/6EB safety code、production app/default、Flow、V3、Resident、wood authority、latest demoは今回不変。Production app SHA-256は前後`94162F82...F02A`。詳細は`docs/design/static_rotated_cylinder_flow_collision.md`。
+- Phase 6EC 7/7、Phase 6EA 7/7・6/6、Phase 6EB 24/24、Release build 6.94秒、Phase 0 RTX、Phase 3 dry/wet mass balance 0・authority hash確定・active blocks final 252、標準suite 8 process・78/78件・303.1秒に合格した。日誌は341 reference／JSON 181／SVG 147、欠落・parse・replacement character・duplicate ID 0。Kit/CDB残留は0。Browser接続がなかったため日誌の実レンダリング確認は静的検査で代替した。
+
 ## Phase 6DZ rotated Cylinder Flow-collision safe stop
 
 ### 2026-08-11: 回転前のaxis controlが正常OS exitへ到達せず停止

@@ -1,5 +1,10 @@
 # Changelog
 
+- Added the production-neutral Phase 6EC static-rotation runner around the exact Phase 6DY Cylinder Mesh CollisionProxy. Offline Y40 preparation passed 14/14 gates with unchanged topology/schema, center-preserving unit transform, and a 0.111532 m (2.2306 velocity-cell) emitter clearance.
+- Safely stopped at the first axis-aligned control. The public Flow probe reached `shutdown_complete`, active blocks 26, fuel 0.8 and OS exit 0 with no residual/fatal/dump/upload, but the unchanged Phase 6EB exception matcher classified the GPU inventory value `Sub System Id : 0xC75C1462` as exception-shaped evidence and therefore returned `unknown_shutdown_failure`.
+- Did not retry condition A or start rotated ON/OFF and visual-evidence processes. Recorded the false-positive boundary without changing Phase 6EA/6EB policy, production code/defaults, the production app SHA-256, or the latest-demo pointer.
+- Passed Phase 6EC 7/7, Phase 6EA 7/7 and 6/6, Phase 6EB 24/24, Release build (6.94 s), Phase 0 RTX, Phase 3 authority/mass balance, and the eight-process standard suite (78/78, 303.1 s). Devlog static validation found 341 local references, 181 JSON files and 147 SVG files with no missing, malformed, replacement-character, or duplicate-ID failures.
+
 - Added the Phase 6EB known-NGX shutdown policy: a maximum 60-second post-`shutdown_requested` grace, non-invasive bounded CDB stack fingerprinting, repeated full-dump avoidance, verified PID/path/start-time identity, and fail-closed handling for any unknown non-exit.
 - Split every covered Kit result into functional, lifecycle, and performance-acceptance axes. A fully completed run with the exact NGX telemetry signature may pass functionally, but is not a normal exit and is excluded from shutdown timing and performance populations.
 - Reused the Phase 6EA atomic capture lock and guarded helper for CDB, with 45-second timeout, 512 MiB private-memory ceiling, direct file redirection, and streamed token matching. Diagnostic failure never authorizes target-Kit termination.

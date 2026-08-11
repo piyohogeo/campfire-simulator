@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6EC static rotated collision safe stop</title>
+  <desc id="desc">Offline Y40 stage preparation passed, but condition A was rejected because a GPU subsystem identifier matched the existing Windows exception pattern. Rotated conditions did not start.</desc>
+  <style>
+    .bg{fill:#0b1220}.title{fill:#f8fafc;font:700 34px sans-serif}.sub{fill:#a8b6c8;font:19px sans-serif}.head{fill:#e2e8f0;font:700 20px sans-serif}.body{fill:#cbd5e1;font:17px sans-serif}.mono{fill:#cbd5e1;font:16px monospace}.ok{fill:#166534}.stop{fill:#9f1239}.idle{fill:#334155}.line{stroke:#64748b;stroke-width:4}.tag{fill:#fbbf24;font:700 17px sans-serif}
+  </style>
+  <rect width="1200" height="620" class="bg"/>
+  <text x="48" y="58" class="title">Phase 6EC — rotation probe stopped at the exact control</text>
+  <text x="48" y="92" class="sub">Fail-closed Phase 6EB classification was preserved; no automatic retry and no rotated run.</text>
+  <line x1="160" y1="205" x2="1040" y2="205" class="line"/>
+  <rect x="55" y="145" width="260" height="120" rx="12" class="ok"/>
+  <text x="76" y="180" class="head">Offline preparation</text>
+  <text x="76" y="212" class="body">Y 40° · 14 / 14 gates</text>
+  <text x="76" y="241" class="body">Emitter gap 2.23 cells</text>
+  <rect x="360" y="145" width="285" height="120" rx="12" class="stop"/>
+  <text x="382" y="180" class="head">A · axis collision ON</text>
+  <text x="382" y="212" class="body">raw ok · blocks 26 · exit 0</text>
+  <text x="382" y="241" class="body">classification: unknown</text>
+  <rect x="690" y="145" width="205" height="120" rx="12" class="idle"/>
+  <text x="712" y="180" class="head">B · Y40 ON</text>
+  <text x="712" y="220" class="body">not started</text>
+  <rect x="940" y="145" width="205" height="120" rx="12" class="idle"/>
+  <text x="962" y="180" class="head">C · Y40 OFF</text>
+  <text x="962" y="220" class="body">not started</text>
+  <text x="55" y="334" class="tag">Observed classification input</text>
+  <text x="55" y="375" class="mono">Sub System Id : 0xC75C1462</text>
+  <text x="55" y="412" class="body">The existing generic 0xCxxxxxxx matcher treated this GPU inventory value as a Windows exception.</text>
+  <text x="55" y="445" class="body">The outcome remains unknown_shutdown_failure; this Phase does not modify or bypass Phase 6EB.</text>
+  <text x="55" y="499" class="tag">Preserved evidence</text>
+  <text x="55" y="535" class="body">shutdown_complete · no residual Kit · fatal/dump/upload 0 · production SHA-256 unchanged</text>
+  <text x="55" y="573" class="sub">Restart only after a separate policy fix and exact negative fixture; latest demo remains unchanged.</text>
+</svg>

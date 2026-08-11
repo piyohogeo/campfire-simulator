@@ -274,11 +274,19 @@ def _prepare_stage(arguments: dict) -> tuple[Path, dict]:
                 _set(simulate, "physicsCollisionEnabled", False)
                 changes.append("disable_Flow_physicsCollisionEnabled")
         changes[0:0] = ("disable_original_Cube_collision", "define_equivalent_Mesh")
-    elif mode in ("phase6dy_prepared_mesh", "phase6dz_rotated_mesh"):
+    elif mode in (
+        "phase6dy_prepared_mesh",
+        "phase6dz_rotated_mesh",
+        "phase6ec_rotated_mesh",
+        "phase6ec_rotated_mesh_collision_off",
+    ):
         collider = stage.GetPrimAtPath("/World/ColliderReferenceMesh")
         if not collider or not collider.IsValid():
             raise RuntimeError("Phase 6DY prepared Mesh is missing")
         changes.append("preserve_prequalified_phase6dy_mesh_and_enable_readback")
+        if mode == "phase6ec_rotated_mesh_collision_off":
+            _set(simulate, "physicsCollisionEnabled", False)
+            changes.append("physicsCollisionEnabled=false_for_positive_control")
     elif mode == "phase6ds_physx_api_force_false":
         collider = stage.GetPrimAtPath(paths["collider"])
         if not PhysxSchema.PhysxCollisionAPI.Apply(collider):
@@ -299,7 +307,12 @@ def _prepare_stage(arguments: dict) -> tuple[Path, dict]:
         "audit_collider_path": (
             "/World/ColliderReferenceMesh"
             if mode.startswith("phase6ds_mesh_")
-            or mode in ("phase6dy_prepared_mesh", "phase6dz_rotated_mesh")
+            or mode in (
+                "phase6dy_prepared_mesh",
+                "phase6dz_rotated_mesh",
+                "phase6ec_rotated_mesh",
+                "phase6ec_rotated_mesh_collision_off",
+            )
             else paths["collider"]
         ),
     }
@@ -347,6 +360,7 @@ def _audit_stage(stage: Usd.Stage, source_kind: str, collider_path: str | None =
             "type": emitter.GetTypeName(),
             "world_origin": list(emitter_position),
             "radius": _json_safe(_get(emitter, "radius")),
+            "fuel": _json_safe(_get(emitter, "fuel")),
             "allocationScale": _json_safe(_get(emitter, "allocationScale")),
             "applyPostPressure": _json_safe(_get(emitter, "applyPostPressure")),
             "coupleRateVelocity": _json_safe(_get(emitter, "coupleRateVelocity")),
@@ -559,6 +573,63 @@ def _sample_local_grid(grid, rois: dict, local_to_world: Gf.Matrix4d, vector: bo
     return results
 
 
+def _sample_alignment_grid(grid, bounds: dict, local_to_world: Gf.Matrix4d, vector: bool) -> dict:
+    """Compare the transformed solid with its stale axis-aligned position."""
+
+    identity = Gf.Matrix4d(1.0)
+    rotated_min, rotated_max = _world_aabb(bounds, local_to_world)
+    axis_min, axis_max = _world_aabb(bounds, identity)
+    minimum = [min(rotated_min[axis], axis_min[axis]) for axis in range(3)]
+    maximum = [max(rotated_max[axis], axis_max[axis]) for axis in range(3)]
+    lo = grid.applyInverseMap(nanovdb.math.Vec3d(*minimum))
+    hi = grid.applyInverseMap(nanovdb.math.Vec3d(*maximum))
+    index_min = [math.floor(min(_component(lo, axis), _component(hi, axis))) - 1 for axis in range(3)]
+    index_max = [math.ceil(max(_component(lo, axis), _component(hi, axis))) + 1 for axis in range(3)]
+    world_to_rotated = local_to_world.GetInverse()
+    samples = {name: [] for name in ("rotated_inside", "axis_inside", "rotated_only", "axis_only", "overlap")}
+    accessor = grid.getAccessor()
+    for i in range(index_min[0], index_max[0] + 1):
+        for j in range(index_min[1], index_max[1] + 1):
+            for k in range(index_min[2], index_max[2] + 1):
+                world = grid.applyMap(nanovdb.math.Vec3d(float(i), float(j), float(k)))
+                point = Gf.Vec3d(*[_component(world, axis) for axis in range(3)])
+                in_rotated = _local_roi_contains(world_to_rotated.Transform(point), bounds)
+                in_axis = _local_roi_contains(point, bounds)
+                if not in_rotated and not in_axis:
+                    continue
+                value = accessor.getValue(i, j, k)
+                if vector:
+                    value = math.sqrt(sum(_component(value, axis) ** 2 for axis in range(3)))
+                else:
+                    value = float(value)
+                if in_rotated:
+                    samples["rotated_inside"].append(value)
+                if in_axis:
+                    samples["axis_inside"].append(value)
+                if in_rotated and not in_axis:
+                    samples["rotated_only"].append(value)
+                elif in_axis and not in_rotated:
+                    samples["axis_only"].append(value)
+                else:
+                    samples["overlap"].append(value)
+
+    results = {}
+    for name, values in samples.items():
+        if not values:
+            results[name] = {"available": False, "reason": "alignment ROI contained no grid samples"}
+            continue
+        ordered = sorted(values)
+        results[name] = {
+            "available": True,
+            "voxel_count": len(values),
+            "nonzero_voxel_count": sum(abs(value) > 1.0e-12 for value in values),
+            "mean": statistics.fmean(values),
+            "p95": ordered[min(len(ordered) - 1, math.ceil(len(ordered) * 0.95) - 1)],
+            "maximum": max(values),
+        }
+    return results
+
+
 def _save_and_sample(
     flow,
     volume,
@@ -585,6 +656,9 @@ def _save_and_sample(
     }
     if local_rois is not None and local_to_world is not None:
         result["local_rois"] = _sample_local_grid(grid, local_rois, local_to_world, vector)
+        result["alignment_rois"] = _sample_alignment_grid(
+            grid, local_rois["cylinder_inside"], local_to_world, vector
+        )
     path.unlink(missing_ok=True)
     return result
 
@@ -692,7 +766,11 @@ async def _run() -> None:
         report["effective_stage_audit"] = effective
         local_rois = None
         local_to_world = None
-        if arguments["mode"] == "phase6dz_rotated_mesh":
+        if arguments["mode"] in (
+            "phase6dz_rotated_mesh",
+            "phase6ec_rotated_mesh",
+            "phase6ec_rotated_mesh_collision_off",
+        ):
             collider = stage.GetPrimAtPath(preparation["audit_collider_path"])
             local_to_world = UsdGeom.XformCache().GetLocalToWorldTransform(collider)
             local_rois = _phase6dz_local_rois()
@@ -703,6 +781,7 @@ async def _run() -> None:
                 "definitions": local_rois,
                 "scalar_noise_threshold": 1.0e-6,
                 "velocity_noise_threshold_m_s": 1.0e-5,
+                "alignment_comparison": "transformed Cylinder versus stale axis-aligned Cylinder",
             }
 
         viewport = None

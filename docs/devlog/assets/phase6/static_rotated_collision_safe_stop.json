@@ -1,0 +1,94 @@
+{
+  "schema": "campfire.phase6ec.static-rotated-collision-safe-stop.v1",
+  "phase": "phase6ec",
+  "date": "2026-08-11",
+  "status": "safe_stop",
+  "purpose": "qualify one static Y40 closed-Mesh Flow CollisionProxy rotation",
+  "source": {
+    "phase": "phase6dy",
+    "sha256": "BC65721F4C6D4ECF1F35C736F2DD10F7A47C9F2B361E45898032E869D894D5F9",
+    "local_geometry_sha256": "662163A79B8E77EFBDACF34775ADF3F8BB9967232B5F8534124DD30E2E676FF0",
+    "vertices": 26,
+    "faces": 36,
+    "indices": 120,
+    "approximation": "convexDecomposition"
+  },
+  "prepared_rotation": {
+    "axis": "Y",
+    "degrees": 40.0,
+    "stage_sha256": "CE66FF32158BE1513748CB653217A66727D9867DB0BDE715C28BBF587E7359CB",
+    "center_world": [0.0, 0.0, 1.035],
+    "world_extent": [[-0.7922859980930038, -0.1599999964237213, 0.33392405570832895], [0.7922860318085557, 0.1599999964237213, 1.7360759844723013]],
+    "emitter_surface_gap_m": 0.11153154429062676,
+    "emitter_gap_velocity_cells": 2.230630885812535,
+    "offline_gates_passed": 14,
+    "offline_gates_total": 14
+  },
+  "formal_sequence": [
+    {"condition": "A_axis_on", "started": true, "accepted": false},
+    {"condition": "B_rotate_y40_on", "started": false, "accepted": false},
+    {"condition": "C_rotate_y40_off", "started": false, "accepted": false}
+  ],
+  "condition_a_observations": {
+    "probe_status": "ok",
+    "last_lifecycle_marker": "shutdown_complete",
+    "active_blocks_final": 26,
+    "emitter_fuel": 0.800000011920929,
+    "process_exit_code": 0,
+    "residual_process": false,
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "core_maximum": {
+      "temperature": 0.5634765625,
+      "fuel": 0.0,
+      "burn": 0.01739501953125,
+      "smoke": 0.53369140625,
+      "velocity_m_s": 0.0
+    }
+  },
+  "shutdown_classification": {
+    "functional_status": "fail",
+    "lifecycle_status": "unknown_shutdown_failure",
+    "performance_sample_accepted": false,
+    "reason": "safety:no_windows_exception",
+    "observed_match": "Kit GPU inventory line: Sub System Id : 0xC75C1462",
+    "interpretation": "The unchanged Phase 6EB regex matched a PCI subsystem identifier as an exception-shaped token. The policy result remains fail-closed and is not relabeled in Phase 6EC.",
+    "same_condition_retried": false
+  },
+  "not_measured": [
+    "rotated collision-on Flow readback",
+    "rotated collision-off positive control",
+    "rotated-versus-stale position discrimination",
+    "comparison video"
+  ],
+  "production": {
+    "changed": false,
+    "app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A"
+  },
+  "verification": {
+    "phase6ec_contract": {"passed": 7, "total": 7},
+    "phase6ea_resource_safety": {"passed": 7, "total": 7, "duration_seconds": 10.5, "sparse_hash_peak_private_bytes": 75849728},
+    "phase6ea_static_contract": {"passed": 6, "total": 6},
+    "phase6eb_contract": {"passed": 24, "total": 24},
+    "release_build": {"status": "pass", "duration_seconds": 6.94},
+    "phase0_rtx": {"status": "pass", "runner_seconds": 17.4, "rtx_ready_seconds": 14.176},
+    "phase3": {
+      "status": "pass",
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "dry_authoritative_state_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+      "wet_authoritative_state_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+      "flow_active_blocks_final": 252,
+      "flow_active_blocks_peak": 405,
+      "peak_fuel_input": 1.0
+    },
+    "standard_suite": {"processes": 8, "passed": 78, "total": 78, "duration_seconds": 303.1},
+    "devlog_static": {"unique_local_references": 341, "missing": 0, "json_files": 181, "json_failures": 0, "svg_files": 147, "svg_failures": 0, "replacement_character_files": 0, "duplicate_ids": 0},
+    "browser_render": "unavailable; no connected Browser instance, static validation used",
+    "residual_kit_or_cdb_processes": 0
+  },
+  "latest_demo_changed": false,
+  "restart_condition": "In a separately approved Phase 6EB policy correction, distinguish explicit Windows exception evidence from arbitrary hexadecimal hardware identifiers, add a negative fixture for this exact log line, then restart Phase 6EC from A in a new artifact root."
+}

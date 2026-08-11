@@ -141,3 +141,9 @@ performance_sample_accepted: false
 再調査triggerは、新signatureまたは新module/offset、result保存またはstage close前のhang、既知residual 2回連続、policy分類済み20 process以上で5%超、fatal／Fabric access violation／Windows exception／TDR／device lost、安全なPID特定・停止不能、interactive productionでの反復、driver／Kit更新後の悪化である。それまではWPR/ETW、DLSS以外を含むNGX内部、telemetry serviceの追加調査を開始しない。distribution前には長時間soakを別途必要とし、この運用を「完全に正常」「完全に安全」と表現しない。
 
 Phase 6EBのfixtureはnormal、既知NGX、未知signature、shutdown marker欠落、functional gate失敗、Windows exception、未知module/offset、dump、timeout、残留停止失敗、入力破損、複数runの既知・未知混在を24/24で確認した。既存正常runnerの最終`kit_only`実processは1.423秒、exit 0、`normal_exit`、性能母集団accepted、fatal/dump/upload 0である。既知hang条件は再実行せず、保存済みWinDbg summaryだけをsignature定義の根拠にした。Phase 6EA resource safety 7/7・静的契約6/6、標準suite 8 process・78/78件・302.2秒、日誌338 reference／JSON 180／SVG 146の静的検査も合格した。Production app SHA-256は`94162F82...F02A`で前後一致した。
+
+### Phase 6ECで検出したexception matcherの再開blocker
+
+Phase 6ECのexact Phase 6DY controlはprobe完了、`shutdown_complete`、OS exit 0、fatal/dump/upload 0だったが、GPU inventoryの`Sub System Id : 0xC75C1462`が一般的な`0xC[0-9A-F]{7}`patternに一致し、`windows_exception_present=true`となった。現logで一致したのはこの1行だけであり、観測上はPCI subsystem identifierである。ただしPhase 6ECは本policyを変更しないため、結果は`unknown_shutdown_failure`のまま保持し、同条件を再実行していない。
+
+再開前の別Phaseでは、Windows exceptionを明示的文脈、Crash Reporter、exit code、access violation等で検出しつつ、hardware identifierをnegative fixtureで除外する必要がある。この修正がないままlog levelを下げて証拠行を隠す回避は採用しない。既知NGX signature判定、full-dump抑制、PID/path/start-time、Phase 6EA resource guardは変更対象ではない。
