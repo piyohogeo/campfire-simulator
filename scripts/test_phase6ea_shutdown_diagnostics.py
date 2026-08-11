@@ -8,6 +8,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT = ROOT / "scripts" / "audit_phase6ea_stage_difference.py"
 CAPTURE = ROOT / "scripts" / "capture_phase6ea_hang_diagnostics.ps1"
+WCT_HELPER = ROOT / "scripts" / "phase6ea_wct_helper.ps1"
+DUMP_HELPER = ROOT / "scripts" / "phase6ea_dump_helper.ps1"
 MONITOR = ROOT / "scripts" / "run_phase6ea_monitored_invocation.ps1"
 REPORT = ROOT / "docs" / "devlog" / "assets" / "phase6" / "kit_shutdown_residual_report.json"
 WINDBG_SUMMARY = ROOT / "docs" / "devlog" / "assets" / "phase6" / "kit_shutdown_windbg_summary.json"
@@ -27,19 +29,24 @@ class Phase6EaShutdownDiagnosticsContract(unittest.TestCase):
         marker = text.index('$marker -eq "shutdown_requested"')
         observation = text.index("$ShutdownObservationSeconds", marker)
         capture = text.index("capture_phase6ea_hang_diagnostics.ps1", observation)
-        path_check = text.index("Kit PID path changed before diagnostic capture", observation)
+        path_check = text.index("Test-Phase6EaProcessIdentity", observation)
         stop = text.index("Stop-Process -Id $kitPid -Force", capture)
         self.assertLess(path_check, capture)
         self.assertLess(capture, stop)
         self.assertNotIn("os._exit", text)
 
-    def test_capture_bounds_wct_and_persists_before_dump(self) -> None:
+    def test_capture_isolates_wct_and_dump_helpers(self) -> None:
         text = CAPTURE.read_text(encoding="utf-8")
-        self.assertIn("GetWaitChainsBounded($ProcessId, 10000)", text)
+        self.assertIn("phase6ea_wct_helper.ps1", text)
+        self.assertIn("Invoke-Phase6EaGuardedHelper", text)
+        self.assertIn("phase6ea_dump_helper.ps1", text)
+        self.assertIn("Invoke-Phase6EaDumpHelper", text)
         pre_dump = text.index("pre_dump_diagnostics.json")
-        full_dump = text.index("WriteFullDump($ProcessId, $dumpPath)", pre_dump)
+        full_dump = text.index("Invoke-Phase6EaDumpHelper", pre_dump)
         self.assertLess(pre_dump, full_dump)
-        self.assertIn("MiniDumpWithFullMemory|MiniDumpWithHandleData", text)
+        self.assertNotIn("MiniDumpWriteDump", text)
+        self.assertNotIn("Task.Run", WCT_HELPER.read_text(encoding="utf-8"))
+        self.assertIn("MiniDumpWriteDump", DUMP_HELPER.read_text(encoding="utf-8"))
 
     def test_checked_in_report_is_safe_stop(self) -> None:
         report = json.loads(REPORT.read_text(encoding="utf-8"))

@@ -1,284 +1,171 @@
 param(
-    [Parameter(Mandatory = $true)][int]$ProcessId,
-    [Parameter(Mandatory = $true)][string]$ExpectedExecutable,
+    [Parameter(Mandatory = $true, ParameterSetName = "Live")][int]$ProcessId,
+    [Parameter(Mandatory = $true, ParameterSetName = "Live")][string]$ExpectedExecutable,
+    [Parameter(Mandatory = $true, ParameterSetName = "Live")][datetime]$ExpectedProcessStartTimeUtc,
     [Parameter(Mandatory = $true)][string]$OutputDir,
-    [string]$LifecyclePath = "",
-    [string]$LogPath = "",
-    [string]$ExistingDumpPath = ""
+    [Parameter(ParameterSetName = "Live")][string]$LifecyclePath = "",
+    [Parameter(ParameterSetName = "Live")][string]$LogPath = "",
+    [Parameter(Mandatory = $true, ParameterSetName = "Existing")][string]$ExistingDumpPath,
+    [Parameter(ParameterSetName = "Existing")][string]$ExpectedExistingDumpSha256 = "",
+    [Parameter(ParameterSetName = "Existing")][switch]$ComputeExistingDumpHash,
+    [Parameter(ParameterSetName = "Live")][switch]$SkipDump,
+    [ValidateRange(1, 3600)][int]$MaximumDiagnosticSeconds = 360,
+    [ValidateRange(1, 120)][int]$WctTimeoutSeconds = 10,
+    [ValidateRange(1, 1800)][int]$DumpTimeoutSeconds = 300,
+    [long]$HelperPrivateBytesLimit = 536870912,
+    [long]$MaximumDumpBytes = 17179869184,
+    [long]$DiskSafetyMarginBytes = 2147483648
 )
 
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version 3.0
+. (Join-Path $PSScriptRoot "phase6ea_diagnostic_common.ps1")
+
 $output = [IO.Path]::GetFullPath($OutputDir)
-$expected = [IO.Path]::GetFullPath($ExpectedExecutable)
+$dumpPath = if ($PSCmdlet.ParameterSetName -eq "Existing") { [IO.Path]::GetFullPath($ExistingDumpPath) } else { Join-Path $output "hang-full.dmp" }
+$targetPid = if ($PSCmdlet.ParameterSetName -eq "Live") { $ProcessId } else { 0 }
+$lockPath = $null
+$stopwatch = [Diagnostics.Stopwatch]::StartNew()
+
+function Assert-DiagnosticTimeBudget {
+    if ($stopwatch.Elapsed.TotalSeconds -ge $MaximumDiagnosticSeconds) { throw "Phase 6EA diagnostic exceeded its total time budget" }
+}
+
 if (Test-Path -LiteralPath $output) { throw "Phase 6EA diagnostic output already exists: $output" }
-New-Item -ItemType Directory -Path $output | Out-Null
-
-Add-Type -TypeDefinition @'
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using Microsoft.Win32.SafeHandles;
-
-public static class Phase6EaNativeDiagnostics {
-    const int WctThreadType = 8;
-    const int WaitChainNodeSize = 280;
-    public class WaitNodeResult {
-        public int object_type;
-        public string object_type_name;
-        public int object_status;
-        public string object_status_name;
-        public string object_name;
-        public int process_id;
-        public int thread_id;
-        public int wait_time_ms;
-        public int context_switches;
-    }
-    public class WaitChainResult {
-        public int thread_id;
-        public bool call_succeeded;
-        public bool is_cycle;
-        public int error_code;
-        public string diagnostic;
-        public List<WaitNodeResult> nodes = new List<WaitNodeResult>();
-    }
-    static readonly string[] ObjectTypeNames = { "Invalid", "CriticalSection", "SendMessage", "Mutex", "ALPC", "COM", "ThreadWait", "ProcessWait", "Thread", "COMActivation", "Unknown", "SocketIO", "SMBIO", "Max" };
-    static readonly string[] ObjectStatusNames = { "Invalid", "NoAccess", "Running", "Blocked", "PidOnly", "PidOnlyRpcss", "Owned", "NotOwned", "Abandoned", "Unknown", "Error", "Max" };
-    [DllImport("advapi32.dll", SetLastError = true)]
-    static extern IntPtr OpenThreadWaitChainSession(uint flags, IntPtr callback);
-    [DllImport("advapi32.dll", SetLastError = true)]
-    static extern bool GetThreadWaitChain(IntPtr session, IntPtr context, uint flags, int threadId, ref uint nodeCount, IntPtr nodes, out int isCycle);
-    [DllImport("advapi32.dll")]
-    static extern void CloseThreadWaitChainSession(IntPtr session);
-    [DllImport("kernel32.dll", SetLastError = true)]
-    static extern IntPtr OpenProcess(uint access, bool inherit, int processId);
-    [DllImport("kernel32.dll")]
-    static extern bool CloseHandle(IntPtr handle);
-    [DllImport("Dbghelp.dll", SetLastError = true)]
-    static extern bool MiniDumpWriteDump(IntPtr process, int processId, SafeFileHandle file, uint dumpType, IntPtr exceptionParam, IntPtr userStreamParam, IntPtr callbackParam);
-
-    public static List<WaitChainResult> GetWaitChains(int processId) {
-        var result = new List<WaitChainResult>();
-        using (var process = Process.GetProcessById(processId)) {
-            IntPtr session = OpenThreadWaitChainSession(0, IntPtr.Zero);
-            if (session == IntPtr.Zero) return result;
-            try {
-                foreach (ProcessThread thread in process.Threads) {
-                    uint count = 16;
-                    IntPtr nodes = Marshal.AllocHGlobal(WaitChainNodeSize * (int)count);
-                    try {
-                        int cycle;
-                        bool ok = GetThreadWaitChain(session, IntPtr.Zero, 0, thread.Id, ref count, nodes, out cycle);
-                        var chain = new WaitChainResult { thread_id = thread.Id, call_succeeded = ok, is_cycle = cycle != 0, error_code = ok ? 0 : Marshal.GetLastWin32Error() };
-                        if (ok) {
-                            for (int index = 0; index < count; ++index) {
-                                IntPtr node = IntPtr.Add(nodes, index * WaitChainNodeSize);
-                                int objectType = Marshal.ReadInt32(node, 0);
-                                bool threadNode = objectType == WctThreadType;
-                                chain.nodes.Add(new WaitNodeResult {
-                                    object_type = objectType,
-                                    object_type_name = objectType >= 0 && objectType < ObjectTypeNames.Length ? ObjectTypeNames[objectType] : "OutOfRange",
-                                    object_status = Marshal.ReadInt32(node, 4),
-                                    object_status_name = Marshal.ReadInt32(node, 4) >= 0 && Marshal.ReadInt32(node, 4) < ObjectStatusNames.Length ? ObjectStatusNames[Marshal.ReadInt32(node, 4)] : "OutOfRange",
-                                    object_name = threadNode ? null : Marshal.PtrToStringUni(IntPtr.Add(node, 8)),
-                                    process_id = threadNode ? Marshal.ReadInt32(node, 8) : 0,
-                                    thread_id = threadNode ? Marshal.ReadInt32(node, 12) : 0,
-                                    wait_time_ms = threadNode ? Marshal.ReadInt32(node, 16) : 0,
-                                    context_switches = threadNode ? Marshal.ReadInt32(node, 20) : 0
-                                });
-                            }
-                        }
-                        result.Add(chain);
-                    } finally {
-                        Marshal.FreeHGlobal(nodes);
-                    }
-                }
-            } finally { CloseThreadWaitChainSession(session); }
-        }
-        return result;
-    }
-
-    public static List<WaitChainResult> GetWaitChainsBounded(int processId, int timeoutMilliseconds) {
-        var task = Task.Run(() => GetWaitChains(processId));
-        try {
-            if (task.Wait(timeoutMilliseconds)) return task.Result;
-        } catch (Exception error) {
-            return new List<WaitChainResult> {
-                new WaitChainResult {
-                    thread_id = -1,
-                    call_succeeded = false,
-                    is_cycle = false,
-                    error_code = error.HResult,
-                    diagnostic = "public WCT collection failed: " + error.GetType().Name
-                }
-            };
-        }
-        return new List<WaitChainResult> {
-            new WaitChainResult {
-                thread_id = -1,
-                call_succeeded = false,
-                is_cycle = false,
-                error_code = 1460,
-                diagnostic = "public WCT collection exceeded the bounded timeout; native call was not used as a shutdown gate"
-            }
-        };
-    }
-
-    public static int WriteFullDump(int processId, string path) {
-        const uint access = 0x0010 | 0x0040 | 0x0400;
-        const uint flags = 0x00000002 | 0x00000004 | 0x00000020 | 0x00000800 | 0x00001000 | 0x00040000;
-        IntPtr process = OpenProcess(access, false, processId);
-        if (process == IntPtr.Zero) return Marshal.GetLastWin32Error();
-        try {
-            using (var file = new FileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.None)) {
-                bool ok = MiniDumpWriteDump(process, processId, file.SafeFileHandle, flags, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
-                file.Flush(true);
-                return ok ? 0 : Marshal.GetLastWin32Error();
-            }
-        } finally { CloseHandle(process); }
-    }
-}
-'@
-
-function Get-ProcessThreadSnapshot([System.Diagnostics.Process]$Process) {
-    $rows = @()
-    foreach ($thread in @($Process.Threads)) {
-        try {
-            $rows += [ordered]@{
-                id = $thread.Id
-                state = [string]$thread.ThreadState
-                wait_reason = if ($thread.ThreadState -eq [Diagnostics.ThreadState]::Wait) { [string]$thread.WaitReason } else { $null }
-                total_cpu_ms = $thread.TotalProcessorTime.TotalMilliseconds
-                user_cpu_ms = $thread.UserProcessorTime.TotalMilliseconds
-                privileged_cpu_ms = $thread.PrivilegedProcessorTime.TotalMilliseconds
-                start_address = ('0x{0:X}' -f $thread.StartAddress.ToInt64())
-            }
-        } catch {
-            $rows += [ordered]@{ id = $thread.Id; error = $_.Exception.Message }
-        }
-    }
-    return @($rows)
-}
-
-function Get-GpuProcesses {
-    $rows = @()
-    $lines = & nvidia-smi --query-compute-apps=gpu_uuid,pid,process_name,used_memory --format=csv,noheader,nounits 2>$null
-    foreach ($line in @($lines)) {
-        $parts = @($line -split ',\s*')
-        if ($parts.Count -eq 4) { $rows += [ordered]@{ gpu_uuid=$parts[0]; pid=$parts[1]; process_name=$parts[2]; used_memory_mib=$parts[3] } }
-    }
-    return @($rows)
-}
-
-$process = Get-Process -Id $ProcessId -ErrorAction Stop
-$actualPath = [IO.Path]::GetFullPath($process.Path)
-if ($actualPath -ne $expected) { throw "Refusing diagnostics for unexpected executable: $actualPath" }
-$cimError = $null
-$cim = $null
-try { $cim = Get-CimInstance Win32_Process -Filter "ProcessId=$ProcessId" -ErrorAction Stop } catch { $cimError = $_.Exception.Message }
-$children = @()
-if ($null -ne $cim) {
-    try { $children = @(Get-CimInstance Win32_Process -Filter "ParentProcessId=$ProcessId" -ErrorAction Stop | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine,CreationDate) } catch { $cimError = $_.Exception.Message }
-}
-$modules = @()
+$lockPath = Enter-Phase6EaCaptureLock -CanonicalOutputPath $output -TargetProcessId $targetPid -DumpPath $dumpPath
 try {
-    foreach ($module in @($process.Modules)) {
-        try { $modules += [ordered]@{ name=$module.ModuleName; path=$module.FileName; base=('0x{0:X}' -f $module.BaseAddress.ToInt64()); size=$module.ModuleMemorySize; version=$module.FileVersionInfo.FileVersion } } catch {}
+    New-Item -ItemType Directory -Path $output | Out-Null
+
+    if ($PSCmdlet.ParameterSetName -eq "Existing") {
+        if (-not (Test-Path -LiteralPath $dumpPath -PathType Leaf)) { throw "Existing hang dump is missing: $dumpPath" }
+        $dump = Get-Item -LiteralPath $dumpPath
+        if ($dump.Length -le 4 -or $dump.Length -gt $MaximumDumpBytes) { throw "Existing dump size is outside configured bounds: $($dump.Length)" }
+        if (-not [Phase6EaFileSafety]::HasMdmpSignature($dumpPath)) { throw "Existing dump lacks MDMP signature" }
+        $hashRequested = $ComputeExistingDumpHash.IsPresent -or [bool]$ExpectedExistingDumpSha256
+        $hash = if ($hashRequested) { [Phase6EaFileSafety]::ComputeSha256($dumpPath) } else { $null }
+        if ($ExpectedExistingDumpSha256 -and $hash -ne $ExpectedExistingDumpSha256.ToUpperInvariant()) { throw "Existing dump SHA-256 mismatch" }
+        $report = [ordered]@{
+            schema = "campfire.phase6ea.existing-dump-metadata.v2"
+            phase = "phase6ea"
+            mode = "existing_dump_read_only"
+            timestamp_local = (Get-Date).ToString("o")
+            live_process_accessed = $false
+            wct_invoked = $false
+            stop_process_invoked = $false
+            dump = [ordered]@{
+                path = $dumpPath
+                bytes = $dump.Length
+                mdmp_signature_valid = $true
+                sha256 = $hash
+                hash_computed = $hashRequested
+                hash_buffer_bytes = [Phase6EaFileSafety]::HashBufferBytes
+                read_only = $true
+            }
+            limits = [ordered]@{ maximum_dump_bytes=$MaximumDumpBytes; maximum_diagnostic_seconds=$MaximumDiagnosticSeconds }
+            machine_wide_configuration_changed = $false
+        }
+        [IO.File]::WriteAllText((Join-Path $output "hang_diagnostics.json"), ($report | ConvertTo-Json -Depth 12) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
+        Write-Host "Phase 6EA existing dump metadata recorded read-only"
+        return
     }
-} catch {}
-$threads0 = @(Get-ProcessThreadSnapshot $process)
-$cpu0 = $process.TotalProcessorTime.TotalMilliseconds
-$time0 = Get-Date
-Start-Sleep -Seconds 5
-$process.Refresh()
-$threads1 = @(Get-ProcessThreadSnapshot $process)
-$cpu1 = $process.TotalProcessorTime.TotalMilliseconds
-$time1 = Get-Date
-$waitChains = @([Phase6EaNativeDiagnostics]::GetWaitChainsBounded($ProcessId, 10000))
-$preDump = [ordered]@{
-    schema = "campfire.phase6ea.pre-dump-diagnostics.v1"
-    phase = "phase6ea"
-    timestamp_local = (Get-Date).ToString("o")
-    process_identity_verified = $true
-    process = [ordered]@{
-        pid = $ProcessId
-        parent_pid = if ($null -ne $cim) { $cim.ParentProcessId } else { $null }
-        executable = $actualPath
-        command_line = if ($null -ne $cim) { $cim.CommandLine } else { $null }
-        start_time = $process.StartTime.ToString("o")
-        handle_count = $process.HandleCount
-        thread_count = $process.Threads.Count
-        cpu_total_ms_t0 = $cpu0
-        cpu_total_ms_t1 = $cpu1
-        cpu_delta_ms = ($cpu1 - $cpu0)
-        observation_wall_ms = ($time1 - $time0).TotalMilliseconds
+
+    $process = Test-Phase6EaProcessIdentity -ProcessId $ProcessId -ExpectedExecutable $ExpectedExecutable -ExpectedStartTimeUtc $ExpectedProcessStartTimeUtc
+    $verifiedStartUtc = $process.StartTime.ToUniversalTime()
+    $expected = [IO.Path]::GetFullPath($ExpectedExecutable)
+    $cimError = $null
+    $cim = $null
+    try { $cim = Get-CimInstance Win32_Process -Filter "ProcessId=$ProcessId" -ErrorAction Stop } catch { $cimError = $_.Exception.Message }
+    $children = @()
+    if ($null -ne $cim) {
+        try { $children = @(Get-CimInstance Win32_Process -Filter "ParentProcessId=$ProcessId" -ErrorAction Stop | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine,CreationDate) } catch { $cimError = $_.Exception.Message }
     }
-    child_processes = @($children)
-    modules = @($modules)
-    threads_t0 = @($threads0)
-    threads_t1 = @($threads1)
-    wait_chains = @($waitChains)
-    machine_wide_configuration_changed = $false
+    $modules = @()
+    try {
+        foreach ($module in @($process.Modules)) {
+            try { $modules += [ordered]@{ name=$module.ModuleName; path=$module.FileName; base=('0x{0:X}' -f $module.BaseAddress.ToInt64()); size=$module.ModuleMemorySize; version=$module.FileVersionInfo.FileVersion } } catch {}
+        }
+    } catch {}
+    $threads = @()
+    foreach ($thread in @($process.Threads)) {
+        try { $threads += [ordered]@{ id=$thread.Id; state=[string]$thread.ThreadState; wait_reason=if($thread.ThreadState -eq [Diagnostics.ThreadState]::Wait){[string]$thread.WaitReason}else{$null}; total_cpu_ms=$thread.TotalProcessorTime.TotalMilliseconds; start_address=('0x{0:X}' -f $thread.StartAddress.ToInt64()) } } catch { $threads += [ordered]@{ id=$thread.Id; error=$_.Exception.Message } }
+    }
+    Assert-DiagnosticTimeBudget
+
+    $powershell = (Get-Process -Id $PID).Path
+    $wctOutput = Join-Path $output "wct.json"
+    $wctStdout = Join-Path $output "wct.stdout.log"
+    $wctStderr = Join-Path $output "wct.stderr.log"
+    $wctScript = Join-Path $PSScriptRoot "phase6ea_wct_helper.ps1"
+    $wctArgs = @("-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", $wctScript, "-TargetProcessId", $ProcessId, "-OutputPath", $wctOutput)
+    $wctGuard = Invoke-Phase6EaGuardedHelper -FilePath $powershell -ArgumentList $wctArgs -StdoutPath $wctStdout -StderrPath $wctStderr -TimeoutSeconds $WctTimeoutSeconds -PrivateBytesLimit $HelperPrivateBytesLimit
+    $wctStatus = if ($wctGuard.timed_out) { "wct_timeout" } elseif ($wctGuard.private_bytes_exceeded) { "wct_memory_limit" } elseif ($wctGuard.exit_code -ne 0 -or -not (Test-Path -LiteralPath $wctOutput)) { "wct_failed" } else { "ok" }
+    $waitChains = @()
+    if ($wctStatus -eq "ok") {
+        try { $waitChains = @((Get-Content -LiteralPath $wctOutput -Raw -Encoding UTF8 | ConvertFrom-Json).chains) } catch { $wctStatus = "wct_invalid_output" }
+    }
+    Assert-DiagnosticTimeBudget
+
+    $lastLog = @()
+    if ($LogPath -and (Test-Path -LiteralPath $LogPath)) { $lastLog = @(Get-Content -LiteralPath $LogPath -Tail 80 -Encoding UTF8) }
+    $lifecycle = $null
+    if ($LifecyclePath -and (Test-Path -LiteralPath $LifecyclePath)) { $lifecycle = Get-Content -LiteralPath $LifecyclePath -Raw -Encoding UTF8 | ConvertFrom-Json }
+    $preDump = [ordered]@{
+        schema = "campfire.phase6ea.pre-dump-diagnostics.v2"
+        phase = "phase6ea"
+        timestamp_local = (Get-Date).ToString("o")
+        process_identity_verified = $true
+        process = [ordered]@{ pid=$ProcessId; parent_pid=if($null -ne $cim){$cim.ParentProcessId}else{$null}; executable=$expected; command_line=if($null -ne $cim){$cim.CommandLine}else{$null}; start_time_utc=$verifiedStartUtc.ToString("o"); handle_count=$process.HandleCount; thread_count=$process.Threads.Count; cim_error=$cimError }
+        child_processes = @($children)
+        modules = @($modules)
+        threads = @($threads)
+        wct = [ordered]@{ status=$wctStatus; helper=$wctGuard; chains=@($waitChains); advisory_only=$true }
+        lifecycle_marker = if($null -ne $lifecycle){$lifecycle.lifecycle_marker}else{$null}
+        lifecycle_history = if($null -ne $lifecycle){@($lifecycle.lifecycle_history)}else{@()}
+        final_log_lines = @($lastLog)
+        machine_wide_configuration_changed = $false
+    }
+    [IO.File]::WriteAllText((Join-Path $output "pre_dump_diagnostics.json"), ($preDump | ConvertTo-Json -Depth 30) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
+
+    $dumpResult = if ($SkipDump) {
+        [ordered]@{ status="skipped_by_explicit_request"; path=$dumpPath; bytes=0 }
+    } else {
+        $process = Test-Phase6EaProcessIdentity -ProcessId $ProcessId -ExpectedExecutable $expected -ExpectedStartTimeUtc $verifiedStartUtc
+        $predicted = [math]::Min($MaximumDumpBytes, [math]::Max([long]($process.PrivateMemorySize64 * 1.5), 536870912L))
+        $freeBefore = Assert-Phase6EaDiskBudget -Path $dumpPath -RequiredBytes ($predicted + $DiskSafetyMarginBytes)
+        $remaining = [math]::Max(1, [math]::Min($DumpTimeoutSeconds, $MaximumDiagnosticSeconds - [int]$stopwatch.Elapsed.TotalSeconds))
+        $dumpHelper = Join-Path $PSScriptRoot "phase6ea_dump_helper.ps1"
+        $helperArgs = @("-TargetProcessId", $ProcessId, "-ExpectedExecutable", $expected, "-ExpectedStartTimeUtc", $verifiedStartUtc.ToString("o"))
+        $result = Invoke-Phase6EaDumpHelper -HelperScript $dumpHelper -HelperArguments $helperArgs -FinalDumpPath $dumpPath -TimeoutSeconds $remaining -PrivateBytesLimit $HelperPrivateBytesLimit -MaximumDumpBytes $MaximumDumpBytes -StdoutPath (Join-Path $output "dump.stdout.log") -StderrPath (Join-Path $output "dump.stderr.log")
+        $result | Add-Member -NotePropertyName predicted_maximum_bytes -NotePropertyValue $predicted
+        $result | Add-Member -NotePropertyName free_disk_bytes_before -NotePropertyValue $freeBefore
+        $result
+    }
+    if ($dumpResult.status -eq "failed") { throw "Full dump helper failed: $($dumpResult.error)" }
+    Assert-DiagnosticTimeBudget
+    $dump = if (Test-Path -LiteralPath $dumpPath) { Get-Item -LiteralPath $dumpPath } else { $null }
+    $hash = if ($null -ne $dump) { [Phase6EaFileSafety]::ComputeSha256($dumpPath) } else { $null }
+    $report = [ordered]@{
+        schema = "campfire.phase6ea.hang-diagnostics.v2"
+        phase = "phase6ea"
+        mode = "live_capture"
+        timestamp_local = (Get-Date).ToString("o")
+        process_identity_verified = $true
+        process = $preDump.process
+        child_processes = @($children)
+        modules = @($modules)
+        threads = @($threads)
+        wct = $preDump.wct
+        lifecycle_marker = $preDump.lifecycle_marker
+        lifecycle_history = $preDump.lifecycle_history
+        final_log_lines = @($lastLog)
+        dump = [ordered]@{ status=$dumpResult.status; path=$dumpPath; bytes=if($null -ne $dump){$dump.Length}else{0}; sha256=$hash; hash_buffer_bytes=[Phase6EaFileSafety]::HashBufferBytes; mdmp_signature_valid=if($null -ne $dump){[Phase6EaFileSafety]::HasMdmpSignature($dumpPath)}else{$null}; helper=$dumpResult }
+        limits = [ordered]@{ maximum_diagnostic_seconds=$MaximumDiagnosticSeconds; wct_timeout_seconds=$WctTimeoutSeconds; dump_timeout_seconds=$DumpTimeoutSeconds; helper_private_bytes=$HelperPrivateBytesLimit; maximum_dump_bytes=$MaximumDumpBytes; disk_safety_margin_bytes=$DiskSafetyMarginBytes }
+        target_process_stopped_by_capture = $false
+        machine_wide_configuration_changed = $false
+    }
+    [IO.File]::WriteAllText((Join-Path $output "hang_diagnostics.json"), ($report | ConvertTo-Json -Depth 30) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
+    Write-Host "Phase 6EA live hang diagnostics completed for PID $ProcessId"
+} finally {
+    $stopwatch.Stop()
+    if ($null -ne $lockPath) { Exit-Phase6EaCaptureLock -LockPath $lockPath }
 }
-[IO.File]::WriteAllText((Join-Path $output "pre_dump_diagnostics.json"), ($preDump | ConvertTo-Json -Depth 30) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
-$dumpPath = if ($ExistingDumpPath) { [IO.Path]::GetFullPath($ExistingDumpPath) } else { Join-Path $output "hang-full.dmp" }
-$dumpError = if ($ExistingDumpPath) {
-    if (-not (Test-Path -LiteralPath $dumpPath -PathType Leaf)) { throw "Existing hang dump is missing: $dumpPath" }
-    0
-} else {
-    [Phase6EaNativeDiagnostics]::WriteFullDump($ProcessId, $dumpPath)
-}
-$dump = if (Test-Path -LiteralPath $dumpPath) { Get-Item -LiteralPath $dumpPath } else { $null }
-$lastLog = @()
-if ($LogPath -and (Test-Path -LiteralPath $LogPath)) { $lastLog = @(Get-Content -LiteralPath $LogPath -Tail 80 -Encoding UTF8) }
-$lifecycle = $null
-if ($LifecyclePath -and (Test-Path -LiteralPath $LifecyclePath)) { $lifecycle = Get-Content -LiteralPath $LifecyclePath -Raw -Encoding UTF8 | ConvertFrom-Json }
-$cpuDelta = $cpu1 - $cpu0
-$wallMs = ($time1 - $time0).TotalMilliseconds
-$report = [ordered]@{
-    schema = "campfire.phase6ea.hang-diagnostics.v1"
-    phase = "phase6ea"
-    timestamp_local = (Get-Date).ToString("o")
-    process_identity_verified = $true
-    process = [ordered]@{
-        pid = $ProcessId
-        parent_pid = if ($null -ne $cim) { $cim.ParentProcessId } else { $null }
-        executable = $actualPath
-        command_line = if ($null -ne $cim) { $cim.CommandLine } else { $null }
-        start_time = $process.StartTime.ToString("o")
-        handle_count = $process.HandleCount
-        thread_count = $process.Threads.Count
-        cpu_total_ms_t0 = $cpu0
-        cpu_total_ms_t1 = $cpu1
-        cpu_delta_ms = $cpuDelta
-        observation_wall_ms = $wallMs
-        classification = if ($cpuDelta -ge ($wallMs * 0.25)) { "cpu_spin_candidate" } else { "predominantly_waiting" }
-        cim_error = $cimError
-    }
-    child_processes = @($children)
-    modules = @($modules)
-    threads_t0 = @($threads0)
-    threads_t1 = @($threads1)
-    wait_chains = @($waitChains)
-    gpu_processes = @(Get-GpuProcesses)
-    lifecycle_marker = if ($null -ne $lifecycle) { $lifecycle.lifecycle_marker } else { $null }
-    lifecycle_history = if ($null -ne $lifecycle) { @($lifecycle.lifecycle_history) } else { @() }
-    final_log_lines = @($lastLog)
-    handle_type_target_source = "public WCT wait-object nodes plus MiniDumpWithHandleData; no Handle.exe/Process Explorer and no undocumented NtQuerySystemInformation"
-    dump = [ordered]@{
-        attempted = (-not [bool]$ExistingDumpPath)
-        reused_completed_capture = [bool]$ExistingDumpPath
-        error_code = $dumpError
-        written = ($null -ne $dump -and $dumpError -eq 0)
-        path = if ($null -ne $dump) { $dump.FullName } else { $dumpPath }
-        bytes = if ($null -ne $dump) { $dump.Length } else { 0 }
-        sha256 = if ($null -ne $dump -and $dumpError -eq 0) { (Get-FileHash -Algorithm SHA256 -LiteralPath $dump.FullName).Hash } else { $null }
-        flags = "MiniDumpWithFullMemory|MiniDumpWithHandleData|MiniDumpWithUnloadedModules|MiniDumpWithFullMemoryInfo|MiniDumpWithThreadInfo|MiniDumpWithTokenInformation"
-    }
-    machine_wide_configuration_changed = $false
-}
-[IO.File]::WriteAllText((Join-Path $output "hang_diagnostics.json"), ($report | ConvertTo-Json -Depth 30) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
-Write-Host "Phase 6EA hang diagnostics captured for PID $ProcessId"

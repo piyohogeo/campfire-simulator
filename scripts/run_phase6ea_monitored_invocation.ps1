@@ -10,6 +10,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version 3.0
+. (Join-Path $PSScriptRoot "phase6ea_diagnostic_common.ps1")
 $scriptPath = [IO.Path]::GetFullPath($InvocationScript)
 $kitPath = [IO.Path]::GetFullPath($KitExecutable)
 $conditionOutput = [IO.Path]::GetFullPath($ConditionOutputDir)
@@ -50,6 +51,7 @@ $childArgs = @("-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "
 $started = Get-Date
 $outer = Start-Process -FilePath $powershell -ArgumentList $childArgs -PassThru -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr
 $kitPid = $null
+$kitStartTimeUtc = $null
 $shutdownObserved = $null
 $hangDetected = $false
 $absoluteTimeout = $false
@@ -68,6 +70,7 @@ while (-not $outer.HasExited) {
             if (-not $candidate.ExecutablePath) { continue }
             if ([IO.Path]::GetFullPath([string]$candidate.ExecutablePath) -eq $kitPath) {
                 $kitPid = [int]$candidate.ProcessId
+                $kitStartTimeUtc = (Get-Process -Id $kitPid -ErrorAction Stop).StartTime.ToUniversalTime()
                 break
             }
         }
@@ -81,18 +84,16 @@ while (-not $outer.HasExited) {
                     } catch { $false }
                 }
         )
-        if ($pathMatches.Count -eq 1) { $kitPid = $pathMatches[0].Id }
+        if ($pathMatches.Count -eq 1) { $kitPid = $pathMatches[0].Id; $kitStartTimeUtc = $pathMatches[0].StartTime.ToUniversalTime() }
     }
     $marker = Get-LifecycleMarker
     if ($marker -eq "shutdown_requested" -and $null -eq $shutdownObserved) { $shutdownObserved = $now }
     if ($null -ne $shutdownObserved -and $null -ne $kitPid -and ($now - $shutdownObserved).TotalSeconds -ge $ShutdownObservationSeconds) {
         try {
-            $kitProcess = Get-Process -Id $kitPid -ErrorAction Stop
-            if ([IO.Path]::GetFullPath($kitProcess.Path) -ne $kitPath) { throw "Kit PID path changed before diagnostic capture" }
+            $kitProcess = Test-Phase6EaProcessIdentity -ProcessId $kitPid -ExpectedExecutable $kitPath -ExpectedStartTimeUtc $kitStartTimeUtc
             $hangDetected = $true
-            & (Join-Path $PSScriptRoot "capture_phase6ea_hang_diagnostics.ps1") -ProcessId $kitPid -ExpectedExecutable $kitPath -OutputDir $diagnosticDir -LifecyclePath $raw -LogPath $kitLog
-            $kitProcess = Get-Process -Id $kitPid -ErrorAction Stop
-            if ([IO.Path]::GetFullPath($kitProcess.Path) -ne $kitPath) { throw "Refusing to stop unexpected executable after capture" }
+            & (Join-Path $PSScriptRoot "capture_phase6ea_hang_diagnostics.ps1") -ProcessId $kitPid -ExpectedExecutable $kitPath -ExpectedProcessStartTimeUtc $kitStartTimeUtc -OutputDir $diagnosticDir -LifecyclePath $raw -LogPath $kitLog
+            $kitProcess = Test-Phase6EaProcessIdentity -ProcessId $kitPid -ExpectedExecutable $kitPath -ExpectedStartTimeUtc $kitStartTimeUtc
             Stop-Process -Id $kitPid -Force
             $stoppedVerifiedKit = $true
         } catch {
@@ -106,9 +107,9 @@ while (-not $outer.HasExited) {
 
 if ($absoluteTimeout -and $null -ne $kitPid) {
     try {
-        $kitProcess = Get-Process -Id $kitPid -ErrorAction Stop
-        if ([IO.Path]::GetFullPath($kitProcess.Path) -ne $kitPath) { throw "Refusing timeout diagnostics for unexpected executable" }
-        & (Join-Path $PSScriptRoot "capture_phase6ea_hang_diagnostics.ps1") -ProcessId $kitPid -ExpectedExecutable $kitPath -OutputDir $diagnosticDir -LifecyclePath $raw -LogPath $kitLog
+        $kitProcess = Test-Phase6EaProcessIdentity -ProcessId $kitPid -ExpectedExecutable $kitPath -ExpectedStartTimeUtc $kitStartTimeUtc
+        & (Join-Path $PSScriptRoot "capture_phase6ea_hang_diagnostics.ps1") -ProcessId $kitPid -ExpectedExecutable $kitPath -ExpectedProcessStartTimeUtc $kitStartTimeUtc -OutputDir $diagnosticDir -LifecyclePath $raw -LogPath $kitLog
+        $kitProcess = Test-Phase6EaProcessIdentity -ProcessId $kitPid -ExpectedExecutable $kitPath -ExpectedStartTimeUtc $kitStartTimeUtc
         Stop-Process -Id $kitPid -Force
         $stoppedVerifiedKit = $true
     } catch { $diagnosticError = $_.Exception.Message }
@@ -130,6 +131,7 @@ $evidence = [ordered]@{
     outer_pid = $outer.Id
     outer_exit_code = if ($outer.HasExited) { $outer.ExitCode } else { $null }
     kit_pid = $kitPid
+    kit_start_time_utc = if ($null -ne $kitStartTimeUtc) { $kitStartTimeUtc.ToString("o") } else { $null }
     shutdown_marker_observed = ($null -ne $shutdownObserved)
     shutdown_marker_time_local = if ($null -ne $shutdownObserved) { $shutdownObserved.ToString("o") } else { $null }
     shutdown_observation_seconds = $ShutdownObservationSeconds
