@@ -2926,3 +2926,14 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - 不完全な`Mesh + PhysicsCollisionAPI` ablationはstage open前にnative `0xC0000005`となったため再試行せず、正式母集団から除外した。dumpはGit外に保全しupload attempt 0。正式19 processはfatal/crash/dump/upload 0、全run safe shutdown、production hash不変だった。
 - Phase 6DRのCylinderはprimitive + `PhysicsCollisionAPI`だけであり、Phase 6DS Cubeと同じ非取込クラスである可能性が最有力となった。次は独立Phaseで静的Cylinder相当Mesh proxyを測り、成立後にrotation・dynamic transform・20本costへ進む。productionは未変更。詳細は`docs/design/nvidia_flow_collision_reference_audit.md`。
 - Release buildは`7.25 s`で合格し、Flow scene collider契約のtargeted Kit testは`1 / 1`件、`0.078 s`で合格した。共有productionコードとapp構成を変更していないため、Phase 0 RTXと標準suite全体はこのPhaseでは再実行していない。
+
+## Phase 6DU static cylindrical Flow collision proxy qualification
+
+### 2026-08-11: offline形状gate合格後、stage-open native crashで安全停止
+
+- 半径`0.16 m`、長さ`1.8 m`、local X軸、12分割の閉じたCylinder Meshをstage接続前に構築した。`26 vertices / 36 faces / 120 indices`、finite、degenerate face 0、全edge 2面共有、outward winding、extent一致を確認した。
+- `AnalyticCollider`、`RenderSurface`、不可視`FlowCollisionProxy`は同じworld transformを共有した。Emitterとの解析的surface gapは`0.190 m`で、既知のvelocity cell `0.050 m`に対して3.8 cellだった。local Cylinder ROIもbelow／inside／core／side／end／above／far／outsideまで準備した。
+- 最初の完全schema `convexHull` preflightは`opening_prebuilt_stage`でnative `0xC0000005`となった。低confidence stackは`omni.fabric.plugin.dll+0xCE5B0`からHydra／RTXへ続く。dumpはGit外へ保全し、upload attempt 0、registry不変、production app SHA-256前後一致。同条件は再試行していない。
+- Flow sampleと有効なrender frameの前に停止したため、静的遮蔽、`convexDecomposition`比較、0／37／53度回転、共存、PhysX filtering、stage reload、RenderSurface再利用は未判定である。これは「Cylinder Meshでも遮蔽しない」という結果ではない。
+- production、既定値、Flow／Kit／PhysX version、Phase V3T-R／V3T-M safe stop、latest demoは不変。dynamic Transform、Phase 6DR実配置、20本性能、production統合へは進まない。詳細は`docs/design/static_cylindrical_flow_collision_proxy.md`。
+- Release buildは`6.78 s`、Flow scene collider targeted Kit testは`1 / 1`件・`0.093 s`で合格した。productionコードとapp compositionは不変のため、Phase 0 RTXと標準suite全体は再実行していない。

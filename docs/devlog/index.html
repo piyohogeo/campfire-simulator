@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6dt">最新記録</a>
+        <a href="#phase-6du">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6dt">Phase 6DTを読む</a>
+        <a class="button primary" href="#phase-6du">Phase 6DUを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6DT reference audit</strong></div>
-        <div><span>Reference</span><strong>Flow 110.0.0 · PhysX automatic</strong></div>
-        <div><span>Formal matrix</span><strong>19 clean processes</strong></div>
-        <div><span>Missing boundary</span><strong>Mesh collision representation</strong></div>
+        <div><span>現在地</span><strong>Phase 6DU safe stop</strong></div>
+        <div><span>Offline shape</span><strong>26 vertices · 36 faces · valid</strong></div>
+        <div><span>Runtime boundary</span><strong>stage-open native crash</strong></div>
+        <div><span>Production</span><strong>unchanged · not qualified</strong></div>
       </div>
     </div>
   </header>
@@ -56,6 +56,19 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6du" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報"><span class="phase-number compact">6DU</span><p><time datetime="2026-08-11">2026.08.11</time></p><span class="pill current">Native-crash safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6DU · static cylindrical Flow collision proxy</p><h2>円柱Meshは正しく作れた。<br>しかしFlowを測る前に停止した。</h2><p>Phase 6DRの薪と同じ半径0.16 m・長さ1.8 mの12分割Mesh proxyをofflineで構築しました。形状とEmitter距離は全gateを通りましたが、最初の<code>convexHull</code> preflightがstage接続中にnative crashしたため、同条件を再実行せずmatrixを停止しています。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/flow_collision_static_cylinder_report.svg"><img src="assets/phase6/flow_collision_static_cylinder_report.svg" alt="Phase 6DUのoffline Cylinder Mesh gateとstage-open native crashによる安全停止" loading="lazy"></a><figcaption><div><strong>Offline shape valid · runtime unqualified</strong><span>0xC0000005 · opening_prebuilt_stage · accepted Flow samples 0</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Geometry</p><h3>26 vertices · 36 faces</h3><p>finite、degenerate face 0、open edge 0、outward winding、extent、解析的Cylinderとのworld transform一致を確認しました。Emitter surface gapは0.190 mです。</p></section><section class="note caution"><p class="note-label">Fail-fast</p><h3>Fabric / Hydra / RTX stage-open</h3><p>Windows <code>0xC0000005</code>。dumpはGit外へ保全し、自動upload 0、production hash不変を確認。同一条件は再試行していません。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Decision</p><h3>遮蔽の成否は未判定。</h3><p>Flow timeline、NanoVDB readback、viewport captureより前のcrashなので、「Cylinder Meshでも遮蔽しない」とは扱いません。convexDecomposition、37／53度回転、解析的Cylinder共存、Flow専用filtering、stage reloadはすべて未実行です。</p><p>Release buildは6.78秒、既存Flow colliderのtargeted Kit testは1 / 1件（0.093秒）で合格しました。</p><p><a href="assets/phase6/flow_collision_static_cylinder_report.json">集計JSON</a> · <a href="assets/phase6/flow_collision_static_cylinder_raw.json">sanitized raw</a> · <a href="assets/phase6/flow_collision_static_cylinder_report.svg">safe-stop SVG</a> · <a href="../design/static_cylindrical_flow_collision_proxy.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Topology</strong><small>closed · finite · outward</small></p></div><div role="listitem"><span>✓</span><p><strong>Emitter gap</strong><small>0.190 m · 3.8 cells</small></p></div><div role="listitem"><span>!</span><p><strong>Runtime</strong><small>native crash · no retry</small></p></div><div role="listitem"><span>—</span><p><strong>Flow ROI</strong><small>sample 0</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>変更なし</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Safe stop</p><h3>dynamic proxyへは進まない。</h3><p>まず保全dumpとPhase 6DTの除外dumpを独立に比較し、stage内容とFabric／Hydra／RTX初期化境界を分ける必要があります。有効な動画frameがないため新動画は作らず、latest demo pointerも変更していません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6dt" class="section entry-section phase-six">

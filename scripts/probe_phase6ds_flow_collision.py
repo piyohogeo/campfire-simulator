@@ -616,4 +616,7 @@ async def _run() -> None:
         app.post_uncancellable_quit(exit_code)
 
 
-asyncio.ensure_future(_run())
+if carb.settings.get_settings().get_as_string("/phase6ds/output"):
+    # Keep the historical Phase 6DS --exec entry point unchanged while making
+    # its stage-authoring helpers reusable by later production-neutral probes.
+    asyncio.ensure_future(_run())

@@ -1,0 +1,317 @@
+{
+  "schema": "campfire.phase6du.static-cylinder-report.v1",
+  "phase": "phase6du",
+  "status": "safe_stop_native_crash",
+  "decision": {
+    "static_cylinder_mesh_occlusion": "unqualified; stage crashed before Flow samples",
+    "rotated_static_occlusion": "not run due stop condition",
+    "convex_hull_vs_decomposition": "unresolved; convexHull preflight did not reach measurement",
+    "analytic_cylinder_coexistence": "not run due stop condition",
+    "flow_only_proxy_separation": "not established",
+    "v3_render_surface_reuse": "not qualified and not recommended from this evidence",
+    "dynamic_transform_ready": false,
+    "production_change": false,
+    "latest_demo_pointer_changed": false
+  },
+  "environment": {
+    "kit": "110.2.0+feature.342835.698af100.gl",
+    "flow": "110.0.0",
+    "physx": "110.1.1",
+    "physx_cooking": "110.1.1",
+    "rtx_hydra": "1.0.4"
+  },
+  "authored_flow_settings": {
+    "density_cell_size_m": 0.025,
+    "velocity_cell_size_m": "not observed; stage crashed before public readback",
+    "physics_collision_enabled": true,
+    "physics_convex_collision": true,
+    "steps_per_second": 60.0,
+    "effective_values": "not observed; stage connection did not complete"
+  },
+  "timing": {
+    "stage_open_ms": "not completed",
+    "collision_cooking_ms": "not available through completed public probe boundary"
+  },
+  "geometry": {
+    "contract": {
+      "yaw_deg": 0.0,
+      "pitch_deg": 0.0,
+      "flow_collision_enabled": true,
+      "analytic_collision": false,
+      "proxy_collision": true,
+      "proxy_collision_enabled": true,
+      "render_surface_collision": false,
+      "approximation": "convexHull"
+    },
+    "radius_m": 0.16,
+    "length_m": 1.8,
+    "axis": "X",
+    "segments": 12,
+    "proxy_topology": {
+      "vertex_count": 26,
+      "face_count": 36,
+      "index_count": 120,
+      "finite": true,
+      "minimum_face_area_m2": 0.0063999997138977065,
+      "degenerate_face_count": 0,
+      "unique_edge_count": 60,
+      "nonmanifold_or_open_edge_count": 0,
+      "closed_manifold": true,
+      "outward_winding": true,
+      "extent_min_m": [
+        -0.8999999761581421,
+        -0.1599999964237213,
+        -0.1599999964237213
+      ],
+      "extent_max_m": [
+        0.8999999761581421,
+        0.1599999964237213,
+        0.1599999964237213
+      ],
+      "expected_extent_min_m": [
+        -0.9,
+        -0.16,
+        -0.16
+      ],
+      "expected_extent_max_m": [
+        0.9,
+        0.16,
+        0.16
+      ]
+    },
+    "render_topology": {
+      "vertex_count": 26,
+      "face_count": 36,
+      "index_count": 120,
+      "finite": true,
+      "minimum_face_area_m2": 0.0063999997138977065,
+      "degenerate_face_count": 0,
+      "unique_edge_count": 60,
+      "nonmanifold_or_open_edge_count": 0,
+      "closed_manifold": true,
+      "outward_winding": true,
+      "extent_min_m": [
+        -0.8999999761581421,
+        -0.1599999964237213,
+        -0.1599999964237213
+      ],
+      "extent_max_m": [
+        0.8999999761581421,
+        0.1599999964237213,
+        0.1599999964237213
+      ],
+      "expected_extent_min_m": [
+        -0.9,
+        -0.16,
+        -0.16
+      ],
+      "expected_extent_max_m": [
+        0.9,
+        0.16,
+        0.16
+      ]
+    },
+    "root_world_transform": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "analytic_world_transform": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "proxy_world_transform": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "render_world_transform": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "world_transforms_match": true,
+    "emitter_center_world_m": [
+      0.0,
+      0.0,
+      0.55
+    ],
+    "emitter_center_local_m": [
+      0.0,
+      0.0,
+      -0.44999999999999996
+    ],
+    "emitter_radius_m": 0.1,
+    "emitter_signed_distance_m": 0.2899999999999999,
+    "emitter_surface_gap_m": 0.18999999999999992,
+    "emitter_outside": true
+  },
+  "memory_boundary": {
+    "raw_mesh_array_payload_bytes_per_12_segment_mesh": 960,
+    "two_mesh_raw_payload_bytes": 1920,
+    "usd_runtime_and_cooked_physx_memory": "not measured",
+    "render_surface_reuse_note": "Reusing a future deforming render surface would couple visual topology to collision cooking; a dedicated proxy remains the safer design candidate, but was not runtime-qualified."
+  },
+  "crash": {
+    "condition": "mesh_hull",
+    "run_index": 1,
+    "exit_code_signed": -1073741819,
+    "exit_code_hex": "0xC0000005",
+    "exception_classification": "Windows native access violation",
+    "last_lifecycle_marker": "opening_prebuilt_stage",
+    "probe_status": "running",
+    "fault_boundary": "omni.fabric.plugin.dll+0xCE5B0 at Hydra/RTX stage-open startup",
+    "native_stack_low_confidence": [
+      "omni.fabric.plugin.dll+0xCE5B0",
+      "usdrt.hydra.fabric_scene_delegate.plugin.dll+0xE5415",
+      "omni.hydra.usdrt_delegate.plugin.dll+0x4FD3",
+      "rtx.hydra.dll+0xF36"
+    ],
+    "dump": {
+      "local_repo_relative_path": "artifacts/phase6du-static-cylinder-1/mesh_hull/run-1/sensitive-crash-dumps/953fdc43-2f84-4274-8521-a0756be3cda9.dmp.zip",
+      "bytes": 1516001,
+      "sha256": "BA2043E0F9BE79A1B957ABDBD283BA73826B7D3D3E395B350251DB432FEB6734",
+      "sensitive_git_ignored": true
+    },
+    "automatic_upload_attempt_count": 0,
+    "same_condition_retried": false,
+    "causality": "unconfirmed; no collision-schema or geometry cause is claimed from one stage-open crash"
+  },
+  "measurement_matrix": {
+    "minimum_required_conditions": 5,
+    "minimum_required_runs": 15,
+    "started_processes": 1,
+    "accepted_processes": 0,
+    "not_run_reason": "mandatory fail-fast after native crash/dump",
+    "roi_values": "unavailable",
+    "off_ratios": "unavailable",
+    "captures": "unavailable; crash occurred before viewport and Flow sampling"
+  },
+  "safety": {
+    "production_hash_unchanged": true,
+    "crash_registry_unchanged": true,
+    "automatic_upload_attempt_count": 0,
+    "dump_preserved_locally": true,
+    "same_condition_retried": false,
+    "phase6ds_phase6dt_artifacts_overwritten": false
+  },
+  "regression": {
+    "release_build": {
+      "status": "passed",
+      "seconds": 6.78
+    },
+    "targeted_flow_collider_test": {
+      "status": "passed",
+      "test": "campfire.app.tests.test_scene.TestScene.test_flow_scene_has_emitter_simulation_and_colliders",
+      "passed": 1,
+      "total": 1,
+      "seconds": 0.093
+    },
+    "phase0_rtx": "not rerun; no production code or app composition changed",
+    "standard_suite": "not rerun; no production code changed"
+  },
+  "gates": {
+    "offline_geometry_finite": true,
+    "offline_geometry_closed_manifold": true,
+    "offline_geometry_outward_winding": true,
+    "offline_geometry_non_degenerate": true,
+    "offline_world_transforms_match": true,
+    "offline_emitter_outside": true,
+    "runtime_no_native_crash": false,
+    "runtime_flow_readback": false,
+    "runtime_occlusion": false
+  },
+  "limitations": {
+    "crash_causality": "single pre-measurement native crash; cause is not attributed",
+    "physx_scene_query": "not reached",
+    "rotation": "not run",
+    "coexistence": "not run",
+    "stage_reload": "not run",
+    "visual_evidence": "not produced because no valid rendered frame existed"
+  }
+}

@@ -1,0 +1,374 @@
+{
+  "schema": "campfire.phase6du.static-cylinder-raw.v1",
+  "phase": "phase6du",
+  "status": "stopped_on_native_crash",
+  "accepted_flow_sample_count": 0,
+  "probe": {
+    "mode": "mesh_hull",
+    "run_index": 1,
+    "stage_sha256": "90ACD8E601A7F034236823DD71F3EC965BDD4FA060E5BE1A6C80F000BB20586B",
+    "kit_build": "110.2.0+feature.342835.698af100.gl",
+    "extensions": {
+      "omni.flowusd": {
+        "enabled": true,
+        "enabled_id": "omni.flowusd-110.0.0",
+        "version": "110.0.0"
+      },
+      "omni.physx": {
+        "enabled": true,
+        "enabled_id": "omni.physx-110.1.1",
+        "version": "110.1.1"
+      },
+      "omni.physx.cooking": {
+        "enabled": true,
+        "enabled_id": "omni.physx.cooking-110.1.1",
+        "version": "110.1.1"
+      },
+      "omni.physx.stageupdate": {
+        "enabled": true,
+        "enabled_id": "omni.physx.stageupdate-110.1.1",
+        "version": "110.1.1"
+      },
+      "omni.hydra.rtx": {
+        "enabled": true,
+        "enabled_id": "omni.hydra.rtx-1.0.4",
+        "version": "1.0.4"
+      }
+    },
+    "geometry": {
+      "contract": {
+        "yaw_deg": 0.0,
+        "pitch_deg": 0.0,
+        "flow_collision_enabled": true,
+        "analytic_collision": false,
+        "proxy_collision": true,
+        "proxy_collision_enabled": true,
+        "render_surface_collision": false,
+        "approximation": "convexHull"
+      },
+      "radius_m": 0.16,
+      "length_m": 1.8,
+      "axis": "X",
+      "segments": 12,
+      "proxy_topology": {
+        "vertex_count": 26,
+        "face_count": 36,
+        "index_count": 120,
+        "finite": true,
+        "minimum_face_area_m2": 0.0063999997138977065,
+        "degenerate_face_count": 0,
+        "unique_edge_count": 60,
+        "nonmanifold_or_open_edge_count": 0,
+        "closed_manifold": true,
+        "outward_winding": true,
+        "extent_min_m": [
+          -0.8999999761581421,
+          -0.1599999964237213,
+          -0.1599999964237213
+        ],
+        "extent_max_m": [
+          0.8999999761581421,
+          0.1599999964237213,
+          0.1599999964237213
+        ],
+        "expected_extent_min_m": [
+          -0.9,
+          -0.16,
+          -0.16
+        ],
+        "expected_extent_max_m": [
+          0.9,
+          0.16,
+          0.16
+        ]
+      },
+      "render_topology": {
+        "vertex_count": 26,
+        "face_count": 36,
+        "index_count": 120,
+        "finite": true,
+        "minimum_face_area_m2": 0.0063999997138977065,
+        "degenerate_face_count": 0,
+        "unique_edge_count": 60,
+        "nonmanifold_or_open_edge_count": 0,
+        "closed_manifold": true,
+        "outward_winding": true,
+        "extent_min_m": [
+          -0.8999999761581421,
+          -0.1599999964237213,
+          -0.1599999964237213
+        ],
+        "extent_max_m": [
+          0.8999999761581421,
+          0.1599999964237213,
+          0.1599999964237213
+        ],
+        "expected_extent_min_m": [
+          -0.9,
+          -0.16,
+          -0.16
+        ],
+        "expected_extent_max_m": [
+          0.9,
+          0.16,
+          0.16
+        ]
+      },
+      "root_world_transform": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "analytic_world_transform": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "proxy_world_transform": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "render_world_transform": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "world_transforms_match": true,
+      "emitter_center_world_m": [
+        0.0,
+        0.0,
+        0.55
+      ],
+      "emitter_center_local_m": [
+        0.0,
+        0.0,
+        -0.44999999999999996
+      ],
+      "emitter_radius_m": 0.1,
+      "emitter_signed_distance_m": 0.2899999999999999,
+      "emitter_surface_gap_m": 0.18999999999999992,
+      "emitter_outside": true
+    },
+    "rois_prepared_but_not_sampled": {
+      "below": {
+        "local_min": [
+          -0.35,
+          -0.12,
+          -0.36
+        ],
+        "local_max": [
+          0.35,
+          0.12,
+          -0.21000000000000002
+        ]
+      },
+      "inside": {
+        "local_min": [
+          -0.75,
+          -0.16,
+          -0.16
+        ],
+        "local_max": [
+          0.75,
+          0.16,
+          0.16
+        ]
+      },
+      "inside_core": {
+        "local_min": [
+          -0.65,
+          -0.11,
+          -0.11
+        ],
+        "local_max": [
+          0.65,
+          0.11,
+          0.11
+        ]
+      },
+      "inside_side_center": {
+        "local_min": [
+          -0.35,
+          0.11,
+          -0.1
+        ],
+        "local_max": [
+          0.35,
+          0.16,
+          0.1
+        ]
+      },
+      "inside_end": {
+        "local_min": [
+          0.75,
+          -0.11,
+          -0.11
+        ],
+        "local_max": [
+          0.85,
+          0.11,
+          0.11
+        ]
+      },
+      "above": {
+        "local_min": [
+          -0.35,
+          -0.12,
+          0.16
+        ],
+        "local_max": [
+          0.35,
+          0.12,
+          0.36
+        ]
+      },
+      "above_far": {
+        "local_min": [
+          -0.35,
+          -0.12,
+          0.21000000000000002
+        ],
+        "local_max": [
+          0.35,
+          0.12,
+          0.58
+        ]
+      },
+      "side_outside": {
+        "local_min": [
+          -0.35,
+          0.21000000000000002,
+          -0.12
+        ],
+        "local_max": [
+          0.35,
+          0.44000000000000006,
+          0.12
+        ]
+      }
+    },
+    "authored_flow_settings": {
+      "density_cell_size_m": 0.025,
+      "velocity_cell_size_m": "not observed; stage crashed before readback",
+      "physics_collision_enabled": true,
+      "physics_convex_collision": true,
+      "steps_per_second": 60.0
+    }
+  },
+  "runner": {
+    "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "production_changed": false,
+    "relevant_crash_registry_unchanged": true
+  },
+  "crash": {
+    "condition": "mesh_hull",
+    "run_index": 1,
+    "exit_code_signed": -1073741819,
+    "exit_code_hex": "0xC0000005",
+    "exception_classification": "Windows native access violation",
+    "last_lifecycle_marker": "opening_prebuilt_stage",
+    "probe_status": "running",
+    "fault_boundary": "omni.fabric.plugin.dll+0xCE5B0 at Hydra/RTX stage-open startup",
+    "native_stack_low_confidence": [
+      "omni.fabric.plugin.dll+0xCE5B0",
+      "usdrt.hydra.fabric_scene_delegate.plugin.dll+0xE5415",
+      "omni.hydra.usdrt_delegate.plugin.dll+0x4FD3",
+      "rtx.hydra.dll+0xF36"
+    ],
+    "dump": {
+      "local_repo_relative_path": "artifacts/phase6du-static-cylinder-1/mesh_hull/run-1/sensitive-crash-dumps/953fdc43-2f84-4274-8521-a0756be3cda9.dmp.zip",
+      "bytes": 1516001,
+      "sha256": "BA2043E0F9BE79A1B957ABDBD283BA73826B7D3D3E395B350251DB432FEB6734",
+      "sensitive_git_ignored": true
+    },
+    "automatic_upload_attempt_count": 0,
+    "same_condition_retried": false,
+    "causality": "unconfirmed; no collision-schema or geometry cause is claimed from one stage-open crash"
+  }
+}

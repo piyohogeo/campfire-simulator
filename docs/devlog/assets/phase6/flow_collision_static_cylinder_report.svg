@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">Phase 6DU static cylindrical Flow collision proxy qualification</title>
+<desc id="desc">Offline cylinder mesh gates passed, but the first full convexHull run stopped at a native stage-open crash before Flow samples.</desc>
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07131f"/><stop offset="1" stop-color="#102337"/></linearGradient></defs>
+<style>.k{font:700 18px 'Segoe UI';letter-spacing:1.5px;fill:#7dd3fc}.t{font:700 34px 'Segoe UI';fill:#f8fafc}.h{font:700 21px 'Segoe UI';fill:#f8fafc}.v{font:700 27px 'Segoe UI';fill:#e2e8f0}.b{font:400 17px 'Segoe UI';fill:#cbd5e1}.s{font:400 15px 'Segoe UI';fill:#94a3b8}.ok{fill:#86efac}.bad{fill:#fca5a5}</style>
+<rect width="1280" height="720" rx="28" fill="url(#bg)"/>
+<text x="58" y="55" class="k">PHASE 6DU · STATIC CYLINDRICAL FLOW COLLISION PROXY</text>
+<text x="58" y="105" class="t">Shape gate passed; runtime qualification stopped safely.</text>
+<rect x="58" y="145" width="552" height="238" rx="20" fill="#0b2537" stroke="#155e75"/>
+<text x="84" y="182" class="h">Offline cylindrical Mesh</text>
+<text x="84" y="226" class="v">26 vertices · 36 faces · 12 segments</text>
+<text x="84" y="265" class="b">Closed manifold · outward winding · finite · no degenerate faces</text>
+<text x="84" y="300" class="b">Radius 0.16 m · length 1.8 m · local axis X</text>
+<text x="84" y="335" class="b">Emitter surface gap 0.190 m · transforms identical</text>
+<text x="84" y="365" class="s">Stage and schemas were fully authored before stage connection.</text>
+<rect x="632" y="145" width="590" height="238" rx="20" fill="#331720" stroke="#b91c1c"/>
+<text x="658" y="182" class="h">Fail-fast boundary</text>
+<text x="658" y="226" class="v bad">Native 0xC0000005</text>
+<text x="658" y="265" class="b">Last marker: opening_prebuilt_stage</text>
+<text x="658" y="300" class="b">omni.fabric.plugin.dll+0xCE5B0 at Hydra/RTX stage-open startup</text>
+<text x="658" y="335" class="b">Dump preserved locally · automatic upload 0 · no retry</text>
+<text x="658" y="365" class="s">No Flow ROI sample or rendered comparison was accepted.</text>
+<path d="M120 460 H360" stroke="#38bdf8" stroke-width="5"/><circle cx="120" cy="460" r="12" fill="#22c55e"/><circle cx="240" cy="460" r="12" fill="#22c55e"/><circle cx="360" cy="460" r="12" fill="#ef4444"/>
+<text x="84" y="505" class="b">Author geometry</text><text x="210" y="535" class="b">Save stage</text><text x="328" y="505" class="b">Open stage</text>
+<rect x="58" y="568" width="1164" height="98" rx="18" fill="#12231b" stroke="#166534"/>
+<text x="84" y="607" class="h ok">Decision: qualification unresolved; production and latest demo remain unchanged.</text>
+<text x="84" y="641" class="b">Rotation, coexistence, PhysX filtering, RenderSurface reuse, dynamic Transform, and 20-log integration were not run.</text>
+</svg>

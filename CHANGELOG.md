@@ -1,5 +1,11 @@
 # Changelog
 
+- Added the production-neutral Phase 6DU static cylindrical Mesh proxy probe with a 12-segment, closed-manifold `0.16 m × 1.8 m` cylinder, local-cylinder ROIs, stage-before-connect authoring, public readback path, and crash-safe isolated runner.
+- Passed every offline geometry gate (`26` vertices, `36` faces, finite, outward winding, no degenerate/open edges), exact analytic/render/proxy transform parity, and a `0.190 m` emitter surface gap before the first runtime preflight.
+- Stopped the first `convexHull` preflight at a native stage-open `0xC0000005` in the Fabric/Hydra/RTX boundary, preserved the 1,516,001-byte dump outside Git, detected zero upload attempts, and did not retry or continue to rotation/coexistence conditions.
+- Recorded Phase 6DU as unresolved rather than treating the crash as a failed occlusion result. Production code/defaults and the latest-demo pointer remain unchanged; dynamic transforms and Phase 6DR integration are not ready.
+- Passed the Release build in `6.78 s` and the focused Flow-scene collider contract `1 / 1` in `0.093 s`; Phase 0 RTX and the full suite were not rerun because production code and app composition were unchanged.
+
 - Reproduced automatic PhysX-to-Flow collision with the bundled Flow 110.0.0 `PhysicsCollision.usda`: official Collision ON reduced temperature mean to `0.167659 / 0.003147 / 0` of OFF in the collider-core / above / far-above ROIs, and the rendered comparison showed matching occlusion.
 - Isolated the Phase 6DS missing boundary to collision representation. Adding the official schema bundle to a Cube changed nothing, while an equivalent Mesh with `PhysicsCollisionAPI`, `PhysicsMeshCollisionAPI`, and a convex approximation reduced core/above/far scalar channels to zero across three independent runs. The official auxiliary PhysX schemas, layer 2, `forceSimulate=false`, and app composition were not required.
 - Recorded one excluded `0xC0000005` startup crash during the incomplete Mesh-schema ablation without retrying or attributing causality; its dump remains local, automatic upload attempts were zero, and all 19 formal processes shut down cleanly with unchanged production hashes.
