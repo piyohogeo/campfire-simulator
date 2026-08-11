@@ -1,5 +1,5 @@
 param(
-    [ValidateSet("tree", "cdb_path", "gpu_inventory")][string]$Mode = "tree",
+    [ValidateSet("tree", "orphan_child", "cdb_path", "gpu_inventory")][string]$Mode = "tree",
     [Parameter(Mandatory = $true)][string]$MarkerPath,
     [ValidateRange(100, 10000)][int]$HoldMilliseconds = 750
 )
@@ -37,6 +37,15 @@ if ($Mode -in @("cdb_path", "gpu_inventory")) {
     }
     # Keep the short fixture alive long enough for the streaming sampler to
     # observe steady-state PowerShell allocation rather than only startup.
+    Start-Sleep -Milliseconds $HoldMilliseconds
+} elseif ($Mode -eq "orphan_child") {
+    $self = (Get-Process -Id $PID).Path
+    $child = Start-Process -FilePath $self -ArgumentList @("-NoProfile", "-NonInteractive", "-Command", "Start-Sleep -Seconds 30") -PassThru -WindowStyle Hidden
+    Write-Marker "orphan_child_started"
+    Write-Marker "orphan_child_pid_$($child.Id)"
+    $child.Dispose()
+    # Keep the parent alive long enough for the streaming guard to observe the
+    # child identity before the parent exits and deliberately orphans it.
     Start-Sleep -Milliseconds $HoldMilliseconds
 } else {
     $self = (Get-Process -Id $PID).Path

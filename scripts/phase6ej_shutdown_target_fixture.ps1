@@ -1,7 +1,8 @@
 param(
     [Parameter(Mandatory = $true)][string]$LifecyclePath,
     [Parameter(Mandatory = $true)][string]$LogPath,
-    [ValidateRange(1, 600)][int]$SleepSeconds = 120
+    [ValidateRange(1, 600)][int]$SleepSeconds = 120,
+    [switch]$ExclusiveLogLock
 )
 
 $ErrorActionPreference = "Stop"
@@ -19,5 +20,15 @@ $lifecycle = [ordered]@{
     }
 }
 [IO.File]::WriteAllText($LifecyclePath, (($lifecycle | ConvertTo-Json -Depth 8) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
-[IO.File]::WriteAllText($LogPath, "Phase 6EJ bounded shutdown target fixture`r`n", [Text.UTF8Encoding]::new($false))
-Start-Sleep -Seconds $SleepSeconds
+if ($ExclusiveLogLock) {
+    $bytes = [Text.UTF8Encoding]::new($false).GetBytes("Phase 6EJ exclusively locked log fixture`r`n")
+    $stream = [IO.FileStream]::new($LogPath, [IO.FileMode]::Create, [IO.FileAccess]::Write, [IO.FileShare]::None)
+    try {
+        $stream.Write($bytes, 0, $bytes.Length)
+        $stream.Flush($true)
+        Start-Sleep -Seconds $SleepSeconds
+    } finally { $stream.Dispose() }
+} else {
+    [IO.File]::WriteAllText($LogPath, "Phase 6EJ bounded shutdown target fixture`r`n", [Text.UTF8Encoding]::new($false))
+    Start-Sleep -Seconds $SleepSeconds
+}

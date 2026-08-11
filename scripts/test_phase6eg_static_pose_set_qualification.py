@@ -116,7 +116,9 @@ class Phase6EgContractTests(unittest.TestCase):
         self.assertIn('identity = (row["pid"], row["create_time_utc_epoch"])', source)
         self.assertIn('trace.write(json.dumps(record', source)
         self.assertIn('"nvidia-smi.exe"', source)
-        self.assertIn('current.create_time() != root_identity["create_time_utc_epoch"]', source)
+        self.assertIn("def _matching_observed_process", source)
+        self.assertIn("process.create_time()", source)
+        self.assertIn('"observed_process_cleanup": observed_cleanup', source)
         self.assertIn('"machine_minima": machine_minima', source)
         self.assertIn('"536870912"', calibration)
         self.assertIn('"12884901888"', calibration)
@@ -248,6 +250,32 @@ class Phase6EgContractTests(unittest.TestCase):
         self.assertEqual("shutdown_complete", report["functional_evidence_before_rejection"]["last_durable_marker"])
         self.assertEqual("runner_private_limit", report["resource_guard"]["stop_reason"])
         self.assertFalse(report["pending_after_phase6eg"]["implemented"])
+
+    def test_phase6ek_records_fourth_root_safe_stop_without_accepting_partial_population(self):
+        path = ROOT / "docs" / "devlog" / "assets" / "phase6" / "static_pose_restart_shutdown_safe_stop.json"
+        report = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual("safe_stop", report["status"])
+        self.assertFalse(report["qualification"]["phase6eg_qualified"])
+        self.assertEqual(8, report["qualification"]["completed_normal_exit_incremental_gate_processes"])
+        self.assertEqual(0, report["qualification"]["accepted_formal_population"])
+        self.assertEqual("run_1/P4_y24_z31_on", report["qualification"]["active_failed_condition"])
+        self.assertTrue(all(item["numeric"]["pass"] for item in report["qualification"]["completed_conditions"]))
+        self.assertEqual(4, report["active_condition"]["velocity_samples_written"])
+        self.assertFalse(report["active_condition"]["normal_os_exit"])
+        self.assertFalse(report["active_condition"]["incremental_numeric_gate_written"])
+        self.assertLess(
+            report["active_condition"]["shutdown_cpu_by_section"]["timeline_stopped"]["mean_percent_of_logical_total"],
+            1.0,
+        )
+        self.assertTrue(report["policy_correction"]["locked_log_fixture"]["log_capture_error_recorded"])
+        self.assertTrue(report["policy_correction"]["observed_descendant_cleanup"]["all_observed_absent"])
+        self.assertFalse(report["production"]["changed"])
+        self.assertNotIn("C:\\Users\\", path.read_text(encoding="utf-8"))
+        devlog = (ROOT / "docs" / "devlog" / "index.html").read_text(encoding="utf-8")
+        self.assertIn('id="phase-6ek"', devlog)
+        self.assertIn("static_pose_restart_shutdown_safe_stop.svg", devlog)
+        section = devlog.split('id="phase-6ek"', 1)[1].split('id="phase-6ej"', 1)[0]
+        self.assertNotIn("video-trigger", section)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,632 @@
+{
+  "schema": "campfire.phase6ek.phase6eg-restart-safe-stop.v1",
+  "phase": "phase6ek",
+  "status": "safe_stop",
+  "generated_utc": "2026-08-11T21:57:00.472601+00:00",
+  "frozen_contract": {
+    "sha256": "4BAED82160A08C061D479BCCA6B6A46866DE88F5046851D2AF140D36D8C80687",
+    "planned_processes": 36,
+    "prior_samples_reused": false,
+    "pose_order_threshold_mesh_emitter_flow_changed": false
+  },
+  "qualification": {
+    "phase6eg_qualified": false,
+    "completed_normal_exit_incremental_gate_processes": 8,
+    "accepted_formal_population": 0,
+    "active_failed_condition": "run_1/P4_y24_z31_on",
+    "automatic_retry": false,
+    "later_processes_started": false,
+    "collision_failure_observed": false,
+    "completed_conditions": [
+      {
+        "run": 1,
+        "condition": "P0_identity_on",
+        "functional_status": "pass",
+        "lifecycle_status": "normal_exit",
+        "exit_code": 0,
+        "active_blocks_final": 26,
+        "source_fuel": 0.800000011920929,
+        "runner_peak_private_bytes": 95473664,
+        "kit_peak_private_bytes": 11979726848,
+        "diagnostic_peak_private_bytes": 16887808,
+        "tree_peak_private_bytes": 12118073344,
+        "minimum_available_physical_bytes": 94588968960,
+        "minimum_commit_headroom_bytes": 113602220032,
+        "spatial_peak_rss_bytes": 6790471680,
+        "spatial_peak_rss_delta_bytes": 558686208,
+        "numeric": {
+          "pass": true,
+          "pair_available": false,
+          "deep_maximum_m_s": 0.0,
+          "center_maximum_m_s": 0.0,
+          "boundary_p95_maximum_m_s": 0.01472094655036926,
+          "boundary_maximum_m_s": 2.831104278564453,
+          "worst_on_off_deep_ratio": null,
+          "stale_position_checks_pass": null
+        },
+        "shutdown_cpu": {
+          "process_startup": {
+            "sample_count": 24,
+            "mean_percent_of_logical_total": 7.672691791352516,
+            "maximum_percent_of_logical_total": 29.44473565470281
+          },
+          "opening_prebuilt_stage": {
+            "sample_count": 16,
+            "mean_percent_of_logical_total": 0.8424488836618566,
+            "maximum_percent_of_logical_total": 2.395512507941057
+          },
+          "timeline_playing": {
+            "sample_count": 50,
+            "mean_percent_of_logical_total": 2.278699877409383,
+            "maximum_percent_of_logical_total": 3.949843665536626
+          },
+          "measurement_complete": {
+            "sample_count": 1,
+            "mean_percent_of_logical_total": 2.6901903613990963,
+            "maximum_percent_of_logical_total": 2.6901903613990963
+          },
+          "timeline_stopped": {
+            "sample_count": 3,
+            "mean_percent_of_logical_total": 0.598104262003058,
+            "maximum_percent_of_logical_total": 0.8979266137907148
+          },
+          "shutdown_complete": {
+            "sample_count": 17,
+            "mean_percent_of_logical_total": 0.8370118883068871,
+            "maximum_percent_of_logical_total": 1.7130076499843587
+          }
+        }
+      },
+      {
+        "run": 1,
+        "condition": "P0_identity_off",
+        "functional_status": "pass",
+        "lifecycle_status": "normal_exit",
+        "exit_code": 0,
+        "active_blocks_final": 58,
+        "source_fuel": 0.800000011920929,
+        "runner_peak_private_bytes": 101220352,
+        "kit_peak_private_bytes": 11985219584,
+        "diagnostic_peak_private_bytes": 16887808,
+        "tree_peak_private_bytes": 12137025536,
+        "minimum_available_physical_bytes": 94783303680,
+        "minimum_commit_headroom_bytes": 113796554752,
+        "spatial_peak_rss_bytes": 6684708864,
+        "spatial_peak_rss_delta_bytes": 625549312,
+        "numeric": {
+          "pass": true,
+          "pair_available": true,
+          "deep_maximum_m_s": 8.826881408691406,
+          "center_maximum_m_s": 8.357105255126953,
+          "boundary_p95_maximum_m_s": 1.2706607520580278,
+          "boundary_maximum_m_s": 8.928284645080566,
+          "worst_on_off_deep_ratio": 0.0,
+          "stale_position_checks_pass": null
+        },
+        "shutdown_cpu": {
+          "process_startup": {
+            "sample_count": 25,
+            "mean_percent_of_logical_total": 8.018960863781631,
+            "maximum_percent_of_logical_total": 28.723962049731053
+          },
+          "opening_prebuilt_stage": {
+            "sample_count": 14,
+            "mean_percent_of_logical_total": 0.880813404084351,
+            "maximum_percent_of_logical_total": 1.8819393799657997
+          },
+          "timeline_playing": {
+            "sample_count": 51,
+            "mean_percent_of_logical_total": 2.396360539362084,
+            "maximum_percent_of_logical_total": 3.9498709340047364
+          },
+          "measurement_complete": {
+            "sample_count": 1,
+            "mean_percent_of_logical_total": 2.2279616763645915,
+            "maximum_percent_of_logical_total": 2.2279616763645915
+          },
+          "timeline_stopped": {
+            "sample_count": 9,
+            "mean_percent_of_logical_total": 1.0571215438966732,
+            "maximum_percent_of_logical_total": 1.6141711122527407
+          },
+          "shutdown_complete": {
+            "sample_count": 12,
+            "mean_percent_of_logical_total": 1.5104369567241058,
+            "maximum_percent_of_logical_total": 2.9151917296841248
+          }
+        }
+      },
+      {
+        "run": 1,
+        "condition": "P1_y40_on",
+        "functional_status": "pass",
+        "lifecycle_status": "normal_exit",
+        "exit_code": 0,
+        "active_blocks_final": 24,
+        "source_fuel": 0.800000011920929,
+        "runner_peak_private_bytes": 99594240,
+        "kit_peak_private_bytes": 11767181312,
+        "diagnostic_peak_private_bytes": 16875520,
+        "tree_peak_private_bytes": 11909152768,
+        "minimum_available_physical_bytes": 94948044800,
+        "minimum_commit_headroom_bytes": 113961295872,
+        "spatial_peak_rss_bytes": 6616780800,
+        "spatial_peak_rss_delta_bytes": 645427200,
+        "numeric": {
+          "pass": true,
+          "pair_available": false,
+          "deep_maximum_m_s": 8.352522854693234e-06,
+          "center_maximum_m_s": 8.352522854693234e-06,
+          "boundary_p95_maximum_m_s": 0.10412837825715347,
+          "boundary_maximum_m_s": 3.1623966693878174,
+          "worst_on_off_deep_ratio": null,
+          "stale_position_checks_pass": null
+        },
+        "shutdown_cpu": {
+          "process_startup": {
+            "sample_count": 24,
+            "mean_percent_of_logical_total": 8.421288513068538,
+            "maximum_percent_of_logical_total": 30.015805747319636
+          },
+          "opening_prebuilt_stage": {
+            "sample_count": 7,
+            "mean_percent_of_logical_total": 0.7944107595456685,
+            "maximum_percent_of_logical_total": 1.3278918727733051
+          },
+          "timeline_playing": {
+            "sample_count": 86,
+            "mean_percent_of_logical_total": 2.6072164398470887,
+            "maximum_percent_of_logical_total": 4.498960164651398
+          },
+          "timeline_stopped": {
+            "sample_count": 5,
+            "mean_percent_of_logical_total": 1.333744077925734,
+            "maximum_percent_of_logical_total": 2.390308629052083
+          },
+          "shutdown_complete": {
+            "sample_count": 54,
+            "mean_percent_of_logical_total": 1.7064484912975302,
+            "maximum_percent_of_logical_total": 4.438739859026162
+          }
+        }
+      },
+      {
+        "run": 1,
+        "condition": "P1_y40_off",
+        "functional_status": "pass",
+        "lifecycle_status": "normal_exit",
+        "exit_code": 0,
+        "active_blocks_final": 58,
+        "source_fuel": 0.800000011920929,
+        "runner_peak_private_bytes": 100278272,
+        "kit_peak_private_bytes": 11969957888,
+        "diagnostic_peak_private_bytes": 16875520,
+        "tree_peak_private_bytes": 12117184512,
+        "minimum_available_physical_bytes": 94824026112,
+        "minimum_commit_headroom_bytes": 113837277184,
+        "spatial_peak_rss_bytes": 6713769984,
+        "spatial_peak_rss_delta_bytes": 658575360,
+        "numeric": {
+          "pass": true,
+          "pair_available": true,
+          "deep_maximum_m_s": 9.09351921081543,
+          "center_maximum_m_s": 8.357105255126953,
+          "boundary_p95_maximum_m_s": 1.7267936766147538,
+          "boundary_maximum_m_s": 9.40645694732666,
+          "worst_on_off_deep_ratio": 1.0753648856049525e-06,
+          "stale_position_checks_pass": true
+        },
+        "shutdown_cpu": {
+          "process_startup": {
+            "sample_count": 24,
+            "mean_percent_of_logical_total": 9.625397305943089,
+            "maximum_percent_of_logical_total": 30.337963258012003
+          },
+          "opening_prebuilt_stage": {
+            "sample_count": 14,
+            "mean_percent_of_logical_total": 0.8925158040858109,
+            "maximum_percent_of_logical_total": 2.3343996350746963
+          },
+          "timeline_playing": {
+            "sample_count": 86,
+            "mean_percent_of_logical_total": 2.2804693283570336,
+            "maximum_percent_of_logical_total": 4.140571451426146
+          },
+          "measurement_complete": {
+            "sample_count": 1,
+            "mean_percent_of_logical_total": 2.2195107743580396,
+            "maximum_percent_of_logical_total": 2.2195107743580396
+          },
+          "timeline_stopped": {
+            "sample_count": 24,
+            "mean_percent_of_logical_total": 0.8262452635887794,
+            "maximum_percent_of_logical_total": 1.6152380251322782
+          },
+          "shutdown_complete": {
+            "sample_count": 70,
+            "mean_percent_of_logical_total": 1.6870278562009098,
+            "maximum_percent_of_logical_total": 2.871133587599398
+          }
+        }
+      },
+      {
+        "run": 1,
+        "condition": "P2_roll_x17_on",
+        "functional_status": "pass",
+        "lifecycle_status": "normal_exit",
+        "exit_code": 0,
+        "active_blocks_final": 32,
+        "source_fuel": 0.800000011920929,
+        "runner_peak_private_bytes": 102596608,
+        "kit_peak_private_bytes": 11860312064,
+        "diagnostic_peak_private_bytes": 16879616,
+        "tree_peak_private_bytes": 12012843008,
+        "minimum_available_physical_bytes": 94900899840,
+        "minimum_commit_headroom_bytes": 113914150912,
+        "spatial_peak_rss_bytes": 6645497856,
+        "spatial_peak_rss_delta_bytes": 600293376,
+        "numeric": {
+          "pass": true,
+          "pair_available": false,
+          "deep_maximum_m_s": 7.300534889509436e-06,
+          "center_maximum_m_s": 2.980232238769531e-07,
+          "boundary_p95_maximum_m_s": 0.015165542811155279,
+          "boundary_maximum_m_s": 3.0230672359466553,
+          "worst_on_off_deep_ratio": null,
+          "stale_position_checks_pass": null
+        },
+        "shutdown_cpu": {
+          "process_startup": {
+            "sample_count": 24,
+            "mean_percent_of_logical_total": 8.696494396834387,
+            "maximum_percent_of_logical_total": 31.65980033298963
+          },
+          "opening_prebuilt_stage": {
+            "sample_count": 7,
+            "mean_percent_of_logical_total": 1.3086138781125738,
+            "maximum_percent_of_logical_total": 1.8584697683888858
+          },
+          "timeline_playing": {
+            "sample_count": 55,
+            "mean_percent_of_logical_total": 2.54370666083751,
+            "maximum_percent_of_logical_total": 3.9471610780271953
+          },
+          "measurement_complete": {
+            "sample_count": 1,
+            "mean_percent_of_logical_total": 2.3914722062878324,
+            "maximum_percent_of_logical_total": 2.3914722062878324
+          },
+          "timeline_stopped": {
+            "sample_count": 5,
+            "mean_percent_of_logical_total": 0.7531756160611682,
+            "maximum_percent_of_logical_total": 1.6141785336893102
+          },
+          "shutdown_complete": {
+            "sample_count": 9,
+            "mean_percent_of_logical_total": 0.550051228638587,
+            "maximum_percent_of_logical_total": 1.1970447956607126
+          }
+        }
+      },
+      {
+        "run": 1,
+        "condition": "P2_roll_x17_off",
+        "functional_status": "pass",
+        "lifecycle_status": "normal_exit",
+        "exit_code": 0,
+        "active_blocks_final": 58,
+        "source_fuel": 0.800000011920929,
+        "runner_peak_private_bytes": 100093952,
+        "kit_peak_private_bytes": 12006707200,
+        "diagnostic_peak_private_bytes": 16883712,
+        "tree_peak_private_bytes": 12158025728,
+        "minimum_available_physical_bytes": 94917226496,
+        "minimum_commit_headroom_bytes": 113930477568,
+        "spatial_peak_rss_bytes": 6658641920,
+        "spatial_peak_rss_delta_bytes": 643117056,
+        "numeric": {
+          "pass": true,
+          "pair_available": true,
+          "deep_maximum_m_s": 8.826881408691406,
+          "center_maximum_m_s": 8.357105255126953,
+          "boundary_p95_maximum_m_s": 1.2497273921966525,
+          "boundary_maximum_m_s": 8.928284645080566,
+          "worst_on_off_deep_ratio": 9.399242603569763e-07,
+          "stale_position_checks_pass": null
+        },
+        "shutdown_cpu": {
+          "process_startup": {
+            "sample_count": 24,
+            "mean_percent_of_logical_total": 8.747501152016403,
+            "maximum_percent_of_logical_total": 32.12097473784565
+          },
+          "opening_prebuilt_stage": {
+            "sample_count": 23,
+            "mean_percent_of_logical_total": 0.4646601454498044,
+            "maximum_percent_of_logical_total": 1.799189815513861
+          },
+          "timeline_playing": {
+            "sample_count": 56,
+            "mean_percent_of_logical_total": 2.3603293892837556,
+            "maximum_percent_of_logical_total": 3.956298600618304
+          },
+          "measurement_complete": {
+            "sample_count": 1,
+            "mean_percent_of_logical_total": 2.3305447081463035,
+            "maximum_percent_of_logical_total": 2.3305447081463035
+          },
+          "timeline_stopped": {
+            "sample_count": 12,
+            "mean_percent_of_logical_total": 0.6952032077735403,
+            "maximum_percent_of_logical_total": 2.050855602796102
+          },
+          "shutdown_complete": {
+            "sample_count": 43,
+            "mean_percent_of_logical_total": 1.4258631925415772,
+            "maximum_percent_of_logical_total": 3.94959523683513
+          }
+        }
+      },
+      {
+        "run": 1,
+        "condition": "P3_z33_on",
+        "functional_status": "pass",
+        "lifecycle_status": "normal_exit",
+        "exit_code": 0,
+        "active_blocks_final": 34,
+        "source_fuel": 0.800000011920929,
+        "runner_peak_private_bytes": 99688448,
+        "kit_peak_private_bytes": 12031737856,
+        "diagnostic_peak_private_bytes": 16871424,
+        "tree_peak_private_bytes": 12179152896,
+        "minimum_available_physical_bytes": 94757695488,
+        "minimum_commit_headroom_bytes": 113770946560,
+        "spatial_peak_rss_bytes": 6707470336,
+        "spatial_peak_rss_delta_bytes": 634167296,
+        "numeric": {
+          "pass": true,
+          "pair_available": false,
+          "deep_maximum_m_s": 3.918523816537345e-06,
+          "center_maximum_m_s": 3.918523816537345e-06,
+          "boundary_p95_maximum_m_s": 0.004876111820340145,
+          "boundary_maximum_m_s": 2.5665783882141113,
+          "worst_on_off_deep_ratio": null,
+          "stale_position_checks_pass": null
+        },
+        "shutdown_cpu": {
+          "process_startup": {
+            "sample_count": 24,
+            "mean_percent_of_logical_total": 8.498559274196424,
+            "maximum_percent_of_logical_total": 32.994303310624204
+          },
+          "starting": {
+            "sample_count": 1,
+            "mean_percent_of_logical_total": 0.9312657233508742,
+            "maximum_percent_of_logical_total": 0.9312657233508742
+          },
+          "opening_prebuilt_stage": {
+            "sample_count": 10,
+            "mean_percent_of_logical_total": 1.0186324032090912,
+            "maximum_percent_of_logical_total": 2.225239002779668
+          },
+          "timeline_playing": {
+            "sample_count": 80,
+            "mean_percent_of_logical_total": 2.2379436108627395,
+            "maximum_percent_of_logical_total": 3.764880473651644
+          },
+          "timeline_stopped": {
+            "sample_count": 10,
+            "mean_percent_of_logical_total": 0.8808193221435425,
+            "maximum_percent_of_logical_total": 2.156296155993673
+          },
+          "shutdown_complete": {
+            "sample_count": 48,
+            "mean_percent_of_logical_total": 1.7364890205225698,
+            "maximum_percent_of_logical_total": 2.9026679558705433
+          }
+        }
+      },
+      {
+        "run": 1,
+        "condition": "P3_z33_off",
+        "functional_status": "pass",
+        "lifecycle_status": "normal_exit",
+        "exit_code": 0,
+        "active_blocks_final": 58,
+        "source_fuel": 0.800000011920929,
+        "runner_peak_private_bytes": 95649792,
+        "kit_peak_private_bytes": 12036837376,
+        "diagnostic_peak_private_bytes": 17121280,
+        "tree_peak_private_bytes": 12170706944,
+        "minimum_available_physical_bytes": 94787272704,
+        "minimum_commit_headroom_bytes": 113800523776,
+        "spatial_peak_rss_bytes": 6657327104,
+        "spatial_peak_rss_delta_bytes": 629997568,
+        "numeric": {
+          "pass": true,
+          "pair_available": true,
+          "deep_maximum_m_s": 8.826881408691406,
+          "center_maximum_m_s": 8.175348281860352,
+          "boundary_p95_maximum_m_s": 1.3073453247547122,
+          "boundary_maximum_m_s": 8.928284645080566,
+          "worst_on_off_deep_ratio": 5.044994176032969e-07,
+          "stale_position_checks_pass": true
+        },
+        "shutdown_cpu": {
+          "process_startup": {
+            "sample_count": 26,
+            "mean_percent_of_logical_total": 8.277436167460865,
+            "maximum_percent_of_logical_total": 28.823919609369344
+          },
+          "opening_prebuilt_stage": {
+            "sample_count": 223,
+            "mean_percent_of_logical_total": 0.17200599280352943,
+            "maximum_percent_of_logical_total": 2.153127339486836
+          },
+          "timeline_playing": {
+            "sample_count": 78,
+            "mean_percent_of_logical_total": 2.2651058611884696,
+            "maximum_percent_of_logical_total": 4.486689724483733
+          },
+          "measurement_complete": {
+            "sample_count": 1,
+            "mean_percent_of_logical_total": 3.42605541912301,
+            "maximum_percent_of_logical_total": 3.42605541912301
+          },
+          "timeline_stopped": {
+            "sample_count": 3,
+            "mean_percent_of_logical_total": 1.076853179867716,
+            "maximum_percent_of_logical_total": 1.0779502891048112
+          },
+          "shutdown_complete": {
+            "sample_count": 31,
+            "mean_percent_of_logical_total": 1.6489386415627245,
+            "maximum_percent_of_logical_total": 2.729143463471117
+          }
+        }
+      }
+    ]
+  },
+  "active_condition": {
+    "probe_status": "ok",
+    "last_probe_marker": "timeline_stopped",
+    "velocity_samples_written": 4,
+    "sample_frames": [
+      60,
+      120,
+      180,
+      200
+    ],
+    "active_blocks_final": 42,
+    "source_fuel": 0.800000011920929,
+    "normal_os_exit": false,
+    "lifecycle_status": "unknown_shutdown_failure",
+    "incremental_numeric_gate_written": false,
+    "diagnostic_markers": [
+      "diagnostic_child_process_started",
+      "process_identity_started",
+      "process_identity_complete",
+      "capture_lock_acquired",
+      "kit_log_parse_started",
+      "cleanup_started",
+      "cleanup_complete",
+      "diagnostic_child_process_failed",
+      "parent_process_returned"
+    ],
+    "diagnostic_report_written": false,
+    "shutdown_cpu_by_section": {
+      "process_startup": {
+        "sample_count": 25,
+        "mean_percent_of_logical_total": 7.996870896977047,
+        "maximum_percent_of_logical_total": 31.26874963731046
+      },
+      "opening_prebuilt_stage": {
+        "sample_count": 26,
+        "mean_percent_of_logical_total": 0.6697288367898179,
+        "maximum_percent_of_logical_total": 2.688136758957612
+      },
+      "timeline_playing": {
+        "sample_count": 142,
+        "mean_percent_of_logical_total": 2.755727775064976,
+        "maximum_percent_of_logical_total": 4.854744940093227
+      },
+      "measurement_complete": {
+        "sample_count": 1,
+        "mean_percent_of_logical_total": 2.0473738448324554,
+        "maximum_percent_of_logical_total": 2.0473738448324554
+      },
+      "timeline_stopped": {
+        "sample_count": 848,
+        "mean_percent_of_logical_total": 0.17001500652211474,
+        "maximum_percent_of_logical_total": 2.0566236801689084
+      },
+      "diagnostic_child_process_failed": {
+        "sample_count": 1,
+        "mean_percent_of_logical_total": 0.0,
+        "maximum_percent_of_logical_total": 0.0
+      },
+      "parent_process_returned": {
+        "sample_count": 50,
+        "mean_percent_of_logical_total": 0.07188989794076385,
+        "maximum_percent_of_logical_total": 0.35990546770082377
+      }
+    },
+    "resource_peaks_bytes": {
+      "runner": 99385344,
+      "kit": 12097118208,
+      "diagnostic": 82968576,
+      "child": 62439424,
+      "tree": 12232523776
+    },
+    "resource_limits": {
+      "runner_private_bytes": 536870912,
+      "kit_private_bytes": 15032385536,
+      "diagnostic_private_bytes": 536870912,
+      "tree_private_bytes": 17179869184,
+      "available_memory_floor_bytes": 8589934592,
+      "commit_headroom_floor_bytes": 8589934592,
+      "timeout_seconds": 720.0
+    },
+    "minimum_machine_headroom_bytes": {
+      "available_physical_bytes": 93294587904,
+      "estimated_commit_headroom_bytes": 112307838976
+    }
+  },
+  "cause_classification": {
+    "observed_facts": [
+      "P4 completed Flow measurement and timeline stop but did not reach normal OS exit",
+      "the isolated diagnostic failed while File.ReadLines opened Kit's exclusively-held log",
+      "CDB was unavailable, so no accepted NGX stack signature was obtained",
+      "the silent timeline-stopped interval had low Kit CPU rather than sustained spin",
+      "the original guard confirmed only root absence; one exactly identified Kit descendant remained until safely stopped"
+    ],
+    "strong_inference": [
+      "the observed silent interval is a low-CPU shutdown wait in this run",
+      "exclusive Kit-log ownership was the immediate diagnostic-report failure, not a resource-limit breach"
+    ],
+    "unconfirmed": [
+      "the native wait owner and whether it matches the known NGX shutdown stack",
+      "whether P4 would satisfy the frozen numeric gate after a normal OS exit"
+    ]
+  },
+  "policy_correction": {
+    "locked_kit_log_is_auxiliary": true,
+    "locked_log_fixture": {
+      "status": "ok",
+      "diagnostic_report_written": true,
+      "log_capture_error_recorded": true,
+      "diagnostic_capture_succeeded": false
+    },
+    "observed_descendant_cleanup": {
+      "fixture_status": "failed",
+      "stop_reason": "observed_descendant_residual",
+      "cleanup_required": true,
+      "all_observed_absent": true,
+      "identity": "pid + creation time + exact executable path"
+    }
+  },
+  "safety": {
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "active_kit_residual_safely_removed": true,
+    "post_cleanup_residual_count": 0
+  },
+  "production": {
+    "changed": false,
+    "app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A"
+  },
+  "next_boundary": "do not resume the 36-process matrix automatically; require a fresh root and explicit approval after this safe stop",
+  "pending_after_phase6eg": {
+    "name": "PointEmitter-CollisionProxy coexistence",
+    "blocked_until": "all 36 Phase 6EG processes qualify",
+    "implemented": false
+  },
+  "artifacts": {
+    "formal_safe_stop": "artifacts/phase6eg-static-pose-qualification-4",
+    "locked_log_fixture": "artifacts/phase6ek-locked-log-fixture-1",
+    "orphan_cleanup_fixture": "artifacts/phase6ek-orphan-cleanup-fixture-2",
+    "raw_artifacts_committed": false
+  }
+}

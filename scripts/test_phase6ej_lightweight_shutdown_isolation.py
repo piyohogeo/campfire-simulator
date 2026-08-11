@@ -59,6 +59,8 @@ class Phase6EjIsolationContract(unittest.TestCase):
         self.assertIn("MaximumCharactersPerLine = 8192", policy)
         self.assertIn("MaximumLines = 120", policy)
         self.assertIn("JSON output exceeds fixed bound", policy)
+        self.assertIn("Log tailing is auxiliary evidence", policy)
+        self.assertIn("log_capture_error = $logCaptureError", policy)
 
     def test_cpu_delta_is_normalized_to_all_logical_cpus(self):
         previous = {(10, 1.0): (1.0, 2.0)}
@@ -83,6 +85,17 @@ class Phase6EjIsolationContract(unittest.TestCase):
             "4BAED82160A08C061D479BCCA6B6A46866DE88F5046851D2AF140D36D8C80687",
             __import__("hashlib").sha256(contract.read_bytes()).hexdigest().upper(),
         )
+
+    def test_resource_guard_tracks_and_cleans_exact_observed_descendants(self):
+        source = (SCRIPTS / "phase6eg_resource_guard.py").read_text(encoding="utf-8")
+        self.assertIn("def _cleanup_observed_processes", source)
+        self.assertIn("process.create_time()", source)
+        self.assertIn("os.path.normcase(process.exe())", source)
+        self.assertIn('stop_reason = "observed_descendant_residual"', source)
+        self.assertIn('"observed_process_cleanup": observed_cleanup', source)
+        fixture = (SCRIPTS / "phase6eg_resource_guard_fixture.ps1").read_text(encoding="utf-8")
+        self.assertIn('"orphan_child"', fixture)
+        self.assertIn('"orphan_child_pid_$($child.Id)"', fixture)
 
     def test_phase6ej_never_restarts_the_formal_matrix(self):
         runner = (SCRIPTS / "run_phase6ej_lightweight_shutdown_isolation.ps1").read_text(encoding="utf-8")

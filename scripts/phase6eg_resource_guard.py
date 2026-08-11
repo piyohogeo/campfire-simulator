@@ -199,6 +199,53 @@ def _terminate_tree(root: psutil.Process) -> None:
     psutil.wait_procs(descendants + [root], timeout=10)
 
 
+def _matching_observed_process(record: dict) -> psutil.Process | None:
+    try:
+        process = psutil.Process(int(record["pid"]))
+        if abs(process.create_time() - float(record["create_time_utc_epoch"])) > 0.01:
+            return None
+        if os.path.normcase(process.exe()) != os.path.normcase(str(record["path"])):
+            return None
+        return process
+    except (psutil.AccessDenied, psutil.NoSuchProcess, psutil.ZombieProcess, OSError):
+        return None
+
+
+def _cleanup_observed_processes(observed: dict[tuple[int, float], dict], root_pid: int) -> dict:
+    alive = []
+    for record in observed.values():
+        process = _matching_observed_process(record)
+        if process is not None:
+            alive.append(process)
+    _, survivors = psutil.wait_procs(alive, timeout=2) if alive else ([], [])
+    killed = []
+    for process in survivors:
+        try:
+            process.kill()
+            killed.append(process.pid)
+        except (psutil.AccessDenied, psutil.NoSuchProcess):
+            pass
+    if survivors:
+        psutil.wait_procs(survivors, timeout=10)
+    remaining = []
+    for record in observed.values():
+        process = _matching_observed_process(record)
+        if process is not None:
+            remaining.append({"pid": process.pid, "path": record["path"], "create_time_utc_epoch": record["create_time_utc_epoch"]})
+    observed_before_cleanup = [
+        {"pid": process.pid, "path": next(record["path"] for record in observed.values() if record["pid"] == process.pid)}
+        for process in alive
+    ]
+    return {
+        "root_pid": root_pid,
+        "observed_alive_before_cleanup": observed_before_cleanup,
+        "cleanup_required": bool(alive),
+        "killed_pids": killed,
+        "remaining": remaining,
+        "all_observed_absent": not remaining,
+    }
+
+
 def _write_json(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".partial")
@@ -230,6 +277,7 @@ def run(arguments: argparse.Namespace) -> int:
     logical_cpu_count = max(1, psutil.cpu_count(logical=True) or 1)
     previous_cpu: dict[tuple[int, float], tuple[float, float]] = {}
     cpu_peaks = {"runner": 0.0, "kit": 0.0, "diagnostic": 0.0, "child": 0.0}
+    observed_processes: dict[tuple[int, float], dict] = {}
 
     with arguments.stdout.open("wb", buffering=0) as stdout, arguments.stderr.open("wb", buffering=0) as stderr, arguments.trace.open("w", encoding="utf-8", buffering=1) as trace:
         creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
@@ -239,6 +287,13 @@ def run(arguments: argparse.Namespace) -> int:
         while popen.poll() is None:
             timestamp = time.time()
             rows = _tree_rows(root, timestamp, arguments.cpu_telemetry)
+            for row in rows:
+                observed_processes[(row["pid"], row["create_time_utc_epoch"])] = {
+                    "pid": row["pid"],
+                    "create_time_utc_epoch": row["create_time_utc_epoch"],
+                    "path": row["path"],
+                    "role": row["role"],
+                }
             if arguments.cpu_telemetry:
                 _append_cpu_deltas(
                     rows,
@@ -323,13 +378,10 @@ def run(arguments: argparse.Namespace) -> int:
             _terminate_tree(root)
             exit_code = popen.poll()
 
-    process_absent = True
-    if root is not None:
-        try:
-            current = psutil.Process(root.pid)
-            process_absent = current.create_time() != root_identity["create_time_utc_epoch"]
-        except (psutil.AccessDenied, psutil.NoSuchProcess, psutil.ZombieProcess, OSError):
-            process_absent = True
+    observed_cleanup = _cleanup_observed_processes(observed_processes, root_identity["pid"])
+    process_absent = bool(observed_cleanup["all_observed_absent"])
+    if observed_cleanup["cleanup_required"] and stop_reason is None:
+        stop_reason = "observed_descendant_residual"
     summary = {
         "schema": "campfire.phase6eg.resource-guard.v1",
         "status": "ok" if stop_reason is None and exit_code == 0 and process_absent else "failed",
@@ -338,6 +390,7 @@ def run(arguments: argparse.Namespace) -> int:
         "exit_code": exit_code,
         "stop_reason": stop_reason,
         "process_absent": process_absent,
+        "observed_process_cleanup": observed_cleanup,
         "duration_seconds": time.time() - started,
         "sample_count": sample_count,
         "peaks": peaks,

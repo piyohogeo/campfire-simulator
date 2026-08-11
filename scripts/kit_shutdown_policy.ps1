@@ -225,8 +225,17 @@ function Invoke-CampfireLightweightNgxDiagnosticCore {
         if (Test-Path -LiteralPath $LifecyclePath) {
             try { $lifecycle = Read-CampfireBoundedJson -Path $LifecyclePath -MaximumBytes 1MB } catch {}
         }
-        $lastLog = @(Get-CampfireBoundedTailLines -Path $LogPath -MaximumLines 120 -MaximumCharactersPerLine 8192)
-        Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "kit_log_parse_complete" -Details @{ line_count = $lastLog.Count }
+        $lastLog = @()
+        $logCaptureError = $null
+        try {
+            $lastLog = @(Get-CampfireBoundedTailLines -Path $LogPath -MaximumLines 120 -MaximumCharactersPerLine 8192)
+        } catch {
+            # The Kit logger may temporarily hold an exclusive handle during a
+            # shutdown hang. Log tailing is auxiliary evidence and must not
+            # prevent the bounded diagnostic report from being committed.
+            $logCaptureError = $_.Exception.Message
+        }
+        Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "kit_log_parse_complete" -Details @{ line_count = $lastLog.Count; error = $logCaptureError }
 
         Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "gpu_inventory_started"
         $gpuInventoryCapture = Get-CampfireGpuInventory -OutputDir $output
@@ -290,6 +299,7 @@ function Invoke-CampfireLightweightNgxDiagnosticCore {
             lifecycle_history = if ($null -ne $lifecycle -and $null -ne $lifecycle.lifecycle_history) { @($lifecycle.lifecycle_history | Select-Object -Last 128) } else { @() }
             completion_contract = if ($null -ne $lifecycle -and $null -ne $lifecycle.completion_contract) { $lifecycle.completion_contract } else { $null }
             final_log_lines = @($lastLog)
+            log_capture_error = $logCaptureError
             gpu_inventory = @($gpuInventoryCapture.rows)
             gpu_inventory_capture = $gpuInventoryCapture.evidence
             debugger = [ordered]@{

@@ -1,5 +1,11 @@
 # Phase 6EA: Kit shutdown residual process diagnosis
 
+## Phase 6EK: locked-log and descendant-cleanup correction
+
+The approved Phase 6EG restart reached a low-CPU shutdown wait in P4 after Flow measurement. Kit held `kit.log` exclusively, so the isolated diagnostic failed before its bounded JSON report and CDB decision. Log tailing is auxiliary evidence: the diagnostic now records `log_capture_error` and continues. A dedicated exclusive-lock fixture persisted `kit_log_parse_complete`, GPU inventory, CDB decision, JSON commit, cleanup, normal child exit, and parent return. This does not make a capture successful when CDB is unavailable; known-NGX classification still requires the accepted stack signature and otherwise fails closed.
+
+The outer guard previously proved only root-process absence. It now stores every observed descendant identity as PID, creation time, and exact executable path. After root termination, exact surviving identities are rejected as `observed_descendant_residual`, stopped, and rechecked. An isolated orphan-child fixture verified both rejection and zero remainder. The original P4 residual Kit was stopped only after exact identity matching. The 512 MiB runner/diagnostic limits, 14 GiB Kit limit, 16 GiB tree limit, headroom floors, bounded output, and no-automatic-retry contracts are unchanged.
+
 ## Phase 6EJ: whole-diagnostic process isolation
 
 The lightweight diagnostic now runs entirely in a short-lived guarded PowerShell child. Identity validation, capture-lock ownership, isolated `nvidia-smi`, bounded lifecycle/log parsing, CDB necessity and capture, report commit, and cleanup no longer execute in the formal runner runspace. The child has a 90-second and 512-MiB ceiling, redirects stdout/stderr to files, writes through `.partial` plus atomic rename, and returns only a bounded JSON document or guarded failure state.

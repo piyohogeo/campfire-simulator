@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6ej">最新記録</a>
+        <a href="#phase-6ek">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6ej">Phase 6EJ診断隔離を読む</a>
+        <a class="button primary" href="#phase-6ek">Phase 6EK安全停止を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6EJ diagnostic isolation · pass</strong></div>
+        <div><span>現在地</span><strong>Phase 6EK formal restart · safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>P0 normal exit · matrix not restarted</strong></div>
+        <div><span>Lifecycle</span><strong>8 normal exits · P4 low-CPU wait</strong></div>
         <div><span>Production</span><strong>unchanged · Phase 6EG unqualified</strong></div>
       </div>
     </div>
@@ -56,6 +56,20 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6ek" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報"><span class="phase-number compact">6EK</span><p><time datetime="2026-08-12">2026.08.12</time></p><span class="pill current">Formal restart safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6EK · Phase 6EG fourth-root restart</p><h2>8条件はnormal exit。<br>P4の低CPU終了待機で安全停止。</h2><p>明示承認に従い、凍結済み36-process contractを新rootのprocess 1から再開しました。過去sampleは再利用せず、姿勢、順序、閾値、Mesh、Emitter、Flow設定を変更していません。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/static_pose_restart_shutdown_safe_stop.svg"><img src="assets/phase6/static_pose_restart_shutdown_safe_stop.svg" alt="Phase 6EKのP4 resource peakとtimeline stopped後のKit CPUを示す図" loading="lazy"></a><figcaption><div><strong>Fourth-root shutdown boundary</strong><span>P4はFlow計測完了後、低CPUの終了待機で停止。</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Completed partial evidence</p><h3>P0～P3 ON/OFF · 8 process</h3><p>8条件はfunctional pass、normal OS exit、4 velocity sample、incremental numeric gateを満たしました。ON deep最大はP0 <code>0</code>、P1 <code>8.352523e-6</code>、P2 <code>7.300535e-6</code>、P3 <code>3.918524e-6 m/s</code>です。ただし3 run・36条件を満たさないため正式qualificationへ採用しません。</p></section><section class="note caution"><p class="note-label">Active safe stop</p><h3><code>run_1/P4_y24_z31_on</code></h3><p>P4は4 sample、active blocks 42、fuel 0.8、<code>measurement_complete</code>、<code>timeline_stopped</code>まで到達しましたが、normal exitを確認できませんでした。停止後848 sampleのKit CPUは平均<code>0.1700%</code>、最大<code>2.0566%</code>で、継続的spinではなく低CPU waitです。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Fail-closed diagnosis</p><h3>排他Kitログと残留childの安全境界を補強。</h3><p>Kitが<code>kit.log</code>を排他保持したため診断childはlog読取で失敗し、CDBも利用不能だったので既知NGX署名とは分類していません。P4 sampleを破棄し、retryも後続条件開始も行いませんでした。</p><p>log tailは補助証拠とし、読取失敗を<code>log_capture_error</code>へ残して診断JSON・cleanupまで進めるよう修正しました。またguardは観測した全childをPID＋開始時刻＋正確なpathで保持し、親終了後の残留を失敗扱いして一致したprocessだけを停止・再確認します。locked-log fixtureとorphan-child fixtureが合格しました。</p><p>P4のrunner／diagnostic／Kit／tree peakは99.4 MB／83.0 MB／12.10 GB／12.23 GBで全上限内。fatal、dump、upload、device lost、TDRは0、production SHA-256は不変です。</p><p><a href="assets/phase6/static_pose_restart_shutdown_safe_stop.json">集計JSON</a> · <a href="assets/phase6/static_pose_restart_shutdown_safe_stop.svg">比較SVG</a> · <a href="../design/static_pose_set_collision_qualification.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>P0–P3</strong><small>8 normal exits</small></p></div><div role="listitem"><span>✓</span><p><strong>Incremental gates</strong><small>8 / 8 pass</small></p></div><div role="listitem"><span>!</span><p><strong>P4 lifecycle</strong><small>unknown wait</small></p></div><div role="listitem"><span>—</span><p><strong>Qualification</strong><small>0 / 36 complete</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>SHA unchanged</small></p></div></div></section>
+          <section class="note"><p class="note-label">Regression</p><h3>104/104 focused · 78/78 standard</h3><p>Release build 7.09秒、collision／resource／shutdown契約104/104、標準suite 8 process・78/78件（310.5秒）、日誌368 reference・190 JSON・156 SVGが合格しました。production appと凍結contractのSHA-256は不変で、Kit／CDB／診断helper残留は0です。</p></section>
+          <section class="note next"><p class="note-label">Stopped as requested</p><h3>自動再開せず、新rootと再承認を待つ。</h3><p>Phase 6EGは未qualifiedです。PointEmitter–CollisionProxy共存試験とproduction統合へ進みません。内部診断だけで画面上の変更はないため、新動画とlatest demo pointerも更新していません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6ej" class="section entry-section phase-six">

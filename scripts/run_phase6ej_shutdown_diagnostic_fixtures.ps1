@@ -1,4 +1,7 @@
-param([Parameter(Mandatory = $true)][string]$OutputRoot)
+param(
+    [Parameter(Mandatory = $true)][string]$OutputRoot,
+    [switch]$ExclusiveLogLock
+)
 
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version 3.0
@@ -15,10 +18,12 @@ function Start-Target([string]$Name) {
     New-Item -ItemType Directory -Path $dir | Out-Null
     $lifecycle = Join-Path $dir "target.json"
     $log = Join-Path $dir "target.log"
-    $process = Start-Process -FilePath $powershell -ArgumentList @(
+    $targetArguments = @(
         "-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass",
         "-File", $targetScript, "-LifecyclePath", $lifecycle, "-LogPath", $log, "-SleepSeconds", "120"
-    ) -PassThru -WindowStyle Hidden
+    )
+    if ($ExclusiveLogLock) { $targetArguments += "-ExclusiveLogLock" }
+    $process = Start-Process -FilePath $powershell -ArgumentList $targetArguments -PassThru -WindowStyle Hidden
     $deadline = [datetime]::UtcNow.AddSeconds(10)
     while (-not (Test-Path -LiteralPath $lifecycle -PathType Leaf) -and [datetime]::UtcNow -lt $deadline) { Start-Sleep -Milliseconds 50 }
     if (-not (Test-Path -LiteralPath $lifecycle -PathType Leaf)) { throw "target fixture did not become ready" }
