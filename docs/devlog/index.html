@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6ei">最新記録</a>
+        <a href="#phase-6ej">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6ei">Phase 6EI safe stopを読む</a>
+        <a class="button primary" href="#phase-6ej">Phase 6EJ診断隔離を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6EI approved restart · safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6EJ diagnostic isolation · pass</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>0 / 36 accepted · runner guard stop</strong></div>
+        <div><span>Lifecycle</span><strong>P0 normal exit · matrix not restarted</strong></div>
         <div><span>Production</span><strong>unchanged · Phase 6EG unqualified</strong></div>
       </div>
     </div>
@@ -56,6 +56,20 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6ej" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報"><span class="phase-number compact">6EJ</span><p><time datetime="2026-08-12">2026.08.12</time></p><span class="pill current">Diagnostic isolation passed</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6EJ · Lightweight shutdown diagnostic isolation</p><h2>終了診断を親runnerから隔離。<br>CPUの待機／spinも追跡可能に。</h2><p>Phase 6EIで親PowerShellが553.9 MBまで増えた境界を、診断全体の短命child化、flush済みmarker、低容量CPU telemetryで切り分けました。凍結済み36-process contractとproductionは変更していません。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/lightweight_shutdown_isolation_report.svg"><img src="assets/phase6/lightweight_shutdown_isolation_report.svg" alt="Phase 6EJの診断childメモリ、telemetry負荷、P0 CPU状態を示す図" loading="lazy"></a><figcaption><div><strong>Isolated diagnostic and CPU boundary</strong><span>親runner、診断child、Kitを分離して測定。</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Process isolation</p><h3>child peak 85.1 MB</h3><p>identity、capture lock、GPU inventory、log、CDB判断、JSON確定、cleanupを全てchildで実行します。強制timeout fixtureも71.2 MBで停止し、残留processは0でした。</p></section><section class="note"><p class="note-label">CPU telemetry</p><h3>shutdown mean 1.84%</h3><p>CPUは論理CPU全体を100%として計算します。P0のshutdownは最大3.77%で、startup以外に高CPU thread sampleはありませんでした。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">One-shot probe result</p><h3>P0はnormal exit。36条件は未再開。</h3><p>許可されたP0相当probeはvelocity 4 sample、active blocks 26、fuel 0.8、<code>shutdown_complete</code>、normal OS exitを満たしました。runner／diagnostic／Kit／tree peakは101.8 MB／16.8 MB／11.86 GB／11.97 GBです。fatal、dump、upload、device lost、TDR、残留processは0でした。</p><p>telemetry OFF／ON各3 runではrunner peak差-0.17 MB、平均時間差+0.265秒で、計測自体の有意なmemory/timing変化はありません。P0が正常終了したため、Phase 6EIの無言区間がCPU spinかwaitか、旧allocationの正確な内部原因は未再現です。CDBも現環境では利用不可なので、将来residualはstack署名なしでknown扱いせずfail closedします。</p><p><a href="assets/phase6/lightweight_shutdown_isolation_report.json">集計JSON</a> · <a href="assets/phase6/lightweight_shutdown_isolation_report.svg">比較SVG</a> · <a href="../design/static_pose_set_collision_qualification.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Diagnostic fixture</strong><small>bounded · normal exit</small></p></div><div role="listitem"><span>✓</span><p><strong>Timeout fixture</strong><small>no residual</small></p></div><div role="listitem"><span>✓</span><p><strong>P0 probe</strong><small>normal exit</small></p></div><div role="listitem"><span>—</span><p><strong>Phase 6EG</strong><small>0 / 36 accepted</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>SHA unchanged</small></p></div></div></section>
+          <section class="note"><p class="note-label">Regression</p><h3>91/91 focused · 78/78 standard</h3><p>Release build、Phase 6E focused contracts 91/91、標準suite 8 process・78/78件（303.7秒）、日誌366 reference・189 JSON・155 SVGが合格しました。production appと凍結contractのSHA-256は不変で、Kit／CDB／nvidia-smi残留は0です。</p></section>
+          <section class="note next"><p class="note-label">Explicit restart only</p><h3>新rootと承認なしに36条件へ戻らない。</h3><p>診断隔離の再開gateは成立しましたが、qualificationは一件も増えていません。次の正式runには新artifact rootと明示承認が必要です。内部診断だけで画面上の変更はないため、新動画とlatest demo pointerは更新していません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6ei" class="section entry-section phase-six">

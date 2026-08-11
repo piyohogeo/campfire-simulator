@@ -1,5 +1,15 @@
 # Phase 6EG: representative static Mesh CollisionProxy poses
 
+## Phase 6EJ isolated diagnostic boundary
+
+Phase 6EJ does not reopen the 36-process population. It moves the complete lightweight shutdown diagnostic into a guarded child process and adds flushed boundary markers plus streamed CPU telemetry. The parent receives only a bounded JSON result; diagnostic stdout/stderr and external-tool output are written directly to files. The unchanged budgets are 512 MiB for the runner, 512 MiB for the diagnostic child, 14 GiB for Kit, and 16 GiB for the de-duplicated tree, with 8 GiB physical/commit floors.
+
+The fixture child peaked at 85,143,552 bytes, and a forced-timeout child peaked at 71,151,616 bytes before clean termination. Three telemetry-OFF/ON runs changed runner peak by -172,032 bytes and mean duration by +0.264529 seconds. The single allowed P0-equivalent probe completed four velocity samples, active blocks 26, source fuel 0.8000000119, `shutdown_complete`, and normal exit. Runner/diagnostic/Kit/tree peaks were 101,765,120 / 16,826,368 / 11,859,038,208 / 11,967,877,120 bytes.
+
+Kit CPU during the successful probe's shutdown section averaged 1.8375% and peaked at 3.7739% of total logical-CPU capacity. This successful run neither reproduced the silent residual nor invoked the real-Kit diagnostic child, so it cannot identify whether the Phase 6EI silent interval was a CPU spin or a wait. The exact old parent allocation mechanism also remains unconfirmed. CDB was unavailable; a future residual therefore remains fail closed.
+
+The isolation gate is sufficient to consider another explicitly approved fresh root, but it does not qualify a pose or authorize an automatic restart. Phase 6EG remains 0/36 accepted. PointEmitter-CollisionProxy coexistence remains pending only after all 36 processes qualify.
+
 ## Purpose and frozen contract
 
 Phase 6EG was intended to extend the Phase 6EF judgment method from static Y40° to six predeclared representative poses while changing only pose. The exact authored 26-vertex, 36-face, 120-index closed Mesh remains the distance reference; the ideal Cylinder is secondary, and no public Flow 110.0.0 API exposes Flow's internal collision occupancy mask. The inherited velocity gates are deep/center ON maximum `<=1e-5 m/s`, paired OFF maximum `>=0.1 m/s`, and ON/OFF deep-maximum ratio `<=0.01`.

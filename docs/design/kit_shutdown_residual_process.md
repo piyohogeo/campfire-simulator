@@ -1,5 +1,15 @@
 # Phase 6EA: Kit shutdown residual process diagnosis
 
+## Phase 6EJ: whole-diagnostic process isolation
+
+The lightweight diagnostic now runs entirely in a short-lived guarded PowerShell child. Identity validation, capture-lock ownership, isolated `nvidia-smi`, bounded lifecycle/log parsing, CDB necessity and capture, report commit, and cleanup no longer execute in the formal runner runspace. The child has a 90-second and 512-MiB ceiling, redirects stdout/stderr to files, writes through `.partial` plus atomic rename, and returns only a bounded JSON document or guarded failure state.
+
+Flushed markers make the last completed boundary durable even when JSON publication fails. The fixture reached every marker and exited normally with an 85.1-MB peak. The timeout fixture was terminated at 71.2 MB and left no process. CDB was not available in the installed WinDbg package search, so this fixture proved bounded persistence and cleanup, not known-NGX signature acquisition. No residual may be classified as known without the existing stack-signature requirement.
+
+CPU telemetry is part of the low-volume resource JSONL, not the diagnostic report payload. It records cumulative user/kernel time and the delta normalized so 100% equals all logical processors. The first sample is missing by design. A top Kit thread is sampled only on high CPU. Telemetry OFF/ON comparison stayed within the fixed overhead limits. In the successful P0-equivalent run, shutdown CPU was low (1.84% mean, 3.77% maximum), while high-CPU thread samples occurred only during startup. Since that run exited normally, the earlier silent interval's wait/spin state is still unknown.
+
+The old Phase 6EI increase from 146.9 to 553.9 MB is confirmed to precede report commit in the former in-process diagnostic. Isolation removes that allocation from the parent boundary, but the specific PowerShell/native allocator responsible has not been reproduced or asserted. A future residual must persist its last marker and remains fail closed when CDB is unavailable.
+
 ## 目的と境界
 
 Phase 6DZ の未回転 axis control は、stage close、renderer drain、`shutdown_requested`、Hydra shutdown まで到達した後も Kit process が残った。この Phase は回転や Flow collision の再検証ではなく、既知正常な Phase 6DY stage でも同じ終了異常が起きるかを、production-neutral な独立 process で分類する。

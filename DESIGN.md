@@ -1,5 +1,17 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+## Phase 6EJ lightweight shutdown diagnostic isolation
+
+Phase 6EJ isolates the complete lightweight shutdown diagnostic from the formal-runner PowerShell process. The child owns process-identity validation, the capture lock, isolated GPU inventory, bounded Kit-log and lifecycle parsing, the dump/CDB decision, atomic bounded JSON output, and cleanup. Its stdout and stderr are redirected to files; the parent reads only a report smaller than 2 MiB or a guarded failure result. A 90-second/512-MiB helper guard, single-owner lock, PID/start-time checks, and process-tree cleanup remain fail closed.
+
+Durable JSONL markers distinguish child entry, identity validation, lock acquisition, GPU inventory, Kit-log parsing, dump/CDB decision, JSON write, cleanup, child exit, and return to the parent. Memory correlation showed the isolated fixture peaking at 85.1 MB and its forced-timeout child at 71.2 MB, with no residual helper. The original Phase 6EI 553.9 MB allocation occurred in the old parent-runspace boundary; the exact internal allocator remains unconfirmed because the new one-shot P0 probe exited normally and never invoked the real-Kit diagnostic child.
+
+The streamed resource trace now records cumulative Kit/runner user and kernel CPU time and interval utilization normalized to all logical CPUs. The first sample and counter resets are missing by contract. High-CPU Kit thread IDs are sampled only above the configured threshold. Three short telemetry-OFF and three telemetry-ON runs changed runner peak by -0.17 MB and mean duration by +0.265 seconds, meeting the predeclared 64-MiB/1.5-second non-perturbation limits.
+
+The one permitted P0-equivalent probe completed four velocity samples, active blocks 26, fuel 0.8, `shutdown_complete`, and normal OS exit. Kit CPU during shutdown averaged 1.84% and peaked at 3.77% of all logical CPUs; high-CPU thread samples appeared only during startup. This is consistent with low teardown activity for this successful run, not evidence about the unreproduced Phase 6EI silent interval. CDB could not be located in the installed WinDbg package, so any future residual remains `unknown_shutdown_failure` until an accepted stack signature is obtained.
+
+Production code, the frozen Phase 6EG contract, Flow settings, Mesh, emitter, V3, Resident state, and wood authority are unchanged. Phase 6EG remains unqualified at 0/36 accepted. A restart requires explicit approval and a fresh artifact root; Phase 6EJ does not start the 36-process matrix.
+
 ## 1. 文書情報
 
 - 文書状態: 実装中・Phase 6AJ 採用後二層再プロファイル完了

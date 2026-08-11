@@ -129,6 +129,9 @@ function Invoke-Phase6EgCase {
         "--tree-private-limit", "$($formalResourceLimits.tree_private_bytes)",
         "--available-memory-floor", "$($formalResourceLimits.available_memory_floor_bytes)",
         "--commit-headroom-floor", "$($formalResourceLimits.commit_headroom_floor_bytes)",
+        "--cpu-telemetry",
+        "--lifecycle-path", (Join-Path $caseOutput "raw.json"),
+        "--diagnostic-marker-path", ((Join-Path $caseOutput "sensitive-shutdown-diagnostics") + ".markers.jsonl"),
         "--", $powershell
     ) + $arguments
     & python @guardArguments

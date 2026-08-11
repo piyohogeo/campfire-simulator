@@ -43,40 +43,59 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--tree-private-limit", type=int, default=14 * 1024 * MIB)
     parser.add_argument("--available-memory-floor", type=int, default=8 * 1024 * MIB)
     parser.add_argument("--commit-headroom-floor", type=int, default=8 * 1024 * MIB)
+    parser.add_argument("--cpu-telemetry", action="store_true")
+    parser.add_argument("--cpu-high-thread-threshold-percent", type=float, default=10.0)
+    parser.add_argument("--lifecycle-path", type=Path)
+    parser.add_argument("--diagnostic-marker-path", type=Path)
     parser.add_argument("command", nargs=argparse.REMAINDER)
     return parser
 
 
-def _memory_row(process: psutil.Process, root_pid: int, timestamp: float) -> dict | None:
+def _role(process: psutil.Process, root_pid: int) -> str:
+    if process.pid == root_pid:
+        return "runner"
+    name = process.name().lower()
+    if name == "kit.exe":
+        return "kit"
+    if name in DIAGNOSTIC_NAMES:
+        return "diagnostic"
+    try:
+        command = " ".join(process.cmdline()).lower()
+    except (psutil.AccessDenied, psutil.NoSuchProcess, psutil.ZombieProcess, OSError):
+        command = ""
+    if "run_lightweight_shutdown_diagnostic_helper.ps1" in command:
+        return "diagnostic"
+    return "child"
+
+
+def _memory_row(process: psutil.Process, root_pid: int, timestamp: float, cpu_telemetry: bool) -> dict | None:
     try:
         info = process.memory_info()
         private = int(getattr(info, "private", getattr(info, "pagefile", info.vms)))
-        return {
+        row = {
             "timestamp_utc_epoch": timestamp,
             "pid": process.pid,
             "parent_pid": process.ppid(),
             "create_time_utc_epoch": process.create_time(),
             "name": process.name(),
             "path": process.exe(),
-            "role": (
-                "runner"
-                if process.pid == root_pid
-                else "kit"
-                if process.name().lower() == "kit.exe"
-                else "diagnostic"
-                if process.name().lower() in DIAGNOSTIC_NAMES
-                else "child"
-            ),
+            "role": _role(process, root_pid),
             "private_bytes": private,
             "working_set_bytes": int(info.rss),
             "peak_working_set_bytes": int(getattr(info, "peak_wset", info.rss)),
             "commit_bytes": int(getattr(info, "pagefile", private)),
         }
+        if cpu_telemetry:
+            times = process.cpu_times()
+            row["cpu_user_seconds"] = float(times.user)
+            row["cpu_kernel_seconds"] = float(times.system)
+            row["cpu_total_seconds"] = float(times.user + times.system)
+        return row
     except (psutil.AccessDenied, psutil.NoSuchProcess, psutil.ZombieProcess, OSError):
         return None
 
 
-def _tree_rows(root: psutil.Process, timestamp: float) -> list[dict]:
+def _tree_rows(root: psutil.Process, timestamp: float, cpu_telemetry: bool) -> list[dict]:
     candidates = [root]
     try:
         candidates.extend(root.children(recursive=True))
@@ -85,7 +104,7 @@ def _tree_rows(root: psutil.Process, timestamp: float) -> list[dict]:
     rows: list[dict] = []
     identities: set[tuple[int, float]] = set()
     for process in candidates:
-        row = _memory_row(process, root.pid, timestamp)
+        row = _memory_row(process, root.pid, timestamp, cpu_telemetry)
         if row is None:
             continue
         identity = (row["pid"], row["create_time_utc_epoch"])
@@ -94,6 +113,73 @@ def _tree_rows(root: psutil.Process, timestamp: float) -> list[dict]:
         identities.add(identity)
         rows.append(row)
     return rows
+
+
+def _bounded_json_marker(path: Path | None, key: str) -> str | None:
+    if path is None or not path.is_file():
+        return None
+    try:
+        if path.stat().st_size > MIB:
+            return "oversize"
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        value = payload.get(key)
+        return str(value) if value is not None else None
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return "unavailable"
+
+
+def _last_jsonl_marker(path: Path | None) -> str | None:
+    if path is None or not path.is_file():
+        return None
+    try:
+        if path.stat().st_size > MIB:
+            return "oversize"
+        last = None
+        with path.open(encoding="utf-8") as stream:
+            for line in stream:
+                if line.strip():
+                    last = line
+        if last is None:
+            return None
+        return str(json.loads(last).get("marker"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return "unavailable"
+
+
+def _append_cpu_deltas(
+    rows: list[dict],
+    previous: dict[tuple[int, float], tuple[float, float]],
+    timestamp: float,
+    logical_cpu_count: int,
+    high_thread_threshold: float,
+) -> None:
+    for row in rows:
+        identity = (row["pid"], row["create_time_utc_epoch"])
+        total = row.get("cpu_total_seconds")
+        prior = previous.get(identity)
+        utilization = None
+        if total is not None and prior is not None:
+            elapsed = timestamp - prior[0]
+            if elapsed > 0:
+                utilization = max(0.0, total - prior[1]) / elapsed * 100.0 / logical_cpu_count
+        row["cpu_percent_of_logical_total"] = utilization
+        row["cpu_sample_interval_seconds"] = None if prior is None else max(0.0, timestamp - prior[0])
+        if total is not None:
+            previous[identity] = (timestamp, total)
+        row["top_cpu_thread"] = None
+        if row["role"] == "kit" and utilization is not None and utilization >= high_thread_threshold:
+            try:
+                process = psutil.Process(row["pid"])
+                threads = process.threads()
+                if threads:
+                    top = max(threads, key=lambda item: item.user_time + item.system_time)
+                    row["top_cpu_thread"] = {
+                        "thread_id": int(top.id),
+                        "cumulative_user_seconds": float(top.user_time),
+                        "cumulative_kernel_seconds": float(top.system_time),
+                    }
+            except (psutil.AccessDenied, psutil.NoSuchProcess, psutil.ZombieProcess, OSError):
+                pass
 
 
 def _terminate_tree(root: psutil.Process) -> None:
@@ -141,6 +227,9 @@ def run(arguments: argparse.Namespace) -> int:
     sample_count = 0
     root: psutil.Process | None = None
     popen: subprocess.Popen | None = None
+    logical_cpu_count = max(1, psutil.cpu_count(logical=True) or 1)
+    previous_cpu: dict[tuple[int, float], tuple[float, float]] = {}
+    cpu_peaks = {"runner": 0.0, "kit": 0.0, "diagnostic": 0.0, "child": 0.0}
 
     with arguments.stdout.open("wb", buffering=0) as stdout, arguments.stderr.open("wb", buffering=0) as stderr, arguments.trace.open("w", encoding="utf-8", buffering=1) as trace:
         creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
@@ -149,7 +238,15 @@ def run(arguments: argparse.Namespace) -> int:
         root_identity = {"pid": root.pid, "create_time_utc_epoch": root.create_time(), "path": root.exe()}
         while popen.poll() is None:
             timestamp = time.time()
-            rows = _tree_rows(root, timestamp)
+            rows = _tree_rows(root, timestamp, arguments.cpu_telemetry)
+            if arguments.cpu_telemetry:
+                _append_cpu_deltas(
+                    rows,
+                    previous_cpu,
+                    timestamp,
+                    logical_cpu_count,
+                    arguments.cpu_high_thread_threshold_percent,
+                )
             tree_private = sum(row["private_bytes"] for row in rows)
             virtual = psutil.virtual_memory()
             swap = psutil.swap_memory()
@@ -173,6 +270,8 @@ def run(arguments: argparse.Namespace) -> int:
                 "root": root_identity,
                 "processes": rows,
                 "tree_private_bytes": tree_private,
+                "lifecycle_marker": _bounded_json_marker(arguments.lifecycle_path, "lifecycle_marker"),
+                "diagnostic_marker": _last_jsonl_marker(arguments.diagnostic_marker_path),
                 "machine": {
                     "available_physical_bytes": int(virtual.available),
                     "physical_total_bytes": int(virtual.total),
@@ -181,6 +280,7 @@ def run(arguments: argparse.Namespace) -> int:
                     "estimated_commit_headroom_bytes": commit_headroom,
                 },
             }
+            record["current_execution_section"] = record["diagnostic_marker"] or record["lifecycle_marker"] or "process_startup"
             trace.write(json.dumps(record, separators=(",", ":")) + "\n")
             sample_count += 1
             for row in rows:
@@ -188,6 +288,9 @@ def run(arguments: argparse.Namespace) -> int:
                 if row["private_bytes"] > peaks[role]:
                     peaks[role] = row["private_bytes"]
                     peak_rows[role] = row
+                utilization = row.get("cpu_percent_of_logical_total")
+                if utilization is not None:
+                    cpu_peaks[role] = max(cpu_peaks[role], float(utilization))
             if tree_private > peaks["tree"]:
                 peaks["tree"] = tree_private
                 peak_rows["tree"] = {"timestamp_utc_epoch": timestamp, "processes": rows}
@@ -240,6 +343,16 @@ def run(arguments: argparse.Namespace) -> int:
         "peaks": peaks,
         "peak_evidence": peak_rows,
         "machine_minima": machine_minima,
+        "cpu_telemetry": {
+            "enabled": arguments.cpu_telemetry,
+            "normalization": "100 percent equals all logical CPUs busy",
+            "logical_cpu_count": logical_cpu_count,
+            "sample_interval_seconds": arguments.sample_seconds,
+            "missing_first_sample": True,
+            "high_cpu_thread_capture_threshold_percent": arguments.cpu_high_thread_threshold_percent,
+            "peak_percent_of_logical_total_by_role": cpu_peaks,
+            "gpu_sampling": "not_collected_to_preserve_isolated_inventory_boundary",
+        },
         "limits": {
             "runner_private_bytes": arguments.runner_private_limit,
             "kit_private_bytes": arguments.kit_private_limit,

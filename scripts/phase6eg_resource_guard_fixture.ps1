@@ -1,6 +1,7 @@
 param(
     [ValidateSet("tree", "cdb_path", "gpu_inventory")][string]$Mode = "tree",
-    [Parameter(Mandatory = $true)][string]$MarkerPath
+    [Parameter(Mandatory = $true)][string]$MarkerPath,
+    [ValidateRange(100, 10000)][int]$HoldMilliseconds = 750
 )
 
 $ErrorActionPreference = "Stop"
@@ -36,10 +37,10 @@ if ($Mode -in @("cdb_path", "gpu_inventory")) {
     }
     # Keep the short fixture alive long enough for the streaming sampler to
     # observe steady-state PowerShell allocation rather than only startup.
-    Start-Sleep -Milliseconds 750
+    Start-Sleep -Milliseconds $HoldMilliseconds
 } else {
     $self = (Get-Process -Id $PID).Path
-    $child = Start-Process -FilePath $self -ArgumentList @("-NoProfile", "-NonInteractive", "-Command", "Start-Sleep -Milliseconds 750") -PassThru -WindowStyle Hidden
+    $child = Start-Process -FilePath $self -ArgumentList @("-NoProfile", "-NonInteractive", "-Command", "Start-Sleep -Milliseconds $HoldMilliseconds") -PassThru -WindowStyle Hidden
     Write-Marker "child_started"
     $child.WaitForExit(5000) | Out-Null
     Write-Marker "child_exited"

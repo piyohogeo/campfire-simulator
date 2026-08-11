@@ -7,6 +7,72 @@ if (-not (Get-Command Invoke-Phase6EaGuardedHelper -ErrorAction SilentlyContinue
 
 $CampfireKnownNgxSignature = "ngx_telemetry_shutdown_wait_v1"
 $CampfireShutdownHelperPrivateBytesLimit = 512MB
+$CampfireShutdownDiagnosticTimeoutSeconds = 90
+$CampfireShutdownDiagnosticJsonLimitBytes = 2MB
+
+function Write-CampfireDiagnosticMarker {
+    param(
+        [Parameter(Mandatory = $true)][string]$Path,
+        [Parameter(Mandatory = $true)][string]$Marker,
+        [hashtable]$Details = @{}
+    )
+    $record = [ordered]@{
+        schema = "campfire.lightweight-shutdown-diagnostic-marker.v1"
+        timestamp_utc = [datetime]::UtcNow.ToString("o")
+        process_id = $PID
+        marker = $Marker
+        details = $Details
+    }
+    $line = ($record | ConvertTo-Json -Depth 6 -Compress) + [Environment]::NewLine
+    $bytes = [Text.UTF8Encoding]::new($false).GetBytes($line)
+    $stream = [IO.FileStream]::new([IO.Path]::GetFullPath($Path), [IO.FileMode]::Append, [IO.FileAccess]::Write, [IO.FileShare]::ReadWrite)
+    try { $stream.Write($bytes, 0, $bytes.Length); $stream.Flush($true) } finally { $stream.Dispose() }
+}
+
+function Read-CampfireBoundedJson {
+    param(
+        [Parameter(Mandatory = $true)][string]$Path,
+        [long]$MaximumBytes = $CampfireShutdownDiagnosticJsonLimitBytes
+    )
+    $item = Get-Item -LiteralPath $Path -ErrorAction Stop
+    if ($item.Length -le 0 -or $item.Length -gt $MaximumBytes) { throw "JSON size is outside the fixed bound: $($item.Length)" }
+    $stream = [IO.FileStream]::new($item.FullName, [IO.FileMode]::Open, [IO.FileAccess]::Read, [IO.FileShare]::ReadWrite)
+    try {
+        $reader = [IO.StreamReader]::new($stream, [Text.Encoding]::UTF8, $true, 65536, $false)
+        try { return $reader.ReadToEnd() | ConvertFrom-Json } finally { $reader.Dispose() }
+    } finally { $stream.Dispose() }
+}
+
+function Get-CampfireBoundedTailLines {
+    param(
+        [Parameter(Mandatory = $true)][string]$Path,
+        [int]$MaximumLines = 120,
+        [int]$MaximumCharactersPerLine = 8192
+    )
+    $queue = [Collections.Generic.Queue[string]]::new($MaximumLines)
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) { return @() }
+    foreach ($line in [IO.File]::ReadLines([IO.Path]::GetFullPath($Path), [Text.Encoding]::UTF8)) {
+        $bounded = if ($line.Length -gt $MaximumCharactersPerLine) { $line.Substring(0, $MaximumCharactersPerLine) } else { $line }
+        if ($queue.Count -eq $MaximumLines) { $null = $queue.Dequeue() }
+        $queue.Enqueue($bounded)
+    }
+    return @($queue.ToArray())
+}
+
+function Write-CampfireBoundedJson {
+    param(
+        [Parameter(Mandatory = $true)][string]$Path,
+        [Parameter(Mandatory = $true)][object]$Value,
+        [long]$MaximumBytes = $CampfireShutdownDiagnosticJsonLimitBytes
+    )
+    $json = ($Value | ConvertTo-Json -Depth 20) + [Environment]::NewLine
+    $bytes = [Text.UTF8Encoding]::new($false).GetBytes($json)
+    if ($bytes.Length -gt $MaximumBytes) { throw "JSON output exceeds fixed bound: $($bytes.Length)" }
+    $temporary = "$Path.partial"
+    $stream = [IO.FileStream]::new($temporary, [IO.FileMode]::Create, [IO.FileAccess]::Write, [IO.FileShare]::None)
+    try { $stream.Write($bytes, 0, $bytes.Length); $stream.Flush($true) } finally { $stream.Dispose() }
+    Move-Item -LiteralPath $temporary -Destination $Path -Force
+}
 
 function Test-CampfireLogPattern {
     param([Parameter(Mandatory = $true)][string]$Path, [Parameter(Mandatory = $true)][string]$Pattern)
@@ -131,7 +197,7 @@ function Get-CampfireGpuInventory {
     }
 }
 
-function Invoke-CampfireLightweightNgxDiagnostic {
+function Invoke-CampfireLightweightNgxDiagnosticCore {
     param(
         [Parameter(Mandatory = $true)][int]$ProcessId,
         [Parameter(Mandatory = $true)][string]$ExpectedExecutable,
@@ -139,23 +205,33 @@ function Invoke-CampfireLightweightNgxDiagnostic {
         [Parameter(Mandatory = $true)][string]$OutputDir,
         [Parameter(Mandatory = $true)][string]$LifecyclePath,
         [Parameter(Mandatory = $true)][string]$LogPath,
+        [Parameter(Mandatory = $true)][string]$MarkerPath,
         [int]$DebuggerTimeoutSeconds = 45
     )
     $output = [IO.Path]::GetFullPath($OutputDir)
     $expected = [IO.Path]::GetFullPath($ExpectedExecutable)
     $lockPath = $null
     try {
+        Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "process_identity_started"
+        $process = Test-Phase6EaProcessIdentity -ProcessId $ProcessId -ExpectedExecutable $expected -ExpectedStartTimeUtc $ExpectedStartTimeUtc
+        Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "process_identity_complete" -Details @{ target_pid = $ProcessId }
         $lockPath = Enter-Phase6EaCaptureLock -CanonicalOutputPath $output -TargetProcessId $ProcessId
+        Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "capture_lock_acquired"
         if (Test-Path -LiteralPath $output) { throw "Shutdown diagnostic output already exists: $output" }
         New-Item -ItemType Directory -Path $output | Out-Null
-        $process = Test-Phase6EaProcessIdentity -ProcessId $ProcessId -ExpectedExecutable $expected -ExpectedStartTimeUtc $ExpectedStartTimeUtc
         $actual = [IO.Path]::GetFullPath($process.Path)
         $lifecycle = $null
+        Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "kit_log_parse_started"
         if (Test-Path -LiteralPath $LifecyclePath) {
-            try { $lifecycle = Get-Content -LiteralPath $LifecyclePath -Raw -Encoding UTF8 | ConvertFrom-Json } catch {}
+            try { $lifecycle = Read-CampfireBoundedJson -Path $LifecyclePath -MaximumBytes 1MB } catch {}
         }
-        $lastLog = @()
-        if (Test-Path -LiteralPath $LogPath) { $lastLog = @(Get-Content -LiteralPath $LogPath -Tail 120 -Encoding UTF8) }
+        $lastLog = @(Get-CampfireBoundedTailLines -Path $LogPath -MaximumLines 120 -MaximumCharactersPerLine 8192)
+        Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "kit_log_parse_complete" -Details @{ line_count = $lastLog.Count }
+
+        Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "gpu_inventory_started"
+        $gpuInventoryCapture = Get-CampfireGpuInventory -OutputDir $output
+        Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "gpu_inventory_complete" -Details @{ succeeded = [bool]$gpuInventoryCapture.evidence.succeeded; row_count = @($gpuInventoryCapture.rows).Count }
+
         $cdb = Get-CampfireCdbPath
         $stackLog = Join-Path $output "cdb-thread-stacks.log"
         $stackError = Join-Path $output "cdb-thread-stacks.stderr.log"
@@ -163,6 +239,7 @@ function Invoke-CampfireLightweightNgxDiagnostic {
         New-Item -ItemType Directory -Path $symbolCache | Out-Null
         $guard = $null
         $cdbError = $null
+        Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "dump_cdb_decision" -Details @{ dump_required = $false; cdb_available = ($null -ne $cdb) }
         if ($null -ne $cdb) {
             try {
                 $symbolPath = "srv*$symbolCache*https://msdl.microsoft.com/download/symbols"
@@ -194,7 +271,6 @@ function Invoke-CampfireLightweightNgxDiagnostic {
             }
             known_chain = "gpu.foundation shutdown -> NGX D3D12 shutdown -> NvTelemetryAPI64 UninitializeTelemetry -> telemetry worker WaitNamedPipeW"
         }
-        $gpuInventoryCapture = Get-CampfireGpuInventory -OutputDir $output
         $diagnosticCaptureSucceeded = $guardSucceeded -and [bool]$gpuInventoryCapture.evidence.succeeded
         $report = [ordered]@{
             schema = "campfire.kit-lightweight-shutdown-diagnostic.v2"
@@ -211,7 +287,7 @@ function Invoke-CampfireLightweightNgxDiagnostic {
                 file_version = $process.MainModule.FileVersionInfo.FileVersion
             }
             lifecycle_marker = if ($null -ne $lifecycle) { $lifecycle.lifecycle_marker } else { $null }
-            lifecycle_history = if ($null -ne $lifecycle -and $null -ne $lifecycle.lifecycle_history) { @($lifecycle.lifecycle_history) } else { @() }
+            lifecycle_history = if ($null -ne $lifecycle -and $null -ne $lifecycle.lifecycle_history) { @($lifecycle.lifecycle_history | Select-Object -Last 128) } else { @() }
             completion_contract = if ($null -ne $lifecycle -and $null -ne $lifecycle.completion_contract) { $lifecycle.completion_contract } else { $null }
             final_log_lines = @($lastLog)
             gpu_inventory = @($gpuInventoryCapture.rows)
@@ -235,11 +311,62 @@ function Invoke-CampfireLightweightNgxDiagnostic {
             machine_wide_configuration_changed = $false
         }
         $reportPath = Join-Path $output "lightweight_shutdown_diagnostic.json"
-        [IO.File]::WriteAllText($reportPath, ($report | ConvertTo-Json -Depth 20) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
+        Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "diagnostic_json_write_started"
+        Write-CampfireBoundedJson -Path $reportPath -Value $report
+        Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "diagnostic_json_write_complete" -Details @{ bytes = (Get-Item -LiteralPath $reportPath).Length }
         return $report
     } finally {
+        Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cleanup_started"
         if ($null -ne $lockPath) { Exit-Phase6EaCaptureLock -LockPath $lockPath }
+        Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cleanup_complete"
     }
+}
+
+function Invoke-CampfireLightweightNgxDiagnostic {
+    param(
+        [Parameter(Mandatory = $true)][int]$ProcessId,
+        [Parameter(Mandatory = $true)][string]$ExpectedExecutable,
+        [Parameter(Mandatory = $true)][datetime]$ExpectedStartTimeUtc,
+        [Parameter(Mandatory = $true)][string]$OutputDir,
+        [Parameter(Mandatory = $true)][string]$LifecyclePath,
+        [Parameter(Mandatory = $true)][string]$LogPath,
+        [int]$DebuggerTimeoutSeconds = 45
+    )
+    $output = [IO.Path]::GetFullPath($OutputDir)
+    $markerPath = "$output.markers.jsonl"
+    $stdout = "$output.helper.stdout.log"
+    $stderr = "$output.helper.stderr.log"
+    $resultPath = Join-Path $output "lightweight_shutdown_diagnostic.json"
+    $helper = Join-Path $PSScriptRoot "run_lightweight_shutdown_diagnostic_helper.ps1"
+    $powershell = (Get-Process -Id $PID).Path
+    $arguments = @(
+        "-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass",
+        "-File", $helper,
+        "-ProcessId", [string]$ProcessId,
+        "-ExpectedExecutable", $ExpectedExecutable,
+        "-ExpectedStartTimeUtc", $ExpectedStartTimeUtc.ToUniversalTime().ToString("o"),
+        "-OutputDir", $output,
+        "-LifecyclePath", $LifecyclePath,
+        "-LogPath", $LogPath,
+        "-MarkerPath", $markerPath,
+        "-DebuggerTimeoutSeconds", [string]$DebuggerTimeoutSeconds
+    )
+    $guard = Invoke-Phase6EaGuardedHelper -FilePath $powershell -ArgumentList $arguments -StdoutPath $stdout -StderrPath $stderr -TimeoutSeconds $CampfireShutdownDiagnosticTimeoutSeconds -PrivateBytesLimit $CampfireShutdownHelperPrivateBytesLimit
+    Write-CampfireDiagnosticMarker -Path $markerPath -Marker "parent_process_returned" -Details @{ helper_exit_code = $guard.exit_code; timed_out = $guard.timed_out; private_bytes_exceeded = $guard.private_bytes_exceeded }
+    if ($guard.timed_out -or $guard.private_bytes_exceeded -or -not $guard.process_absent -or $guard.exit_code_error -ne $null -or $guard.exit_code -ne 0) {
+        return [ordered]@{
+            diagnostic_capture_succeeded = $false
+            error = "isolated lightweight diagnostic helper failed"
+            helper_guard = $guard
+            marker_path = $markerPath
+            stack_fingerprint = [ordered]@{ name = $CampfireKnownNgxSignature; matched = $false }
+        }
+    }
+    if (-not (Test-Path -LiteralPath $resultPath -PathType Leaf)) { throw "isolated lightweight diagnostic did not write its bounded result" }
+    $result = Read-CampfireBoundedJson -Path $resultPath
+    $result | Add-Member -NotePropertyName helper_guard -NotePropertyValue $guard -Force
+    $result | Add-Member -NotePropertyName marker_path -NotePropertyValue $markerPath -Force
+    return $result
 }
 
 function Wait-CampfireKitProcessWithShutdownPolicy {

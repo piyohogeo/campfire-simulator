@@ -1,0 +1,205 @@
+{
+  "schema": "campfire.phase6ej.public-report.v1",
+  "phase": "phase6ej",
+  "status": "pass",
+  "phase6eg_formal_restarted": false,
+  "restart_recommendation": "eligible_for_new_explicitly_approved_root",
+  "isolation_fixture": {
+    "helper_peak_private_bytes": 85143552,
+    "helper_duration_seconds": 0.8462683999999999,
+    "result_persisted": true,
+    "diagnostic_capture_succeeded": false,
+    "cdb_available": false,
+    "timeout_fixture_peak_private_bytes": 71151616,
+    "timeout_fixture_process_absent": true
+  },
+  "telemetry_off_on": {
+    "runs_per_mode": 3,
+    "off_mean_duration_seconds": 3.2408780256907144,
+    "on_mean_duration_seconds": 3.5054072539011636,
+    "duration_delta_seconds": 0.2645292282104492,
+    "off_runner_peak_private_bytes": 71663616,
+    "on_runner_peak_private_bytes": 71491584,
+    "runner_peak_delta_bytes": -172032,
+    "nonperturbing_gate": true,
+    "duration_delta_limit_seconds": 1.5,
+    "memory_delta_limit_bytes": 67108864
+  },
+  "p0_equivalent": {
+    "functional_status": "pass",
+    "lifecycle_status": "normal_exit",
+    "probe_status": "ok",
+    "lifecycle_marker": "shutdown_complete",
+    "active_blocks_final": 26,
+    "source_fuel": 0.800000011920929,
+    "velocity_sample_count": 4,
+    "runner_peak_private_bytes": 101765120,
+    "diagnostic_peak_private_bytes": 16826368,
+    "kit_peak_private_bytes": 11859038208,
+    "tree_peak_private_bytes": 11967877120,
+    "diagnostic_invoked": false,
+    "diagnostic_result_exists": false,
+    "durable_markers": [],
+    "cpu": {
+      "all_kit": {
+        "sample_count": 117,
+        "mean_percent_of_logical_total": 3.676624861735138,
+        "maximum_percent_of_logical_total": 36.01388498408672,
+        "cumulative_user_delta_seconds": 72.65625,
+        "cumulative_kernel_delta_seconds": 3.15625
+      },
+      "all_runner": {
+        "sample_count": 121,
+        "mean_percent_of_logical_total": 0.04982670401747127,
+        "maximum_percent_of_logical_total": 1.3454382261632056,
+        "cumulative_user_delta_seconds": 0.46875,
+        "cumulative_kernel_delta_seconds": 0.140625
+      },
+      "shutdown_interval": {
+        "sample_count": 23,
+        "mean_percent_of_logical_total": 1.8374838317735998,
+        "maximum_percent_of_logical_total": 3.7738514598797948,
+        "cumulative_user_delta_seconds": 3.21875,
+        "cumulative_kernel_delta_seconds": 0.28125
+      },
+      "runner_shutdown_interval": {
+        "sample_count": 25,
+        "mean_percent_of_logical_total": 0.11271950963065494,
+        "maximum_percent_of_logical_total": 1.3454382261632056,
+        "cumulative_user_delta_seconds": 0.25,
+        "cumulative_kernel_delta_seconds": 0.0
+      },
+      "shutdown_mode": "low_cpu_teardown_activity",
+      "by_lifecycle_section": {
+        "process_startup": {
+          "sample_count": 30,
+          "mean_percent_of_logical_total": 7.431858866756902,
+          "maximum_percent_of_logical_total": 36.01388498408672
+        },
+        "opening_prebuilt_stage": {
+          "sample_count": 10,
+          "mean_percent_of_logical_total": 1.1878134540408218,
+          "maximum_percent_of_logical_total": 2.050038293282227
+        },
+        "timeline_playing": {
+          "sample_count": 53,
+          "mean_percent_of_logical_total": 2.833887237790559,
+          "maximum_percent_of_logical_total": 4.486173746135796
+        },
+        "measurement_complete": {
+          "sample_count": 1,
+          "mean_percent_of_logical_total": 2.8730565462034017,
+          "maximum_percent_of_logical_total": 2.8730565462034017
+        },
+        "timeline_stopped": {
+          "sample_count": 1,
+          "mean_percent_of_logical_total": 1.7923189767678966,
+          "maximum_percent_of_logical_total": 1.7923189767678966
+        },
+        "shutdown_complete": {
+          "sample_count": 22,
+          "mean_percent_of_logical_total": 1.8395367797284046,
+          "maximum_percent_of_logical_total": 3.7738514598797948
+        }
+      },
+      "high_cpu_top_thread_samples": [
+        {
+          "sample_index": 21,
+          "section": "process_startup",
+          "kit_cpu_percent_of_logical_total": 28.340033546139548,
+          "thread_id": 24232,
+          "cumulative_user_seconds": 1.734375,
+          "cumulative_kernel_seconds": 0.390625
+        },
+        {
+          "sample_index": 22,
+          "section": "process_startup",
+          "kit_cpu_percent_of_logical_total": 36.01388498408672,
+          "thread_id": 6164,
+          "cumulative_user_seconds": 2.125,
+          "cumulative_kernel_seconds": 0.390625
+        },
+        {
+          "sample_index": 23,
+          "section": "process_startup",
+          "kit_cpu_percent_of_logical_total": 31.781618011043122,
+          "thread_id": 6164,
+          "cumulative_user_seconds": 2.84375,
+          "cumulative_kernel_seconds": 0.4375
+        },
+        {
+          "sample_index": 24,
+          "section": "process_startup",
+          "kit_cpu_percent_of_logical_total": 23.77855774782606,
+          "thread_id": 6164,
+          "cumulative_user_seconds": 3.234375,
+          "cumulative_kernel_seconds": 0.453125
+        },
+        {
+          "sample_index": 25,
+          "section": "process_startup",
+          "kit_cpu_percent_of_logical_total": 17.760309659351265,
+          "thread_id": 6164,
+          "cumulative_user_seconds": 3.28125,
+          "cumulative_kernel_seconds": 0.484375
+        },
+        {
+          "sample_index": 27,
+          "section": "process_startup",
+          "kit_cpu_percent_of_logical_total": 18.731002958790906,
+          "thread_id": 6164,
+          "cumulative_user_seconds": 4.125,
+          "cumulative_kernel_seconds": 0.484375
+        },
+        {
+          "sample_index": 28,
+          "section": "process_startup",
+          "kit_cpu_percent_of_logical_total": 16.401818753651536,
+          "thread_id": 6164,
+          "cumulative_user_seconds": 4.578125,
+          "cumulative_kernel_seconds": 0.515625
+        },
+        {
+          "sample_index": 29,
+          "section": "process_startup",
+          "kit_cpu_percent_of_logical_total": 12.18184668899369,
+          "thread_id": 6164,
+          "cumulative_user_seconds": 4.609375,
+          "cumulative_kernel_seconds": 0.53125
+        }
+      ],
+      "normalization": "100 percent equals all logical CPUs busy",
+      "sample_interval_seconds": 0.25
+    }
+  },
+  "gates": {
+    "fixture_pass": true,
+    "known_normal_exit": true,
+    "telemetry_nonperturbing": true,
+    "parent_below_512_mib": true,
+    "diagnostic_child_below_limit": true,
+    "diagnostic_boundary_persisted": true,
+    "required_markers_complete_when_invoked": true,
+    "process_tree_absent": true,
+    "no_fatal_dump_upload_device_failure": true,
+    "functional_pass": true,
+    "four_velocity_samples": true,
+    "frozen_contract_unchanged": true,
+    "production_unchanged": true
+  },
+  "cause_classification": {
+    "observed": [
+      "the full lightweight diagnostic now executes in a bounded child process",
+      "the parent receives only a bounded JSON file and helper exit evidence"
+    ],
+    "strong_inference": [],
+    "unconfirmed": [
+      "P0 exited normally, so the exact Phase 6EI residual path was not reproduced in this probe"
+    ]
+  },
+  "limitations": [
+    "P0 exited normally, so the Phase 6EI silent residual interval was not reproduced",
+    "CDB was unavailable in the current WinDbg package lookup; a future residual fails closed rather than matching the known NGX signature",
+    "the exact allocator behind the former parent-PowerShell growth remains unconfirmed"
+  ]
+}
