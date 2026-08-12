@@ -1,0 +1,115 @@
+{
+  "schema": "campfire.phase6ev.r0-lifecycle-safe-stop.v1",
+  "phase": "phase6ev",
+  "status": "safe_stop",
+  "reason": "L0 reached normal OS exit, but required final_sample_complete marker was absent due to a diagnostic branch-placement defect; frozen gate forbids retry",
+  "phase6eu_frozen_evidence": {
+    "classification": "unknown_shutdown_failure",
+    "last_marker": "timeline_stopped",
+    "active_blocks_240_280_320": [
+      1346,
+      1303,
+      1356
+    ],
+    "kit_peak_private_bytes": 14547746816,
+    "processes_cleaned": [
+      {
+        "pid": 21380,
+        "path": "C:\\packman-repo\\chk\\kit-kernel\\110.2.0+feature.windows-x86_64.release\\kit.exe"
+      },
+      {
+        "pid": 14796,
+        "path": "C:\\Windows\\System32\\conhost.exe"
+      },
+      {
+        "pid": 21656,
+        "path": "C:\\Users\\junic\\AppData\\Local\\ov\\data\\exts\\v2\\omni.kit.telemetry-1d6b5b5bc03ae94a\\omni.telemetry.transmitter\\omni.telemetry.transmitter.exe"
+      }
+    ],
+    "cleanup_remaining": [],
+    "cdb_observations": {
+      "main_thread": "RtlAcquireSRWLockExclusive -> MSVCP140 mtx_do_lock -> omni_ext_plugin carbOnPluginShutdown offsets",
+      "usd_loader_thread": "RtlAcquireSRWLockExclusive -> omni_usd UsdContext::loadRenderSettingsFromStage -> UsdContext::closeStage+0x360",
+      "profiler_thread": "NtDelayExecution",
+      "remaining_threads": "not captured before bounded CDB timeout",
+      "known_ngx_five_token_signature": false,
+      "access_violation": false,
+      "stack_tokens_verified": true
+    }
+  },
+  "phase6ev_l0": {
+    "path": "L0_short",
+    "normal_exit": true,
+    "probe_markers_complete": false,
+    "extension_markers_complete": true,
+    "runner_markers_complete": true,
+    "synchronous_memory_valid": true,
+    "active_blocks": {
+      "30": 505,
+      "60": 688
+    },
+    "stability_active_block_range_fraction": null,
+    "stability_resource_sample_count": 0,
+    "stability_private_slope_bytes_per_second": null,
+    "stability_private_non_monotonic_or_flat": false,
+    "plateau": false,
+    "kit_peak_private_bytes": 13597253632,
+    "last_probe_marker": "shutdown_complete",
+    "last_extension_marker": "extension_on_shutdown_end",
+    "last_runner_marker": "os_process_exit_observed",
+    "cdb_invoked": false,
+    "stage_close_seconds": 102.595644,
+    "tree_peak_private_bytes": 13760684032,
+    "runner_peak_private_bytes": 95117312,
+    "process_cleanup": {
+      "root_pid": 48972,
+      "observed_alive_before_cleanup": [],
+      "cleanup_required": false,
+      "killed_pids": [],
+      "remaining": [],
+      "all_observed_absent": true
+    },
+    "fatal_dump_upload_device_fault": 0,
+    "missing_required_marker": "final_sample_complete",
+    "marker_defect_corrected_after_safe_stop": true,
+    "condition_retried": false
+  },
+  "formal_population": {
+    "r0_completed": 0,
+    "r0_required": 3,
+    "r1_started": false
+  },
+  "production_changed": false,
+  "latest_demo_changed": false,
+  "regression": {
+    "release_build": "pass",
+    "phase0_rtx": "pass",
+    "phase3": {
+      "status": "pass",
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "active_blocks_final": 246,
+      "active_blocks_peak": 330,
+      "peak_fuel_input": 1.0
+    },
+    "focused": {
+      "passed": 187,
+      "total": 187,
+      "seconds": 28.807
+    },
+    "standard_suite": {
+      "passed": 78,
+      "total": 78,
+      "processes": 8,
+      "seconds": 346.9
+    },
+    "devlog": {
+      "references": 402,
+      "ids": 250,
+      "json": 202,
+      "svg": 168,
+      "zip": 2
+    },
+    "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A"
+  }
+}

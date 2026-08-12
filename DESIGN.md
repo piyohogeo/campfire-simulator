@@ -1,5 +1,13 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6EV readback-free R0 lifecycle calibration safe stop
+
+Phase 6EUの既存証拠を凍結したまま、別contract `campfire.phase6ev.r0-lifecycle-contract.v1`（SHA-256 `19FD34C5616DE4090F0EC512646F56E5069BC233C5EF35A4E9D58D28A2F26E92`）でreadbackなし4本Flowの終了順序を診断した。production、Point、wood authority、Flow、CollisionProxy、既定値とresource上限は不変である。
+
+Phase 6EUのCDBではmain threadが`RtlAcquireSRWLockExclusive → MSVCP140!mtx_do_lock → omni_ext_plugin!carbOnPluginShutdown`、UsdContext loader threadが`RtlAcquireSRWLockExclusive → omni_usd!UsdContext::loadRenderSettingsFromStage → UsdContext::closeStage+0x360`で待っていた。残りthreadはbounded CDB timeoutで未取得のためlock ownerは未確定だが、stage close／plugin shutdown境界が最有力でありaccess violationではない。
+
+新rootのL0はactive blocks `505/688`、Kit peak `13,597,253,632 bytes`で、Flow/Emitter/provider参照解放後の`close_stage_async()`が`102.595644秒`で復帰した。USD切断、extension shutdown callback、`shutdown_complete`、OS exit 0、残留0まで到達した。ただし`none`分岐で必須`final_sample_complete` markerが欠落する診断実装不備により凍結gateはfail。配置を共通loop後へ修正したが同条件をretryせず、R0 `0/3`、plateau未評価、R1未開始で安全停止した。詳細は`docs/design/r0_flow_shutdown_lifecycle.md`。
+
 # Phase 6EU NanoVDB readback lifetime calibration safe stop
 
 Phase 6ES/6ETを凍結したまま、public NanoVDB readbackのacquire、参照寿命、fuel変換、NumPy集計、bounded JSONL、最小空間samplingをR0～R6へ分離する新contract（SHA-256 `206E1051BA05327AA996E461B250C0B0D23A26BF7F89CB764E8AD30694FADA2C`）を追加した。production、Point/authority/Flow/CollisionProxy、既定値、14 GiB Kit guardは不変である。

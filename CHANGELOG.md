@@ -1,5 +1,10 @@
 # Changelog
 
+- Added the production-neutral Phase 6EV lifecycle contract, corrected synchronous memory markers, per-update renderer/state markers, reused extension shutdown callbacks, and parent-observed OS-exit evidence without changing production or the Phase 6EU history.
+- Audited the frozen Phase 6EU CDB evidence to a stage-close/plugin-shutdown SRW-lock boundary. L0 later completed its 102.596-second stage close, extension shutdown, and normal OS exit under the unchanged resource limits.
+- Safely stopped the new root because `final_sample_complete` was missing from the readback-none branch. Corrected the marker placement without retrying L0; formal R0 remains 0/3 and R1 was not started.
+- Passed the Release build, Phase 0 RTX, Phase 3 with mass-balance error 0 and Flow active blocks final/peak 246/330, 187/187 focused contracts, and the eight-process standard suite with 78/78 tests in 346.9 seconds. Devlog validation passed 402 references, 250 IDs, 202 JSON, 168 SVG, and 2 ZIP files; production app SHA-256 remained unchanged.
+
 - Added the production-neutral Phase 6EU NanoVDB readback lifetime contract and fine-grained acquisition/conversion/reference/persistence markers. Its first readback-free formal baseline reached frame 320 but ended in an unknown shutdown residual, so the run stopped before R1 and retained the unchanged 14 GiB guard.
 - Corrected the Phase 6EU synchronous Windows process-memory fixture after the safe stop by declaring the native function signatures explicitly; the failed run was not retried or reclassified.
 - Passed the Release build, Phase 0 RTX, Phase 3 with dry/wet mass-balance error 0 and Flow active blocks final/peak 264/352, 181/181 focused Phase 6E contracts, and the eight-process standard suite with 78/78 tests in 334.3 seconds. Devlog validation passed 399 references, 201 JSON, 167 SVG, and 2 ZIP files; production app SHA-256 remained unchanged.

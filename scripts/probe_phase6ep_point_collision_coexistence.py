@@ -634,11 +634,10 @@ async def _run():
             mark("sample_persist_started", frame=frame)
             _write(output, report)
             mark("sample_persisted", frame=frame, raw_json_bytes=output.stat().st_size)
-            if frame == final_frame:
-                mark(
-                    "final_sample_complete", frame=frame,
-                    **_lifecycle_state(timeline, context, flow, volume, emitter, collectors),
-                )
+        mark(
+            "final_sample_complete", frame=final_frame,
+            **_lifecycle_state(timeline, context, flow, volume, emitter, collectors),
+        )
         report["spatial_manifest_collider_indices"] = list(collectors_by_index)
         report["spatial_manifests"] = [collectors_by_index[index].finalize() for index in collectors_by_index]
         report["active_blocks_final"] = int(flow.get_active_block_count())

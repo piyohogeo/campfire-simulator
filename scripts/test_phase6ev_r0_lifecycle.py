@@ -44,6 +44,9 @@ class Phase6EvLifecycleContract(unittest.TestCase):
         ]
         positions = [self.probe.index(f'"{marker}"') for marker in ordered]
         self.assertEqual(positions, sorted(positions))
+        common_final = self.probe.index('"final_sample_complete", frame=final_frame')
+        self.assertLess(self.probe.index("for frame in range(1, final_frame + 1):"), common_final)
+        self.assertLess(common_final, self.probe.index('report["spatial_manifest_collider_indices"]'))
         self.assertIn("os_process_exit_observed", self.case_runner)
 
     def test_known_good_extension_is_reused(self):
