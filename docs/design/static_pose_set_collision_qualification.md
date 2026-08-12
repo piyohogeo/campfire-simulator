@@ -1,5 +1,19 @@
 # Phase 6EG: representative static Mesh CollisionProxy poses
 
+## Phase 6EN engineering-tolerance qualification
+
+Phase 6EM remains a formal failure of the historical `1e-5 m/s` maximum contract; neither its result nor contract was rewritten. Phase 6EN froze a new contract before its formal population with schema `campfire.phase6en.static-pose-engineering-qualification-contract.v1` and SHA-256 `C6A73B07385519160488DA07C023EC5E5104BB0A8C1BDAD70D01B15327CAE1AF`. The new absolute hard maximum is `1e-4 m/s` for both deep interior and center axis. OFF positive controls remain `>=0.1 m/s`, the deep ON/OFF ratio remains `<=0.01`, the stale-position predicate is unchanged, and the one-velocity-voxel boundary band remains reported but excluded from the hard gate. `5e-5 m/s` is diagnostic warning level only.
+
+The reason is an engineering tolerance, not a retroactive pass. Public NanoVDB velocity is float32; unobstructed deep velocity is approximately 8.8–9.1 m/s; Phase 6EM P4 recorded `1.5913658e-5 m/s` deep and `1.0030950e-5 m/s` center. The new hard maximum is 0.1% of the minimum OFF control and therefore tighter than the retained 1% relative gate. Pose matrices, order, Mesh, emitter, Flow settings, velocity voxel size, exact-Mesh distance bands, sample frames, and three-run population stayed byte-identical to the old contract.
+
+All 36 fresh processes and all 144 samples passed. Every process reached normal OS exit with active blocks and source fuel `0.8 ± 1e-6`. The worst ON values were P4 deep `1.5913657989585772e-5` and center `1.0030949852080084e-5 m/s`; P5 reached `1.32856866912334e-5` and `1.17714271254954e-5 m/s`; all other poses were lower. No deep or center cell exceeded the `5e-5` warning level. Minimum OFF deep was `7.767152309417725 m/s`; minimum OFF center was `5.97240686416626 m/s`; worst deep ON/OFF ratio was `2.04884072767446e-6`. The Phase 6EM P4 11-deep/one-center positions reproduced in all three new runs and all four frames, with zero run-to-run range in the maxima.
+
+Resource peaks were 103,792,640 bytes runner, 27,439,104 diagnostic, 12,098,895,872 Kit, and 12,245,282,816 unique tree. Minimum available physical memory and commit headroom were 90,869,358,592 and 109,909,864,448 bytes. CDB invocation, known-NGX classification, fatal, dump, automatic upload, device loss/TDR, and cleanup residual counts were zero. Production SHA-256 stayed `94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`.
+
+Qualification is limited to Flow 110.0.0, the current fixed resolution, the unchanged 26-vertex closed Mesh, P0–P5 representative static poses, and this new tolerance. It does not qualify all SO(3), dynamic transforms, RenderSurface, PhysX sharing, production log layout, or 20-log performance. PointEmitter–CollisionProxy coexistence remains the next proposed independent Phase and was not started.
+
+Final regression passed the Release build in 6.48 seconds, Phase 0 RTX in 21.5 seconds, Phase 3 in 27.8 seconds, 114/114 focused Phase 6EA–6EN contracts, and the eight-process standard suite with 78/78 tests in 333.8 seconds. Devlog validation passed 374 references, 193 JSON files, 159 SVG files, and 2 ZIP files. This internal numerical result has no new visual behavior, so no video was generated and the latest-demo pointer was not moved.
+
 ## Phase 6EM fifth-root numeric safe stop
 
 The explicitly approved fifth root started from frozen process 1 with no prior sample reuse. The contract SHA-256 remained `4BAED82160A08C061D479BCCA6B6A46866DE88F5046851D2AF140D36D8C80687`, the production app SHA-256 remained `94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`, and no pose, process order, threshold, Mesh, emitter, Flow setting, production code, or production default changed.

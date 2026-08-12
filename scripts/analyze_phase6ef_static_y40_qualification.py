@@ -43,22 +43,45 @@ def summarize(values: np.ndarray, thresholds: tuple[float, ...]) -> dict:
         return {
             "available": False,
             "voxel_count": 0,
+            "minimum": 0.0,
             "mean": 0.0,
             "p50": 0.0,
             "p95": 0.0,
+            "p99": 0.0,
             "maximum": 0.0,
             "threshold_counts": {f"{value:.12g}": 0 for value in thresholds},
         }
     return {
         "available": True,
         "voxel_count": int(values.size),
+        "minimum": finite(np.min(values)),
         "mean": finite(np.mean(values)),
         "p50": finite(np.percentile(values, 50)),
         "p95": finite(np.percentile(values, 95)),
+        "p99": finite(np.percentile(values, 99)),
         "maximum": finite(np.max(values)),
         "threshold_counts": {
             f"{value:.12g}": int(np.count_nonzero(values > value)) for value in thresholds
         },
+    }
+
+
+def maximum_cell(payload, magnitude: np.ndarray, mask: np.ndarray) -> dict | None:
+    candidates = np.flatnonzero(mask)
+    if not candidates.size:
+        return None
+    source_index = int(candidates[int(np.argmax(magnitude[candidates]))])
+    face_code = int(payload["nearest_face_class"][source_index])
+    return {
+        "source_array_index": source_index,
+        "index_ijk": [int(value) for value in payload["index_ijk"][source_index]],
+        "world_xyz_m": [finite(value) for value in payload["world_xyz"][source_index]],
+        "collider_local_xyz_m": [finite(value) for value in payload["local_xyz"][source_index]],
+        "velocity_xyz_m_s": [finite(value) for value in payload["velocity_xyz"][source_index]],
+        "magnitude_m_s": finite(magnitude[source_index]),
+        "mesh_signed_distance_m": finite(payload["mesh_signed_distance_m"][source_index]),
+        "mesh_distance_velocity_voxels": finite(payload["mesh_distance_voxels"][source_index]),
+        "nearest_face_class": {0: "side", 1: "end", 2: "other"}.get(face_code, f"unknown_{face_code}"),
     }
 
 
@@ -99,6 +122,14 @@ def sample_stats(path: Path, thresholds: tuple[float, ...]) -> tuple[dict, dict]
             "geometry_labels_are_flow_occupancy": bool(
                 payload["flow_collision_occupancy_mask_available"][0]
             ),
+            "maximum_cells": {
+                name: maximum_cell(payload, magnitude, masks[name])
+                for name in (
+                    "boundary_0_to_1_voxel",
+                    "deep_interior",
+                    "center_axis_near",
+                )
+            },
         }
     return stats, metadata
 

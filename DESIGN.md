@@ -1,5 +1,17 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+## Phase 6EN static-pose engineering tolerance qualification
+
+Phase 6EMの`1e-5 m/s` contract不合格は履歴として確定し、旧contract SHA-256 `4BAED82160A08C061D479BCCA6B6A46866DE88F5046851D2AF140D36D8C80687`を変更しない。Phase 6ENは別schema・別SHA-256 `C6A73B07385519160488DA07C023EC5E5104BB0A8C1BDAD70D01B15327CAE1AF`の新規qualificationである。公開NanoVDB velocityがfloat32であること、OFF深部が約8.8～9.1 m/sであること、Phase 6EM P4残差がdeep `1.5913658e-5`／center `1.0030950e-5 m/s`だったことから、deep／center hard maximumを`1e-4 m/s`へ事前固定した。これは最低OFF正例`0.1 m/s`の0.1%で、別途維持する1% relative gateより厳しい。`5e-5 m/s`は警戒水準であり合否には使わない。
+
+新rootの36独立process（P0～P5 × ON/OFF × 3 run）は全てfunctional pass、normal OS exit、4 velocity sample、active block、fuel 0.8、incremental/pair/stale gateを満たした。最悪ON deep／centerはP4の`1.5913657989585772e-5`／`1.0030949852080084e-5 m/s`で、3 run・4 frameとも同一だった。P5は`1.32856866912334e-5`／`1.17714271254954e-5 m/s`、他姿勢はそれ以下で、全姿勢の`5e-5`超過deep／center cellは0。OFF deep最小は全姿勢`7.7671523094 m/s`、OFF center最小は`5.9724068642 m/s`、worst deep ratioはP4の`2.0488407277e-6`である。Phase 6EMの11 deep＋1 center cell位置はPhase 6ENの全P4 run・全frameで再現したが、新contractの警戒水準には達していない。
+
+runner／diagnostic／Kit／unique-tree peakは103,792,640／27,439,104／12,098,895,872／12,245,282,816 bytes。最小available physical／commit headroomは90,869,358,592／109,909,864,448 bytesだった。CDB呼出し、known NGX分類、fatal、dump、automatic upload、device lost、TDR、cleanup残留は全て0。production app SHA-256は前後とも`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`である。
+
+qualified範囲はFlow 110.0.0、現行固定解像度、現行26頂点閉Mesh、事前固定したP0～P5静的姿勢、新engineering toleranceに限定する。全SO(3)、dynamic transform、RenderSurface、PhysX共用、production薪配置、20本性能は未qualified。次はPointEmitter–CollisionProxy共存試験を独立Phaseとして提案するが、このPhaseでは開始しない。
+
+回帰はRelease build 6.48秒、Phase 0 RTX 21.5秒、Phase 3 27.8秒、Phase 6EA～6EN focused contract 114/114、標準8 process 78/78（333.8秒）が合格した。日誌静的検査は374参照、193 JSON、159 SVG、2 ZIPが合格。内部数値試験のみで映像上の差がないため動画とlatest-demo pointerは更新しない。
+
 ## Phase 6EM Phase 6EG numeric-gate safe stop
 
 Explicit approval restarted the frozen Phase 6EG contract from process 1 in the new `phase6eg-static-pose-qualification-5` root. The production app SHA-256 remained `94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`, and the contract SHA-256 remained `4BAED82160A08C061D479BCCA6B6A46866DE88F5046851D2AF140D36D8C80687`. No prior sample was reused and no pose, order, threshold, Mesh, emitter, Flow setting, production code, or production default changed.

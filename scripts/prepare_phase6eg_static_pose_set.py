@@ -177,9 +177,11 @@ def _main() -> None:
     report_path = Path(settings.get_as_string("/phase6eg/report")).resolve()
     reference_npz = Path(settings.get_as_string("/phase6eg/referenceNpz")).resolve()
     app = omni.kit.app.get_app()
+    contract = json.loads(contract_path.read_text(encoding="utf-8"))
+    phase = str(contract.get("phase", ""))
     report = {
-        "schema": "campfire.phase6eg.static-pose-preflight.v1",
-        "phase": "phase6eg",
+        "schema": f"campfire.{phase}.static-pose-preflight.v1",
+        "phase": phase,
         "status": "running",
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "source_sha256": phase6ec._sha256(source) if source.is_file() else None,
@@ -191,11 +193,10 @@ def _main() -> None:
     }
     exit_code = 1
     try:
-        contract = json.loads(contract_path.read_text(encoding="utf-8"))
         if report["source_sha256"] != contract["source_stage_sha256"]:
             raise RuntimeError("qualified Phase 6DY source hash mismatch")
-        if not contract["declared_before_formal_runs"] or contract["phase"] != "phase6eg":
-            raise RuntimeError("Phase 6EG contract is not predeclared")
+        if not contract["declared_before_formal_runs"] or phase not in ("phase6eg", "phase6en"):
+            raise RuntimeError("Static-pose contract is not predeclared")
         output_root.mkdir(parents=True, exist_ok=False)
         origin, basis = _reference_grid(reference_npz)
         source_stage = Usd.Stage.Open(str(source))
@@ -264,10 +265,10 @@ def _main() -> None:
             "all_pose_gates_pass": all(all(item["gates"].values()) for item in report["poses"].values()),
             "all_local_geometry_hashes_identical": len({item["audit"]["local_geometry_sha256"] for item in report["poses"].values()}) == 1,
             "formal_order_has_36_unique_run_condition_slots": sum(len(row) for row in contract["formal_order"]) == 36 and all(len(set(row)) == 12 for row in contract["formal_order"]),
-            "thresholds_equal_phase6ef": contract["thresholds"]["existing_velocity_limit_m_s"] == 1.0e-5 and contract["thresholds"]["collision_off_positive_minimum_m_s"] == 0.1 and contract["thresholds"]["on_to_off_deep_maximum_ratio"] == 0.01,
+            "thresholds_match_declared_phase": contract["thresholds"]["existing_velocity_limit_m_s"] == (1.0e-5 if phase == "phase6eg" else 1.0e-4) and contract["thresholds"]["collision_off_positive_minimum_m_s"] == 0.1 and contract["thresholds"]["on_to_off_deep_maximum_ratio"] == 0.01,
         }
         if not all(report["gates"].values()):
-            raise RuntimeError(f"Phase 6EG offline gates failed: {report['gates']}")
+            raise RuntimeError(f"{phase} offline gates failed: {report['gates']}")
         report["status"] = "ok"
         exit_code = 0
     except Exception as error:

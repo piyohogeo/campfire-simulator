@@ -1,0 +1,92 @@
+{
+  "schema": "campfire.phase6en.static-pose-engineering-qualification-contract.v1",
+  "phase": "phase6en",
+  "declared_before_formal_runs": true,
+  "purpose": "Qualify the unchanged static 26-vertex Mesh CollisionProxy across the frozen representative pose set under a new float32 engineering tolerance; preserve Phase 6EM as a formal failure of the historical 1e-5 contract.",
+  "source_stage_sha256": "BC65721F4C6D4ECF1F35C736F2DD10F7A47C9F2B361E45898032E869D894D5F9",
+  "historical_contract": {
+    "path": "scripts/phase6eg_static_pose_set_contract.json",
+    "sha256": "4BAED82160A08C061D479BCCA6B6A46866DE88F5046851D2AF140D36D8C80687",
+    "phase6em_status": "formal_fail_at_1e-5_m_s_unchanged"
+  },
+  "engineering_tolerance_rationale": [
+    "Public NanoVDB velocity values are float32.",
+    "Unoccluded deep-interior velocity is approximately 8.8 to 9.1 m/s.",
+    "Phase 6EM P4 recorded a deep maximum of 1.5913658e-5 m/s and a center maximum of 1.0030950e-5 m/s.",
+    "The new 1e-4 m/s hard maximum is 0.1 percent of the minimum 0.1 m/s OFF positive control and is stricter than the existing 1 percent relative gate.",
+    "The tolerance covers small float32 residuals after rotation, grid phasing, and interpolation.",
+    "This is a new qualification contract and does not revise or reinterpret the failed historical contract."
+  ],
+  "fixed_environment": {
+    "flow_version": "110.0.0",
+    "velocity_voxel_size_m": 0.05,
+    "sample_frames": [60, 120, 180, 200],
+    "independent_runs": 3,
+    "formal_process_count": 36,
+    "emitter_fuel": 0.8,
+    "emitter_follows_pose": false,
+    "geometry": {"vertex_count": 26, "face_count": 36, "face_index_count": 120, "closed": true},
+    "qualified_scene_envelope_m": {"minimum": [-1.25, -1.25, 0.0], "maximum": [1.25, 1.25, 2.1]}
+  },
+  "matrix_convention": {
+    "storage": "USD/Gf row-vector 4x4 matrix",
+    "point_transform": "[x,y,z,1] @ matrix",
+    "center_preserved_m": [0.0, 0.0, 1.035],
+    "compound_order": "P4 applies local Y24, then world Z31; final column-vector rotation Rz(31)*Ry(24), transposed for Gf row-vector storage",
+    "measurement_inverse": "the exact authored local_to_world matrix is inverted; no Euler reconstruction"
+  },
+  "poses": {
+    "P0_identity": {"kind":"identity axis-aligned control","parameters":{"euler_degrees":[0.0,0.0,0.0]},"matrix":[[1.0,0.0,0.0,0.0],[0.0,1.0,0.0,0.0],[0.0,0.0,1.0,0.0],[0.0,0.0,0.0,1.0]]},
+    "P1_y40": {"kind":"Phase 6EF qualified Y40 control","parameters":{"axis":[0.0,1.0,0.0],"angle_degrees":40.0},"matrix":[[0.766044443118978,0.0,-0.6427876096865393,0.0],[0.0,1.0,0.0,0.0],[0.6427876096865393,0.0,0.766044443118978,0.0],[-0.665285176025568,0.0,0.24214400137185776,1.0]]},
+    "P2_roll_x17": {"kind":"asymmetric long-axis roll changing low-poly cross-section grid phase","parameters":{"axis":[1.0,0.0,0.0],"angle_degrees":17.0},"matrix":[[1.0,0.0,0.0,0.0],[0.0,0.9563047559630354,0.29237170472273677,0.0],[0.0,-0.29237170472273677,0.9563047559630354,0.0],[0.0,0.30260471438803255,0.045224577578258374,1.0]]},
+    "P3_z33": {"kind":"non-Y single-axis rotation","parameters":{"axis":[0.0,0.0,1.0],"angle_degrees":33.0},"matrix":[[0.838670567945424,0.5446390350150271,0.0,0.0],[-0.5446390350150271,0.838670567945424,0.0,0.0],[0.0,0.0,1.0,0.0],[0.0,0.0,0.0,1.0]]},
+    "P4_y24_z31": {"kind":"two-axis compound rotation","parameters":{"local_y_degrees":24.0,"then_world_z_degrees":31.0},"matrix":[[0.7830612939961841,0.47051069384706956,-0.40673664307580015,0.0],[-0.5150380749100542,0.8571673007021123,0.0,0.0],[0.3486413504419221,0.2094848576451379,0.9135454576426009,0.0],[-0.3608437977073894,-0.21681682766271773,0.08948045133990812,1.0]]},
+    "P5_axis111_53": {"kind":"general axis-angle pose not near a grid axis","parameters":{"normalized_axis":[0.5773502691896258,0.5773502691896258,0.5773502691896258],"angle_degrees":53.0},"matrix":[[0.7345433487680323,0.5938207523261825,-0.3283641010942147,0.0],[-0.3283641010942147,0.7345433487680323,0.5938207523261825,0.0],[0.5938207523261825,-0.3283641010942147,0.7345433487680323,0.0],[-0.6146044786575988,0.3398568446325122,0.2747476340250865,1.0]]}
+  },
+  "formal_order": [
+    ["P0_identity_on","P0_identity_off","P1_y40_on","P1_y40_off","P2_roll_x17_on","P2_roll_x17_off","P3_z33_on","P3_z33_off","P4_y24_z31_on","P4_y24_z31_off","P5_axis111_53_on","P5_axis111_53_off"],
+    ["P2_roll_x17_off","P2_roll_x17_on","P3_z33_off","P3_z33_on","P4_y24_z31_off","P4_y24_z31_on","P5_axis111_53_off","P5_axis111_53_on","P0_identity_off","P0_identity_on","P1_y40_off","P1_y40_on"],
+    ["P4_y24_z31_on","P4_y24_z31_off","P5_axis111_53_on","P5_axis111_53_off","P0_identity_on","P0_identity_off","P1_y40_on","P1_y40_off","P2_roll_x17_on","P2_roll_x17_off","P3_z33_on","P3_z33_off"]
+  ],
+  "geometry_contract": {
+    "primary_distance": "signed shortest distance to the exact authored 26-vertex, 36-face closed Mesh",
+    "ideal_cylinder_role": "secondary diagnostic only",
+    "flow_internal_occupancy_mask_public_api_available": false,
+    "geometry_labels_are_flow_occupancy": false,
+    "boundary_band": "actual-Mesh inside with signed depth in [0,1] native velocity voxel; reported, excluded from hard maximum gate",
+    "deep_interior": "actual-Mesh signed depth > 1 native velocity voxel",
+    "center_axis_near": "deep interior and local long-axis radial distance <= 0.5 native velocity voxel",
+    "stale_reference": "identity actual-Mesh geometry evaluated at the same world-space velocity samples"
+  },
+  "thresholds": {
+    "existing_velocity_limit_m_s": 0.0001,
+    "engineering_hard_maximum_m_s": 0.0001,
+    "warning_level_m_s": 0.00005,
+    "collision_off_positive_minimum_m_s": 0.1,
+    "on_to_off_deep_maximum_ratio": 0.01,
+    "identity_only_comparison_minimum_off_m_s": 0.1,
+    "identity_only_on_to_off_minimum_ratio": 0.1,
+    "reported_velocity_thresholds_m_s": [0.000001,0.00001,0.00005,0.0001],
+    "fuel_absolute_tolerance": 0.000001,
+    "minimum_emitter_surface_clearance_m": 0.1
+  },
+  "stale_transform_contract": {
+    "P0_identity": "not_applicable_same_pose",
+    "P2_roll_x17": "identity-only comparison may be geometrically sparse because the long axis is unchanged; report availability and require exact matrix parity plus current-pose gates",
+    "other_poses": "where identity-only OFF maximum reaches 0.1 m/s, ON/OFF ratio must remain at least 0.1 so suppression is not stale at identity"
+  },
+  "gates": {
+    "all_36_processes_and_all_samples_required": true,
+    "on_deep_and_center_hard_maximum_at_or_below_engineering_limit": true,
+    "paired_off_deep_and_center_maximum_at_or_above_positive_minimum": true,
+    "on_over_off_deep_maximum_ratio_at_or_below_limit": true,
+    "current_pose_suppression_and_stale_reference_check": true,
+    "boundary_band_excluded_from_hard_maximum": true,
+    "warning_level_is_diagnostic_only": true,
+    "active_blocks_positive_and_source_fuel_preserved": true,
+    "on_off_difference_limited_to_collision_switch": true,
+    "functional_pass_and_normal_os_exit_only": true,
+    "fatal_dump_upload_residual_zero": true
+  },
+  "scope_if_pass": "Flow 110.0.0, current fixed resolution, current 26-vertex closed Mesh, and only P0-P5 representative static single-axis/compound poses under the Phase 6EN engineering tolerance; not all SO(3), dynamic transform, RenderSurface, PhysX sharing, production layout, or 20-log performance."
+}

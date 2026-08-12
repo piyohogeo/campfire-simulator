@@ -1,0 +1,1864 @@
+{
+  "schema": "campfire.phase6en.static-pose-engineering-qualification-summary.v1",
+  "phase": "phase6en",
+  "generated_utc": "2026-08-11T23:58:18.587206+00:00",
+  "qualified": true,
+  "population": {
+    "processes": 36,
+    "velocity_samples": 144,
+    "independent_runs": 3,
+    "prior_samples_reused": false
+  },
+  "contracts": {
+    "phase6en_sha256": "C6A73B07385519160488DA07C023EC5E5104BB0A8C1BDAD70D01B15327CAE1AF",
+    "phase6em_historical_contract_sha256": "4BAED82160A08C061D479BCCA6B6A46866DE88F5046851D2AF140D36D8C80687",
+    "phase6em_historical_status": "formal_fail_at_1e-5_m_s_unchanged",
+    "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "production_changed": false
+  },
+  "thresholds": {
+    "existing_velocity_limit_m_s": 0.0001,
+    "engineering_hard_maximum_m_s": 0.0001,
+    "warning_level_m_s": 5e-05,
+    "collision_off_positive_minimum_m_s": 0.1,
+    "on_to_off_deep_maximum_ratio": 0.01,
+    "identity_only_comparison_minimum_off_m_s": 0.1,
+    "identity_only_on_to_off_minimum_ratio": 0.1,
+    "reported_velocity_thresholds_m_s": [
+      1e-06,
+      1e-05,
+      5e-05,
+      0.0001
+    ],
+    "fuel_absolute_tolerance": 1e-06,
+    "minimum_emitter_surface_clearance_m": 0.1
+  },
+  "rationale": [
+    "Public NanoVDB velocity values are float32.",
+    "Unoccluded deep-interior velocity is approximately 8.8 to 9.1 m/s.",
+    "Phase 6EM P4 recorded a deep maximum of 1.5913658e-5 m/s and a center maximum of 1.0030950e-5 m/s.",
+    "The new 1e-4 m/s hard maximum is 0.1 percent of the minimum 0.1 m/s OFF positive control and is stricter than the existing 1 percent relative gate.",
+    "The tolerance covers small float32 residuals after rotation, grid phasing, and interpolation.",
+    "This is a new qualification contract and does not revise or reinterpret the failed historical contract."
+  ],
+  "pose_results": {
+    "P0_identity": {
+      "worst_on_deep_m_s": 0.0,
+      "worst_on_center_m_s": 0.0,
+      "minimum_off_deep_m_s": 7.767152309417725,
+      "minimum_off_center_m_s": 7.767152309417725,
+      "worst_deep_ratio": 0.0,
+      "identity_only_comparable_samples": 0,
+      "worst_identity_only_on_over_off_ratio": 0.0,
+      "boundary_band_worst_maximum_m_s": 8.928284645080566,
+      "stale_transform_mode": "not_applicable_same_pose"
+    },
+    "P1_y40": {
+      "worst_on_deep_m_s": 8.352522854693234e-06,
+      "worst_on_center_m_s": 8.352522854693234e-06,
+      "minimum_off_deep_m_s": 7.767152309417725,
+      "minimum_off_center_m_s": 7.767152309417725,
+      "worst_deep_ratio": 1.0753648856049525e-06,
+      "identity_only_comparable_samples": 12,
+      "worst_identity_only_on_over_off_ratio": 7.030854019588856,
+      "boundary_band_worst_maximum_m_s": 9.40645694732666,
+      "stale_transform_mode": "where identity-only OFF maximum reaches 0.1 m/s, ON/OFF ratio must remain at least 0.1 so suppression is not stale at identity"
+    },
+    "P2_roll_x17": {
+      "worst_on_deep_m_s": 7.300534889509436e-06,
+      "worst_on_center_m_s": 2.980232238769531e-07,
+      "minimum_off_deep_m_s": 7.767152309417725,
+      "minimum_off_center_m_s": 7.767152309417725,
+      "worst_deep_ratio": 9.399242603569763e-07,
+      "identity_only_comparable_samples": 0,
+      "worst_identity_only_on_over_off_ratio": 0.0,
+      "boundary_band_worst_maximum_m_s": 8.928284645080566,
+      "stale_transform_mode": "identity-only comparison may be geometrically sparse because the long axis is unchanged; report availability and require exact matrix parity plus current-pose gates"
+    },
+    "P3_z33": {
+      "worst_on_deep_m_s": 3.918523816537345e-06,
+      "worst_on_center_m_s": 3.918523816537345e-06,
+      "minimum_off_deep_m_s": 7.767152309417725,
+      "minimum_off_center_m_s": 5.97240686416626,
+      "worst_deep_ratio": 5.044994176032969e-07,
+      "identity_only_comparable_samples": 12,
+      "worst_identity_only_on_over_off_ratio": 5.6891814390216595,
+      "boundary_band_worst_maximum_m_s": 8.928284645080566,
+      "stale_transform_mode": "where identity-only OFF maximum reaches 0.1 m/s, ON/OFF ratio must remain at least 0.1 so suppression is not stale at identity"
+    },
+    "P4_y24_z31": {
+      "worst_on_deep_m_s": 1.5913657989585772e-05,
+      "worst_on_center_m_s": 1.0030949852080084e-05,
+      "minimum_off_deep_m_s": 7.767152309417725,
+      "minimum_off_center_m_s": 5.97240686416626,
+      "worst_deep_ratio": 2.04884072767446e-06,
+      "identity_only_comparable_samples": 12,
+      "worst_identity_only_on_over_off_ratio": 8.461052928583799,
+      "boundary_band_worst_maximum_m_s": 9.09351921081543,
+      "stale_transform_mode": "where identity-only OFF maximum reaches 0.1 m/s, ON/OFF ratio must remain at least 0.1 so suppression is not stale at identity"
+    },
+    "P5_axis111_53": {
+      "worst_on_deep_m_s": 1.3285686691233423e-05,
+      "worst_on_center_m_s": 1.1771427125495393e-05,
+      "minimum_off_deep_m_s": 7.767152309417725,
+      "minimum_off_center_m_s": 5.97240686416626,
+      "worst_deep_ratio": 1.7104964808176141e-06,
+      "identity_only_comparable_samples": 12,
+      "worst_identity_only_on_over_off_ratio": 8.84678465010608,
+      "boundary_band_worst_maximum_m_s": 9.09351921081543,
+      "stale_transform_mode": "where identity-only OFF maximum reaches 0.1 m/s, ON/OFF ratio must remain at least 0.1 so suppression is not stale at identity"
+    }
+  },
+  "run_to_run_variation": {
+    "P0_identity": {
+      "runs": [
+        {
+          "run": 1,
+          "deep_maximum_m_s": 0.0,
+          "center_maximum_m_s": 0.0,
+          "boundary_maximum_m_s": 2.831104278564453,
+          "deep_cells_above_warning": 0,
+          "center_cells_above_warning": 0
+        },
+        {
+          "run": 2,
+          "deep_maximum_m_s": 0.0,
+          "center_maximum_m_s": 0.0,
+          "boundary_maximum_m_s": 2.831104278564453,
+          "deep_cells_above_warning": 0,
+          "center_cells_above_warning": 0
+        },
+        {
+          "run": 3,
+          "deep_maximum_m_s": 0.0,
+          "center_maximum_m_s": 0.0,
+          "boundary_maximum_m_s": 2.831104278564453,
+          "deep_cells_above_warning": 0,
+          "center_cells_above_warning": 0
+        }
+      ],
+      "deep_run_range_m_s": 0.0,
+      "center_run_range_m_s": 0.0
+    },
+    "P1_y40": {
+      "runs": [
+        {
+          "run": 1,
+          "deep_maximum_m_s": 8.352522854693234e-06,
+          "center_maximum_m_s": 8.352522854693234e-06,
+          "boundary_maximum_m_s": 3.1623966693878174,
+          "deep_cells_above_warning": 0,
+          "center_cells_above_warning": 0
+        },
+        {
+          "run": 2,
+          "deep_maximum_m_s": 8.352522854693234e-06,
+          "center_maximum_m_s": 8.352522854693234e-06,
+          "boundary_maximum_m_s": 3.1623966693878174,
+          "deep_cells_above_warning": 0,
+          "center_cells_above_warning": 0
+        },
+        {
+          "run": 3,
+          "deep_maximum_m_s": 8.352522854693234e-06,
+          "center_maximum_m_s": 8.352522854693234e-06,
+          "boundary_maximum_m_s": 3.1623966693878174,
+          "deep_cells_above_warning": 0,
+          "center_cells_above_warning": 0
+        }
+      ],
+      "deep_run_range_m_s": 0.0,
+      "center_run_range_m_s": 0.0
+    },
+    "P2_roll_x17": {
+      "runs": [
+        {
+          "run": 1,
+          "deep_maximum_m_s": 7.300534889509436e-06,
+          "center_maximum_m_s": 2.980232238769531e-07,
+          "boundary_maximum_m_s": 3.0230672359466553,
+          "deep_cells_above_warning": 0,
+          "center_cells_above_warning": 0
+        },
+        {
+          "run": 2,
+          "deep_maximum_m_s": 7.300534889509436e-06,
+          "center_maximum_m_s": 2.980232238769531e-07,
+          "boundary_maximum_m_s": 3.0230672359466553,
+          "deep_cells_above_warning": 0,
+          "center_cells_above_warning": 0
+        },
+        {
+          "run": 3,
+          "deep_maximum_m_s": 7.300534889509436e-06,
+          "center_maximum_m_s": 2.980232238769531e-07,
+          "boundary_maximum_m_s": 3.0230672359466553,
+          "deep_cells_above_warning": 0,
+          "center_cells_above_warning": 0
+        }
+      ],
+      "deep_run_range_m_s": 0.0,
+      "center_run_range_m_s": 0.0
+    },
+    "P3_z33": {
+      "runs": [
+        {
+          "run": 1,
+          "deep_maximum_m_s": 3.918523816537345e-06,
+          "center_maximum_m_s": 3.918523816537345e-06,
+          "boundary_maximum_m_s": 2.5665783882141113,
+          "deep_cells_above_warning": 0,
+          "center_cells_above_warning": 0
+        },
+        {
+          "run": 2,
+          "deep_maximum_m_s": 3.918523816537345e-06,
+          "center_maximum_m_s": 3.918523816537345e-06,
+          "boundary_maximum_m_s": 2.5665783882141113,
+          "deep_cells_above_warning": 0,
+          "center_cells_above_warning": 0
+        },
+        {
+          "run": 3,
+          "deep_maximum_m_s": 3.918523816537345e-06,
+          "center_maximum_m_s": 3.918523816537345e-06,
+          "boundary_maximum_m_s": 2.5665783882141113,
+          "deep_cells_above_warning": 0,
+          "center_cells_above_warning": 0
+        }
+      ],
+      "deep_run_range_m_s": 0.0,
+      "center_run_range_m_s": 0.0
+    },
+    "P4_y24_z31": {
+      "runs": [
+        {
+          "run": 1,
+          "deep_maximum_m_s": 1.5913657989585772e-05,
+          "center_maximum_m_s": 1.0030949852080084e-05,
+          "boundary_maximum_m_s": 1.9408366680145264,
+          "deep_cells_above_warning": 0,
+          "center_cells_above_warning": 0
+        },
+        {
+          "run": 2,
+          "deep_maximum_m_s": 1.5913657989585772e-05,
+          "center_maximum_m_s": 1.0030949852080084e-05,
+          "boundary_maximum_m_s": 1.9408366680145264,
+          "deep_cells_above_warning": 0,
+          "center_cells_above_warning": 0
+        },
+        {
+          "run": 3,
+          "deep_maximum_m_s": 1.5913657989585772e-05,
+          "center_maximum_m_s": 1.0030949852080084e-05,
+          "boundary_maximum_m_s": 1.9408366680145264,
+          "deep_cells_above_warning": 0,
+          "center_cells_above_warning": 0
+        }
+      ],
+      "deep_run_range_m_s": 0.0,
+      "center_run_range_m_s": 0.0
+    },
+    "P5_axis111_53": {
+      "runs": [
+        {
+          "run": 1,
+          "deep_maximum_m_s": 1.3285686691233423e-05,
+          "center_maximum_m_s": 1.1771427125495393e-05,
+          "boundary_maximum_m_s": 0.8578240275382996,
+          "deep_cells_above_warning": 0,
+          "center_cells_above_warning": 0
+        },
+        {
+          "run": 2,
+          "deep_maximum_m_s": 1.3285686691233423e-05,
+          "center_maximum_m_s": 1.1771427125495393e-05,
+          "boundary_maximum_m_s": 0.8578240275382996,
+          "deep_cells_above_warning": 0,
+          "center_cells_above_warning": 0
+        },
+        {
+          "run": 3,
+          "deep_maximum_m_s": 1.3285686691233423e-05,
+          "center_maximum_m_s": 1.1771427125495393e-05,
+          "boundary_maximum_m_s": 0.8578240275382996,
+          "deep_cells_above_warning": 0,
+          "center_cells_above_warning": 0
+        }
+      ],
+      "deep_run_range_m_s": 0.0,
+      "center_run_range_m_s": 0.0
+    }
+  },
+  "threshold_exceedance_cell_totals": {
+    "P0_identity": {
+      "on": {
+        "deep_interior": {
+          "1e-06": 0,
+          "1e-05": 0,
+          "5e-05": 0,
+          "0.0001": 0
+        },
+        "center_axis_near": {
+          "1e-06": 0,
+          "1e-05": 0,
+          "5e-05": 0,
+          "0.0001": 0
+        },
+        "boundary_0_to_1_voxel": {
+          "1e-06": 1920,
+          "1e-05": 1920,
+          "5e-05": 1890,
+          "0.0001": 1836
+        }
+      },
+      "off": {
+        "deep_interior": {
+          "1e-06": 5376,
+          "1e-05": 5376,
+          "5e-05": 5376,
+          "0.0001": 5376
+        },
+        "center_axis_near": {
+          "1e-06": 384,
+          "1e-05": 384,
+          "5e-05": 384,
+          "0.0001": 384
+        },
+        "boundary_0_to_1_voxel": {
+          "1e-06": 6912,
+          "1e-05": 6912,
+          "5e-05": 6912,
+          "0.0001": 6912
+        }
+      }
+    },
+    "P1_y40": {
+      "on": {
+        "deep_interior": {
+          "1e-06": 4044,
+          "1e-05": 0,
+          "5e-05": 0,
+          "0.0001": 0
+        },
+        "center_axis_near": {
+          "1e-06": 324,
+          "1e-05": 0,
+          "5e-05": 0,
+          "0.0001": 0
+        },
+        "boundary_0_to_1_voxel": {
+          "1e-06": 5076,
+          "1e-05": 2088,
+          "5e-05": 2088,
+          "0.0001": 2088
+        }
+      },
+      "off": {
+        "deep_interior": {
+          "1e-06": 5892,
+          "1e-05": 5892,
+          "5e-05": 5892,
+          "0.0001": 5892
+        },
+        "center_axis_near": {
+          "1e-06": 408,
+          "1e-05": 408,
+          "5e-05": 408,
+          "0.0001": 408
+        },
+        "boundary_0_to_1_voxel": {
+          "1e-06": 7344,
+          "1e-05": 7344,
+          "5e-05": 7344,
+          "0.0001": 7344
+        }
+      }
+    },
+    "P2_roll_x17": {
+      "on": {
+        "deep_interior": {
+          "1e-06": 2688,
+          "1e-05": 0,
+          "5e-05": 0,
+          "0.0001": 0
+        },
+        "center_axis_near": {
+          "1e-06": 0,
+          "1e-05": 0,
+          "5e-05": 0,
+          "0.0001": 0
+        },
+        "boundary_0_to_1_voxel": {
+          "1e-06": 4608,
+          "1e-05": 1920,
+          "5e-05": 1914,
+          "0.0001": 1860
+        }
+      },
+      "off": {
+        "deep_interior": {
+          "1e-06": 5760,
+          "1e-05": 5760,
+          "5e-05": 5760,
+          "0.0001": 5760
+        },
+        "center_axis_near": {
+          "1e-06": 384,
+          "1e-05": 384,
+          "5e-05": 384,
+          "0.0001": 384
+        },
+        "boundary_0_to_1_voxel": {
+          "1e-06": 6528,
+          "1e-05": 6528,
+          "5e-05": 6528,
+          "0.0001": 6528
+        }
+      }
+    },
+    "P3_z33": {
+      "on": {
+        "deep_interior": {
+          "1e-06": 1728,
+          "1e-05": 0,
+          "5e-05": 0,
+          "0.0001": 0
+        },
+        "center_axis_near": {
+          "1e-06": 132,
+          "1e-05": 0,
+          "5e-05": 0,
+          "0.0001": 0
+        },
+        "boundary_0_to_1_voxel": {
+          "1e-06": 2892,
+          "1e-05": 849,
+          "5e-05": 705,
+          "0.0001": 651
+        }
+      },
+      "off": {
+        "deep_interior": {
+          "1e-06": 5688,
+          "1e-05": 5688,
+          "5e-05": 5688,
+          "0.0001": 5688
+        },
+        "center_axis_near": {
+          "1e-06": 324,
+          "1e-05": 324,
+          "5e-05": 324,
+          "0.0001": 324
+        },
+        "boundary_0_to_1_voxel": {
+          "1e-06": 7440,
+          "1e-05": 7440,
+          "5e-05": 7440,
+          "0.0001": 7437
+        }
+      }
+    },
+    "P4_y24_z31": {
+      "on": {
+        "deep_interior": {
+          "1e-06": 5331,
+          "1e-05": 132,
+          "5e-05": 0,
+          "0.0001": 0
+        },
+        "center_axis_near": {
+          "1e-06": 312,
+          "1e-05": 12,
+          "5e-05": 0,
+          "0.0001": 0
+        },
+        "boundary_0_to_1_voxel": {
+          "1e-06": 6969,
+          "1e-05": 2460,
+          "5e-05": 2115,
+          "0.0001": 2022
+        }
+      },
+      "off": {
+        "deep_interior": {
+          "1e-06": 5748,
+          "1e-05": 5748,
+          "5e-05": 5748,
+          "0.0001": 5748
+        },
+        "center_axis_near": {
+          "1e-06": 336,
+          "1e-05": 336,
+          "5e-05": 336,
+          "0.0001": 336
+        },
+        "boundary_0_to_1_voxel": {
+          "1e-06": 7440,
+          "1e-05": 7440,
+          "5e-05": 7440,
+          "0.0001": 7440
+        }
+      }
+    },
+    "P5_axis111_53": {
+      "on": {
+        "deep_interior": {
+          "1e-06": 5106,
+          "1e-05": 228,
+          "5e-05": 0,
+          "0.0001": 0
+        },
+        "center_axis_near": {
+          "1e-06": 306,
+          "1e-05": 24,
+          "5e-05": 0,
+          "0.0001": 0
+        },
+        "boundary_0_to_1_voxel": {
+          "1e-06": 6759,
+          "1e-05": 2082,
+          "5e-05": 1881,
+          "0.0001": 1776
+        }
+      },
+      "off": {
+        "deep_interior": {
+          "1e-06": 5772,
+          "1e-05": 5772,
+          "5e-05": 5772,
+          "0.0001": 5772
+        },
+        "center_axis_near": {
+          "1e-06": 336,
+          "1e-05": 336,
+          "5e-05": 336,
+          "0.0001": 336
+        },
+        "boundary_0_to_1_voxel": {
+          "1e-06": 7488,
+          "1e-05": 7488,
+          "5e-05": 7488,
+          "0.0001": 7485
+        }
+      }
+    }
+  },
+  "maximum_cells": {
+    "P0_identity": {
+      "on": {
+        "deep_interior": {
+          "run": 1,
+          "frame": 60,
+          "source_array_index": 474,
+          "index_ijk": [
+            -16,
+            -2,
+            21
+          ],
+          "world_xyz_m": [
+            -0.800000011920929,
+            -0.10000000149011612,
+            1.0500000156462193
+          ],
+          "collider_local_xyz_m": [
+            -0.800000011920929,
+            -0.10000000149011612,
+            1.0500000156462193
+          ],
+          "velocity_xyz_m_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "magnitude_m_s": 0.0,
+          "mesh_signed_distance_m": -0.05407325178384781,
+          "mesh_distance_velocity_voxels": -1.0814650058746338,
+          "nearest_face_class": "side"
+        },
+        "center_axis_near": {
+          "run": 1,
+          "frame": 60,
+          "source_array_index": 498,
+          "index_ijk": [
+            -16,
+            0,
+            21
+          ],
+          "world_xyz_m": [
+            -0.800000011920929,
+            0.0,
+            1.0500000156462193
+          ],
+          "collider_local_xyz_m": [
+            -0.800000011920929,
+            0.0,
+            1.0500000156462193
+          ],
+          "velocity_xyz_m_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "magnitude_m_s": 0.0,
+          "mesh_signed_distance_m": -0.09999996423721313,
+          "mesh_distance_velocity_voxels": -1.9999992847442627,
+          "nearest_face_class": "end"
+        },
+        "boundary_0_to_1_voxel": {
+          "run": 1,
+          "frame": 180,
+          "source_array_index": 2302,
+          "index_ijk": [
+            -1,
+            3,
+            20
+          ],
+          "world_xyz_m": [
+            -0.05000000074505806,
+            0.15000000223517418,
+            1.0000000149011612
+          ],
+          "collider_local_xyz_m": [
+            -0.05000000074505806,
+            0.15000000223517418,
+            1.0000000149011612
+          ],
+          "velocity_xyz_m_s": [
+            -0.006134033203125,
+            1.1611328125,
+            2.58203125
+          ],
+          "magnitude_m_s": 2.831104278564453,
+          "mesh_signed_distance_m": -0.0006005984032526612,
+          "mesh_distance_velocity_voxels": -0.012011967599391937,
+          "nearest_face_class": "side"
+        }
+      },
+      "off": {
+        "deep_interior": {
+          "run": 1,
+          "frame": 180,
+          "source_array_index": 2387,
+          "index_ijk": [
+            0,
+            0,
+            22
+          ],
+          "world_xyz_m": [
+            0.0,
+            0.0,
+            1.1000000163912773
+          ],
+          "collider_local_xyz_m": [
+            0.0,
+            0.0,
+            1.1000000163912773
+          ],
+          "velocity_xyz_m_s": [
+            0.25732421875,
+            1.1923828125,
+            8.7421875
+          ],
+          "magnitude_m_s": 8.826881408691406,
+          "mesh_signed_distance_m": -0.091762974858284,
+          "mesh_distance_velocity_voxels": -1.8352595567703247,
+          "nearest_face_class": "side"
+        },
+        "center_axis_near": {
+          "run": 1,
+          "frame": 60,
+          "source_array_index": 2268,
+          "index_ijk": [
+            -1,
+            0,
+            21
+          ],
+          "world_xyz_m": [
+            -0.05000000074505806,
+            0.0,
+            1.0500000156462193
+          ],
+          "collider_local_xyz_m": [
+            -0.05000000074505806,
+            0.0,
+            1.0500000156462193
+          ],
+          "velocity_xyz_m_s": [
+            -0.91650390625,
+            -0.1827392578125,
+            8.3046875
+          ],
+          "magnitude_m_s": 8.357105255126953,
+          "mesh_signed_distance_m": -0.14005926251411438,
+          "mesh_distance_velocity_voxels": -2.801185131072998,
+          "nearest_face_class": "side"
+        },
+        "boundary_0_to_1_voxel": {
+          "run": 1,
+          "frame": 120,
+          "source_array_index": 2270,
+          "index_ijk": [
+            -1,
+            0,
+            23
+          ],
+          "world_xyz_m": [
+            -0.05000000074505806,
+            0.0,
+            1.1500000171363354
+          ],
+          "collider_local_xyz_m": [
+            -0.05000000074505806,
+            0.0,
+            1.1500000171363354
+          ],
+          "velocity_xyz_m_s": [
+            0.47607421875,
+            -0.1646728515625,
+            8.9140625
+          ],
+          "magnitude_m_s": 8.928284645080566,
+          "mesh_signed_distance_m": -0.04346669092774391,
+          "mesh_distance_velocity_voxels": -0.869333803653717,
+          "nearest_face_class": "side"
+        }
+      }
+    },
+    "P1_y40": {
+      "on": {
+        "deep_interior": {
+          "run": 1,
+          "frame": 60,
+          "source_array_index": 2084,
+          "index_ijk": [
+            -2,
+            -2,
+            22
+          ],
+          "world_xyz_m": [
+            -0.10000000149011612,
+            -0.10000000149011612,
+            1.1000000163912773
+          ],
+          "collider_local_xyz_m": [
+            -0.1183856506191282,
+            -0.10000000149011612,
+            1.0205141394326984
+          ],
+          "velocity_xyz_m_s": [
+            -4.410743713378906e-06,
+            0.0,
+            -7.092952728271484e-06
+          ],
+          "magnitude_m_s": 8.352522854693234e-06,
+          "mesh_signed_distance_m": -0.05420633777976036,
+          "mesh_distance_velocity_voxels": -1.0841267108917236,
+          "nearest_face_class": "side"
+        },
+        "center_axis_near": {
+          "run": 1,
+          "frame": 60,
+          "source_array_index": 2115,
+          "index_ijk": [
+            -2,
+            0,
+            22
+          ],
+          "world_xyz_m": [
+            -0.10000000149011612,
+            0.0,
+            1.1000000163912773
+          ],
+          "collider_local_xyz_m": [
+            -0.1183856506191282,
+            0.0,
+            1.0205141394326984
+          ],
+          "velocity_xyz_m_s": [
+            -4.410743713378906e-06,
+            0.0,
+            -7.092952728271484e-06
+          ],
+          "magnitude_m_s": 8.352522854693234e-06,
+          "mesh_signed_distance_m": -0.14055587351322174,
+          "mesh_distance_velocity_voxels": -2.81111741065979,
+          "nearest_face_class": "side"
+        },
+        "boundary_0_to_1_voxel": {
+          "run": 1,
+          "frame": 60,
+          "source_array_index": 2162,
+          "index_ijk": [
+            -2,
+            3,
+            23
+          ],
+          "world_xyz_m": [
+            -0.10000000149011612,
+            0.15000000223517418,
+            1.1500000171363354
+          ],
+          "collider_local_xyz_m": [
+            -0.1505250315823693,
+            0.15000000223517418,
+            1.058816362159395
+          ],
+          "velocity_xyz_m_s": [
+            -0.63232421875,
+            0.6513671875,
+            3.029296875
+          ],
+          "magnitude_m_s": 3.1623966693878174,
+          "mesh_signed_distance_m": -0.003495120443403721,
+          "mesh_distance_velocity_voxels": -0.06990241259336472,
+          "nearest_face_class": "side"
+        }
+      },
+      "off": {
+        "deep_interior": {
+          "run": 1,
+          "frame": 120,
+          "source_array_index": 2274,
+          "index_ijk": [
+            -1,
+            0,
+            24
+          ],
+          "world_xyz_m": [
+            -0.05000000074505806,
+            0.0,
+            1.2000000178813934
+          ],
+          "collider_local_xyz_m": [
+            -0.1443621898189139,
+            0.0,
+            1.1292579658493325
+          ],
+          "velocity_xyz_m_s": [
+            -0.3681640625,
+            -0.0478515625,
+            9.0859375
+          ],
+          "magnitude_m_s": 9.09351921081543,
+          "mesh_signed_distance_m": -0.06350196897983551,
+          "mesh_distance_velocity_voxels": -1.270039439201355,
+          "nearest_face_class": "side"
+        },
+        "center_axis_near": {
+          "run": 1,
+          "frame": 60,
+          "source_array_index": 2271,
+          "index_ijk": [
+            -1,
+            0,
+            21
+          ],
+          "world_xyz_m": [
+            -0.05000000074505806,
+            0.0,
+            1.0500000156462193
+          ],
+          "collider_local_xyz_m": [
+            -0.04794404692919063,
+            0.0,
+            1.014351297669243
+          ],
+          "velocity_xyz_m_s": [
+            -0.91650390625,
+            -0.1827392578125,
+            8.3046875
+          ],
+          "magnitude_m_s": 8.357105255126953,
+          "mesh_signed_distance_m": -0.13460302352905273,
+          "mesh_distance_velocity_voxels": -2.6920604705810547,
+          "nearest_face_class": "side"
+        },
+        "boundary_0_to_1_voxel": {
+          "run": 1,
+          "frame": 120,
+          "source_array_index": 2275,
+          "index_ijk": [
+            -1,
+            0,
+            25
+          ],
+          "world_xyz_m": [
+            -0.05000000074505806,
+            0.0,
+            1.2500000186264515
+          ],
+          "collider_local_xyz_m": [
+            -0.1765015707821549,
+            0.0,
+            1.167560188576029
+          ],
+          "velocity_xyz_m_s": [
+            -0.9677734375,
+            -0.30517578125,
+            9.3515625
+          ],
+          "magnitude_m_s": 9.40645694732666,
+          "mesh_signed_distance_m": -0.026504870504140854,
+          "mesh_distance_velocity_voxels": -0.5300973653793335,
+          "nearest_face_class": "side"
+        }
+      }
+    },
+    "P2_roll_x17": {
+      "on": {
+        "deep_interior": {
+          "run": 1,
+          "frame": 60,
+          "source_array_index": 513,
+          "index_ijk": [
+            -16,
+            1,
+            19
+          ],
+          "world_xyz_m": [
+            -0.800000011920929,
+            0.05000000074505806,
+            0.9500000141561031
+          ],
+          "collider_local_xyz_m": [
+            -0.800000011920929,
+            0.022963647748065696,
+            0.93909552382672
+          ],
+          "velocity_xyz_m_s": [
+            0.0,
+            1.7285346984863281e-06,
+            -7.092952728271484e-06
+          ],
+          "magnitude_m_s": 7.300534889509436e-06,
+          "mesh_signed_distance_m": -0.05596810206770897,
+          "mesh_distance_velocity_voxels": -1.1193619966506958,
+          "nearest_face_class": "side"
+        },
+        "center_axis_near": {
+          "run": 1,
+          "frame": 60,
+          "source_array_index": 503,
+          "index_ijk": [
+            -16,
+            0,
+            21
+          ],
+          "world_xyz_m": [
+            -0.800000011920929,
+            0.0,
+            1.0500000156462193
+          ],
+          "collider_local_xyz_m": [
+            -0.800000011920929,
+            0.004385580145352841,
+            1.0493445863019994
+          ],
+          "velocity_xyz_m_s": [
+            0.0,
+            -2.980232238769531e-07,
+            0.0
+          ],
+          "magnitude_m_s": 2.980232238769531e-07,
+          "mesh_signed_distance_m": -0.09999996423721313,
+          "mesh_distance_velocity_voxels": -1.9999992847442627,
+          "nearest_face_class": "end"
+        },
+        "boundary_0_to_1_voxel": {
+          "run": 1,
+          "frame": 200,
+          "source_array_index": 2352,
+          "index_ijk": [
+            -1,
+            3,
+            20
+          ],
+          "world_xyz_m": [
+            -0.05000000074505806,
+            0.15000000223517418,
+            1.0000000149011612
+          ],
+          "collider_local_xyz_m": [
+            -0.05000000074505806,
+            0.13321271022334513,
+            0.957673591429433
+          ],
+          "velocity_xyz_m_s": [
+            -0.0404052734375,
+            1.0927734375,
+            2.818359375
+          ],
+          "magnitude_m_s": 3.0230672359466553,
+          "mesh_signed_distance_m": -0.005674505606293678,
+          "mesh_distance_velocity_voxels": -0.11349011212587357,
+          "nearest_face_class": "side"
+        }
+      },
+      "off": {
+        "deep_interior": {
+          "run": 1,
+          "frame": 180,
+          "source_array_index": 2440,
+          "index_ijk": [
+            0,
+            0,
+            22
+          ],
+          "world_xyz_m": [
+            0.0,
+            0.0,
+            1.1000000163912773
+          ],
+          "collider_local_xyz_m": [
+            0.0,
+            0.019004165599323608,
+            1.0971598248126537
+          ],
+          "velocity_xyz_m_s": [
+            0.25732421875,
+            1.1923828125,
+            8.7421875
+          ],
+          "magnitude_m_s": 8.826881408691406,
+          "mesh_signed_distance_m": -0.0895877406001091,
+          "mesh_distance_velocity_voxels": -1.7917548418045044,
+          "nearest_face_class": "side"
+        },
+        "center_axis_near": {
+          "run": 1,
+          "frame": 60,
+          "source_array_index": 2318,
+          "index_ijk": [
+            -1,
+            0,
+            21
+          ],
+          "world_xyz_m": [
+            -0.05000000074505806,
+            0.0,
+            1.0500000156462193
+          ],
+          "collider_local_xyz_m": [
+            -0.05000000074505806,
+            0.004385580145352841,
+            1.0493445863019994
+          ],
+          "velocity_xyz_m_s": [
+            -0.91650390625,
+            -0.1827392578125,
+            8.3046875
+          ],
+          "magnitude_m_s": 8.357105255126953,
+          "mesh_signed_distance_m": -0.13955728709697723,
+          "mesh_distance_velocity_voxels": -2.7911455631256104,
+          "nearest_face_class": "side"
+        },
+        "boundary_0_to_1_voxel": {
+          "run": 1,
+          "frame": 120,
+          "source_array_index": 2320,
+          "index_ijk": [
+            -1,
+            0,
+            23
+          ],
+          "world_xyz_m": [
+            -0.05000000074505806,
+            0.0,
+            1.1500000171363354
+          ],
+          "collider_local_xyz_m": [
+            -0.05000000074505806,
+            0.03362275105329432,
+            1.1449750633233082
+          ],
+          "velocity_xyz_m_s": [
+            0.47607421875,
+            -0.1646728515625,
+            8.9140625
+          ],
+          "magnitude_m_s": 8.928284645080566,
+          "mesh_signed_distance_m": -0.039618197828531265,
+          "mesh_distance_velocity_voxels": -0.7923639416694641,
+          "nearest_face_class": "side"
+        }
+      }
+    },
+    "P3_z33": {
+      "on": {
+        "deep_interior": {
+          "run": 1,
+          "frame": 60,
+          "source_array_index": 573,
+          "index_ijk": [
+            -13,
+            -9,
+            19
+          ],
+          "world_xyz_m": [
+            -0.6500000096857548,
+            -0.45000000670552254,
+            0.9500000141561031
+          ],
+          "collider_local_xyz_m": [
+            -0.7902234466965344,
+            -0.023386383164157445,
+            0.9500000141561031
+          ],
+          "velocity_xyz_m_s": [
+            -3.516674041748047e-06,
+            -1.7285346984863281e-06,
+            0.0
+          ],
+          "magnitude_m_s": 3.918523816537345e-06,
+          "mesh_signed_distance_m": -0.06639161705970764,
+          "mesh_distance_velocity_voxels": -1.3278323411941528,
+          "nearest_face_class": "side"
+        },
+        "center_axis_near": {
+          "run": 1,
+          "frame": 60,
+          "source_array_index": 4112,
+          "index_ijk": [
+            12,
+            8,
+            21
+          ],
+          "world_xyz_m": [
+            0.6000000089406967,
+            0.4000000059604645,
+            1.0500000156462193
+          ],
+          "collider_local_xyz_m": [
+            0.721057965517866,
+            0.008684806298567035,
+            1.0500000156462193
+          ],
+          "velocity_xyz_m_s": [
+            3.516674041748047e-06,
+            1.7285346984863281e-06,
+            0.0
+          ],
+          "magnitude_m_s": 3.918523816537345e-06,
+          "mesh_signed_distance_m": -0.1378004401922226,
+          "mesh_distance_velocity_voxels": -2.7560088634490967,
+          "nearest_face_class": "side"
+        },
+        "boundary_0_to_1_voxel": {
+          "run": 1,
+          "frame": 120,
+          "source_array_index": 2317,
+          "index_ijk": [
+            -1,
+            3,
+            21
+          ],
+          "world_xyz_m": [
+            -0.05000000074505806,
+            0.15000000223517418,
+            1.0500000156462193
+          ],
+          "collider_local_xyz_m": [
+            0.03976232744748771,
+            0.15303253922292748,
+            1.0500000156462193
+          ],
+          "velocity_xyz_m_s": [
+            -0.242919921875,
+            0.79052734375,
+            2.4296875
+          ],
+          "magnitude_m_s": 2.5665783882141113,
+          "mesh_signed_distance_m": -0.0028477513696998358,
+          "mesh_distance_velocity_voxels": -0.05695502832531929,
+          "nearest_face_class": "side"
+        }
+      },
+      "off": {
+        "deep_interior": {
+          "run": 1,
+          "frame": 180,
+          "source_array_index": 2417,
+          "index_ijk": [
+            0,
+            0,
+            22
+          ],
+          "world_xyz_m": [
+            0.0,
+            0.0,
+            1.1000000163912773
+          ],
+          "collider_local_xyz_m": [
+            0.0,
+            0.0,
+            1.1000000163912773
+          ],
+          "velocity_xyz_m_s": [
+            0.25732421875,
+            1.1923828125,
+            8.7421875
+          ],
+          "magnitude_m_s": 8.826881408691406,
+          "mesh_signed_distance_m": -0.091762974858284,
+          "mesh_distance_velocity_voxels": -1.8352595567703247,
+          "nearest_face_class": "side"
+        },
+        "center_axis_near": {
+          "run": 1,
+          "frame": 120,
+          "source_array_index": 2416,
+          "index_ijk": [
+            0,
+            0,
+            21
+          ],
+          "world_xyz_m": [
+            0.0,
+            0.0,
+            1.0500000156462193
+          ],
+          "collider_local_xyz_m": [
+            0.0,
+            0.0,
+            1.0500000156462193
+          ],
+          "velocity_xyz_m_s": [
+            0.82568359375,
+            -0.10919189453125,
+            8.1328125
+          ],
+          "magnitude_m_s": 8.175348281860352,
+          "mesh_signed_distance_m": -0.14005926251411438,
+          "mesh_distance_velocity_voxels": -2.801185131072998,
+          "nearest_face_class": "side"
+        },
+        "boundary_0_to_1_voxel": {
+          "run": 1,
+          "frame": 120,
+          "source_array_index": 2284,
+          "index_ijk": [
+            -1,
+            0,
+            23
+          ],
+          "world_xyz_m": [
+            -0.05000000074505806,
+            0.0,
+            1.1500000171363354
+          ],
+          "collider_local_xyz_m": [
+            -0.04193352902212946,
+            0.027231952156539063,
+            1.1500000171363354
+          ],
+          "velocity_xyz_m_s": [
+            0.47607421875,
+            -0.1646728515625,
+            8.9140625
+          ],
+          "magnitude_m_s": 8.928284645080566,
+          "mesh_signed_distance_m": -0.03641853109002113,
+          "mesh_distance_velocity_voxels": -0.7283706068992615,
+          "nearest_face_class": "side"
+        }
+      }
+    },
+    "P4_y24_z31": {
+      "on": {
+        "deep_interior": {
+          "run": 1,
+          "frame": 60,
+          "source_array_index": 4510,
+          "index_ijk": [
+            14,
+            7,
+            14
+          ],
+          "world_xyz_m": [
+            0.7000000104308128,
+            0.3500000052154064,
+            0.7000000104308128
+          ],
+          "collider_local_xyz_m": [
+            0.8490784304534728,
+            -0.060518098093088495,
+            1.0463309314330556
+          ],
+          "velocity_xyz_m_s": [
+            -1.424551010131836e-05,
+            -7.092952728271484e-06,
+            0.0
+          ],
+          "magnitude_m_s": 1.5913657989585772e-05,
+          "mesh_signed_distance_m": -0.050921544432640076,
+          "mesh_distance_velocity_voxels": -1.0184309482574463,
+          "nearest_face_class": "end"
+        },
+        "center_axis_near": {
+          "run": 1,
+          "frame": 60,
+          "source_array_index": 4241,
+          "index_ijk": [
+            12,
+            7,
+            15
+          ],
+          "world_xyz_m": [
+            0.6000000089406967,
+            0.3500000052154064,
+            0.7500000111758709
+          ],
+          "collider_local_xyz_m": [
+            0.7504354674301696,
+            -0.009014289834616544,
+            1.0571440694321217
+          ],
+          "velocity_xyz_m_s": [
+            -7.092952728271484e-06,
+            -7.092952728271484e-06,
+            0.0
+          ],
+          "magnitude_m_s": 1.0030949852080084e-05,
+          "mesh_signed_distance_m": -0.13082556426525116,
+          "mesh_distance_velocity_voxels": -2.616511106491089,
+          "nearest_face_class": "side"
+        },
+        "boundary_0_to_1_voxel": {
+          "run": 1,
+          "frame": 60,
+          "source_array_index": 2320,
+          "index_ijk": [
+            -1,
+            3,
+            20
+          ],
+          "world_xyz_m": [
+            -0.05000000074505806,
+            0.15000000223517418,
+            1.0000000149011612
+          ],
+          "collider_local_xyz_m": [
+            0.04565931629230313,
+            0.15432700115047104,
+            1.0170165839285488
+          ],
+          "velocity_xyz_m_s": [
+            -0.349853515625,
+            0.72119140625,
+            1.767578125
+          ],
+          "magnitude_m_s": 1.9408366680145264,
+          "mesh_signed_distance_m": -0.000825250637717545,
+          "mesh_distance_velocity_voxels": -0.016505012288689613,
+          "nearest_face_class": "side"
+        }
+      },
+      "off": {
+        "deep_interior": {
+          "run": 1,
+          "frame": 120,
+          "source_array_index": 2285,
+          "index_ijk": [
+            -1,
+            0,
+            23
+          ],
+          "world_xyz_m": [
+            -0.05000000074505806,
+            0.0,
+            1.1500000171363354
+          ],
+          "collider_local_xyz_m": [
+            -0.08592778620692798,
+            0.025751904129235975,
+            1.1226256755018662
+          ],
+          "velocity_xyz_m_s": [
+            0.47607421875,
+            -0.1646728515625,
+            8.9140625
+          ],
+          "magnitude_m_s": 8.928284645080566,
+          "mesh_signed_distance_m": -0.06324317306280136,
+          "mesh_distance_velocity_voxels": -1.2648634910583496,
+          "nearest_face_class": "side"
+        },
+        "center_axis_near": {
+          "run": 1,
+          "frame": 120,
+          "source_array_index": 2426,
+          "index_ijk": [
+            0,
+            0,
+            21
+          ],
+          "world_xyz_m": [
+            0.0,
+            0.0,
+            1.0500000156462193
+          ],
+          "collider_local_xyz_m": [
+            -0.00610105601002775,
+            0.0,
+            1.0487031961581716
+          ],
+          "velocity_xyz_m_s": [
+            0.82568359375,
+            -0.10919189453125,
+            8.1328125
+          ],
+          "magnitude_m_s": 8.175348281860352,
+          "mesh_signed_distance_m": -0.1413118988275528,
+          "mesh_distance_velocity_voxels": -2.826237916946411,
+          "nearest_face_class": "side"
+        },
+        "boundary_0_to_1_voxel": {
+          "run": 1,
+          "frame": 120,
+          "source_array_index": 2286,
+          "index_ijk": [
+            -1,
+            0,
+            24
+          ],
+          "world_xyz_m": [
+            -0.05000000074505806,
+            0.0,
+            1.2000000178813934
+          ],
+          "collider_local_xyz_m": [
+            -0.10626461866376036,
+            0.025751904129235975,
+            1.1683029490646408
+          ],
+          "velocity_xyz_m_s": [
+            -0.3681640625,
+            -0.0478515625,
+            9.0859375
+          ],
+          "magnitude_m_s": 9.09351921081543,
+          "mesh_signed_distance_m": -0.019122323021292686,
+          "mesh_distance_velocity_voxels": -0.3824464678764343,
+          "nearest_face_class": "side"
+        }
+      }
+    },
+    "P5_axis111_53": {
+      "on": {
+        "deep_interior": {
+          "run": 1,
+          "frame": 60,
+          "source_array_index": 4209,
+          "index_ijk": [
+            11,
+            10,
+            17
+          ],
+          "world_xyz_m": [
+            0.5500000081956387,
+            0.5000000074505806,
+            0.850000012665987
+          ],
+          "collider_local_xyz_m": [
+            0.7616565829732445,
+            0.07681458990480128,
+            1.0615288554341606
+          ],
+          "velocity_xyz_m_s": [
+            -1.0669231414794922e-05,
+            -3.516674041748047e-06,
+            -7.092952728271484e-06
+          ],
+          "magnitude_m_s": 1.3285686691233423e-05,
+          "mesh_signed_distance_m": -0.07348475605249405,
+          "mesh_distance_velocity_voxels": -1.4696952104568481,
+          "nearest_face_class": "side"
+        },
+        "center_axis_near": {
+          "run": 1,
+          "frame": 60,
+          "source_array_index": 4030,
+          "index_ijk": [
+            10,
+            8,
+            16
+          ],
+          "world_xyz_m": [
+            0.5000000074505806,
+            0.4000000059604645,
+            0.800000011920929
+          ],
+          "collider_local_xyz_m": [
+            0.6819655441694462,
+            -0.00991257882593577,
+            1.0279470599884637
+          ],
+          "velocity_xyz_m_s": [
+            -1.0669231414794922e-05,
+            -3.516674041748047e-06,
+            -3.516674041748047e-06
+          ],
+          "magnitude_m_s": 1.1771427125495393e-05,
+          "mesh_signed_distance_m": -0.1425517052412033,
+          "mesh_distance_velocity_voxels": -2.851034164428711,
+          "nearest_face_class": "side"
+        },
+        "boundary_0_to_1_voxel": {
+          "run": 1,
+          "frame": 60,
+          "source_array_index": 2307,
+          "index_ijk": [
+            -1,
+            3,
+            21
+          ],
+          "world_xyz_m": [
+            -0.05000000074505806,
+            0.15000000223517418,
+            1.0500000156462193
+          ],
+          "collider_local_xyz_m": [
+            0.047420479536471216,
+            0.13550702983234075,
+            0.9670725077675236
+          ],
+          "velocity_xyz_m_s": [
+            -0.697265625,
+            -0.1455078125,
+            -0.47802734375
+          ],
+          "magnitude_m_s": 0.8578240275382996,
+          "mesh_signed_distance_m": -0.006077468395233154,
+          "mesh_distance_velocity_voxels": -0.12154936790466309,
+          "nearest_face_class": "side"
+        }
+      },
+      "off": {
+        "deep_interior": {
+          "run": 1,
+          "frame": 120,
+          "source_array_index": 2271,
+          "index_ijk": [
+            -1,
+            0,
+            23
+          ],
+          "world_xyz_m": [
+            -0.05000000074505806,
+            0.0,
+            1.1500000171363354
+          ],
+          "collider_local_xyz_m": [
+            -0.07448904523847105,
+            0.08470760199278371,
+            1.0897814596369648
+          ],
+          "velocity_xyz_m_s": [
+            0.47607421875,
+            -0.1646728515625,
+            8.9140625
+          ],
+          "magnitude_m_s": 8.928284645080566,
+          "mesh_signed_distance_m": -0.05591447651386261,
+          "mesh_distance_velocity_voxels": -1.118289589881897,
+          "nearest_face_class": "side"
+        },
+        "center_axis_near": {
+          "run": 1,
+          "frame": 120,
+          "source_array_index": 2422,
+          "index_ijk": [
+            0,
+            0,
+            21
+          ],
+          "world_xyz_m": [
+            0.0,
+            0.0,
+            1.0500000156462193
+          ],
+          "collider_local_xyz_m": [
+            -0.004925466654069899,
+            0.008907320575942568,
+            1.046018161724347
+          ],
+          "velocity_xyz_m_s": [
+            0.82568359375,
+            -0.10919189453125,
+            8.1328125
+          ],
+          "magnitude_m_s": 8.175348281860352,
+          "mesh_signed_distance_m": -0.14045870304107666,
+          "mesh_distance_velocity_voxels": -2.809173822402954,
+          "nearest_face_class": "side"
+        },
+        "boundary_0_to_1_voxel": {
+          "run": 1,
+          "frame": 120,
+          "source_array_index": 2272,
+          "index_ijk": [
+            -1,
+            0,
+            24
+          ],
+          "world_xyz_m": [
+            -0.05000000074505806,
+            0.0,
+            1.2000000178813934
+          ],
+          "collider_local_xyz_m": [
+            -0.09090725053783211,
+            0.11439864005152378,
+            1.126508627622644
+          ],
+          "velocity_xyz_m_s": [
+            -0.3681640625,
+            -0.0478515625,
+            9.0859375
+          ],
+          "magnitude_m_s": 9.09351921081543,
+          "mesh_signed_distance_m": -0.00894971378147602,
+          "mesh_distance_velocity_voxels": -0.178994283080101,
+          "nearest_face_class": "side"
+        }
+      }
+    }
+  },
+  "phase6em_p4_cell_location_repeatability": {
+    "available": true,
+    "historical_samples_used_for_qualification": false,
+    "historical_role": "diagnostic cell-location comparison only",
+    "historical_root": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eg-static-pose-qualification-5",
+    "frames": {
+      "60": {
+        "available": true,
+        "phase6em_deep_cells_above_1e_5": 11,
+        "phase6em_center_cells_above_1e_5": 1,
+        "phase6en_runs": [
+          {
+            "run": 1,
+            "historical_deep_cells_present": 11,
+            "historical_deep_cells_above_1e_5": 11,
+            "historical_center_cells_present": 1,
+            "historical_center_cells_above_1e_5": 1,
+            "maximum_at_historical_deep_cells_m_s": 1.5913657989585772e-05,
+            "maximum_at_historical_center_cells_m_s": 1.0030949852080084e-05
+          },
+          {
+            "run": 2,
+            "historical_deep_cells_present": 11,
+            "historical_deep_cells_above_1e_5": 11,
+            "historical_center_cells_present": 1,
+            "historical_center_cells_above_1e_5": 1,
+            "maximum_at_historical_deep_cells_m_s": 1.5913657989585772e-05,
+            "maximum_at_historical_center_cells_m_s": 1.0030949852080084e-05
+          },
+          {
+            "run": 3,
+            "historical_deep_cells_present": 11,
+            "historical_deep_cells_above_1e_5": 11,
+            "historical_center_cells_present": 1,
+            "historical_center_cells_above_1e_5": 1,
+            "maximum_at_historical_deep_cells_m_s": 1.5913657989585772e-05,
+            "maximum_at_historical_center_cells_m_s": 1.0030949852080084e-05
+          }
+        ]
+      },
+      "120": {
+        "available": true,
+        "phase6em_deep_cells_above_1e_5": 11,
+        "phase6em_center_cells_above_1e_5": 1,
+        "phase6en_runs": [
+          {
+            "run": 1,
+            "historical_deep_cells_present": 11,
+            "historical_deep_cells_above_1e_5": 11,
+            "historical_center_cells_present": 1,
+            "historical_center_cells_above_1e_5": 1,
+            "maximum_at_historical_deep_cells_m_s": 1.5913657989585772e-05,
+            "maximum_at_historical_center_cells_m_s": 1.0030949852080084e-05
+          },
+          {
+            "run": 2,
+            "historical_deep_cells_present": 11,
+            "historical_deep_cells_above_1e_5": 11,
+            "historical_center_cells_present": 1,
+            "historical_center_cells_above_1e_5": 1,
+            "maximum_at_historical_deep_cells_m_s": 1.5913657989585772e-05,
+            "maximum_at_historical_center_cells_m_s": 1.0030949852080084e-05
+          },
+          {
+            "run": 3,
+            "historical_deep_cells_present": 11,
+            "historical_deep_cells_above_1e_5": 11,
+            "historical_center_cells_present": 1,
+            "historical_center_cells_above_1e_5": 1,
+            "maximum_at_historical_deep_cells_m_s": 1.5913657989585772e-05,
+            "maximum_at_historical_center_cells_m_s": 1.0030949852080084e-05
+          }
+        ]
+      },
+      "180": {
+        "available": true,
+        "phase6em_deep_cells_above_1e_5": 11,
+        "phase6em_center_cells_above_1e_5": 1,
+        "phase6en_runs": [
+          {
+            "run": 1,
+            "historical_deep_cells_present": 11,
+            "historical_deep_cells_above_1e_5": 11,
+            "historical_center_cells_present": 1,
+            "historical_center_cells_above_1e_5": 1,
+            "maximum_at_historical_deep_cells_m_s": 1.5913657989585772e-05,
+            "maximum_at_historical_center_cells_m_s": 1.0030949852080084e-05
+          },
+          {
+            "run": 2,
+            "historical_deep_cells_present": 11,
+            "historical_deep_cells_above_1e_5": 11,
+            "historical_center_cells_present": 1,
+            "historical_center_cells_above_1e_5": 1,
+            "maximum_at_historical_deep_cells_m_s": 1.5913657989585772e-05,
+            "maximum_at_historical_center_cells_m_s": 1.0030949852080084e-05
+          },
+          {
+            "run": 3,
+            "historical_deep_cells_present": 11,
+            "historical_deep_cells_above_1e_5": 11,
+            "historical_center_cells_present": 1,
+            "historical_center_cells_above_1e_5": 1,
+            "maximum_at_historical_deep_cells_m_s": 1.5913657989585772e-05,
+            "maximum_at_historical_center_cells_m_s": 1.0030949852080084e-05
+          }
+        ]
+      },
+      "200": {
+        "available": true,
+        "phase6em_deep_cells_above_1e_5": 11,
+        "phase6em_center_cells_above_1e_5": 1,
+        "phase6en_runs": [
+          {
+            "run": 1,
+            "historical_deep_cells_present": 11,
+            "historical_deep_cells_above_1e_5": 11,
+            "historical_center_cells_present": 1,
+            "historical_center_cells_above_1e_5": 1,
+            "maximum_at_historical_deep_cells_m_s": 1.5913657989585772e-05,
+            "maximum_at_historical_center_cells_m_s": 1.0030949852080084e-05
+          },
+          {
+            "run": 2,
+            "historical_deep_cells_present": 11,
+            "historical_deep_cells_above_1e_5": 11,
+            "historical_center_cells_present": 1,
+            "historical_center_cells_above_1e_5": 1,
+            "maximum_at_historical_deep_cells_m_s": 1.5913657989585772e-05,
+            "maximum_at_historical_center_cells_m_s": 1.0030949852080084e-05
+          },
+          {
+            "run": 3,
+            "historical_deep_cells_present": 11,
+            "historical_deep_cells_above_1e_5": 11,
+            "historical_center_cells_present": 1,
+            "historical_center_cells_above_1e_5": 1,
+            "maximum_at_historical_deep_cells_m_s": 1.5913657989585772e-05,
+            "maximum_at_historical_center_cells_m_s": 1.0030949852080084e-05
+          }
+        ]
+      }
+    }
+  },
+  "lifecycle": {
+    "normal_os_exit_count": 36,
+    "cdb_invocation_count": 0,
+    "known_ngx_classification_count": 0,
+    "cpu_by_lifecycle_section": {
+      "measurement_complete": {
+        "sample_count": 31,
+        "mean_percent_of_logical_total": 2.125671827747687,
+        "maximum_percent_of_logical_total": 4.130544823895671
+      },
+      "opening_prebuilt_stage": {
+        "sample_count": 975,
+        "mean_percent_of_logical_total": 0.40938774519906723,
+        "maximum_percent_of_logical_total": 3.0983515821254364
+      },
+      "process_startup": {
+        "sample_count": 966,
+        "mean_percent_of_logical_total": 7.988115078214043,
+        "maximum_percent_of_logical_total": 32.45899763665581
+      },
+      "renderer_drain_complete": {
+        "sample_count": 1,
+        "mean_percent_of_logical_total": 1.5390868310254755,
+        "maximum_percent_of_logical_total": 1.5390868310254755
+      },
+      "shutdown_complete": {
+        "sample_count": 1204,
+        "mean_percent_of_logical_total": 1.7119351129083327,
+        "maximum_percent_of_logical_total": 4.847955623531207
+      },
+      "starting": {
+        "sample_count": 2,
+        "mean_percent_of_logical_total": 0.640897039327762,
+        "maximum_percent_of_logical_total": 0.6630559042246827
+      },
+      "timeline_playing": {
+        "sample_count": 3533,
+        "mean_percent_of_logical_total": 2.4682694939314898,
+        "maximum_percent_of_logical_total": 5.811996737679623
+      },
+      "timeline_stopped": {
+        "sample_count": 504,
+        "mean_percent_of_logical_total": 0.9960750614214474,
+        "maximum_percent_of_logical_total": 2.565279666213024
+      }
+    }
+  },
+  "resources": {
+    "peak_private_bytes_by_role": {
+      "runner": 103792640,
+      "kit": 12098895872,
+      "diagnostic": 27439104,
+      "child": 65462272,
+      "tree": 12245282816
+    },
+    "minimum_available_physical_bytes": 90869358592,
+    "minimum_commit_headroom_bytes": 109909864448,
+    "limits": {
+      "runner_private_bytes": 536870912,
+      "kit_private_bytes": 15032385536,
+      "diagnostic_private_bytes": 536870912,
+      "tree_private_bytes": 17179869184,
+      "available_memory_floor_bytes": 8589934592,
+      "commit_headroom_floor_bytes": 8589934592
+    }
+  },
+  "safety": {
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "device_lost_or_tdr_count": 0,
+    "residual_process_count_after_cleanup": 0
+  },
+  "scope": "Flow 110.0.0, current fixed resolution, current 26-vertex closed Mesh, and only P0-P5 representative static single-axis/compound poses under the Phase 6EN engineering tolerance; not all SO(3), dynamic transform, RenderSurface, PhysX sharing, production layout, or 20-log performance.",
+  "not_qualified": [
+    "all SO(3)",
+    "dynamic transform",
+    "RenderSurface",
+    "PhysX sharing",
+    "production log layout",
+    "20-log performance"
+  ],
+  "next_phase": "PointEmitter-CollisionProxy coexistence remains pending and was not started.",
+  "artifacts": {
+    "formal_root": "artifacts/phase6en-static-pose-engineering-qualification-2",
+    "full_report_sha256": "2282F86AA43387B01495389ED32C30555589E5B57517BD57D181753AC7AEE301",
+    "velocity_archive_sha256": "7370B098F3D7894E30110C882D30BC6E36CABC60629BFFFF2B0E8222712596F0",
+    "latest_demo_changed": false
+  }
+}

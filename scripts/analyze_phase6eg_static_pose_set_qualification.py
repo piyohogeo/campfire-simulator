@@ -134,7 +134,7 @@ def evaluate_incremental(root: Path, contract: dict, run_index: int, condition: 
             "pass": all(predicates.values()),
         })
     return {
-        "schema": "campfire.phase6eg.incremental-numeric-gate.v1",
+        "schema": f"campfire.{contract['phase']}.incremental-numeric-gate.v1",
         "run": run_index,
         "condition": condition,
         "pose": pose,
@@ -287,14 +287,15 @@ def validate_preflight(root: Path, contract: dict) -> tuple[dict, list[dict]]:
     return report, checks
 
 
-def write_svg(path: Path, pose_summary: dict, qualified: bool) -> None:
+def write_svg(path: Path, pose_summary: dict, qualified: bool, phase: str) -> None:
     poses = list(pose_summary)
     width, height = 1160, 510
     plot_left, plot_top, plot_width, plot_height = 105, 90, 980, 300
     maximum = max(max(item["minimum_off_deep_m_s"], item["boundary_band_worst_maximum_m_s"], 0.1) for item in pose_summary.values())
     def y(value: float) -> float:
         return plot_top + plot_height - (min(value, maximum) / maximum) * plot_height
-    elements = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">', '<rect width="100%" height="100%" fill="#101820"/>', '<text x="55" y="42" fill="#f7f4e9" font-size="25" font-family="Segoe UI">Phase 6EG — representative static Mesh collision poses</text>', f'<text x="55" y="70" fill="#8ed1fc" font-size="15" font-family="Segoe UI">qualification: {str(qualified).lower()} · exact authored-Mesh distance · velocity m/s</text>']
+    phase_label = phase.upper().replace("PHASE", "Phase ")
+    elements = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">', '<rect width="100%" height="100%" fill="#101820"/>', f'<text x="55" y="42" fill="#f7f4e9" font-size="25" font-family="Segoe UI">{html.escape(phase_label)} — representative static Mesh collision poses</text>', f'<text x="55" y="70" fill="#8ed1fc" font-size="15" font-family="Segoe UI">qualification: {str(qualified).lower()} · exact authored-Mesh distance · velocity m/s</text>']
     for step in range(6):
         value = maximum * step / 5
         yy = y(value)
@@ -323,6 +324,97 @@ def archive_samples(root: Path, destination: Path, contract: dict) -> None:
                     archive.write(path, path.relative_to(root))
 
 
+def engineering_diagnostics(
+    root: Path,
+    samples: dict,
+    metadata: dict,
+    contract: dict,
+    historical_root: Path | None,
+) -> dict | None:
+    if contract.get("phase") != "phase6en":
+        return None
+    warning_key = f"{float(contract['thresholds']['warning_level_m_s']):.12g}"
+    variation = {}
+    for pose in contract["poses"]:
+        run_rows = []
+        for run_index in range(1, 4):
+            condition = f"{pose}_on"
+            frame_rows = samples[str(run_index)][condition]
+            run_rows.append({
+                "run": run_index,
+                "deep_maximum_m_s": max(row["deep_interior"]["maximum"] for row in frame_rows.values()),
+                "center_maximum_m_s": max(row["center_axis_near"]["maximum"] for row in frame_rows.values()),
+                "boundary_maximum_m_s": max(row["boundary_0_to_1_voxel"]["maximum"] for row in frame_rows.values()),
+                "deep_cells_above_warning": sum(row["deep_interior"]["threshold_counts"][warning_key] for row in frame_rows.values()),
+                "center_cells_above_warning": sum(row["center_axis_near"]["threshold_counts"][warning_key] for row in frame_rows.values()),
+            })
+        deep_values = [row["deep_maximum_m_s"] for row in run_rows]
+        center_values = [row["center_maximum_m_s"] for row in run_rows]
+        variation[pose] = {
+            "runs": run_rows,
+            "deep_run_range_m_s": max(deep_values) - min(deep_values),
+            "center_run_range_m_s": max(center_values) - min(center_values),
+        }
+
+    repeatability = {
+        "available": False,
+        "historical_samples_used_for_qualification": False,
+        "historical_role": "diagnostic cell-location comparison only",
+        "historical_root": str(historical_root) if historical_root else None,
+        "frames": {},
+    }
+    if historical_root and historical_root.is_dir():
+        repeatability["available"] = True
+        for frame in FRAMES:
+            historical_path = historical_root / "spatial" / "run_1" / "P4_y24_z31_on" / f"P4_y24_z31_on_f{frame:04d}_velocity.npz"
+            if not historical_path.is_file():
+                repeatability["available"] = False
+                repeatability["frames"][str(frame)] = {"available": False}
+                continue
+            with phase6ef.np.load(historical_path, allow_pickle=False) as old:
+                old_masks = phase6ef.region_masks(old)
+                old_indices = old["index_ijk"].astype(phase6ef.np.int32)
+                old_magnitude = old["magnitude"].astype(phase6ef.np.float64)
+                old_deep = {
+                    tuple(int(value) for value in old_indices[index])
+                    for index in phase6ef.np.flatnonzero(old_masks["deep_interior"] & (old_magnitude > 1.0e-5))
+                }
+                old_center = {
+                    tuple(int(value) for value in old_indices[index])
+                    for index in phase6ef.np.flatnonzero(old_masks["center_axis_near"] & (old_magnitude > 1.0e-5))
+                }
+            new_runs = []
+            for run_index in range(1, 4):
+                new_path = root / "spatial" / f"run_{run_index}" / "P4_y24_z31_on" / f"P4_y24_z31_on_f{frame:04d}_velocity.npz"
+                with phase6ef.np.load(new_path, allow_pickle=False) as current:
+                    current_values = {
+                        tuple(int(value) for value in index): float(value)
+                        for index, value in zip(current["index_ijk"], current["magnitude"])
+                    }
+                new_runs.append({
+                    "run": run_index,
+                    "historical_deep_cells_present": sum(index in current_values for index in old_deep),
+                    "historical_deep_cells_above_1e_5": sum(current_values.get(index, 0.0) > 1.0e-5 for index in old_deep),
+                    "historical_center_cells_present": sum(index in current_values for index in old_center),
+                    "historical_center_cells_above_1e_5": sum(current_values.get(index, 0.0) > 1.0e-5 for index in old_center),
+                    "maximum_at_historical_deep_cells_m_s": max((current_values.get(index, 0.0) for index in old_deep), default=0.0),
+                    "maximum_at_historical_center_cells_m_s": max((current_values.get(index, 0.0) for index in old_center), default=0.0),
+                })
+            repeatability["frames"][str(frame)] = {
+                "available": True,
+                "phase6em_deep_cells_above_1e_5": len(old_deep),
+                "phase6em_center_cells_above_1e_5": len(old_center),
+                "phase6en_runs": new_runs,
+            }
+    return {
+        "warning_level_m_s": float(contract["thresholds"]["warning_level_m_s"]),
+        "warning_is_qualification_gate": False,
+        "run_to_run_variation": variation,
+        "maximum_cells_by_sample": metadata,
+        "phase6em_p4_cell_location_repeatability": repeatability,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, required=True)
@@ -330,6 +422,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path)
     parser.add_argument("--svg", type=Path)
     parser.add_argument("--archive", type=Path)
+    parser.add_argument("--historical-root", type=Path)
     parser.add_argument("--check-run", type=int)
     parser.add_argument("--check-condition")
     parser.add_argument("--check-output", type=Path)
@@ -351,9 +444,18 @@ def main() -> int:
     outcomes, process_checks = validate_processes(root, contract)
     all_checks = preflight_checks + numeric_checks + process_checks
     qualified = all(item["pass"] for item in all_checks) and len(outcomes) == 36
+    phase = str(contract["phase"])
+    engineering = engineering_diagnostics(
+        root,
+        samples,
+        metadata,
+        contract,
+        args.historical_root.resolve() if args.historical_root else None,
+    )
+    resource_path = root / "resource_outcomes.json"
     payload = {
-        "schema": "campfire.phase6eg.static-pose-set-qualification-report.v1",
-        "phase": "phase6eg",
+        "schema": f"campfire.{phase}.static-pose-set-qualification-report.v1",
+        "phase": phase,
         "qualified": qualified,
         "scope": contract["scope_if_pass"] if qualified else "not qualified",
         "contract_path": str(args.contract.resolve()),
@@ -365,6 +467,8 @@ def main() -> int:
         "ratios": ratios,
         "samples": samples,
         "sample_files": metadata,
+        "engineering_diagnostics": engineering,
+        "resource_outcomes": load_json(resource_path) if resource_path.is_file() else None,
         "process_outcomes": outcomes,
         "checks": all_checks,
         "failed_checks": [item for item in all_checks if not item["pass"]],
@@ -373,7 +477,7 @@ def main() -> int:
     }
     args.output.write_text(json.dumps(payload, ensure_ascii=False, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     if qualified:
-        write_svg(args.svg, pose_summary, qualified)
+        write_svg(args.svg, pose_summary, qualified, phase)
         archive_samples(root, args.archive, contract)
     else:
         for path in (args.svg, args.archive):

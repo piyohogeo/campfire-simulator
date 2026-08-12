@@ -1,6 +1,7 @@
 param(
     [string]$OutputRoot = "",
-    [string]$SourceStage = ""
+    [string]$SourceStage = "",
+    [string]$ContractPath = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -17,7 +18,8 @@ $release = Join-Path $root "_build\windows-x86_64\release"
 $kit = Join-Path $release "kit\kit.exe"
 $emptyApp = Join-Path $release "kit\apps\omni.app.empty.kit"
 $productionApp = Join-Path $release "apps\campfire.simulator.kit"
-$contractPath = Join-Path $PSScriptRoot "phase6eg_static_pose_set_contract.json"
+if (-not $ContractPath) { $ContractPath = Join-Path $PSScriptRoot "phase6eg_static_pose_set_contract.json" }
+$contractPath = [IO.Path]::GetFullPath($ContractPath)
 $analyzer = Join-Path $PSScriptRoot "analyze_phase6eg_static_pose_set_qualification.py"
 $prepareProbe = Join-Path $PSScriptRoot "prepare_phase6eg_static_pose_set.py"
 $flowRunner = Join-Path $PSScriptRoot "run_phase6dt_flow_collision_case.ps1"
@@ -33,11 +35,14 @@ if ((Get-FileHash -Algorithm SHA256 -LiteralPath $source).Hash -ne $qualifiedSou
 
 $contractHashBefore = (Get-FileHash -Algorithm SHA256 -LiteralPath $contractPath).Hash
 $contract = Get-Content -Raw -Encoding UTF8 $contractPath | ConvertFrom-Json
-if ($contract.phase -ne "phase6eg" -or -not [bool]$contract.declared_before_formal_runs) { throw "Phase 6EG predeclared contract is invalid" }
+$phaseId = [string]$contract.phase
+if ($phaseId -notin @("phase6eg", "phase6en") -or -not [bool]$contract.declared_before_formal_runs) { throw "Static-pose predeclared contract is invalid" }
 if ($contract.source_stage_sha256 -ne $qualifiedSourceHash) { throw "Phase 6EG source hash contract changed" }
 if (@($contract.poses.psobject.Properties).Count -ne 6 -or @($contract.formal_order).Count -ne 3) { throw "Phase 6EG pose/run contract changed" }
 if ((@($contract.formal_order | ForEach-Object { @($_).Count }) | Measure-Object -Sum).Sum -ne 36) { throw "Phase 6EG formal process count changed" }
-if ([double]$contract.thresholds.existing_velocity_limit_m_s -ne 0.00001 -or [double]$contract.thresholds.collision_off_positive_minimum_m_s -ne 0.1 -or [double]$contract.thresholds.on_to_off_deep_maximum_ratio -ne 0.01) { throw "Phase 6EG inherited Phase 6EF thresholds changed" }
+if ([double]$contract.thresholds.collision_off_positive_minimum_m_s -ne 0.1 -or [double]$contract.thresholds.on_to_off_deep_maximum_ratio -ne 0.01) { throw "Static-pose positive/relative thresholds changed" }
+if ($phaseId -eq "phase6eg" -and [double]$contract.thresholds.existing_velocity_limit_m_s -ne 0.00001) { throw "Phase 6EG historical threshold changed" }
+if ($phaseId -eq "phase6en" -and ([double]$contract.thresholds.existing_velocity_limit_m_s -ne 0.0001 -or [double]$contract.thresholds.engineering_hard_maximum_m_s -ne 0.0001 -or [double]$contract.thresholds.warning_level_m_s -ne 0.00005)) { throw "Phase 6EN frozen engineering thresholds changed" }
 Copy-Item -LiteralPath $contractPath -Destination (Join-Path $OutputRoot "predeclared_contract.json")
 
 $productionHashBefore = (Get-FileHash -Algorithm SHA256 -LiteralPath $productionApp).Hash
@@ -62,8 +67,8 @@ $formalResourceLimits = [ordered]@{
 
 function Write-SafeStop([string]$Step, [string]$Condition, [string]$Message) {
     $payload = [ordered]@{
-        schema = "campfire.phase6eg.safe-stop.v1"
-        phase = "phase6eg"
+        schema = "campfire.$phaseId.safe-stop.v1"
+        phase = $phaseId
         status = "safe_stop"
         step = $Step
         condition = $Condition
@@ -176,7 +181,7 @@ function Invoke-Phase6EgCase {
         spatial_peak_rss_delta_bytes = $manifest.peak_rss_delta_bytes
     }
     $script:completed += "run_${RunIndex}/$Condition"
-    [IO.File]::WriteAllText($resourceOutcomePath, (([ordered]@{ schema="campfire.phase6eg.resource-outcomes.v1"; limits=$formalResourceLimits; outcomes=@($script:outcomes) } | ConvertTo-Json -Depth 12) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+    [IO.File]::WriteAllText($resourceOutcomePath, (([ordered]@{ schema="campfire.$phaseId.resource-outcomes.v1"; phase=$phaseId; limits=$formalResourceLimits; outcomes=@($script:outcomes) } | ConvertTo-Json -Depth 12) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
 }
 
 $prepareArgs = @(
@@ -230,17 +235,31 @@ try {
     throw
 }
 
-if ((Get-FileHash -Algorithm SHA256 -LiteralPath $contractPath).Hash -ne $contractHashBefore) { throw "Phase 6EG contract changed after formal runs" }
-& python $analyzer --root $OutputRoot --contract $contractPath --output (Join-Path $OutputRoot "report.json") --svg (Join-Path $OutputRoot "qualification.svg") --archive (Join-Path $OutputRoot "velocity_samples.zip")
+if ((Get-FileHash -Algorithm SHA256 -LiteralPath $contractPath).Hash -ne $contractHashBefore) { throw "$phaseId contract changed after formal runs" }
+$analysisArguments = @(
+    $analyzer,
+    "--root", $OutputRoot,
+    "--contract", $contractPath,
+    "--output", (Join-Path $OutputRoot "report.json"),
+    "--svg", (Join-Path $OutputRoot "qualification.svg"),
+    "--archive", (Join-Path $OutputRoot "velocity_samples.zip")
+)
+if ($phaseId -eq "phase6en") {
+    $historicalRoot = Join-Path $root "artifacts\phase6eg-static-pose-qualification-5"
+    if (Test-Path -LiteralPath $historicalRoot -PathType Container) {
+        $analysisArguments += @("--historical-root", $historicalRoot)
+    }
+}
+& python @analysisArguments
 if ($LASTEXITCODE -ne 0) {
-    Write-SafeStop "analysis" "qualification" "Phase 6EG predeclared numeric gates failed"
-    throw "Phase 6EG qualification failed"
+    Write-SafeStop "analysis" "qualification" "$phaseId predeclared numeric gates failed"
+    throw "$phaseId qualification failed"
 }
 $productionHashAfter = (Get-FileHash -Algorithm SHA256 -LiteralPath $productionApp).Hash
 if ($productionHashBefore -ne $productionHashAfter) { throw "Phase 6EG changed production app" }
 $matrix = [ordered]@{
-    schema = "campfire.phase6eg.matrix-complete.v1"
-    phase = "phase6eg"
+    schema = "campfire.$phaseId.matrix-complete.v1"
+    phase = $phaseId
     status = "ok"
     contract_sha256 = $contractHashBefore
     formal_order = @($contract.formal_order)
@@ -254,4 +273,4 @@ $matrix = [ordered]@{
     previous_phase_artifacts_overwritten = $false
 }
 [IO.File]::WriteAllText((Join-Path $OutputRoot "matrix_complete.json"), ($matrix | ConvertTo-Json -Depth 12) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
-Write-Host "Phase 6EG complete: 36 normal-exit processes and all predeclared gates passed"
+Write-Host "$phaseId complete: 36 normal-exit processes and all predeclared gates passed"
