@@ -1,5 +1,15 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FA Flow liveness safe stop
+
+Phase 6EY/6EZ through `0066ab3` remain frozen. The independent Phase 6FA D1 reproduced 24 active blocks at every fresh per-frame sample from frame 1 through frame 60, while timeline time advanced; readback followed the frame-60 sample. Together with frozen C1's frame-30 value, this excludes public readback, alias release, and `numpy.asarray(fuel)` as the direct cause of the initial small field. Identical audited stage/payload/source inputs place the strongest remaining boundary in per-process Flow/Point-emitter startup or ingestion, but semantic public-field decoding did not complete and the exact trigger remains unconfirmed.
+
+The constant-occupancy contract is now explicit: it removes artificial increase/decrease requirements but still requires fresh telemetry, an advancing timeline, positive expected Point input, unchanged identities, a meaningful public field, representative occupancy (minimum 128 blocks for this fixed fixture), bounded memory, complete lifecycle, and normal OS exit. A constant 24-block trace is not accepted automatically. Synthetic fixtures cover bounded constant/dynamic cases and reject stale, stopped, empty-source, unrepresentative, and divergent-memory cases.
+
+After the diagnostic helper correction, the formal population restarted from a new empty root. D0 passed functional and memory-stationarity gates but `close_stage_async()` exceeded the frozen 180-second timeout. Bounded CDB evidence reached an `omni_usd` context-destruction / extension-shutdown boundary, did not match the accepted NGX signature, and timed out before a complete detach marker. Exact-identity cleanup left zero residual. D1/D2 were not started; one fuel alias lifetime and repeated readback remain unqualified. The Phase 6EZ 74.329-second close did not reproduce exactly: root-1 closes were 2.498/2.634 seconds, while root-2 timed out at 180 seconds. Production, defaults, and resource ceilings remain unchanged. Details: `docs/design/phase6fa_flow_functional_liveness.md`.
+
+Final regression passed the Release build, Phase 0 RTX, Phase 3, focused Phase 6FA/6EY/6EZ contracts 22/22, and the eight-process standard suite 78/78 in 349.5 seconds. Phase 3 retained authority hashes, mass-balance error 0, active blocks final/peak 256/353, and peak fuel 1.0. Production SHA-256 remained `94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`; final diagnostic-process residual count was zero.
+
 # Phase 6FA Flow functional-liveness contract
 
 Phase 6EY and Phase 6EZ through `0066ab3` remain frozen. Read-only comparison shows that Phase 6EZ C1 already reported 24 active blocks at frame 30, before its frame-60 public readback and `numpy.asarray(fuel)` call. Its timeline and sample timestamps continued to advance, and its returned public buffers were substantially smaller than C0. The initial collapse therefore cannot have been caused directly by `numpy.asarray` or later alias release; a real smaller Flow allocation is more likely than a repeated stale integer, while the exact ingestion/lifecycle trigger remains unconfirmed before the new runtime diagnostic.

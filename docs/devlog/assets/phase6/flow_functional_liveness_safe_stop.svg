@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="560" viewBox="0 0 1120 560" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6FA Flow functional-liveness safe stop</title>
+  <desc id="desc">Comparison of representative active Flow occupancy and lifecycle outcome. The 24-block state preceded readback, while the corrected restart stopped at stage close.</desc>
+  <rect width="1120" height="560" fill="#10151c"/>
+  <text x="56" y="58" fill="#f6f7f9" font-family="Segoe UI, sans-serif" font-size="30" font-weight="700">Phase 6FA — 24-block cause boundary</text>
+  <text x="56" y="91" fill="#a9b4c2" font-family="Segoe UI, sans-serif" font-size="17">Fresh telemetry shows the small field existed before public readback; exact startup/ingestion trigger remains unresolved.</text>
+  <line x1="88" y1="410" x2="1040" y2="410" stroke="#536170" stroke-width="2"/>
+  <g font-family="Segoe UI, sans-serif" font-size="15" text-anchor="middle">
+    <rect x="112" y="156" width="150" height="254" rx="8" fill="#4cc9a7"/>
+    <text x="187" y="143" fill="#d8fff4" font-size="21" font-weight="700">1362 mean</text>
+    <text x="187" y="438" fill="#d9e1e8">Frozen C0</text>
+    <text x="187" y="460" fill="#8fa0b2">normal exit</text>
+
+    <rect x="334" y="402" width="150" height="8" rx="4" fill="#ffbd59"/>
+    <text x="409" y="383" fill="#ffe1a8" font-size="21" font-weight="700">24</text>
+    <text x="409" y="438" fill="#d9e1e8">Frozen C1</text>
+    <text x="409" y="460" fill="#8fa0b2">before frame-60 readback</text>
+
+    <rect x="556" y="157" width="150" height="253" rx="8" fill="#5aa9e6"/>
+    <text x="631" y="143" fill="#cfeaff" font-size="21" font-weight="700">1360 mean</text>
+    <text x="631" y="438" fill="#d9e1e8">Root 1 D0</text>
+    <text x="631" y="460" fill="#8fa0b2">close 2.50 s</text>
+
+    <rect x="778" y="402" width="150" height="8" rx="4" fill="#ff7b72"/>
+    <text x="853" y="383" fill="#ffc5c0" font-size="21" font-weight="700">24 × 60</text>
+    <text x="853" y="438" fill="#d9e1e8">Root 1 D1</text>
+    <text x="853" y="460" fill="#8fa0b2">frame 1–60, pre-readback</text>
+  </g>
+  <rect x="56" y="500" width="1008" height="38" rx="8" fill="#291d24" stroke="#ff7b72"/>
+  <text x="76" y="525" fill="#ffd0cc" font-family="Segoe UI, sans-serif" font-size="16">Safe stop: corrected root D0 passed Flow/memory gates but close_stage_async exceeded 180 s; D1/D2 were not started.</text>
+</svg>

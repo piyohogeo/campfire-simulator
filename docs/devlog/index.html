@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6ey-qualified">最新記録</a>
+        <a href="#phase-6fa">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6ey-qualified">Phase 6EYの結果を読む</a>
+        <a class="button primary" href="#phase-6fa">Phase 6FAの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6EY R0 3/3 · R1 acquire/discard qualified</strong></div>
+        <div><span>現在地</span><strong>Phase 6FA · Flow liveness safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>4/4 normal exit · CDB/residual 0</strong></div>
+        <div><span>Lifecycle</span><strong>stage-close unknown wait · cleanup residual 0</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
@@ -49,6 +49,19 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-6fa" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FA Flow liveness entry"><span class="phase-number compact">6FA</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">pre-readback cause isolated · lifecycle safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FA · Flow functional liveness</p><h2>24 blocksはreadback前から実在。<br>原因境界をstartup／ingestionへ限定。</h2><p>Phase 6EY/6EZの結果を凍結し、同じ4本Point payloadをD0/D1/D2へ一変数ずつ分けました。D1はframe 1から60まで24 blocksのままtimelineとtelemetryが更新し、readbackはその後でした。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/flow_functional_liveness_safe_stop.svg"><img src="assets/phase6/flow_functional_liveness_safe_stop.svg" alt="Phase 6FAのC0代表Flow場とreadback前24-block場、およびstage-close safe stopの比較" loading="lazy"></a><figcaption><div><strong>24 blocks precede readback · D0 dynamic field reproduced</strong><span>root 1 close 2.50/2.63 s · corrected root close timeout 180 s</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Confirmed</p><h3>`np.asarray()`は初期原因ではない</h3><p>凍結C1はframe 30、新D1はframe 1から24 blocksでした。いずれもframe 60 readbackより前です。stage、1,344 active points、revision 1、fuel/temperature/smoke入力は対照と一致し、timestampとtimelineも進みました。</p></section><section class="note"><p class="note-label">Unconfirmed</p><h3>process startup / source ingestion</h3><p>もっとも狭い残存境界はFlow/Point Emitterのprocess起動・取り込みです。ただしD1のpublic fuel意味検査は診断helper例外で完了せず、exact triggerは未確定です。24を物理的定常状態として合格扱いしていません。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Fail-closed result</p><h3>新contractはconstant occupancyもliveness必須。</h3><p>constant occupancyでは増減fractionを要求しませんが、fresh telemetry、timeline進行、正のEmitter入力、public field、代表occupancy、bounded memory、normal exitを必須にしました。synthetic fixtureはbounded constant/dynamicを通し、24 blocks、stale、停止、空field、memory発散を拒否します。</p><p>helper修正後は新rootのD0から再開しました。Flow/memory gateは合格しましたが、stage closeが180秒timeout。CDBは既知NGX signatureに一致せず、D1/D2を開始しませんでした。正確なPID identityでcleanupし残留は0です。</p><p>focused <code>22/22</code>、Release build、Phase 0 RTX、Phase 3、標準suite <code>78/78</code>（8 process、349.5秒）は合格。Phase 3のmass balance errorは0、active blocks final/peakは<code>256/353</code>、production SHAは不変でした。</p><p><a href="assets/phase6/flow_functional_liveness_safe_stop.json">machine report</a> · <a href="assets/phase6/flow_functional_liveness_safe_stop.svg">comparison SVG</a> · <a href="../design/phase6fa_flow_functional_liveness.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>24 boundary</strong><small>pre-readback</small></p></div><div role="listitem"><span>✓</span><p><strong>Telemetry</strong><small>fresh</small></p></div><div role="listitem"><span>!</span><p><strong>Root cause</strong><small>not confirmed</small></p></div><div role="listitem"><span>!</span><p><strong>Lifecycle</strong><small>unknown close wait</small></p></div><div role="listitem"><span>✓</span><p><strong>Cleanup</strong><small>residual 0</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Next boundary</p><h3>反復readbackには進まない。</h3><p>Flow/Point ingestionのprocess間不定性とunknown stage-close waitを解消し、public fuel livenessを完了するまでは、fuel alias lifetimeのformal qualification、繰り返しreadback、production統合を開始しません。内部診断のみのため新しい動画とlatest-demo pointerは更新していません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6ez-restart" class="section entry-section phase-six">

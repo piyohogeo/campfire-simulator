@@ -52,3 +52,25 @@ Synthetic fixtures accept constant/flat, constant/bounded-noise, dynamic/bounded
 ## Claim boundary
 
 Even if D0/D1/D2 pass, the result qualifies only one fixed-condition fuel alias lifetime. It does not qualify repeated readback, repeated conversion, other channels, field persistence, production integration, or any resource-ceiling increase.
+
+## Runtime result and safe stop
+
+The first new root established a healthy D0 control: 49 stationarity samples covered 1,121–1,567 active blocks with mean 1,360.143, its dynamic-memory gate passed, stage close took 2.498 seconds, and the process exited normally. D1 then reproduced the small field independently: all 60 per-frame observations from frame 1 through frame 60 were fresh values of 24 while timeline time advanced from 0.0167 to 1.0 seconds. The readback boundary follows the frame-60 observation. Therefore public readback, alias release, and `numpy.asarray` cannot be the direct cause of the initial 24-block field. A diagnostic helper name error prevented the public fuel semantic decode; D1 closed in 2.634 seconds and left no process residual. D2 was not started.
+
+After correcting only that helper, the formal population restarted from D0 in a second empty root; no root-1 evidence was reused. D0 again formed the representative dynamic field (1,121–1,558 active blocks, mean 1,361.551) and passed the memory-stationarity checks. It then exceeded the frozen 180-second `close_stage_async()` limit. Bounded CDB collection reached an `omni_usd` context-destruction / extension-shutdown stack boundary but timed out before a complete detach marker; the accepted NGX five-token signature did not match and the lock owner is unknown. Exact-identity cleanup removed the observed Kit and children, with zero residual afterward. D1 and D2 were not started.
+
+### Confirmed facts
+
+- Phase 6EZ C1 and the independent Phase 6FA D1 both had 24 blocks before their readback boundary.
+- Timeline and telemetry samples advanced, and the frozen C1 returned much smaller public buffers than C0. The value is not consistent with a single stale integer being replayed.
+- Stage, Point payload, 1,344 active / 1,440 total points, revision 1, transforms, source sums, and Flow settings match between the audited C0/C1 inputs.
+- Phase 6EZ's same-object, shared-memory, zero-copy `numpy.asarray(fuel)` observation remains valid as an observation, but is not qualified under the Phase 6FA liveness contract.
+- The 14 GiB Kit and 16 GiB tree ceilings were unchanged.
+
+### Strong inference and unknowns
+
+The narrowest supported causal boundary is per-process Flow/Point-emitter startup or source ingestion before readback. The exact trigger— including whether immediate cross-process sequencing contributes—remains unconfirmed. The D1 helper failed before semantic field decoding, so the complete functional-liveness gate was not satisfied even though authored input, timeline, and fresh occupancy telemetry existed. The second-root unknown stage-close wait is a separate lifecycle blocker. Repeated readback cannot proceed until both boundaries are resolved.
+
+The machine-readable result is `docs/devlog/assets/phase6/flow_functional_liveness_safe_stop.json`; the comparison figure is `flow_functional_liveness_safe_stop.svg`. Phase 6EY/6EZ history remains unchanged, Phase 6FA does not qualify one fuel alias lifetime, and production is unchanged.
+
+Final regression passed 22/22 focused Phase 6FA/6EY/6EZ contracts, the Release build in 7.75 seconds, Phase 0 RTX, Phase 3, and the standard eight-process suite with 78/78 tests in 349.5 seconds. Phase 3 retained zero dry/wet mass-balance error, the established dry/wet authority hashes, active blocks final/peak 256/353, and peak fuel 1.0. The production app SHA-256 remained `94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`; final Kit/CDB/GPU-helper residual count was zero. Devlog validation passed 419 references, 257 IDs, 209 JSON files, 175 SVG files, and two ZIP files.

@@ -1,0 +1,165 @@
+{
+  "schema": "campfire.phase6fa.flow-functional-liveness-safe-stop.v1",
+  "phase": "phase6fa",
+  "status": "safe_stop",
+  "contract_sha256": "1BC41973A75FA0DC00886164CA0763EC52EE6DF7B4418926B0859213F4D3E1CA",
+  "history": {
+    "safe_commit": "0066ab3",
+    "phase6ey_frozen": true,
+    "phase6ez_frozen": true,
+    "phase6ez_c1_reclassified": false,
+    "prior_formal_samples_reused": false
+  },
+  "offline_comparison": {
+    "stage_sha256_equal": true,
+    "point_payload_sha256_equal": true,
+    "total_points": 1440,
+    "active_points": 1344,
+    "point_revision": 1,
+    "source_sums": {
+      "fuel": 1075.2000160217285,
+      "temperature": 2688.0,
+      "smoke": 107.51999759674072
+    },
+    "phase6ez_c0_active_block_mean": 1362.122,
+    "phase6ez_c1_active_block_samples": 49,
+    "phase6ez_c1_active_block_minimum": 24,
+    "phase6ez_c1_active_block_maximum": 24,
+    "phase6ez_c1_first_recorded_frame": 30,
+    "phase6ez_c1_readback_frame": 60,
+    "initial_collapse_preceded_readback": true,
+    "numpy_asarray_direct_initial_cause_excluded": true,
+    "release_order_direct_initial_cause_excluded": true
+  },
+  "runtime": {
+    "root_1": {
+      "artifact": "artifacts/phase6fa-flow-liveness-1",
+      "formal_population_reused": false,
+      "D0_no_readback": {
+        "functional_liveness": true,
+        "occupancy_classification": "dynamic_occupancy",
+        "active_block_sample_count": 49,
+        "active_block_mean": 1360.142857142857,
+        "active_block_minimum": 1121,
+        "active_block_maximum": 1567,
+        "normal_os_exit": true,
+        "stage_close_seconds": 2.4980411529541016,
+        "kit_peak_private_bytes": 14548516864,
+        "tree_peak_private_bytes": 14711336960
+      },
+      "D1_readback_release": {
+        "functional_liveness_qualified": false,
+        "flow_history_samples_before_failure": 60,
+        "first_frame": 1,
+        "last_frame": 60,
+        "active_block_minimum": 24,
+        "active_block_maximum": 24,
+        "timeline_start": 0.016666666666666666,
+        "timeline_end": 1.0000000000000013,
+        "readback_boundary_after_frame_60_telemetry": true,
+        "helper_failure": "NameError before public fuel semantic decode",
+        "stage_close_seconds": 2.6343021392822266,
+        "kit_peak_private_bytes": 11710939136,
+        "tree_peak_private_bytes": 11873918976,
+        "cleanup_residual_count": 0
+      },
+      "D2_fuel_asarray_started": false
+    },
+    "root_2": {
+      "artifact": "artifacts/phase6fa-flow-liveness-2",
+      "reason_for_new_root": "restart after diagnostic helper correction; root 1 samples were not reused",
+      "D0_no_readback": {
+        "functional_liveness": true,
+        "occupancy_classification": "dynamic_occupancy",
+        "active_block_sample_count": 49,
+        "active_block_mean": 1361.5510204081634,
+        "active_block_minimum": 1121,
+        "active_block_maximum": 1558,
+        "memory_stationarity_gate": true,
+        "kit_peak_private_bytes": 14563819520,
+        "kit_limit_bytes": 15032385536,
+        "kit_limit_margin_bytes": 468566016,
+        "tree_peak_private_bytes": 14726078464,
+        "last_probe_marker": "stage_close_timeout",
+        "stage_close_timeout_seconds": 180,
+        "normal_os_exit": false,
+        "cdb_invoked": true,
+        "cdb_timeout_seconds": 45,
+        "cdb_detach_marker_complete": false,
+        "known_ngx_signature_matched": false,
+        "observed_stack_boundary": "omni_usd destroyContext / omni_ext_plugin shutdown; lock owner unconfirmed",
+        "cleanup_residual_count": 0
+      },
+      "D1_started": false,
+      "D2_started": false
+    }
+  },
+  "cause_assessment": {
+    "direct_observation": "The 24-block field existed from the first telemetry sample and before public readback in both the frozen Phase 6EZ C1 and Phase 6FA root-1 D1.",
+    "telemetry_stale": false,
+    "functional_liveness_historical_c1_fully_proven": false,
+    "most_likely_boundary": "per-process Flow/Point-emitter startup or source-ingestion lifecycle before readback",
+    "root_cause_confirmed": false,
+    "ranked_hypotheses": [
+      "Flow field/source ingestion did not grow in the affected process",
+      "independent-process initialization or immediate cross-process sequencing changed ingestion",
+      "observation began too early, weakened by the persistent 24-block interval",
+      "readback/release affected later lifetime but cannot explain the initial state",
+      "fixture difference, not observed in frozen stage/payload/argument audit",
+      "stale telemetry, contradicted by fresh timestamps and smaller public buffers",
+      "physically meaningful 24-block steady state, not accepted without semantic field liveness"
+    ]
+  },
+  "new_contract": {
+    "dynamic_occupancy": "retains finite trend, recovery, normalized-memory, resource and lifecycle gates",
+    "constant_occupancy": "does not require artificial increase/decrease/drop response; requires fresh telemetry, advancing timeline, positive emitter payload, expected revision, unchanged identities, meaningful public field, representative occupancy, bounded memory, normal exit and zero fatal/residual evidence",
+    "minimum_representative_active_blocks_fixed_fixture": 128,
+    "constant_24_automatically_accepted": false,
+    "synthetic_fixture": "pass"
+  },
+  "qualification": {
+    "single_fuel_alias_lifetime_qualified_under_phase6fa": false,
+    "phase6ez_same_object_zero_copy_observation_preserved": true,
+    "repeated_readback_qualified": false,
+    "next_step": "resolve the pre-readback Flow/Point ingestion nondeterminism and the unknown stage-close wait before any repeated readback test"
+  },
+  "stage_close_seconds": {
+    "phase6ez_c0_frozen": 74.32942914962769,
+    "phase6fa_root1_d0": 2.4980411529541016,
+    "phase6fa_root1_d1": 2.6343021392822266,
+    "phase6fa_root2_d0": null,
+    "phase6fa_root2_timeout_seconds": 180,
+    "phase6ez_74_33_reproduced": false
+  },
+  "production": {
+    "changed": false,
+    "defaults_changed": false,
+    "resource_ceilings_changed": false,
+    "expected_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "verified_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A"
+  },
+  "regression": {
+    "focused_phase6fa_phase6ey_phase6ez": "22/22",
+    "release_build": "pass; 7.75 seconds",
+    "phase0_rtx": "pass",
+    "phase3": {
+      "status": "pass",
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "dry_authority_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+      "wet_authority_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+      "active_blocks_final": 256,
+      "active_blocks_peak": 353,
+      "peak_fuel": 1.0
+    },
+    "standard_suite": {
+      "processes": "8/8",
+      "tests": "78/78",
+      "wall_seconds": 349.5,
+      "upload_enabled": false
+    },
+    "devlog_validation": "pass; 419 references, 257 IDs, 209 JSON, 175 SVG, 2 ZIP",
+    "post_regression_residual_process_count": 0
+  },
+  "latest_demo_changed": false
+}
