@@ -103,6 +103,7 @@ def _settings():
         ),
         "lifecycle_calibration": bool(settings.get_as_bool("/phase6ep/lifecycleCalibration")),
         "renderer_drain_updates": max(1, int(settings.get_as_int("/phase6ep/rendererDrainUpdates")) or 8),
+        "stage_close_timeout_seconds": max(0.0, float(settings.get_as_float("/phase6ep/stageCloseTimeoutSeconds"))),
     }
 
 
@@ -706,7 +707,16 @@ async def _run():
 
                 report["lifecycle_marker"] = "stage_close_request_before"
                 mark("stage_close_request_before", **state())
-                await context.close_stage_async()
+                close_timeout = arguments["stage_close_timeout_seconds"]
+                try:
+                    if close_timeout > 0.0:
+                        await asyncio.wait_for(context.close_stage_async(), timeout=close_timeout)
+                    else:
+                        await context.close_stage_async()
+                except asyncio.TimeoutError:
+                    report["lifecycle_marker"] = "stage_close_timeout"
+                    mark("stage_close_timeout", timeout_seconds=close_timeout, **state())
+                    raise RuntimeError(f"close_stage_async exceeded {close_timeout:.3f} seconds")
                 report["lifecycle_marker"] = "stage_close_request_after"
                 mark("stage_close_request_after", **state())
                 report["completion_contract"]["stage_closed"] = True

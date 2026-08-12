@@ -1,0 +1,86 @@
+{
+  "schema": "campfire.phase6ew.r0-lifecycle-qualification-contract.v1",
+  "phase": "phase6ew",
+  "declared_before_runtime": true,
+  "phase6eu_history": "frozen unknown_shutdown_failure; artifacts, invalid marker samples, partial plateau evidence, CDB capture, and classification are immutable",
+  "phase6ev_history": "frozen L0 marker-gate safe stop; its missing final_sample_complete, 102.595644-second stage close, artifacts, and classification are immutable",
+  "purpose": "qualify the corrected-marker readback-free R0 lifecycle and only then exercise one bounded public acquire-and-discard",
+  "production_neutral": true,
+  "scenario": "production_four",
+  "geometry_variant": "phase6er_corrected",
+  "point_policy": "allow_self_center",
+  "point_offset_m": -0.0125,
+  "support_radius_m": 0.05,
+  "collision_enabled": true,
+  "point_filtering_enabled": true,
+  "source_scales": {"fuel": 1.0, "temperature": 1.0, "smoke": 1.0},
+  "lifecycle": {
+    "calibration_enabled": true,
+    "renderer_pre_close_drain_updates": 8,
+    "renderer_post_close_drain_updates": 4,
+    "timeline_stop_confirmation_updates": 12,
+    "stage_close_timeout_seconds": 180,
+    "stage_close_timeout_rationale": "bounded above the frozen Phase 6EV observation of 102.595644 seconds with 77.404356 seconds of margin",
+    "inner_absolute_timeout_seconds": 540,
+    "outer_condition_timeout_seconds": 900,
+    "timeout_rationale": "the inner bound includes startup, frame 320, the 180-second close bound, 60-second shutdown grace, and bounded CDB diagnostics; the outer guard retains cleanup margin",
+    "extension_marker": "omni.campfire.phasev3tg_shutdown",
+    "normal_os_exit_required": true
+  },
+  "conditions": [
+    {"id": "L0_short", "sample_frames": [30, 60], "readback_mode": "none", "runs": 1, "requires": []},
+    {"id": "R0_none", "sample_frames": [30, 60, 90, 120, 150, 180, 200, 240, 280, 320], "readback_mode": "none", "runs": 3, "requires": ["L0_short_complete"]},
+    {"id": "R1_acquire_discard", "sample_frames": [30, 60, 90, 120, 150, 180, 200, 240, 280, 320], "readback_mode": "acquire_discard", "readback_frames": [60], "runs": 1, "requires": ["R0_none_3_of_3_normal_exit", "R0_none_3_of_3_plateau", "R0_cross_run_reproducibility"]}
+  ],
+  "execution": {
+    "automatic_retry": false,
+    "stop_after_r1": true,
+    "maximum_processes": 5,
+    "phase6eu_or_phase6ev_sample_reuse": false
+  },
+  "plateau_contract": {
+    "growth_frames": [30, 60, 90, 120, 150, 180, 200],
+    "stability_frames": [240, 280, 320],
+    "minimum_resource_samples_in_stability_interval": 20,
+    "maximum_active_block_range_fraction": 0.15,
+    "maximum_private_growth_bytes_per_second": 8388608,
+    "require_non_monotonic_or_flat_private_series": true,
+    "maximum_cross_run_peak_private_range_fraction": 0.10,
+    "maximum_cross_run_terminal_private_range_fraction": 0.10,
+    "maximum_cross_run_stage_close_range_seconds": 120,
+    "maximum_stage_close_seconds": 180
+  },
+  "required_probe_markers": [
+    "final_sample_complete", "measurement_complete", "timeline_stop_request_before",
+    "timeline_stop_request_after", "timeline_stop_confirmed", "renderer_drain_started",
+    "renderer_drain_complete", "flow_references_release_started", "flow_references_release_complete",
+    "provider_readback_references_release_started", "provider_readback_references_release_complete",
+    "stage_close_request_before", "stage_close_request_after", "usd_context_disconnected",
+    "app_close_requested", "shutdown_complete"
+  ],
+  "required_extension_markers": ["extension_on_startup", "extension_on_shutdown_begin", "extension_on_shutdown_end"],
+  "required_runner_markers": ["os_process_exit_observed"],
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "resource_sampling_seconds": 0.20,
+    "gpu_sampling_ms": 1000
+  },
+  "r1_boundary": {
+    "frame": 60,
+    "public_call": "get_latest_nanovdb_readback",
+    "conversion": false,
+    "scalar_aggregation": false,
+    "spatial_sampling": false,
+    "field_json_or_npz_persistence": false,
+    "directional_transport": false,
+    "private_release_api": false,
+    "gc_collect": false,
+    "release": "natural scope end or explicit del only",
+    "bounded_type_identity_shape_metadata_only": true
+  }
+}
