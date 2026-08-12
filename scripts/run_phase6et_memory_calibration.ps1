@@ -70,10 +70,11 @@ function Invoke-GuardedCase([string]$Label, [string]$Scenario, [int]$RunIndex, [
         "-FuelScale", "1", "-TemperatureScale", "1", "-SmokeScale", "1",
         "-SampleFrames", $SampleFrames, "-ReadbackChannels", $ReadbackChannels,
         "-SpatialCollectorsEnabled", $SpatialEnabled.ToString().ToLowerInvariant(),
-        "-SpatialColliderIndices", $SpatialIndices,
-        "-SpatialScalarColliderIndices", $SpatialIndices,
         "-RunIndex", "$RunIndex"
     )
+    if (-not [string]::IsNullOrWhiteSpace($SpatialIndices)) {
+        $arguments += @("-SpatialColliderIndices", $SpatialIndices, "-SpatialScalarColliderIndices", $SpatialIndices)
+    }
     if ($AllChannels) { $arguments += "-SpatialAllChannels" }
     $trace = Join-Path $logs "$prefix.resource.jsonl"
     $summary = Join-Path $logs "$prefix.guard.json"
