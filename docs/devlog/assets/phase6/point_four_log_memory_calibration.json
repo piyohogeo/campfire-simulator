@@ -1,0 +1,725 @@
+{
+  "schema": "campfire.phase6et.four-log-memory-calibration-report.v1",
+  "phase": "phase6et",
+  "status": "safe_stop_or_incomplete",
+  "contract_sha256": "4B14168B37442050FCA9D23B1ECAAC6DA9F57C666FB3D44FBCEE5F39C26830F6",
+  "phase6es_frozen": true,
+  "phase6es_reclassified": false,
+  "baseline_read_only": {
+    "rows": [
+      {
+        "artifact": "artifacts/phase6er-formal-1/runner-logs/formal_run_1_lower_upper_allow_self_center.guard.json",
+        "status": "ok",
+        "stop_reason": null,
+        "kit_peak_bytes": 13205430272,
+        "kit_peak_gib": 12.298515319824219,
+        "tree_peak_bytes": 13346344960,
+        "duration_seconds": 199.08280491828918,
+        "peak_section": 1786514878.7464569
+      },
+      {
+        "artifact": "artifacts/phase6er-formal-2/runner-logs/formal_run_1_lower_upper_allow_self_center.guard.json",
+        "status": "ok",
+        "stop_reason": null,
+        "kit_peak_bytes": 13222883328,
+        "kit_peak_gib": 12.314769744873047,
+        "tree_peak_bytes": 13362843648,
+        "duration_seconds": 201.4001190662384,
+        "peak_section": 1786515726.3505373
+      },
+      {
+        "artifact": "artifacts/phase6es-calibration-1/runner-logs/emitterless_on.guard.json",
+        "status": "ok",
+        "stop_reason": null,
+        "kit_peak_bytes": 11938181120,
+        "kit_peak_gib": 11.118297576904297,
+        "tree_peak_bytes": 12074807296,
+        "duration_seconds": 182.50840878486633,
+        "peak_section": 1786518154.3065999
+      },
+      {
+        "artifact": "artifacts/phase6es-calibration-1/runner-logs/emitter_off.guard.json",
+        "status": "ok",
+        "stop_reason": null,
+        "kit_peak_bytes": 13267070976,
+        "kit_peak_gib": 12.35592269897461,
+        "tree_peak_bytes": 13407264768,
+        "duration_seconds": 180.41554498672485,
+        "peak_section": 1786518338.9943001
+      },
+      {
+        "artifact": "artifacts/phase6es-calibration-1/runner-logs/filtered_933_on.guard.json",
+        "status": "failed",
+        "stop_reason": "kit_private_limit",
+        "kit_peak_bytes": 15100735488,
+        "kit_peak_gib": 14.063655853271484,
+        "tree_peak_bytes": 15241826304,
+        "duration_seconds": 102.84088635444641,
+        "peak_section": 1786518537.3487287
+      },
+      {
+        "artifact": "artifacts/phase6es-calibration-2/runner-logs/emitterless_on.guard.json",
+        "status": "ok",
+        "stop_reason": null,
+        "kit_peak_bytes": 12074225664,
+        "kit_peak_gib": 11.244998931884766,
+        "tree_peak_bytes": 12214919168,
+        "duration_seconds": 187.2485649585724,
+        "peak_section": 1786518717.6806192
+      },
+      {
+        "artifact": "artifacts/phase6es-calibration-2/runner-logs/emitter_off.guard.json",
+        "status": "ok",
+        "stop_reason": null,
+        "kit_peak_bytes": 13434462208,
+        "kit_peak_gib": 12.511817932128906,
+        "tree_peak_bytes": 13574311936,
+        "duration_seconds": 200.03462600708008,
+        "peak_section": 1786518887.6660745
+      },
+      {
+        "artifact": "artifacts/phase6es-calibration-2/runner-logs/filtered_933_on.guard.json",
+        "status": "failed",
+        "stop_reason": "kit_private_limit",
+        "kit_peak_bytes": 15722414080,
+        "kit_peak_gib": 14.64263916015625,
+        "tree_peak_bytes": 15863865344,
+        "duration_seconds": 99.13380455970764,
+        "peak_section": 1786519106.2885702
+      }
+    ],
+    "phase6er_four_log_runtime": "not reached; Phase 6ER production_four evidence is offline geometry only",
+    "phase6es_root1_failed_peak_bytes": 15100735488,
+    "phase6es_root1_failed_peak_gib": 14.063655853271484,
+    "phase6es_root2_failed_peak_bytes": 15722414080,
+    "phase6es_root2_failed_peak_gib": 14.64263916015625
+  },
+  "attempted_processes": 2,
+  "completed_processes": 1,
+  "expected_processes": 21,
+  "rows": [
+    {
+      "run_index": 1,
+      "condition": "A_flow_only",
+      "guard_status": "ok",
+      "stop_reason": null,
+      "exit_code": 0,
+      "kit_peak_bytes": 14536630272,
+      "kit_peak_gib": 13.538291931152344,
+      "tree_peak_bytes": 14700179456,
+      "runner_peak_bytes": 96309248,
+      "diagnostic_peak_bytes": 17006592,
+      "machine_minima": {
+        "available_physical_bytes": 84219650048,
+        "estimated_commit_headroom_bytes": 102894931968
+      },
+      "trace": {
+        "sample_count": 114,
+        "first_kit_private_bytes": 0,
+        "last_kit_private_bytes": 0,
+        "peak": {
+          "private_bytes": 14536630272,
+          "timestamp_utc_epoch": 1786521191.1455626,
+          "execution_section": "sample_persisted",
+          "lifecycle_marker": "timeline_playing",
+          "diagnostic_marker": "sample_persisted"
+        },
+        "tail_sample_count": 51,
+        "tail_growth_bytes_per_second": 370644064.09405184
+      },
+      "plateau": false,
+      "raw": {
+        "available": true,
+        "status": "ok",
+        "lifecycle_marker": "shutdown_complete",
+        "frames": [
+          {
+            "frame": 30,
+            "active_blocks": 505,
+            "channel_buffer_bytes": {},
+            "total_buffer_bytes": 0
+          },
+          {
+            "frame": 60,
+            "active_blocks": 688,
+            "channel_buffer_bytes": {},
+            "total_buffer_bytes": 0
+          },
+          {
+            "frame": 90,
+            "active_blocks": 894,
+            "channel_buffer_bytes": {},
+            "total_buffer_bytes": 0
+          },
+          {
+            "frame": 120,
+            "active_blocks": 1118,
+            "channel_buffer_bytes": {},
+            "total_buffer_bytes": 0
+          },
+          {
+            "frame": 150,
+            "active_blocks": 1314,
+            "channel_buffer_bytes": {},
+            "total_buffer_bytes": 0
+          },
+          {
+            "frame": 180,
+            "active_blocks": 1329,
+            "channel_buffer_bytes": {},
+            "total_buffer_bytes": 0
+          },
+          {
+            "frame": 200,
+            "active_blocks": 1251,
+            "channel_buffer_bytes": {},
+            "total_buffer_bytes": 0
+          }
+        ],
+        "maximum_public_buffer_bytes_per_sample": 0,
+        "spatial_npz_file_bytes": 10593,
+        "active_blocks": [
+          505,
+          688,
+          894,
+          1118,
+          1314,
+          1329,
+          1251
+        ]
+      },
+      "marker_memory": [
+        {
+          "marker": "process_entry",
+          "kit_private_bytes": 9318236160,
+          "tree_private_bytes": 9709666304,
+          "sample_timestamp_utc_epoch": 1786521178.917942,
+          "kit_delta_from_previous_marker_bytes": null
+        },
+        {
+          "marker": "offline_stage_complete",
+          "kit_private_bytes": 9318236160,
+          "tree_private_bytes": 9709666304,
+          "sample_timestamp_utc_epoch": 1786521178.917942,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "usd_context_connection_complete",
+          "kit_private_bytes": 9909915648,
+          "tree_private_bytes": 10177871872,
+          "sample_timestamp_utc_epoch": 1786521180.6264424,
+          "kit_delta_from_previous_marker_bytes": 591679488
+        },
+        {
+          "marker": "timeline_playing",
+          "kit_private_bytes": 12350246912,
+          "tree_private_bytes": 12513923072,
+          "sample_timestamp_utc_epoch": 1786521183.594329,
+          "kit_delta_from_previous_marker_bytes": 2440331264
+        },
+        {
+          "marker": "sample_started",
+          "frame": 30,
+          "kit_private_bytes": 13512364032,
+          "tree_private_bytes": 13676044288,
+          "sample_timestamp_utc_epoch": 1786521184.9468732,
+          "kit_delta_from_previous_marker_bytes": 1162117120
+        },
+        {
+          "marker": "sample_persisted",
+          "frame": 30,
+          "readback": false,
+          "kit_private_bytes": 13512364032,
+          "tree_private_bytes": 13676044288,
+          "sample_timestamp_utc_epoch": 1786521184.9468732,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "sample_started",
+          "frame": 60,
+          "kit_private_bytes": 13443940352,
+          "tree_private_bytes": 13607620608,
+          "sample_timestamp_utc_epoch": 1786521186.62556,
+          "kit_delta_from_previous_marker_bytes": -68423680
+        },
+        {
+          "marker": "sample_persisted",
+          "frame": 60,
+          "readback": false,
+          "kit_private_bytes": 13443940352,
+          "tree_private_bytes": 13607620608,
+          "sample_timestamp_utc_epoch": 1786521186.62556,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "sample_started",
+          "frame": 90,
+          "kit_private_bytes": 13682343936,
+          "tree_private_bytes": 13845893120,
+          "sample_timestamp_utc_epoch": 1786521188.3340566,
+          "kit_delta_from_previous_marker_bytes": 238403584
+        },
+        {
+          "marker": "sample_persisted",
+          "frame": 90,
+          "readback": false,
+          "kit_private_bytes": 13682343936,
+          "tree_private_bytes": 13845893120,
+          "sample_timestamp_utc_epoch": 1786521188.3340566,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "sample_started",
+          "frame": 120,
+          "kit_private_bytes": 14518624256,
+          "tree_private_bytes": 14682173440,
+          "sample_timestamp_utc_epoch": 1786521190.0743444,
+          "kit_delta_from_previous_marker_bytes": 836280320
+        },
+        {
+          "marker": "sample_persisted",
+          "frame": 120,
+          "readback": false,
+          "kit_private_bytes": 14518624256,
+          "tree_private_bytes": 14682173440,
+          "sample_timestamp_utc_epoch": 1786521190.0743444,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "sample_started",
+          "frame": 150,
+          "kit_private_bytes": 14267092992,
+          "tree_private_bytes": 14430543872,
+          "sample_timestamp_utc_epoch": 1786521192.2319946,
+          "kit_delta_from_previous_marker_bytes": -251531264
+        },
+        {
+          "marker": "sample_persisted",
+          "frame": 150,
+          "readback": false,
+          "kit_private_bytes": 14267092992,
+          "tree_private_bytes": 14430543872,
+          "sample_timestamp_utc_epoch": 1786521192.2319946,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "sample_started",
+          "frame": 180,
+          "kit_private_bytes": 14354948096,
+          "tree_private_bytes": 14517886976,
+          "sample_timestamp_utc_epoch": 1786521194.31255,
+          "kit_delta_from_previous_marker_bytes": 87855104
+        },
+        {
+          "marker": "sample_persisted",
+          "frame": 180,
+          "readback": false,
+          "kit_private_bytes": 14354948096,
+          "tree_private_bytes": 14517886976,
+          "sample_timestamp_utc_epoch": 1786521194.31255,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "sample_started",
+          "frame": 200,
+          "kit_private_bytes": 13999648768,
+          "tree_private_bytes": 14162558976,
+          "sample_timestamp_utc_epoch": 1786521195.6785104,
+          "kit_delta_from_previous_marker_bytes": -355299328
+        },
+        {
+          "marker": "sample_persisted",
+          "frame": 200,
+          "readback": false,
+          "kit_private_bytes": 13999648768,
+          "tree_private_bytes": 14162558976,
+          "sample_timestamp_utc_epoch": 1786521195.6785104,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "measurement_complete",
+          "kit_private_bytes": 13999648768,
+          "tree_private_bytes": 14162558976,
+          "sample_timestamp_utc_epoch": 1786521195.6785104,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "timeline_stopping",
+          "kit_private_bytes": 13999648768,
+          "tree_private_bytes": 14162558976,
+          "sample_timestamp_utc_epoch": 1786521195.6785104,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "timeline_stopped",
+          "kit_private_bytes": 13743312896,
+          "tree_private_bytes": 13906223104,
+          "sample_timestamp_utc_epoch": 1786521196.0049622,
+          "kit_delta_from_previous_marker_bytes": -256335872
+        },
+        {
+          "marker": "renderer_drain_complete",
+          "kit_private_bytes": 13676916736,
+          "tree_private_bytes": 13839826944,
+          "sample_timestamp_utc_epoch": 1786521199.2686725,
+          "kit_delta_from_previous_marker_bytes": -66396160
+        },
+        {
+          "marker": "shutdown_complete",
+          "kit_private_bytes": 13676916736,
+          "tree_private_bytes": 13839826944,
+          "sample_timestamp_utc_epoch": 1786521199.2686725,
+          "kit_delta_from_previous_marker_bytes": 0
+        }
+      ],
+      "gpu": {
+        "available": true,
+        "adapters": {
+          "0": {
+            "name": "NVIDIA GeForce RTX 3090",
+            "pci_bus_id": "00000000:01:00.0",
+            "samples": 45,
+            "peak_dedicated_mib": 7024.0,
+            "peak_utilization_percent": 99.0,
+            "peak_power_w": 209.66,
+            "peak_temperature_c": 68.0
+          },
+          "1": {
+            "name": "NVIDIA GeForce RTX 2070",
+            "pci_bus_id": "00000000:08:00.0",
+            "samples": 45,
+            "peak_dedicated_mib": 519.0,
+            "peak_utilization_percent": 10.0,
+            "peak_power_w": 37.92,
+            "peak_temperature_c": 49.0
+          }
+        },
+        "shared_memory": "unavailable; not estimated"
+      }
+    },
+    {
+      "run_index": 1,
+      "condition": "B_minimal_fuel",
+      "guard_status": "failed",
+      "stop_reason": "kit_private_limit",
+      "exit_code": 15,
+      "kit_peak_bytes": 15323729920,
+      "kit_peak_gib": 14.27133560180664,
+      "tree_peak_bytes": 15487098880,
+      "runner_peak_bytes": 96272384,
+      "diagnostic_peak_bytes": 16850944,
+      "machine_minima": {
+        "available_physical_bytes": 83621330944,
+        "estimated_commit_headroom_bytes": 102296612864
+      },
+      "trace": {
+        "sample_count": 84,
+        "first_kit_private_bytes": 0,
+        "last_kit_private_bytes": 15323729920,
+        "peak": {
+          "private_bytes": 15323729920,
+          "timestamp_utc_epoch": 1786521243.7169049,
+          "execution_section": "sample_persisted",
+          "lifecycle_marker": "timeline_playing",
+          "diagnostic_marker": "sample_persisted"
+        },
+        "tail_sample_count": 57,
+        "tail_growth_bytes_per_second": 403193275.9075602
+      },
+      "plateau": false,
+      "raw": {
+        "available": true,
+        "status": "running",
+        "lifecycle_marker": "timeline_playing",
+        "frames": [
+          {
+            "frame": 30,
+            "active_blocks": 505,
+            "channel_buffer_bytes": {
+              "fuel": 19277312
+            },
+            "total_buffer_bytes": 19277312
+          },
+          {
+            "frame": 60,
+            "active_blocks": 688,
+            "channel_buffer_bytes": {
+              "fuel": 25553152
+            },
+            "total_buffer_bytes": 25553152
+          },
+          {
+            "frame": 90,
+            "active_blocks": 894,
+            "channel_buffer_bytes": {
+              "fuel": 32858112
+            },
+            "total_buffer_bytes": 32858112
+          }
+        ],
+        "maximum_public_buffer_bytes_per_sample": 32858112,
+        "spatial_npz_file_bytes": 10593,
+        "active_blocks": [
+          505,
+          688,
+          894
+        ]
+      },
+      "marker_memory": [
+        {
+          "marker": "process_entry",
+          "kit_private_bytes": 9362739200,
+          "tree_private_bytes": 9732481024,
+          "sample_timestamp_utc_epoch": 1786521224.8848472,
+          "kit_delta_from_previous_marker_bytes": null
+        },
+        {
+          "marker": "offline_stage_complete",
+          "kit_private_bytes": 9362739200,
+          "tree_private_bytes": 9732481024,
+          "sample_timestamp_utc_epoch": 1786521224.8848472,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "usd_context_connection_complete",
+          "kit_private_bytes": 11431813120,
+          "tree_private_bytes": 11595939840,
+          "sample_timestamp_utc_epoch": 1786521228.4428253,
+          "kit_delta_from_previous_marker_bytes": 2069073920
+        },
+        {
+          "marker": "timeline_playing",
+          "kit_private_bytes": 12301557760,
+          "tree_private_bytes": 12465688576,
+          "sample_timestamp_utc_epoch": 1786521231.1639915,
+          "kit_delta_from_previous_marker_bytes": 869744640
+        },
+        {
+          "marker": "sample_started",
+          "frame": 30,
+          "kit_private_bytes": 13575766016,
+          "tree_private_bytes": 13739896832,
+          "sample_timestamp_utc_epoch": 1786521232.5471003,
+          "kit_delta_from_previous_marker_bytes": 1274208256
+        },
+        {
+          "marker": "readback_started",
+          "frame": 30,
+          "kit_private_bytes": 13575766016,
+          "tree_private_bytes": 13739896832,
+          "sample_timestamp_utc_epoch": 1786521232.5471003,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "readback_complete",
+          "frame": 30,
+          "kit_private_bytes": 13715951616,
+          "tree_private_bytes": 13879951360,
+          "sample_timestamp_utc_epoch": 1786521232.8877661,
+          "kit_delta_from_previous_marker_bytes": 140185600
+        },
+        {
+          "marker": "channel_started",
+          "frame": 30,
+          "channel": "fuel",
+          "kit_private_bytes": 13715951616,
+          "tree_private_bytes": 13879951360,
+          "sample_timestamp_utc_epoch": 1786521232.8877661,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "channel_complete",
+          "frame": 30,
+          "channel": "fuel",
+          "buffer_bytes": 19277312,
+          "kit_private_bytes": 13709963264,
+          "tree_private_bytes": 13873967104,
+          "sample_timestamp_utc_epoch": 1786521235.1858373,
+          "kit_delta_from_previous_marker_bytes": -5988352
+        },
+        {
+          "marker": "sample_persist_started",
+          "frame": 30,
+          "kit_private_bytes": 13709963264,
+          "tree_private_bytes": 13873967104,
+          "sample_timestamp_utc_epoch": 1786521235.1858373,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "sample_persisted",
+          "frame": 30,
+          "raw_json_bytes": 7259,
+          "kit_private_bytes": 13709963264,
+          "tree_private_bytes": 13873967104,
+          "sample_timestamp_utc_epoch": 1786521235.1858373,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "sample_started",
+          "frame": 60,
+          "kit_private_bytes": 13715857408,
+          "tree_private_bytes": 13879861248,
+          "sample_timestamp_utc_epoch": 1786521236.56968,
+          "kit_delta_from_previous_marker_bytes": 5894144
+        },
+        {
+          "marker": "readback_started",
+          "frame": 60,
+          "kit_private_bytes": 13715857408,
+          "tree_private_bytes": 13879861248,
+          "sample_timestamp_utc_epoch": 1786521236.56968,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "readback_complete",
+          "frame": 60,
+          "kit_private_bytes": 13715857408,
+          "tree_private_bytes": 13879861248,
+          "sample_timestamp_utc_epoch": 1786521236.56968,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "channel_started",
+          "frame": 60,
+          "channel": "fuel",
+          "kit_private_bytes": 13715857408,
+          "tree_private_bytes": 13879861248,
+          "sample_timestamp_utc_epoch": 1786521236.56968,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "channel_complete",
+          "frame": 60,
+          "channel": "fuel",
+          "buffer_bytes": 25553152,
+          "kit_private_bytes": 13662982144,
+          "tree_private_bytes": 13826301952,
+          "sample_timestamp_utc_epoch": 1786521239.3053286,
+          "kit_delta_from_previous_marker_bytes": -52875264
+        },
+        {
+          "marker": "sample_persist_started",
+          "frame": 60,
+          "kit_private_bytes": 13662982144,
+          "tree_private_bytes": 13826301952,
+          "sample_timestamp_utc_epoch": 1786521239.3053286,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "sample_persisted",
+          "frame": 60,
+          "raw_json_bytes": 8384,
+          "kit_private_bytes": 13662982144,
+          "tree_private_bytes": 13826301952,
+          "sample_timestamp_utc_epoch": 1786521239.3053286,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "sample_started",
+          "frame": 90,
+          "kit_private_bytes": 13919780864,
+          "tree_private_bytes": 14083178496,
+          "sample_timestamp_utc_epoch": 1786521240.7042115,
+          "kit_delta_from_previous_marker_bytes": 256798720
+        },
+        {
+          "marker": "readback_started",
+          "frame": 90,
+          "kit_private_bytes": 13919780864,
+          "tree_private_bytes": 14083178496,
+          "sample_timestamp_utc_epoch": 1786521240.7042115,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "readback_complete",
+          "frame": 90,
+          "kit_private_bytes": 13919780864,
+          "tree_private_bytes": 14083178496,
+          "sample_timestamp_utc_epoch": 1786521240.7042115,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "channel_started",
+          "frame": 90,
+          "channel": "fuel",
+          "kit_private_bytes": 13919780864,
+          "tree_private_bytes": 14083178496,
+          "sample_timestamp_utc_epoch": 1786521240.7042115,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "channel_complete",
+          "frame": 90,
+          "channel": "fuel",
+          "buffer_bytes": 32858112,
+          "kit_private_bytes": 14851235840,
+          "tree_private_bytes": 15014604800,
+          "sample_timestamp_utc_epoch": 1786521243.360723,
+          "kit_delta_from_previous_marker_bytes": 931454976
+        },
+        {
+          "marker": "sample_persist_started",
+          "frame": 90,
+          "kit_private_bytes": 14851235840,
+          "tree_private_bytes": 15014604800,
+          "sample_timestamp_utc_epoch": 1786521243.360723,
+          "kit_delta_from_previous_marker_bytes": 0
+        },
+        {
+          "marker": "sample_persisted",
+          "frame": 90,
+          "raw_json_bytes": 9511,
+          "kit_private_bytes": 14851235840,
+          "tree_private_bytes": 15014604800,
+          "sample_timestamp_utc_epoch": 1786521243.360723,
+          "kit_delta_from_previous_marker_bytes": 0
+        }
+      ],
+      "gpu": {
+        "available": true,
+        "adapters": {
+          "0": {
+            "name": "NVIDIA GeForce RTX 3090",
+            "pci_bus_id": "00000000:01:00.0",
+            "samples": 37,
+            "peak_dedicated_mib": 6995.0,
+            "peak_utilization_percent": 99.0,
+            "peak_power_w": 209.26,
+            "peak_temperature_c": 66.0
+          },
+          "1": {
+            "name": "NVIDIA GeForce RTX 2070",
+            "pci_bus_id": "00000000:08:00.0",
+            "samples": 37,
+            "peak_dedicated_mib": 519.0,
+            "peak_utilization_percent": 10.0,
+            "peak_power_w": 37.84,
+            "peak_temperature_c": 49.0
+          }
+        },
+        "shared_memory": "unavailable; not estimated"
+      }
+    }
+  ],
+  "by_condition": {
+    "A_flow_only": {
+      "completed_runs": 1,
+      "kit_peak_min_bytes": 14536630272,
+      "kit_peak_max_bytes": 14536630272,
+      "kit_peak_mean_bytes": 14536630272.0,
+      "all_normal_exit": true,
+      "all_plateau": false
+    },
+    "B_minimal_fuel": {
+      "completed_runs": 1,
+      "kit_peak_min_bytes": 15323729920,
+      "kit_peak_max_bytes": 15323729920,
+      "kit_peak_mean_bytes": 15323729920.0,
+      "all_normal_exit": false,
+      "all_plateau": false
+    }
+  },
+  "cause_classification": "four-log Flow without readback already approaches the fixed limit; the first public fuel readback is sufficient to cross it. Directional aggregation and temperature/smoke collection occur later and are excluded as the trigger for this safe stop; readback resource lifetime versus Flow allocator high-water remains unresolved.",
+  "return_gate_satisfied": false,
+  "array_interpretation": "get_latest_nanovdb_readback returns the public channel tuple as one acquisition. The selected-channel byte count is a lower bound; the earlier Phase 6ES frame-90 available buffers total 294,940,224 bytes. Public buffer bytes and compressed NPZ bytes are reported separately, and an unexplained GiB increase is not attributed to Python arrays without matching byte evidence."
+}

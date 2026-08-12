@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+<style>.title{font:700 34px system-ui;fill:#f8fafc}.sub{font:18px system-ui;fill:#cbd5e1}.label{font:17px system-ui;fill:#e2e8f0}.value{font:700 17px ui-monospace,monospace;fill:#f8fafc}.small{font:16px system-ui;fill:#cbd5e1}.strong{font:700 18px system-ui;fill:#f8fafc}</style>
+<rect width="1200" height="680" rx="28" fill="#101827"/>
+<text x="70" y="70" class="title">Phase 6ET · Four-log Kit memory boundary</text>
+<text x="70" y="108" class="sub">Phase 6ES remains frozen · unchanged 14 GiB Kit guard · new artifact root</text>
+<line x1="996.9" y1="155" x2="996.9" y2="465" stroke="#fda4af" stroke-width="3" stroke-dasharray="10 8"/>
+<text x="986.9" y="150" text-anchor="end" class="small">fixed limit 14.000 GiB</text>
+<text x="257" y="210" text-anchor="end" class="label">A · Flow only</text><rect x="275" y="185" width="698.1" height="34" rx="8" fill="#4ade80"/><text x="985.1" y="209" class="value">13.538 GiB</text><text x="257" y="272" text-anchor="end" class="label">B · public fuel readback</text><rect x="275" y="247" width="735.9" height="34" rx="8" fill="#fb7185"/><text x="1022.9" y="271" class="value">14.271 GiB</text><text x="257" y="334" text-anchor="end" class="label">6ES root 1</text><rect x="275" y="309" width="725.2" height="34" rx="8" fill="#f59e0b"/><text x="1012.2" y="333" class="value">14.064 GiB</text><text x="257" y="396" text-anchor="end" class="label">6ES root 2</text><rect x="275" y="371" width="755.0" height="34" rx="8" fill="#f97316"/><text x="1042.0" y="395" class="value">14.643 GiB</text>
+<rect x="70" y="500" width="1060" height="125" rx="18" fill="#1e293b"/>
+<text x="95" y="536" class="strong">Safe stop at B · 1 / 21 normal-exit calibration processes</text>
+<text x="95" y="569" class="small">A: no readback, peak at timeline sampling; active blocks 505 → 1329 → 1251.</text>
+<text x="95" y="599" class="small">B: 32.86 MB selected fuel buffer at frame 90; Kit peak 14.271 GiB. Raw JSON 9.5 KB, NPZ 0.</text>
+<text x="70" y="655" class="small">Conclusion: high four-log Flow baseline + first public readback boundary; transport aggregation and temperature/smoke collectors were not reached.</text>
+</svg>

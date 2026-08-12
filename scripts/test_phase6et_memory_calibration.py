@@ -1,7 +1,7 @@
 import hashlib
 import json
-import re
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
@@ -74,6 +74,20 @@ class Phase6EtMemoryCalibrationContract(unittest.TestCase):
         self.assertNotIn("removesuffix", analyzer)
         self.assertIn("marker_memory", analyzer)
         self.assertIn("if ($LASTEXITCODE -ne 0)", runner)
+
+    def test_published_safe_stop_and_devlog_are_consistent(self):
+        report_path = ROOT / "docs" / "devlog" / "assets" / "phase6" / "point_four_log_memory_calibration.json"
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+        self.assertEqual("safe_stop_or_incomplete", report["status"])
+        self.assertEqual(2, report["attempted_processes"])
+        self.assertEqual(1, report["completed_processes"])
+        self.assertFalse(report["return_gate_satisfied"])
+        ET.parse(report_path.with_suffix(".svg"))
+        devlog = (ROOT / "docs" / "devlog" / "index.html").read_text(encoding="utf-8")
+        self.assertIn('id="phase-6et"', devlog)
+        self.assertIn("point_four_log_memory_calibration.json", devlog)
+        latest = json.loads((ROOT / "docs" / "devlog" / "assets" / "latest_demo.json").read_text(encoding="utf-8"))
+        self.assertNotEqual("phase6et", latest["phase"])
 
 
 if __name__ == "__main__":

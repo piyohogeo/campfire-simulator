@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6es">最新記録</a>
+        <a href="#phase-6et">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6es">Phase 6ESの結果を読む</a>
+        <a class="button primary" href="#phase-6et">Phase 6ETの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6ES directional transport resource safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6ET four-log memory calibration safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>2 controls normal exit · four-log guard safe stop</strong></div>
+        <div><span>Lifecycle</span><strong>A normal exit · B fixed guard safe stop</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
@@ -58,6 +58,19 @@
       </div>
     </section>
 
+    <section id="phase-6et" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6ET entry"><span class="phase-number compact">6ET</span><p><time datetime="2026-08-12">2026.08.12</time></p><span class="pill current">Memory boundary isolated · safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6ET · Four-log Flow memory calibration</p><h2>readbackなしで13.54 GiB。<br>最初のpublic readbackで固定上限へ。</h2><p>Phase 6ESを凍結したまま、同じ修正版4本配置をFlowのみ、最小readback、channel別、方向付き集計へ一変数ずつ分ける21-process contractを作りました。production、Point payload、Flow、CollisionProxy、14 GiB guardは変更していません。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/point_four_log_memory_calibration.svg"><img src="assets/phase6/point_four_log_memory_calibration.svg" alt="Phase 6ETのFlow-only、最小public readback、Phase 6ESのKit Private Bytes比較" loading="lazy"></a><figcaption><div><strong>Flow-only completed / first readback safe stop</strong><span>A 13.538 GiB · B 14.271 GiB · fixed limit 14 GiB</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">A · no readback</p><h3>14,536,630,272 bytes</h3><p>normal OS exit、active blocksは<code>505 → 1329 → 1251</code>。メモリはframeごとに単調増加ではありませんが、事前固定したmeasurement tailのplateau判定は満たしませんでした。raw JSONは約7 KiB、NPZは0です。</p></section><section class="note"><p class="note-label">B · public fuel readback</p><h3>15,323,729,920 bytes</h3><p>frame 90のfuel選択配列は<code>32,858,112 bytes</code>、raw JSONは<code>9,511 bytes</code>、spatial collectorとNPZはなし。それでもKitは<code>14.271 GiB</code>へ達し、固定guardが正確にcleanupしました。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Observed boundary</p><h3>高い4本Flow baseline＋最初のpublic NanoVDB readback</h3><p><code>get_latest_nanovdb_readback()</code>はchannel tupleを一括取得するため、Bはfuel処理だけでも真のper-channel device取得ではありません。Phase 6ES frame 90のavailable buffer理論合計は<code>294,940,224 bytes</code>で、GiB級変化を単純なPython配列やJSONだけへ帰属できません。</p><p>temperature/smoke処理、spatial collector、方向付きtransportはBより後なので、今回のtriggerから除外できます。一方、Flow allocatorとreadback resource lifetimeのどちらが所有するかは未確認です。</p><p>formal normal exitは<code>1 / 21</code>、Bで自動retryせずC～Gを開始していません。fatal、dump、upload、device lost、TDR、Kit/CDB/helper残留は0。production app SHA-256も不変です。</p><p>Release build <code>8.25 s</code>、Phase 0 RTX、Phase 3、focused <code>169 / 169</code>、標準suite <code>78 / 78</code>（8 process、348.5 s）が合格。Phase 3はmass balance 0、active blocks final/peak <code>304 / 332</code>、peak fuel 1.0です。</p><p><a href="assets/phase6/point_four_log_memory_calibration.json">machine report</a> · <a href="assets/phase6/point_four_log_memory_calibration.svg">比較SVG</a> · <a href="../design/four_log_flow_memory_calibration.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Flow-only A</strong><small>normal exit</small></p></div><div role="listitem"><span>!</span><p><strong>Readback B</strong><small>14 GiB guard</small></p></div><div role="listitem"><span>✓</span><p><strong>Cleanup</strong><small>residual 0</small></p></div><div role="listitem"><span>—</span><p><strong>C–G / 3 run</strong><small>not started</small></p></div><div role="listitem"><span>—</span><p><strong>93.33 / 100%</strong><small>blocked</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Safe stop and next</p><h3>上限を上げず、取得と変換・保存を別contractで分離する。</h3><p>次は新しいrootでacquire-and-discardと<code>_save_and_sample()</code>を分け、readback resource lifetimeを確認します。3 runのplateauが得られるまで14 GiBを緩和せず、93.33%対100%比較と動画へ進みません。画面上のqualified変更がないため新動画とlatest demo更新は行いません。</p></section>
+        </div>
+      </article>
+    </section>
+
     <section id="phase-6es" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6ES entry"><span class="phase-number compact">6ES</span><p><time datetime="2026-08-12">2026.08.12</time></p><span class="pill current">Directional proxy calibrated · resource safe stop</span></aside>
@@ -66,7 +79,7 @@
           <figure class="capture-card wide"><a href="assets/phase6/point_directional_transport_safe_stop.svg"><img src="assets/phase6/point_directional_transport_safe_stop.svg" alt="Phase 6ESのPoint保持率、方向付きtransport校正、Kit resource safe stop" loading="lazy"></a><figcaption><div><strong>Directional proxy calibrated / formal not started</strong><span>2 controls normal exit · filtered four-log exceeded unchanged Kit guard</span></div></figcaption></figure>
           <div class="notes-grid"><section class="note"><p class="note-label">Point classification</p><h3>93.33% / 100% / 88.89%</h3><p>offset <code>-0.0125 m</code>のfiltered／full、offset 0 filteredです。全条件で他薪内部Point中心は0。100%条件だけ、半径0.05 mの仮定support sphereが他薪と交差する96点をprobe内で有効にします。4条件×1,440点の全判定はJSONLへ保存しました。</p></section><section class="note"><p class="note-label">Local control volume</p><h3>Sign fixture passed</h3><p><code>max(u·n,0) × scalar × voxel area</code>をbottom/top/side/end面で積分します。Emitterなしは0、Collision OFFは正の上向きtransportを2 rootで同値再現しました。公開channelには独立tracerがなく、物理fluxとは主張しません。</p></section></div>
           <section class="verification"><div class="verification-copy"><p class="section-kicker">Fail-closed resource result</p><h3>93.33%条件が14 GiB Kit上限を2 rootで超過。</h3><p>初期rootは<code>15,100,735,488 bytes</code>。全Collider velocityを維持しscalarを代表blocker 1本へ限定したroot 2も<code>15,722,414,080 bytes</code>でした。いずれも<code>timeline_playing</code>のframe 3でguardが停止し、正確なcleanup後の残留は0です。</p><p>scalar collector多重化だけでは説明できません。上限を変更せず3回目を行わず、100%条件、offset 0、正式3-run、動画を開始していません。fatal、dump、upload、device lost、TDRは0です。</p><p>Release build、Phase 0 RTX、Phase 3、focused contract <code>161 / 161</code>、標準suite <code>78 / 78</code>（8 process、342.5秒）が合格しました。Phase 3はdry/wet mass balance error 0、active blocks final/peak <code>274 / 335</code>、peak fuel 1.0です。production app SHA-256も不変です。</p><p><a href="assets/phase6/point_directional_transport_safe_stop.json">safe-stop JSON</a> · <a href="assets/phase6/point_directional_transport_safe_stop.svg">比較SVG</a> · <a href="../design/point_emitter_directional_scalar_transport.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Offline</strong><small>full 1440 / 1440</small></p></div><div role="listitem"><span>✓</span><p><strong>Sign fixture</strong><small>direction correct</small></p></div><div role="listitem"><span>✓</span><p><strong>Controls</strong><small>2 normal exits</small></p></div><div role="listitem"><span>!</span><p><strong>Four-log Kit</strong><small>memory guard</small></p></div><div role="listitem"><span>—</span><p><strong>Formal / video</strong><small>not started</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
-          <section class="note next"><p class="note-label">Safe stop and next</p><h3>4本Flow／collector memory境界を別Phaseで校正する。</h3><p>現在は5 cm filterの必要性、96点の安全性、推奨offsetを判断できません。formal閾値を事後作成せず、Phase 6ERとlatest demoを維持します。数値gate未成立なので動画も生成しません。</p></section>
+          <section class="note next"><p class="note-label">Safe stop and next</p><h3>Phase 6ETでFlow-onlyと最初のreadbackまで分離。</h3><p>Phase 6ETでも固定14 GiB gateに達したため、現在も5 cm filterの必要性、96点の安全性、推奨offsetを判断できません。formal閾値を事後作成せず、Phase 6ERとlatest demoを維持します。数値gate未成立なので動画も生成しません。</p></section>
         </div>
       </article>
     </section>

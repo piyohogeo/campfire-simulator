@@ -1,5 +1,8 @@
 # Changelog
 
+- Added the production-neutral Phase 6ET four-log memory calibration contract, channel/collector switches, flushed resource markers, isolated GPU CSV telemetry, and streamed report generation without changing the Phase 6ES history or resource limits.
+- Completed Flow-only A with a 14,536,630,272-byte Kit peak, then safely stopped at minimal public readback B when Kit reached 15,323,729,920 bytes. Directional transport and temperature/smoke collectors were not reached; production and latest demo remain unchanged.
+
 - Added the independent Phase 6ES local control-volume transport proxy and probe-only full-supply policy without changing production or reclassifying Phase 6ER. The synthetic +Z sign fixture passed, and the public Flow channels were audited as insufficient for an independent passive source-ownership tracer.
 - Recorded corrected-four offline classifications: 1344/1440 filtered, 1440/1440 experimental full supply, and 1280/1440 offset-zero filtered. Other-log Point centers remain zero; the full condition enables 96 Points whose assumed 0.05 m support spheres overlap another log. A 5,760-record JSONL preserves every condition/Point decision and channel strength by immutable payload index.
 - Preserved two completed controls in separate roots. Emitterless Collision ON yielded zero scalar transport; Collision OFF reproduced positive top/outward and bottom/inward directional transport identically.

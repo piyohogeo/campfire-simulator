@@ -1,5 +1,17 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6ET four-log Flow memory calibration safe stop
+
+Phase 6ESの14 GiB resource safe stopを凍結したまま、修正版4本配置のmemory境界をA～G・3 run・21 processの別contract（SHA-256 `4B14168B37442050FCA9D23B1ECAAC6DA9F57C666FB3D44FBCEE5F39C26830F6`）へ事前固定した。Point payload、Flow、CollisionProxy、production app/defaultは不変で、Kit 14 GiB、tree 16 GiB、runner/diagnostic各512 MiB、system headroom各8 GiBの上限も変更していない。
+
+新rootのwarm-upはnormal exit、Kit peak `12,291,465,216 bytes`（`11.447319 GiB`）。正式Aの4本Flowのみ・readbackなしはnormal exitしたが、Kit peak `14,536,630,272 bytes`（`13.538292 GiB`）、active blocks `505/688/894/1118/1314/1329/1251`で、事前plateau判定を満たさなかった。続くBの最小public readbackはfuelだけを処理し、spatial collector、NPZ、transport集計、temperature/smoke処理なしでもframe 90後にKit `15,323,729,920 bytes`（`14.271336 GiB`）となり、固定guardで安全停止した。normal-exit完了は1/21、Bのactive markerは`sample_persisted`、fatal/dump/upload/device-lost/TDR/cleanup residualは0である。
+
+Bのfuel配列は最大`32,858,112 bytes`、raw JSONは`9,511 bytes`、NPZは0。一方、public callは全channel tupleを返し、Phase 6ES frame 90でavailable bufferの理論合計は`294,940,224 bytes`だった。したがって数MBのJSON、単一selected NumPy配列、方向付きtransport、temperature/smoke collectorだけでGiB差を説明できない。現在の最狭分類は「高い4本Flow/active-block baseline＋最初のpublic NanoVDB readback取得・処理境界」であり、Flow allocatorとreadback resource lifetimeのどちらが所有するかは未確認である。
+
+上限は引き上げず、C～G、3-run分布、93.33%対100%、動画、production推奨へ進まない。次は別contract/rootでreadbackのacquire-and-discardと`_save_and_sample()`変換・永続化を分ける。詳細は`docs/design/four_log_flow_memory_calibration.md`。
+
+回帰はRelease build 8.25秒、Phase 0 RTX、Phase 3、Phase 6EA～6ET focused `169/169`、標準suite `78/78`（8 process、348.5秒）が合格した。Phase 3はdry/wet mass-balance error 0、authority SHA維持、active blocks final/peak `304/332`、peak fuel 1.0。production app SHA-256は`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`で不変だった。
+
 # Phase 6ES directional scalar transport / full-supply resource safe stop
 
 Phase 6ERを凍結したまま、実Meshローカル6面の`max(u dot n,0) * scalar * voxel area`方向付きtransport proxyと、仮定上のother-support交差96 Pointも有効にする1440/1440条件を別Phaseで準備した。0.05 mは引き続き公開Flow support半径ではない。offset 0も数学的表面ではなく、表面セル中心基準で約13.125 mm内側である。4条件×1,440 Pointの全判定は、immutable payload index、self/other signed distance、center/support交差、無効化理由、fuel/temperature/smokeの元値と有効化後値を含む5,760-record JSONLへ保存した。
