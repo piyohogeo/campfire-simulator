@@ -1,0 +1,452 @@
+{
+  "schema": "campfire.phase6ep.point-collision-safe-stop.v1",
+  "phase": "phase6ep",
+  "overall_qualified": false,
+  "formal_numeric_qualified": true,
+  "formal_processes_passed": 18,
+  "contract_sha256": "8DAD6E540EEFAA397FEEDE2313BFA531541AC976328924EA198BA2F4CD5B09C9",
+  "selected_offset_m": 0.075,
+  "media_gate": {
+    "qualified": false,
+    "collision_off": {
+      "capture_frames": 180,
+      "lifecycle_status": "normal_exit"
+    },
+    "collision_on_unfiltered": {
+      "capture_frames": 180,
+      "probe_status": "ok",
+      "last_lifecycle_marker": "shutdown_complete",
+      "lifecycle_status": "unknown_shutdown_failure",
+      "process_exit_code": null,
+      "cdb_timed_out": true,
+      "cdb_detach_observed": false,
+      "known_ngx_signature_matched": false,
+      "log_capture_error_present": true
+    },
+    "collision_on_candidate": {
+      "started": false
+    },
+    "videos_encoded_or_published": 0
+  },
+  "safe_stop": {
+    "active_condition": "visual/collision_on_unfiltered",
+    "reason": "unknown_shutdown_failure after shutdown_complete; CDB timed out without detach marker or accepted NGX signature",
+    "automatic_retry": false,
+    "later_condition_started": false,
+    "guard_stop_reason": "observed_descendant_residual",
+    "cleanup": {
+      "observed_alive_before_cleanup": [
+        {
+          "pid": 24256,
+          "executable": "kit.exe"
+        },
+        {
+          "pid": 12140,
+          "executable": "conhost.exe"
+        },
+        {
+          "pid": 24836,
+          "executable": "omni.telemetry.transmitter.exe"
+        }
+      ],
+      "cleanup_required": true,
+      "killed_pid_count": 3,
+      "remaining_count": 0,
+      "all_observed_absent": true
+    },
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "production_changed": false
+  },
+  "numeric_report": {
+    "path": "artifacts\\phase6ep-point-collision-5\\report.json",
+    "pair_results": [
+      {
+        "run": "run_1",
+        "deep_ratio": 0.0,
+        "off_deep_maximum_m_s": 7.911711692810059,
+        "passed": true
+      },
+      {
+        "run": "run_2",
+        "deep_ratio": 0.0,
+        "off_deep_maximum_m_s": 7.911711692810059,
+        "passed": true
+      },
+      {
+        "run": "run_3",
+        "deep_ratio": 0.0,
+        "off_deep_maximum_m_s": 7.911711692810059,
+        "passed": true
+      }
+    ],
+    "formal_summary": [
+      {
+        "condition": "single_candidate",
+        "run_count": 3,
+        "minimum_supply_efficiency": 1.0,
+        "worst_deep_maximum_m_s": 0.0,
+        "worst_center_maximum_m_s": 0.0,
+        "active_blocks_minimum": 122,
+        "planning_ms": {
+          "count": 3,
+          "minimum": 94.4643,
+          "mean": 115.31079999999999,
+          "p50": 100.7547,
+          "p95": 145.71753,
+          "p99": 149.714226,
+          "maximum": 150.7134
+        },
+        "usd_publication_ms": {
+          "count": 3,
+          "minimum": 3.3196,
+          "mean": 4.3139666666666665,
+          "p50": 3.824,
+          "p95": 5.6008700000000005,
+          "p99": 5.758814,
+          "maximum": 5.7983
+        },
+        "source_fuel_sum": {
+          "count": 3,
+          "minimum": 288.0000042915344,
+          "mean": 288.0000042915344,
+          "p50": 288.0000042915344,
+          "p95": 288.0000042915344,
+          "p99": 288.0000042915344,
+          "maximum": 288.0000042915344
+        },
+        "source_temperature_sum": {
+          "count": 3,
+          "minimum": 720.0,
+          "mean": 720.0,
+          "p50": 720.0,
+          "p95": 720.0,
+          "p99": 720.0,
+          "maximum": 720.0
+        },
+        "source_smoke_sum": {
+          "count": 3,
+          "minimum": 28.799999356269836,
+          "mean": 28.799999356269836,
+          "p50": 28.799999356269836,
+          "p95": 28.799999356269836,
+          "p99": 28.799999356269836,
+          "maximum": 28.799999356269836
+        },
+        "upper_roi_maximum": {
+          "velocity": 12.590988064566146,
+          "fuel": 0.125244140625,
+          "temperature": 1.0,
+          "smoke": 2.22265625
+        }
+      },
+      {
+        "condition": "near_two_candidate",
+        "run_count": 3,
+        "minimum_supply_efficiency": 0.8083333333333333,
+        "worst_deep_maximum_m_s": 0.0,
+        "worst_center_maximum_m_s": 0.0,
+        "active_blocks_minimum": 240,
+        "planning_ms": {
+          "count": 3,
+          "minimum": 111.1588,
+          "mean": 131.36916666666667,
+          "p50": 121.0601,
+          "p95": 157.80575,
+          "p99": 161.07202999999998,
+          "maximum": 161.8886
+        },
+        "usd_publication_ms": {
+          "count": 3,
+          "minimum": 4.6749,
+          "mean": 5.235566666666666,
+          "p50": 5.4016,
+          "p95": 5.607340000000001,
+          "p99": 5.625628000000001,
+          "maximum": 5.6302
+        },
+        "source_fuel_sum": {
+          "count": 3,
+          "minimum": 465.60000693798065,
+          "mean": 465.60000693798065,
+          "p50": 465.60000693798065,
+          "p95": 465.60000693798065,
+          "p99": 465.60000693798065,
+          "maximum": 465.60000693798065
+        },
+        "source_temperature_sum": {
+          "count": 3,
+          "minimum": 1164.0,
+          "mean": 1164.0,
+          "p50": 1164.0,
+          "p95": 1164.0,
+          "p99": 1164.0,
+          "maximum": 1164.0
+        },
+        "source_smoke_sum": {
+          "count": 3,
+          "minimum": 46.5599989593029,
+          "mean": 46.5599989593029,
+          "p50": 46.5599989593029,
+          "p95": 46.5599989593029,
+          "p99": 46.5599989593029,
+          "maximum": 46.5599989593029
+        },
+        "upper_roi_maximum": {
+          "velocity": 13.600750964131727,
+          "fuel": 0.2783203125,
+          "temperature": 1.0,
+          "smoke": 3.80078125
+        }
+      },
+      {
+        "condition": "lower_upper_candidate",
+        "run_count": 3,
+        "minimum_supply_efficiency": 1.0,
+        "worst_deep_maximum_m_s": 0.0,
+        "worst_center_maximum_m_s": 0.0,
+        "active_blocks_minimum": 129,
+        "planning_ms": {
+          "count": 3,
+          "minimum": 97.6699,
+          "mean": 105.16453333333334,
+          "p50": 104.6619,
+          "p95": 112.31181,
+          "p99": 112.99180199999999,
+          "maximum": 113.1618
+        },
+        "usd_publication_ms": {
+          "count": 3,
+          "minimum": 2.9139,
+          "mean": 3.4157333333333333,
+          "p50": 3.2454,
+          "p95": 4.00365,
+          "p99": 4.0710500000000005,
+          "maximum": 4.0879
+        },
+        "source_fuel_sum": {
+          "count": 3,
+          "minimum": 288.0000042915344,
+          "mean": 288.0000042915344,
+          "p50": 288.0000042915344,
+          "p95": 288.0000042915344,
+          "p99": 288.0000042915344,
+          "maximum": 288.0000042915344
+        },
+        "source_temperature_sum": {
+          "count": 3,
+          "minimum": 720.0,
+          "mean": 720.0,
+          "p50": 720.0,
+          "p95": 720.0,
+          "p99": 720.0,
+          "maximum": 720.0
+        },
+        "source_smoke_sum": {
+          "count": 3,
+          "minimum": 28.799999356269836,
+          "mean": 28.799999356269836,
+          "p50": 28.799999356269836,
+          "p95": 28.799999356269836,
+          "p99": 28.799999356269836,
+          "maximum": 28.799999356269836
+        },
+        "upper_roi_maximum": {
+          "velocity": 11.812954777838913,
+          "fuel": 0.09405517578125,
+          "temperature": 1.0,
+          "smoke": 2.400390625
+        }
+      },
+      {
+        "condition": "production_four_candidate",
+        "run_count": 3,
+        "minimum_supply_efficiency": 0.7555555555555555,
+        "worst_deep_maximum_m_s": 0.0,
+        "worst_center_maximum_m_s": 0.0,
+        "active_blocks_minimum": 294,
+        "planning_ms": {
+          "count": 3,
+          "minimum": 215.6612,
+          "mean": 255.5556333333333,
+          "p50": 248.2362,
+          "p95": 297.31617,
+          "p99": 301.678834,
+          "maximum": 302.7695
+        },
+        "usd_publication_ms": {
+          "count": 3,
+          "minimum": 6.6333,
+          "mean": 9.239333333333333,
+          "p50": 8.6306,
+          "p95": 12.07175,
+          "p99": 12.37763,
+          "maximum": 12.4541
+        },
+        "source_fuel_sum": {
+          "count": 3,
+          "minimum": 870.4000129699707,
+          "mean": 870.4000129699707,
+          "p50": 870.4000129699707,
+          "p95": 870.4000129699707,
+          "p99": 870.4000129699707,
+          "maximum": 870.4000129699707
+        },
+        "source_temperature_sum": {
+          "count": 3,
+          "minimum": 2176.0,
+          "mean": 2176.0,
+          "p50": 2176.0,
+          "p95": 2176.0,
+          "p99": 2176.0,
+          "maximum": 2176.0
+        },
+        "source_smoke_sum": {
+          "count": 3,
+          "minimum": 87.0399980545044,
+          "mean": 87.0399980545044,
+          "p50": 87.0399980545044,
+          "p95": 87.0399980545044,
+          "p99": 87.0399980545044,
+          "maximum": 87.0399980545044
+        },
+        "upper_roi_maximum": {
+          "velocity": 13.1090437127721,
+          "fuel": 0.2403564453125,
+          "temperature": 1.0,
+          "smoke": 2.63671875
+        }
+      },
+      {
+        "condition": "lower_upper_collision_off_filter_off",
+        "run_count": 3,
+        "minimum_supply_efficiency": 1.0,
+        "worst_deep_maximum_m_s": 7.911711692810059,
+        "worst_center_maximum_m_s": 7.911711692810059,
+        "active_blocks_minimum": 166,
+        "planning_ms": {
+          "count": 3,
+          "minimum": 97.9855,
+          "mean": 107.89433333333334,
+          "p50": 112.3754,
+          "p95": 113.22743,
+          "p99": 113.303166,
+          "maximum": 113.3221
+        },
+        "usd_publication_ms": {
+          "count": 3,
+          "minimum": 2.9588,
+          "mean": 3.3679333333333332,
+          "p50": 2.978,
+          "p95": 4.0481,
+          "p99": 4.1432199999999995,
+          "maximum": 4.167
+        },
+        "source_fuel_sum": {
+          "count": 3,
+          "minimum": 288.0000042915344,
+          "mean": 288.0000042915344,
+          "p50": 288.0000042915344,
+          "p95": 288.0000042915344,
+          "p99": 288.0000042915344,
+          "maximum": 288.0000042915344
+        },
+        "source_temperature_sum": {
+          "count": 3,
+          "minimum": 720.0,
+          "mean": 720.0,
+          "p50": 720.0,
+          "p95": 720.0,
+          "p99": 720.0,
+          "maximum": 720.0
+        },
+        "source_smoke_sum": {
+          "count": 3,
+          "minimum": 28.799999356269836,
+          "mean": 28.799999356269836,
+          "p50": 28.799999356269836,
+          "p95": 28.799999356269836,
+          "p99": 28.799999356269836,
+          "maximum": 28.799999356269836
+        },
+        "upper_roi_maximum": {
+          "velocity": 13.31246350959469,
+          "fuel": 0.21435546875,
+          "temperature": 1.0,
+          "smoke": 2.564453125
+        }
+      },
+      {
+        "condition": "lower_upper_collision_on_filter_off",
+        "run_count": 3,
+        "minimum_supply_efficiency": 1.0,
+        "worst_deep_maximum_m_s": 0.0,
+        "worst_center_maximum_m_s": 0.0,
+        "active_blocks_minimum": 163,
+        "planning_ms": {
+          "count": 3,
+          "minimum": 30.5448,
+          "mean": 62.531066666666675,
+          "p50": 41.9239,
+          "p95": 107.80443999999999,
+          "p99": 113.660488,
+          "maximum": 115.1245
+        },
+        "usd_publication_ms": {
+          "count": 3,
+          "minimum": 4.7168,
+          "mean": 61.92116666666667,
+          "p50": 84.5838,
+          "p95": 95.27499,
+          "p99": 96.225318,
+          "maximum": 96.4629
+        },
+        "source_fuel_sum": {
+          "count": 3,
+          "minimum": 288.0000042915344,
+          "mean": 288.0000042915344,
+          "p50": 288.0000042915344,
+          "p95": 288.0000042915344,
+          "p99": 288.0000042915344,
+          "maximum": 288.0000042915344
+        },
+        "source_temperature_sum": {
+          "count": 3,
+          "minimum": 720.0,
+          "mean": 720.0,
+          "p50": 720.0,
+          "p95": 720.0,
+          "p99": 720.0,
+          "maximum": 720.0
+        },
+        "source_smoke_sum": {
+          "count": 3,
+          "minimum": 28.799999356269836,
+          "mean": 28.799999356269836,
+          "p50": 28.799999356269836,
+          "p95": 28.799999356269836,
+          "p99": 28.799999356269836,
+          "maximum": 28.799999356269836
+        },
+        "upper_roi_maximum": {
+          "velocity": 10.55058303711788,
+          "fuel": 0.100341796875,
+          "temperature": 1.0,
+          "smoke": 3.07421875
+        }
+      }
+    ],
+    "resource_summary": {
+      "formal_processes_with_resource_evidence": 18,
+      "runner_peak_private_bytes": 96628736,
+      "diagnostic_peak_private_bytes": 27447296,
+      "kit_peak_private_bytes": 13090537472,
+      "tree_peak_private_bytes": 13237260288,
+      "minimum_available_physical_bytes": 85858873344,
+      "minimum_commit_headroom_bytes": 104473055232,
+      "gpu_sampling": "not collected; the isolated inventory boundary does not provide continuous GPU telemetry"
+    }
+  },
+  "scope": "default-off production-neutral probe; no production integration and no media adoption"
+}

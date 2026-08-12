@@ -1,5 +1,17 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6EP PointEmitter–CollisionProxy coexistence safe stop
+
+Phase 6EOのBox Mesh遮蔽合格後、既定OFF・production-neutralな単一PointEmitterと26頂点閉Mesh CollisionProxyの共存を調べた。公開Flow 110.0.0 schemaには正確なPoint support半径または別のPoint raster cell sizeが見つからないため、実測velocity voxel 1個=`0.05 m`の保守的support評価球を使う。Point配列の順序・長さ・revisionを保持し、全Colliderへのsupport clearanceが負のPointだけfuel/temperature/smokeを0にする。
+
+凍結contract `campfire.phase6ep.point-collision-coexistence-contract.v1`（SHA-256 `8DAD6E540EEFAA397FEEDE2313BFA531541AC976328924EA198BA2F4CD5B09C9`）はoffset `0/0.25/0.5/1/1.5` velocity voxel、4 scenario、3 run、Phase 6ENのdeep/center `1e-4 m/s` gateを固定した。preflight root 4でfilter/offset-OFF controlへoffsetが残る不一致を検出したため正式不採用とし、両controlをoffset 0へ固定してroot 5を最初から実行した。
+
+formal 18/18 processはnormal OS exitし数値sub-gate合格。最小候補は1.5 voxel=`0.075 m`で、supplyはsingle 100%、near-two 80.83%、lower/upper 100%、production-four 75.56%、active support交差0。candidate deep/center maximumは全sample 0、raw/unshifted OFFは7.9117 m/s、pair ratioは0だった。production-fourのplan/filter p95は297.32 ms、USD publication p95は12.07 msで、一回限りのoffline stage構築costとして記録する。
+
+ただし映像populationの2本目（Collision ON・filter/offset OFF）は180 frameと`shutdown_complete`後にOS終了せず、CDBもtimeoutしてdetach marker・既知NGX signatureを得られなかった。`unknown_shutdown_failure`としてexact-identity cleanupし残留0、fatal/dump/upload/device-lost/TDR 0。自動retryと3本目動画を開始していないため、Phase 6EP全体はmedia/lifecycle safe stopでありproduction採用へ進まない。動画は公開せずlatest demoも不変。詳細は`docs/design/point_emitter_collision_proxy_coexistence.md`。
+
+回帰はRelease build 8.20秒、Phase 6EA～6EP focused contract 130/130、隔離cleanup後の標準8 process 78/78（357.2秒）が合格した。日誌静的検査は384参照、196 JSON、162 SVG、2 ZIPが合格。Phase 6EPの同条件retryと後続映像条件は開始せず、Phase 0 RTXとPhase 3の専用probeも保留した。production app SHA-256は前後とも`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`である。
+
 # Phase 6EO Box Mesh collision occlusion recheck
 
 Phase 6DSで遮蔽しなかったBox動画を、Phase 6DT〜6ENで成立した閉じたMesh CollisionProxyへ置き換えて隔離再検証した。凍結contract `campfire.phase6eo.box-mesh-occlusion-contract.v1`（SHA-256 `F3A0CE0003F2BDFC6A6B59A61D517700C0961C0417B12EFADA9902EA63ABA1F8`）は、8頂点・6面の静的Box、`convexDecomposition`、velocity voxel 0.05 m、source表面clearance 0.225 m、frame 60/120/180/200、Phase 6ENの`1e-4 m/s` deep/center gateを事前固定する。

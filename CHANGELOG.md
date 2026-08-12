@@ -1004,6 +1004,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Predefined `define_app` declarations from `premake5.lua` in favor of developer defined applications
 - Predefined source/apps in favor of templates for developers to build from
 
+# Phase 6EP
+
+- Added a default-off, production-neutral PointEmitter–CollisionProxy coexistence probe with exact authored-Mesh signed distance, a conservative 0.05 m Point support sphere, immutable point ordering, offset sweep, four placement scenarios, public NanoVDB readback, three-run numeric gates, and existing resource/shutdown guards.
+- Rejected an invalid preflight population after detecting that the filtering/offset-OFF controls retained the candidate offset. Froze a corrected contract (SHA-256 `8DAD6E540EEFAA397FEEDE2313BFA531541AC976328924EA198BA2F4CD5B09C9`) with raw controls at offset 0 and restarted from a new root.
+- Passed all 18 formal numeric processes: selected 0.075 m offset, supply 100%/80.83%/100%/75.56% across single/near-two/lower-upper/production-four, active support intersections 0, candidate deep/center velocity 0, OFF deep 7.9117 m/s, and ON/OFF ratio 0.
+- Stopped safely during the excluded visual population. Collision ON/raw captured 180 frames and reached `shutdown_complete`, but Kit did not exit and bounded CDB timed out without detach or an accepted NGX signature. Classified it as `unknown_shutdown_failure`, cleaned exact observed descendants, did not retry or start the candidate video, and published no Phase 6EP video.
+- Kept production, authority, Flow defaults, Point sidecar schema, Sphere default, V3, Resident state, CollisionProxy geometry, and the latest-demo pointer unchanged. Fatal/dump/upload/device-loss/TDR and final residual counts were zero.
+- Passed the Release build in 8.20 seconds, 130/130 focused Phase 6EA–6EP contracts, the post-cleanup eight-process standard suite with 78/78 tests in 357.2 seconds, and static devlog validation for 384 references, 196 JSON, 162 SVG, and 2 ZIP files. The failed visual condition was not retried, the candidate visual was not started, and the dedicated Phase 0 RTX and Phase 3 probes were deferred.
+
 # Phase 6EO
 
 - Recreated the earlier Box occlusion diagnostic with the known-good closed Mesh CollisionProxy instead of the non-occluding analytic path. The frozen `campfire.phase6eo.box-mesh-occlusion-contract.v1` contract uses an 8-vertex closed Box, `convexDecomposition`, 0.05 m velocity voxels, 0.225 m source clearance, and the Phase 6EN `1e-4 m/s` deep/center gate.

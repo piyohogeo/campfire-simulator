@@ -1,0 +1,104 @@
+{
+  "schema": "campfire.phase6ep.point-collision-coexistence-contract.v1",
+  "phase": "phase6ep",
+  "declared_before_runtime_sweep": true,
+  "production_connected": false,
+  "default_enabled": false,
+  "fixed_environment": {
+    "kit": "110.2",
+    "flow": "110.0.0",
+    "density_cell_size_m": 0.025,
+    "velocity_voxel_size_m": 0.05,
+    "point_rasterization_cell_interpretation": "FlowSimulate densityCellSize; no separate public Point rasterization cell-size attribute was found",
+    "public_exact_support_radius_available": false,
+    "conservative_support_radius_m": 0.05,
+    "conservative_support_basis": "one measured velocity NanoVDB voxel, equal to two density cells"
+  },
+  "point_payload": {
+    "source": "Phase 6CB/Resident 24 axial x 12 circumferential x 4 radial surface-cell centers",
+    "points_per_log": 360,
+    "fuel_per_active_point": 0.8,
+    "temperature_per_active_point": 2.0,
+    "smoke_per_active_point": 0.08,
+    "velocity_m_s": [0.0, 0.0, 0.35],
+    "ordering": "owner log order then axial/circumferential/radial surface identity",
+    "disabled_point_policy": "retain position and index; set fuel/temperature/smoke to zero",
+    "revision_policy": "one immutable diagnostic payload revision; not wood or Resident authority"
+  },
+  "collision_proxy": {
+    "vertices": 26,
+    "faces": 36,
+    "indices": 120,
+    "closed": true,
+    "approximation": "convexDecomposition",
+    "length_m": 0.72,
+    "radius_m": 0.105
+  },
+  "offset_sweep": {
+    "unit": "velocity_voxel",
+    "values": [0.0, 0.25, 0.5, 1.0, 1.5],
+    "meters": [0.0, 0.0125, 0.025, 0.05, 0.075],
+    "density_cells": [0.0, 0.5, 1.0, 2.0, 3.0],
+    "selection": "smallest offset that passes every scenario supply and active-support-clearance gate"
+  },
+  "formal_scenarios": [
+    "single_candidate",
+    "near_two_candidate",
+    "lower_upper_candidate",
+    "production_four_candidate",
+    "lower_upper_collision_off_filter_off",
+    "lower_upper_collision_on_filter_off"
+  ],
+  "formal_runs_per_scenario": 3,
+  "formal_execution_order_per_run": [
+    "lower_upper_collision_off_filter_off",
+    "lower_upper_collision_on_filter_off",
+    "single_candidate",
+    "near_two_candidate",
+    "lower_upper_candidate",
+    "production_four_candidate"
+  ],
+  "formal_condition_controls": {
+    "lower_upper_collision_off_filter_off": {
+      "collision": false,
+      "filtering": false,
+      "offset_m": 0.0,
+      "purpose": "positive control with raw, unshifted Point payload"
+    },
+    "lower_upper_collision_on_filter_off": {
+      "collision": true,
+      "filtering": false,
+      "offset_m": 0.0,
+      "purpose": "collision ON control with both filtering and offset disabled"
+    },
+    "candidate_conditions": {
+      "collision": true,
+      "filtering": true,
+      "offset_m": 0.075,
+      "purpose": "selected 1.5-velocity-voxel filtered candidate"
+    }
+  },
+  "sample_frames": [60, 120, 180, 200],
+  "thresholds": {
+    "minimum_supply_efficiency": 0.75,
+    "maximum_active_support_intersections": 0,
+    "minimum_active_support_clearance_m": 0.0,
+    "collision_on_deep_maximum_m_s": 0.0001,
+    "collision_on_center_maximum_m_s": 0.0001,
+    "collision_off_deep_minimum_m_s": 0.1,
+    "collision_off_center_minimum_m_s": 0.1,
+    "on_to_off_deep_maximum_ratio": 0.01,
+    "source_channel_efficiency_minimum": 0.75,
+    "fuel_tolerance": 0.000001
+  },
+  "selection_failure_policy": "If no offset passes all scenarios, stop without choosing a production candidate",
+  "safety": {
+    "independent_processes": true,
+    "normal_os_exit_required": true,
+    "fatal_dump_upload_device_lost_tdr_allowed": 0,
+    "production_sha_must_remain_unchanged": true,
+    "phase6ea_resource_guard_reused": true,
+    "phase6eb_phase6ed_shutdown_classifier_reused": true,
+    "phase6el_cdb_path_reused_for_residual_only": true
+  }
+}

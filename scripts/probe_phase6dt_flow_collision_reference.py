@@ -13,6 +13,7 @@ import importlib.util
 import json
 import math
 import statistics
+import time
 import traceback
 from datetime import datetime, timezone
 from pathlib import Path
@@ -668,7 +669,23 @@ def _save_and_sample(
     parameters.flags = omni.volume.kNanoVDBCodecNone
     if not volume.save_volume(grid_data, str(path), parameters):
         raise RuntimeError(f"Unable to save public readback: {path}")
-    handle = nanovdb.io.readGrid(str(path))
+    deadline = time.monotonic() + 5.0
+    while (not path.is_file() or path.stat().st_size == 0) and time.monotonic() < deadline:
+        time.sleep(0.01)
+    if not path.is_file() or path.stat().st_size == 0:
+        raise RuntimeError(f"Public readback did not become durable within 5 s: {path}")
+    handle = None
+    read_error = None
+    deadline = time.monotonic() + 5.0
+    while time.monotonic() < deadline:
+        try:
+            handle = nanovdb.io.readGrid(str(path))
+            break
+        except RuntimeError as error:
+            read_error = error
+            time.sleep(0.01)
+    if handle is None:
+        raise RuntimeError(f"Public readback was not readable within 5 s: {path}: {read_error}")
     vector = channel == "velocity"
     grid = handle.vec3fGrid() if vector else handle.floatGrid()
     voxel_size = grid.voxelSize()
@@ -685,13 +702,14 @@ def _save_and_sample(
     if spatial_collector is not None and (not spatial_velocity_only or channel == "velocity"):
         if frame is None:
             raise RuntimeError("Phase 6EE spatial capture requires a frame")
-        result["phase6ee_neighborhood"] = spatial_collector.capture(
-            grid,
-            channel,
-            frame,
-            vector,
-            nanovdb.math.Vec3d,
-        )
+        collectors = list(spatial_collector) if isinstance(spatial_collector, (list, tuple)) else [spatial_collector]
+        neighborhoods = [
+            collector.capture(grid, channel, frame, vector, nanovdb.math.Vec3d)
+            for collector in collectors
+        ]
+        result["phase6ee_neighborhood"] = neighborhoods[0]
+        if len(neighborhoods) > 1:
+            result["phase6ee_additional_neighborhoods"] = neighborhoods[1:]
     path.unlink(missing_ok=True)
     return result
 
@@ -1056,4 +1074,5 @@ async def _run() -> None:
         app.post_uncancellable_quit(exit_code)
 
 
-asyncio.ensure_future(_run())
+if __name__ == "__main__":
+    asyncio.ensure_future(_run())

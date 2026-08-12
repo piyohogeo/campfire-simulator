@@ -1,0 +1,333 @@
+"""Default-off PointEmitter/closed-Mesh coexistence probe for Phase 6EP."""
+
+from __future__ import annotations
+
+import asyncio
+import hashlib
+import json
+import sys
+import time
+import traceback
+from datetime import datetime, timezone
+from pathlib import Path
+
+import carb
+import nanovdb
+import numpy as np
+import omni.kit.app
+import omni.kit.viewport.utility
+import omni.timeline
+import omni.usd
+import omni.volume
+from omni.flowusd import _flowusd
+from pxr import Gf, Sdf, Usd, UsdGeom, UsdPhysics, Vt
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+import benchmark_point_emitter_core as point_core
+from phase6ep_point_collision_geometry import plan_payload
+from phase6ee_velocity_distribution import SpatialNeighborhoodCollector
+from probe_phase6dt_flow_collision_reference import CHANNELS, SAMPLE_FRAMES, _capture, _save_and_sample
+
+
+CAMERA_PATH = Sdf.Path("/World/Camera")
+CAPTURE_RESOLUTION = (1280, 720)
+
+
+def _settings():
+    settings = carb.settings.get_settings()
+    return {
+        "output": Path(settings.get_as_string("/phase6ep/output")).resolve(),
+        "scenario": settings.get_as_string("/phase6ep/scenario"),
+        "offset_m": float(settings.get_as_float("/phase6ep/offsetM")),
+        "support_radius_m": float(settings.get_as_float("/phase6ep/supportRadiusM")),
+        "filtering": bool(settings.get_as_bool("/phase6ep/filtering")),
+        "collision": bool(settings.get_as_bool("/phase6ep/collision")),
+        "run_index": int(settings.get_as_int("/phase6ep/runIndex")) or 1,
+        "capture": bool(settings.get_as_bool("/phase6ep/capture")),
+        "capture_start": int(settings.get_as_int("/phase6ep/captureStart")),
+        "capture_end": int(settings.get_as_int("/phase6ep/captureEnd")),
+    }
+
+
+def _write(path, payload):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+
+
+def _sha256(path):
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest().upper()
+
+
+def _define_collision_meshes(stage, plan):
+    records = []
+    for index, (pose, points, counts, indices, _geometry) in enumerate(plan["geometries"]):
+        path = Sdf.Path(f"/World/CollisionProxies/{pose.name}")
+        mesh = UsdGeom.Mesh.Define(stage, path)
+        mesh.CreatePointsAttr(Vt.Vec3fArray([Gf.Vec3f(*value) for value in points]))
+        mesh.CreateFaceVertexCountsAttr(Vt.IntArray(counts.tolist()))
+        mesh.CreateFaceVertexIndicesAttr(Vt.IntArray(indices.tolist()))
+        mesh.CreateSubdivisionSchemeAttr(UsdGeom.Tokens.none)
+        mesh.CreateDoubleSidedAttr(False)
+        mesh.CreateDisplayColorAttr([Gf.Vec3f(0.22, 0.07 + 0.035 * index, 0.025)])
+        collision_api = UsdPhysics.CollisionAPI.Apply(mesh.GetPrim())
+        collision_api.CreateCollisionEnabledAttr(True)
+        mesh_api = UsdPhysics.MeshCollisionAPI.Apply(mesh.GetPrim())
+        mesh_api.CreateApproximationAttr().Set(UsdPhysics.Tokens.convexDecomposition)
+        records.append({
+            "path": str(path), "name": pose.name, "vertex_count": len(points),
+            "face_count": len(counts), "index_count": len(indices),
+            "center": list(pose.center), "yaw_degrees": pose.yaw_degrees,
+            "emits": pose.emits,
+        })
+    return records
+
+
+def _stage_path(output):
+    return output.with_suffix(".scene.usda")
+
+
+def _build_stage(arguments):
+    output = arguments["output"]
+    path = _stage_path(output)
+    path.unlink(missing_ok=True)
+    planning_started = time.perf_counter_ns()
+    plan = plan_payload(
+        arguments["scenario"], arguments["offset_m"],
+        arguments["support_radius_m"], arguments["filtering"],
+    )
+    planning_ms = (time.perf_counter_ns() - planning_started) / 1_000_000.0
+    stage = Usd.Stage.CreateNew(str(path))
+    point_core._define_minimal_world(stage)
+    point_core._define_flow_solver(stage)
+    simulate = stage.GetPrimAtPath(point_core.SIMULATE_PATH)
+    point_core._set(simulate, "physicsCollisionEnabled", arguments["collision"])
+    point_core._set(simulate, "physicsConvexCollision", True)
+    collision_records = _define_collision_meshes(stage, plan)
+    publication_started = time.perf_counter_ns()
+    handles = point_core._define_point_sources(
+        stage, (tuple(Gf.Vec3f(*(float(component) for component in value)) for value in plan["positions"]),)
+    )
+    emitter = stage.GetPrimAtPath(handles[0]["path"])
+    active = plan["active"].astype(np.float32)
+    point_core._set(emitter, "pointFuels", Vt.FloatArray((active * 0.8).tolist()))
+    point_core._set(emitter, "pointTemperatures", Vt.FloatArray((active * 2.0).tolist()))
+    point_core._set(emitter, "pointSmokes", Vt.FloatArray((active * 0.08).tolist()))
+    publication_ms = (time.perf_counter_ns() - publication_started) / 1_000_000.0
+    revision = emitter.GetAttribute("campfire:residentRevision")
+    revision.Set(1)
+    stage.SetStartTimeCode(0.0)
+    stage.SetEndTimeCode(600.0)
+    stage.SetTimeCodesPerSecond(60.0)
+    stage.GetRootLayer().customLayerData = {
+        "campfire:phase": "phase6ep", "campfire:defaultOff": True,
+        "campfire:productionConnected": False,
+    }
+    if not stage.GetRootLayer().Save():
+        raise RuntimeError("failed to save Phase 6EP offline stage")
+    payload_path = output.parent / "point_payload.npz"
+    records = plan["records"]
+    np.savez_compressed(
+        payload_path,
+        positions=plan["positions"], active=plan["active"],
+        owner_index=np.asarray([item["owner_index"] for item in records], dtype=np.int16),
+        signed_distance_m=np.asarray([item["signed_distance_m"] for item in records], dtype=np.float32),
+        support_clearance_m=np.asarray([item["support_clearance_m"] for item in records], dtype=np.float32),
+        nearest_collider_index=np.asarray([item["nearest_collider_index"] for item in records], dtype=np.int16),
+        nearest_face_class=np.asarray([item["nearest_face_class"] for item in records], dtype=np.uint8),
+        surface_identity=np.asarray([item["surface_identity"] for item in records], dtype=np.int16),
+    )
+    summary = {key: plan[key] for key in (
+        "scenario", "poses", "original_point_count", "active_point_count",
+        "disabled_point_count", "supply_efficiency", "minimum_support_clearance_m",
+        "minimum_active_support_clearance_m", "support_intersection_count",
+        "active_support_intersection_count", "self_inside_count", "other_inside_count",
+    )}
+    summary.update({
+        "planning_ms": planning_ms, "usd_publication_ms": publication_ms,
+        "payload_path": str(payload_path), "payload_sha256": _sha256(payload_path),
+        "payload_bytes": payload_path.stat().st_size,
+        "colliders": collision_records,
+    })
+    return path, summary, plan
+
+
+def _stats_attributes(prim):
+    values = []
+    for attribute in prim.GetAttributes():
+        name = attribute.GetName()
+        lowered = name.lower()
+        if any(token in lowered for token in ("radius", "support", "smooth", "alloc", "level", "substep")):
+            try:
+                value = attribute.Get()
+                if hasattr(value, "__len__") and not isinstance(value, str):
+                    value = str(value) if len(value) < 16 else f"array[{len(value)}]"
+                values.append({"name": name, "type": str(attribute.GetTypeName()), "value": value})
+            except Exception as error:
+                values.append({"name": name, "error": f"{type(error).__name__}: {error}"})
+    return values
+
+
+async def _run():
+    arguments = _settings()
+    output = arguments["output"]
+    report = {
+        "schema": "campfire.phase6ep.point-collision-run.v1", "phase": "phase6ep",
+        "status": "running", "lifecycle_marker": "process_entry",
+        "lifecycle_history": [], "arguments": {k: str(v) if isinstance(v, Path) else v for k, v in arguments.items()},
+        "samples": [], "captures": [],
+        "completion_contract": {
+            "results_saved": False, "timeline_stopped": False,
+            "stage_closed": False, "renderer_drained": False,
+            "shutdown_requested": False,
+        },
+    }
+    app = omni.kit.app.get_app()
+    context = omni.usd.get_context()
+    timeline = omni.timeline.get_timeline_interface()
+    flow = None
+    collectors = []
+    exit_code = 1
+    try:
+        stage_path, point_summary, plan = _build_stage(arguments)
+        report["point_payload"] = point_summary
+        report["stage_sha256"] = _sha256(stage_path)
+        report["lifecycle_marker"] = "offline_stage_complete"
+        _write(output, report)
+        await context.open_stage_async(str(stage_path))
+        stage = context.get_stage()
+        if stage is None:
+            raise RuntimeError("Phase 6EP stage connection failed")
+        report["lifecycle_marker"] = "usd_context_connection_complete"
+        emitter = stage.GetPrimAtPath("/World/Flow/EmitterPoint")
+        report["public_point_support_attribute_audit"] = {
+            "attributes": _stats_attributes(emitter),
+            "exact_support_radius_available": False,
+            "conservative_support_radius_m": arguments["support_radius_m"],
+        }
+        viewport = None
+        for _ in range(240):
+            viewport = omni.kit.viewport.utility.get_active_viewport()
+            if viewport is not None:
+                break
+            await app.next_update_async()
+        if viewport is None:
+            raise RuntimeError("no active viewport")
+        viewport.camera_path = CAMERA_PATH
+        viewport.fill_frame = False
+        viewport.resolution = CAPTURE_RESOLUTION
+        for _ in range(60):
+            await omni.kit.viewport.utility.next_viewport_frame_async(viewport)
+        flow = _flowusd.acquire_flowusd_interface()
+        volume = omni.volume.get_volume_interface()
+        public_members = sorted(name for name in dir(flow) if not name.startswith("_"))
+        for index, (_pose, points, counts, indices, _geometry) in enumerate(plan["geometries"]):
+            collectors.append(SpatialNeighborhoodCollector(
+                output.parent / "spatial" / f"collider_{index}",
+                f"{arguments['scenario']}_collider_{index}", points, counts, indices,
+                np.eye(4), public_members,
+            ))
+        timeline.stop()
+        timeline.set_current_time(0.0)
+        for _ in range(12):
+            await app.next_update_async()
+        timeline.play()
+        report["lifecycle_marker"] = "timeline_playing"
+        _write(output, report)
+        capture_frames = set()
+        if arguments["capture"]:
+            capture_frames = set(range(arguments["capture_start"], arguments["capture_end"] + 1))
+        final_frame = max(SAMPLE_FRAMES[-1], max(capture_frames, default=0))
+        for frame in range(1, final_frame + 1):
+            await app.next_update_async()
+            if frame in capture_frames:
+                await omni.kit.viewport.utility.next_viewport_frame_async(viewport)
+                path = output.parent / "frames" / f"frame_{frame:04d}.png"
+                path.parent.mkdir(parents=True, exist_ok=True)
+                report["captures"].append({"frame": frame, **(await _capture(viewport, path))})
+            if frame not in SAMPLE_FRAMES:
+                continue
+            if int(point_summary["active_point_count"]) == 0:
+                report["samples"].append({
+                    "frame": frame,
+                    "active_blocks": int(flow.get_active_block_count()),
+                    "channels": {
+                        channel: {"available": False, "reason": "no active Point source after conservative support filtering"}
+                        for channel in CHANNELS
+                    },
+                })
+                _write(output, report)
+                continue
+            raw = flow.get_latest_nanovdb_readback()
+            sample = {"frame": frame, "active_blocks": int(flow.get_active_block_count()), "channels": {}}
+            for channel_index, channel in enumerate(CHANNELS):
+                array = np.asarray(raw[channel_index])
+                if array.size == 0:
+                    sample["channels"][channel] = {"available": False}
+                    continue
+                nvdb_path = output.parent / f"sample_{frame}_{channel}.nvdb"
+                bounds = {
+                    "scene": {"minimum": [-1.1, -1.1, 0.2], "maximum": [1.1, 1.1, 2.1]},
+                    "upper": {"minimum": [-0.5, -0.5, 0.9], "maximum": [0.5, 0.5, 1.8]},
+                }
+                details = _save_and_sample(
+                    flow, volume, array, channel, nvdb_path, bounds,
+                    spatial_collector=collectors if channel == "velocity" else None,
+                    spatial_velocity_only=True, frame=frame,
+                )
+                sample["channels"][channel] = {"available": True, "word_count": int(array.size), **details}
+            report["samples"].append(sample)
+            _write(output, report)
+        report["spatial_manifests"] = [collector.finalize() for collector in collectors]
+        report["active_blocks_final"] = int(flow.get_active_block_count())
+        report["source_sums"] = {
+            "fuel": float(sum(emitter.GetAttribute("pointFuels").Get())),
+            "temperature": float(sum(emitter.GetAttribute("pointTemperatures").Get())),
+            "smoke": float(sum(emitter.GetAttribute("pointSmokes").Get())),
+        }
+        report["revision"] = int(emitter.GetAttribute("campfire:residentRevision").Get())
+        report["status"] = "ok"
+        report["completion_contract"]["results_saved"] = True
+        report["lifecycle_marker"] = "measurement_complete"
+        _write(output, report)
+        exit_code = 0
+    except Exception as error:
+        report["status"] = "error"
+        report["error"] = f"{type(error).__name__}: {error}"
+        report["traceback"] = traceback.format_exc()
+    finally:
+        try:
+            report["lifecycle_marker"] = "timeline_stopping"
+            timeline.stop()
+            for _ in range(12):
+                await app.next_update_async()
+            report["lifecycle_marker"] = "timeline_stopped"
+            report["completion_contract"]["timeline_stopped"] = True
+            await context.close_stage_async()
+            for _ in range(12):
+                await app.next_update_async()
+            report["lifecycle_marker"] = "renderer_drain_complete"
+            report["completion_contract"]["stage_closed"] = True
+            report["completion_contract"]["renderer_drained"] = True
+            if flow is not None:
+                _flowusd.release_flowusd_interface(flow)
+                flow = None
+            report["lifecycle_marker"] = "shutdown_complete"
+            report["completion_contract"]["shutdown_requested"] = True
+            report["lifecycle_history"].append({"marker": "shutdown_complete", "timestamp_utc": datetime.now(timezone.utc).isoformat()})
+        except Exception as error:
+            report["shutdown_error"] = f"{type(error).__name__}: {error}"
+            report["status"] = "error"
+            exit_code = 1
+        _write(output, report)
+        app.post_uncancellable_quit(exit_code)
+
+
+if __name__ == "__main__":
+    asyncio.ensure_future(_run())

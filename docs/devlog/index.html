@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6eo">最新記録</a>
+        <a href="#phase-6ep">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,17 +27,17 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6eo">Phase 6EOの結果を読む</a>
+        <a class="button primary" href="#phase-6ep">Phase 6EPの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6EO Box occlusion qualified</strong></div>
+        <div><span>現在地</span><strong>Phase 6EP numeric pass / media safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>36 / 36 normal exit</strong></div>
-        <div><span>Production</span><strong>unchanged · engineering gate passed</strong></div>
+        <div><span>Lifecycle</span><strong>18 / 18 formal normal exit · visual residual</strong></div>
+        <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
   </header>
@@ -56,6 +56,19 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6ep" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6EP entry"><span class="phase-number compact">6EP</span><p><time datetime="2026-08-12">2026.08.12</time></p><span class="pill current">Numeric pass · media safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6EP · PointEmitter–CollisionProxy coexistence</p><h2>配置の数値gateは合格。<br>映像processの終了残留で安全停止。</h2><p>単一PointEmitterの点を、自分自身や他の薪の閉Mesh CollisionProxyへ直接注入しない配置規則を既定OFFで検証しました。正確なPoint support半径は公開APIにないため、velocity voxel 1個の<code>0.05 m</code>評価球を保守的に使っています。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/point_collision_safe_stop.svg"><img src="assets/phase6/point_collision_safe_stop.svg" alt="Phase 6EPの正式数値合格と映像process終了残留によるsafe stop" loading="lazy"></a><figcaption><div><strong>Formal numeric pass / media lifecycle safe stop</strong><span>18 / 18 normal exits · visual ON/raw unknown shutdown · video unpublished</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Selected placement</p><h3>1.5 velocity voxels · 0.075 m</h3><p>active supplyはsingle <code>100%</code>、near-two <code>80.83%</code>、lower/upper <code>100%</code>、production-four <code>75.56%</code>。Point配列は削除・並べ替えず、不適合点のfuel/temperature/smokeだけを0にしました。active support交差は全candidateで0です。</p></section><section class="note"><p class="note-label">NanoVDB qualification</p><h3>Candidate deep / center = 0</h3><p>4 scenario×3 runの全sampleでCollision ON deep/center maximumは<code>0 m/s</code>。raw/unshifted Collision OFFは<code>7.9117 m/s</code>、lower/upperのON/OFF ratioは0。active blocksも全条件で正でした。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Fail-closed media result</p><h3>数値18/18合格 · Phase全体は未qualified</h3><p>映像用Collision OFFは180 frameとnormal exitを完了しました。続くCollision ON/rawも180 frameと<code>shutdown_complete</code>まで到達しましたがOS終了せず、CDBも45秒timeoutしてdetach markerと既知NGX signatureを得られませんでした。<code>unknown_shutdown_failure</code>としてexact-identity cleanupし、同条件をretryせずcandidate動画も開始していません。</p><p>fatal、dump、automatic upload、device lost、TDR、cleanup residualは0。動画はencode・公開・modal登録せず、latest demo pointerも維持しています。</p><p>Release build、focused contract <code>130 / 130</code>、cleanup後の標準suite <code>78 / 78</code>は合格しました。Phase 0 RTXとPhase 3の専用probeは未実施です。</p><p><a href="assets/phase6/point_collision_safe_stop.json">safe-stop JSON</a> · <a href="assets/phase6/point_collision_qualification.svg">numeric SVG</a> · <a href="../design/point_emitter_collision_proxy_coexistence.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Formal numeric</strong><small>18 / 18 pass</small></p></div><div role="listitem"><span>✓</span><p><strong>Support clear</strong><small>active intersections 0</small></p></div><div role="listitem"><span>✓</span><p><strong>Regression</strong><small>130 / 130 · 78 / 78</small></p></div><div role="listitem"><span>!</span><p><strong>Visual lifecycle</strong><small>unknown shutdown</small></p></div><div role="listitem"><span>—</span><p><strong>Video</strong><small>not published</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Safe stop and next</p><h3>production統合へは進まない。</h3><p>production-four supplyの余裕は0.56 percentage pointだけで、visual liftと横方向偏りも未確認です。再開にはunknown visual shutdownを扱う明示承認と新しいvisual rootが必要です。Sphere既定、Point sidecar、wood authority、Resident、V3、CollisionProxy geometryは変更していません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6eo" class="section entry-section phase-six">
