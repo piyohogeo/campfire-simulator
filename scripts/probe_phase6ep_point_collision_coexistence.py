@@ -348,7 +348,8 @@ def _readback_boundary(flow, volume, arguments, frame, output):
     synchronous = arguments["synchronous_memory_markers"]
     mode = arguments["readback_mode"]
     mark = lambda name, **values: _append_resource_marker(
-        marker_path, name, synchronous_memory=synchronous, frame=frame, **values
+        marker_path, name, synchronous_memory=synchronous, frame=frame,
+        active_blocks=int(flow.get_active_block_count()), **values
     )
     mark("readback_call_before", mode=mode)
     raw = flow.get_latest_nanovdb_readback()
@@ -365,11 +366,96 @@ def _readback_boundary(flow, volume, arguments, frame, output):
     }
     mark("tuple_elements_checked", channel_object_count=len(result["channel_objects"]))
     weak_references = []
+    value = None
     for value in raw:
         try:
             weak_references.append(weakref.ref(value))
         except TypeError:
             weak_references.append(None)
+    # Do not let the loop variable retain the final channel past an exact
+    # lifetime marker.  Historical modes retain their original semantics.
+    del value
+
+    exact_release_mode = mode in ("acquire_discard_release", "fuel_convert_release")
+    if exact_release_mode:
+        result["operation_counts"] = {
+            "public_readback_calls": 1,
+            "fuel_handle_selections": 0,
+            "numpy_asarray_calls": 0,
+            "explicit_copy_function_calls": 0,
+            "field_persistence_calls": 0,
+        }
+        if mode == "acquire_discard_release":
+            del raw
+            mark(
+                "original_tuple_and_all_handle_aliases_released",
+                retained_converted_object=False,
+            )
+            result["reference_disposal"] = "explicit_del_no_gc"
+            result["gc_collected"] = None
+            return result, weak_references
+
+        fuel_index = CHANNELS.index("fuel")
+        source = raw[fuel_index]
+        result["operation_counts"]["fuel_handle_selections"] = 1
+        mark(
+            "fuel_handle_selected", fuel_channel_index=fuel_index,
+            source_type=_type_name(source), source_identity=int(id(source)),
+        )
+        mark("fuel_conversion_before", source_type=_type_name(source), source_identity=int(id(source)))
+        array = np.asarray(source)
+        result["operation_counts"]["numpy_asarray_calls"] = 1
+        base = getattr(array, "base", None)
+        fuel_array = {
+            **_bounded_object_metadata(array),
+            "owns_data": bool(array.flags.owndata),
+            "base_type": _type_name(base) if base is not None else None,
+            "base_identity": int(id(base)) if base is not None else None,
+            "same_identity_as_source": bool(array is source),
+        }
+        try:
+            fuel_array["shares_memory_with_source"] = bool(np.shares_memory(array, source))
+        except Exception:
+            fuel_array["shares_memory_with_source"] = None
+        result["fuel_array"] = fuel_array
+        result["observable_copy_contract"] = {
+            "explicit_copy_function_calls": 0,
+            "same_identity": fuel_array["same_identity_as_source"],
+            "shares_memory": fuel_array["shares_memory_with_source"],
+            "exact_internal_copy_count_known": bool(fuel_array["same_identity_as_source"]),
+            "internal_public_readback_copy_count_known": False,
+        }
+        mark(
+            "fuel_conversion_after", dtype=str(array.dtype), shape=[int(value) for value in array.shape],
+            strides=[int(value) for value in array.strides], buffer_bytes=int(array.nbytes),
+            owns_data=bool(array.flags.owndata), same_identity_as_source=bool(array is source),
+            shares_memory_with_source=fuel_array["shares_memory_with_source"],
+        )
+        del base
+        converted_identity = int(id(array))
+        converted_is_original = bool(array is source)
+        del raw
+        del source
+        mark(
+            "original_tuple_and_all_handle_aliases_released",
+            retained_converted_object=True,
+            retained_converted_identity=converted_identity,
+            retained_converted_is_original_fuel_object=converted_is_original,
+        )
+        mark(
+            "converted_buffer_only_held", converted_identity=converted_identity,
+            converted_is_original_fuel_object=converted_is_original,
+            buffer_bytes=int(array.nbytes),
+        )
+        del array
+        mark(
+            "converted_buffer_released",
+            released_identity=converted_identity,
+            converted_was_original_fuel_object=converted_is_original,
+        )
+        result["reference_disposal"] = "ordered_explicit_del_no_gc"
+        result["gc_collected"] = None
+        return result, weak_references
 
     array = None
     source = None
@@ -473,7 +559,8 @@ async def _run():
         if unknown_channels:
             raise ValueError(f"unsupported readback channels: {unknown_channels}")
         valid_readback_modes = {
-            "legacy", "none", "acquire_discard", "fuel_convert", "fuel_scalar", "fuel_jsonl", "fuel_spatial"
+            "legacy", "none", "acquire_discard", "acquire_discard_release",
+            "fuel_convert", "fuel_convert_release", "fuel_scalar", "fuel_jsonl", "fuel_spatial"
         }
         if arguments["readback_mode"] not in valid_readback_modes:
             raise ValueError(f"unsupported readback mode: {arguments['readback_mode']}")

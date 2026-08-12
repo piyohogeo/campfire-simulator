@@ -1,5 +1,7 @@
 # Changelog
 
+- Declared the production-neutral Phase 6EZ single fuel-channel conversion contract. It freezes Phase 6EY as qualified history, compares one explicit acquire/discard control with one existing `numpy.asarray(fuel)` call, records ordered alias lifetimes and bounded CPU/GPU telemetry, and preserves all existing resource ceilings. Runtime results are intentionally not yet included in this contract commit.
+
 - Re-ran the byte-identical Phase 6EY dynamic-stationarity contract from an empty artifact root without reusing prior evidence. All three readback-free R0 processes passed their finite non-divergence, resource, lifecycle, and cross-run gates with 49 aligned samples each and normal OS exit.
 - Qualified one public NanoVDB acquire/discard boundary without conversion or field persistence. Synchronous Private Bytes rose 138.223 MiB, retained 125.074 MiB after reference release and 111.578 MiB at the next frame, then remained bounded below the unchanged 14 GiB ceiling; R2 was not started and production stayed unchanged.
 - Added the production-neutral Phase 6EY finite dynamic-stationarity contract. Synthetic calibration accepted bounded periodic/recovery cases and rejected linear, accelerating, memory-only, and non-recovering cache growth without changing the frozen Phase 6EX 15% range gate.

@@ -1,5 +1,11 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6EZ single fuel-channel conversion contract
+
+Phase 6EYのR0 `3/3`とR1 acquire/discard `1/1`をコミット`6dd497c`のqualified historyとして凍結し、新しい正式populationへ流用しない。新しい`campfire.phase6ez.single-fuel-conversion-contract.v1`は、別processのC0でpublic `get_latest_nanovdb_readback()`を1回取得・明示解放し、C0合格後だけC1でfuel handleに既存`numpy.asarray()`を1回適用する。source tuple/alias、converted object、次frame、24秒dynamic-stationarity、stage close、OS exitを順序付きmarkerで分離する。
+
+public境界で既に返るchannel objectはPhase 6EYでは`numpy.ndarray`だったため、`np.asarray()`が別buffer copyとは仮定しない。identity、ownership、base、`shares_memory`、logical bytesをruntimeに記録し、explicit copy呼出し0とprovider内部copy未確認を区別する。14 GiB Kit、16 GiB tree、512 MiB runner/diagnostic、8 GiB headroomは不変。他channel、集計、field保存、反復取得、forced GC、private release、production統合は禁止する。詳細は`docs/design/phase6ez_single_fuel_conversion.md`。
+
 # Phase 6EY Flow dynamic-stationarity qualification restart
 
 Phase 6EXと最初のPhase 6EY safe stopを凍結したまま、修正済みanalyzerと同一contract（SHA-256 `58C9755FF8F3F8E67752E558F572CB1B997A14E1976E0241B586E1DE64CA4AB4`）を新しい空rootから実行した。過去sampleは再利用していない。readbackなしR0は3/3で、各49 aligned sample、active mean `1357.408–1360.347`、Kit Private Bytes slope `+2,988,120–+3,325,234 bytes/s`、stage close `2.253494–4.842660秒`、normal OS exitだった。cross-runもactive mean range `0.2162%`、peak Private Bytes range `1.1020%`、terminal range `1.0650%`で凍結gateに合格した。単純なactive-block rangeは合否に用いていない。
