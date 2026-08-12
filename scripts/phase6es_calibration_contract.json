@@ -1,0 +1,37 @@
+{
+  "schema": "campfire.phase6es.directional-transport-calibration-contract.v1",
+  "phase": "phase6es",
+  "declared_before_runtime": true,
+  "phase6er_policy": "frozen safe stop retained; no overwrite, reclassification, threshold relaxation, or sample reuse",
+  "geometry_variant": "phase6er_corrected",
+  "support_radius_m": 0.05,
+  "support_radius_status": "engineering assumption equal to one velocity voxel; not a public Flow support radius",
+  "sample_frames": [30, 60, 90, 120, 150, 180, 200],
+  "control_volume": {
+    "coordinate_system": "blocker log local frame",
+    "plane_offset_from_mesh_m": 0.05,
+    "plane_thickness": "one channel-specific voxel centered on each declared plane",
+    "faces": ["inlet_bottom", "opposite_top", "side_left", "side_right", "end_left", "end_right"],
+    "outward_normal_contract": "bottom -Z, top +Z, side left/right -/+Y, end left/right -/+X",
+    "sample_area": "product of the two tangential channel-specific voxel dimensions",
+    "boundary_band": "authored Mesh interior within one channel-specific voxel",
+    "deep_interior": "authored Mesh signed depth greater than one channel-specific voxel",
+    "center_axis": "deep interior within 0.5 channel-specific voxel of the Mesh long axis"
+  },
+  "conditions": [
+    {"name":"emitterless_on","scenario":"lower_upper","collision":true,"policy":"allow_self_center","offset_m":-0.0125,"filtering":true,"fuel_scale":0.0,"temperature_scale":0.0,"smoke_scale":0.0},
+    {"name":"emitter_off","scenario":"lower_upper","collision":false,"policy":"allow_self_center","offset_m":-0.0125,"filtering":false,"fuel_scale":1.0,"temperature_scale":1.0,"smoke_scale":1.0},
+    {"name":"filtered_933_on","scenario":"production_four","collision":true,"policy":"allow_self_center","offset_m":-0.0125,"filtering":true,"fuel_scale":1.0,"temperature_scale":1.0,"smoke_scale":1.0},
+    {"name":"full_100_on","scenario":"production_four","collision":true,"policy":"allow_other_support","offset_m":-0.0125,"filtering":true,"fuel_scale":1.0,"temperature_scale":1.0,"smoke_scale":1.0},
+    {"name":"lower_upper_on","scenario":"lower_upper","collision":true,"policy":"allow_self_center","offset_m":-0.0125,"filtering":true,"fuel_scale":1.0,"temperature_scale":1.0,"smoke_scale":1.0}
+  ],
+  "tracer_policy": "inspect public channels only; do not use private API or claim source ownership when no independent passive channel exists",
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592
+  }
+}

@@ -303,7 +303,7 @@ async def _run():
                     "scene": {"minimum": [-1.1, -1.1, 0.2], "maximum": [1.1, 1.1, 2.1]},
                     "upper": {"minimum": [-0.5, -0.5, 0.9], "maximum": [0.5, 0.5, 1.8]},
                 }
-                if arguments["report_phase"] == "phase6er":
+                if arguments["report_phase"] in ("phase6er", "phase6es"):
                     bounds.update({
                         "emitter_side": {"minimum": [-0.36, -0.16, 0.50], "maximum": [0.36, 0.16, 0.65]},
                         "opposite_side": {"minimum": [-0.36, -0.16, 0.895], "maximum": [0.36, 0.16, 1.05]},
@@ -316,7 +316,7 @@ async def _run():
                     spatial_velocity_only=not arguments["spatial_all_channels"], frame=frame,
                     profile_threshold=(
                         {"velocity": 0.01, "fuel": 0.001, "temperature": 0.1, "burn": 0.001, "smoke": 0.001}[channel]
-                        if arguments["report_phase"] in ("phase6eq", "phase6er") else None
+                        if arguments["report_phase"] in ("phase6eq", "phase6er", "phase6es") else None
                     ),
                 )
                 sample["channels"][channel] = {"available": True, "word_count": int(array.size), **details}

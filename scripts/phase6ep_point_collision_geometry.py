@@ -18,6 +18,7 @@ FILTER_POLICIES = (
     "strict_all",
     "allow_self_support",
     "allow_self_center",
+    "allow_other_support",
 )
 
 
@@ -162,7 +163,7 @@ def plan_payload(
             other_support_intersects = other_signed - support_radius_m < 0.0
             if not filtering:
                 enabled, reason = True, "filtering_disabled"
-            elif other_support_intersects:
+            elif other_support_intersects and policy != "allow_other_support":
                 enabled, reason = False, "other_support_intersection"
             elif policy == "strict_all" and self_support_intersects:
                 enabled, reason = False, "self_support_intersection"
