@@ -8,4 +8,12 @@ The current public return boundary is a Python list whose elements were NumPy ar
 
 The frozen contract is `scripts/phase6ez_fuel_conversion_contract.json`. It preserves the Phase 6EY dynamic-stationarity predicates and all 14 GiB Kit, 16 GiB unique-tree, 512 MiB runner/diagnostic, and 8 GiB system-headroom limits. It allows no other channel conversion, aggregation, field JSON/JSONL/NPZ persistence, repeated readback, forced GC, private release API, production integration, or ceiling increase. A single successful C1 qualifies only this fixed one-conversion lifetime boundary; repeated conversion remains a later Phase.
 
-Runtime results have not yet been collected at contract declaration time.
+## Runtime safe stop
+
+The first artifact root stopped before Kit launch because the runner referenced a misspelled guard-helper filename. No runtime sample was produced. The helper path and a focused existence assertion were corrected independently.
+
+The second empty root launched C0 once. Its probe completed one public acquisition, explicitly dropped all aliases, collected 49 aligned running-Flow samples over 23.976 seconds, reached `shutdown_complete`, closed the stage in 3.091002 seconds, and exited with code 0. The returned list held seven NumPy arrays; the five non-empty arrays totalled 115,628,576 logical bytes. Synchronous Kit Private Bytes increased by 175,423,488 bytes at acquisition. Kit peak was 14,822,223,872 bytes (13.804 GiB), leaving 210,161,664 bytes (200.426 MiB) below the unchanged 14 GiB ceiling. Fatal, dump, upload, device-lost/TDR, CDB, and cleanup residual counts were zero.
+
+After that normal process exit, the new analyzer passed a list of marker-name strings to a helper branch that expected marker dictionaries and raised `AttributeError`. C1 was not started. The parser now accepts either bounded representation and its fixture covers both, but C0 is not retroactively promoted: a read-only offline diagnostic shows that C0 would satisfy the numeric/lifecycle gates, while the formal population remains C0 0/1 and C1 0/1. Fuel conversion logical size, conversion-specific CPU/GPU delta, alias/buffer recovery, terminal residual, and qualification are therefore unmeasured. A fresh artifact root and explicit restart are required. Phase 6EY remains unchanged.
+
+Post-stop regression passed Release build, Phase 0 RTX, Phase 3, all 232 Phase 6 focused contracts, the 78/78 standard suite in eight processes (290.4 seconds), and static devlog validation. Phase 3 reported zero dry/wet mass-balance error, active blocks final/peak 257/315, and peak fuel 1.0. The production app SHA-256 remained `94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`.

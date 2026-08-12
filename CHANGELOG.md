@@ -1,5 +1,6 @@
 # Changelog
 
+- Phase 6EZ stopped fail-closed before fuel conversion. A first pre-Kit helper-path error produced no formal sample; after that correction, C0 completed one public acquire, 49 dynamic-stationarity samples, stage close, and normal OS exit, but a post-process marker parser exception blocked formal acceptance and prevented C1 from starting. Offline C0 evidence is retained without reclassification; production is unchanged.
 - Declared the production-neutral Phase 6EZ single fuel-channel conversion contract. It freezes Phase 6EY as qualified history, compares one explicit acquire/discard control with one existing `numpy.asarray(fuel)` call, records ordered alias lifetimes and bounded CPU/GPU telemetry, and preserves all existing resource ceilings. Runtime results are intentionally not yet included in this contract commit.
 
 - Re-ran the byte-identical Phase 6EY dynamic-stationarity contract from an empty artifact root without reusing prior evidence. All three readback-free R0 processes passed their finite non-divergence, resource, lifecycle, and cross-run gates with 49 aligned samples each and normal OS exit.

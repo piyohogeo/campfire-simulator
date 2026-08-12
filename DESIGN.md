@@ -1,5 +1,13 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6EZ single fuel conversion safe stop
+
+事前凍結contract（SHA-256 `66A559032A1795FF45D71E2657149277BDDA3DBFCE259BCB26C72C3650BC20DA`）の最初のrootはguard helper名の誤記をKit起動前に検出し、formal sample 0で停止した。helper存在検査を追加して訂正後、新しいrootでC0を開始した。C0のKit processはpublic readback 1回、49 aligned sample、`shutdown_complete`、stage close `3.091002秒`、OS exit 0まで完了した。fatal/dump/upload/device lost/TDR/cleanup residualは0で、production SHA-256も不変だった。
+
+しかしKit終了後のanalyzerが、既にmarker名へ正規化された文字列listをmarker dictとして再解釈して`AttributeError`になった。契約どおりC1は開始せず、C0をformal passへ事後再分類せずPhase 6EZをsafe stopとする。修正後のread-only offline診断ではC0のdynamic/resource/lifecycle gateはpass相当で、readback即時増分`175,423,488 bytes`（`167.297 MiB`）、Kit peak `14,822,223,872 bytes`（`13.804 GiB`）、14 GiB上限まで`210,161,664 bytes`（`200.426 MiB`）だった。この値は次回再開設計の参考証拠だけで、正式populationはC0 `0/1`、C1 `0/1`である。fuel変換logical bytes、CPU/GPU固有増分、解放回収量は未計測。新しい空rootと明示的な再開判断なしにC0/C1を実行しない。詳細は`docs/design/phase6ez_single_fuel_conversion.md`。
+
+回帰はRelease build、Phase 0 RTX、Phase 3、Phase 6 focused `232/232`、標準suite `78/78`（8 process、290.4秒）、日誌検査`DEVLOG_OK`が合格した。Phase 3はdry/wet mass balance error 0、active blocks final/peak `257/315`、peak fuel 1.0。production app SHA-256は`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`で不変である。
+
 # Phase 6EZ single fuel-channel conversion contract
 
 Phase 6EYのR0 `3/3`とR1 acquire/discard `1/1`をコミット`6dd497c`のqualified historyとして凍結し、新しい正式populationへ流用しない。新しい`campfire.phase6ez.single-fuel-conversion-contract.v1`は、別processのC0でpublic `get_latest_nanovdb_readback()`を1回取得・明示解放し、C0合格後だけC1でfuel handleに既存`numpy.asarray()`を1回適用する。source tuple/alias、converted object、次frame、24秒dynamic-stationarity、stage close、OS exitを順序付きmarkerで分離する。

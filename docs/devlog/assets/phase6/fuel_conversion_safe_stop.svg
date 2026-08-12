@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6EZ fuel conversion safe stop</title>
+  <desc id="desc">C0 Kit process completed normally, but post-process marker parsing stopped the matrix before C1 fuel conversion.</desc>
+  <rect width="1200" height="520" fill="#111827"/>
+  <text x="64" y="72" fill="#f59e0b" font-family="Segoe UI, sans-serif" font-size="24">PHASE 6EZ · FAIL-CLOSED DIAGNOSTIC</text>
+  <text x="64" y="124" fill="#f9fafb" font-family="Segoe UI, sans-serif" font-size="38" font-weight="700">C0 normal exit · analyzer safe stop · C1 not started</text>
+  <g font-family="Segoe UI, sans-serif">
+    <rect x="64" y="170" width="330" height="230" rx="16" fill="#1f2937" stroke="#34d399" stroke-width="2"/>
+    <text x="88" y="212" fill="#34d399" font-size="22" font-weight="700">C0 process evidence</text>
+    <text x="88" y="254" fill="#e5e7eb" font-size="20">OS exit 0 · close 3.091 s</text>
+    <text x="88" y="288" fill="#e5e7eb" font-size="20">Acquire +167.297 MiB</text>
+    <text x="88" y="322" fill="#e5e7eb" font-size="20">Kit peak 13.804 GiB</text>
+    <text x="88" y="356" fill="#e5e7eb" font-size="20">14 GiB margin 200.426 MiB</text>
+    <text x="88" y="384" fill="#9ca3af" font-size="16">offline diagnostic only</text>
+    <rect x="435" y="170" width="330" height="230" rx="16" fill="#1f2937" stroke="#f59e0b" stroke-width="2"/>
+    <text x="459" y="212" fill="#f59e0b" font-size="22" font-weight="700">Safe-stop boundary</text>
+    <text x="459" y="254" fill="#e5e7eb" font-size="20">Kit evidence persisted</text>
+    <text x="459" y="288" fill="#e5e7eb" font-size="20">marker parser exception</text>
+    <text x="459" y="322" fill="#e5e7eb" font-size="20">formal C0 0/1</text>
+    <text x="459" y="356" fill="#e5e7eb" font-size="20">automatic retry 0</text>
+    <text x="459" y="384" fill="#9ca3af" font-size="16">history remains immutable</text>
+    <rect x="806" y="170" width="330" height="230" rx="16" fill="#1f2937" stroke="#6b7280" stroke-width="2"/>
+    <text x="830" y="212" fill="#d1d5db" font-size="22" font-weight="700">C1 fuel conversion</text>
+    <text x="830" y="254" fill="#e5e7eb" font-size="20">not started</text>
+    <text x="830" y="288" fill="#e5e7eb" font-size="20">logical bytes: unmeasured</text>
+    <text x="830" y="322" fill="#e5e7eb" font-size="20">CPU/GPU delta: unmeasured</text>
+    <text x="830" y="356" fill="#e5e7eb" font-size="20">qualification: blocked</text>
+    <text x="830" y="384" fill="#9ca3af" font-size="16">fresh approved restart required</text>
+  </g>
+  <text x="64" y="462" fill="#9ca3af" font-family="Segoe UI, sans-serif" font-size="18">Production unchanged · fatal/dump/upload/device lost/TDR/residual 0 · Phase 6EY frozen</text>
+</svg>

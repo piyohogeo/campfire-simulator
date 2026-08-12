@@ -51,6 +51,19 @@
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
     </section>
 
+    <section id="phase-6ez" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6EZ entry"><span class="phase-number compact">6EZ</span><p><time datetime="2026-08-12">2026.08.12</time></p><span class="pill current">C0 normal exit · analyzer safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6EZ · Single fuel conversion boundary</p><h2>C0の実processは正常終了。<br>fuel変換前の解析例外で安全停止。</h2><p>Phase 6EYのR0 3/3とR1 1/1を凍結し、新contractでC0→C1を分離しました。C0終了後のmarker parser例外をfail-closedで扱い、C1は開始していません。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/fuel_conversion_safe_stop.svg"><img src="assets/phase6/fuel_conversion_safe_stop.svg" alt="Phase 6EZ C0 normal exit、analyzer safe stop、C1未開始" loading="lazy"></a><figcaption><div><strong>C0 process evidence · formal 0/1 · C1 not started</strong><span>49 samples · close 3.091 s · Kit peak 13.804 GiB</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">C0 partial evidence</p><h3>+167.297 MiB acquire</h3><p>public readbackは7個のNumPy arrayを返し、非空fieldのlogical bytes合計は110.272 MiBでした。弱参照はscope後0、normal OS exit、fatal/dump/upload/residual 0です。</p></section><section class="note"><p class="note-label">Fail-closed boundary</p><h3>post-process parser</h3><p>marker名の文字列listをdictとして再解釈したためanalyzerが停止しました。parser修正後のoffline診断はpass相当ですが、C0を正式合格へ再分類せず、C1を開始していません。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Frozen result</p><h3>変換固有メモリはまだ未計測。</h3><p>C0 Kit peakは13.804 GiB、14 GiB上限まで200.426 MiBでした。C1を開始していないため、fuel logical buffer、CPU/GPU変換増分、handle/buffer解放回収、最終残留は未計測です。</p><p>production app SHA-256は不変。Phase 6EY、Point payload、Flow、CollisionProxy、wood authority、V3、既定値、latest demoは変更していません。内部診断のため動画は生成していません。</p><p><a href="assets/phase6/fuel_conversion_safe_stop.json">machine report</a> · <a href="assets/phase6/fuel_conversion_safe_stop.svg">safe-stop SVG</a> · <a href="../design/phase6ez_single_fuel_conversion.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>C0 process</strong><small>normal exit</small></p></div><div role="listitem"><span>!</span><p><strong>Analyzer</strong><small>safe stop</small></p></div><div role="listitem"><span>—</span><p><strong>Formal C0</strong><small>0 / 1</small></p></div><div role="listitem"><span>—</span><p><strong>C1</strong><small>not started</small></p></div><div role="listitem"><span>✓</span><p><strong>Cleanup</strong><small>residual 0</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Restart boundary</p><h3>新しい空rootと明示的な再開判断が必要。</h3><p>修正済みparserはfocused fixtureで固定しましたが、自動retryは行いません。次回はC0から再実行し、合格後だけC1 fuel変換へ進みます。Release、Phase 0 RTX、Phase 3、focused 232/232、標準suite 78/78、日誌検査は合格しました。</p></section>
+        </div>
+      </article>
+    </section>
+
     <section id="latest-demo" class="section shell" aria-labelledby="latest-demo-title">
       <div class="entry-body">
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>

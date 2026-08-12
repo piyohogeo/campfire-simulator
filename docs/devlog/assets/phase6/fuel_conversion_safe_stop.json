@@ -1,0 +1,86 @@
+{
+  "schema": "campfire.phase6ez.single-fuel-conversion-safe-stop.v1",
+  "phase": "phase6ez",
+  "status": "safe_stop",
+  "date": "2026-08-12",
+  "phase6ey_history": {
+    "frozen": true,
+    "safe_commit": "6dd497c",
+    "r0": "3/3 qualified",
+    "r1": "1/1 acquire/discard qualified",
+    "reclassified": false
+  },
+  "contract": {
+    "schema": "campfire.phase6ez.single-fuel-conversion-contract.v1",
+    "sha256": "66A559032A1795FF45D71E2657149277BDDA3DBFCE259BCB26C72C3650BC20DA",
+    "resource_ceilings_changed": false
+  },
+  "attempts": [
+    {
+      "artifact_root": "artifacts/phase6ez-fuel-conversion-1",
+      "classification": "pre_kit_orchestration_safe_stop",
+      "reason": "guard helper filename was misspelled",
+      "kit_processes_started": 0,
+      "formal_samples": 0
+    },
+    {
+      "artifact_root": "artifacts/phase6ez-fuel-conversion-2",
+      "classification": "post_process_analyzer_safe_stop",
+      "active_condition": "C0_acquire_discard",
+      "reason": "marker-name strings were passed to a parser branch expecting marker dictionaries",
+      "kit_processes_started": 1,
+      "c1_started": false,
+      "formal_c0_passes": 0,
+      "formal_c1_passes": 0
+    }
+  ],
+  "c0_process_evidence": {
+    "read_only_partial_evidence": true,
+    "probe_status": "ok",
+    "shutdown_complete": true,
+    "os_exit_code": 0,
+    "normal_exit": true,
+    "dynamic_stationarity_offline_diagnostic_pass": true,
+    "aligned_samples": 49,
+    "outer_resource_samples": 105,
+    "public_readback_calls": 1,
+    "returned_type": "builtins.list",
+    "returned_channels": 7,
+    "returned_channel_type": "numpy.ndarray",
+    "returned_logical_bytes_total": 115628576,
+    "readback_immediate_private_delta_bytes": 175423488,
+    "phase6ey_reference_delta_bytes": 144936960,
+    "difference_from_phase6ey_reference_bytes": 30486528,
+    "next_frame_private_residual_bytes": 179376128,
+    "observation_end_private_residual_bytes": 358289408,
+    "kit_peak_private_bytes": 14822223872,
+    "kit_peak_private_gib": 13.804271697998047,
+    "minimum_kit_ceiling_margin_bytes": 210161664,
+    "minimum_kit_ceiling_margin_mib": 200.42578125,
+    "tree_peak_private_bytes": 14985981952,
+    "gpu0_peak_dedicated_memory_mib": 6998,
+    "stage_close_seconds": 3.0910019874572754,
+    "weak_reference_alive_after_scope_count": 0,
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "device_lost_or_tdr_count": 0,
+    "cleanup_residual_count": 0,
+    "formal_reclassification": false
+  },
+  "c1": {
+    "started": false,
+    "fuel_conversion_logical_bytes": null,
+    "fuel_conversion_cpu_delta_bytes": null,
+    "fuel_conversion_gpu_delta_mib": null,
+    "source_alias_recovery_bytes": null,
+    "converted_object_recovery_bytes": null,
+    "terminal_residual_bytes": null,
+    "qualified": false
+  },
+  "production": {
+    "changed": false,
+    "app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A"
+  },
+  "next_boundary": "a fresh artifact root and explicit restart are required before C0 may be rerun; C1 remains blocked"
+}
