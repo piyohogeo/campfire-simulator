@@ -1,0 +1,283 @@
+{
+  "schema": "campfire.phase6es.directional-transport-safe-stop.v1",
+  "phase": "phase6es",
+  "status": "safe_stop",
+  "phase6er_frozen": true,
+  "phase6er_reclassified": false,
+  "phase6er_remaining_restarted": false,
+  "formal_contract_frozen": false,
+  "formal_started": false,
+  "video_started": false,
+  "latest_demo_changed": false,
+  "offline": {
+    "support_radius_m": 0.05,
+    "support_radius_status": "engineering assumption equal to one velocity voxel; not a public Flow support radius",
+    "offset_zero_meaning": "surface-cell centers remain approximately 13.125 mm inside the authored CollisionProxy; offset is relative to Point cell center, not the mathematical Mesh surface",
+    "point_records": {
+      "path": "point_records.jsonl",
+      "format": "JSONL; one bounded record per condition and immutable payload index",
+      "count": 5760,
+      "sha256": "2502E6BF4706F3C288972B04A7AAB2EAE5D5D8E6736B357A3667520CA9E1CB1D"
+    },
+    "A_filtered_933": {
+      "name": "A_filtered_933",
+      "policy": "allow_self_center",
+      "offset_from_point_cell_center_m": -0.0125,
+      "filtering": true,
+      "original_point_count": 1440,
+      "active_point_count": 1344,
+      "self_center_inside_count": 1440,
+      "other_center_inside_count": 0,
+      "self_support_intersection_count": 1440,
+      "other_support_intersection_count": 96,
+      "active_other_support_intersection_count": 0,
+      "disable_reason_counts": {
+        "enabled": 1344,
+        "filtering_disabled": 0,
+        "self_support_intersection": 0,
+        "self_center_inside": 0,
+        "other_support_intersection": 96
+      },
+      "weighted_supply": {
+        "fuel": {
+          "original": 1151.9999999999688,
+          "enabled": 1075.1999999999732,
+          "retention": 0.9333333333333353
+        },
+        "temperature": {
+          "original": 2880.0,
+          "enabled": 2688.0,
+          "retention": 0.9333333333333333
+        },
+        "smoke": {
+          "original": 115.1999999999979,
+          "enabled": 107.51999999999806,
+          "retention": 0.9333333333333336
+        }
+      },
+      "self_signed_distance": {
+        "minimum_m": -0.027500000000000024,
+        "maximum_m": -0.015000000000000013
+      },
+      "other_signed_distance": {
+        "minimum_m": 0.02839161827109809,
+        "maximum_m": 0.2500647633995965
+      }
+    },
+    "B_full_100": {
+      "name": "B_full_100",
+      "policy": "allow_other_support",
+      "offset_from_point_cell_center_m": -0.0125,
+      "filtering": true,
+      "original_point_count": 1440,
+      "active_point_count": 1440,
+      "self_center_inside_count": 1440,
+      "other_center_inside_count": 0,
+      "self_support_intersection_count": 1440,
+      "other_support_intersection_count": 96,
+      "active_other_support_intersection_count": 96,
+      "disable_reason_counts": {
+        "enabled": 1440,
+        "filtering_disabled": 0,
+        "self_support_intersection": 0,
+        "self_center_inside": 0,
+        "other_support_intersection": 0
+      },
+      "weighted_supply": {
+        "fuel": {
+          "original": 1151.9999999999688,
+          "enabled": 1151.9999999999688,
+          "retention": 1.0
+        },
+        "temperature": {
+          "original": 2880.0,
+          "enabled": 2880.0,
+          "retention": 1.0
+        },
+        "smoke": {
+          "original": 115.1999999999979,
+          "enabled": 115.1999999999979,
+          "retention": 1.0
+        }
+      },
+      "self_signed_distance": {
+        "minimum_m": -0.027500000000000024,
+        "maximum_m": -0.015000000000000013
+      },
+      "other_signed_distance": {
+        "minimum_m": 0.02839161827109809,
+        "maximum_m": 0.2500647633995965
+      }
+    },
+    "C_offset_zero_filtered": {
+      "name": "C_offset_zero_filtered",
+      "policy": "allow_self_center",
+      "offset_from_point_cell_center_m": 0.0,
+      "filtering": true,
+      "original_point_count": 1440,
+      "active_point_count": 1280,
+      "self_center_inside_count": 1440,
+      "other_center_inside_count": 0,
+      "self_support_intersection_count": 1440,
+      "other_support_intersection_count": 160,
+      "active_other_support_intersection_count": 0,
+      "disable_reason_counts": {
+        "enabled": 1280,
+        "filtering_disabled": 0,
+        "self_support_intersection": 0,
+        "self_center_inside": 0,
+        "other_support_intersection": 160
+      },
+      "weighted_supply": {
+        "fuel": {
+          "original": 1151.9999999999688,
+          "enabled": 1023.999999999976,
+          "retention": 0.8888888888888921
+        },
+        "temperature": {
+          "original": 2880.0,
+          "enabled": 2560.0,
+          "retention": 0.8888888888888888
+        },
+        "smoke": {
+          "original": 115.1999999999979,
+          "enabled": 102.39999999999817,
+          "retention": 0.8888888888888893
+        }
+      },
+      "self_signed_distance": {
+        "minimum_m": -0.015000000000000013,
+        "maximum_m": -0.009547211760352097
+      },
+      "other_signed_distance": {
+        "minimum_m": 0.01636334345514319,
+        "maximum_m": 0.2596244817034597
+      }
+    }
+  },
+  "directional_proxy": {
+    "definition": "max(u dot n, 0) times scalar times channel-grid sample area; physical flux units and strict conservation are not claimed",
+    "synthetic_sign_fixture_passed": true,
+    "passive_tracer_available": false,
+    "completed_controls": {
+      "emitterless_on": {
+        "temperature": {
+          "deep_sum": 0.0,
+          "opposite_top_outward_proxy": 0.0,
+          "side_and_end_outward_proxy": 0.0,
+          "inlet_bottom_inward_proxy": 0.0
+        },
+        "smoke": {
+          "deep_sum": 0.0,
+          "opposite_top_outward_proxy": 0.0,
+          "side_and_end_outward_proxy": 0.0,
+          "inlet_bottom_inward_proxy": 0.0
+        }
+      },
+      "emitter_off": {
+        "temperature": {
+          "deep_sum": 643.000346839428,
+          "opposite_top_outward_proxy": 0.2771603504015754,
+          "side_and_end_outward_proxy": 0.009203391409779873,
+          "inlet_bottom_inward_proxy": 0.364108635349502
+        },
+        "smoke": {
+          "deep_sum": 563.7634012699127,
+          "opposite_top_outward_proxy": 0.28001755764287295,
+          "side_and_end_outward_proxy": 0.0017532556487464533,
+          "inlet_bottom_inward_proxy": 0.2380480599892677
+        }
+      }
+    },
+    "repeatability": "root 1 and root 2 completed-control values were byte-for-value identical"
+  },
+  "resource_safe_stop": {
+    "attempts": [
+      {
+        "root": "artifacts\\phase6es-calibration-1",
+        "status": "failed",
+        "active_condition": "filtered_933_on",
+        "stop_reason": "kit_private_limit",
+        "last_lifecycle_marker": "timeline_playing",
+        "samples_persisted": 3,
+        "kit_peak_private_bytes": 15100735488,
+        "runner_peak_private_bytes": 96194560,
+        "tree_peak_private_bytes": 15241826304,
+        "minimum_available_physical_bytes": 83579244544,
+        "minimum_commit_headroom_bytes": 102201331713,
+        "process_absent": true,
+        "fatal": 0,
+        "dump": 0,
+        "upload": 0,
+        "device_lost": 0,
+        "tdr": 0
+      },
+      {
+        "root": "artifacts\\phase6es-calibration-2",
+        "status": "failed",
+        "active_condition": "filtered_933_on",
+        "stop_reason": "kit_private_limit",
+        "last_lifecycle_marker": "timeline_playing",
+        "samples_persisted": 3,
+        "kit_peak_private_bytes": 15722414080,
+        "runner_peak_private_bytes": 96399360,
+        "tree_peak_private_bytes": 15863865344,
+        "minimum_available_physical_bytes": 83402203136,
+        "minimum_commit_headroom_bytes": 102076276737,
+        "process_absent": true,
+        "fatal": 0,
+        "dump": 0,
+        "upload": 0,
+        "device_lost": 0,
+        "tdr": 0
+      }
+    ],
+    "classification": "bounded four-log Kit resource peak during early Flow sampling; collector-only root2 change did not normalize the peak",
+    "calibration_processes_completed_each_root": 2,
+    "failing_condition_automatically_retried": false,
+    "further_retry_after_second_signature": false
+  },
+  "decision": {
+    "support_filter_needed": "unresolved",
+    "full_1440_supply_safe": "unresolved",
+    "recommended_offset": "unresolved",
+    "reason": "the 93.33% calibration condition did not pass the fixed resource gate, so 100% comparison and formal threshold freezing were prohibited",
+    "next": "separately calibrate the bounded four-log Flow/collector memory boundary before scalar transport qualification"
+  },
+  "regression": {
+    "release_build": "pass",
+    "phase0_rtx": "pass",
+    "phase3": "pass",
+    "phase3_mass_balance_error_kg": {
+      "dry": 0.0,
+      "wet": 0.0
+    },
+    "phase3_active_blocks": {
+      "final": 274,
+      "peak": 335
+    },
+    "phase3_peak_fuel": 1.0,
+    "focused_contracts": "161/161",
+    "standard_suite": {
+      "processes": 8,
+      "tests": "78/78",
+      "wall_seconds": 342.5
+    },
+    "devlog_validation": "pass"
+  },
+  "production": {
+    "changed": false,
+    "app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "defaults_changed": false,
+    "point_schema_changed": false,
+    "flow_settings_changed": false,
+    "collision_proxy_changed": false
+  },
+  "artifact_hashes": {
+    "offline": "85A0CA81CE50BF00F2A784E98A403CA65FE2C09AC57B602EE88AFEEDC9EBEA31",
+    "offline_point_records": "2502E6BF4706F3C288972B04A7AAB2EAE5D5D8E6736B357A3667520CA9E1CB1D",
+    "calibration_contract": "82683ED568064C4F13C8230B0D09012F989F2804CB117030AE47FD51D758DEA3",
+    "root2_emitterless_transport": "82BE57162E7465AB02E93970B1D4795BCE9BCAAAB9F7C8CA2DC4C520EF2EA233",
+    "root2_off_transport": "4E0EC21827FAD4FE046ACFCEA54505318D6FCA57EB9448446828A0E940401FCA"
+  }
+}

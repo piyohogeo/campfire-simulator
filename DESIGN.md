@@ -1,5 +1,15 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6ES directional scalar transport / full-supply resource safe stop
+
+Phase 6ERを凍結したまま、実Meshローカル6面の`max(u dot n,0) * scalar * voxel area`方向付きtransport proxyと、仮定上のother-support交差96 Pointも有効にする1440/1440条件を別Phaseで準備した。0.05 mは引き続き公開Flow support半径ではない。offset 0も数学的表面ではなく、表面セル中心基準で約13.125 mm内側である。4条件×1,440 Pointの全判定は、immutable payload index、self/other signed distance、center/support交差、無効化理由、fuel/temperature/smokeの元値と有効化後値を含む5,760-record JSONLへ保存した。
+
+offlineではfiltered 1344/1440、full experimental 1440/1440、offset-zero filtered 1280/1440。他薪内部Point中心は全て0で、full条件だけactive assumed other-support intersectionが96である。合成+Z fixtureはtop outward／bottom inwardの符号に合格し、EmitterなしONはscalar transport 0、Collision OFFは正の上向きtransportを2 rootで同値再現した。公開channelには独立passive source-ownership tracerがないため、proxyを物理fluxや厳密保存量とは扱わない。
+
+最初の4本`filtered_933_on`は初期rootでKit Private Bytes `15,100,735,488`、scalar collectorを代表blocker 1本へ限定した新rootでも`15,722,414,080 bytes`となり、固定14 GiB guardに不合格となった。いずれも`timeline_playing`のframe 3でfail-closed cleanupし、fatal/dump/upload/device-lost/TDR/residualは0。上限を変更せず3回目を行わない。formal contract、100% runtime、3-run、動画、production推奨は未開始である。詳細は`docs/design/point_emitter_directional_scalar_transport.md`。
+
+回帰はRelease build、Phase 0 RTX、Phase 3、focused contract `161/161`、標準suite `78/78`（8 process、342.5秒）が合格した。Phase 3はdry/wet mass-balance error 0、Flow active blocks final/peak `274/335`、peak fuel 1.0を維持し、production app SHA-256は不変だった。
+
 # Phase 6ER corrected four-log geometry / scalar transport safe stop
 
 Phase 6EQの凍結結果を変更せず、旧`production_four` fixtureの幾何を監査した。yaw 90度の上段2本を長軸Y方向へ0.22 mだけずらしていたため、0.72 mのCollisionProxy中心線が0.50 m重なり、実Mesh signed distanceは`-0.1014222118 m`、他薪内部の表面Point中心は480個だった。実production配置は平行薪を長軸に垂直な方向へ分離しており、同じ欠陥を持たない。

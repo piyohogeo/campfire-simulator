@@ -39,4 +39,37 @@ class Phase6EsDirectionalTransport(unittest.TestCase):
   self.assertIn('channel != "velocity"',probe)
   self.assertIn('if($condition.scenario -eq "production_four"){"2"}else{"1"}',calibration)
 
+ def test_published_safe_stop_is_resource_not_numeric_acceptance(self):
+  report=json.loads((ROOT/"docs/devlog/assets/phase6/point_directional_transport_safe_stop.json").read_text(encoding="utf-8"))
+  self.assertEqual("safe_stop",report["status"])
+  self.assertTrue(report["phase6er_frozen"])
+  self.assertFalse(report["formal_contract_frozen"])
+  self.assertFalse(report["formal_started"])
+  self.assertFalse(report["video_started"])
+  self.assertEqual(["kit_private_limit","kit_private_limit"],[item["stop_reason"] for item in report["resource_safe_stop"]["attempts"]])
+  self.assertTrue(all(item["process_absent"] for item in report["resource_safe_stop"]["attempts"]))
+
+ def test_full_supply_is_probe_only_and_unresolved(self):
+  report=json.loads((ROOT/"docs/devlog/assets/phase6/point_directional_transport_safe_stop.json").read_text(encoding="utf-8"))
+  full=report["offline"]["B_full_100"]
+  self.assertEqual(1440,full["active_point_count"])
+  self.assertEqual(0,full["other_center_inside_count"])
+  self.assertEqual(96,full["active_other_support_intersection_count"])
+  self.assertEqual("unresolved",report["decision"]["full_1440_supply_safe"])
+
+ def test_offline_contract_persists_every_point_record(self):
+  report=json.loads((ROOT/"docs/devlog/assets/phase6/point_directional_transport_safe_stop.json").read_text(encoding="utf-8"))
+  metadata=report["offline"]["point_records"]
+  self.assertEqual(4*1440,metadata["count"])
+  prepare=(ROOT/"scripts/prepare_phase6es_offline.py").read_text(encoding="utf-8")+(ROOT/"scripts/phase6ep_point_collision_geometry.py").read_text(encoding="utf-8")
+  for field in ("self_signed_distance_m","other_min_signed_distance_m","self_center_inside","other_center_inside","self_support_intersects","other_support_intersects","enabled_reason","original_fuel","enabled_fuel","original_temperature","enabled_temperature","original_smoke","enabled_smoke"):
+   self.assertIn(field,prepare)
+
+ def test_devlog_has_no_phase6es_video_or_latest_demo_change(self):
+  html=(ROOT/"docs/devlog/index.html").read_text(encoding="utf-8")
+  section=html.split('id="phase-6es"',1)[1].split('id="phase-6er"',1)[0]
+  latest=json.loads((ROOT/"docs/devlog/assets/latest_demo.json").read_text(encoding="utf-8"))
+  self.assertNotIn("data-video-src",section)
+  self.assertNotEqual("phase6es",latest["phase"])
+
 if __name__=="__main__":unittest.main()
