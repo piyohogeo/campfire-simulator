@@ -6,7 +6,7 @@ param(
     [ValidateSet("true", "false")][string]$Filtering = "true",
     [ValidateSet("true", "false")][string]$Collision = "true",
     [ValidateSet("strict_all", "allow_self_support", "allow_self_center", "allow_other_support")][string]$Policy = "strict_all",
-    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev", "phase6ew", "phase6ex")][string]$ReportPhase = "phase6ep",
+    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev", "phase6ew", "phase6ex", "phase6ey")][string]$ReportPhase = "phase6ep",
     [string]$SampleFrames = "60,120,180,200",
     [string]$ReadbackChannels = "temperature,fuel,burn,smoke,velocity",
     [ValidateSet("legacy", "none", "acquire_discard", "fuel_convert", "fuel_scalar", "fuel_jsonl", "fuel_spatial")][string]$ReadbackMode = "legacy",
