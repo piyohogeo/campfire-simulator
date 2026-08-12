@@ -6,7 +6,7 @@ param(
     [ValidateSet("true", "false")][string]$Filtering = "true",
     [ValidateSet("true", "false")][string]$Collision = "true",
     [ValidateSet("strict_all", "allow_self_support", "allow_self_center", "allow_other_support")][string]$Policy = "strict_all",
-    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu")][string]$ReportPhase = "phase6ep",
+    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev")][string]$ReportPhase = "phase6ep",
     [string]$SampleFrames = "60,120,180,200",
     [string]$ReadbackChannels = "temperature,fuel,burn,smoke,velocity",
     [ValidateSet("legacy", "none", "acquire_discard", "fuel_convert", "fuel_scalar", "fuel_jsonl", "fuel_spatial")][string]$ReadbackMode = "legacy",
@@ -26,7 +26,10 @@ param(
     [ValidateSet("legacy_phase6ep", "phase6er_corrected")][string]$GeometryVariant = "legacy_phase6ep",
     [double]$FuelScale = 1.0,
     [double]$TemperatureScale = 1.0,
-    [double]$SmokeScale = 1.0
+    [double]$SmokeScale = 1.0,
+    [switch]$LifecycleCalibration,
+    [int]$RendererDrainUpdates = 8,
+    [int]$AbsoluteTimeoutSeconds = 330
 )
 
 $ErrorActionPreference = "Stop"
@@ -45,6 +48,8 @@ $dumpDir = Join-Path $output "sensitive-crash-dumps"
 $diagnosticDir = Join-Path $output "sensitive-shutdown-diagnostics"
 $evidencePath = Join-Path $output "runner_evidence.json"
 $resourceMarkerPath = Join-Path $output "resource_markers.jsonl"
+$extensionMarkerPath = Join-Path $output "extension_lifecycle_markers.jsonl"
+$runnerMarkerPath = Join-Path $output "runner_lifecycle_markers.jsonl"
 $productionApp = Join-Path $release "apps\campfire.simulator.kit"
 $productionHashBefore = (Get-FileHash -Algorithm SHA256 -LiteralPath $productionApp).Hash
 $app = Join-Path $release "kit\apps\omni.app.editor.base.kit"
@@ -96,6 +101,11 @@ $arguments = @(
     "--/phase6ep/temperatureScale=$TemperatureScale",
     "--/phase6ep/smokeScale=$SmokeScale",
     "--/phase6ep/resourceMarkerPath=$resourceMarkerPath",
+    "--/phase6ep/lifecycleCalibration=$($LifecycleCalibration.IsPresent.ToString().ToLowerInvariant())",
+    "--/phase6ep/rendererDrainUpdates=$RendererDrainUpdates",
+    "--ext-folder", (Join-Path $PSScriptRoot "phasev3tg_extension"),
+    "--enable", "omni.campfire.phasev3tg_shutdown",
+    "--/phasev3tg/markers=$extensionMarkerPath",
     "--/rtx/flow/enabled=true",
     "--/log/file=$log",
     "--/log/fileLogLevel=Info",
@@ -111,7 +121,18 @@ $arguments = @(
 
 $registryBefore = Get-CampfireCrashRegistrySnapshot
 $process = Start-Process -FilePath $kit -ArgumentList $arguments -PassThru -WindowStyle Hidden
-$monitor = Wait-CampfireKitProcessWithShutdownPolicy -Process $process -ExpectedExecutable $kit -LifecyclePath $raw -LogPath $log -DiagnosticDir $diagnosticDir -ShutdownGraceSeconds 60 -AbsoluteTimeoutSeconds 330
+$monitor = Wait-CampfireKitProcessWithShutdownPolicy -Process $process -ExpectedExecutable $kit -LifecyclePath $raw -LogPath $log -DiagnosticDir $diagnosticDir -ShutdownGraceSeconds 60 -AbsoluteTimeoutSeconds $AbsoluteTimeoutSeconds
+$osExitMarker = [ordered]@{
+    schema = "campfire.phase6ev.runner-lifecycle-marker.v1"
+    marker = "os_process_exit_observed"
+    timestamp_utc = [DateTime]::UtcNow.ToString("o")
+    pid = $process.Id
+    expected_executable = $kit
+    process_exit_code = $monitor.exit_code
+    lifecycle_candidate = $monitor.lifecycle_candidate
+    residual_process = $monitor.residual_process
+}
+[IO.File]::WriteAllText($runnerMarkerPath, ($osExitMarker | ConvertTo-Json -Depth 8 -Compress) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
 $logEvidenceReadiness = [ordered]@{ available=$false; attempts=0; waited_seconds=0.0; last_error=$null; maximum_wait_seconds=15 }
 $logReadyStopwatch = [Diagnostics.Stopwatch]::StartNew()
 do {
@@ -159,6 +180,10 @@ $evidence = [ordered]@{
     reference_disposal = $ReferenceDisposal
     synchronous_memory_markers = ($SynchronousMemoryMarkers -eq "true")
     python_memory_telemetry = ($PythonMemoryTelemetry -eq "true")
+    lifecycle_calibration = $LifecycleCalibration.IsPresent
+    renderer_drain_updates = $RendererDrainUpdates
+    extension_marker_path = $extensionMarkerPath
+    runner_marker_path = $runnerMarkerPath
     spatial_collectors_enabled = ($SpatialCollectorsEnabled -eq "true")
     spatial_collider_indices = $SpatialColliderIndices
     spatial_all_channels = $SpatialAllChannels.IsPresent

@@ -101,6 +101,8 @@ def _settings():
             Path(settings.get_as_string("/phase6ep/resourceMarkerPath")).resolve()
             if settings.get_as_string("/phase6ep/resourceMarkerPath") else None
         ),
+        "lifecycle_calibration": bool(settings.get_as_bool("/phase6ep/lifecycleCalibration")),
+        "renderer_drain_updates": max(1, int(settings.get_as_int("/phase6ep/rendererDrainUpdates")) or 8),
     }
 
 
@@ -134,6 +136,36 @@ def _append_resource_marker(path, marker, synchronous_memory=False, **values):
     with path.open("a", encoding="utf-8", newline="\n") as stream:
         stream.write(json.dumps(payload, ensure_ascii=False, separators=(",", ":"), allow_nan=False) + "\n")
         stream.flush()
+        os.fsync(stream.fileno())
+
+
+def _lifecycle_state(timeline, context, flow, volume, emitter, collectors):
+    """Return bounded public state for durable Phase 6EV lifecycle markers."""
+    stage = None
+    stage_identity = None
+    try:
+        stage = context.get_stage() if context is not None else None
+        if stage is not None:
+            root = stage.GetRootLayer()
+            stage_identity = str(root.identifier) if root is not None else f"stage:{id(stage)}"
+    except Exception as error:
+        stage_identity = f"unavailable:{type(error).__name__}"
+    try:
+        timeline_playing = bool(timeline.is_playing()) if timeline is not None else None
+        timeline_time = float(timeline.get_current_time()) if timeline is not None else None
+    except Exception:
+        timeline_playing = None
+        timeline_time = None
+    return {
+        "timeline_playing": timeline_playing,
+        "timeline_time": timeline_time,
+        "stage_present": stage is not None,
+        "stage_identity": stage_identity,
+        "flow_reference_present": flow is not None,
+        "volume_reference_present": volume is not None,
+        "emitter_reference_present": emitter is not None,
+        "collector_reference_count": len(collectors) if collectors is not None else 0,
+    }
 
 
 def _type_name(value):
@@ -422,6 +454,7 @@ async def _run():
     flow = None
     collectors = []
     collectors_by_index = {}
+    emitter = None
     exit_code = 1
     try:
         if arguments["python_memory_telemetry"] and not tracemalloc.is_tracing():
@@ -601,6 +634,11 @@ async def _run():
             mark("sample_persist_started", frame=frame)
             _write(output, report)
             mark("sample_persisted", frame=frame, raw_json_bytes=output.stat().st_size)
+            if frame == final_frame:
+                mark(
+                    "final_sample_complete", frame=frame,
+                    **_lifecycle_state(timeline, context, flow, volume, emitter, collectors),
+                )
         report["spatial_manifest_collider_indices"] = list(collectors_by_index)
         report["spatial_manifests"] = [collectors_by_index[index].finalize() for index in collectors_by_index]
         report["active_blocks_final"] = int(flow.get_active_block_count())
@@ -614,7 +652,7 @@ async def _run():
         report["completion_contract"]["results_saved"] = True
         report["lifecycle_marker"] = "measurement_complete"
         _write(output, report)
-        mark("measurement_complete")
+        mark("measurement_complete", **_lifecycle_state(timeline, context, flow, volume, emitter, collectors))
         exit_code = 0
     except Exception as error:
         report["status"] = "error"
@@ -622,26 +660,89 @@ async def _run():
         report["traceback"] = traceback.format_exc()
     finally:
         try:
-            report["lifecycle_marker"] = "timeline_stopping"
-            mark("timeline_stopping")
-            timeline.stop()
-            for _ in range(12):
-                await app.next_update_async()
-            report["lifecycle_marker"] = "timeline_stopped"
-            mark("timeline_stopped")
-            report["completion_contract"]["timeline_stopped"] = True
-            await context.close_stage_async()
-            for _ in range(12):
-                await app.next_update_async()
-            report["lifecycle_marker"] = "renderer_drain_complete"
-            mark("renderer_drain_complete")
-            report["completion_contract"]["stage_closed"] = True
-            report["completion_contract"]["renderer_drained"] = True
-            if flow is not None:
-                _flowusd.release_flowusd_interface(flow)
-                flow = None
+            if arguments["lifecycle_calibration"]:
+                state = lambda: _lifecycle_state(timeline, context, flow, volume, emitter, collectors)
+                report["lifecycle_marker"] = "timeline_stop_request_before"
+                mark("timeline_stop_request_before", **state())
+                timeline.stop()
+                report["lifecycle_marker"] = "timeline_stop_request_after"
+                mark("timeline_stop_request_after", **state())
+                for _ in range(12):
+                    await app.next_update_async()
+                    if not timeline.is_playing():
+                        break
+                if timeline.is_playing():
+                    raise RuntimeError("timeline did not stop within 12 Kit updates")
+                report["lifecycle_marker"] = "timeline_stop_confirmed"
+                mark("timeline_stop_confirmed", **state())
+                report["completion_contract"]["timeline_stopped"] = True
+
+                drain_updates = arguments["renderer_drain_updates"]
+                report["lifecycle_marker"] = "renderer_drain_started"
+                mark("renderer_drain_started", update_count=drain_updates, **state())
+                for update_index in range(1, drain_updates + 1):
+                    mark("renderer_update_started", update_index=update_index, **state())
+                    await app.next_update_async()
+                    mark("renderer_update_complete", update_index=update_index, **state())
+                report["lifecycle_marker"] = "renderer_drain_complete"
+                mark("renderer_drain_complete", **state())
+                report["completion_contract"]["renderer_drained"] = True
+
+                report["lifecycle_marker"] = "flow_references_release_started"
+                mark("flow_references_release_started", **state())
+                if flow is not None:
+                    _flowusd.release_flowusd_interface(flow)
+                    flow = None
+                emitter = None
+                report["lifecycle_marker"] = "flow_references_release_complete"
+                mark("flow_references_release_complete", **state())
+
+                report["lifecycle_marker"] = "provider_readback_references_release_started"
+                mark("provider_readback_references_release_started", **state())
+                volume = None
+                collectors.clear()
+                collectors_by_index.clear()
+                report["lifecycle_marker"] = "provider_readback_references_release_complete"
+                mark("provider_readback_references_release_complete", **state())
+
+                report["lifecycle_marker"] = "stage_close_request_before"
+                mark("stage_close_request_before", **state())
+                await context.close_stage_async()
+                report["lifecycle_marker"] = "stage_close_request_after"
+                mark("stage_close_request_after", **state())
+                report["completion_contract"]["stage_closed"] = True
+                if context.get_stage() is not None:
+                    raise RuntimeError("USD context still exposes a stage after close_stage_async")
+                report["lifecycle_marker"] = "usd_context_disconnected"
+                mark("usd_context_disconnected", **state())
+                for update_index in range(1, 5):
+                    mark("post_close_renderer_update_started", update_index=update_index, **state())
+                    await app.next_update_async()
+                    mark("post_close_renderer_update_complete", update_index=update_index, **state())
+            else:
+                report["lifecycle_marker"] = "timeline_stopping"
+                mark("timeline_stopping")
+                timeline.stop()
+                for _ in range(12):
+                    await app.next_update_async()
+                report["lifecycle_marker"] = "timeline_stopped"
+                mark("timeline_stopped")
+                report["completion_contract"]["timeline_stopped"] = True
+                await context.close_stage_async()
+                for _ in range(12):
+                    await app.next_update_async()
+                report["lifecycle_marker"] = "renderer_drain_complete"
+                mark("renderer_drain_complete")
+                report["completion_contract"]["stage_closed"] = True
+                report["completion_contract"]["renderer_drained"] = True
+                if flow is not None:
+                    _flowusd.release_flowusd_interface(flow)
+                    flow = None
+            if arguments["lifecycle_calibration"]:
+                report["lifecycle_marker"] = "app_close_requested"
+                mark("app_close_requested", **_lifecycle_state(timeline, context, flow, volume, emitter, collectors))
             report["lifecycle_marker"] = "shutdown_complete"
-            mark("shutdown_complete")
+            mark("shutdown_complete", **_lifecycle_state(timeline, context, flow, volume, emitter, collectors))
             report["completion_contract"]["shutdown_requested"] = True
             report["lifecycle_history"].append({"marker": "shutdown_complete", "timestamp_utc": datetime.now(timezone.utc).isoformat()})
         except Exception as error:
