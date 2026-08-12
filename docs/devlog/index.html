@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6ep">最新記録</a>
+        <a href="#phase-6eq">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6ep">Phase 6EPの結果を読む</a>
+        <a class="button primary" href="#phase-6eq">Phase 6EQの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6EP numeric pass / media safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6EQ scalar-gate safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>18 / 18 formal normal exit · visual residual</strong></div>
+        <div><span>Lifecycle</span><strong>18 sweep + 2 formal normal exit · no residual</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
@@ -56,6 +56,19 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6eq" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6EQ entry"><span class="phase-number compact">6EQ</span><p><time datetime="2026-08-12">2026.08.12</time></p><span class="pill current">Scalar-gate safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6EQ · PointEmitter self-Collider tolerance</p><h2>自己重なりを分離。<br>他薪のscalar深部gateで安全停止。</h2><p>Phase 6EPの正式結果を変更せず、Pointごとに「自分の薪」と「他の薪」へのsigned distance、center-inside、半径0.05 mの評価球交差を分けました。Point配列、layout、revision、wood authority、Flow、productionは不変です。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/point_self_collider_safe_stop.svg"><img src="assets/phase6/point_self_collider_safe_stop.svg" alt="Phase 6EQのself-Collider許容供給率とformal scalar gate safe stop" loading="lazy"></a><figcaption><div><strong>Offset sweep complete / formal safe stop</strong><span>18 / 18 sweep normal exit · formal 2 / 24 partial evidence · accepted population 0</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Production-four offline classification</p><h3>75.56% / 55.83% / 64.72%</h3><p>事前選択したstrict <code>+0.075 m</code>、self-support <code>+0.025 m</code>、self-center <code>-0.0125 m</code>のweighted supplyです。自己重なりを許しても外向きstrictを超えず、他薪support intersectionが主な無効化理由でした。有効Pointの他薪交差は0です。</p></section><section class="note"><p class="note-label">Completed Collision ON condition</p><h3>Velocity 0 · scalar gate failed</h3><p>lower/upper strictは供給100%、active blocks 129、他薪deep velocity <code>0 m/s</code>、normal exit。一方、deep temperatureは<code>1.0</code>、smokeは<code>1.4052734375</code>で、事前固定したhard gateを超えました。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Fail-closed formal result</p><h3>結果を見てgateを緩めず、0 / 24 accepted</h3><p>Collision OFF controlは合格しました。続く最初のCollision ONがtemperature/smokeで不合格になったため、同条件をretryせず、残り22条件、3-run再現性、visual populationを開始していません。速度遮蔽とscalar transportは同一視せず、Flow内部occupancyや原因を公開証拠なしに断定しません。</p><p>実行済み20 processは全てnormal exit、guard内、cleanup残留0。fatal、dump、automatic upload、device lost、TDRも0です。production appとPhase 6EP reportのSHA-256は不変です。</p><p>Release build 8.92秒、focused <code>72 / 72</code>、標準suite <code>78 / 78</code>（346.2秒）、日誌静的検査は合格しました。接続browserが0件のため実レンダリング確認は未実施です。</p><p><a href="assets/phase6/point_self_collider_safe_stop.json">safe-stop JSON</a> · <a href="assets/phase6/point_self_collider_safe_stop.svg">比較SVG</a> · <a href="../design/point_emitter_self_collider_tolerance.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Runtime sweep</strong><small>18 / 18 normal exit</small></p></div><div role="listitem"><span>✓</span><p><strong>Other support</strong><small>active intersections 0</small></p></div><div role="listitem"><span>✓</span><p><strong>Velocity deep</strong><small>ON maximum 0</small></p></div><div role="listitem"><span>!</span><p><strong>Scalar deep</strong><small>temperature / smoke fail</small></p></div><div role="listitem"><span>—</span><p><strong>Formal</strong><small>0 / 24 accepted</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Video and next</p><h3>数値gate未成立のため映像populationへ進まない。</h3><p>同一cameraの比較動画はformal numeric合格後だけ生成する契約でした。今回は動画を作らず、既存latest demo pointerを維持します。次は別承認の新contractでambient/reference、実Mesh deep、反対側far ROIを分離し、temperature/smokeをcontrol-relativeに評価する必要があります。自己Collider許容のproduction推奨はまだありません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6ep" class="section entry-section phase-six">

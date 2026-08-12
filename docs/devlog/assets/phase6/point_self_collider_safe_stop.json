@@ -1,0 +1,1118 @@
+{
+  "schema": "campfire.phase6eq.self-collider-safe-stop.v1",
+  "phase": "phase6eq",
+  "status": "safe_stop",
+  "overall_qualified": false,
+  "formal_population_accepted": false,
+  "formal_processes_completed_as_partial_evidence": 2,
+  "formal_processes_required": 24,
+  "runtime_sweep_processes_completed": 18,
+  "runtime_sweep_processes_required": 18,
+  "contract_sha256": "B9D3169C54ADA5EEB62B712E02C00438C4FBFCE9914CCABE0EFE2FADEC0E1DAF",
+  "phase6ep_report_sha256": "104F4E1921408CCBE6E6BBC2C5AE01C7FD9ADF99F44AB395E0C696ED9876DA06",
+  "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "production_changed": false,
+  "phase6ep_artifacts_reclassified_or_overwritten": false,
+  "safe_stop": {
+    "active_condition": "formal/run_1/lower_upper/strict_all",
+    "reason": "predeclared other-Collider deep temperature and smoke hard gates failed",
+    "failed_condition": {
+      "path": "formal/run_1/lower_upper/strict_all",
+      "policy": "strict_all",
+      "collision": true,
+      "incremental_gate_passed": false,
+      "failed_gates": [
+        "other_deep_temperature",
+        "other_deep_smoke"
+      ],
+      "point_retention": 1.0,
+      "weighted_supply": {
+        "fuel": {
+          "original": 288.0,
+          "enabled": 288.0,
+          "retention": 1.0
+        },
+        "temperature": {
+          "original": 720.0,
+          "enabled": 720.0,
+          "retention": 1.0
+        },
+        "smoke": {
+          "original": 28.8,
+          "enabled": 28.8,
+          "retention": 1.0
+        }
+      },
+      "active_other_support_intersections": 0,
+      "other_deep_maximum": {
+        "velocity": 0.0,
+        "temperature": 1.0,
+        "smoke": 1.4052734375
+      },
+      "other_collider_deep_by_frame": {
+        "velocity": [
+          {
+            "frame": 30,
+            "voxel_count": 26,
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0
+          },
+          {
+            "frame": 60,
+            "voxel_count": 26,
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0
+          },
+          {
+            "frame": 90,
+            "voxel_count": 26,
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0
+          },
+          {
+            "frame": 120,
+            "voxel_count": 26,
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0
+          },
+          {
+            "frame": 150,
+            "voxel_count": 26,
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0
+          },
+          {
+            "frame": 180,
+            "voxel_count": 26,
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0
+          },
+          {
+            "frame": 200,
+            "voxel_count": 26,
+            "mean": 0.0,
+            "p95": 0.0,
+            "maximum": 0.0
+          }
+        ],
+        "temperature": [
+          {
+            "frame": 30,
+            "voxel_count": 810,
+            "mean": 0.05851734773612317,
+            "p95": 0.4457763671874998,
+            "maximum": 1.0
+          },
+          {
+            "frame": 60,
+            "voxel_count": 810,
+            "mean": 0.05863336957531211,
+            "p95": 0.5155395507812457,
+            "maximum": 1.0
+          },
+          {
+            "frame": 90,
+            "voxel_count": 810,
+            "mean": 0.05792781232315817,
+            "p95": 0.44801025390624966,
+            "maximum": 1.0
+          },
+          {
+            "frame": 120,
+            "voxel_count": 810,
+            "mean": 0.05613075067967544,
+            "p95": 0.4120361328124994,
+            "maximum": 1.0
+          },
+          {
+            "frame": 150,
+            "voxel_count": 810,
+            "mean": 0.05577939057055815,
+            "p95": 0.4856933593749999,
+            "maximum": 1.0
+          },
+          {
+            "frame": 180,
+            "voxel_count": 810,
+            "mean": 0.05649569005142024,
+            "p95": 0.4422607421874992,
+            "maximum": 1.0
+          },
+          {
+            "frame": 200,
+            "voxel_count": 810,
+            "mean": 0.055058963504838354,
+            "p95": 0.46444091796874803,
+            "maximum": 1.0
+          }
+        ],
+        "smoke": [
+          {
+            "frame": 30,
+            "voxel_count": 810,
+            "mean": 0.03701225475028709,
+            "p95": 0.13160705566406128,
+            "maximum": 1.4052734375
+          },
+          {
+            "frame": 60,
+            "voxel_count": 810,
+            "mean": 0.03415302332536674,
+            "p95": 0.1449951171874998,
+            "maximum": 1.177734375
+          },
+          {
+            "frame": 90,
+            "voxel_count": 810,
+            "mean": 0.034752200415104996,
+            "p95": 0.07727355957031225,
+            "maximum": 1.3359375
+          },
+          {
+            "frame": 120,
+            "voxel_count": 810,
+            "mean": 0.03405441546145781,
+            "p95": 0.08627014160156228,
+            "maximum": 1.3212890625
+          },
+          {
+            "frame": 150,
+            "voxel_count": 810,
+            "mean": 0.03348715540803509,
+            "p95": 0.11919250488281115,
+            "maximum": 1.37890625
+          },
+          {
+            "frame": 180,
+            "voxel_count": 810,
+            "mean": 0.033583792197851486,
+            "p95": 0.10416564941406249,
+            "maximum": 1.404296875
+          },
+          {
+            "frame": 200,
+            "voxel_count": 810,
+            "mean": 0.03203860388861762,
+            "p95": 0.11004028320312445,
+            "maximum": 1.201171875
+          }
+        ]
+      },
+      "active_blocks": 129,
+      "external_ignition_frame": 30,
+      "external_vertical_extent_m": 1.8000000268220901,
+      "probe_status": "ok",
+      "last_lifecycle_marker": "shutdown_complete",
+      "functional_status": "pass",
+      "lifecycle_status": "normal_exit",
+      "os_process_normal_exit": true,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "automatic_upload_attempt_count": 0,
+      "resource_peaks_bytes": {
+        "runner": 96129024,
+        "kit": 13126250496,
+        "diagnostic": 16846848,
+        "child": 62464000,
+        "tree": 13265563648
+      },
+      "machine_minima_bytes": {
+        "available_physical_bytes": 85640024064,
+        "estimated_commit_headroom_bytes": 104257220608
+      },
+      "cleanup_remaining_count": 0
+    },
+    "preceding_control": {
+      "path": "formal/run_1/lower_upper/collision_off",
+      "policy": "strict_all",
+      "collision": false,
+      "incremental_gate_passed": true,
+      "failed_gates": [],
+      "point_retention": 1.0,
+      "weighted_supply": {
+        "fuel": {
+          "original": 288.0,
+          "enabled": 288.0,
+          "retention": 1.0
+        },
+        "temperature": {
+          "original": 720.0,
+          "enabled": 720.0,
+          "retention": 1.0
+        },
+        "smoke": {
+          "original": 28.8,
+          "enabled": 28.8,
+          "retention": 1.0
+        }
+      },
+      "active_other_support_intersections": 0,
+      "other_deep_maximum": {
+        "velocity": 0.0,
+        "temperature": 0.0,
+        "smoke": 0.0
+      },
+      "other_collider_deep_by_frame": {
+        "velocity": [
+          {
+            "frame": 30,
+            "voxel_count": 26,
+            "mean": 4.0826285022955675,
+            "p95": 6.756084442138672,
+            "maximum": 7.533004283905029
+          },
+          {
+            "frame": 60,
+            "voxel_count": 26,
+            "mean": 6.713898053536048,
+            "p95": 7.531771540641785,
+            "maximum": 7.887281894683838
+          },
+          {
+            "frame": 90,
+            "voxel_count": 26,
+            "mean": 6.514219568325923,
+            "p95": 7.2398234605789185,
+            "maximum": 7.4115495681762695
+          },
+          {
+            "frame": 120,
+            "voxel_count": 26,
+            "mean": 6.036859361025003,
+            "p95": 7.4772666692733765,
+            "maximum": 7.911711692810059
+          },
+          {
+            "frame": 150,
+            "voxel_count": 26,
+            "mean": 6.275324780207414,
+            "p95": 7.794213175773621,
+            "maximum": 7.8631815910339355
+          },
+          {
+            "frame": 180,
+            "voxel_count": 26,
+            "mean": 4.551917566702916,
+            "p95": 6.782508134841919,
+            "maximum": 7.05131196975708
+          },
+          {
+            "frame": 200,
+            "voxel_count": 26,
+            "mean": 5.077864413078014,
+            "p95": 7.090648770332336,
+            "maximum": 7.8218841552734375
+          }
+        ],
+        "temperature": [
+          {
+            "frame": 30,
+            "voxel_count": 810,
+            "mean": 0.762513694792618,
+            "p95": 1.0,
+            "maximum": 1.0
+          },
+          {
+            "frame": 60,
+            "voxel_count": 810,
+            "mean": 0.8371080186631944,
+            "p95": 1.0,
+            "maximum": 1.0
+          },
+          {
+            "frame": 90,
+            "voxel_count": 810,
+            "mean": 0.7504229419025374,
+            "p95": 1.0,
+            "maximum": 1.0
+          },
+          {
+            "frame": 120,
+            "voxel_count": 810,
+            "mean": 0.6985940949416455,
+            "p95": 1.0,
+            "maximum": 1.0
+          },
+          {
+            "frame": 150,
+            "voxel_count": 810,
+            "mean": 0.7762577103979793,
+            "p95": 1.0,
+            "maximum": 1.0
+          },
+          {
+            "frame": 180,
+            "voxel_count": 810,
+            "mean": 0.7022550374637415,
+            "p95": 1.0,
+            "maximum": 1.0
+          },
+          {
+            "frame": 200,
+            "voxel_count": 810,
+            "mean": 0.7952764406616305,
+            "p95": 1.0,
+            "maximum": 1.0
+          }
+        ],
+        "smoke": [
+          {
+            "frame": 30,
+            "voxel_count": 810,
+            "mean": 0.5748147699568007,
+            "p95": 1.0784179687499997,
+            "maximum": 1.3212890625
+          },
+          {
+            "frame": 60,
+            "voxel_count": 810,
+            "mean": 0.6110943126089778,
+            "p95": 1.0172363281249999,
+            "maximum": 1.1787109375
+          },
+          {
+            "frame": 90,
+            "voxel_count": 810,
+            "mean": 0.63145916381,
+            "p95": 1.158203125,
+            "maximum": 1.33203125
+          },
+          {
+            "frame": 120,
+            "voxel_count": 810,
+            "mean": 0.5535911361376444,
+            "p95": 1.134326171875,
+            "maximum": 1.2890625
+          },
+          {
+            "frame": 150,
+            "voxel_count": 810,
+            "mean": 0.6439856535122719,
+            "p95": 1.17578125,
+            "maximum": 1.4892578125
+          },
+          {
+            "frame": 180,
+            "voxel_count": 810,
+            "mean": 0.5706988911569855,
+            "p95": 1.068359375,
+            "maximum": 1.326171875
+          },
+          {
+            "frame": 200,
+            "voxel_count": 810,
+            "mean": 0.6976782422006866,
+            "p95": 1.23046875,
+            "maximum": 1.3603515625
+          }
+        ]
+      },
+      "active_blocks": 166,
+      "external_ignition_frame": 30,
+      "external_vertical_extent_m": 1.725000025704503,
+      "probe_status": "ok",
+      "last_lifecycle_marker": "shutdown_complete",
+      "functional_status": "pass",
+      "lifecycle_status": "normal_exit",
+      "os_process_normal_exit": true,
+      "fatal_count": 0,
+      "dump_count": 0,
+      "automatic_upload_attempt_count": 0,
+      "resource_peaks_bytes": {
+        "runner": 96018432,
+        "kit": 13408141312,
+        "diagnostic": 16994304,
+        "child": 62615552,
+        "tree": 13546676224
+      },
+      "machine_minima_bytes": {
+        "available_physical_bytes": 85497286656,
+        "estimated_commit_headroom_bytes": 104114483200
+      },
+      "cleanup_remaining_count": 0
+    },
+    "automatic_retry": false,
+    "later_condition_started": false,
+    "visual_population_started": false,
+    "videos_encoded_or_published": 0,
+    "latest_demo_changed": false
+  },
+  "runtime_offset_sweep": {
+    "schema": "campfire.phase6eq.runtime-offset-sweep.v1",
+    "rows": [
+      {
+        "policy": "strict_all",
+        "offset_m": -0.0125,
+        "active_points": 0,
+        "point_retention": 0.0,
+        "weighted_supply": {
+          "fuel": {
+            "original": 288.0,
+            "enabled": 0.0,
+            "retention": 0.0
+          },
+          "temperature": {
+            "original": 720.0,
+            "enabled": 0.0,
+            "retention": 0.0
+          },
+          "smoke": {
+            "original": 28.8,
+            "enabled": 0.0,
+            "retention": 0.0
+          }
+        },
+        "active_other_support_intersections": 0,
+        "active_blocks": 8,
+        "source_sums": {
+          "fuel": 0.0,
+          "temperature": 0.0,
+          "smoke": 0.0
+        }
+      },
+      {
+        "policy": "strict_all",
+        "offset_m": 0,
+        "active_points": 0,
+        "point_retention": 0.0,
+        "weighted_supply": {
+          "fuel": {
+            "original": 288.0,
+            "enabled": 0.0,
+            "retention": 0.0
+          },
+          "temperature": {
+            "original": 720.0,
+            "enabled": 0.0,
+            "retention": 0.0
+          },
+          "smoke": {
+            "original": 28.8,
+            "enabled": 0.0,
+            "retention": 0.0
+          }
+        },
+        "active_other_support_intersections": 0,
+        "active_blocks": 8,
+        "source_sums": {
+          "fuel": 0.0,
+          "temperature": 0.0,
+          "smoke": 0.0
+        }
+      },
+      {
+        "policy": "strict_all",
+        "offset_m": 0.0125,
+        "active_points": 0,
+        "point_retention": 0.0,
+        "weighted_supply": {
+          "fuel": {
+            "original": 288.0,
+            "enabled": 0.0,
+            "retention": 0.0
+          },
+          "temperature": {
+            "original": 720.0,
+            "enabled": 0.0,
+            "retention": 0.0
+          },
+          "smoke": {
+            "original": 28.8,
+            "enabled": 0.0,
+            "retention": 0.0
+          }
+        },
+        "active_other_support_intersections": 0,
+        "active_blocks": 8,
+        "source_sums": {
+          "fuel": 0.0,
+          "temperature": 0.0,
+          "smoke": 0.0
+        }
+      },
+      {
+        "policy": "strict_all",
+        "offset_m": 0.025,
+        "active_points": 0,
+        "point_retention": 0.0,
+        "weighted_supply": {
+          "fuel": {
+            "original": 288.0,
+            "enabled": 0.0,
+            "retention": 0.0
+          },
+          "temperature": {
+            "original": 720.0,
+            "enabled": 0.0,
+            "retention": 0.0
+          },
+          "smoke": {
+            "original": 28.8,
+            "enabled": 0.0,
+            "retention": 0.0
+          }
+        },
+        "active_other_support_intersections": 0,
+        "active_blocks": 8,
+        "source_sums": {
+          "fuel": 0.0,
+          "temperature": 0.0,
+          "smoke": 0.0
+        }
+      },
+      {
+        "policy": "strict_all",
+        "offset_m": 0.05,
+        "active_points": 0,
+        "point_retention": 0.0,
+        "weighted_supply": {
+          "fuel": {
+            "original": 288.0,
+            "enabled": 0.0,
+            "retention": 0.0
+          },
+          "temperature": {
+            "original": 720.0,
+            "enabled": 0.0,
+            "retention": 0.0
+          },
+          "smoke": {
+            "original": 28.8,
+            "enabled": 0.0,
+            "retention": 0.0
+          }
+        },
+        "active_other_support_intersections": 0,
+        "active_blocks": 8,
+        "source_sums": {
+          "fuel": 0.0,
+          "temperature": 0.0,
+          "smoke": 0.0
+        }
+      },
+      {
+        "policy": "strict_all",
+        "offset_m": 0.075,
+        "active_points": 360,
+        "point_retention": 1.0,
+        "weighted_supply": {
+          "fuel": {
+            "original": 288.0,
+            "enabled": 288.0,
+            "retention": 1.0
+          },
+          "temperature": {
+            "original": 720.0,
+            "enabled": 720.0,
+            "retention": 1.0
+          },
+          "smoke": {
+            "original": 28.8,
+            "enabled": 28.8,
+            "retention": 1.0
+          }
+        },
+        "active_other_support_intersections": 0,
+        "active_blocks": 129,
+        "source_sums": {
+          "fuel": 288.0000042915344,
+          "temperature": 720.0,
+          "smoke": 28.799999356269836
+        }
+      },
+      {
+        "policy": "allow_self_support",
+        "offset_m": -0.0125,
+        "active_points": 0,
+        "point_retention": 0.0,
+        "weighted_supply": {
+          "fuel": {
+            "original": 288.0,
+            "enabled": 0.0,
+            "retention": 0.0
+          },
+          "temperature": {
+            "original": 720.0,
+            "enabled": 0.0,
+            "retention": 0.0
+          },
+          "smoke": {
+            "original": 28.8,
+            "enabled": 0.0,
+            "retention": 0.0
+          }
+        },
+        "active_other_support_intersections": 0,
+        "active_blocks": 8,
+        "source_sums": {
+          "fuel": 0.0,
+          "temperature": 0.0,
+          "smoke": 0.0
+        }
+      },
+      {
+        "policy": "allow_self_support",
+        "offset_m": 0,
+        "active_points": 0,
+        "point_retention": 0.0,
+        "weighted_supply": {
+          "fuel": {
+            "original": 288.0,
+            "enabled": 0.0,
+            "retention": 0.0
+          },
+          "temperature": {
+            "original": 720.0,
+            "enabled": 0.0,
+            "retention": 0.0
+          },
+          "smoke": {
+            "original": 28.8,
+            "enabled": 0.0,
+            "retention": 0.0
+          }
+        },
+        "active_other_support_intersections": 0,
+        "active_blocks": 8,
+        "source_sums": {
+          "fuel": 0.0,
+          "temperature": 0.0,
+          "smoke": 0.0
+        }
+      },
+      {
+        "policy": "allow_self_support",
+        "offset_m": 0.0125,
+        "active_points": 288,
+        "point_retention": 0.8,
+        "weighted_supply": {
+          "fuel": {
+            "original": 288.0,
+            "enabled": 230.4,
+            "retention": 0.8
+          },
+          "temperature": {
+            "original": 720.0,
+            "enabled": 576.0,
+            "retention": 0.8
+          },
+          "smoke": {
+            "original": 28.8,
+            "enabled": 23.04,
+            "retention": 0.7999999999999999
+          }
+        },
+        "active_other_support_intersections": 0,
+        "active_blocks": 107,
+        "source_sums": {
+          "fuel": 230.40000343322754,
+          "temperature": 576.0,
+          "smoke": 23.03999948501587
+        }
+      },
+      {
+        "policy": "allow_self_support",
+        "offset_m": 0.025,
+        "active_points": 360,
+        "point_retention": 1.0,
+        "weighted_supply": {
+          "fuel": {
+            "original": 288.0,
+            "enabled": 288.0,
+            "retention": 1.0
+          },
+          "temperature": {
+            "original": 720.0,
+            "enabled": 720.0,
+            "retention": 1.0
+          },
+          "smoke": {
+            "original": 28.8,
+            "enabled": 28.8,
+            "retention": 1.0
+          }
+        },
+        "active_other_support_intersections": 0,
+        "active_blocks": 134,
+        "source_sums": {
+          "fuel": 288.0000042915344,
+          "temperature": 720.0,
+          "smoke": 28.799999356269836
+        }
+      },
+      {
+        "policy": "allow_self_support",
+        "offset_m": 0.05,
+        "active_points": 360,
+        "point_retention": 1.0,
+        "weighted_supply": {
+          "fuel": {
+            "original": 288.0,
+            "enabled": 288.0,
+            "retention": 1.0
+          },
+          "temperature": {
+            "original": 720.0,
+            "enabled": 720.0,
+            "retention": 1.0
+          },
+          "smoke": {
+            "original": 28.8,
+            "enabled": 28.8,
+            "retention": 1.0
+          }
+        },
+        "active_other_support_intersections": 0,
+        "active_blocks": 204,
+        "source_sums": {
+          "fuel": 288.0000042915344,
+          "temperature": 720.0,
+          "smoke": 28.799999356269836
+        }
+      },
+      {
+        "policy": "allow_self_support",
+        "offset_m": 0.075,
+        "active_points": 360,
+        "point_retention": 1.0,
+        "weighted_supply": {
+          "fuel": {
+            "original": 288.0,
+            "enabled": 288.0,
+            "retention": 1.0
+          },
+          "temperature": {
+            "original": 720.0,
+            "enabled": 720.0,
+            "retention": 1.0
+          },
+          "smoke": {
+            "original": 28.8,
+            "enabled": 28.8,
+            "retention": 1.0
+          }
+        },
+        "active_other_support_intersections": 0,
+        "active_blocks": 129,
+        "source_sums": {
+          "fuel": 288.0000042915344,
+          "temperature": 720.0,
+          "smoke": 28.799999356269836
+        }
+      },
+      {
+        "policy": "allow_self_center",
+        "offset_m": -0.0125,
+        "active_points": 360,
+        "point_retention": 1.0,
+        "weighted_supply": {
+          "fuel": {
+            "original": 288.0,
+            "enabled": 288.0,
+            "retention": 1.0
+          },
+          "temperature": {
+            "original": 720.0,
+            "enabled": 720.0,
+            "retention": 1.0
+          },
+          "smoke": {
+            "original": 28.8,
+            "enabled": 28.8,
+            "retention": 1.0
+          }
+        },
+        "active_other_support_intersections": 0,
+        "active_blocks": 209,
+        "source_sums": {
+          "fuel": 288.0000042915344,
+          "temperature": 720.0,
+          "smoke": 28.799999356269836
+        }
+      },
+      {
+        "policy": "allow_self_center",
+        "offset_m": 0,
+        "active_points": 360,
+        "point_retention": 1.0,
+        "weighted_supply": {
+          "fuel": {
+            "original": 288.0,
+            "enabled": 288.0,
+            "retention": 1.0
+          },
+          "temperature": {
+            "original": 720.0,
+            "enabled": 720.0,
+            "retention": 1.0
+          },
+          "smoke": {
+            "original": 28.8,
+            "enabled": 28.8,
+            "retention": 1.0
+          }
+        },
+        "active_other_support_intersections": 0,
+        "active_blocks": 163,
+        "source_sums": {
+          "fuel": 288.0000042915344,
+          "temperature": 720.0,
+          "smoke": 28.799999356269836
+        }
+      },
+      {
+        "policy": "allow_self_center",
+        "offset_m": 0.0125,
+        "active_points": 360,
+        "point_retention": 1.0,
+        "weighted_supply": {
+          "fuel": {
+            "original": 288.0,
+            "enabled": 288.0,
+            "retention": 1.0
+          },
+          "temperature": {
+            "original": 720.0,
+            "enabled": 720.0,
+            "retention": 1.0
+          },
+          "smoke": {
+            "original": 28.8,
+            "enabled": 28.8,
+            "retention": 1.0
+          }
+        },
+        "active_other_support_intersections": 0,
+        "active_blocks": 107,
+        "source_sums": {
+          "fuel": 288.0000042915344,
+          "temperature": 720.0,
+          "smoke": 28.799999356269836
+        }
+      },
+      {
+        "policy": "allow_self_center",
+        "offset_m": 0.025,
+        "active_points": 360,
+        "point_retention": 1.0,
+        "weighted_supply": {
+          "fuel": {
+            "original": 288.0,
+            "enabled": 288.0,
+            "retention": 1.0
+          },
+          "temperature": {
+            "original": 720.0,
+            "enabled": 720.0,
+            "retention": 1.0
+          },
+          "smoke": {
+            "original": 28.8,
+            "enabled": 28.8,
+            "retention": 1.0
+          }
+        },
+        "active_other_support_intersections": 0,
+        "active_blocks": 134,
+        "source_sums": {
+          "fuel": 288.0000042915344,
+          "temperature": 720.0,
+          "smoke": 28.799999356269836
+        }
+      },
+      {
+        "policy": "allow_self_center",
+        "offset_m": 0.05,
+        "active_points": 360,
+        "point_retention": 1.0,
+        "weighted_supply": {
+          "fuel": {
+            "original": 288.0,
+            "enabled": 288.0,
+            "retention": 1.0
+          },
+          "temperature": {
+            "original": 720.0,
+            "enabled": 720.0,
+            "retention": 1.0
+          },
+          "smoke": {
+            "original": 28.8,
+            "enabled": 28.8,
+            "retention": 1.0
+          }
+        },
+        "active_other_support_intersections": 0,
+        "active_blocks": 204,
+        "source_sums": {
+          "fuel": 288.0000042915344,
+          "temperature": 720.0,
+          "smoke": 28.799999356269836
+        }
+      },
+      {
+        "policy": "allow_self_center",
+        "offset_m": 0.075,
+        "active_points": 360,
+        "point_retention": 1.0,
+        "weighted_supply": {
+          "fuel": {
+            "original": 288.0,
+            "enabled": 288.0,
+            "retention": 1.0
+          },
+          "temperature": {
+            "original": 720.0,
+            "enabled": 720.0,
+            "retention": 1.0
+          },
+          "smoke": {
+            "original": 28.8,
+            "enabled": 28.8,
+            "retention": 1.0
+          }
+        },
+        "active_other_support_intersections": 0,
+        "active_blocks": 129,
+        "source_sums": {
+          "fuel": 288.0000042915344,
+          "temperature": 720.0,
+          "smoke": 28.799999356269836
+        }
+      }
+    ]
+  },
+  "production_four_selected_geometry": [
+    {
+      "policy": "strict_all",
+      "offset_m": 0.075,
+      "point_count": 1440,
+      "active_point_count": 1088,
+      "point_retention": 0.7555555555555555,
+      "weighted_supply": {
+        "fuel": {
+          "original": 1151.9999999999688,
+          "enabled": 870.3999999999847,
+          "retention": 0.7555555555555628
+        },
+        "temperature": {
+          "original": 2880.0,
+          "enabled": 2176.0,
+          "retention": 0.7555555555555555
+        },
+        "smoke": {
+          "original": 115.1999999999979,
+          "enabled": 87.0399999999985,
+          "retention": 0.7555555555555563
+        }
+      },
+      "self_center_inside_count": 0,
+      "other_center_inside_count": 216,
+      "self_support_intersection_count": 0,
+      "other_support_intersection_count": 352,
+      "active_other_support_intersection_count": 0,
+      "disable_reason_counts": {
+        "enabled": 1088,
+        "filtering_disabled": 0,
+        "self_support_intersection": 0,
+        "self_center_inside": 0,
+        "other_support_intersection": 352
+      }
+    },
+    {
+      "policy": "allow_self_support",
+      "offset_m": 0.025,
+      "point_count": 1440,
+      "active_point_count": 804,
+      "point_retention": 0.5583333333333333,
+      "weighted_supply": {
+        "fuel": {
+          "original": 1151.9999999999688,
+          "enabled": 643.1999999999977,
+          "retention": 0.5583333333333464
+        },
+        "temperature": {
+          "original": 2880.0,
+          "enabled": 1608.0,
+          "retention": 0.5583333333333333
+        },
+        "smoke": {
+          "original": 115.1999999999979,
+          "enabled": 64.31999999999898,
+          "retention": 0.5583333333333347
+        }
+      },
+      "self_center_inside_count": 0,
+      "other_center_inside_count": 72,
+      "self_support_intersection_count": 1440,
+      "other_support_intersection_count": 636,
+      "active_other_support_intersection_count": 0,
+      "disable_reason_counts": {
+        "enabled": 804,
+        "filtering_disabled": 0,
+        "self_support_intersection": 0,
+        "self_center_inside": 0,
+        "other_support_intersection": 636
+      }
+    },
+    {
+      "policy": "allow_self_center",
+      "offset_m": -0.0125,
+      "point_count": 1440,
+      "active_point_count": 932,
+      "point_retention": 0.6472222222222223,
+      "weighted_supply": {
+        "fuel": {
+          "original": 1151.9999999999688,
+          "enabled": 745.5999999999918,
+          "retention": 0.6472222222222327
+        },
+        "temperature": {
+          "original": 2880.0,
+          "enabled": 1864.0,
+          "retention": 0.6472222222222223
+        },
+        "smoke": {
+          "original": 115.1999999999979,
+          "enabled": 74.55999999999877,
+          "retention": 0.6472222222222234
+        }
+      },
+      "self_center_inside_count": 1440,
+      "other_center_inside_count": 480,
+      "self_support_intersection_count": 1440,
+      "other_support_intersection_count": 508,
+      "active_other_support_intersection_count": 0,
+      "disable_reason_counts": {
+        "enabled": 932,
+        "filtering_disabled": 0,
+        "self_support_intersection": 0,
+        "self_center_inside": 0,
+        "other_support_intersection": 508
+      }
+    }
+  ],
+  "interpretation": {
+    "confirmed": [
+      "self/other signed distance and support-sphere causes are separated per point",
+      "the selected policies keep active other-log support intersections at zero",
+      "strict collision suppresses other-log deep velocity to zero in the completed condition",
+      "other-log deep temperature and smoke remain nonzero and fail the frozen contract",
+      "self-overlap allowance at the chosen lower offsets does not exceed the 75.56 percent conservative production-four retention"
+    ],
+    "not_confirmed": [
+      "a production recommendation for self-overlap allowance",
+      "three-run reproducibility",
+      "visual flame lift or absence of reverse-side emergence",
+      "a scalar occupancy interpretation for Flow Collision"
+    ],
+    "next_one_variable_question": "separate collision scalar transport from velocity occlusion using control-relative, spatially resolved temperature/smoke criteria in a newly approved contract; do not relax this frozen result post hoc"
+  },
+  "scope": "default-off production-neutral diagnostic; no production integration"
+}

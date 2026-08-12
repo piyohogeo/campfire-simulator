@@ -92,6 +92,39 @@ class Phase6EqSelfColliderTolerance(unittest.TestCase):
             ["collision_off", "strict_all", "allow_self_support", "allow_self_center"],
         )
 
+    def test_published_result_is_fail_closed_and_keeps_phase6ep_unchanged(self):
+        assets = ROOT / "docs" / "devlog" / "assets" / "phase6"
+        report = json.loads((assets / "point_self_collider_safe_stop.json").read_text(encoding="utf-8"))
+        self.assertEqual(report["status"], "safe_stop")
+        self.assertFalse(report["overall_qualified"])
+        self.assertFalse(report["formal_population_accepted"])
+        self.assertEqual(report["formal_processes_completed_as_partial_evidence"], 2)
+        self.assertEqual(report["runtime_sweep_processes_completed"], 18)
+        self.assertEqual(
+            report["safe_stop"]["failed_condition"]["failed_gates"],
+            ["other_deep_temperature", "other_deep_smoke"],
+        )
+        self.assertFalse(report["safe_stop"]["automatic_retry"])
+        self.assertFalse(report["safe_stop"]["later_condition_started"])
+        self.assertFalse(report["safe_stop"]["visual_population_started"])
+        self.assertFalse(report["production_changed"])
+        phase6ep = assets / "point_collision_safe_stop.json"
+        self.assertEqual(
+            report["phase6ep_report_sha256"], hashlib.sha256(phase6ep.read_bytes()).hexdigest().upper()
+        )
+
+    def test_devlog_records_no_video_and_no_latest_demo_change(self):
+        devlog = (ROOT / "docs" / "devlog" / "index.html").read_text(encoding="utf-8")
+        start = devlog.index('id="phase-6eq"')
+        end = devlog.index('id="phase-6ep"')
+        entry = devlog[start:end]
+        self.assertIn("point_self_collider_safe_stop.svg", entry)
+        self.assertIn("point_self_collider_safe_stop.json", entry)
+        self.assertNotIn("video-trigger", entry)
+        self.assertIn("latest demo pointerを維持", entry)
+        latest = json.loads((ROOT / "docs" / "devlog" / "assets" / "latest_demo.json").read_text(encoding="utf-8"))
+        self.assertNotEqual(latest["phase"], "Phase 6EQ")
+
 
 if __name__ == "__main__":
     unittest.main()

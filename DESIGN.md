@@ -1,5 +1,13 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6EQ PointEmitter self-Collider tolerance safe stop
+
+Phase 6EPの18-process数値結果とmedia safe stopをread-onlyで維持し、self support交差、self center-inside、other support交差をPointごとに分離する既定OFF probeを追加した。事前凍結contract `campfire.phase6eq.self-collider-tolerance-contract.v1`（SHA-256 `B9D3169C54ADA5EEB62B712E02C00438C4FBFCE9914CCABE0EFE2FADEC0E1DAF`）はoffset `-0.0125～+0.075 m`、strict/self-support/self-center/collision-offの4規則、lower/upperとproduction-four、3 run、other-Colliderのvelocity/temperature/smoke deep gateを固定した。
+
+18/18 runtime sweepはnormal exit。production-fourの事前選択offsetではstrict `+0.075 m`が75.56%、self-support `+0.025 m`が55.83%、self-center `-0.0125 m`が64.72%のweighted supplyを保持した。有効Pointのother support intersectionは全て0だが、自己重なりを許しても外向きstrict基準を超えず、他薪support intersectionが支配的な無効化理由だった。
+
+formalはCollision OFF control合格後、最初の`lower_upper/strict_all`が凍結済みscalar gateで不合格となり安全停止した。Collision ONはsupply 100%、active blocks 129、other deep velocity 0、normal OS exitだったが、other deep temperature `1.0`、smoke `1.4052734375`がhard gateを超えた。0/24 complete-population acceptance、retryなし、後続22条件とvisual populationは未開始。動画は生成せずlatest demoも不変で、自己許容のproduction推奨は出さない。production app、Point配列/layout/revision、wood authority、Flow、CollisionProxy、Phase 6EP成果物は不変。Release build 8.92秒、focused 72/72、標準suite 78/78（346.2秒）、日誌静的検査が合格した。詳細は`docs/design/point_emitter_self_collider_tolerance.md`。
+
 # Phase 6EP PointEmitter–CollisionProxy coexistence safe stop
 
 Phase 6EOのBox Mesh遮蔽合格後、既定OFF・production-neutralな単一PointEmitterと26頂点閉Mesh CollisionProxyの共存を調べた。公開Flow 110.0.0 schemaには正確なPoint support半径または別のPoint raster cell sizeが見つからないため、実測velocity voxel 1個=`0.05 m`の保守的support評価球を使う。Point配列の順序・長さ・revisionを保持し、全Colliderへのsupport clearanceが負のPointだけfuel/temperature/smokeを0にする。
