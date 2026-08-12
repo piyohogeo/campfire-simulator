@@ -64,6 +64,7 @@ class Phase6EzFuelConversionContract(unittest.TestCase):
     def test_marker_order_helper_is_fail_closed(self):
         required = ["a", "b", "c"]
         self.assertTrue(analyzer._ordered([{"marker": "a"}, {"marker": "b"}, {"marker": "c"}], required))
+        self.assertTrue(analyzer._ordered(["a", "b", "c"], required))
         self.assertFalse(analyzer._ordered([{"marker": "a"}, {"marker": "c"}, {"marker": "b"}], required))
         self.assertFalse(analyzer._ordered([{"marker": "a"}, {"marker": "b"}], required))
 

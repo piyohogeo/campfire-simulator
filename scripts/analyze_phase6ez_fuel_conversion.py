@@ -96,10 +96,11 @@ def _delta(by_name: dict[str, dict], before: str, after: str, field: str) -> int
     return right - left
 
 
-def _ordered(markers: list[dict], required: list[str]) -> bool:
+def _ordered(markers: list[dict | str], required: list[str]) -> bool:
     positions = {}
     for index, marker in enumerate(markers):
-        positions.setdefault(marker.get("marker"), index)
+        name = marker if isinstance(marker, str) else marker.get("marker")
+        positions.setdefault(name, index)
     return all(name in positions for name in required) and [positions[name] for name in required] == sorted(
         positions[name] for name in required
     )
