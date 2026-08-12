@@ -1,0 +1,128 @@
+{
+  "schema": "campfire.phase6fc.point-emitter-startup-reproduction-contract.v1",
+  "phase": "phase6fc",
+  "declared_before_runtime": true,
+  "history": {
+    "safe_commit": "4e19108",
+    "phase6ey": "frozen qualified history; no reclassification",
+    "phase6ez": "frozen zero-copy observation and C1 safe stop; no reclassification",
+    "phase6fa": "frozen 24-block pre-readback evidence and lifecycle safe stop",
+    "phase6fb": "frozen two-process representative startup result",
+    "prior_population_reuse": false
+  },
+  "purpose": "measure the short-process reproduction rate of the 24-block Point Emitter startup and, only after six representative baselines, compare one startup-order variable at a time",
+  "claim_boundary": "six readback-free baseline processes plus at most four one-process startup-order ablations; no long D0/D1/D2, conversion, repeated readback, production integration, payload change, Flow-setting change, or resource-ceiling change",
+  "scenario": "production_four",
+  "geometry_variant": "phase6er_corrected",
+  "point_policy": "allow_self_center",
+  "point_offset_m": -0.0125,
+  "support_radius_m": 0.05,
+  "collision_enabled": true,
+  "point_filtering_enabled": true,
+  "source_scales": {"fuel": 1.0, "temperature": 1.0, "smoke": 1.0},
+  "sample_frames": [30, 60, 90, 120],
+  "maximum_frame": 120,
+  "baseline_startup_order": [
+    "complete stage and Point payload before connection",
+    "connect stage to USD context",
+    "advance active viewport for 60 frames",
+    "acquire public Flow interface",
+    "stop and reset timeline",
+    "execute 12 stopped Kit updates",
+    "execute 0 extra Kit updates after that boundary",
+    "play timeline",
+    "observe post-play frames 1 through 120",
+    "close stage, extension shutdown, normal OS exit"
+  ],
+  "baseline_conditions": [
+    {"id": "B01_baseline", "flow_acquire_position": "before_updates", "pre_timeline_update_count": 12, "extra_update_before_play_count": 0},
+    {"id": "B02_baseline", "flow_acquire_position": "before_updates", "pre_timeline_update_count": 12, "extra_update_before_play_count": 0},
+    {"id": "B03_baseline", "flow_acquire_position": "before_updates", "pre_timeline_update_count": 12, "extra_update_before_play_count": 0},
+    {"id": "B04_baseline", "flow_acquire_position": "before_updates", "pre_timeline_update_count": 12, "extra_update_before_play_count": 0},
+    {"id": "B05_baseline", "flow_acquire_position": "before_updates", "pre_timeline_update_count": 12, "extra_update_before_play_count": 0},
+    {"id": "B06_baseline", "flow_acquire_position": "before_updates", "pre_timeline_update_count": 12, "extra_update_before_play_count": 0}
+  ],
+  "ablation_conditions": [
+    {"id": "A0_baseline_control", "changed_variable": "none", "flow_acquire_position": "before_updates", "pre_timeline_update_count": 12, "extra_update_before_play_count": 0},
+    {"id": "A1_flow_acquire_after_updates", "changed_variable": "Flow interface acquisition position only", "flow_acquire_position": "after_updates", "pre_timeline_update_count": 12, "extra_update_before_play_count": 0},
+    {"id": "A2_zero_stopped_updates", "changed_variable": "stopped Kit update count only", "flow_acquire_position": "before_updates", "pre_timeline_update_count": 0, "extra_update_before_play_count": 0},
+    {"id": "A3_one_extra_update_before_play", "changed_variable": "one additional update between the frozen 12-update boundary and timeline play", "flow_acquire_position": "before_updates", "pre_timeline_update_count": 12, "extra_update_before_play_count": 1}
+  ],
+  "classification": {
+    "classification_frame": 60,
+    "final_frame": 120,
+    "representative_active_blocks": 128,
+    "small_field_minimum_blocks": 20,
+    "small_field_maximum_blocks": 32,
+    "expected_point_revision": 1,
+    "expected_total_point_count": 1440,
+    "expected_active_point_count": 1344,
+    "minimum_fuel_sum": 1000.0,
+    "minimum_temperature_sum": 1.0,
+    "minimum_smoke_sum": 1.0,
+    "representative_ingestion": "fresh frame/update/timestamp/timeline samples through frame 120 and at least 128 active blocks by frame 60",
+    "small_field_ingestion": "fresh telemetry and valid source, but every sample through frame 60 remains in the 20 through 32 block band and no representative threshold is reached by frame 120",
+    "delayed_ingestion": "fresh telemetry and valid source, below 128 blocks through frame 60, then at least 128 blocks by frame 120",
+    "stale_telemetry": "frame, monotonic timestamp, Kit update number, timeline time, or timeline play state is not fresh",
+    "no_source": "Emitter enabled state, Point revision/count, or positive fuel/temperature/smoke input is absent",
+    "indeterminate_startup": "fresh valid-source history is neither representative, delayed-to-128, nor confined to the 20 through 32 small-field band; fail closed without reclassification",
+    "lifecycle_failure": "required startup/lifecycle marker, normal stage close/OS exit, resource guard, or cleanup is not complete"
+  },
+  "branching": {
+    "automatic_retry": false,
+    "complete_all_six_baselines_after_small_or_delayed_result": true,
+    "stop_baseline_on": ["stale_telemetry", "no_source", "indeterminate_startup", "lifecycle_failure"],
+    "run_ablations_only_if_all_six_baselines_representative": true,
+    "ablation_order": ["A0_baseline_control", "A1_flow_acquire_after_updates", "A2_zero_stopped_updates", "A3_one_extra_update_before_play"],
+    "stop_ablation_on": ["small_field_ingestion", "delayed_ingestion", "stale_telemetry", "no_source", "indeterminate_startup", "lifecycle_failure"],
+    "public_field_probe_automatic": false,
+    "public_field_probe_may_be_declared_separately_only_after_small_field_comparison": true,
+    "fixed_sleep_ablation": false,
+    "long_population_started": false
+  },
+  "required_startup_markers": [
+    "startup_extension_ready", "offline_stage_complete", "usd_context_connection_started",
+    "usd_context_connection_complete", "startup_live_point_emitter_contract_complete",
+    "renderer_readiness_started", "renderer_readiness_complete", "flow_interface_acquire_started",
+    "flow_interface_acquire_complete", "timeline_reset_started", "timeline_reset_complete",
+    "pre_timeline_updates_started", "pre_timeline_updates_complete",
+    "extra_updates_before_play_started", "extra_updates_before_play_complete",
+    "timeline_play_request_before", "timeline_playing", "startup_frame_sample",
+    "timeline_stop_request_before", "timeline_stop_request_after", "timeline_stop_confirmed",
+    "stage_close_request_before", "stage_close_request_after", "shutdown_complete"
+  ],
+  "lifecycle": {
+    "renderer_pre_close_drain_updates": 8,
+    "renderer_post_close_drain_updates": 4,
+    "timeline_stop_confirmation_updates": 12,
+    "stage_close_timeout_seconds": 180,
+    "inner_absolute_timeout_seconds": 420,
+    "outer_condition_timeout_seconds": 660,
+    "normal_os_exit_required": true,
+    "bounded_cdb_only_after_timeout": true
+  },
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "resource_sampling_seconds": 0.2,
+    "gpu_sampling_ms": 1000,
+    "automatic_upload": false,
+    "private_api": false,
+    "resource_ceiling_change": false,
+    "production_change": false
+  },
+  "future_production_monitoring_not_implemented": {
+    "states": ["startup_pending", "representative_ready", "small_field_detected", "recovery_pending", "recovery_failed", "running"],
+    "fixed_fixture_candidate": "frame 60 below 128 active blocks is an anomaly candidate, not a sufficient automatic-recovery trigger",
+    "additional_requirements": [
+      "fresh timeline and telemetry", "correct Point revision/count/supply", "Emitter enabled",
+      "expected stage and Flow identity", "resource limits satisfied", "distinguish delayed ingestion",
+      "at most one recovery attempt", "durable before/after recovery markers", "no infinite restart"
+    ],
+    "implementation_gate": "do not implement until startup failure is reproducible and the recovery operation passes independent lifecycle qualification including stage close and normal OS exit"
+  }
+}

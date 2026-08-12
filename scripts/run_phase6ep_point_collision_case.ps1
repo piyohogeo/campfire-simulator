@@ -6,7 +6,7 @@ param(
     [ValidateSet("true", "false")][string]$Filtering = "true",
     [ValidateSet("true", "false")][string]$Collision = "true",
     [ValidateSet("strict_all", "allow_self_support", "allow_self_center", "allow_other_support")][string]$Policy = "strict_all",
-    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev", "phase6ew", "phase6ex", "phase6ey", "phase6ez", "phase6fa", "phase6fb")][string]$ReportPhase = "phase6ep",
+    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev", "phase6ew", "phase6ex", "phase6ey", "phase6ez", "phase6fa", "phase6fb", "phase6fc")][string]$ReportPhase = "phase6ep",
     [string]$SampleFrames = "60,120,180,200",
     [string]$ReadbackChannels = "temperature,fuel,burn,smoke,velocity",
     [ValidateSet("legacy", "none", "acquire_discard", "acquire_discard_release", "fuel_convert", "fuel_convert_release", "fuel_scalar", "fuel_jsonl", "fuel_spatial")][string]$ReadbackMode = "legacy",
@@ -37,6 +37,10 @@ param(
     [ValidateSet("true", "false")][string]$FuelLivenessDecode = "false",
     [ValidateSet("true", "false")][string]$StartupProbe = "false",
     [string]$StartupProbeLabel = "",
+    [ValidateSet("before_updates", "after_updates")][string]$StartupFlowAcquirePosition = "before_updates",
+    [ValidateRange(0, 120)][int]$StartupPreTimelineUpdateCount = 12,
+    [ValidateRange(0, 120)][int]$StartupExtraUpdateBeforePlayCount = 0,
+    [string]$PreviousProcessExitUtc = "",
     [int]$AbsoluteTimeoutSeconds = 330
 )
 
@@ -119,6 +123,9 @@ $arguments = @(
     "--/phase6ep/fuelLivenessDecode=$FuelLivenessDecode",
     "--/phase6ep/startupProbe=$StartupProbe",
     "--/phase6ep/startupProbeLabel=$StartupProbeLabel",
+    "--/phase6ep/startupFlowAcquirePosition=$StartupFlowAcquirePosition",
+    "--/phase6ep/startupPreTimelineUpdateCount=$StartupPreTimelineUpdateCount",
+    "--/phase6ep/startupExtraUpdateBeforePlayCount=$StartupExtraUpdateBeforePlayCount",
     "--ext-folder", (Join-Path $PSScriptRoot "phasev3tg_extension"),
     "--enable", "omni.campfire.phasev3tg_shutdown",
     "--/phasev3tg/markers=$extensionMarkerPath",
@@ -137,6 +144,12 @@ $arguments = @(
 
 $registryBefore = Get-CampfireCrashRegistrySnapshot
 $process = Start-Process -FilePath $kit -ArgumentList $arguments -PassThru -WindowStyle Hidden
+$processStartUtc = $process.StartTime.ToUniversalTime()
+$previousProcessExitGapSeconds = $null
+if (-not [string]::IsNullOrWhiteSpace($PreviousProcessExitUtc)) {
+    $previousExit = [DateTimeOffset]::Parse($PreviousProcessExitUtc, [Globalization.CultureInfo]::InvariantCulture)
+    $previousProcessExitGapSeconds = ($processStartUtc - $previousExit.UtcDateTime).TotalSeconds
+}
 $monitor = Wait-CampfireKitProcessWithShutdownPolicy -Process $process -ExpectedExecutable $kit -LifecyclePath $raw -LogPath $log -DiagnosticDir $diagnosticDir -ShutdownGraceSeconds 60 -AbsoluteTimeoutSeconds $AbsoluteTimeoutSeconds
 $osExitMarker = [ordered]@{
     schema = "campfire.phase6ev.runner-lifecycle-marker.v1"
@@ -206,6 +219,12 @@ $evidence = [ordered]@{
     fuel_liveness_decode = ($FuelLivenessDecode -eq "true")
     startup_probe = ($StartupProbe -eq "true")
     startup_probe_label = $StartupProbeLabel
+    startup_flow_acquire_position = $StartupFlowAcquirePosition
+    startup_pre_timeline_update_count = $StartupPreTimelineUpdateCount
+    startup_extra_update_before_play_count = $StartupExtraUpdateBeforePlayCount
+    process_start_utc = $processStartUtc.ToString("o")
+    previous_process_exit_utc = if ([string]::IsNullOrWhiteSpace($PreviousProcessExitUtc)) { $null } else { $PreviousProcessExitUtc }
+    previous_process_exit_to_process_start_seconds = $previousProcessExitGapSeconds
     extension_marker_path = $extensionMarkerPath
     runner_marker_path = $runnerMarkerPath
     spatial_collectors_enabled = ($SpatialCollectorsEnabled -eq "true")

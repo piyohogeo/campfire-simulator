@@ -51,6 +51,8 @@ def _settings():
     spatial_collider_text = settings.get_as_string("/phase6ep/spatialColliderIndices")
     readback_text = settings.get_as_string("/phase6ep/readbackChannels")
     readback_frame_text = settings.get_as_string("/phase6ep/readbackFrames")
+    startup_pre_update_value = settings.get("/phase6ep/startupPreTimelineUpdateCount")
+    startup_extra_update_value = settings.get("/phase6ep/startupExtraUpdateBeforePlayCount")
     sample_frames = tuple(int(value.strip()) for value in sample_text.split(",") if value.strip()) if sample_text else tuple(SAMPLE_FRAMES)
     return {
         "output": Path(settings.get_as_string("/phase6ep/output")).resolve(),
@@ -117,6 +119,15 @@ def _settings():
         "fuel_liveness_decode": bool(settings.get_as_bool("/phase6ep/fuelLivenessDecode")),
         "startup_probe": bool(settings.get_as_bool("/phase6ep/startupProbe")),
         "startup_probe_label": settings.get_as_string("/phase6ep/startupProbeLabel") or "",
+        "startup_flow_acquire_position": (
+            settings.get_as_string("/phase6ep/startupFlowAcquirePosition") or "before_updates"
+        ),
+        "startup_pre_timeline_update_count": max(
+            0, int(startup_pre_update_value) if startup_pre_update_value is not None else 12
+        ),
+        "startup_extra_update_before_play_count": max(
+            0, int(startup_extra_update_value) if startup_extra_update_value is not None else 0
+        ),
     }
 
 
@@ -435,11 +446,13 @@ def _live_point_emitter_contract(stage, emitter):
     temperature_values = np.asarray(temperatures, dtype=np.float32)
     smoke_values = np.asarray(smokes, dtype=np.float32)
     return {
+        "stage_python_identity": int(id(stage)),
         "emitter_path": str(emitter.GetPath()),
         "emitter_type": emitter.GetTypeName(),
         "emitter_python_identity": int(id(emitter)),
         "points_prim_path": targets[0],
         "points_prim_type": points_prim.GetTypeName(),
+        "points_prim_python_identity": int(id(points_prim)),
         "relationship_targets": targets,
         "enabled": bool(enabled),
         "revision": int(revision),
@@ -782,15 +795,59 @@ async def _run():
         for _ in range(60):
             await omni.kit.viewport.utility.next_viewport_frame_async(viewport)
         if arguments["startup_probe"]:
-            mark("renderer_readiness_complete", kit_update_number=int(app.get_update_number()))
-            mark("flow_interface_acquire_started", kit_update_number=int(app.get_update_number()))
-        flow = _flowusd.acquire_flowusd_interface()
-        volume = omni.volume.get_volume_interface()
+            mark(
+                "renderer_readiness_complete", kit_update_number=int(app.get_update_number()),
+                viewport_identity=int(id(viewport)),
+            )
+        acquire_position = arguments["startup_flow_acquire_position"]
+        if acquire_position not in ("before_updates", "after_updates"):
+            raise ValueError(f"unsupported startup Flow acquire position: {acquire_position}")
+
+        def acquire_flow_interfaces(position):
+            if arguments["startup_probe"]:
+                mark(
+                    "flow_interface_acquire_started", kit_update_number=int(app.get_update_number()),
+                    acquire_position=position,
+                )
+            acquired_flow = _flowusd.acquire_flowusd_interface()
+            acquired_volume = omni.volume.get_volume_interface()
+            if arguments["startup_probe"]:
+                mark(
+                    "flow_interface_acquire_complete", kit_update_number=int(app.get_update_number()),
+                    acquire_position=position, flow_identity=int(id(acquired_flow)),
+                    volume_identity=int(id(acquired_volume)),
+                )
+            return acquired_flow, acquired_volume
+
+        if acquire_position == "before_updates":
+            flow, volume = acquire_flow_interfaces(acquire_position)
+        timeline.stop()
         if arguments["startup_probe"]:
             mark(
-                "flow_interface_acquire_complete", kit_update_number=int(app.get_update_number()),
-                flow_identity=int(id(flow)), volume_identity=int(id(volume)),
+                "timeline_reset_started", kit_update_number=int(app.get_update_number()),
+                timeline_playing=bool(timeline.is_playing()), timeline_time=float(timeline.get_current_time()),
             )
+        timeline.set_current_time(0.0)
+        if arguments["startup_probe"]:
+            mark(
+                "timeline_reset_complete", kit_update_number=int(app.get_update_number()),
+                timeline_playing=bool(timeline.is_playing()), timeline_time=float(timeline.get_current_time()),
+            )
+        pre_update_count = arguments["startup_pre_timeline_update_count"]
+        if arguments["startup_probe"]:
+            mark(
+                "pre_timeline_updates_started", kit_update_number=int(app.get_update_number()),
+                update_count=pre_update_count,
+            )
+        for _ in range(pre_update_count):
+            await app.next_update_async()
+        if arguments["startup_probe"]:
+            mark(
+                "pre_timeline_updates_complete", kit_update_number=int(app.get_update_number()),
+                update_count=pre_update_count,
+            )
+        if acquire_position == "after_updates":
+            flow, volume = acquire_flow_interfaces(acquire_position)
         public_members = sorted(name for name in dir(flow) if not name.startswith("_"))
         if arguments["spatial_collectors_enabled"]:
             selected_colliders = arguments["spatial_collider_indices"]
@@ -805,15 +862,24 @@ async def _run():
                 )
                 collectors.append(collector)
                 collectors_by_index[index] = collector
-        timeline.stop()
-        timeline.set_current_time(0.0)
+        extra_update_count = arguments["startup_extra_update_before_play_count"]
         if arguments["startup_probe"]:
-            mark("pre_timeline_updates_started", kit_update_number=int(app.get_update_number()), update_count=12)
-        for _ in range(12):
+            mark(
+                "extra_updates_before_play_started", kit_update_number=int(app.get_update_number()),
+                update_count=extra_update_count,
+            )
+        for _ in range(extra_update_count):
             await app.next_update_async()
         if arguments["startup_probe"]:
-            mark("pre_timeline_updates_complete", kit_update_number=int(app.get_update_number()), update_count=12)
-            mark("timeline_play_request_before", kit_update_number=int(app.get_update_number()))
+            mark(
+                "extra_updates_before_play_complete", kit_update_number=int(app.get_update_number()),
+                update_count=extra_update_count,
+            )
+            mark(
+                "timeline_play_request_before", kit_update_number=int(app.get_update_number()),
+                flow_identity=int(id(flow)), acquire_position=acquire_position,
+                pre_update_count=pre_update_count, extra_update_count=extra_update_count,
+            )
         timeline.play()
         report["lifecycle_marker"] = "timeline_playing"
         _write(output, report)
@@ -855,10 +921,16 @@ async def _run():
                         "total_point_count": int(startup_contract["total_point_count"]),
                         "active_point_count": int(startup_contract["active_point_count"]),
                         "source_sums": startup_contract["source_sums"],
+                        "stage_sha256": report["stage_sha256"],
+                        "payload_sha256": point_summary["payload_sha256"],
+                        "payload_array_contracts": startup_contract["arrays"],
+                        "stage_python_identity": int(id(current_stage)),
                         "emitter_path": str(current_emitter.GetPath()),
                         "emitter_python_identity": int(id(current_emitter)),
+                        "points_prim_python_identity": int(startup_contract["points_prim_python_identity"]),
                         "emitter_enabled": bool(current_emitter.GetAttribute("enabled").Get()),
                         "renderer_ready": True,
+                        "viewport_identity": int(id(viewport)),
                         "flow_interface_ready": flow is not None,
                     }
                     startup_history.append(sample)
