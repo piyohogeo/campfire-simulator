@@ -1,0 +1,135 @@
+{
+  "schema": "campfire.phase6eu.nanovdb-readback-safe-stop.v1",
+  "phase": "phase6eu",
+  "status": "safe_stop",
+  "phase6es_frozen": true,
+  "phase6et_frozen": true,
+  "contract_sha256": "206E1051BA05327AA996E461B250C0B0D23A26BF7F89CB764E8AD30694FADA2C",
+  "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "production_changed": false,
+  "formal_population": {
+    "attempted": 1,
+    "normal_exit": 0,
+    "expected": 27
+  },
+  "active_condition": "baseline/run01/R0_none",
+  "stop_reason": "observed_descendant_residual",
+  "last_probe_marker": "measurement_complete",
+  "probe_status": "ok",
+  "lifecycle_status": "unknown_shutdown_failure",
+  "normal_os_exit": false,
+  "known_ngx_signature_matched": false,
+  "cdb_all_thread_stack_observed": true,
+  "resource": {
+    "kit_peak_bytes": 14547746816,
+    "kit_peak_gib": 13.54864501953125,
+    "tree_peak_bytes": 14710587392,
+    "runner_peak_bytes": 95584256,
+    "diagnostic_peak_bytes": 96243712,
+    "minimum_available_physical_bytes": 83286867968,
+    "minimum_commit_headroom_bytes": 101963591680,
+    "fixed_kit_limit_bytes": 15032385536,
+    "fixed_tree_limit_bytes": 17179869184
+  },
+  "flow": {
+    "frames": [
+      30,
+      60,
+      90,
+      120,
+      150,
+      180,
+      200,
+      240,
+      280,
+      320
+    ],
+    "active_blocks": [
+      505,
+      688,
+      894,
+      1118,
+      1314,
+      1329,
+      1251,
+      1346,
+      1303,
+      1356
+    ],
+    "stability_frames": [
+      240,
+      280,
+      320
+    ],
+    "stability_active_blocks": [
+      1346,
+      1303,
+      1356
+    ],
+    "active_block_range_fraction": 0.039700374531835204,
+    "stability_private_bytes": [
+      14256705536,
+      13902397440,
+      13818634240
+    ],
+    "private_growth_bytes_per_second": -80092265.64867206,
+    "private_decrease_interval_count": 2,
+    "active_blocks_stable": true,
+    "private_memory_stable": true,
+    "stability_resource_sample_count": 16,
+    "frozen_minimum_resource_samples": 20,
+    "plateau_pass": false,
+    "no_readback_performed": true
+  },
+  "synchronous_marker_probe": {
+    "status": "invalid_ctypes_signature_in_run; corrected after safe stop and verified with a small fixture only",
+    "run_retried": false,
+    "outer_guard_fallback_used_for_partial_memory_series": true
+  },
+  "cleanup": {
+    "root_pid": 2432,
+    "observed_alive_before_cleanup": [
+      {
+        "pid": 21380,
+        "path": "C:\\packman-repo\\chk\\kit-kernel\\110.2.0+feature.windows-x86_64.release\\kit.exe"
+      },
+      {
+        "pid": 14796,
+        "path": "C:\\Windows\\System32\\conhost.exe"
+      },
+      {
+        "pid": 21656,
+        "path": "C:\\Users\\junic\\AppData\\Local\\ov\\data\\exts\\v2\\omni.kit.telemetry-1d6b5b5bc03ae94a\\omni.telemetry.transmitter\\omni.telemetry.transmitter.exe"
+      }
+    ],
+    "cleanup_required": true,
+    "killed_pids": [
+      14796,
+      21380,
+      21656
+    ],
+    "remaining": [],
+    "all_observed_absent": true
+  },
+  "safety": {
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "device_lost_or_tdr_count": 0,
+    "residual_after_cleanup": 0
+  },
+  "classification": {
+    "observed_fact": "readback-free four-log Flow reached all ten sample frames, then did not complete stage-close/shutdown and was cleaned up fail closed",
+    "strong_inference": "frames 240-320 show stable active-block count and decreasing nearest-guard Private Bytes, but the frozen 20-sample stability population and normal-exit gate were not met",
+    "unconfirmed": "NanoVDB acquisition, conversion, Python retention, and persistence remain unmeasured because R1-R6 were never started"
+  },
+  "decision": {
+    "kit_limit_raised": false,
+    "r1_to_r6_started": false,
+    "supply_comparison_started": false,
+    "video_generated": false,
+    "latest_demo_changed": false,
+    "restart_requires_new_root_and_explicit_approval": true
+  }
+}

@@ -1,5 +1,9 @@
 # Changelog
 
+- Added the production-neutral Phase 6EU NanoVDB readback lifetime contract and fine-grained acquisition/conversion/reference/persistence markers. Its first readback-free formal baseline reached frame 320 but ended in an unknown shutdown residual, so the run stopped before R1 and retained the unchanged 14 GiB guard.
+- Corrected the Phase 6EU synchronous Windows process-memory fixture after the safe stop by declaring the native function signatures explicitly; the failed run was not retried or reclassified.
+- Passed the Release build, Phase 0 RTX, Phase 3 with dry/wet mass-balance error 0 and Flow active blocks final/peak 264/352, 181/181 focused Phase 6E contracts, and the eight-process standard suite with 78/78 tests in 334.3 seconds. Devlog validation passed 399 references, 201 JSON, 167 SVG, and 2 ZIP files; production app SHA-256 remained unchanged.
+
 - Added the production-neutral Phase 6ET four-log memory calibration contract, channel/collector switches, flushed resource markers, isolated GPU CSV telemetry, and streamed report generation without changing the Phase 6ES history or resource limits.
 - Completed Flow-only A with a 14,536,630,272-byte Kit peak, then safely stopped at minimal public readback B when Kit reached 15,323,729,920 bytes. Directional transport and temperature/smoke collectors were not reached; production and latest demo remain unchanged.
 

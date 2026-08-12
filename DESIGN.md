@@ -1,5 +1,15 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6EU NanoVDB readback lifetime calibration safe stop
+
+Phase 6ES/6ETを凍結したまま、public NanoVDB readbackのacquire、参照寿命、fuel変換、NumPy集計、bounded JSONL、最小空間samplingをR0～R6へ分離する新contract（SHA-256 `206E1051BA05327AA996E461B250C0B0D23A26BF7F89CB764E8AD30694FADA2C`）を追加した。production、Point/authority/Flow/CollisionProxy、既定値、14 GiB Kit guardは不変である。
+
+新rootのwarm-upはnormal exitした。正式R0 run 1はreadbackを一度も呼ばずframe 320まで到達し、active blocksは`505/688/894/1118/1314/1329/1251/1346/1303/1356`、Kit peakは`14,547,746,816 bytes`（`13.548645 GiB`）だった。late 3 frameのactive-block rangeは3.970%、nearest outer-guard Private Bytesは`14,256,705,536 → 13,902,397,440 → 13,818,634,240 bytes`と減少したが、凍結済み20 sampleに対して16 sampleしかなくformal plateauではない。
+
+probeは`measurement_complete`後、stage close／shutdownを完了せずinner absolute timeoutとなった。CDB all-thread stackは得たが既知NGX 5-token signatureは不一致で、`unknown_shutdown_failure`。Kit/conhost/telemetry transmitterをexact identityでcleanupし残留0、fatal/dump/upload/device-lost/TDR 0。1/27 attempted、accepted 0で、R0 run 2/3とR1～R6は未開始。同期Private Bytes markerのctypes宣言不備はrun後の小fixtureで修正したが、同条件をretryしていない。上限は据え置き、再開には新rootと明示承認が必要。詳細は`docs/design/nanovdb_readback_lifetime_calibration.md`。
+
+回帰はRelease build 7.80秒、Phase 0 RTX、Phase 3、Phase 6E focused contract `181/181`、標準suite `78/78`（8 process、334.3秒）が合格した。Phase 3はdry/wet mass-balance error 0、authority SHA維持、active blocks final/peak `264/352`、peak fuel 1.0。日誌静的検査は399 reference、201 JSON、167 SVG、2 ZIPが合格し、production app SHA-256は`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`で不変だった。
+
 # Phase 6ET four-log Flow memory calibration safe stop
 
 Phase 6ESの14 GiB resource safe stopを凍結したまま、修正版4本配置のmemory境界をA～G・3 run・21 processの別contract（SHA-256 `4B14168B37442050FCA9D23B1ECAAC6DA9F57C666FB3D44FBCEE5F39C26830F6`）へ事前固定した。Point payload、Flow、CollisionProxy、production app/defaultは不変で、Kit 14 GiB、tree 16 GiB、runner/diagnostic各512 MiB、system headroom各8 GiBの上限も変更していない。

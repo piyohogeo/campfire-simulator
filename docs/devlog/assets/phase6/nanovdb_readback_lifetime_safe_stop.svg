@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+<style>.title{font:700 34px system-ui;fill:#f8fafc}.sub{font:18px system-ui;fill:#cbd5e1}.label{font:17px system-ui;fill:#e2e8f0}.value{font:700 17px ui-monospace,monospace;fill:#f8fafc}.small{font:16px system-ui;fill:#cbd5e1}.strong{font:700 19px system-ui;fill:#f8fafc}</style>
+<rect width="1200" height="680" rx="28" fill="#101827"/>
+<text x="70" y="70" class="title">Phase 6EU - Readback-free baseline lifecycle safe stop</text>
+<text x="70" y="108" class="sub">Phase 6ES / 6ET frozen - unchanged 14 GiB guard - no NanoVDB readback called</text>
+<line x1="965" y1="175" x2="965" y2="435" stroke="#fda4af" stroke-width="3" stroke-dasharray="10 8"/>
+<text x="950" y="166" text-anchor="end" class="small">fixed Kit limit 14.000 GiB</text>
+<text x="250" y="239" text-anchor="end" class="label">frame 240 / 1346 blocks</text><rect x="275" y="215" width="654.4" height="35" rx="8" fill="#38bdf8"/><text x="941.4" y="240" class="value">13.278 GiB</text><text x="250" y="319" text-anchor="end" class="label">frame 280 / 1303 blocks</text><rect x="275" y="295" width="638.1" height="35" rx="8" fill="#38bdf8"/><text x="925.1" y="320" class="value">12.948 GiB</text><text x="250" y="399" text-anchor="end" class="label">frame 320 / 1356 blocks</text><rect x="275" y="375" width="634.3" height="35" rx="8" fill="#38bdf8"/><text x="921.3" y="400" class="value">12.870 GiB</text>
+<rect x="70" y="475" width="1060" height="135" rx="18" fill="#1e293b"/>
+<text x="95" y="515" class="strong">Flow samples complete; normal OS exit not established</text>
+<text x="95" y="550" class="small">Kit peak 13.549 GiB. Stability frames: active blocks vary 3.97%.</text>
+<text x="95" y="580" class="small">Nearest guard memory decreases across 240/280/320, but only 16 of 20 frozen samples were available.</text>
+<text x="70" y="650" class="small">Safe stop: observed descendant residual, unknown shutdown signature, exact PID cleanup complete. R1-R6 not started.</text>
+</svg>

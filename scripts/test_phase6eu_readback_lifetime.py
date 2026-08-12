@@ -2,6 +2,7 @@ import hashlib
 import json
 import os
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
@@ -106,6 +107,23 @@ class Phase6EuReadbackLifetimeContract(unittest.TestCase):
         gate = self.contract["return_to_supply_comparison"]
         self.assertTrue(gate["not_part_of_this_contract"])
         self.assertIn("R0 through R4", gate["allowed_only_after"][0])
+
+    def test_published_safe_stop_is_fail_closed(self):
+        path = ROOT / "docs/devlog/assets/phase6/nanovdb_readback_lifetime_safe_stop.json"
+        report = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual("safe_stop", report["status"])
+        self.assertEqual("observed_descendant_residual", report["stop_reason"])
+        self.assertEqual(1, report["formal_population"]["attempted"])
+        self.assertEqual(0, report["formal_population"]["normal_exit"])
+        self.assertTrue(report["flow"]["no_readback_performed"])
+        self.assertFalse(report["flow"]["plateau_pass"])
+        self.assertFalse(report["decision"]["r1_to_r6_started"])
+        self.assertFalse(report["production_changed"])
+        ET.parse(path.with_suffix(".svg"))
+        devlog = (ROOT / "docs/devlog/index.html").read_text(encoding="utf-8")
+        self.assertIn('id="phase-6eu"', devlog)
+        latest = json.loads((ROOT / "docs/devlog/assets/latest_demo.json").read_text(encoding="utf-8"))
+        self.assertNotEqual("phase6eu", latest["phase"])
 
 
 if __name__ == "__main__":

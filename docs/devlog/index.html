@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6et">最新記録</a>
+        <a href="#phase-6eu">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6et">Phase 6ETの結果を読む</a>
+        <a class="button primary" href="#phase-6eu">Phase 6EUの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6ET four-log memory calibration safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6EU readback-free lifecycle safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>A normal exit · B fixed guard safe stop</strong></div>
+        <div><span>Lifecycle</span><strong>samples complete · unknown shutdown residual</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
@@ -56,6 +56,19 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6eu" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6EU entry"><span class="phase-number compact">6EU</span><p><time datetime="2026-08-12">2026.08.12</time></p><span class="pill current">Readback lifetime staged · lifecycle safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6EU · NanoVDB readback lifetime</p><h2>readbackなしでframe 320へ。<br>stage close前の終了残留で安全停止。</h2><p>Phase 6ES／6ETを凍結したまま、public NanoVDBの取得、参照寿命、fuel変換、NumPy集計、JSONL、空間samplingをR0～R6へ分離しました。production、Point、Flow、CollisionProxy、14 GiB guardは変更していません。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/nanovdb_readback_lifetime_safe_stop.svg"><img src="assets/phase6/nanovdb_readback_lifetime_safe_stop.svg" alt="Phase 6EUのreadbackなし安定区間とKit Private Bytes" loading="lazy"></a><figcaption><div><strong>Flow samples complete / normal exit not established</strong><span>R0 peak 13.549 GiB · R1–R6 not started · exact cleanup complete</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Readback-free R0</p><h3>14,547,746,816 bytes</h3><p>frame 320までreadbackを一度も呼ばず、active blocksは<code>505 → 1356</code>でした。late区間のblocks変動は3.970%、nearest guard memoryは<code>14.257 → 13.902 → 13.819 GB</code>と減少しました。</p></section><section class="note"><p class="note-label">Frozen plateau</p><h3>16 / 20 samples · not qualified</h3><p>active blocksとPrivate Bytesは安定傾向でしたが、凍結済みのresource sample数に不足し、さらにnormal OS exitもありません。事後にplateau基準を緩和していません。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Fail-closed lifecycle result</p><h3>measurement_complete後、shutdown_completeへ到達せず。</h3><p>inner monitorはabsolute timeout。CDBはall-thread stackを保存しましたが、既知NGXの5-token signatureは不一致だったため<code>unknown_shutdown_failure</code>です。Kit、conhost、telemetry transmitterをPID＋開始時刻＋pathでcleanupし、残留0でした。</p><p>fatal、dump、automatic upload、device lost、TDRは0。正式母集団はattempted <code>1 / 27</code>、accepted 0です。R0 run 2/3とR1～R6を開始せず、14 GiB上限、93.33%対100%、動画、latest demoを変更していません。</p><p>同期Private Bytes markerのctypes宣言不足も発見し、小さい非Kit fixtureで修正しました。safe-stop runは再実行していません。</p><p>Release build、Phase 0 RTX、Phase 3、focused <code>181 / 181</code>、標準suite <code>78 / 78</code>が合格しました。Phase 3はmass balance 0、active blocks final/peak <code>264 / 352</code>、peak fuel 1.0です。日誌399 reference・201 JSON・167 SVG・2 ZIPも検査済みで、production SHA-256は不変です。</p><p><a href="assets/phase6/nanovdb_readback_lifetime_safe_stop.json">machine report</a> · <a href="assets/phase6/nanovdb_readback_lifetime_safe_stop.svg">比較SVG</a> · <a href="../design/nanovdb_readback_lifetime_calibration.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Flow samples</strong><small>10 / 10 complete</small></p></div><div role="listitem"><span>!</span><p><strong>OS lifecycle</strong><small>unknown residual</small></p></div><div role="listitem"><span>✓</span><p><strong>Cleanup</strong><small>residual 0</small></p></div><div role="listitem"><span>—</span><p><strong>R1–R6</strong><small>not started</small></p></div><div role="listitem"><span>—</span><p><strong>Supply compare</strong><small>blocked</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Safe stop and next</p><h3>新rootと明示承認なしに再実行しない。</h3><p>次回は修正済み同期markerを使い、R0の3 normal exitsから再開します。R0が成立するまではNanoVDB acquire、GC比較、供給比較へ進みません。内部診断だけで画面差がないため新しい動画は作りません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6et" class="section entry-section phase-six">
