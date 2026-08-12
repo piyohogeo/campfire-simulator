@@ -53,7 +53,7 @@ def _nearest(rows: list[dict], timestamp: float, key: str) -> dict | None:
     return row
 
 
-def _marker_resources(markers: list[dict], trace: list[dict], gpu: list[dict]) -> list[dict]:
+def _marker_resources(markers: list[dict], trace: list[dict], gpu: list[dict], contract: dict) -> list[dict]:
     output = []
     for index, marker in enumerate(markers):
         stamp = _epoch(marker["timestamp_utc"])
@@ -63,6 +63,8 @@ def _marker_resources(markers: list[dict], trace: list[dict], gpu: list[dict]) -
         if resource:
             kit = next((item for item in resource.get("processes", []) if item.get("role") == "kit"), None)
         memory = marker.get("process_memory") or {}
+        kit_private_sync = memory.get("private_bytes")
+        tree_private = None if resource is None else resource.get("tree_private_bytes")
         output.append({
             "sequence": index,
             "marker": marker.get("marker"),
@@ -70,14 +72,26 @@ def _marker_resources(markers: list[dict], trace: list[dict], gpu: list[dict]) -
             "epoch": stamp,
             "frame": marker.get("frame"),
             "active_blocks": marker.get("active_blocks"),
-            "kit_private_bytes_sync": memory.get("private_bytes"),
+            "kit_private_bytes_sync": kit_private_sync,
             "kit_working_set_bytes_sync": memory.get("working_set_bytes"),
-            "tree_private_bytes_nearest": None if resource is None else resource.get("tree_private_bytes"),
+            "tree_private_bytes_nearest": tree_private,
             "outer_kit_private_bytes_nearest": None if kit is None else kit.get("private_bytes"),
             "outer_resource_alignment_seconds": None if resource is None else abs(float(resource["timestamp_utc_epoch"]) - stamp),
             "gpu_dedicated_memory_mib_nearest": None if gpu_row is None else gpu_row["dedicated_memory_mib"],
             "gpu_alignment_seconds": None if gpu_row is None else abs(float(gpu_row["epoch"]) - stamp),
+            "kit_private_ceiling_margin_bytes_sync": (
+                None if kit_private_sync is None
+                else int(contract["safety"]["kit_private_limit_bytes"]) - int(kit_private_sync)
+            ),
+            "tree_private_ceiling_margin_bytes_nearest": (
+                None if tree_private is None
+                else int(contract["safety"]["unique_tree_private_limit_bytes"]) - int(tree_private)
+            ),
         })
+    for index, row in enumerate(output):
+        row["duration_from_previous_marker_seconds"] = (
+            None if index == 0 else row["epoch"] - output[index - 1]["epoch"]
+        )
     return output
 
 
@@ -123,7 +137,7 @@ def _case(root: Path, label: str, prefix: str, contract: dict) -> dict:
     gpu = _gpu_rows(log_dir / f"{prefix}.gpu.csv")
     raw = _json(case_dir / "raw.json") or {}
     boundary = _readback_boundary(raw)
-    resources = _marker_resources(markers, trace, gpu)
+    resources = _marker_resources(markers, trace, gpu, contract)
     names = _by_name(resources)
     before = "readback_call_before"
     result.update({
@@ -173,6 +187,15 @@ def _condition_gate(case: dict, contract: dict, condition: str) -> tuple[bool, l
         logical = fuel.get("nbytes")
         if logical is None or logical <= 0 or logical > gates["maximum_fuel_logical_bytes"]:
             failures.append("fuel_logical_bytes")
+        if fuel.get("size") is None or fuel.get("dtype") is None or fuel.get("shape") is None:
+            failures.append("fuel_array_metadata")
+        if fuel.get("c_contiguous") is None or fuel.get("f_contiguous") is None:
+            failures.append("fuel_contiguity_metadata")
+        retained = boundary.get("converted_after_source_alias_release") or {}
+        if retained.get("valid") is not True or retained.get("identity") != fuel.get("identity"):
+            failures.append("converted_invalid_after_source_alias_release")
+        if boundary.get("converted_weak_reference_alive_immediately_after_release") is not False:
+            failures.append("converted_weak_reference_after_release")
         if (boundary.get("observable_copy_contract") or {}).get("explicit_copy_function_calls") != 0:
             failures.append("explicit_copy_function_call")
     if not _ordered(case["boundary_marker_order"], required):
@@ -216,8 +239,12 @@ def main() -> None:
             "conversion_cpu_increment_bytes": conversion,
             "conversion_cpu_increment_to_logical_ratio": None if not logical or conversion is None else conversion / logical,
             "conversion_gpu_increment_mib": c1["gpu_deltas_mib"].get("fuel_conversion_immediate"),
+            "allocation_classification": (c1.get("boundary", {}).get("observable_copy_contract") or {}).get("allocation_classification"),
+            "new_data_buffer_allocated": (c1.get("boundary", {}).get("observable_copy_contract") or {}).get("new_data_buffer_allocated"),
+            "source_alias_release_delta_bytes": c1["memory_deltas_bytes"].get("original_alias_release"),
+            "converted_object_release_delta_bytes": c1["memory_deltas_bytes"].get("converted_buffer_release"),
             "c1_minus_c0_peak_private_bytes": c1["kit_peak_private_bytes"] - c0["kit_peak_private_bytes"],
-            "c1_minus_c0_terminal_private_bytes": c1["aligned_time_series"][-1]["kit_private_bytes"] - c0["aligned_time_series"][-1]["kit_private_bytes"],
+            "c1_minus_c0_terminal_private_bytes": c1["terminal_kit_private_bytes"] - c0["terminal_kit_private_bytes"],
             "c1_minus_c0_active_block_mean": c1["dynamic_stationarity"]["metrics"]["active_blocks"]["mean"] - c0["dynamic_stationarity"]["metrics"]["active_blocks"]["mean"],
         }
     report = {

@@ -185,18 +185,24 @@ def _type_name(value):
 
 def _bounded_object_metadata(value):
     metadata = {"type": _type_name(value), "identity": int(id(value))}
-    for name in ("dtype", "shape", "strides", "nbytes"):
+    for name in ("dtype", "shape", "strides", "size", "nbytes"):
         try:
             item = getattr(value, name)
             if name in ("shape", "strides"):
                 item = [int(component) for component in item]
-            elif name == "nbytes":
+            elif name in ("size", "nbytes"):
                 item = int(item)
             else:
                 item = str(item)
             metadata[name] = item
         except Exception:
             metadata[name] = None
+    try:
+        metadata["c_contiguous"] = bool(value.flags.c_contiguous)
+        metadata["f_contiguous"] = bool(value.flags.f_contiguous)
+    except Exception:
+        metadata["c_contiguous"] = None
+        metadata["f_contiguous"] = None
     return metadata
 
 
@@ -425,33 +431,62 @@ def _readback_boundary(flow, volume, arguments, frame, output):
             "exact_internal_copy_count_known": bool(fuel_array["same_identity_as_source"]),
             "internal_public_readback_copy_count_known": False,
         }
+        if fuel_array["same_identity_as_source"]:
+            allocation_classification = "same_object_zero_copy_alias"
+            new_data_buffer_allocated = False
+        elif fuel_array["shares_memory_with_source"] is True:
+            allocation_classification = "distinct_python_object_shared_memory_alias"
+            new_data_buffer_allocated = False
+        elif fuel_array["shares_memory_with_source"] is False:
+            allocation_classification = "independent_data_buffer_observed"
+            new_data_buffer_allocated = True
+        else:
+            allocation_classification = "unconfirmed"
+            new_data_buffer_allocated = None
+        result["observable_copy_contract"].update({
+            "allocation_classification": allocation_classification,
+            "new_data_buffer_allocated": new_data_buffer_allocated,
+        })
         mark(
             "fuel_conversion_after", dtype=str(array.dtype), shape=[int(value) for value in array.shape],
-            strides=[int(value) for value in array.strides], buffer_bytes=int(array.nbytes),
+            strides=[int(value) for value in array.strides], element_count=int(array.size),
+            buffer_bytes=int(array.nbytes), c_contiguous=bool(array.flags.c_contiguous),
+            f_contiguous=bool(array.flags.f_contiguous),
             owns_data=bool(array.flags.owndata), same_identity_as_source=bool(array is source),
             shares_memory_with_source=fuel_array["shares_memory_with_source"],
+            allocation_classification=allocation_classification,
         )
         del base
         converted_identity = int(id(array))
         converted_is_original = bool(array is source)
         del raw
         del source
+        converted_after_source_release = _bounded_object_metadata(array)
+        result["converted_after_source_alias_release"] = {
+            "valid": True,
+            **converted_after_source_release,
+        }
         mark(
             "original_tuple_and_all_handle_aliases_released",
             retained_converted_object=True,
             retained_converted_identity=converted_identity,
             retained_converted_is_original_fuel_object=converted_is_original,
+            converted_object_valid=True,
         )
         mark(
             "converted_buffer_only_held", converted_identity=converted_identity,
             converted_is_original_fuel_object=converted_is_original,
-            buffer_bytes=int(array.nbytes),
+            buffer_bytes=int(array.nbytes), element_count=int(array.size),
         )
+        converted_weak_reference = weakref.ref(array)
         del array
+        converted_alive_after_release = converted_weak_reference() is not None
+        result["converted_weak_reference_alive_immediately_after_release"] = converted_alive_after_release
         mark(
             "converted_buffer_released",
             released_identity=converted_identity,
             converted_was_original_fuel_object=converted_is_original,
+            converted_weak_reference_alive=converted_alive_after_release,
         )
         result["reference_disposal"] = "ordered_explicit_del_no_gc"
         result["gc_collected"] = None

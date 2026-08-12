@@ -54,11 +54,15 @@ class Phase6EzFuelConversionContract(unittest.TestCase):
             '"fuel_handle_selected"', '"fuel_conversion_before"', '"fuel_conversion_after"',
             '"original_tuple_and_all_handle_aliases_released"',
             '"converted_buffer_only_held"', '"converted_buffer_released"',
+            '"allocation_classification"', '"new_data_buffer_allocated"',
+            '"c_contiguous"', '"f_contiguous"',
+            '"converted_weak_reference_alive_immediately_after_release"',
         ):
             self.assertIn(token, self.probe)
         self.assertIn('"phase6ez"', self.case_runner)
         self.assertIn('"fuel_convert_release"', self.case_runner)
         self.assertIn("del value", self.probe)
+        self.assertIn('"kit_private_ceiling_margin_bytes_sync"', (SCRIPTS / "analyze_phase6ez_fuel_conversion.py").read_text(encoding="utf-8"))
         self.assertNotIn("gc.collect()", self.probe[self.probe.index("if exact_release_mode") : self.probe.index("array = None", self.probe.index("if exact_release_mode"))])
 
     def test_marker_order_helper_is_fail_closed(self):
