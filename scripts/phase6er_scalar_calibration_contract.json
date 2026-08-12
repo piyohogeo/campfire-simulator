@@ -1,0 +1,45 @@
+{
+  "schema": "campfire.phase6er.scalar-calibration-contract.v1",
+  "phase": "phase6er",
+  "declared_before_runtime": true,
+  "production_connected": false,
+  "geometry_contract_sha256": "926533B4DD908200B0C2C8D179C7425698F589D06566877035BB4E90ECC1A903",
+  "scenario": "lower_upper",
+  "geometry_variant": "phase6er_corrected",
+  "offset_m": 0.075,
+  "support_radius_m": 0.05,
+  "policy": "strict_all",
+  "sample_frames": [30, 60, 90, 120, 150, 180, 200],
+  "conditions": [
+    {"name": "emitterless_on", "collision": true, "fuel_scale": 0.0, "temperature_scale": 0.0, "smoke_scale": 0.0},
+    {"name": "normal_off", "collision": false, "fuel_scale": 1.0, "temperature_scale": 1.0, "smoke_scale": 1.0},
+    {"name": "normal_on", "collision": true, "fuel_scale": 1.0, "temperature_scale": 1.0, "smoke_scale": 1.0},
+    {"name": "temperature_only_off", "collision": false, "fuel_scale": 0.0, "temperature_scale": 1.0, "smoke_scale": 0.0},
+    {"name": "temperature_only_on", "collision": true, "fuel_scale": 0.0, "temperature_scale": 1.0, "smoke_scale": 0.0},
+    {"name": "smoke_only_off", "collision": false, "fuel_scale": 0.0, "temperature_scale": 0.0, "smoke_scale": 1.0},
+    {"name": "smoke_only_on", "collision": true, "fuel_scale": 0.0, "temperature_scale": 0.0, "smoke_scale": 1.0}
+  ],
+  "roi_contract": {
+    "boundary_band": "authored Mesh interior within one channel-specific voxel",
+    "deep_interior": "authored Mesh signed depth greater than one channel-specific voxel",
+    "center_axis": "deep interior within 0.5 channel-specific voxel of the Mesh long axis",
+    "emitter_side": [[-0.36, -0.16, 0.50], [0.36, 0.16, 0.65]],
+    "opposite_side": [[-0.36, -0.16, 0.895], [0.36, 0.16, 1.05]],
+    "far_above": [[-0.50, -0.30, 1.10], [0.50, 0.30, 1.55]],
+    "exterior_flow": [[0.50, -0.25, 0.40], [0.90, 0.25, 1.55]]
+  },
+  "interpretation": {
+    "temperature_ambient_value": "unknown_before_calibration",
+    "flow_occupancy_mask_available": false,
+    "velocity_and_scalar_transport_are_separate_decisions": true,
+    "single_voxel_maximum_is_not_the_only_scalar_metric": true
+  },
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592
+  }
+}

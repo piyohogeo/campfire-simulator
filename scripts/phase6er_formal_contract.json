@@ -1,0 +1,70 @@
+{
+  "schema": "campfire.phase6er.corrected-four-log-scalar-qualification-contract.v1",
+  "phase": "phase6er",
+  "declared_before_formal_runtime": true,
+  "production_connected": false,
+  "default_enabled": false,
+  "phase6eq_policy": "frozen failure retained; no reclassification, overwrite, threshold relaxation, or sample reuse",
+  "geometry_contract_sha256": "926533B4DD908200B0C2C8D179C7425698F589D06566877035BB4E90ECC1A903",
+  "scalar_calibration_contract_sha256": "D3D8F99C3A461E85BED659A3FBFD67781EAA0B42A6FB8FF05D5072AB47853F54",
+  "scalar_calibration_root": "artifacts/phase6er-scalar-calibration-1",
+  "fixed_environment": {"kit":"110.2","flow":"110.0.0","density_cell_size_m":0.025,"velocity_voxel_size_m":0.05},
+  "point_payload": {
+    "points_per_log": 360, "fuel_per_active_point": 0.8,
+    "temperature_per_active_point": 2.0, "smoke_per_active_point": 0.08, "revision": 1
+  },
+  "policies": {
+    "strict_all": {"selected_offset_m":0.075,"self_support_allowed":false,"self_center_allowed":false,"other_support_allowed":false},
+    "allow_self_support": {"selected_offset_m":0.025,"self_support_allowed":true,"self_center_allowed":false,"other_support_allowed":false},
+    "allow_self_center": {"selected_offset_m":-0.0125,"self_support_allowed":true,"self_center_allowed":true,"other_support_allowed":false},
+    "collision_off": {"selected_offset_m":0.0,"filtering":false,"collision":false}
+  },
+  "formal_scenarios": ["lower_upper", "production_four"],
+  "formal_runs_per_condition": 3,
+  "formal_process_count": 24,
+  "sample_frames": [30,60,90,120,150,180,200],
+  "formal_orders": [
+    ["collision_off","strict_all","allow_self_support","allow_self_center"],
+    ["strict_all","allow_self_center","collision_off","allow_self_support"],
+    ["allow_self_support","collision_off","allow_self_center","strict_all"]
+  ],
+  "thresholds": {
+    "minimum_weighted_supply_retention": 0.75,
+    "maximum_active_other_support_intersections": 0,
+    "minimum_active_blocks": 1,
+    "other_or_self_deep_velocity_maximum_m_s": 0.0001,
+    "collision_off_deep_velocity_minimum_m_s": 0.1,
+    "collision_on_to_off_deep_velocity_ratio": 0.01,
+    "emitterless_temperature_deep_maximum": 0.0001,
+    "emitterless_smoke_deep_maximum": 0.0001,
+    "collision_off_temperature_deep_sum_minimum": 100.0,
+    "collision_off_smoke_deep_sum_minimum": 100.0,
+    "collision_on_to_off_temperature_deep_sum_ratio": 0.15,
+    "collision_on_to_off_smoke_deep_sum_ratio": 0.15,
+    "collision_on_to_off_temperature_center_sum_ratio": 0.15,
+    "collision_on_to_off_smoke_center_sum_ratio": 0.15,
+    "collision_on_to_off_temperature_opposite_sum_ratio": 0.85,
+    "collision_on_to_off_smoke_opposite_sum_ratio": 0.85,
+    "collision_on_to_off_temperature_far_sum_ratio": 0.70,
+    "collision_on_to_off_smoke_far_sum_ratio": 0.70,
+    "external_temperature_profile_threshold": 0.1,
+    "latest_external_ignition_frame": 60,
+    "minimum_external_vertical_extent_m": 0.1,
+    "maximum_run_relative_variation": 0.20,
+    "source_channel_sum_relative_tolerance": 0.000001
+  },
+  "scalar_gate_scope": {
+    "lower_upper": "hard gate: upper blocker has no emitter; compare baseline-adjusted deep/center/opposite/far scalar integrals to same-run Collision OFF",
+    "production_four": "report only: every log emits, so per-log scalar ownership cannot be separated from leakage; do not apply the lower_upper scalar-occlusion hard gate"
+  },
+  "visual_conditions": ["collision_off","strict_all","allow_self_support","allow_self_center"],
+  "visual_scenario": "lower_upper",
+  "visual_after_numeric_only": true,
+  "support_radius": {"value_m":0.05,"status":"engineering assumption equal to one velocity voxel; not a public Flow support radius"},
+  "safety": {
+    "normal_os_exit_required": true, "automatic_retry": false,
+    "runner_private_limit_bytes":536870912,"diagnostic_private_limit_bytes":536870912,
+    "kit_private_limit_bytes":15032385536,"unique_tree_private_limit_bytes":17179869184,
+    "physical_memory_floor_bytes":8589934592,"commit_headroom_floor_bytes":8589934592
+  }
+}
