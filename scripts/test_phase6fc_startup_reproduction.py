@@ -91,6 +91,7 @@ class Phase6FcStartupReproduction(unittest.TestCase):
         self.assertIn("StartupFlowAcquirePosition", runner)
         self.assertIn("StartupPreTimelineUpdateCount", runner)
         self.assertIn("StartupExtraUpdateBeforePlayCount", runner)
+        self.assertIn('if (-not [string]::IsNullOrWhiteSpace($previousExitUtc))', runner)
         self.assertNotIn("Start-Sleep", runner)
 
     def test_resource_ceilings_unchanged(self):

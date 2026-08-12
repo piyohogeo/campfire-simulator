@@ -81,11 +81,13 @@ function Invoke-StartupCase($Condition) {
         "-StartupFlowAcquirePosition", ([string]$Condition.flow_acquire_position),
         "-StartupPreTimelineUpdateCount", ([string]$Condition.pre_timeline_update_count),
         "-StartupExtraUpdateBeforePlayCount", ([string]$Condition.extra_update_before_play_count),
-        "-PreviousProcessExitUtc", $previousExitUtc,
         "-RendererDrainUpdates", "$($contract.lifecycle.renderer_pre_close_drain_updates)",
         "-StageCloseTimeoutSeconds", "$($contract.lifecycle.stage_close_timeout_seconds)",
         "-AbsoluteTimeoutSeconds", "$($contract.lifecycle.inner_absolute_timeout_seconds)"
     )
+    if (-not [string]::IsNullOrWhiteSpace($previousExitUtc)) {
+        $arguments += @("-PreviousProcessExitUtc", $previousExitUtc)
+    }
     $guardArgs = @(
         $guard, "--trace", (Join-Path $logs "$label.resource.jsonl"),
         "--summary", (Join-Path $logs "$label.guard.json"),
