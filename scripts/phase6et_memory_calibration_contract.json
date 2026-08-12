@@ -1,0 +1,70 @@
+{
+  "schema": "campfire.phase6et.four-log-memory-calibration-contract.v1",
+  "phase": "phase6et",
+  "declared_before_runtime": true,
+  "phase6es_history": "frozen resource safe stop; no overwrite, reclassification, retrospective limit relaxation, or sample reuse",
+  "purpose": "isolate the dominant Kit private-byte boundary for the corrected four-log Flow condition by changing one readback or analysis factor at a time",
+  "production_neutral": true,
+  "geometry_variant": "phase6er_corrected",
+  "scenario": "production_four",
+  "point_policy": "allow_self_center",
+  "point_offset_m": -0.0125,
+  "support_radius_m": 0.05,
+  "collision_enabled": true,
+  "point_filtering_enabled": true,
+  "source_scales": {"fuel": 1.0, "temperature": 1.0, "smoke": 1.0},
+  "sample_frames": [30, 60, 90, 120, 150, 180, 200],
+  "representative_collider_index": 2,
+  "warmup": {
+    "formal_population": false,
+    "scenario": "lower_upper",
+    "sample_frames": [30, 60],
+    "readback_channels": [],
+    "spatial_collectors_enabled": false,
+    "reason": "compile and initialize the unchanged Flow/RTX path before the formal counterbalanced matrix"
+  },
+  "conditions": [
+    {"id": "A_flow_only", "readback_channels": [], "spatial_collectors_enabled": false, "spatial_collider_indices": [], "offline_transport": false},
+    {"id": "B_minimal_fuel", "readback_channels": ["fuel"], "spatial_collectors_enabled": false, "spatial_collider_indices": [], "offline_transport": false},
+    {"id": "C_velocity", "readback_channels": ["velocity"], "spatial_collectors_enabled": true, "spatial_collider_indices": [2], "offline_transport": false},
+    {"id": "D_temperature", "readback_channels": ["temperature"], "spatial_collectors_enabled": true, "spatial_collider_indices": [2], "offline_transport": false},
+    {"id": "E_smoke", "readback_channels": ["smoke"], "spatial_collectors_enabled": true, "spatial_collider_indices": [2], "offline_transport": false},
+    {"id": "F_velocity_temperature_smoke", "readback_channels": ["velocity", "temperature", "smoke"], "spatial_collectors_enabled": true, "spatial_collider_indices": [2], "offline_transport": false},
+    {"id": "G_directional_transport", "readback_channels": ["velocity", "temperature", "smoke"], "spatial_collectors_enabled": true, "spatial_collider_indices": [2], "offline_transport": true}
+  ],
+  "run_orders": [
+    ["A_flow_only", "B_minimal_fuel", "C_velocity", "D_temperature", "E_smoke", "F_velocity_temperature_smoke", "G_directional_transport"],
+    ["D_temperature", "E_smoke", "F_velocity_temperature_smoke", "G_directional_transport", "A_flow_only", "B_minimal_fuel", "C_velocity"],
+    ["G_directional_transport", "F_velocity_temperature_smoke", "E_smoke", "D_temperature", "C_velocity", "B_minimal_fuel", "A_flow_only"]
+  ],
+  "formal_process_count": 21,
+  "resource_sampling_seconds": 0.25,
+  "gpu_sampling_ms": 1000,
+  "plateau_contract": {
+    "tail_window_seconds": 20.0,
+    "maximum_tail_growth_bytes_per_second": 8388608,
+    "minimum_tail_samples": 20,
+    "note": "calibration classification only; exceeding this threshold is a safe stop and is not retrospectively relaxed"
+  },
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "condition_timeout_seconds": 1200,
+    "automatic_retry": false
+  },
+  "return_to_phase6es_comparison": {
+    "allowed_only_after": [
+      "all 21 calibration processes normal-exit",
+      "all conditions plateau in all three runs",
+      "dominant growth boundary identified or sufficiently bounded",
+      "resource limit decision frozen in a new contract",
+      "fatal/dump/upload/device-lost/TDR/residual-process counts are zero",
+      "directional transport synthetic sign fixture remains passing"
+    ],
+    "not_part_of_this_contract": true
+  }
+}

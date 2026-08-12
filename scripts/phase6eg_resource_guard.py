@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import signal
 import subprocess
 import sys
@@ -47,6 +48,8 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--cpu-high-thread-threshold-percent", type=float, default=10.0)
     parser.add_argument("--lifecycle-path", type=Path)
     parser.add_argument("--diagnostic-marker-path", type=Path)
+    parser.add_argument("--gpu-csv", type=Path)
+    parser.add_argument("--gpu-sample-ms", type=int, default=1000)
     parser.add_argument("command", nargs=argparse.REMAINDER)
     return parser
 
@@ -278,6 +281,38 @@ def run(arguments: argparse.Namespace) -> int:
     previous_cpu: dict[tuple[int, float], tuple[float, float]] = {}
     cpu_peaks = {"runner": 0.0, "kit": 0.0, "diagnostic": 0.0, "child": 0.0}
     observed_processes: dict[tuple[int, float], dict] = {}
+    gpu_popen: subprocess.Popen | None = None
+    gpu_process: psutil.Process | None = None
+    gpu_stdout = None
+    gpu_stderr = None
+    gpu_status = "not_requested"
+
+    if arguments.gpu_csv is not None:
+        arguments.gpu_csv.parent.mkdir(parents=True, exist_ok=True)
+        gpu_stderr_path = arguments.gpu_csv.with_suffix(arguments.gpu_csv.suffix + ".stderr.log")
+        gpu_stdout = arguments.gpu_csv.open("wb", buffering=0)
+        gpu_stderr = gpu_stderr_path.open("wb", buffering=0)
+        executable = shutil.which("nvidia-smi")
+        if executable is None:
+            gpu_status = "unavailable"
+            gpu_stdout.close()
+            gpu_stderr.close()
+            gpu_stdout = None
+            gpu_stderr = None
+        else:
+            gpu_popen = subprocess.Popen(
+                [
+                    executable,
+                    "--query-gpu=timestamp,index,name,pci.bus_id,memory.used,utilization.gpu,power.draw,temperature.gpu",
+                    "--format=csv,noheader,nounits",
+                    f"--loop-ms={max(250, arguments.gpu_sample_ms)}",
+                ],
+                stdout=gpu_stdout,
+                stderr=gpu_stderr,
+                creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+            )
+            gpu_process = psutil.Process(gpu_popen.pid)
+            gpu_status = "running"
 
     with arguments.stdout.open("wb", buffering=0) as stdout, arguments.stderr.open("wb", buffering=0) as stderr, arguments.trace.open("w", encoding="utf-8", buffering=1) as trace:
         creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
@@ -287,6 +322,10 @@ def run(arguments: argparse.Namespace) -> int:
         while popen.poll() is None:
             timestamp = time.time()
             rows = _tree_rows(root, timestamp, arguments.cpu_telemetry)
+            if gpu_process is not None and gpu_popen is not None and gpu_popen.poll() is None:
+                gpu_row = _memory_row(gpu_process, root.pid, timestamp, arguments.cpu_telemetry)
+                if gpu_row is not None:
+                    rows.append(gpu_row)
             for row in rows:
                 observed_processes[(row["pid"], row["create_time_utc_epoch"])] = {
                     "pid": row["pid"],
@@ -353,7 +392,9 @@ def run(arguments: argparse.Namespace) -> int:
             runner_peak = max((row["private_bytes"] for row in rows if row["role"] == "runner"), default=0)
             kit_peak = max((row["private_bytes"] for row in rows if row["role"] == "kit"), default=0)
             diagnostic_peak = max((row["private_bytes"] for row in rows if row["role"] == "diagnostic"), default=0)
-            if runner_peak > arguments.runner_private_limit:
+            if arguments.gpu_csv is not None and (gpu_popen is None or gpu_popen.poll() is not None):
+                stop_reason = "gpu_telemetry_exit"
+            elif runner_peak > arguments.runner_private_limit:
                 stop_reason = "runner_private_limit"
             elif kit_peak > arguments.kit_private_limit:
                 stop_reason = "kit_private_limit"
@@ -377,6 +418,20 @@ def run(arguments: argparse.Namespace) -> int:
             stop_reason = stop_reason or "exit_wait_timeout"
             _terminate_tree(root)
             exit_code = popen.poll()
+
+    if gpu_popen is not None and gpu_process is not None:
+        if gpu_popen.poll() is None:
+            _terminate_tree(gpu_process)
+        try:
+            gpu_popen.wait(timeout=10)
+        except subprocess.TimeoutExpired:
+            _terminate_tree(gpu_process)
+    if gpu_stdout is not None:
+        gpu_stdout.close()
+    if gpu_stderr is not None:
+        gpu_stderr.close()
+    if arguments.gpu_csv is not None:
+        gpu_status = "completed" if arguments.gpu_csv.is_file() and arguments.gpu_csv.stat().st_size > 0 else "missing_output"
 
     observed_cleanup = _cleanup_observed_processes(observed_processes, root_identity["pid"])
     process_absent = bool(observed_cleanup["all_observed_absent"])
@@ -404,7 +459,14 @@ def run(arguments: argparse.Namespace) -> int:
             "missing_first_sample": True,
             "high_cpu_thread_capture_threshold_percent": arguments.cpu_high_thread_threshold_percent,
             "peak_percent_of_logical_total_by_role": cpu_peaks,
-            "gpu_sampling": "not_collected_to_preserve_isolated_inventory_boundary",
+            "gpu_sampling": {
+                "status": gpu_status,
+                "csv_path": None if arguments.gpu_csv is None else str(arguments.gpu_csv.resolve()),
+                "sample_interval_ms": None if arguments.gpu_csv is None else max(250, arguments.gpu_sample_ms),
+                "scope": "system-wide per-adapter dedicated allocation, utilization, power, and temperature from isolated nvidia-smi",
+                "shared_memory": "unavailable from this bounded public telemetry path; not estimated",
+                "stdout_buffered_in_parent": False,
+            },
         },
         "limits": {
             "runner_private_bytes": arguments.runner_private_limit,

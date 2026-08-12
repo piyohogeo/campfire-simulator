@@ -103,10 +103,16 @@ def analyze_condition(condition: Path, plane_offset_m: float = 0.05) -> dict:
     raw = json.loads((condition / "raw.json").read_text(encoding="utf-8"))
     poses = raw["point_payload"]["poses"]
     manifests = raw["spatial_manifests"]
+    manifest_indices = raw.get("spatial_manifest_collider_indices", list(range(len(manifests))))
+    manifests_by_index = dict(zip(manifest_indices, manifests))
     frames = sorted(int(sample["frame"]) for sample in raw["samples"])
     colliders = []
     for collider_index, pose in enumerate(poses):
-        files = {Path(item["path"]).name: Path(item["path"]) for item in manifests[collider_index]["files"]}
+        manifest = manifests_by_index.get(collider_index)
+        if manifest is None:
+            colliders.append({"index": collider_index, "pose": pose, "scalar_transport_available": False, "reason": "no spatial collector was configured for this collider", "frames": []})
+            continue
+        files = {Path(item["path"]).name: Path(item["path"]) for item in manifest["files"]}
         scalar_available = any(name.endswith("_temperature.npz") for name in files)
         if not scalar_available:
             colliders.append({"index": collider_index, "pose": pose, "scalar_transport_available": False, "reason": "bounded Phase 6ES collection keeps velocity for every collider but scalar only for the predeclared representative blocker", "frames": []})

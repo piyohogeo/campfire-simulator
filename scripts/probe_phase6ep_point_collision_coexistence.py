@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import hashlib
 import json
+import os
 import sys
 import time
 import traceback
@@ -43,6 +44,8 @@ def _settings():
     report_phase = settings.get_as_string("/phase6ep/reportPhase") or "phase6ep"
     sample_text = settings.get_as_string("/phase6ep/sampleFrames")
     scalar_collider_text = settings.get_as_string("/phase6ep/spatialScalarColliderIndices")
+    spatial_collider_text = settings.get_as_string("/phase6ep/spatialColliderIndices")
+    readback_text = settings.get_as_string("/phase6ep/readbackChannels")
     sample_frames = tuple(int(value.strip()) for value in sample_text.split(",") if value.strip()) if sample_text else tuple(SAMPLE_FRAMES)
     return {
         "output": Path(settings.get_as_string("/phase6ep/output")).resolve(),
@@ -54,6 +57,16 @@ def _settings():
         "policy": policy,
         "report_phase": report_phase,
         "sample_frames": sample_frames,
+        "readback_channels": (
+            tuple() if readback_text.strip().lower() == "none" else
+            tuple(value.strip() for value in readback_text.split(",") if value.strip())
+            if readback_text else tuple(CHANNELS)
+        ),
+        "spatial_collectors_enabled": bool(settings.get_as_bool("/phase6ep/spatialCollectorsEnabled")),
+        "spatial_collider_indices": (
+            tuple(int(value.strip()) for value in spatial_collider_text.split(",") if value.strip())
+            if spatial_collider_text else None
+        ),
         "spatial_all_channels": bool(settings.get_as_bool("/phase6ep/spatialAllChannels")),
         "spatial_scalar_collider_indices": (
             tuple(int(value.strip()) for value in scalar_collider_text.split(",") if value.strip())
@@ -67,12 +80,33 @@ def _settings():
         "fuel_scale": float(settings.get_as_float("/phase6ep/fuelScale")),
         "temperature_scale": float(settings.get_as_float("/phase6ep/temperatureScale")),
         "smoke_scale": float(settings.get_as_float("/phase6ep/smokeScale")),
+        "resource_marker_path": (
+            Path(settings.get_as_string("/phase6ep/resourceMarkerPath")).resolve()
+            if settings.get_as_string("/phase6ep/resourceMarkerPath") else None
+        ),
     }
 
 
 def _write(path, payload):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+
+
+def _append_resource_marker(path, marker, **values):
+    if path is None:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "schema": "campfire.phase6et.resource-marker.v1",
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "perf_counter_ns": time.perf_counter_ns(),
+        "pid": os.getpid(),
+        "marker": marker,
+        **values,
+    }
+    with path.open("a", encoding="utf-8", newline="\n") as stream:
+        stream.write(json.dumps(payload, ensure_ascii=False, separators=(",", ":"), allow_nan=False) + "\n")
+        stream.flush()
 
 
 def _sha256(path):
@@ -224,18 +258,25 @@ async def _run():
     timeline = omni.timeline.get_timeline_interface()
     flow = None
     collectors = []
+    collectors_by_index = {}
     exit_code = 1
     try:
+        unknown_channels = sorted(set(arguments["readback_channels"]) - set(CHANNELS))
+        if unknown_channels:
+            raise ValueError(f"unsupported readback channels: {unknown_channels}")
+        _append_resource_marker(arguments["resource_marker_path"], "process_entry")
         stage_path, point_summary, plan = _build_stage(arguments)
         report["point_payload"] = point_summary
         report["stage_sha256"] = _sha256(stage_path)
         report["lifecycle_marker"] = "offline_stage_complete"
         _write(output, report)
+        _append_resource_marker(arguments["resource_marker_path"], "offline_stage_complete")
         await context.open_stage_async(str(stage_path))
         stage = context.get_stage()
         if stage is None:
             raise RuntimeError("Phase 6EP stage connection failed")
         report["lifecycle_marker"] = "usd_context_connection_complete"
+        _append_resource_marker(arguments["resource_marker_path"], "usd_context_connection_complete")
         emitter = stage.GetPrimAtPath("/World/Flow/EmitterPoint")
         report["public_point_support_attribute_audit"] = {
             "attributes": _stats_attributes(emitter),
@@ -258,12 +299,19 @@ async def _run():
         flow = _flowusd.acquire_flowusd_interface()
         volume = omni.volume.get_volume_interface()
         public_members = sorted(name for name in dir(flow) if not name.startswith("_"))
-        for index, (_pose, points, counts, indices, _geometry) in enumerate(plan["geometries"]):
-            collectors.append(SpatialNeighborhoodCollector(
-                output.parent / "spatial" / f"collider_{index}",
-                f"{arguments['scenario']}_collider_{index}", points, counts, indices,
-                np.eye(4), public_members,
-            ))
+        if arguments["spatial_collectors_enabled"]:
+            selected_colliders = arguments["spatial_collider_indices"]
+            if selected_colliders is None:
+                selected_colliders = tuple(range(len(plan["geometries"])))
+            for index in selected_colliders:
+                _pose, points, counts, indices, _geometry = plan["geometries"][index]
+                collector = SpatialNeighborhoodCollector(
+                    output.parent / "spatial" / f"collider_{index}",
+                    f"{arguments['scenario']}_collider_{index}", points, counts, indices,
+                    np.eye(4), public_members,
+                )
+                collectors.append(collector)
+                collectors_by_index[index] = collector
         timeline.stop()
         timeline.set_current_time(0.0)
         for _ in range(12):
@@ -271,6 +319,7 @@ async def _run():
         timeline.play()
         report["lifecycle_marker"] = "timeline_playing"
         _write(output, report)
+        _append_resource_marker(arguments["resource_marker_path"], "timeline_playing")
         capture_frames = set()
         if arguments["capture"]:
             capture_frames = set(range(arguments["capture_start"], arguments["capture_end"] + 1))
@@ -285,6 +334,7 @@ async def _run():
                 report["captures"].append({"frame": frame, **(await _capture(viewport, path))})
             if frame not in sample_frames:
                 continue
+            _append_resource_marker(arguments["resource_marker_path"], "sample_started", frame=frame)
             if int(point_summary["active_point_count"]) == 0:
                 report["samples"].append({
                     "frame": frame,
@@ -295,13 +345,24 @@ async def _run():
                     },
                 })
                 _write(output, report)
+                _append_resource_marker(arguments["resource_marker_path"], "sample_persisted", frame=frame)
                 continue
+            if not arguments["readback_channels"]:
+                report["samples"].append({"frame": frame, "active_blocks": int(flow.get_active_block_count()), "channels": {}})
+                _write(output, report)
+                _append_resource_marker(arguments["resource_marker_path"], "sample_persisted", frame=frame, readback=False)
+                continue
+            _append_resource_marker(arguments["resource_marker_path"], "readback_started", frame=frame)
             raw = flow.get_latest_nanovdb_readback()
+            _append_resource_marker(arguments["resource_marker_path"], "readback_complete", frame=frame, returned_channel_count=len(raw))
             sample = {"frame": frame, "active_blocks": int(flow.get_active_block_count()), "channels": {}}
-            for channel_index, channel in enumerate(CHANNELS):
+            for channel in arguments["readback_channels"]:
+                channel_index = CHANNELS.index(channel)
+                _append_resource_marker(arguments["resource_marker_path"], "channel_started", frame=frame, channel=channel)
                 array = np.asarray(raw[channel_index])
                 if array.size == 0:
                     sample["channels"][channel] = {"available": False}
+                    _append_resource_marker(arguments["resource_marker_path"], "channel_complete", frame=frame, channel=channel, available=False)
                     continue
                 nvdb_path = output.parent / f"sample_{frame}_{channel}.nvdb"
                 bounds = {
@@ -317,7 +378,7 @@ async def _run():
                     })
                 spatial_collectors = collectors
                 if channel != "velocity" and arguments["spatial_scalar_collider_indices"] is not None:
-                    spatial_collectors = [collectors[index] for index in arguments["spatial_scalar_collider_indices"]]
+                    spatial_collectors = [collectors_by_index[index] for index in arguments["spatial_scalar_collider_indices"] if index in collectors_by_index]
                 details = _save_and_sample(
                     flow, volume, array, channel, nvdb_path, bounds,
                     spatial_collector=(spatial_collectors if arguments["spatial_all_channels"] or channel == "velocity" else None),
@@ -327,10 +388,14 @@ async def _run():
                         if arguments["report_phase"] in ("phase6eq", "phase6er", "phase6es") else None
                     ),
                 )
-                sample["channels"][channel] = {"available": True, "word_count": int(array.size), **details}
+                sample["channels"][channel] = {"available": True, "word_count": int(array.size), "buffer_dtype": str(array.dtype), "buffer_bytes": int(array.nbytes), **details}
+                _append_resource_marker(arguments["resource_marker_path"], "channel_complete", frame=frame, channel=channel, available=True, buffer_bytes=int(array.nbytes))
             report["samples"].append(sample)
+            _append_resource_marker(arguments["resource_marker_path"], "sample_persist_started", frame=frame)
             _write(output, report)
-        report["spatial_manifests"] = [collector.finalize() for collector in collectors]
+            _append_resource_marker(arguments["resource_marker_path"], "sample_persisted", frame=frame, raw_json_bytes=output.stat().st_size)
+        report["spatial_manifest_collider_indices"] = list(collectors_by_index)
+        report["spatial_manifests"] = [collectors_by_index[index].finalize() for index in collectors_by_index]
         report["active_blocks_final"] = int(flow.get_active_block_count())
         report["source_sums"] = {
             "fuel": float(sum(emitter.GetAttribute("pointFuels").Get())),
@@ -342,6 +407,7 @@ async def _run():
         report["completion_contract"]["results_saved"] = True
         report["lifecycle_marker"] = "measurement_complete"
         _write(output, report)
+        _append_resource_marker(arguments["resource_marker_path"], "measurement_complete")
         exit_code = 0
     except Exception as error:
         report["status"] = "error"
@@ -350,21 +416,25 @@ async def _run():
     finally:
         try:
             report["lifecycle_marker"] = "timeline_stopping"
+            _append_resource_marker(arguments["resource_marker_path"], "timeline_stopping")
             timeline.stop()
             for _ in range(12):
                 await app.next_update_async()
             report["lifecycle_marker"] = "timeline_stopped"
+            _append_resource_marker(arguments["resource_marker_path"], "timeline_stopped")
             report["completion_contract"]["timeline_stopped"] = True
             await context.close_stage_async()
             for _ in range(12):
                 await app.next_update_async()
             report["lifecycle_marker"] = "renderer_drain_complete"
+            _append_resource_marker(arguments["resource_marker_path"], "renderer_drain_complete")
             report["completion_contract"]["stage_closed"] = True
             report["completion_contract"]["renderer_drained"] = True
             if flow is not None:
                 _flowusd.release_flowusd_interface(flow)
                 flow = None
             report["lifecycle_marker"] = "shutdown_complete"
+            _append_resource_marker(arguments["resource_marker_path"], "shutdown_complete")
             report["completion_contract"]["shutdown_requested"] = True
             report["lifecycle_history"].append({"marker": "shutdown_complete", "timestamp_utc": datetime.now(timezone.utc).isoformat()})
         except Exception as error:
