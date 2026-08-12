@@ -1,0 +1,1786 @@
+{
+  "schema": "campfire.phase6eo.box-mesh-occlusion-report.v1",
+  "phase": "phase6eo",
+  "qualified": true,
+  "contract_sha256": "F3A0CE0003F2BDFC6A6B59A61D517700C0961C0417B12EFADA9902EA63ABA1F8",
+  "contract": {
+    "schema": "campfire.phase6eo.box-mesh-occlusion-contract.v1",
+    "phase": "phase6eo",
+    "declared_before_formal_runs": true,
+    "purpose": "Recreate the historical Box occlusion comparison with the qualified closed Mesh CollisionProxy and require matching numeric and visual evidence before PointEmitter coexistence begins.",
+    "historical_phase6en_contract_sha256": "C6A73B07385519160488DA07C023EC5E5104BB0A8C1BDAD70D01B15327CAE1AF",
+    "fixed_scene": {
+      "flow_version": "110.0.0",
+      "up_axis": "Z",
+      "meters_per_unit": 1.0,
+      "box_dimensions_m": [
+        2.0,
+        2.0,
+        0.25
+      ],
+      "box_center_m": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "mesh_vertex_count": 8,
+      "mesh_face_count": 6,
+      "mesh_index_count": 24,
+      "mesh_closed": true,
+      "collision_approximation": "convexDecomposition",
+      "emitter_center_m": [
+        0.0,
+        0.0,
+        0.55
+      ],
+      "emitter_radius_m": 0.1,
+      "emitter_surface_clearance_m": 0.225,
+      "density_cell_size_m": 0.025,
+      "expected_velocity_voxel_size_m": 0.05,
+      "sample_frames": [
+        60,
+        120,
+        180,
+        200
+      ],
+      "capture_frames": {
+        "start": 21,
+        "end": 200,
+        "stride": 1,
+        "fps": 15
+      },
+      "camera": "/World/Cameras/Front"
+    },
+    "conditions": [
+      {
+        "name": "box_off",
+        "mode": "phase6eo_box_mesh_collision_off",
+        "physicsCollisionEnabled": false
+      },
+      {
+        "name": "box_on",
+        "mode": "phase6eo_box_mesh_collision_on",
+        "physicsCollisionEnabled": true
+      }
+    ],
+    "geometry_contract": {
+      "primary_distance": "signed shortest distance to the exact authored 8-vertex, 6-face closed Mesh",
+      "flow_internal_occupancy_mask_public_api_available": false,
+      "geometry_labels_are_flow_occupancy": false,
+      "boundary_band": "actual-Mesh inside with signed depth in [0,1] native velocity voxel; reported and excluded from hard maximum",
+      "deep_interior": "actual-Mesh signed depth greater than 1 native velocity voxel",
+      "center_axis": "deep interior and horizontal distance to Box Z center line at most 0.5 native velocity voxel"
+    },
+    "thresholds": {
+      "collision_on_deep_maximum_m_s": 0.0001,
+      "collision_on_center_maximum_m_s": 0.0001,
+      "collision_off_deep_minimum_m_s": 0.1,
+      "collision_off_center_minimum_m_s": 0.1,
+      "on_to_off_deep_maximum_ratio": 0.01,
+      "above_far_mean_ratio_maximum": 0.1,
+      "above_far_off_velocity_mean_minimum_m_s": 0.1,
+      "above_far_off_temperature_mean_minimum": 0.001,
+      "above_far_off_smoke_mean_minimum": 0.001,
+      "fuel_absolute_tolerance": 1e-06
+    },
+    "gates": {
+      "normal_os_exit_only": true,
+      "active_blocks_positive_and_source_fuel_preserved": true,
+      "on_off_stage_difference_only_collision_switch": true,
+      "all_four_velocity_samples_required": true,
+      "numeric_deep_center_positive_and_relative_gates": true,
+      "above_far_velocity_temperature_smoke_suppression": true,
+      "fatal_dump_upload_device_lost_tdr_residual_zero": true,
+      "continuous_video_is_comparison_evidence_not_numeric_gate": true
+    },
+    "scope_if_pass": "Only the fixed axis-aligned Box, Flow 110.0.0, current fixed grid, closed Mesh CollisionProxy, and the isolated Sphere-source comparison; no production integration or PointEmitter qualification."
+  },
+  "conditions": {
+    "box_off": {
+      "raw_sha256": "5436214CCF1AD6506FCE460577C00572AA053737D07E32AB9D32D95160C53BA3",
+      "evidence_sha256": "24C82C14E31596349CFB18FF4C24A6E11FC9299694AE89FA7E0DBA539A0F7318",
+      "status": "ok",
+      "lifecycle_marker": "shutdown_complete",
+      "functional_status": "pass",
+      "lifecycle_status": "normal_exit",
+      "process_exit_code": 0,
+      "active_blocks_final": 62,
+      "source_fuel": 0.800000011920929,
+      "stage_audit": {
+        "up_axis": "Z",
+        "meters_per_unit": 1.0,
+        "collider": {
+          "path": "/World/ColliderReferenceMesh",
+          "type": "Mesh",
+          "applied_schemas": [
+            "PhysicsCollisionAPI",
+            "PhysicsMeshCollisionAPI"
+          ],
+          "rigid_body_api": false,
+          "collision_enabled": true,
+          "approximation": "convexDecomposition",
+          "world_bbox_min": [
+            -1.0,
+            -1.0,
+            0.875
+          ],
+          "world_bbox_max": [
+            1.0,
+            1.0,
+            1.125
+          ]
+        },
+        "emitter": {
+          "path": "/World/Flow/Emitter",
+          "type": "FlowEmitterSphere",
+          "world_origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "radius": 0.10000000149011612,
+          "fuel": 0.800000011920929,
+          "allocationScale": 1.5,
+          "applyPostPressure": false,
+          "coupleRateVelocity": 2.0,
+          "physicsVelocityScale": 0.0,
+          "coupleRateFuel": 2.0,
+          "coupleRateTemperature": 10.0,
+          "coupleRateSmoke": 1.0,
+          "coupleRateBurn": 0.0,
+          "target_velocity": "(0, 0, 0.3)"
+        },
+        "simulate": {
+          "layer": 0,
+          "densityCellSize": 0.02500000037252903,
+          "stepsPerSecond": 60.0,
+          "forceSimulate": true,
+          "simulateWhenPaused": false,
+          "physicsCollisionEnabled": false,
+          "physicsConvexCollision": true,
+          "velocitySubSteps": 1
+        },
+        "physics_scene_paths": [
+          "/World/PhysicsScene"
+        ],
+        "flow_prim_types": [
+          {
+            "path": "/World/Flow/Emitter",
+            "type": "FlowEmitterSphere"
+          },
+          {
+            "path": "/World/Flow/Simulate",
+            "type": "FlowSimulate"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection",
+            "type": "FlowAdvectionCombustionParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/temperature",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/fuel",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/burn",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/smoke",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/velocity",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/divergence",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/vorticity",
+            "type": "FlowVorticityParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/pressure",
+            "type": "FlowPressureParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/summaryAllocate",
+            "type": "FlowSummaryAllocateParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/nanoVdbExport",
+            "type": "FlowSparseNanoVdbExportParams"
+          },
+          {
+            "path": "/World/Flow/Offscreen",
+            "type": "FlowOffscreen"
+          },
+          {
+            "path": "/World/Flow/Offscreen/colormap",
+            "type": "FlowRayMarchColormapParams"
+          },
+          {
+            "path": "/World/Flow/Offscreen/shadow",
+            "type": "FlowShadowParams"
+          },
+          {
+            "path": "/World/Flow/Offscreen/debugVolume",
+            "type": "FlowDebugVolumeParams"
+          },
+          {
+            "path": "/World/Flow/Render",
+            "type": "FlowRender"
+          },
+          {
+            "path": "/World/Flow/Render/rayMarch",
+            "type": "FlowRayMarchParams"
+          },
+          {
+            "path": "/World/Flow/Render/rayMarch/cloud",
+            "type": "FlowRayMarchCloudParams"
+          },
+          {
+            "path": "/World/Flow/Render/renderSettings",
+            "type": "FlowRenderSettingsParams"
+          }
+        ]
+      },
+      "preparation": {
+        "source_kind": "phase6ds",
+        "source_sha256": "297EB5552845666714457484468B4F3870B255881E6193ED4EB1C6CFC09FCF5B",
+        "stage_unmodified": false,
+        "prepared_sha256": "C9D30D578D8AFCFCA06B2CD71E924D4446CAB87923C798351891877FEDFC5755",
+        "offline_changes": [
+          "disable_original_Cube_collision",
+          "define_equivalent_Mesh",
+          "enable_public_nanovdb_readback",
+          "apply_USD_collision_and_mesh_collision_APIs_to_Mesh:approximation=convexDecomposition",
+          "physicsCollisionEnabled=false_for_positive_control"
+        ],
+        "audit_collider_path": "/World/ColliderReferenceMesh"
+      },
+      "velocity_samples": [
+        {
+          "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eo-box-occlusion-4\\spatial\\box_off\\box_off_f0060_velocity.npz",
+          "sha256": "51FB134FDB5B5C85B0CCD95B487CD45A2BA6123C5C21023847AF922BF2096CA7",
+          "frame": 60,
+          "velocity_voxel_size_m": 0.05000000074505806,
+          "boundary": {
+            "voxel_count": 3498,
+            "minimum": 0.0,
+            "mean": 0.04017782179828649,
+            "p50": 0.00035665524774231017,
+            "p95": 0.043767284601926804,
+            "p99": 0.7918189764022827,
+            "maximum": 8.17232894897461,
+            "above_1e_6": 2046,
+            "above_1e_5": 2030,
+            "above_5e_5": 1974,
+            "above_1e_4": 1914
+          },
+          "deep": {
+            "voxel_count": 4107,
+            "minimum": 0.0,
+            "mean": 0.052841221398116534,
+            "p50": 0.0014859638176858425,
+            "p95": 0.08282801508903503,
+            "p99": 0.8460991978645325,
+            "maximum": 7.979513645172119,
+            "above_1e_6": 3070,
+            "above_1e_5": 3050,
+            "above_5e_5": 2975,
+            "above_1e_4": 2893
+          },
+          "center": {
+            "voxel_count": 3,
+            "minimum": 5.744318008422852,
+            "mean": 6.010066986083984,
+            "p50": 5.793141841888428,
+            "p95": 6.492741107940674,
+            "p99": 6.492741107940674,
+            "maximum": 6.492741107940674,
+            "above_1e_6": 3,
+            "above_1e_5": 3,
+            "above_5e_5": 3,
+            "above_1e_4": 3
+          },
+          "maximum_cells": {
+            "boundary": {
+              "magnitude_m_s": 8.17232894897461,
+              "index_ijk": [
+                -1,
+                -1,
+                22
+              ],
+              "world_xyz_m": [
+                -0.05000000074505806,
+                -0.05000000074505806,
+                1.1000000163912773
+              ],
+              "local_xyz_m": [
+                -0.05000000074505806,
+                -0.05000000074505806,
+                1.1000000163912773
+              ],
+              "mesh_signed_distance_m": -0.024999983608722687,
+              "mesh_distance_voxels": -0.49999967217445374
+            },
+            "deep": {
+              "magnitude_m_s": 7.979513645172119,
+              "index_ijk": [
+                -1,
+                -1,
+                20
+              ],
+              "world_xyz_m": [
+                -0.05000000074505806,
+                -0.05000000074505806,
+                1.0000000149011612
+              ],
+              "local_xyz_m": [
+                -0.05000000074505806,
+                -0.05000000074505806,
+                1.0000000149011612
+              ],
+              "mesh_signed_distance_m": -0.1249999850988388,
+              "mesh_distance_voxels": -2.499999761581421
+            },
+            "center": {
+              "magnitude_m_s": 6.492741107940674,
+              "index_ijk": [
+                0,
+                0,
+                20
+              ],
+              "world_xyz_m": [
+                0.0,
+                0.0,
+                1.0000000149011612
+              ],
+              "local_xyz_m": [
+                0.0,
+                0.0,
+                1.0000000149011612
+              ],
+              "mesh_signed_distance_m": -0.1249999850988388,
+              "mesh_distance_voxels": -2.499999761581421
+            }
+          }
+        },
+        {
+          "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eo-box-occlusion-4\\spatial\\box_off\\box_off_f0120_velocity.npz",
+          "sha256": "544689A5A0C12409E40703A792ED94EBF82E120038CD4610967CCE5B5534E759",
+          "frame": 120,
+          "velocity_voxel_size_m": 0.05000000074505806,
+          "boundary": {
+            "voxel_count": 3498,
+            "minimum": 0.0,
+            "mean": 0.040951336082361074,
+            "p50": 0.000571312615647912,
+            "p95": 0.09032507985830307,
+            "p99": 0.8134821057319641,
+            "maximum": 8.341697692871094,
+            "above_1e_6": 2048,
+            "above_1e_5": 2041,
+            "above_5e_5": 2004,
+            "above_1e_4": 1972
+          },
+          "deep": {
+            "voxel_count": 4107,
+            "minimum": 0.0,
+            "mean": 0.05383780062793856,
+            "p50": 0.0020259476732462645,
+            "p95": 0.09404773265123367,
+            "p99": 1.0987313985824585,
+            "maximum": 7.770808696746826,
+            "above_1e_6": 3072,
+            "above_1e_5": 3062,
+            "above_5e_5": 3006,
+            "above_1e_4": 2960
+          },
+          "center": {
+            "voxel_count": 3,
+            "minimum": 4.563106536865234,
+            "mean": 6.104147434234619,
+            "p50": 6.3940887451171875,
+            "p95": 7.3552470207214355,
+            "p99": 7.3552470207214355,
+            "maximum": 7.3552470207214355,
+            "above_1e_6": 3,
+            "above_1e_5": 3,
+            "above_5e_5": 3,
+            "above_1e_4": 3
+          },
+          "maximum_cells": {
+            "boundary": {
+              "magnitude_m_s": 8.341697692871094,
+              "index_ijk": [
+                -1,
+                -1,
+                22
+              ],
+              "world_xyz_m": [
+                -0.05000000074505806,
+                -0.05000000074505806,
+                1.1000000163912773
+              ],
+              "local_xyz_m": [
+                -0.05000000074505806,
+                -0.05000000074505806,
+                1.1000000163912773
+              ],
+              "mesh_signed_distance_m": -0.024999983608722687,
+              "mesh_distance_voxels": -0.49999967217445374
+            },
+            "deep": {
+              "magnitude_m_s": 7.770808696746826,
+              "index_ijk": [
+                -1,
+                -1,
+                21
+              ],
+              "world_xyz_m": [
+                -0.05000000074505806,
+                -0.05000000074505806,
+                1.0500000156462193
+              ],
+              "local_xyz_m": [
+                -0.05000000074505806,
+                -0.05000000074505806,
+                1.0500000156462193
+              ],
+              "mesh_signed_distance_m": -0.07499998807907104,
+              "mesh_distance_voxels": -1.4999996423721313
+            },
+            "center": {
+              "magnitude_m_s": 7.3552470207214355,
+              "index_ijk": [
+                0,
+                0,
+                21
+              ],
+              "world_xyz_m": [
+                0.0,
+                0.0,
+                1.0500000156462193
+              ],
+              "local_xyz_m": [
+                0.0,
+                0.0,
+                1.0500000156462193
+              ],
+              "mesh_signed_distance_m": -0.07499998807907104,
+              "mesh_distance_voxels": -1.4999996423721313
+            }
+          }
+        },
+        {
+          "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eo-box-occlusion-4\\spatial\\box_off\\box_off_f0180_velocity.npz",
+          "sha256": "9DF593F541F9469CC51CB4707DC5044C684BCC39CF7BCBF14D0E5BEC7FBEEFB6",
+          "frame": 180,
+          "velocity_voxel_size_m": 0.05000000074505806,
+          "boundary": {
+            "voxel_count": 3498,
+            "minimum": 0.0,
+            "mean": 0.04204925507764506,
+            "p50": 0.0005290858680382371,
+            "p95": 0.07476624101400375,
+            "p99": 0.8220690488815308,
+            "maximum": 7.977234363555908,
+            "above_1e_6": 2048,
+            "above_1e_5": 2034,
+            "above_5e_5": 1987,
+            "above_1e_4": 1947
+          },
+          "deep": {
+            "voxel_count": 4107,
+            "minimum": 0.0,
+            "mean": 0.051268329939635725,
+            "p50": 0.0021720691584050655,
+            "p95": 0.08548325300216675,
+            "p99": 0.9294825792312622,
+            "maximum": 7.722599029541016,
+            "above_1e_6": 3072,
+            "above_1e_5": 3053,
+            "above_5e_5": 2980,
+            "above_1e_4": 2919
+          },
+          "center": {
+            "voxel_count": 3,
+            "minimum": 6.716613292694092,
+            "mean": 7.120562553405762,
+            "p50": 6.922475337982178,
+            "p95": 7.722599029541016,
+            "p99": 7.722599029541016,
+            "maximum": 7.722599029541016,
+            "above_1e_6": 3,
+            "above_1e_5": 3,
+            "above_5e_5": 3,
+            "above_1e_4": 3
+          },
+          "maximum_cells": {
+            "boundary": {
+              "magnitude_m_s": 7.977234363555908,
+              "index_ijk": [
+                0,
+                0,
+                22
+              ],
+              "world_xyz_m": [
+                0.0,
+                0.0,
+                1.1000000163912773
+              ],
+              "local_xyz_m": [
+                0.0,
+                0.0,
+                1.1000000163912773
+              ],
+              "mesh_signed_distance_m": -0.024999983608722687,
+              "mesh_distance_voxels": -0.49999967217445374
+            },
+            "deep": {
+              "magnitude_m_s": 7.722599029541016,
+              "index_ijk": [
+                0,
+                0,
+                21
+              ],
+              "world_xyz_m": [
+                0.0,
+                0.0,
+                1.0500000156462193
+              ],
+              "local_xyz_m": [
+                0.0,
+                0.0,
+                1.0500000156462193
+              ],
+              "mesh_signed_distance_m": -0.07499998807907104,
+              "mesh_distance_voxels": -1.4999996423721313
+            },
+            "center": {
+              "magnitude_m_s": 7.722599029541016,
+              "index_ijk": [
+                0,
+                0,
+                21
+              ],
+              "world_xyz_m": [
+                0.0,
+                0.0,
+                1.0500000156462193
+              ],
+              "local_xyz_m": [
+                0.0,
+                0.0,
+                1.0500000156462193
+              ],
+              "mesh_signed_distance_m": -0.07499998807907104,
+              "mesh_distance_voxels": -1.4999996423721313
+            }
+          }
+        },
+        {
+          "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eo-box-occlusion-4\\spatial\\box_off\\box_off_f0200_velocity.npz",
+          "sha256": "A70505479EB89BBE23EA74224CE3B41831D55B8D253CE1923FACC9D09EC25F30",
+          "frame": 200,
+          "velocity_voxel_size_m": 0.05000000074505806,
+          "boundary": {
+            "voxel_count": 3498,
+            "minimum": 0.0,
+            "mean": 0.04448180247780795,
+            "p50": 0.0004643548163585365,
+            "p95": 0.07681909203529358,
+            "p99": 0.8835767507553101,
+            "maximum": 7.525166034698486,
+            "above_1e_6": 2045,
+            "above_1e_5": 2029,
+            "above_5e_5": 1977,
+            "above_1e_4": 1929
+          },
+          "deep": {
+            "voxel_count": 4107,
+            "minimum": 0.0,
+            "mean": 0.05227702164744616,
+            "p50": 0.002106383442878723,
+            "p95": 0.10620630532503128,
+            "p99": 0.9108057022094727,
+            "maximum": 7.531680107116699,
+            "above_1e_6": 3071,
+            "above_1e_5": 3045,
+            "above_5e_5": 2970,
+            "above_1e_4": 2906
+          },
+          "center": {
+            "voxel_count": 3,
+            "minimum": 5.950393199920654,
+            "mean": 6.216890176137288,
+            "p50": 6.23994255065918,
+            "p95": 6.460334777832031,
+            "p99": 6.460334777832031,
+            "maximum": 6.460334777832031,
+            "above_1e_6": 3,
+            "above_1e_5": 3,
+            "above_5e_5": 3,
+            "above_1e_4": 3
+          },
+          "maximum_cells": {
+            "boundary": {
+              "magnitude_m_s": 7.525166034698486,
+              "index_ijk": [
+                0,
+                -1,
+                18
+              ],
+              "world_xyz_m": [
+                0.0,
+                -0.05000000074505806,
+                0.9000000134110451
+              ],
+              "local_xyz_m": [
+                0.0,
+                -0.05000000074505806,
+                0.9000000134110451
+              ],
+              "mesh_signed_distance_m": -0.025000013411045074,
+              "mesh_distance_voxels": -0.5000002384185791
+            },
+            "deep": {
+              "magnitude_m_s": 7.531680107116699,
+              "index_ijk": [
+                -1,
+                -1,
+                21
+              ],
+              "world_xyz_m": [
+                -0.05000000074505806,
+                -0.05000000074505806,
+                1.0500000156462193
+              ],
+              "local_xyz_m": [
+                -0.05000000074505806,
+                -0.05000000074505806,
+                1.0500000156462193
+              ],
+              "mesh_signed_distance_m": -0.07499998807907104,
+              "mesh_distance_voxels": -1.4999996423721313
+            },
+            "center": {
+              "magnitude_m_s": 6.460334777832031,
+              "index_ijk": [
+                0,
+                0,
+                21
+              ],
+              "world_xyz_m": [
+                0.0,
+                0.0,
+                1.0500000156462193
+              ],
+              "local_xyz_m": [
+                0.0,
+                0.0,
+                1.0500000156462193
+              ],
+              "mesh_signed_distance_m": -0.07499998807907104,
+              "mesh_distance_voxels": -1.4999996423721313
+            }
+          }
+        }
+      ],
+      "above_far": {
+        "velocity": {
+          "samples": [
+            {
+              "frame": 60,
+              "mean": 0.8597317174159045,
+              "p95": 4.217634788331107,
+              "maximum": 9.182792508549955,
+              "nonzero_voxel_count": 847
+            },
+            {
+              "frame": 120,
+              "mean": 0.9222546858882873,
+              "p95": 4.526434773390122,
+              "maximum": 9.69855233037347,
+              "nonzero_voxel_count": 847
+            },
+            {
+              "frame": 180,
+              "mean": 0.8698329899767234,
+              "p95": 4.690675295789486,
+              "maximum": 9.889462081736967,
+              "nonzero_voxel_count": 847
+            },
+            {
+              "frame": 200,
+              "mean": 0.7159954157605876,
+              "p95": 3.44940623155114,
+              "maximum": 9.314716932896742,
+              "nonzero_voxel_count": 847
+            }
+          ],
+          "maximum_mean": 0.9222546858882873
+        },
+        "fuel": {
+          "samples": [
+            {
+              "frame": 60,
+              "mean": 1.6225082887818998e-08,
+              "p95": 0.0,
+              "maximum": 9.47713851928711e-06,
+              "nonzero_voxel_count": 326
+            },
+            {
+              "frame": 120,
+              "mean": 1.4905185271944834e-08,
+              "p95": 0.0,
+              "maximum": 1.0848045349121094e-05,
+              "nonzero_voxel_count": 138
+            },
+            {
+              "frame": 180,
+              "mean": 7.782567039940958e-08,
+              "p95": 0.0,
+              "maximum": 5.340576171875e-05,
+              "nonzero_voxel_count": 277
+            },
+            {
+              "frame": 200,
+              "mean": 4.407975147648048e-08,
+              "p95": 0.0,
+              "maximum": 1.245737075805664e-05,
+              "nonzero_voxel_count": 298
+            }
+          ],
+          "maximum_mean": 7.782567039940958e-08
+        },
+        "temperature": {
+          "samples": [
+            {
+              "frame": 60,
+              "mean": 0.04434676358515013,
+              "p95": 0.298828125,
+              "maximum": 0.974609375,
+              "nonzero_voxel_count": 4593
+            },
+            {
+              "frame": 120,
+              "mean": 0.05768457293317281,
+              "p95": 0.390625,
+              "maximum": 0.974609375,
+              "nonzero_voxel_count": 5059
+            },
+            {
+              "frame": 180,
+              "mean": 0.05182210524404754,
+              "p95": 0.39892578125,
+              "maximum": 0.974609375,
+              "nonzero_voxel_count": 4258
+            },
+            {
+              "frame": 200,
+              "mean": 0.043625659518328155,
+              "p95": 0.259765625,
+              "maximum": 0.974609375,
+              "nonzero_voxel_count": 4483
+            }
+          ],
+          "maximum_mean": 0.05768457293317281
+        },
+        "smoke": {
+          "samples": [
+            {
+              "frame": 60,
+              "mean": 0.01620003799152091,
+              "p95": 0.003200531005859375,
+              "maximum": 1.1533203125,
+              "nonzero_voxel_count": 489
+            },
+            {
+              "frame": 120,
+              "mean": 0.022541912590977698,
+              "p95": 0.07806396484375,
+              "maximum": 1.1982421875,
+              "nonzero_voxel_count": 576
+            },
+            {
+              "frame": 180,
+              "mean": 0.019472127053469155,
+              "p95": 0.049468994140625,
+              "maximum": 1.087890625,
+              "nonzero_voxel_count": 573
+            },
+            {
+              "frame": 200,
+              "mean": 0.013283895160132668,
+              "p95": 7.152557373046875e-07,
+              "maximum": 1.0947265625,
+              "nonzero_voxel_count": 416
+            }
+          ],
+          "maximum_mean": 0.022541912590977698
+        }
+      },
+      "resource": {
+        "status": "ok",
+        "peaks": {
+          "runner": 95899648,
+          "kit": 12343246848,
+          "diagnostic": 17027072,
+          "child": 62562304,
+          "tree": 12434616320
+        },
+        "machine_minima": {
+          "available_physical_bytes": 90552414208,
+          "estimated_commit_headroom_bytes": 109696708608
+        }
+      },
+      "safety": {
+        "fatal_count": 0,
+        "dump_count": 0,
+        "upload_attempt_count": 0,
+        "production_changed": false,
+        "registry_unchanged": true
+      }
+    },
+    "box_on": {
+      "raw_sha256": "E37B12208296FECDF3BDB18A3DD734B8D6B08D5CFF13369DB8F28686F5C11811",
+      "evidence_sha256": "5A1C957BE59CD765F10FC64E3695177F40F1EFD22652BB611EBCC56AD5F3776F",
+      "status": "ok",
+      "lifecycle_marker": "shutdown_complete",
+      "functional_status": "pass",
+      "lifecycle_status": "normal_exit",
+      "process_exit_code": 0,
+      "active_blocks_final": 24,
+      "source_fuel": 0.800000011920929,
+      "stage_audit": {
+        "up_axis": "Z",
+        "meters_per_unit": 1.0,
+        "collider": {
+          "path": "/World/ColliderReferenceMesh",
+          "type": "Mesh",
+          "applied_schemas": [
+            "PhysicsCollisionAPI",
+            "PhysicsMeshCollisionAPI"
+          ],
+          "rigid_body_api": false,
+          "collision_enabled": true,
+          "approximation": "convexDecomposition",
+          "world_bbox_min": [
+            -1.0,
+            -1.0,
+            0.875
+          ],
+          "world_bbox_max": [
+            1.0,
+            1.0,
+            1.125
+          ]
+        },
+        "emitter": {
+          "path": "/World/Flow/Emitter",
+          "type": "FlowEmitterSphere",
+          "world_origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "radius": 0.10000000149011612,
+          "fuel": 0.800000011920929,
+          "allocationScale": 1.5,
+          "applyPostPressure": false,
+          "coupleRateVelocity": 2.0,
+          "physicsVelocityScale": 0.0,
+          "coupleRateFuel": 2.0,
+          "coupleRateTemperature": 10.0,
+          "coupleRateSmoke": 1.0,
+          "coupleRateBurn": 0.0,
+          "target_velocity": "(0, 0, 0.3)"
+        },
+        "simulate": {
+          "layer": 0,
+          "densityCellSize": 0.02500000037252903,
+          "stepsPerSecond": 60.0,
+          "forceSimulate": true,
+          "simulateWhenPaused": false,
+          "physicsCollisionEnabled": true,
+          "physicsConvexCollision": true,
+          "velocitySubSteps": 1
+        },
+        "physics_scene_paths": [
+          "/World/PhysicsScene"
+        ],
+        "flow_prim_types": [
+          {
+            "path": "/World/Flow/Emitter",
+            "type": "FlowEmitterSphere"
+          },
+          {
+            "path": "/World/Flow/Simulate",
+            "type": "FlowSimulate"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection",
+            "type": "FlowAdvectionCombustionParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/temperature",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/fuel",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/burn",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/smoke",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/velocity",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/advection/divergence",
+            "type": "FlowAdvectionChannelParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/vorticity",
+            "type": "FlowVorticityParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/pressure",
+            "type": "FlowPressureParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/summaryAllocate",
+            "type": "FlowSummaryAllocateParams"
+          },
+          {
+            "path": "/World/Flow/Simulate/nanoVdbExport",
+            "type": "FlowSparseNanoVdbExportParams"
+          },
+          {
+            "path": "/World/Flow/Offscreen",
+            "type": "FlowOffscreen"
+          },
+          {
+            "path": "/World/Flow/Offscreen/colormap",
+            "type": "FlowRayMarchColormapParams"
+          },
+          {
+            "path": "/World/Flow/Offscreen/shadow",
+            "type": "FlowShadowParams"
+          },
+          {
+            "path": "/World/Flow/Offscreen/debugVolume",
+            "type": "FlowDebugVolumeParams"
+          },
+          {
+            "path": "/World/Flow/Render",
+            "type": "FlowRender"
+          },
+          {
+            "path": "/World/Flow/Render/rayMarch",
+            "type": "FlowRayMarchParams"
+          },
+          {
+            "path": "/World/Flow/Render/rayMarch/cloud",
+            "type": "FlowRayMarchCloudParams"
+          },
+          {
+            "path": "/World/Flow/Render/renderSettings",
+            "type": "FlowRenderSettingsParams"
+          }
+        ]
+      },
+      "preparation": {
+        "source_kind": "phase6ds",
+        "source_sha256": "297EB5552845666714457484468B4F3870B255881E6193ED4EB1C6CFC09FCF5B",
+        "stage_unmodified": false,
+        "prepared_sha256": "4D925F23B9D42F18B89B537E801B7EE9D8401985922CBC6C3E283D8DBF8148A9",
+        "offline_changes": [
+          "disable_original_Cube_collision",
+          "define_equivalent_Mesh",
+          "enable_public_nanovdb_readback",
+          "apply_USD_collision_and_mesh_collision_APIs_to_Mesh:approximation=convexDecomposition"
+        ],
+        "audit_collider_path": "/World/ColliderReferenceMesh"
+      },
+      "velocity_samples": [
+        {
+          "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eo-box-occlusion-4\\spatial\\box_on\\box_on_f0060_velocity.npz",
+          "sha256": "6A047B73A7F83F0DC61320DC84D5188D1438E31B5C822ADD70F1EE41EF8C2EAF",
+          "frame": 60,
+          "velocity_voxel_size_m": 0.05000000074505806,
+          "boundary": {
+            "voxel_count": 3498,
+            "minimum": 0.0,
+            "mean": 0.0030215631410715977,
+            "p50": 0.0,
+            "p95": 0.007630568463355303,
+            "p99": 0.06555207818746567,
+            "maximum": 0.3513253331184387,
+            "above_1e_6": 1024,
+            "above_1e_5": 1017,
+            "above_5e_5": 971,
+            "above_1e_4": 929
+          },
+          "deep": {
+            "voxel_count": 4107,
+            "minimum": 0.0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "above_1e_6": 0,
+            "above_1e_5": 0,
+            "above_5e_5": 0,
+            "above_1e_4": 0
+          },
+          "center": {
+            "voxel_count": 3,
+            "minimum": 0.0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "above_1e_6": 0,
+            "above_1e_5": 0,
+            "above_5e_5": 0,
+            "above_1e_4": 0
+          },
+          "maximum_cells": {
+            "boundary": {
+              "magnitude_m_s": 0.3513253331184387,
+              "index_ijk": [
+                -1,
+                -1,
+                22
+              ],
+              "world_xyz_m": [
+                -0.05000000074505806,
+                -0.05000000074505806,
+                1.1000000163912773
+              ],
+              "local_xyz_m": [
+                -0.05000000074505806,
+                -0.05000000074505806,
+                1.1000000163912773
+              ],
+              "mesh_signed_distance_m": -0.024999983608722687,
+              "mesh_distance_voxels": -0.49999967217445374
+            },
+            "deep": {
+              "magnitude_m_s": 0.0,
+              "index_ijk": [
+                -18,
+                -18,
+                19
+              ],
+              "world_xyz_m": [
+                -0.9000000134110451,
+                -0.9000000134110451,
+                0.9500000141561031
+              ],
+              "local_xyz_m": [
+                -0.9000000134110451,
+                -0.9000000134110451,
+                0.9500000141561031
+              ],
+              "mesh_signed_distance_m": -0.07500001788139343,
+              "mesh_distance_voxels": -1.500000238418579
+            },
+            "center": {
+              "magnitude_m_s": 0.0,
+              "index_ijk": [
+                0,
+                0,
+                19
+              ],
+              "world_xyz_m": [
+                0.0,
+                0.0,
+                0.9500000141561031
+              ],
+              "local_xyz_m": [
+                0.0,
+                0.0,
+                0.9500000141561031
+              ],
+              "mesh_signed_distance_m": -0.07500001788139343,
+              "mesh_distance_voxels": -1.500000238418579
+            }
+          }
+        },
+        {
+          "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eo-box-occlusion-4\\spatial\\box_on\\box_on_f0120_velocity.npz",
+          "sha256": "667659D9D7DF1175AC9C85A895D5F25F061A26E397115F50DB8A3127AA6772F7",
+          "frame": 120,
+          "velocity_voxel_size_m": 0.05000000074505806,
+          "boundary": {
+            "voxel_count": 3498,
+            "minimum": 0.0,
+            "mean": 0.003041244735404099,
+            "p50": 0.0,
+            "p95": 0.007624211721122265,
+            "p99": 0.06357928365468979,
+            "maximum": 0.3530440032482147,
+            "above_1e_6": 1024,
+            "above_1e_5": 1017,
+            "above_5e_5": 970,
+            "above_1e_4": 926
+          },
+          "deep": {
+            "voxel_count": 4107,
+            "minimum": 0.0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "above_1e_6": 0,
+            "above_1e_5": 0,
+            "above_5e_5": 0,
+            "above_1e_4": 0
+          },
+          "center": {
+            "voxel_count": 3,
+            "minimum": 0.0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "above_1e_6": 0,
+            "above_1e_5": 0,
+            "above_5e_5": 0,
+            "above_1e_4": 0
+          },
+          "maximum_cells": {
+            "boundary": {
+              "magnitude_m_s": 0.3530440032482147,
+              "index_ijk": [
+                -1,
+                0,
+                22
+              ],
+              "world_xyz_m": [
+                -0.05000000074505806,
+                0.0,
+                1.1000000163912773
+              ],
+              "local_xyz_m": [
+                -0.05000000074505806,
+                0.0,
+                1.1000000163912773
+              ],
+              "mesh_signed_distance_m": -0.024999983608722687,
+              "mesh_distance_voxels": -0.49999967217445374
+            },
+            "deep": {
+              "magnitude_m_s": 0.0,
+              "index_ijk": [
+                -18,
+                -18,
+                19
+              ],
+              "world_xyz_m": [
+                -0.9000000134110451,
+                -0.9000000134110451,
+                0.9500000141561031
+              ],
+              "local_xyz_m": [
+                -0.9000000134110451,
+                -0.9000000134110451,
+                0.9500000141561031
+              ],
+              "mesh_signed_distance_m": -0.07500001788139343,
+              "mesh_distance_voxels": -1.500000238418579
+            },
+            "center": {
+              "magnitude_m_s": 0.0,
+              "index_ijk": [
+                0,
+                0,
+                19
+              ],
+              "world_xyz_m": [
+                0.0,
+                0.0,
+                0.9500000141561031
+              ],
+              "local_xyz_m": [
+                0.0,
+                0.0,
+                0.9500000141561031
+              ],
+              "mesh_signed_distance_m": -0.07500001788139343,
+              "mesh_distance_voxels": -1.500000238418579
+            }
+          }
+        },
+        {
+          "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eo-box-occlusion-4\\spatial\\box_on\\box_on_f0180_velocity.npz",
+          "sha256": "EA864BBABC828C0068ABBFE7780B526C63248E994810ECF031CB855670007C1B",
+          "frame": 180,
+          "velocity_voxel_size_m": 0.05000000074505806,
+          "boundary": {
+            "voxel_count": 3498,
+            "minimum": 0.0,
+            "mean": 0.0029595183734429766,
+            "p50": 0.0,
+            "p95": 0.007950776256620884,
+            "p99": 0.05267583578824997,
+            "maximum": 0.34183037281036377,
+            "above_1e_6": 1024,
+            "above_1e_5": 1020,
+            "above_5e_5": 984,
+            "above_1e_4": 947
+          },
+          "deep": {
+            "voxel_count": 4107,
+            "minimum": 0.0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "above_1e_6": 0,
+            "above_1e_5": 0,
+            "above_5e_5": 0,
+            "above_1e_4": 0
+          },
+          "center": {
+            "voxel_count": 3,
+            "minimum": 0.0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "above_1e_6": 0,
+            "above_1e_5": 0,
+            "above_5e_5": 0,
+            "above_1e_4": 0
+          },
+          "maximum_cells": {
+            "boundary": {
+              "magnitude_m_s": 0.34183037281036377,
+              "index_ijk": [
+                -1,
+                -1,
+                22
+              ],
+              "world_xyz_m": [
+                -0.05000000074505806,
+                -0.05000000074505806,
+                1.1000000163912773
+              ],
+              "local_xyz_m": [
+                -0.05000000074505806,
+                -0.05000000074505806,
+                1.1000000163912773
+              ],
+              "mesh_signed_distance_m": -0.024999983608722687,
+              "mesh_distance_voxels": -0.49999967217445374
+            },
+            "deep": {
+              "magnitude_m_s": 0.0,
+              "index_ijk": [
+                -18,
+                -18,
+                19
+              ],
+              "world_xyz_m": [
+                -0.9000000134110451,
+                -0.9000000134110451,
+                0.9500000141561031
+              ],
+              "local_xyz_m": [
+                -0.9000000134110451,
+                -0.9000000134110451,
+                0.9500000141561031
+              ],
+              "mesh_signed_distance_m": -0.07500001788139343,
+              "mesh_distance_voxels": -1.500000238418579
+            },
+            "center": {
+              "magnitude_m_s": 0.0,
+              "index_ijk": [
+                0,
+                0,
+                19
+              ],
+              "world_xyz_m": [
+                0.0,
+                0.0,
+                0.9500000141561031
+              ],
+              "local_xyz_m": [
+                0.0,
+                0.0,
+                0.9500000141561031
+              ],
+              "mesh_signed_distance_m": -0.07500001788139343,
+              "mesh_distance_voxels": -1.500000238418579
+            }
+          }
+        },
+        {
+          "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eo-box-occlusion-4\\spatial\\box_on\\box_on_f0200_velocity.npz",
+          "sha256": "C1FD05085C08B9F8859A522CC682CC5BD9BE30B9909581C8242AD34BC69D19CB",
+          "frame": 200,
+          "velocity_voxel_size_m": 0.05000000074505806,
+          "boundary": {
+            "voxel_count": 3498,
+            "minimum": 0.0,
+            "mean": 0.0030246364114816355,
+            "p50": 0.0,
+            "p95": 0.007718034088611603,
+            "p99": 0.06321072578430176,
+            "maximum": 0.35085272789001465,
+            "above_1e_6": 1023,
+            "above_1e_5": 1014,
+            "above_5e_5": 972,
+            "above_1e_4": 928
+          },
+          "deep": {
+            "voxel_count": 4107,
+            "minimum": 0.0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "above_1e_6": 0,
+            "above_1e_5": 0,
+            "above_5e_5": 0,
+            "above_1e_4": 0
+          },
+          "center": {
+            "voxel_count": 3,
+            "minimum": 0.0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "maximum": 0.0,
+            "above_1e_6": 0,
+            "above_1e_5": 0,
+            "above_5e_5": 0,
+            "above_1e_4": 0
+          },
+          "maximum_cells": {
+            "boundary": {
+              "magnitude_m_s": 0.35085272789001465,
+              "index_ijk": [
+                -1,
+                -1,
+                22
+              ],
+              "world_xyz_m": [
+                -0.05000000074505806,
+                -0.05000000074505806,
+                1.1000000163912773
+              ],
+              "local_xyz_m": [
+                -0.05000000074505806,
+                -0.05000000074505806,
+                1.1000000163912773
+              ],
+              "mesh_signed_distance_m": -0.024999983608722687,
+              "mesh_distance_voxels": -0.49999967217445374
+            },
+            "deep": {
+              "magnitude_m_s": 0.0,
+              "index_ijk": [
+                -18,
+                -18,
+                19
+              ],
+              "world_xyz_m": [
+                -0.9000000134110451,
+                -0.9000000134110451,
+                0.9500000141561031
+              ],
+              "local_xyz_m": [
+                -0.9000000134110451,
+                -0.9000000134110451,
+                0.9500000141561031
+              ],
+              "mesh_signed_distance_m": -0.07500001788139343,
+              "mesh_distance_voxels": -1.500000238418579
+            },
+            "center": {
+              "magnitude_m_s": 0.0,
+              "index_ijk": [
+                0,
+                0,
+                19
+              ],
+              "world_xyz_m": [
+                0.0,
+                0.0,
+                0.9500000141561031
+              ],
+              "local_xyz_m": [
+                0.0,
+                0.0,
+                0.9500000141561031
+              ],
+              "mesh_signed_distance_m": -0.07500001788139343,
+              "mesh_distance_voxels": -1.500000238418579
+            }
+          }
+        }
+      ],
+      "above_far": {
+        "velocity": {
+          "samples": [
+            {
+              "frame": 60,
+              "mean": 0.005642670950295272,
+              "p95": 0.011207867508987513,
+              "maximum": 0.13726958458036737,
+              "nonzero_voxel_count": 847
+            },
+            {
+              "frame": 120,
+              "mean": 0.005468233156393728,
+              "p95": 0.012736128938092018,
+              "maximum": 0.14172277581987094,
+              "nonzero_voxel_count": 847
+            },
+            {
+              "frame": 180,
+              "mean": 0.005201813504819432,
+              "p95": 0.012232222343222098,
+              "maximum": 0.13818719462397258,
+              "nonzero_voxel_count": 847
+            },
+            {
+              "frame": 200,
+              "mean": 0.005328954829097085,
+              "p95": 0.012869823557568499,
+              "maximum": 0.14075231759462786,
+              "nonzero_voxel_count": 847
+            }
+          ],
+          "maximum_mean": 0.005642670950295272
+        },
+        "fuel": {
+          "samples": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "maximum_mean": 0.0
+        },
+        "temperature": {
+          "samples": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "maximum_mean": 0.0
+        },
+        "smoke": {
+          "samples": [
+            {
+              "frame": 60,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 120,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 180,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            },
+            {
+              "frame": 200,
+              "mean": 0.0,
+              "p95": 0.0,
+              "maximum": 0.0,
+              "nonzero_voxel_count": 0
+            }
+          ],
+          "maximum_mean": 0.0
+        }
+      },
+      "resource": {
+        "status": "ok",
+        "peaks": {
+          "runner": 95531008,
+          "kit": 12032819200,
+          "diagnostic": 16879616,
+          "child": 62418944,
+          "tree": 12123926528
+        },
+        "machine_minima": {
+          "available_physical_bytes": 90782461952,
+          "estimated_commit_headroom_bytes": 109926887424
+        }
+      },
+      "safety": {
+        "fatal_count": 0,
+        "dump_count": 0,
+        "upload_attempt_count": 0,
+        "production_changed": false,
+        "registry_unchanged": true
+      }
+    }
+  },
+  "stage_difference": {
+    "source_sha_equal": true,
+    "common_prefix_equal": true,
+    "only_off_extra": true
+  },
+  "gates": {
+    "checks": [
+      {
+        "name": "f60_on_deep",
+        "passed": true,
+        "value": 0.0
+      },
+      {
+        "name": "f60_on_center",
+        "passed": true,
+        "value": 0.0
+      },
+      {
+        "name": "f60_off_deep",
+        "passed": true,
+        "value": 7.979513645172119
+      },
+      {
+        "name": "f60_off_center",
+        "passed": true,
+        "value": 6.492741107940674
+      },
+      {
+        "name": "f60_deep_ratio",
+        "passed": true,
+        "value": 0.0
+      },
+      {
+        "name": "f120_on_deep",
+        "passed": true,
+        "value": 0.0
+      },
+      {
+        "name": "f120_on_center",
+        "passed": true,
+        "value": 0.0
+      },
+      {
+        "name": "f120_off_deep",
+        "passed": true,
+        "value": 7.770808696746826
+      },
+      {
+        "name": "f120_off_center",
+        "passed": true,
+        "value": 7.3552470207214355
+      },
+      {
+        "name": "f120_deep_ratio",
+        "passed": true,
+        "value": 0.0
+      },
+      {
+        "name": "f180_on_deep",
+        "passed": true,
+        "value": 0.0
+      },
+      {
+        "name": "f180_on_center",
+        "passed": true,
+        "value": 0.0
+      },
+      {
+        "name": "f180_off_deep",
+        "passed": true,
+        "value": 7.722599029541016
+      },
+      {
+        "name": "f180_off_center",
+        "passed": true,
+        "value": 7.722599029541016
+      },
+      {
+        "name": "f180_deep_ratio",
+        "passed": true,
+        "value": 0.0
+      },
+      {
+        "name": "f200_on_deep",
+        "passed": true,
+        "value": 0.0
+      },
+      {
+        "name": "f200_on_center",
+        "passed": true,
+        "value": 0.0
+      },
+      {
+        "name": "f200_off_deep",
+        "passed": true,
+        "value": 7.531680107116699
+      },
+      {
+        "name": "f200_off_center",
+        "passed": true,
+        "value": 6.460334777832031
+      },
+      {
+        "name": "f200_deep_ratio",
+        "passed": true,
+        "value": 0.0
+      },
+      {
+        "name": "above_far_velocity_ratio",
+        "passed": true,
+        "value": 0.0061183434864962765
+      },
+      {
+        "name": "above_far_temperature_ratio",
+        "passed": true,
+        "value": 0.0
+      },
+      {
+        "name": "above_far_smoke_ratio",
+        "passed": true,
+        "value": 0.0
+      },
+      {
+        "name": "off_above_velocity_positive",
+        "passed": true
+      },
+      {
+        "name": "off_above_temperature_positive",
+        "passed": true
+      },
+      {
+        "name": "off_above_smoke_positive",
+        "passed": true
+      },
+      {
+        "name": "box_off_normal_exit",
+        "passed": true
+      },
+      {
+        "name": "box_off_active_blocks",
+        "passed": true
+      },
+      {
+        "name": "box_off_fuel",
+        "passed": true
+      },
+      {
+        "name": "box_off_safety",
+        "passed": true
+      },
+      {
+        "name": "box_on_normal_exit",
+        "passed": true
+      },
+      {
+        "name": "box_on_active_blocks",
+        "passed": true
+      },
+      {
+        "name": "box_on_fuel",
+        "passed": true
+      },
+      {
+        "name": "box_on_safety",
+        "passed": true
+      },
+      {
+        "name": "stage_difference_only_collision_switch",
+        "passed": true
+      }
+    ],
+    "failed": [],
+    "worst_deep_on_off_ratio": 0.0,
+    "above_far_on_off_mean_ratios": {
+      "velocity": 0.0061183434864962765,
+      "temperature": 0.0,
+      "smoke": 0.0
+    }
+  }
+}

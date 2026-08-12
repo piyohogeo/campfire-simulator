@@ -1,0 +1,60 @@
+{
+  "schema": "campfire.phase6eo.box-occlusion-media.v1",
+  "phase": "phase6eo",
+  "source_frames": 180,
+  "unique_frames": {
+    "off": 180,
+    "on": 180,
+    "comparison": 180
+  },
+  "media": {
+    "collision_off": {
+      "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eo-box-occlusion-4\\media\\phase6eo_box_collision_off.mp4",
+      "sha256": "6C72CDBEB9E334CFEEC3C851DFC8613D9A6AE8AF4FEB985EAA4E977DC32E2865",
+      "bytes": 225388,
+      "duration_seconds": 12.0,
+      "frame_count": 180,
+      "width": 1280,
+      "height": 720,
+      "fps": 15
+    },
+    "collision_on": {
+      "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eo-box-occlusion-4\\media\\phase6eo_box_collision_on.mp4",
+      "sha256": "FFDFC4C09B29BC86635955C664AE325BCD21AE9F428FF04E3CBA3E88C722E9C7",
+      "bytes": 139318,
+      "duration_seconds": 12.0,
+      "frame_count": 180,
+      "width": 1280,
+      "height": 720,
+      "fps": 15
+    },
+    "comparison": {
+      "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eo-box-occlusion-4\\media\\phase6eo_box_collision_comparison.mp4",
+      "sha256": "D687E85F8A433074840FB5A44918B8F5476D564985749C4F6896B41480933A38",
+      "bytes": 174086,
+      "duration_seconds": 12.0,
+      "frame_count": 180,
+      "width": 1280,
+      "height": 720,
+      "fps": 15
+    }
+  },
+  "posters": {
+    "off": {
+      "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eo-box-occlusion-4\\media\\phase6eo_box_collision_off_poster.png",
+      "sha256": "5546AEA49A2531EEF39E4B84CBB1E4A85151D7486E011E553D3FB84566B8EEC2",
+      "bytes": 292059
+    },
+    "on": {
+      "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eo-box-occlusion-4\\media\\phase6eo_box_collision_on_poster.png",
+      "sha256": "5D5281EE3625973B3B116D3C157F434CDF403EAD6557F1D48680829D968C6C9D",
+      "bytes": 289991
+    },
+    "comparison": {
+      "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6eo-box-occlusion-4\\media\\phase6eo_box_collision_comparison_poster.png",
+      "sha256": "D229C8C09B6546B26E5F0DB04BEECACAE3D8E58E189006F92A2E5633BE22B0CA",
+      "bytes": 182478
+    }
+  },
+  "visually_reviewed": false
+}

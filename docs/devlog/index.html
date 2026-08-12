@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6en">最新記録</a>
+        <a href="#phase-6eo">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6en">Phase 6ENの結果を読む</a>
+        <a class="button primary" href="#phase-6eo">Phase 6EOの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6EN qualified</strong></div>
+        <div><span>現在地</span><strong>Phase 6EO Box occlusion qualified</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Lifecycle</span><strong>36 / 36 normal exit</strong></div>
         <div><span>Production</span><strong>unchanged · engineering gate passed</strong></div>
@@ -56,6 +56,19 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6eo" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="エントリ情報"><span class="phase-number compact">6EO</span><p><time datetime="2026-08-12">2026.08.12</time></p><span class="pill current">Mesh Box occlusion passed</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6EO · Box Mesh collision occlusion</p><h2>既知正常Meshで、<br>Box上方への通過を遮蔽。</h2><p>以前の解析的Box動画を、Flow 110.0.0で実際に成立した閉じたMesh CollisionProxyへ置き換えました。同じcamera、timeline、source、Flow設定で、Collision OFF/ONだけを切り替えています。映像と公開NanoVDBの両方で確認しました。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/box_mesh_occlusion_report.svg"><img src="assets/phase6/box_mesh_occlusion_report.svg" alt="Phase 6EOのCollision OFFとONについてdeep、center、上方ROIを比較した数値レポート" loading="lazy"></a><figcaption><div><strong>Exact-Mesh numeric qualification</strong><span>OFF deep 7.53–7.98 m/s · ON deep/center 0 · above velocity ratio 0.00612</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase6eo_box_collision_comparison.mp4" data-video-poster="assets/phase6/phase6eo_box_collision_comparison_poster.png" data-video-title="Phase 6EO · Box Mesh occlusion comparison" data-video-meta="Collision OFF / ON · same camera and timeline · 180 unique frames · 12 s · 15 fps"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>OFF / ON比較動画</strong><small>上方遮蔽を同時比較</small></span></button></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Collision OFF</p><h3>Positive control reached above</h3><p>deep最大はframe 60/120/180/200で<code>7.9795 / 7.7708 / 7.7226 / 7.5317 m/s</code>。上方far ROIにもtemperatureとsmokeが到達しました。動画ではBox上面に炎・煙が見えます。</p><button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase6eo_box_collision_off.mp4" data-video-poster="assets/phase6/phase6eo_box_collision_off_poster.png" data-video-title="Phase 6EO · Collision OFF positive control" data-video-meta="Closed Box present but Flow collision disabled · 180 unique frames · 12 s · 15 fps"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>OFF動画</strong><small>上面へ通過</small></span></button></section><section class="note"><p class="note-label">Collision ON</p><h3>Deep and center remained zero</h3><p>4 sampleすべてでdeep/center maximumは<code>0 m/s</code>。上方temperature/smokeも0です。boundary bandには最大<code>0.3530 m/s</code>が残るため、境界値を隠さず別集計しています。</p><button class="video-trigger" type="button" aria-haspopup="dialog" data-video-src="assets/phase6/phase6eo_box_collision_on.mp4" data-video-poster="assets/phase6/phase6eo_box_collision_on_poster.png" data-video-title="Phase 6EO · Collision ON closed Mesh proxy" data-video-meta="PhysicsCollisionAPI + MeshCollisionAPI convexDecomposition · 180 unique frames · 12 s · 15 fps"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>ON動画</strong><small>上方通過を遮蔽</small></span></button></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Qualified isolation</p><h3>2 / 2 normal exits · numeric gates passed</h3><p>Boxは8頂点・6面の閉Mesh、source表面clearanceは<code>0.225 m</code>（4.5 velocity voxel）、fuelは双方0.8です。active blocksはOFF 62、ON 24。worst deep ratio 0、上方velocity mean ratio 0.00612、fatal・dump・upload・residualは0でした。</p><p><a href="assets/phase6/box_mesh_occlusion_report.json">集計JSON</a> · <a href="assets/phase6/box_mesh_occlusion_report.svg">比較SVG</a> · <a href="../design/box_mesh_collision_occlusion_recheck.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Deep / center</strong><small>ON maximum 0</small></p></div><div role="listitem"><span>✓</span><p><strong>Above ROI</strong><small>temperature / smoke 0</small></p></div><div role="listitem"><span>✓</span><p><strong>Video</strong><small>180 unique frames</small></p></div><div role="listitem"><span>✓</span><p><strong>Lifecycle</strong><small>2 normal exits</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Scope and next</p><h3>静的Box＋Sphere sourceだけをqualified。</h3><p>動画は上方遮蔽を明確に示しますが、不透明Boxの陰になる横方向の弱い迂回は目立ちません。次は独立PhaseでPointEmitterのsupport範囲、自己・他薪Colliderとの重なり、offset sweep、供給効率を検証します。latest demo pointerはproduction機能のV3T-P動画を維持します。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6en" class="section entry-section phase-six">

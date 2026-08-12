@@ -1004,3 +1004,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Predefined `define_app` declarations from `premake5.lua` in favor of developer defined applications
 - Predefined source/apps in favor of templates for developers to build from
 
+# Phase 6EO
+
+- Recreated the earlier Box occlusion diagnostic with the known-good closed Mesh CollisionProxy instead of the non-occluding analytic path. The frozen `campfire.phase6eo.box-mesh-occlusion-contract.v1` contract uses an 8-vertex closed Box, `convexDecomposition`, 0.05 m velocity voxels, 0.225 m source clearance, and the Phase 6EN `1e-4 m/s` deep/center gate.
+- Qualified both independent OFF/ON processes with normal OS exits. OFF deep velocity remained 7.53–7.98 m/s while ON deep and center were zero at frames 60/120/180/200; the upper-far velocity mean ratio was 0.00612 and temperature/smoke ratios were zero. Fuel remained 0.8, active blocks remained positive, and fatal/dump/upload/residual counts were zero.
+- Added reproducible runners, exact-Mesh NanoVDB analysis, machine-readable report/SVG, and 12-second OFF, ON, and side-by-side videos with 180 unique frames. Production code and defaults remain unchanged; PointEmitter coexistence remains a separate next Phase.

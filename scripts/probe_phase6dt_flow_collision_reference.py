@@ -53,6 +53,9 @@ def _settings() -> dict:
         "mode": settings.get_as_string("/phase6dt/mode"),
         "source": Path(settings.get_as_string("/phase6dt/source")).resolve(),
         "capture": bool(settings.get_as_bool("/phase6dt/capture")),
+        "capture_start_frame": int(settings.get_as_int("/phase6dt/captureStartFrame")),
+        "capture_end_frame": int(settings.get_as_int("/phase6dt/captureEndFrame")),
+        "capture_stride": max(1, int(settings.get_as_int("/phase6dt/captureStride")) or 1),
         "run_index": int(settings.get_as_int("/phase6dt/runIndex")) or 1,
         "app_kind": settings.get_as_string("/phase6dt/appKind") or "reference",
         "phase6ee_spatial_enabled": bool(settings.get_as_bool("/phase6ee/spatialEnabled")),
@@ -253,6 +256,8 @@ def _prepare_stage(arguments: dict) -> tuple[Path, dict]:
         "phase6ds_mesh_reference_schema_bundle",
         "phase6ds_mesh_reference_collision_disabled",
         "phase6ds_mesh_flow_collision_disabled",
+        "phase6eo_box_mesh_collision_on",
+        "phase6eo_box_mesh_collision_off",
     ):
         collider = stage.GetPrimAtPath(paths["collider"])
         _set(collider, "physics:collisionEnabled", False)
@@ -265,7 +270,7 @@ def _prepare_stage(arguments: dict) -> tuple[Path, dict]:
                 raise RuntimeError("CollisionAPI.Apply failed on equivalent Mesh")
             mesh.CreateAttribute("physics:collisionEnabled", Sdf.ValueTypeNames.Bool).Set(True)
             changes.append("apply_PhysicsCollisionAPI_only_to_Mesh")
-        elif mode.startswith("phase6ds_mesh_usd_mesh_collision"):
+        elif mode.startswith("phase6ds_mesh_usd_mesh_collision") or mode.startswith("phase6eo_box_mesh_collision_"):
             approximation = {
                 "phase6ds_mesh_usd_mesh_collision_none": "none",
                 "phase6ds_mesh_usd_mesh_collision_convex_hull": "convexHull",
@@ -275,6 +280,9 @@ def _prepare_stage(arguments: dict) -> tuple[Path, dict]:
                 "apply_USD_collision_and_mesh_collision_APIs_to_Mesh:"
                 f"approximation={approximation}"
             )
+            if mode == "phase6eo_box_mesh_collision_off":
+                _set(simulate, "physicsCollisionEnabled", False)
+                changes.append("physicsCollisionEnabled=false_for_positive_control")
         else:
             _apply_reference_collision_schemas(mesh)
             changes.append("apply_reference_collision_schema_bundle_to_Mesh")
@@ -318,6 +326,7 @@ def _prepare_stage(arguments: dict) -> tuple[Path, dict]:
         "audit_collider_path": (
             "/World/ColliderReferenceMesh"
             if mode.startswith("phase6ds_mesh_")
+            or mode.startswith("phase6eo_box_mesh_collision_")
             or mode in (
                 "phase6dy_prepared_mesh",
                 "phase6dz_rotated_mesh",
@@ -747,6 +756,11 @@ async def _run() -> None:
         },
         "samples": [],
         "captures": [],
+        "capture_contract": {
+            "start_frame": arguments["capture_start_frame"],
+            "end_frame": arguments["capture_end_frame"],
+            "stride": arguments["capture_stride"],
+        },
     }
     _write(output, report)
     exit_code = 1
@@ -823,11 +837,16 @@ async def _run() -> None:
         local_rois = None
         local_to_world = None
         spatial_mesh = None
-        if arguments["mode"] in (
+        rotated_mesh_mode = arguments["mode"] in (
             "phase6dz_rotated_mesh",
             "phase6ec_rotated_mesh",
             "phase6ec_rotated_mesh_collision_off",
-        ):
+        )
+        box_mesh_mode = arguments["mode"] in (
+            "phase6eo_box_mesh_collision_on",
+            "phase6eo_box_mesh_collision_off",
+        )
+        if rotated_mesh_mode:
             collider = stage.GetPrimAtPath(preparation["audit_collider_path"])
             local_to_world = UsdGeom.XformCache().GetLocalToWorldTransform(collider)
             local_rois = _phase6dz_local_rois()
@@ -840,17 +859,22 @@ async def _run() -> None:
                 "velocity_noise_threshold_m_s": 1.0e-5,
                 "alignment_comparison": "transformed Cylinder versus stale axis-aligned Cylinder",
             }
-            if arguments["phase6ee_spatial_enabled"]:
-                if arguments["phase6ee_spatial_root"] is None or not arguments["phase6ee_condition"]:
-                    raise RuntimeError("Phase 6EE spatial output root and condition are required")
-                mesh = UsdGeom.Mesh(collider)
-                spatial_mesh = {
-                    "points": list(mesh.GetPointsAttr().Get() or ()),
-                    "face_counts": list(mesh.GetFaceVertexCountsAttr().Get() or ()),
-                    "face_indices": list(mesh.GetFaceVertexIndicesAttr().Get() or ()),
-                }
-                if not spatial_mesh["points"] or not spatial_mesh["face_counts"]:
-                    raise RuntimeError("Phase 6EE requires the authored collision Mesh topology")
+        if arguments["phase6ee_spatial_enabled"]:
+            if arguments["phase6ee_spatial_root"] is None or not arguments["phase6ee_condition"]:
+                raise RuntimeError("Phase 6EE spatial output root and condition are required")
+            if not rotated_mesh_mode and not box_mesh_mode:
+                raise RuntimeError("Spatial capture requires an exact authored Mesh mode")
+            collider = stage.GetPrimAtPath(preparation["audit_collider_path"])
+            if local_to_world is None:
+                local_to_world = UsdGeom.XformCache().GetLocalToWorldTransform(collider)
+            mesh = UsdGeom.Mesh(collider)
+            spatial_mesh = {
+                "points": list(mesh.GetPointsAttr().Get() or ()),
+                "face_counts": list(mesh.GetFaceVertexCountsAttr().Get() or ()),
+                "face_indices": list(mesh.GetFaceVertexIndicesAttr().Get() or ()),
+            }
+            if not spatial_mesh["points"] or not spatial_mesh["face_counts"]:
+                raise RuntimeError("Spatial capture requires the authored collision Mesh topology")
 
         viewport = None
         for _ in range(240):
@@ -870,7 +894,7 @@ async def _run() -> None:
         flow = _flowusd.acquire_flowusd_interface()
         if arguments["phase6ee_spatial_enabled"]:
             if spatial_mesh is None or local_to_world is None:
-                raise RuntimeError("Phase 6EE spatial capture is only valid for the Phase 6EC Mesh modes")
+                raise RuntimeError("Spatial capture is only valid for exact authored Mesh modes")
             collector_type = _load_phase6ee_collector()
             public_members = sorted(name for name in dir(flow) if not name.startswith("_"))
             collision_mask_candidates = [
@@ -908,8 +932,20 @@ async def _run() -> None:
         timeline.play()
         _write(output, report)
 
-        capture_frames = SAMPLE_FRAMES if arguments["capture"] else ()
-        for frame in range(1, SAMPLE_FRAMES[-1] + 1):
+        if arguments["capture"] and arguments["capture_start_frame"] > 0:
+            if arguments["capture_end_frame"] < arguments["capture_start_frame"]:
+                raise RuntimeError("Capture end frame precedes start frame")
+            capture_frames = tuple(
+                range(
+                    arguments["capture_start_frame"],
+                    arguments["capture_end_frame"] + 1,
+                    arguments["capture_stride"],
+                )
+            )
+        else:
+            capture_frames = SAMPLE_FRAMES if arguments["capture"] else ()
+        final_frame = max(SAMPLE_FRAMES[-1], capture_frames[-1] if capture_frames else 0)
+        for frame in range(1, final_frame + 1):
             await app.next_update_async()
             if frame in capture_frames:
                 await omni.kit.viewport.utility.next_viewport_frame_async(viewport)
@@ -971,7 +1007,7 @@ async def _run() -> None:
                 not numeric or len(report["samples"]) == len(SAMPLE_FRAMES)
             ),
             "capture_complete": (
-                not arguments["capture"] or len(report["captures"]) == len(SAMPLE_FRAMES)
+                not arguments["capture"] or len(report["captures"]) == len(capture_frames)
             ),
         }
         if not all(report["measurement_gates"].values()):

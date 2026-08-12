@@ -1,5 +1,11 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6EO Box Mesh collision occlusion recheck
+
+Phase 6DSで遮蔽しなかったBox動画を、Phase 6DT〜6ENで成立した閉じたMesh CollisionProxyへ置き換えて隔離再検証した。凍結contract `campfire.phase6eo.box-mesh-occlusion-contract.v1`（SHA-256 `F3A0CE0003F2BDFC6A6B59A61D517700C0961C0417B12EFADA9902EA63ABA1F8`）は、8頂点・6面の静的Box、`convexDecomposition`、velocity voxel 0.05 m、source表面clearance 0.225 m、frame 60/120/180/200、Phase 6ENの`1e-4 m/s` deep/center gateを事前固定する。
+
+OFF/ONはともにnormal OS exit、fuel 0.8、active blocks 62/24、fatal/dump/upload/residual 0だった。OFF deep最大は全frameで7.53〜7.98 m/s、ON deep/centerは全frame 0、worst ratio 0。上方far ROIのON/OFF mean ratioはvelocity 0.00612、temperature 0、smoke 0である。180 unique frameのOFF/ON/comparison動画でもOFFだけがBox上へ抜けることを確認した。横方向の弱い迂回は不透明Box越しに目立たないため、動画の主張は上方遮蔽に限定する。production app/defaultは不変で、次は独立したPointEmitter–CollisionProxy共存Phaseへ進む。詳細は`docs/design/box_mesh_collision_occlusion_recheck.md`。
+
 ## Phase 6EN static-pose engineering tolerance qualification
 
 Phase 6EMの`1e-5 m/s` contract不合格は履歴として確定し、旧contract SHA-256 `4BAED82160A08C061D479BCCA6B6A46866DE88F5046851D2AF140D36D8C80687`を変更しない。Phase 6ENは別schema・別SHA-256 `C6A73B07385519160488DA07C023EC5E5104BB0A8C1BDAD70D01B15327CAE1AF`の新規qualificationである。公開NanoVDB velocityがfloat32であること、OFF深部が約8.8～9.1 m/sであること、Phase 6EM P4残差がdeep `1.5913658e-5`／center `1.0030950e-5 m/s`だったことから、deep／center hard maximumを`1e-4 m/s`へ事前固定した。これは最低OFF正例`0.1 m/s`の0.1%で、別途維持する1% relative gateより厳しい。`5e-5 m/s`は警戒水準であり合否には使わない。

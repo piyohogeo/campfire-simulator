@@ -412,7 +412,10 @@ class SpatialNeighborhoodCollector:
             "flow_collision_occupancy_mask_public_api_available": bool(self.collision_mask_candidates),
             "flow_collision_occupancy_mask_candidates": self.collision_mask_candidates,
             "geometry_labels_are_flow_occupancy": False,
-            "geometry_label_source": "authored 26-vertex 36-face closed low-poly Mesh",
+            "geometry_label_source": (
+                f"authored {self.geometry['vertices'].shape[0]}-vertex "
+                f"{self.geometry['face_counts'].size}-face closed Mesh"
+            ),
             "mesh": {
                 "vertex_count": int(self.geometry["vertices"].shape[0]),
                 "polygon_count": int(self.geometry["face_counts"].size),

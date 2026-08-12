@@ -1,0 +1,62 @@
+{
+  "schema": "campfire.phase6eo.box-mesh-occlusion-contract.v1",
+  "phase": "phase6eo",
+  "declared_before_formal_runs": true,
+  "purpose": "Recreate the historical Box occlusion comparison with the qualified closed Mesh CollisionProxy and require matching numeric and visual evidence before PointEmitter coexistence begins.",
+  "historical_phase6en_contract_sha256": "C6A73B07385519160488DA07C023EC5E5104BB0A8C1BDAD70D01B15327CAE1AF",
+  "fixed_scene": {
+    "flow_version": "110.0.0",
+    "up_axis": "Z",
+    "meters_per_unit": 1.0,
+    "box_dimensions_m": [2.0, 2.0, 0.25],
+    "box_center_m": [0.0, 0.0, 1.0],
+    "mesh_vertex_count": 8,
+    "mesh_face_count": 6,
+    "mesh_index_count": 24,
+    "mesh_closed": true,
+    "collision_approximation": "convexDecomposition",
+    "emitter_center_m": [0.0, 0.0, 0.55],
+    "emitter_radius_m": 0.1,
+    "emitter_surface_clearance_m": 0.225,
+    "density_cell_size_m": 0.025,
+    "expected_velocity_voxel_size_m": 0.05,
+    "sample_frames": [60, 120, 180, 200],
+    "capture_frames": {"start": 21, "end": 200, "stride": 1, "fps": 15},
+    "camera": "/World/Cameras/Front"
+  },
+  "conditions": [
+    {"name": "box_off", "mode": "phase6eo_box_mesh_collision_off", "physicsCollisionEnabled": false},
+    {"name": "box_on", "mode": "phase6eo_box_mesh_collision_on", "physicsCollisionEnabled": true}
+  ],
+  "geometry_contract": {
+    "primary_distance": "signed shortest distance to the exact authored 8-vertex, 6-face closed Mesh",
+    "flow_internal_occupancy_mask_public_api_available": false,
+    "geometry_labels_are_flow_occupancy": false,
+    "boundary_band": "actual-Mesh inside with signed depth in [0,1] native velocity voxel; reported and excluded from hard maximum",
+    "deep_interior": "actual-Mesh signed depth greater than 1 native velocity voxel",
+    "center_axis": "deep interior and horizontal distance to Box Z center line at most 0.5 native velocity voxel"
+  },
+  "thresholds": {
+    "collision_on_deep_maximum_m_s": 0.0001,
+    "collision_on_center_maximum_m_s": 0.0001,
+    "collision_off_deep_minimum_m_s": 0.1,
+    "collision_off_center_minimum_m_s": 0.1,
+    "on_to_off_deep_maximum_ratio": 0.01,
+    "above_far_mean_ratio_maximum": 0.1,
+    "above_far_off_velocity_mean_minimum_m_s": 0.1,
+    "above_far_off_temperature_mean_minimum": 0.001,
+    "above_far_off_smoke_mean_minimum": 0.001,
+    "fuel_absolute_tolerance": 0.000001
+  },
+  "gates": {
+    "normal_os_exit_only": true,
+    "active_blocks_positive_and_source_fuel_preserved": true,
+    "on_off_stage_difference_only_collision_switch": true,
+    "all_four_velocity_samples_required": true,
+    "numeric_deep_center_positive_and_relative_gates": true,
+    "above_far_velocity_temperature_smoke_suppression": true,
+    "fatal_dump_upload_device_lost_tdr_residual_zero": true,
+    "continuous_video_is_comparison_evidence_not_numeric_gate": true
+  },
+  "scope_if_pass": "Only the fixed axis-aligned Box, Flow 110.0.0, current fixed grid, closed Mesh CollisionProxy, and the isolated Sphere-source comparison; no production integration or PointEmitter qualification."
+}
