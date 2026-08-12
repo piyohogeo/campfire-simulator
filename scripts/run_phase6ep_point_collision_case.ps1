@@ -9,6 +9,7 @@ param(
     [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es")][string]$ReportPhase = "phase6ep",
     [string]$SampleFrames = "60,120,180,200",
     [switch]$SpatialAllChannels,
+    [string]$SpatialScalarColliderIndices = "",
     [int]$RunIndex = 1,
     [switch]$Capture,
     [int]$CaptureStart = 21,
@@ -66,6 +67,7 @@ $arguments = @(
     "--/phase6ep/reportPhase=$ReportPhase",
     "--/phase6ep/sampleFrames=$SampleFrames",
     "--/phase6ep/spatialAllChannels=$($SpatialAllChannels.IsPresent.ToString().ToLowerInvariant())",
+    "--/phase6ep/spatialScalarColliderIndices=$SpatialScalarColliderIndices",
     "--/phase6ep/runIndex=$RunIndex",
     "--/phase6ep/capture=$captureValue",
     "--/phase6ep/captureStart=$CaptureStart",
@@ -132,6 +134,7 @@ $evidence = [ordered]@{
     policy = $Policy
     sample_frames = $SampleFrames
     spatial_all_channels = $SpatialAllChannels.IsPresent
+    spatial_scalar_collider_indices = $SpatialScalarColliderIndices
     run_index = $RunIndex
     geometry_variant = $GeometryVariant
     source_scales = [ordered]@{ fuel=$FuelScale; temperature=$TemperatureScale; smoke=$SmokeScale }

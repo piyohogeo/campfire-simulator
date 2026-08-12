@@ -31,5 +31,12 @@ class Phase6EsDirectionalTransport(unittest.TestCase):
   self.assertIn('[string]$ReportPhase = "phase6ep"',runner)
   self.assertIn('[string]$Policy = "strict_all"',runner)
   self.assertIn("allow_other_support",runner)
+  self.assertIn("SpatialScalarColliderIndices",runner)
+
+ def test_phase6es_limits_scalar_collection_without_hiding_velocity(self):
+  probe=(ROOT/"scripts/probe_phase6ep_point_collision_coexistence.py").read_text(encoding="utf-8")
+  calibration=(ROOT/"scripts/run_phase6es_calibration.ps1").read_text(encoding="utf-8")
+  self.assertIn('channel != "velocity"',probe)
+  self.assertIn('if($condition.scenario -eq "production_four"){"2"}else{"1"}',calibration)
 
 if __name__=="__main__":unittest.main()

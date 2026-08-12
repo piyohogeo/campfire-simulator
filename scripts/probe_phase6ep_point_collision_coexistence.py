@@ -42,6 +42,7 @@ def _settings():
     policy = settings.get_as_string("/phase6ep/policy") or "strict_all"
     report_phase = settings.get_as_string("/phase6ep/reportPhase") or "phase6ep"
     sample_text = settings.get_as_string("/phase6ep/sampleFrames")
+    scalar_collider_text = settings.get_as_string("/phase6ep/spatialScalarColliderIndices")
     sample_frames = tuple(int(value.strip()) for value in sample_text.split(",") if value.strip()) if sample_text else tuple(SAMPLE_FRAMES)
     return {
         "output": Path(settings.get_as_string("/phase6ep/output")).resolve(),
@@ -54,6 +55,10 @@ def _settings():
         "report_phase": report_phase,
         "sample_frames": sample_frames,
         "spatial_all_channels": bool(settings.get_as_bool("/phase6ep/spatialAllChannels")),
+        "spatial_scalar_collider_indices": (
+            tuple(int(value.strip()) for value in scalar_collider_text.split(",") if value.strip())
+            if scalar_collider_text else None
+        ),
         "run_index": int(settings.get_as_int("/phase6ep/runIndex")) or 1,
         "capture": bool(settings.get_as_bool("/phase6ep/capture")),
         "capture_start": int(settings.get_as_int("/phase6ep/captureStart")),
@@ -310,9 +315,12 @@ async def _run():
                         "far_above": {"minimum": [-0.50, -0.30, 1.10], "maximum": [0.50, 0.30, 1.55]},
                         "exterior_flow": {"minimum": [0.50, -0.25, 0.40], "maximum": [0.90, 0.25, 1.55]},
                     })
+                spatial_collectors = collectors
+                if channel != "velocity" and arguments["spatial_scalar_collider_indices"] is not None:
+                    spatial_collectors = [collectors[index] for index in arguments["spatial_scalar_collider_indices"]]
                 details = _save_and_sample(
                     flow, volume, array, channel, nvdb_path, bounds,
-                    spatial_collector=(collectors if arguments["spatial_all_channels"] or channel == "velocity" else None),
+                    spatial_collector=(spatial_collectors if arguments["spatial_all_channels"] or channel == "velocity" else None),
                     spatial_velocity_only=not arguments["spatial_all_channels"], frame=frame,
                     profile_threshold=(
                         {"velocity": 0.01, "fuel": 0.001, "temperature": 0.1, "burn": 0.001, "smoke": 0.001}[channel]

@@ -107,6 +107,10 @@ def analyze_condition(condition: Path, plane_offset_m: float = 0.05) -> dict:
     colliders = []
     for collider_index, pose in enumerate(poses):
         files = {Path(item["path"]).name: Path(item["path"]) for item in manifests[collider_index]["files"]}
+        scalar_available = any(name.endswith("_temperature.npz") for name in files)
+        if not scalar_available:
+            colliders.append({"index": collider_index, "pose": pose, "scalar_transport_available": False, "reason": "bounded Phase 6ES collection keeps velocity for every collider but scalar only for the predeclared representative blocker", "frames": []})
+            continue
         per_frame = []
         for frame in frames:
             def find(channel: str) -> Path:
@@ -149,7 +153,7 @@ def analyze_condition(condition: Path, plane_offset_m: float = 0.05) -> dict:
                 previous = entry
             for entry in per_frame:
                 entry["channels"][channel]["time_integrated_transport_proxy"] = cumulative
-        colliders.append({"index": collider_index, "pose": pose, "frames": per_frame})
+        colliders.append({"index": collider_index, "pose": pose, "scalar_transport_available": True, "frames": per_frame})
     report = {
         "schema": "campfire.phase6es.directional-scalar-transport.v1",
         "phase": "phase6es",
