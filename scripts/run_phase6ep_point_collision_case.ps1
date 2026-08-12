@@ -6,13 +6,17 @@ param(
     [ValidateSet("true", "false")][string]$Filtering = "true",
     [ValidateSet("true", "false")][string]$Collision = "true",
     [ValidateSet("strict_all", "allow_self_support", "allow_self_center")][string]$Policy = "strict_all",
-    [ValidateSet("phase6ep", "phase6eq")][string]$ReportPhase = "phase6ep",
+    [ValidateSet("phase6ep", "phase6eq", "phase6er")][string]$ReportPhase = "phase6ep",
     [string]$SampleFrames = "60,120,180,200",
     [switch]$SpatialAllChannels,
     [int]$RunIndex = 1,
     [switch]$Capture,
     [int]$CaptureStart = 21,
-    [int]$CaptureEnd = 200
+    [int]$CaptureEnd = 200,
+    [ValidateSet("legacy_phase6ep", "phase6er_corrected")][string]$GeometryVariant = "legacy_phase6ep",
+    [double]$FuelScale = 1.0,
+    [double]$TemperatureScale = 1.0,
+    [double]$SmokeScale = 1.0
 )
 
 $ErrorActionPreference = "Stop"
@@ -66,6 +70,10 @@ $arguments = @(
     "--/phase6ep/capture=$captureValue",
     "--/phase6ep/captureStart=$CaptureStart",
     "--/phase6ep/captureEnd=$CaptureEnd",
+    "--/phase6ep/geometryVariant=$GeometryVariant",
+    "--/phase6ep/fuelScale=$FuelScale",
+    "--/phase6ep/temperatureScale=$TemperatureScale",
+    "--/phase6ep/smokeScale=$SmokeScale",
     "--/rtx/flow/enabled=true",
     "--/log/file=$log",
     "--/log/fileLogLevel=Info",
@@ -125,6 +133,8 @@ $evidence = [ordered]@{
     sample_frames = $SampleFrames
     spatial_all_channels = $SpatialAllChannels.IsPresent
     run_index = $RunIndex
+    geometry_variant = $GeometryVariant
+    source_scales = [ordered]@{ fuel=$FuelScale; temperature=$TemperatureScale; smoke=$SmokeScale }
     process_exit_code = $monitor.exit_code
     shutdown_monitor = $monitor
     log_evidence_readiness = $logEvidenceReadiness

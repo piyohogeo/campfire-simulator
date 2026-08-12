@@ -113,10 +113,12 @@ def plan_payload(
     support_radius_m: float,
     filtering: bool,
     policy: str = "strict_all",
+    *,
+    poses_override: tuple[LogPose, ...] | None = None,
 ):
     if policy not in FILTER_POLICIES:
         raise ValueError(f"unsupported Point/Collision policy: {policy}")
-    poses = SCENARIOS[scenario]
+    poses = poses_override if poses_override is not None else SCENARIOS[scenario]
     geometries = []
     for pose in poses:
         points, counts, indices = cylinder_topology(pose)

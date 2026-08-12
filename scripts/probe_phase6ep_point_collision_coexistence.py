@@ -28,6 +28,7 @@ if str(SCRIPT_DIR) not in sys.path:
 
 import benchmark_point_emitter_core as point_core
 from phase6ep_point_collision_geometry import plan_payload
+from phase6er_point_collision_geometry import corrected_plan_payload
 from phase6ee_velocity_distribution import SpatialNeighborhoodCollector
 from probe_phase6dt_flow_collision_reference import CHANNELS, SAMPLE_FRAMES, _capture, _save_and_sample
 
@@ -57,6 +58,10 @@ def _settings():
         "capture": bool(settings.get_as_bool("/phase6ep/capture")),
         "capture_start": int(settings.get_as_int("/phase6ep/captureStart")),
         "capture_end": int(settings.get_as_int("/phase6ep/captureEnd")),
+        "geometry_variant": settings.get_as_string("/phase6ep/geometryVariant") or "legacy_phase6ep",
+        "fuel_scale": float(settings.get_as_float("/phase6ep/fuelScale")),
+        "temperature_scale": float(settings.get_as_float("/phase6ep/temperatureScale")),
+        "smoke_scale": float(settings.get_as_float("/phase6ep/smokeScale")),
     }
 
 
@@ -106,7 +111,8 @@ def _build_stage(arguments):
     path = _stage_path(output)
     path.unlink(missing_ok=True)
     planning_started = time.perf_counter_ns()
-    plan = plan_payload(
+    planner = corrected_plan_payload if arguments["geometry_variant"] == "phase6er_corrected" else plan_payload
+    plan = planner(
         arguments["scenario"], arguments["offset_m"],
         arguments["support_radius_m"], arguments["filtering"], arguments["policy"],
     )
@@ -124,9 +130,9 @@ def _build_stage(arguments):
     )
     emitter = stage.GetPrimAtPath(handles[0]["path"])
     active = plan["active"].astype(np.float32)
-    point_core._set(emitter, "pointFuels", Vt.FloatArray((active * 0.8).tolist()))
-    point_core._set(emitter, "pointTemperatures", Vt.FloatArray((active * 2.0).tolist()))
-    point_core._set(emitter, "pointSmokes", Vt.FloatArray((active * 0.08).tolist()))
+    point_core._set(emitter, "pointFuels", Vt.FloatArray((active * 0.8 * arguments["fuel_scale"]).tolist()))
+    point_core._set(emitter, "pointTemperatures", Vt.FloatArray((active * 2.0 * arguments["temperature_scale"]).tolist()))
+    point_core._set(emitter, "pointSmokes", Vt.FloatArray((active * 0.08 * arguments["smoke_scale"]).tolist()))
     publication_ms = (time.perf_counter_ns() - publication_started) / 1_000_000.0
     revision = emitter.GetAttribute("campfire:residentRevision")
     revision.Set(1)
@@ -297,13 +303,20 @@ async def _run():
                     "scene": {"minimum": [-1.1, -1.1, 0.2], "maximum": [1.1, 1.1, 2.1]},
                     "upper": {"minimum": [-0.5, -0.5, 0.9], "maximum": [0.5, 0.5, 1.8]},
                 }
+                if arguments["report_phase"] == "phase6er":
+                    bounds.update({
+                        "emitter_side": {"minimum": [-0.36, -0.16, 0.50], "maximum": [0.36, 0.16, 0.65]},
+                        "opposite_side": {"minimum": [-0.36, -0.16, 0.895], "maximum": [0.36, 0.16, 1.05]},
+                        "far_above": {"minimum": [-0.50, -0.30, 1.10], "maximum": [0.50, 0.30, 1.55]},
+                        "exterior_flow": {"minimum": [0.50, -0.25, 0.40], "maximum": [0.90, 0.25, 1.55]},
+                    })
                 details = _save_and_sample(
                     flow, volume, array, channel, nvdb_path, bounds,
                     spatial_collector=(collectors if arguments["spatial_all_channels"] or channel == "velocity" else None),
                     spatial_velocity_only=not arguments["spatial_all_channels"], frame=frame,
                     profile_threshold=(
                         {"velocity": 0.01, "fuel": 0.001, "temperature": 0.1, "burn": 0.001, "smoke": 0.001}[channel]
-                        if arguments["report_phase"] == "phase6eq" else None
+                        if arguments["report_phase"] in ("phase6eq", "phase6er") else None
                     ),
                 )
                 sample["channels"][channel] = {"available": True, "word_count": int(array.size), **details}

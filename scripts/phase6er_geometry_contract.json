@@ -1,0 +1,42 @@
+{
+  "schema": "campfire.phase6er.corrected-four-log-geometry-contract.v1",
+  "phase": "phase6er",
+  "declared_before_runtime": true,
+  "production_connected": false,
+  "default_enabled": false,
+  "legacy_phase6eq_reclassified": false,
+  "geometry_variant": "phase6er_corrected",
+  "geometry_tolerance_m": 0.000001,
+  "collision_proxy": {"length_m": 0.72, "radius_m": 0.105, "vertices": 26, "faces": 36, "indices": 120},
+  "surface_points_per_log": 360,
+  "support_radius": {
+    "value_m": 0.05,
+    "basis": "engineering assumption equal to one velocity voxel",
+    "public_flow_support_radius_available": false
+  },
+  "corrected_poses": [
+    {"name": "lower_a", "center": [0.0, -0.223125, 0.45], "yaw_degrees": 0.0},
+    {"name": "lower_b", "center": [0.0, 0.223125, 0.45], "yaw_degrees": 0.0},
+    {"name": "upper_a", "center": [-0.223125, 0.0, 0.66], "yaw_degrees": 90.0},
+    {"name": "upper_b", "center": [0.223125, 0.0, 0.66], "yaw_degrees": 90.0}
+  ],
+  "offline_offset_sweep_m": [-0.0125, 0.0, 0.0125, 0.025, 0.05, 0.075],
+  "selected_offsets_m": {
+    "strict_all": 0.075,
+    "allow_self_support": 0.025,
+    "allow_self_center": -0.0125,
+    "collision_off": 0.0
+  },
+  "geometry_gates": {
+    "raw_surface_point_centers_inside_other_log": 0,
+    "sampled_volume_overlap_pairs": 0,
+    "minimum_selected_weighted_supply_retention": 0.75,
+    "active_other_support_intersections": 0
+  },
+  "notes": [
+    "The legacy production_four fixture remains immutable evidence and is not reclassified.",
+    "Production phase2 places X-axis lower logs apart in Y and Y-axis upper logs apart in X.",
+    "The corrected lateral separation is production-radius-scaled; crossed layers touch at the authored Mesh surface.",
+    "AABB overlap is not used as a volume-intersection decision."
+  ]
+}
