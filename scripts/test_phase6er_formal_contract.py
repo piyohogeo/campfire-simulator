@@ -31,6 +31,7 @@ class Phase6ErFormalContract(unittest.TestCase):
         text=(SCRIPTS/"run_phase6er_formal_matrix.ps1").read_text(encoding="utf-8")
         self.assertIn("phase6eg_resource_guard.py",text);self.assertIn("normal_exit",text)
         self.assertIn("incremental gate failed",text);self.assertIn("pair gate failed",text)
+        self.assertGreaterEqual(text.count("| Out-Host"),3)
         self.assertNotIn("retry",text.lower())
 
     def test_support_radius_remains_an_engineering_assumption(self):

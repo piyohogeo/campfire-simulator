@@ -41,7 +41,7 @@ function Invoke-Phase6ErCase{
       "--tree-private-limit","$($limits.unique_tree_private_limit_bytes)","--available-memory-floor","$($limits.physical_memory_floor_bytes)",
       "--commit-headroom-floor","$($limits.commit_headroom_floor_bytes)","--cpu-telemetry","--lifecycle-path",(Join-Path $caseOutput "raw.json"),
       "--diagnostic-marker-path",((Join-Path $caseOutput "sensitive-shutdown-diagnostics")+".markers.jsonl"),"--",$powershell)+$arguments
-    & python @guardArgs
+    & python @guardArgs | Out-Host
     if($LASTEXITCODE -ne 0){throw "Phase 6ER guard/runner failed for $Group/$Name"}
     $guard=Get-Content -Raw -Encoding UTF8 $summary|ConvertFrom-Json
     $raw=Get-Content -Raw -Encoding UTF8 (Join-Path $caseOutput "raw.json")|ConvertFrom-Json
@@ -50,7 +50,7 @@ function Invoke-Phase6ErCase{
     if($raw.status -ne "ok" -or $raw.lifecycle_marker -ne "shutdown_complete"){throw "Phase 6ER functional gate failed for $Group/$Name"}
     if($evidence.outcome.lifecycle_status -ne "normal_exit" -or $evidence.outcome.functional_status -ne "pass"){throw "Phase 6ER lifecycle gate failed for $Group/$Name"}
     if(@($evidence.fatal_lines).Count -or @($evidence.dump_inventory).Count -or @($evidence.automatic_upload_attempt_lines).Count -or [bool]$evidence.production_changed){throw "Phase 6ER safety gate failed for $Group/$Name"}
-    & python $conditionGate --condition $caseOutput --contract $contractPath --output (Join-Path $caseOutput "incremental_gate.json")
+    & python $conditionGate --condition $caseOutput --contract $contractPath --output (Join-Path $caseOutput "incremental_gate.json") | Out-Host
     if($LASTEXITCODE -ne 0){throw "Phase 6ER incremental gate failed for $Group/$Name"}
     return $caseOutput
 }
@@ -65,7 +65,7 @@ for($run=1;$run -le 3;$run++){
       $conditions[$name]=Invoke-Phase6ErCase -Group $group -Name $name -Scenario $scenario -Policy $policy -Offset ([double]$definition.selected_offset_m) -Filtering $filtering -Collision $collision -RunIndex $run
     }
     foreach($name in @("strict_all","allow_self_support","allow_self_center")){
-      & python $pairGate --off $conditions["collision_off"] --candidate $conditions[$name] --contract $contractPath --output (Join-Path $conditions[$name] "pair_gate.json")
+      & python $pairGate --off $conditions["collision_off"] --candidate $conditions[$name] --contract $contractPath --output (Join-Path $conditions[$name] "pair_gate.json") | Out-Host
       if($LASTEXITCODE -ne 0){throw "Phase 6ER pair gate failed for run $run/$scenario/$name"}
     }
   }
