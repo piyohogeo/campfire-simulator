@@ -62,11 +62,28 @@ def _marker_summary(markers, contract, resource_trace):
     )
     private_points = []
     private_values = []
+    marker_memory_source = "synchronous_process_snapshot"
     for row in stability:
         memory = row.get("process_memory") or {}
         if memory.get("available") and memory.get("private_bytes") is not None:
             private_points.append((float(row["perf_counter_ns"]) / 1_000_000_000.0, int(memory["private_bytes"])))
             private_values.append(int(memory["private_bytes"]))
+    if len(private_values) != len(stability_frames) and resource_trace:
+        marker_memory_source = "nearest_outer_guard_sample"
+        private_points = []
+        private_values = []
+        for marker in stability:
+            marker_epoch = datetime.fromisoformat(marker["timestamp_utc"]).timestamp()
+            candidates = []
+            for trace_row in resource_trace:
+                for process in trace_row.get("processes", []):
+                    if process.get("role") == "kit":
+                        candidates.append((abs(float(trace_row["timestamp_utc_epoch"]) - marker_epoch), trace_row, process))
+            if not candidates:
+                continue
+            _distance, trace_row, process = min(candidates, key=lambda item: item[0])
+            private_points.append((float(trace_row["timestamp_utc_epoch"]), int(process["private_bytes"])))
+            private_values.append(int(process["private_bytes"]))
     private_slope = _slope(private_points)
     decreases = sum(right < left for left, right in zip(private_values, private_values[1:]))
     stability_resource_samples = 0
@@ -95,6 +112,7 @@ def _marker_summary(markers, contract, resource_trace):
         "active_block_range_fraction": active_range_fraction,
         "active_blocks_stable": active_stable,
         "stability_private_bytes": private_values,
+        "marker_memory_source": marker_memory_source,
         "private_growth_bytes_per_second": private_slope,
         "private_decrease_interval_count": decreases,
         "stability_resource_sample_count": stability_resource_samples,

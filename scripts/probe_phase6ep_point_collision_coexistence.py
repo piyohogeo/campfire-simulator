@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import asyncio
-import ctypes
 import gc
 import hashlib
 import json
@@ -35,6 +34,7 @@ import benchmark_point_emitter_core as point_core
 from phase6ep_point_collision_geometry import plan_payload
 from phase6er_point_collision_geometry import corrected_plan_payload
 from phase6ee_velocity_distribution import SpatialNeighborhoodCollector
+from phase6eu_process_memory import process_memory_snapshot
 from probe_phase6dt_flow_collision_reference import CHANNELS, SAMPLE_FRAMES, _capture, _save_and_sample
 
 
@@ -109,40 +109,6 @@ def _write(path, payload):
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2, allow_nan=False) + "\n", encoding="utf-8")
 
 
-class _ProcessMemoryCountersEx(ctypes.Structure):
-    _fields_ = [
-        ("cb", ctypes.c_ulong),
-        ("page_fault_count", ctypes.c_ulong),
-        ("peak_working_set_size", ctypes.c_size_t),
-        ("working_set_size", ctypes.c_size_t),
-        ("quota_peak_paged_pool_usage", ctypes.c_size_t),
-        ("quota_paged_pool_usage", ctypes.c_size_t),
-        ("quota_peak_non_paged_pool_usage", ctypes.c_size_t),
-        ("quota_non_paged_pool_usage", ctypes.c_size_t),
-        ("pagefile_usage", ctypes.c_size_t),
-        ("peak_pagefile_usage", ctypes.c_size_t),
-        ("private_usage", ctypes.c_size_t),
-    ]
-
-
-def _process_memory_snapshot():
-    if os.name != "nt":
-        return {"available": False, "reason": "Windows PROCESS_MEMORY_COUNTERS_EX only"}
-    counters = _ProcessMemoryCountersEx()
-    counters.cb = ctypes.sizeof(counters)
-    success = ctypes.windll.psapi.GetProcessMemoryInfo(
-        ctypes.windll.kernel32.GetCurrentProcess(), ctypes.byref(counters), counters.cb
-    )
-    if not success:
-        return {"available": False, "reason": f"GetProcessMemoryInfo error {ctypes.get_last_error()}"}
-    return {
-        "available": True,
-        "private_bytes": int(counters.private_usage),
-        "working_set_bytes": int(counters.working_set_size),
-        "peak_working_set_bytes": int(counters.peak_working_set_size),
-    }
-
-
 def _python_memory_snapshot():
     if not tracemalloc.is_tracing():
         return {"available": False}
@@ -163,7 +129,7 @@ def _append_resource_marker(path, marker, synchronous_memory=False, **values):
         **values,
     }
     if synchronous_memory:
-        payload["process_memory"] = _process_memory_snapshot()
+        payload["process_memory"] = process_memory_snapshot()
         payload["python_memory"] = _python_memory_snapshot()
     with path.open("a", encoding="utf-8", newline="\n") as stream:
         stream.write(json.dumps(payload, ensure_ascii=False, separators=(",", ":"), allow_nan=False) + "\n")

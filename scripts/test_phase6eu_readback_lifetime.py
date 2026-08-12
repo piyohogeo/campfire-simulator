@@ -1,5 +1,6 @@
 import hashlib
 import json
+import os
 import unittest
 from pathlib import Path
 
@@ -70,9 +71,22 @@ class Phase6EuReadbackLifetimeContract(unittest.TestCase):
     def test_synchronous_markers_cover_every_boundary(self):
         for marker in self.contract["synchronous_marker_contract"]["markers"]:
             self.assertIn(marker, self.probe)
-        self.assertIn("GetProcessMemoryInfo", self.probe)
-        self.assertIn("private_usage", self.probe)
+        memory_helper = (SCRIPTS / "phase6eu_process_memory.py").read_text(encoding="utf-8")
+        self.assertIn("GetProcessMemoryInfo", memory_helper)
+        self.assertIn("argtypes", memory_helper)
+        self.assertIn("restype", memory_helper)
+        self.assertIn("private_usage", memory_helper)
         self.assertIn("tracemalloc.get_traced_memory", self.probe)
+
+    @unittest.skipUnless(os.name == "nt", "Windows process counters")
+    def test_synchronous_process_memory_fixture(self):
+        from scripts.phase6eu_process_memory import process_memory_snapshot
+
+        snapshot = process_memory_snapshot()
+        self.assertTrue(snapshot["available"], snapshot)
+        self.assertGreater(snapshot["private_bytes"], 0)
+        self.assertGreater(snapshot["working_set_bytes"], 0)
+        self.assertEqual(80, snapshot["structure_bytes"])
 
     def test_field_data_is_not_retained_or_expanded_to_json(self):
         self.assertIn("_append_bounded_jsonl", self.probe)
