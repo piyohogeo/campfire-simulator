@@ -108,6 +108,25 @@ class Phase6ExStabilityContract(unittest.TestCase):
         self.assertIn('if (-not $report.r0_gate_pass)', self.runner)
         self.assertIn('("before", "after", "references_released", "next_frame")', self.analyzer)
 
+    def test_published_safe_stop_keeps_r1_blocked(self):
+        asset = json.loads(
+            (ROOT / "docs/devlog/assets/phase6/r0_stability_observation_safe_stop.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        devlog = (ROOT / "docs/devlog/index.html").read_text(encoding="utf-8")
+        self.assertEqual(asset["schema"], "campfire.phase6ex.r0-stability-safe-stop.v1")
+        self.assertEqual(asset["status"], "safe_stop")
+        self.assertEqual(asset["r0_run01"]["stability_resource_samples"], 48)
+        self.assertGreater(asset["r0_run01"]["active_block_range_fraction"], 0.15)
+        self.assertFalse(asset["r0_run01"]["plateau_gate_pass"])
+        self.assertEqual(asset["formal_population"]["accepted_complete_population"], 0)
+        self.assertFalse(asset["formal_population"]["r1_started"])
+        self.assertFalse(asset["safety"]["production_changed"])
+        self.assertIn('id="phase-6ex"', devlog)
+        phase_section = devlog.split('id="phase-6ex"', 1)[1].split('id="phase-6ew"', 1)[0]
+        self.assertNotIn("video-trigger", phase_section)
+
 
 if __name__ == "__main__":
     unittest.main()

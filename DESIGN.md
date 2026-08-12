@@ -1,5 +1,13 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6EX extended running-Flow stability observation safe stop
+
+Phase 6EWの18/20 sample safe stopを凍結したまま、新contract `campfire.phase6ex.r0-stability-qualification-contract.v1`（SHA-256 `BF2D8160267C3F108952C5A92C7DB688C34C74CE29014635945A84722D66DAB2`）で観測設計だけを変更した。frame 240から観測を開始し、frame 320後もtimeline/Flowを停止せず8秒間更新した。外側sampling 0.20秒、通常目標30、hard minimum 20とし、active-block 15%、Private Bytes +8 MiB/s、resource/lifecycle上限は緩和していない。production、Point payload/order/revision、wood authority、Flow、CollisionProxy、修正版4本配置は不変である。
+
+非Kit sampler fixtureは34 sample、単調timestamp、PID/creation-time/path identity、有限メモリ、7桁PowerShell timestamp parser、residual 0で合格した。正式R0 run 1は48 resource sample、timeline継続、Private Bytes slope `+725,458.45 bytes/s`、non-monotonic、Kit peak `14,614,773,760 bytes`、terminal `13,760,348,160 bytes`、stage close `1.949598 s`、normal OS exit、fatal/dump/upload/device-lost/TDR/CDB/residual 0だった。しかし稼働中のactive blocksは`1121..1447`、range fraction `24.382%`で凍結済み15%を超えた。sample不足は解消したが物理plateauは不合格であり、run 2/3とR1は開始せず正式R0は`0/3`、NanoVDB lifetime分離は引き続き保留する。Phase 6EWを合格へ再分類せず、詳細は`docs/design/r0_flow_shutdown_lifecycle.md`に記録する。
+
+回帰はRelease build、Phase 0 RTX、Phase 3、Phase 6E focused `205/205`、標準suite `78/78`（8 process、306.2秒）、日誌静的検査が合格した。Phase 3はdry/wet mass balance error 0、authority SHA維持、active blocks final/peak `256/393`、peak fuel 1.0だった。production app SHA-256は`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`で不変、Kit/CDB/nvidia-smi残留は0である。
+
 # Phase 6EW corrected-marker R0 lifecycle qualification safe stop
 
 Phase 6EU／6EVを凍結したまま、別contract `campfire.phase6ew.r0-lifecycle-qualification-contract.v1`（SHA-256 `1B549CE271C55CFA62BFB2E4021992658C03692CAE350E6832560ED048D10BB9`）でL0、R0 3 run、条件付きR1を事前固定した。stage closeはPhase 6EVの102.595644秒を収容する180秒上限、process内540秒、外側900秒とし、Kit 14 GiB、tree 16 GiB、runner/diagnostic各512 MiB、physical/commit headroom各8 GiBは変更していない。production、Point schema/order/revision、wood authority、Flow、CollisionProxy、修正版4本配置も不変である。

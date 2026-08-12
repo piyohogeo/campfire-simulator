@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6ew">最新記録</a>
+        <a href="#phase-6ex">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6ew">Phase 6EWの結果を読む</a>
+        <a class="button primary" href="#phase-6ex">Phase 6EXの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6EW R0 plateau safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6EX active-block plateau safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>L0 pass · R0 normal exit · 18/20 sample gate</strong></div>
+        <div><span>Lifecycle</span><strong>R0 normal exit · 48 samples · active-block gate</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
@@ -56,6 +56,19 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6ex" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6EX entry"><span class="phase-number compact">6EX</span><p><time datetime="2026-08-12">2026.08.12</time></p><span class="pill current">sample target pass · active-block safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6EX · Extended running-Flow stability observation</p><h2>48 sampleで観測不足を解消。<br>active block変動24.382%で安全停止。</h2><p>Phase 6EWの18/20 sample判定を凍結したまま、frame 320後もFlowを止めず8秒間観測しました。最低20、目標30に対して48 sampleを得ましたが、物理・安全閾値は緩和していません。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/r0_stability_observation_safe_stop.svg"><img src="assets/phase6/r0_stability_observation_safe_stop.svg" alt="Phase 6EX sampler、R0 telemetry、active-block plateau gateの比較" loading="lazy"></a><figcaption><div><strong>Sampler pass / R0 normal exit / physical plateau safe stop</strong><span>48 samples · blocks 1121–1447 · close 1.950 s · R1 not started</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Observation design</p><h3>34 fixture · 48 R0 samples</h3><p>非Kit fixtureは8秒で34件、正式R0はframe 240から追加観測終了まで48件を取得しました。timestamp、process identity、finite memory、JSONL、7桁時刻parserはすべて合格です。</p></section><section class="note"><p class="note-label">Unchanged gate</p><h3>24.382% &gt; 15%</h3><p>Private Bytes slopeは<code>+725,458 B/s</code>で8 MiB/s以下、non-monotonicでした。一方active blocksは<code>1121–1447</code>へ変動し、凍結済み15% gateを超えました。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Fail-closed result</p><h3>sample-countの成功を物理plateauへ読み替えない。</h3><p>R0 run 1はnormal OS exit、stage close <code>1.949598 s</code>、Kit peak <code>13.611 GiB</code>、terminal <code>12.815 GiB</code>でした。fatal、dump、automatic upload、device lost、TDR、CDB、cleanup residualは0です。</p><p>run 2/3とR1は開始せず、正式R0は<code>0/3</code>です。production、Flow、Point、CollisionProxy、既定値、latest demoは変更していません。内部telemetry変更だけなので新しい動画は生成していません。</p><p>Release build、Phase 0 RTX、Phase 3、Phase 6E focused <code>205/205</code>、標準suite <code>78/78</code>（8 process、306.2秒）が合格。Phase 3はmass balance 0、active blocks final/peak <code>256/393</code>、peak fuel 1.0、production SHA-256不変です。</p><p><a href="assets/phase6/r0_stability_observation_safe_stop.json">machine report</a> · <a href="assets/phase6/r0_stability_observation_safe_stop.svg">比較SVG</a> · <a href="../design/r0_flow_shutdown_lifecycle.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Sampler</strong><small>34 ≥ 30</small></p></div><div role="listitem"><span>✓</span><p><strong>R0 telemetry</strong><small>48 ≥ 30</small></p></div><div role="listitem"><span>!</span><p><strong>Active blocks</strong><small>24.382% &gt; 15%</small></p></div><div role="listitem"><span>—</span><p><strong>R0 / R1</strong><small>0/3 · not started</small></p></div><div role="listitem"><span>✓</span><p><strong>Cleanup</strong><small>residual 0</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Safe stop and next</p><h3>NanoVDB acquireへは進まない。</h3><p>観測窓でactive blockの時間変動が顕在化しました。新しい承認なしにgateや観測区間を変更せず、Phase 6EUのnative lock riskも未解決のまま保持します。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6ew" class="section entry-section phase-six">

@@ -1,5 +1,6 @@
 # Changelog
 
+- Added the production-neutral Phase 6EX extended running-Flow stability observation. The non-Kit sampler fixture reached 34 samples, and R0 run 1 reached 48 samples with a normal OS exit, but the frozen active-block range gate failed at 24.382% versus 15%; run 2/3 and R1 were not started, production stayed unchanged, and Phase 6EW remains frozen.
 - Added the production-neutral Phase 6EW contract with an explicit 180-second stage-close timeout, corrected-marker L0 gate, three-run R0 plateau gate, and conditional single R1 acquire/discard boundary. Phase 6EU/6EV evidence, production defaults, Point payload, Flow, CollisionProxy, and resource limits remain unchanged.
 - Corrected the report parser for PowerShell's seven-digit fractional ISO timestamps after the first L0 process. The valid L0 evidence was re-analysed without rerunning Kit: all markers, normal OS exit, 2.523-second stage close, and zero residual qualified L0.
 - Safely stopped at R0 run 1 after normal OS exit because the frozen stability interval contained 18 resource samples instead of the required 20. Active-block variation was 3.970%, Private Bytes slope was -4,469,950 bytes/s, stage close was 4.017 seconds, and Kit peak was 14,630,817,792 bytes; R0 remains 0/3 and R1 was not started.
