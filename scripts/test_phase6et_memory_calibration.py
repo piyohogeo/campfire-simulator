@@ -68,6 +68,13 @@ class Phase6EtMemoryCalibrationContract(unittest.TestCase):
         self.assertIn("spatial_manifest_collider_indices", transport)
         self.assertIn("manifests_by_index", transport)
 
+    def test_analyzer_supports_bundled_python_and_persists_marker_boundaries(self):
+        analyzer = (SCRIPTS / "analyze_phase6et_memory_calibration.py").read_text(encoding="utf-8")
+        runner = (SCRIPTS / "run_phase6et_memory_calibration.ps1").read_text(encoding="utf-8")
+        self.assertNotIn("removesuffix", analyzer)
+        self.assertIn("marker_memory", analyzer)
+        self.assertIn("if ($LASTEXITCODE -ne 0)", runner)
+
 
 if __name__ == "__main__":
     unittest.main()

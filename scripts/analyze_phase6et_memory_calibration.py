@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import argparse
+import bisect
 import csv
 import hashlib
 import json
+from datetime import datetime
 from collections import defaultdict
 from pathlib import Path
 
@@ -65,6 +67,39 @@ def _trace(path: Path, tail_seconds: float) -> dict:
         "tail_sample_count": len(tail),
         "tail_growth_bytes_per_second": slope,
     }
+
+
+def _marker_memory(trace_path: Path, marker_path: Path) -> list[dict]:
+    if not trace_path.is_file() or not marker_path.is_file():
+        return []
+    timestamps: list[float] = []
+    samples: list[dict] = []
+    with trace_path.open(encoding="utf-8") as stream:
+        for line in stream:
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            kit = max((int(row["private_bytes"]) for row in record.get("processes", []) if row.get("role") == "kit"), default=0)
+            timestamps.append(float(record["timestamp_utc_epoch"]))
+            samples.append({"kit_private_bytes": kit, "tree_private_bytes": int(record.get("tree_private_bytes", 0))})
+    output = []
+    previous = None
+    with marker_path.open(encoding="utf-8") as stream:
+        for line in stream:
+            if not line.strip():
+                continue
+            marker = json.loads(line)
+            timestamp = datetime.fromisoformat(marker["timestamp_utc"]).timestamp()
+            index = min(bisect.bisect_left(timestamps, timestamp), len(samples) - 1)
+            if index < 0:
+                continue
+            row = {key: marker.get(key) for key in ("marker", "frame", "channel", "buffer_bytes", "raw_json_bytes", "readback") if key in marker}
+            row.update(samples[index])
+            row["sample_timestamp_utc_epoch"] = timestamps[index]
+            row["kit_delta_from_previous_marker_bytes"] = None if previous is None else row["kit_private_bytes"] - previous
+            previous = row["kit_private_bytes"]
+            output.append(row)
+    return output
 
 
 def _raw_metrics(path: Path) -> dict:
@@ -157,13 +192,17 @@ def main() -> int:
     for summary_path in sorted((args.root / "runner-logs").glob("run??_*.guard.json")):
         if summary_path.name.endswith(".transport.guard.json"):
             continue
-        stem = summary_path.name.removesuffix(".guard.json")
+        stem = summary_path.name[: -len(".guard.json")]
         run_index = int(stem[3:5])
         condition_id = stem[6:]
         condition_dir = args.root / "calibration" / f"run{run_index:02d}" / condition_id
         guard = _guard(summary_path)
         trace = _trace(summary_path.with_name(stem + ".resource.jsonl"), tail_seconds)
         raw = _raw_metrics(condition_dir / "raw.json")
+        marker_memory = _marker_memory(
+            summary_path.with_name(stem + ".resource.jsonl"),
+            condition_dir / "resource_markers.jsonl",
+        )
         peak = int(guard.get("peaks", {}).get("kit", 0))
         slope = trace["tail_growth_bytes_per_second"]
         plateau = guard.get("status") == "ok" and trace["tail_sample_count"] >= min_tail and slope is not None and slope <= slope_limit
@@ -182,6 +221,7 @@ def main() -> int:
             "trace": trace,
             "plateau": plateau,
             "raw": raw,
+            "marker_memory": marker_memory,
             "gpu": _gpu(summary_path.with_name(stem + ".gpu.csv")),
         }
         completed.append(row)
@@ -198,6 +238,17 @@ def main() -> int:
             "all_plateau": all(row["plateau"] for row in rows),
         }
     expected = int(contract["formal_process_count"])
+    first_rows = {row["condition"]: row for row in completed if row["run_index"] == 1}
+    cause_classification = "insufficient formal evidence"
+    if "A_flow_only" in first_rows and "B_minimal_fuel" in first_rows:
+        a = first_rows["A_flow_only"]
+        b = first_rows["B_minimal_fuel"]
+        if a["guard_status"] == "ok" and b["stop_reason"] == "kit_private_limit":
+            cause_classification = (
+                "four-log Flow without readback already approaches the fixed limit; the first public fuel readback is sufficient "
+                "to cross it. Directional aggregation and temperature/smoke collection occur later and are excluded as the "
+                "trigger for this safe stop; readback resource lifetime versus Flow allocator high-water remains unresolved."
+            )
     report = {
         "schema": "campfire.phase6et.four-log-memory-calibration-report.v1",
         "phase": "phase6et",
@@ -206,12 +257,14 @@ def main() -> int:
         "phase6es_frozen": True,
         "phase6es_reclassified": False,
         "baseline_read_only": _baseline(repo),
-        "completed_processes": len(completed),
+        "attempted_processes": len(completed),
+        "completed_processes": sum(row["guard_status"] == "ok" and row["exit_code"] == 0 for row in completed),
         "expected_processes": expected,
         "rows": completed,
         "by_condition": aggregate,
+        "cause_classification": cause_classification,
         "return_gate_satisfied": len(completed) == expected and all(row["plateau"] and row["guard_status"] == "ok" for row in completed),
-        "array_interpretation": "public readback buffer bytes and compressed NPZ bytes are reported separately; an unexplained GiB increase is not attributed to Python arrays without matching byte evidence",
+        "array_interpretation": "get_latest_nanovdb_readback returns the public channel tuple as one acquisition. The selected-channel byte count is a lower bound; the earlier Phase 6ES frame-90 available buffers total 294,940,224 bytes. Public buffer bytes and compressed NPZ bytes are reported separately, and an unexplained GiB increase is not attributed to Python arrays without matching byte evidence.",
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

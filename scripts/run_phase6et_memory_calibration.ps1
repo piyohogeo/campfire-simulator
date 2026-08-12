@@ -49,6 +49,7 @@ function Write-State([string]$Status, [int]$Completed, [string]$Active, [string]
 
 function Update-Report {
     & python $analyzer --root $OutputRoot --contract $contractPath --output (Join-Path $OutputRoot "memory_calibration_report.json") | Out-Host
+    if ($LASTEXITCODE -ne 0) { throw "Phase 6ET analyzer failed" }
 }
 
 function Stop-Safely([int]$Completed, [string]$Active, [string]$Reason) {
