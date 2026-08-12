@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6EY Flow dynamic stationarity safe stop</title>
+  <desc id="desc">Synthetic calibration and one bounded R0 run passed numerically, but a post-run analyzer adapter error stopped the matrix before run 2.</desc>
+  <rect width="1200" height="675" fill="#111318"/>
+  <g font-family="Segoe UI, sans-serif">
+    <text x="72" y="78" fill="#f0f2f5" font-size="25" font-weight="700">Phase 6EY · Flow dynamic stationarity</text>
+    <text x="72" y="116" fill="#a8b0bd" font-size="18">Bounded cycles pass; one-way occupancy or memory divergence fails</text>
+    <rect x="72" y="158" width="322" height="164" rx="16" fill="#19241f" stroke="#46c37b" stroke-width="2"/>
+    <text x="98" y="199" fill="#77e5a3" font-size="18" font-weight="700">Synthetic contract · PASS</text>
+    <text x="98" y="245" fill="#f0f2f5" font-size="40" font-weight="700">8 / 8</text>
+    <text x="98" y="281" fill="#a8b0bd" font-size="16">periodic / recovery accepted</text>
+    <text x="98" y="306" fill="#a8b0bd" font-size="16">linear / cache divergence rejected</text>
+    <rect x="439" y="158" width="322" height="164" rx="16" fill="#19241f" stroke="#46c37b" stroke-width="2"/>
+    <text x="465" y="199" fill="#77e5a3" font-size="18" font-weight="700">R0 run 1 evidence · PASS</text>
+    <text x="465" y="245" fill="#f0f2f5" font-size="40" font-weight="700">49</text>
+    <text x="535" y="245" fill="#a8b0bd" font-size="18">aligned samples</text>
+    <text x="465" y="281" fill="#a8b0bd" font-size="16">blocks 1145–1560 · slope +2.521/s</text>
+    <text x="465" y="306" fill="#a8b0bd" font-size="16">memory +3.615 MiB/s · close 2.560 s</text>
+    <rect x="806" y="158" width="322" height="164" rx="16" fill="#2a2318" stroke="#f2b84b" stroke-width="2"/>
+    <text x="832" y="199" fill="#f2c76d" font-size="18" font-weight="700">Matrix · SAFE STOP</text>
+    <text x="832" y="245" fill="#f0f2f5" font-size="40" font-weight="700">0 / 3</text>
+    <text x="832" y="281" fill="#a8b0bd" font-size="16">post-run analyzer adapter error</text>
+    <text x="832" y="306" fill="#a8b0bd" font-size="16">run 2/3 and R1 not started</text>
+    <text x="72" y="382" fill="#f0f2f5" font-size="20" font-weight="700">Four equal-time windows (active-block mean)</text>
+    <line x1="94" y1="548" x2="1102" y2="548" stroke="#404753"/>
+    <polyline fill="none" stroke="#63b3ed" stroke-width="5" points="120,444 420,480 720,395 1020,427"/>
+    <circle cx="120" cy="444" r="7" fill="#63b3ed"/><circle cx="420" cy="480" r="7" fill="#63b3ed"/><circle cx="720" cy="395" r="7" fill="#63b3ed"/><circle cx="1020" cy="427" r="7" fill="#63b3ed"/>
+    <text x="98" y="578" fill="#a8b0bd" font-size="15">1354.8</text><text x="398" y="578" fill="#a8b0bd" font-size="15">1295.4</text><text x="698" y="578" fill="#a8b0bd" font-size="15">1433.3</text><text x="998" y="578" fill="#a8b0bd" font-size="15">1377.3</text>
+    <text x="72" y="630" fill="#f2c76d" font-size="18" font-weight="700">FAIL-CLOSED · no retry · production unchanged · R1 not reached</text>
+  </g>
+</svg>

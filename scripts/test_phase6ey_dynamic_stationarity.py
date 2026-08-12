@@ -18,6 +18,7 @@ class Phase6EyDynamicStationarity(unittest.TestCase):
         cls.contract = json.loads(cls.contract_path.read_text(encoding="utf-8"))
         cls.runner = (SCRIPTS / "run_phase6ey_dynamic_stationarity.ps1").read_text(encoding="utf-8")
         cls.case_runner = (SCRIPTS / "run_phase6ep_point_collision_case.ps1").read_text(encoding="utf-8")
+        cls.analyzer = (SCRIPTS / "analyze_phase6ey_dynamic_stationarity.py").read_text(encoding="utf-8")
 
     def test_contract_hash_and_history_are_frozen(self):
         expected = (SCRIPTS / "phase6ey_dynamic_stationarity_contract.sha256").read_text().split()[0]
@@ -92,6 +93,23 @@ class Phase6EyDynamicStationarity(unittest.TestCase):
         self.assertFalse(boundary["spatial_sampling"])
         self.assertFalse(boundary["field_json_or_npz_persistence"])
         self.assertFalse(boundary["gc_collect"])
+
+    def test_shared_lifecycle_compatibility_does_not_reintroduce_old_gate(self):
+        self.assertIn('compatibility_contract["plateau_contract"]', self.analyzer)
+        self.assertIn('row.get("marker") == "stability_observation_sample"', self.analyzer)
+        self.assertIn('contract["dynamic_stationarity_thresholds"]', self.analyzer)
+        self.assertNotIn('evaluate(rows, contract["plateau_contract"]', self.analyzer)
+
+    def test_published_safe_stop_keeps_r1_blocked(self):
+        report = json.loads(
+            (ROOT / "docs/devlog/assets/phase6/flow_dynamic_stationarity_safe_stop.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual("safe_stop", report["status"])
+        self.assertEqual("0/3", report["safe_stop"]["formal_r0_qualification"])
+        self.assertFalse(report["safe_stop"]["r0_run02_started"])
+        self.assertFalse(report["safe_stop"]["r0_run03_started"])
+        self.assertFalse(report["safe_stop"]["r1_started"])
+        self.assertFalse(report["production"]["changed"])
 
 
 if __name__ == "__main__":

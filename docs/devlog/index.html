@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6ex">最新記録</a>
+        <a href="#phase-6ey">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6ex">Phase 6EXの結果を読む</a>
+        <a class="button primary" href="#phase-6ey">Phase 6EYの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6EX active-block plateau safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6EY dynamic-stationarity diagnostic safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>R0 normal exit · 48 samples · active-block gate</strong></div>
+        <div><span>Lifecycle</span><strong>R0 normal exit · numeric pass · analyzer safe stop</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
@@ -56,6 +56,19 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6ey" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6EY entry"><span class="phase-number compact">6EY</span><p><time datetime="2026-08-12">2026.08.12</time></p><span class="pill current">dynamic gate pass · analyzer safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6EY · Flow dynamic stationarity</p><h2>周期変動と発散を分離。<br>R0数値合格後の解析不備で安全停止。</h2><p>Phase 6EXの24.382%対15%を凍結したまま、rangeの大小ではなく、傾向・boundedness・復帰性・block当たりメモリを組み合わせる24秒の有限契約をruntime前に固定しました。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/flow_dynamic_stationarity_safe_stop.svg"><img src="assets/phase6/flow_dynamic_stationarity_safe_stop.svg" alt="Phase 6EY synthetic calibration、R0数値結果、analyzer safe stop" loading="lazy"></a><figcaption><div><strong>Synthetic 8/8 · R0 bounded evidence · formal safe stop</strong><span>49 aligned samples · close 2.560 s · run 2/3 and R1 not started</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Engineering contract</p><h3>4 window · trend · recovery · memory</h3><p>周期変動、一時低下後の復帰、block連動のboundedメモリを通し、線形／加速発散、memory-only増加、戻らないcache型を落とすsynthetic 8条件が合格しました。物理的定常状態の証明ではありません。</p></section><section class="note"><p class="note-label">R0 run 1</p><h3>49 samples · all numeric checks pass</h3><p>active blocksは<code>1145–1560</code>、傾き<code>+2.521 blocks/s</code>、Private Bytes傾き<code>+3.615 MiB/s</code>、final/initial window mean比<code>1.0166</code>でした。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Fail-closed result</p><h3>Kitは正常終了。後処理adapterの欠落を隠さない。</h3><p>stage close <code>2.559663 s</code>、Kit peak <code>13.675 GiB</code>、normal OS exit、fatal/dump/upload/device lost/TDR/residual 0でした。その直後、旧lifecycle parserへobsolete compatibility viewを渡していなかったためanalyzerが停止しました。</p><p>契約閾値を変えずanalyzerを修正し、既存runをoffline解析すると動的定常性とlifecycleは合格します。しかし自動retryせず、run 2/3とR1は開始していません。正式R0は<code>0/3</code>、productionとlatest demoは不変です。内部診断だけなので新動画は作っていません。</p><p>Release build、Phase 0 RTX、Phase 3、focused <code>214/214</code>、標準suite <code>78/78</code>（8 process、303.6秒）が合格。Phase 3はmass balance 0、active blocks final/peak <code>262/376</code>、peak fuel 1.0です。</p><p><a href="assets/phase6/flow_dynamic_stationarity_safe_stop.json">machine report</a> · <a href="assets/phase6/flow_dynamic_stationarity_safe_stop.svg">比較SVG</a> · <a href="../design/phase6ey_flow_dynamic_stationarity.md">契約文書</a> · <a href="../design/r0_flow_shutdown_lifecycle.md">lifecycle記録</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Synthetic</strong><small>8 / 8</small></p></div><div role="listitem"><span>✓</span><p><strong>R0 numeric</strong><small>49 samples · pass</small></p></div><div role="listitem"><span>✓</span><p><strong>OS lifecycle</strong><small>normal exit</small></p></div><div role="listitem"><span>!</span><p><strong>Analyzer</strong><small>adapter safe stop</small></p></div><div role="listitem"><span>—</span><p><strong>R0 / R1</strong><small>0/3 · not started</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Safe stop and next</p><h3>readback lifetime分離へはまだ進めない。</h3><p>修正済みanalyzerと同じ凍結contractを新しいartifact rootで最初から実行するには、明示的な再開承認が必要です。Phase 6EUのnative SRW-lock ownerも未確定です。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6ex" class="section entry-section phase-six">

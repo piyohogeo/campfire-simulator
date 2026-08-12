@@ -1,0 +1,100 @@
+{
+  "schema": "campfire.phase6ey.dynamic-stationarity-safe-stop.v1",
+  "phase": "6EY",
+  "status": "safe_stop",
+  "date": "2026-08-12",
+  "contract": {
+    "schema": "campfire.phase6ey.dynamic-stationarity-qualification-contract.v1",
+    "sha256": "58C9755FF8F3F8E67752E558F572CB1B997A14E1976E0241B586E1DE64CA4AB4",
+    "observation_seconds": 24.0,
+    "windows": 4,
+    "minimum_aligned_samples": 40,
+    "minimum_outer_resource_samples": 100,
+    "history_policy": "Phase 6EX remains a frozen 24.382%-versus-15% active-block-range safe stop and is neither reclassified nor reused"
+  },
+  "offline_calibration": {
+    "status": "pass",
+    "accepted_synthetic": ["constant_noise", "periodic", "drop_recovery", "bounded_correlated_growth"],
+    "rejected_synthetic": ["linear_growth", "accelerating_growth", "memory_only_growth", "cache_after_drop"],
+    "phase6ex_stability_evidence": {
+      "sample_count": 20,
+      "active_block_minimum": 1121,
+      "active_block_maximum": 1447,
+      "active_block_slope_per_second": -6.890,
+      "kit_private_slope_mib_per_second": -6.186,
+      "increase_count": 10,
+      "decrease_count": 9,
+      "interpretation": "dip and recovery, not monotonic expansion; reference evidence only"
+    }
+  },
+  "r0_run01": {
+    "functional_status": "pass",
+    "lifecycle_status": "normal_exit",
+    "dynamic_stationarity_numeric_gate": "pass after offline analyzer correction",
+    "aligned_samples": 49,
+    "outer_resource_samples": 106,
+    "duration_seconds": 23.98173,
+    "active_blocks": {"minimum": 1145, "mean": 1364.979592, "median": 1367, "p95": 1528, "maximum": 1560},
+    "active_slope_blocks_per_second": 2.52095,
+    "active_projected_drift_fraction": 0.0442913,
+    "kit_private_slope_bytes_per_second": 3790730.198,
+    "kit_private_slope_mib_per_second": 3.615122,
+    "kit_private_projected_drift_fraction": 0.00654049,
+    "private_per_block_slope": -16280.66316,
+    "private_per_block_projected_drift_fraction": 0.0381791,
+    "active_increase_fraction": 0.5833333,
+    "active_decrease_fraction": 0.4166667,
+    "active_private_correlation": 0.333267,
+    "final_to_initial_window_active_mean_ratio": 1.016594,
+    "private_high_water_recovered_or_flat": true,
+    "kit_peak_private_bytes": 14683439104,
+    "kit_peak_private_gib": 13.67502,
+    "kit_observation_terminal_private_bytes": 13836525568,
+    "tree_peak_private_bytes": 14846590976,
+    "runner_peak_private_bytes": 95346688,
+    "diagnostic_peak_private_bytes": 16908288,
+    "gpu0_peak_dedicated_memory_mib": 6925,
+    "minimum_available_physical_bytes": 87870054400,
+    "minimum_commit_headroom_bytes": 106804846592,
+    "stage_close_seconds": 2.559663,
+    "extension_shutdown_seconds": 0.004499,
+    "shutdown_complete_to_os_exit_seconds": 15.443474,
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "device_lost_or_tdr_count": 0,
+    "cleanup_residual_count": 0
+  },
+  "safe_stop": {
+    "reason": "post-run analyzer passed the Phase 6EY contract to an older lifecycle parser without its obsolete plateau compatibility view",
+    "first_analyzer_error": "KeyError: plateau_contract",
+    "correction": "supply a permissive in-memory compatibility view only and evaluate Phase 6EY exclusively with its frozen dynamic-stationarity thresholds; use only post-frame-320 stability_observation_sample records for the four equal-time windows",
+    "r0_run02_started": false,
+    "r0_run03_started": false,
+    "r1_started": false,
+    "formal_r0_qualification": "0/3",
+    "automatic_retry": false
+  },
+  "regression": {
+    "release_build": "pass in 7.6 seconds",
+    "phase0_rtx": "pass",
+    "phase3": {
+      "status": "pass",
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "dry_authority_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+      "wet_authority_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+      "active_blocks_final": 262,
+      "active_blocks_peak": 376,
+      "peak_fuel_input": 1.0
+    },
+    "phase6e_focused_contracts": "214/214",
+    "standard_suite": "78/78 in 8 processes (303.6 seconds)",
+    "devlog_static": "739 references, 253 ids, 205 json, 171 svg; no missing references or duplicate ids"
+  },
+  "production": {
+    "changed": false,
+    "app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A"
+  }
+}

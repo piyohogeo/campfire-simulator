@@ -37,7 +37,17 @@ def _outer_resource_count(trace: list[dict], start: float | None, end: float | N
 
 
 def _case(root: Path, relative: str, prefix: str, contract: dict) -> dict:
-    result = _phase6ew_case(root, relative, prefix, contract)
+    # The shared lifecycle parser still derives obsolete Phase 6EV plateau
+    # fields. Supply a permissive in-memory compatibility view only; Phase
+    # 6EY qualification below exclusively uses its frozen stationarity gate.
+    compatibility_contract = dict(contract)
+    compatibility_contract["plateau_contract"] = {
+        "stability_frames": [240, 280, 320],
+        "maximum_active_block_range_fraction": 1.0e9,
+        "minimum_resource_samples_in_stability_interval": 0,
+        "maximum_private_growth_bytes_per_second": 1.0e30,
+    }
+    result = _phase6ew_case(root, relative, prefix, compatibility_contract)
     case_dir = root / relative
     log_dir = root / "runner-logs"
     marker_path = case_dir / "resource_markers.jsonl"
@@ -49,7 +59,14 @@ def _case(root: Path, relative: str, prefix: str, contract: dict) -> dict:
     stability = raw.get("stability_observation") or {}
     start, end = _window_bounds(markers)
     rows = aligned_rows(marker_path, trace_path, gpu_path)
-    rows = [row for row in rows if start is not None and end is not None and start <= row["epoch"] <= end]
+    # The frozen 24-second contract concerns the fixed post-frame-320
+    # observation. Earlier frame 240/280/320 anchors are retained in raw
+    # artifacts but are not distributed across the four equal-time windows.
+    rows = [
+        row for row in rows
+        if row.get("marker") == "stability_observation_sample"
+        and start is not None and end is not None and start <= row["epoch"] <= end
+    ]
     if rows:
         origin = rows[0]["epoch"]
         for index, row in enumerate(rows):
@@ -74,7 +91,7 @@ def _case(root: Path, relative: str, prefix: str, contract: dict) -> dict:
         "dynamic_stationarity_pass": bool(
             evaluation["gate_pass"]
             and outer_count >= int(observation["minimum_outer_resource_samples"])
-            and (result.get("stability_timeline_playing_at_end") is True)
+            and (stability.get("timeline_playing_at_end") is True)
         ),
     })
     return result

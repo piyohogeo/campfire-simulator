@@ -104,6 +104,7 @@ def aligned_rows(marker_path: Path, trace_path: Path, gpu_path: Path) -> list[di
         timeline_time = marker.get("timeline_time")
         frame = marker.get("frame")
         result.append({
+            "marker": marker["marker"],
             "timestamp_utc": marker["timestamp_utc"],
             "epoch": epoch,
             "wall_seconds": 0.0,

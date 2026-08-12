@@ -1,5 +1,13 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6EY Flow dynamic-stationarity qualification safe stop
+
+Phase 6EXの24.382%対15% safe stopを凍結したまま、新contract `campfire.phase6ey.dynamic-stationarity-qualification-contract.v1`（SHA-256 `58C9755FF8F3F8E67752E558F572CB1B997A14E1976E0241B586E1DE64CA4AB4`）をruntime前に定義した。旧range gateを遡及緩和せず、24秒・4 window・aligned 40 sample以上でactive block傾向、window復帰、new high、増減、Kit Private Bytes、block当たりメモリ、high-water後の回復を組み合わせる。これは有限区間のengineering non-divergenceであり、物理的定常状態の証明ではない。synthetic 8条件は周期・一時低下後回復・bounded連動メモリを通し、線形／加速発散・memory-only増加・戻らないcacheを落とした。
+
+新rootのR0 run 1はpost-frame-320観測で49 aligned sample／106 outer sample、23.981730秒、active blocks min/mean/median/p95/max `1145/1364.980/1367/1528/1560`、active slope `+2.520950 blocks/s`、Kit Private Bytes slope `+3,790,730 bytes/s`、private/block slope `-16,280.663`、final/initial window mean比`1.016594`で全動的定常性gateに合格した。stage close `2.559663秒`、normal exit、Kit/tree peak `14,683,439,104 / 14,846,590,976 bytes`、fatal/dump/upload/device-lost/TDR/residual 0だった。
+
+ただしKit終了直後、new analyzerが旧lifecycle parserへobsolete `plateau_contract`互換viewを渡さず`KeyError`となった。契約閾値は変えず、旧parserにはpermissiveなin-memory互換viewだけを渡し、正式評価はpost-frame-320の`stability_observation_sample`へ限定する修正を行った。既存runをoffline再分類すると数値・lifecycleはpassだが、fail-closed方針に従いrun 2/3とR1を開始していない。正式R0は`0/3`、Phase 6EYは診断後処理safe stopであり、NanoVDB acquireへは未到達。回帰はRelease、Phase 0 RTX、Phase 3、focused `214/214`、標準suite `78/78`（8 process、303.6秒）が合格した。Phase 3はmass balance 0、active blocks final/peak `262/376`、peak fuel 1.0。production SHA-256は`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`で不変である。詳細は`docs/design/phase6ey_flow_dynamic_stationarity.md`と`docs/design/r0_flow_shutdown_lifecycle.md`。
+
 # Phase 6EX extended running-Flow stability observation safe stop
 
 Phase 6EWの18/20 sample safe stopを凍結したまま、新contract `campfire.phase6ex.r0-stability-qualification-contract.v1`（SHA-256 `BF2D8160267C3F108952C5A92C7DB688C34C74CE29014635945A84722D66DAB2`）で観測設計だけを変更した。frame 240から観測を開始し、frame 320後もtimeline/Flowを停止せず8秒間更新した。外側sampling 0.20秒、通常目標30、hard minimum 20とし、active-block 15%、Private Bytes +8 MiB/s、resource/lifecycle上限は緩和していない。production、Point payload/order/revision、wood authority、Flow、CollisionProxy、修正版4本配置は不変である。
