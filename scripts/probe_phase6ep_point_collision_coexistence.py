@@ -3,12 +3,16 @@
 from __future__ import annotations
 
 import asyncio
+import ctypes
+import gc
 import hashlib
 import json
 import os
 import sys
 import time
+import tracemalloc
 import traceback
+import weakref
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -46,6 +50,7 @@ def _settings():
     scalar_collider_text = settings.get_as_string("/phase6ep/spatialScalarColliderIndices")
     spatial_collider_text = settings.get_as_string("/phase6ep/spatialColliderIndices")
     readback_text = settings.get_as_string("/phase6ep/readbackChannels")
+    readback_frame_text = settings.get_as_string("/phase6ep/readbackFrames")
     sample_frames = tuple(int(value.strip()) for value in sample_text.split(",") if value.strip()) if sample_text else tuple(SAMPLE_FRAMES)
     return {
         "output": Path(settings.get_as_string("/phase6ep/output")).resolve(),
@@ -61,6 +66,18 @@ def _settings():
             tuple() if readback_text.strip().lower() == "none" else
             tuple(value.strip() for value in readback_text.split(",") if value.strip())
             if readback_text else tuple(CHANNELS)
+        ),
+        "readback_mode": settings.get_as_string("/phase6ep/readbackMode") or "legacy",
+        "readback_frames": (
+            tuple(int(value.strip()) for value in readback_frame_text.split(",") if value.strip())
+            if readback_frame_text else sample_frames
+        ),
+        "reference_disposal": settings.get_as_string("/phase6ep/referenceDisposal") or "natural",
+        "synchronous_memory_markers": bool(settings.get_as_bool("/phase6ep/synchronousMemoryMarkers")),
+        "python_memory_telemetry": bool(settings.get_as_bool("/phase6ep/pythonMemoryTelemetry")),
+        "bounded_jsonl_path": (
+            Path(settings.get_as_string("/phase6ep/boundedJsonlPath")).resolve()
+            if settings.get_as_string("/phase6ep/boundedJsonlPath") else None
         ),
         "spatial_collectors_enabled": bool(settings.get_as_bool("/phase6ep/spatialCollectorsEnabled")),
         "spatial_collider_indices": (
@@ -92,7 +109,48 @@ def _write(path, payload):
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2, allow_nan=False) + "\n", encoding="utf-8")
 
 
-def _append_resource_marker(path, marker, **values):
+class _ProcessMemoryCountersEx(ctypes.Structure):
+    _fields_ = [
+        ("cb", ctypes.c_ulong),
+        ("page_fault_count", ctypes.c_ulong),
+        ("peak_working_set_size", ctypes.c_size_t),
+        ("working_set_size", ctypes.c_size_t),
+        ("quota_peak_paged_pool_usage", ctypes.c_size_t),
+        ("quota_paged_pool_usage", ctypes.c_size_t),
+        ("quota_peak_non_paged_pool_usage", ctypes.c_size_t),
+        ("quota_non_paged_pool_usage", ctypes.c_size_t),
+        ("pagefile_usage", ctypes.c_size_t),
+        ("peak_pagefile_usage", ctypes.c_size_t),
+        ("private_usage", ctypes.c_size_t),
+    ]
+
+
+def _process_memory_snapshot():
+    if os.name != "nt":
+        return {"available": False, "reason": "Windows PROCESS_MEMORY_COUNTERS_EX only"}
+    counters = _ProcessMemoryCountersEx()
+    counters.cb = ctypes.sizeof(counters)
+    success = ctypes.windll.psapi.GetProcessMemoryInfo(
+        ctypes.windll.kernel32.GetCurrentProcess(), ctypes.byref(counters), counters.cb
+    )
+    if not success:
+        return {"available": False, "reason": f"GetProcessMemoryInfo error {ctypes.get_last_error()}"}
+    return {
+        "available": True,
+        "private_bytes": int(counters.private_usage),
+        "working_set_bytes": int(counters.working_set_size),
+        "peak_working_set_bytes": int(counters.peak_working_set_size),
+    }
+
+
+def _python_memory_snapshot():
+    if not tracemalloc.is_tracing():
+        return {"available": False}
+    current, peak = tracemalloc.get_traced_memory()
+    return {"available": True, "current_bytes": int(current), "peak_bytes": int(peak)}
+
+
+def _append_resource_marker(path, marker, synchronous_memory=False, **values):
     if path is None:
         return
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -104,8 +162,45 @@ def _append_resource_marker(path, marker, **values):
         "marker": marker,
         **values,
     }
+    if synchronous_memory:
+        payload["process_memory"] = _process_memory_snapshot()
+        payload["python_memory"] = _python_memory_snapshot()
     with path.open("a", encoding="utf-8", newline="\n") as stream:
         stream.write(json.dumps(payload, ensure_ascii=False, separators=(",", ":"), allow_nan=False) + "\n")
+        stream.flush()
+
+
+def _type_name(value):
+    value_type = type(value)
+    return f"{value_type.__module__}.{value_type.__qualname__}"
+
+
+def _bounded_object_metadata(value):
+    metadata = {"type": _type_name(value), "identity": int(id(value))}
+    for name in ("dtype", "shape", "strides", "nbytes"):
+        try:
+            item = getattr(value, name)
+            if name in ("shape", "strides"):
+                item = [int(component) for component in item]
+            elif name == "nbytes":
+                item = int(item)
+            else:
+                item = str(item)
+            metadata[name] = item
+        except Exception:
+            metadata[name] = None
+    return metadata
+
+
+def _append_bounded_jsonl(path, payload):
+    if path is None:
+        raise RuntimeError("bounded JSONL output is required for fuel_jsonl mode")
+    encoded = json.dumps(payload, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
+    if len(encoded.encode("utf-8")) > 16 * 1024:
+        raise RuntimeError("bounded JSONL record exceeded 16 KiB")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8", newline="\n") as stream:
+        stream.write(encoded + "\n")
         stream.flush()
 
 
@@ -239,9 +334,111 @@ def _stats_attributes(prim):
     return values
 
 
+def _readback_boundary(flow, volume, arguments, frame, output):
+    """Exercise exactly one declared public-readback boundary and return only bounded metadata."""
+    marker_path = arguments["resource_marker_path"]
+    synchronous = arguments["synchronous_memory_markers"]
+    mode = arguments["readback_mode"]
+    mark = lambda name, **values: _append_resource_marker(
+        marker_path, name, synchronous_memory=synchronous, frame=frame, **values
+    )
+    mark("readback_call_before", mode=mode)
+    raw = flow.get_latest_nanovdb_readback()
+    mark("readback_call_after", mode=mode, returned_channel_count=len(raw))
+    result = {
+        "mode": mode,
+        "returned_type": _type_name(raw),
+        "returned_channel_count": len(raw),
+        "returned_identity": int(id(raw)),
+        "channel_objects": [_bounded_object_metadata(value) for value in raw],
+        "public_release_method_used": False,
+        "public_release_method_available": False,
+        "explicit_release_note": "No public release method is exposed by the returned Python objects; no private or inferred release is called.",
+    }
+    mark("tuple_elements_checked", channel_object_count=len(result["channel_objects"]))
+    weak_references = []
+    for value in raw:
+        try:
+            weak_references.append(weakref.ref(value))
+        except TypeError:
+            weak_references.append(None)
+
+    array = None
+    source = None
+    if mode != "acquire_discard":
+        fuel_index = CHANNELS.index("fuel")
+        source = raw[fuel_index]
+        mark("fuel_conversion_before", source_type=_type_name(source))
+        array = np.asarray(source)
+        base = getattr(array, "base", None)
+        result["fuel_array"] = {
+            **_bounded_object_metadata(array),
+            "owns_data": bool(array.flags.owndata),
+            "base_type": _type_name(base) if base is not None else None,
+            "base_identity": int(id(base)) if base is not None else None,
+            "same_identity_as_source": bool(array is source),
+        }
+        try:
+            result["fuel_array"]["shares_memory_with_source"] = bool(np.shares_memory(array, source))
+        except Exception:
+            result["fuel_array"]["shares_memory_with_source"] = None
+        mark(
+            "fuel_conversion_after", dtype=str(array.dtype), shape=[int(value) for value in array.shape],
+            strides=[int(value) for value in array.strides], buffer_bytes=int(array.nbytes),
+            owns_data=bool(array.flags.owndata),
+        )
+
+    if mode in ("fuel_scalar", "fuel_jsonl"):
+        mark("numpy_aggregate_before")
+        if array.size:
+            aggregate = {
+                "sum": float(np.sum(array, dtype=np.float64)),
+                "mean": float(np.mean(array, dtype=np.float64)),
+                "minimum": float(np.min(array)),
+                "maximum": float(np.max(array)),
+            }
+        else:
+            aggregate = {"sum": 0.0, "mean": None, "minimum": None, "maximum": None}
+        result["fuel_aggregate"] = aggregate
+        mark("numpy_aggregate_after")
+
+    if mode == "fuel_spatial":
+        mark("spatial_sampling_before")
+        temporary_path = output.parent / f"phase6eu_{frame}_fuel.nvdb"
+        result["spatial_sample"] = _save_and_sample(
+            flow,
+            volume,
+            array,
+            "fuel",
+            temporary_path,
+            {"representative_collider": {"minimum": [-0.42, -0.20, 0.70], "maximum": [0.42, 0.20, 1.12]}},
+        )
+        mark("spatial_sampling_after", temporary_file_present=temporary_path.exists())
+
+    disposal = arguments["reference_disposal"]
+    if disposal not in ("natural", "del", "gc"):
+        raise ValueError(f"unsupported reference disposal mode: {disposal}")
+    if disposal in ("del", "gc"):
+        if array is not None:
+            del array
+        if source is not None:
+            del source
+        del raw
+    collected = None
+    if disposal == "gc":
+        collected = int(gc.collect())
+    result["reference_disposal"] = disposal
+    result["gc_collected"] = collected
+    return result, weak_references
+
+
 async def _run():
     arguments = _settings()
     output = arguments["output"]
+    mark = lambda name, **values: _append_resource_marker(
+        arguments["resource_marker_path"], name,
+        synchronous_memory=arguments["synchronous_memory_markers"], **values
+    )
     report = {
         "schema": f"campfire.{arguments['report_phase']}.point-collision-run.v1", "phase": arguments["report_phase"],
         "status": "running", "lifecycle_marker": "process_entry",
@@ -261,22 +458,31 @@ async def _run():
     collectors_by_index = {}
     exit_code = 1
     try:
+        if arguments["python_memory_telemetry"] and not tracemalloc.is_tracing():
+            tracemalloc.start(10)
         unknown_channels = sorted(set(arguments["readback_channels"]) - set(CHANNELS))
         if unknown_channels:
             raise ValueError(f"unsupported readback channels: {unknown_channels}")
-        _append_resource_marker(arguments["resource_marker_path"], "process_entry")
+        valid_readback_modes = {
+            "legacy", "none", "acquire_discard", "fuel_convert", "fuel_scalar", "fuel_jsonl", "fuel_spatial"
+        }
+        if arguments["readback_mode"] not in valid_readback_modes:
+            raise ValueError(f"unsupported readback mode: {arguments['readback_mode']}")
+        if not set(arguments["readback_frames"]).issubset(set(arguments["sample_frames"])):
+            raise ValueError("readback frames must be a subset of sample frames")
+        mark("process_entry")
         stage_path, point_summary, plan = _build_stage(arguments)
         report["point_payload"] = point_summary
         report["stage_sha256"] = _sha256(stage_path)
         report["lifecycle_marker"] = "offline_stage_complete"
         _write(output, report)
-        _append_resource_marker(arguments["resource_marker_path"], "offline_stage_complete")
+        mark("offline_stage_complete")
         await context.open_stage_async(str(stage_path))
         stage = context.get_stage()
         if stage is None:
             raise RuntimeError("Phase 6EP stage connection failed")
         report["lifecycle_marker"] = "usd_context_connection_complete"
-        _append_resource_marker(arguments["resource_marker_path"], "usd_context_connection_complete")
+        mark("usd_context_connection_complete")
         emitter = stage.GetPrimAtPath("/World/Flow/EmitterPoint")
         report["public_point_support_attribute_audit"] = {
             "attributes": _stats_attributes(emitter),
@@ -319,14 +525,18 @@ async def _run():
         timeline.play()
         report["lifecycle_marker"] = "timeline_playing"
         _write(output, report)
-        _append_resource_marker(arguments["resource_marker_path"], "timeline_playing")
+        mark("timeline_playing")
         capture_frames = set()
         if arguments["capture"]:
             capture_frames = set(range(arguments["capture_start"], arguments["capture_end"] + 1))
         sample_frames = tuple(arguments["sample_frames"])
         final_frame = max(sample_frames[-1], max(capture_frames, default=0))
+        pending_readback_frame = None
         for frame in range(1, final_frame + 1):
             await app.next_update_async()
+            if pending_readback_frame is not None:
+                mark("next_frame_started", frame=frame, previous_readback_frame=pending_readback_frame)
+                pending_readback_frame = None
             if frame in capture_frames:
                 await omni.kit.viewport.utility.next_viewport_frame_async(viewport)
                 path = output.parent / "frames" / f"frame_{frame:04d}.png"
@@ -334,7 +544,7 @@ async def _run():
                 report["captures"].append({"frame": frame, **(await _capture(viewport, path))})
             if frame not in sample_frames:
                 continue
-            _append_resource_marker(arguments["resource_marker_path"], "sample_started", frame=frame)
+            mark("sample_started", frame=frame, active_blocks=int(flow.get_active_block_count()))
             if int(point_summary["active_point_count"]) == 0:
                 report["samples"].append({
                     "frame": frame,
@@ -345,24 +555,55 @@ async def _run():
                     },
                 })
                 _write(output, report)
-                _append_resource_marker(arguments["resource_marker_path"], "sample_persisted", frame=frame)
+                mark("sample_persisted", frame=frame)
+                continue
+            if arguments["readback_mode"] != "legacy":
+                sample = {"frame": frame, "active_blocks": int(flow.get_active_block_count()), "channels": {}}
+                if arguments["readback_mode"] != "none" and frame in arguments["readback_frames"]:
+                    boundary, weak_references = _readback_boundary(flow, volume, arguments, frame, output)
+                    alive_after_scope = sum(reference is not None and reference() is not None for reference in weak_references)
+                    boundary["weak_reference_supported_count"] = sum(reference is not None for reference in weak_references)
+                    boundary["weak_reference_alive_after_scope_count"] = alive_after_scope
+                    sample["readback_boundary"] = boundary
+                    mark(
+                        "python_references_released", frame=frame,
+                        disposal=arguments["reference_disposal"], weak_reference_alive_count=alive_after_scope,
+                    )
+                    if arguments["readback_mode"] == "fuel_jsonl":
+                        bounded = {
+                            "schema": "campfire.phase6eu.fuel-aggregate.v1", "frame": frame,
+                            "active_blocks": sample["active_blocks"],
+                            "fuel_aggregate": boundary.get("fuel_aggregate"),
+                        }
+                        mark("jsonl_write_before", frame=frame)
+                        _append_bounded_jsonl(arguments["bounded_jsonl_path"], bounded)
+                        mark(
+                            "jsonl_write_after", frame=frame,
+                            jsonl_bytes=arguments["bounded_jsonl_path"].stat().st_size,
+                        )
+                    pending_readback_frame = frame
+                report["samples"].append(sample)
+                mark(
+                    "sample_metadata_complete", frame=frame,
+                    readback=bool(sample.get("readback_boundary")), active_blocks=sample["active_blocks"],
+                )
                 continue
             if not arguments["readback_channels"]:
                 report["samples"].append({"frame": frame, "active_blocks": int(flow.get_active_block_count()), "channels": {}})
                 _write(output, report)
-                _append_resource_marker(arguments["resource_marker_path"], "sample_persisted", frame=frame, readback=False)
+                mark("sample_persisted", frame=frame, readback=False)
                 continue
-            _append_resource_marker(arguments["resource_marker_path"], "readback_started", frame=frame)
+            mark("readback_started", frame=frame)
             raw = flow.get_latest_nanovdb_readback()
-            _append_resource_marker(arguments["resource_marker_path"], "readback_complete", frame=frame, returned_channel_count=len(raw))
+            mark("readback_complete", frame=frame, returned_channel_count=len(raw))
             sample = {"frame": frame, "active_blocks": int(flow.get_active_block_count()), "channels": {}}
             for channel in arguments["readback_channels"]:
                 channel_index = CHANNELS.index(channel)
-                _append_resource_marker(arguments["resource_marker_path"], "channel_started", frame=frame, channel=channel)
+                mark("channel_started", frame=frame, channel=channel)
                 array = np.asarray(raw[channel_index])
                 if array.size == 0:
                     sample["channels"][channel] = {"available": False}
-                    _append_resource_marker(arguments["resource_marker_path"], "channel_complete", frame=frame, channel=channel, available=False)
+                    mark("channel_complete", frame=frame, channel=channel, available=False)
                     continue
                 nvdb_path = output.parent / f"sample_{frame}_{channel}.nvdb"
                 bounds = {
@@ -389,11 +630,11 @@ async def _run():
                     ),
                 )
                 sample["channels"][channel] = {"available": True, "word_count": int(array.size), "buffer_dtype": str(array.dtype), "buffer_bytes": int(array.nbytes), **details}
-                _append_resource_marker(arguments["resource_marker_path"], "channel_complete", frame=frame, channel=channel, available=True, buffer_bytes=int(array.nbytes))
+                mark("channel_complete", frame=frame, channel=channel, available=True, buffer_bytes=int(array.nbytes))
             report["samples"].append(sample)
-            _append_resource_marker(arguments["resource_marker_path"], "sample_persist_started", frame=frame)
+            mark("sample_persist_started", frame=frame)
             _write(output, report)
-            _append_resource_marker(arguments["resource_marker_path"], "sample_persisted", frame=frame, raw_json_bytes=output.stat().st_size)
+            mark("sample_persisted", frame=frame, raw_json_bytes=output.stat().st_size)
         report["spatial_manifest_collider_indices"] = list(collectors_by_index)
         report["spatial_manifests"] = [collectors_by_index[index].finalize() for index in collectors_by_index]
         report["active_blocks_final"] = int(flow.get_active_block_count())
@@ -407,7 +648,7 @@ async def _run():
         report["completion_contract"]["results_saved"] = True
         report["lifecycle_marker"] = "measurement_complete"
         _write(output, report)
-        _append_resource_marker(arguments["resource_marker_path"], "measurement_complete")
+        mark("measurement_complete")
         exit_code = 0
     except Exception as error:
         report["status"] = "error"
@@ -416,25 +657,25 @@ async def _run():
     finally:
         try:
             report["lifecycle_marker"] = "timeline_stopping"
-            _append_resource_marker(arguments["resource_marker_path"], "timeline_stopping")
+            mark("timeline_stopping")
             timeline.stop()
             for _ in range(12):
                 await app.next_update_async()
             report["lifecycle_marker"] = "timeline_stopped"
-            _append_resource_marker(arguments["resource_marker_path"], "timeline_stopped")
+            mark("timeline_stopped")
             report["completion_contract"]["timeline_stopped"] = True
             await context.close_stage_async()
             for _ in range(12):
                 await app.next_update_async()
             report["lifecycle_marker"] = "renderer_drain_complete"
-            _append_resource_marker(arguments["resource_marker_path"], "renderer_drain_complete")
+            mark("renderer_drain_complete")
             report["completion_contract"]["stage_closed"] = True
             report["completion_contract"]["renderer_drained"] = True
             if flow is not None:
                 _flowusd.release_flowusd_interface(flow)
                 flow = None
             report["lifecycle_marker"] = "shutdown_complete"
-            _append_resource_marker(arguments["resource_marker_path"], "shutdown_complete")
+            mark("shutdown_complete")
             report["completion_contract"]["shutdown_requested"] = True
             report["lifecycle_history"].append({"marker": "shutdown_complete", "timestamp_utc": datetime.now(timezone.utc).isoformat()})
         except Exception as error:
@@ -442,6 +683,8 @@ async def _run():
             report["status"] = "error"
             exit_code = 1
         _write(output, report)
+        if tracemalloc.is_tracing():
+            tracemalloc.stop()
         app.post_uncancellable_quit(exit_code)
 
 

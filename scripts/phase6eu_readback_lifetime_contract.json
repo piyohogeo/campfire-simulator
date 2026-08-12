@@ -1,0 +1,122 @@
+{
+  "schema": "campfire.phase6eu.nanovdb-readback-lifetime-contract.v1",
+  "phase": "phase6eu",
+  "declared_before_runtime": true,
+  "phase6es_history": "frozen resource safe stop; no overwrite, reclassification, retrospective limit relaxation, or sample reuse",
+  "phase6et_history": "frozen memory safe stop; its two attempted processes and 14 GiB classification remain immutable",
+  "purpose": "separate public NanoVDB acquisition, reference lifetime, fuel conversion, scalar aggregation, bounded persistence, and minimum spatial sampling",
+  "production_neutral": true,
+  "geometry_variant": "phase6er_corrected",
+  "scenario": "production_four",
+  "point_policy": "allow_self_center",
+  "point_offset_m": -0.0125,
+  "support_radius_m": 0.05,
+  "collision_enabled": true,
+  "point_filtering_enabled": true,
+  "source_scales": {"fuel": 1.0, "temperature": 1.0, "smoke": 1.0},
+  "timeline": {
+    "final_frame": 320,
+    "observation_frames": [30, 60, 90, 120, 150, 180, 200, 240, 280, 320],
+    "growth_frames": [30, 60, 90, 120, 150, 180, 200],
+    "stability_frames": [240, 280, 320],
+    "reason": "Phase 6ET peaked near the active-block growth region; frames 240-320 form a bounded post-peak observation interval without an unlimited soak"
+  },
+  "warmup": {
+    "formal_population": false,
+    "scenario": "lower_upper",
+    "sample_frames": [30, 60],
+    "readback_mode": "none",
+    "reason": "compile and initialize the unchanged Flow/RTX path before the formal staged matrix"
+  },
+  "condition_groups": [
+    {
+      "id": "baseline",
+      "requires_previous_group": false,
+      "requires_group_plateau": true,
+      "conditions": [
+        {"id": "R0_none", "readback_mode": "none", "readback_frames": [], "reference_disposal": "natural"}
+      ]
+    },
+    {
+      "id": "acquisition",
+      "requires_previous_group": true,
+      "requires_group_plateau": true,
+      "conditions": [
+        {"id": "R1_early_once", "readback_mode": "acquire_discard", "readback_frames": [60], "reference_disposal": "natural"},
+        {"id": "R1_late_once", "readback_mode": "acquire_discard", "readback_frames": [180], "reference_disposal": "natural"},
+        {"id": "R2_three", "readback_mode": "acquire_discard", "readback_frames": [60, 120, 180], "reference_disposal": "natural"},
+        {"id": "R2_seven", "readback_mode": "acquire_discard", "readback_frames": [30, 60, 90, 120, 150, 180, 200], "reference_disposal": "natural"}
+      ]
+    },
+    {
+      "id": "conversion_and_aggregation",
+      "requires_previous_group": true,
+      "requires_group_plateau": true,
+      "conditions": [
+        {"id": "R3_fuel_convert", "readback_mode": "fuel_convert", "readback_frames": [30, 60, 90, 120, 150, 180, 200], "reference_disposal": "natural"},
+        {"id": "R4_fuel_scalar", "readback_mode": "fuel_scalar", "readback_frames": [30, 60, 90, 120, 150, 180, 200], "reference_disposal": "natural"}
+      ]
+    },
+    {
+      "id": "persistence_and_spatial",
+      "requires_previous_group": true,
+      "requires_group_plateau": true,
+      "conditions": [
+        {"id": "R5_fuel_jsonl", "readback_mode": "fuel_jsonl", "readback_frames": [30, 60, 90, 120, 150, 180, 200], "reference_disposal": "natural"},
+        {"id": "R6_fuel_spatial", "readback_mode": "fuel_spatial", "readback_frames": [30, 60, 90, 120, 150, 180, 200], "reference_disposal": "natural"}
+      ]
+    }
+  ],
+  "runs_per_condition": 3,
+  "formal_process_count": 27,
+  "optional_reference_disposal_followups": {
+    "automatic": false,
+    "trigger": "only if R2 shows a bounded but persistent acquisition high-water that Python reference lifetime could plausibly explain",
+    "conditions": [
+      {"id": "R2_seven_del", "readback_mode": "acquire_discard", "readback_frames": [30, 60, 90, 120, 150, 180, 200], "reference_disposal": "del"},
+      {"id": "R2_seven_gc", "readback_mode": "acquire_discard", "readback_frames": [30, 60, 90, 120, 150, 180, 200], "reference_disposal": "gc"}
+    ],
+    "production_gc_adoption": false
+  },
+  "resource_sampling_seconds": 0.25,
+  "gpu_sampling_ms": 1000,
+  "plateau_contract": {
+    "stability_frames": [240, 280, 320],
+    "maximum_active_block_range_fraction": 0.15,
+    "maximum_private_growth_bytes_per_second": 8388608,
+    "minimum_resource_samples_in_stability_interval": 20,
+    "require_non_monotonic_or_flat_private_series": true,
+    "classification_note": "positive tail slope alone is not called a leak; active-block stability and memory slope are reported separately"
+  },
+  "synchronous_marker_contract": {
+    "enabled": true,
+    "gpu_global_sync": false,
+    "markers": [
+      "readback_call_before", "readback_call_after", "tuple_elements_checked",
+      "fuel_conversion_before", "fuel_conversion_after", "numpy_aggregate_before",
+      "numpy_aggregate_after", "python_references_released", "next_frame_started",
+      "jsonl_write_before", "jsonl_write_after", "timeline_stopped",
+      "renderer_drain_complete", "shutdown_complete"
+    ]
+  },
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "condition_timeout_seconds": 1500,
+    "automatic_retry": false
+  },
+  "return_to_supply_comparison": {
+    "allowed_only_after": [
+      "R0 through R4 complete three normal-exit runs each",
+      "readback-free Flow plateau is demonstrated in all three R0 runs",
+      "acquisition growth is bounded and not unbounded with call count",
+      "a finite resource ceiling is derived in a new contract from observed maximum plus explicit margin",
+      "fatal/dump/upload/device-lost/TDR/residual-process counts are zero"
+    ],
+    "not_part_of_this_contract": true
+  }
+}
