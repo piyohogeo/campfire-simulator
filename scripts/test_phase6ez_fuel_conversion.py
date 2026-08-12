@@ -35,6 +35,8 @@ class Phase6EzFuelConversionContract(unittest.TestCase):
         self.assertLess(self.runner.index('Invoke-Case "C0_acquire_discard"'), self.runner.index('Invoke-Case "C1_fuel_convert"'))
         self.assertFalse(self.contract["execution"]["automatic_retry"])
         self.assertEqual(self.contract["execution"]["maximum_kit_processes"], 2)
+        self.assertIn('"phase6eg_resource_guard.py"', self.runner)
+        self.assertTrue((SCRIPTS / "phase6eg_resource_guard.py").is_file())
 
     def test_public_boundary_and_forbidden_operations_are_fixed(self):
         boundary = self.contract["public_api_boundary"]

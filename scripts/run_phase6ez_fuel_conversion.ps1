@@ -21,7 +21,7 @@ Copy-Item -LiteralPath $hashPath -Destination (Join-Path $OutputRoot "frozen_con
 $contract = Get-Content -Raw -Encoding UTF8 $contractPath | ConvertFrom-Json
 $limits = $contract.safety
 $window = $contract.observation
-$guard = Join-Path $PSScriptRoot "run_phase6eg_resource_guard.py"
+$guard = Join-Path $PSScriptRoot "phase6eg_resource_guard.py"
 $caseRunner = Join-Path $PSScriptRoot "run_phase6ep_point_collision_case.ps1"
 $analyzer = Join-Path $PSScriptRoot "analyze_phase6ez_fuel_conversion.py"
 $powershell = (Get-Command powershell.exe).Source
