@@ -1,0 +1,170 @@
+{
+  "schema": "campfire.phase6ez.single-fuel-conversion-restart-safe-stop.v1",
+  "phase": "phase6ez",
+  "status": "safe_stop",
+  "date": "2026-08-12",
+  "history": {
+    "phase6ey_qualified_frozen": true,
+    "phase6ez_through_commit_bc7a8bf_frozen": true,
+    "prior_c0_formal_population_reuse": false,
+    "artifact_root": "artifacts/phase6ez-fuel-conversion-3"
+  },
+  "contract": {
+    "schema": "campfire.phase6ez.single-fuel-conversion-contract.v1",
+    "sha256": "66A559032A1795FF45D71E2657149277BDDA3DBFCE259BCB26C72C3650BC20DA",
+    "thresholds_changed_after_measurement": false,
+    "resource_ceilings_changed": false
+  },
+  "c0": {
+    "formal_gate_pass": true,
+    "public_readback_calls": 1,
+    "numpy_asarray_calls": 0,
+    "field_persistence_calls": 0,
+    "weak_reference_alive_after_scope_count": 0,
+    "readback_immediate_private_delta_bytes": 144257024,
+    "readback_immediate_private_delta_mib": 137.57421875,
+    "next_frame_residual_bytes": 145309696,
+    "next_frame_residual_mib": 138.578125,
+    "observation_end_residual_bytes": 329891840,
+    "observation_end_residual_mib": 314.609375,
+    "active_block_mean": 1362.1224489795918,
+    "active_block_range": [1121, 1567],
+    "aligned_samples": 49,
+    "outer_resource_samples": 106,
+    "dynamic_stationarity_pass": true,
+    "kit_peak_private_bytes": 14834958336,
+    "kit_peak_private_gib": 13.816131591796875,
+    "kit_terminal_private_bytes": 13898428416,
+    "kit_terminal_private_gib": 12.943920135498047,
+    "tree_peak_private_bytes": 14998818816,
+    "gpu0_peak_dedicated_memory_mib": 6947,
+    "minimum_kit_ceiling_margin_bytes": 197427200,
+    "minimum_kit_ceiling_margin_mib": 188.28125,
+    "stage_close_seconds": 74.32942914962769,
+    "normal_os_exit": true,
+    "fatal_dump_upload_device_lost_tdr_residual_count": 0
+  },
+  "c1": {
+    "process_started": true,
+    "process_completed": true,
+    "normal_os_exit": true,
+    "lifecycle_pass": true,
+    "formal_gate_pass": false,
+    "formal_failure": "dynamic_stationarity",
+    "failed_dynamic_checks": [
+      "increase_fraction",
+      "decrease_fraction",
+      "active_drop_memory_response"
+    ],
+    "public_readback_calls": 1,
+    "numpy_asarray_calls": 1,
+    "explicit_copy_function_calls": 0,
+    "field_persistence_calls": 0,
+    "source": {
+      "type": "numpy.ndarray",
+      "identity": 2295388713488
+    },
+    "converted": {
+      "type": "numpy.ndarray",
+      "identity": 2295388713488,
+      "same_identity_as_source": true,
+      "shape": [814784],
+      "dtype": "uint32",
+      "element_count": 814784,
+      "logical_bytes": 3259136,
+      "logical_mib": 3.108154296875,
+      "strides": [4],
+      "c_contiguous": true,
+      "f_contiguous": true,
+      "owns_data": true,
+      "base_type": null,
+      "base_identity": null,
+      "shares_memory_with_source": true,
+      "allocation_classification": "same_object_zero_copy_alias",
+      "new_data_buffer_allocated": false,
+      "valid_after_source_alias_release": true,
+      "weak_reference_alive_immediately_after_release": false,
+      "weak_reference_alive_after_scope_count": 0
+    },
+    "memory": {
+      "readback_immediate_private_delta_bytes": 51814400,
+      "readback_immediate_private_delta_mib": 49.4140625,
+      "numpy_asarray_immediate_private_delta_bytes": 1642496,
+      "numpy_asarray_immediate_private_delta_mib": 1.56640625,
+      "numpy_asarray_delta_to_logical_ratio": 0.5039666954677559,
+      "source_alias_release_delta_bytes": -1576960,
+      "source_alias_release_recovered_mib": 1.50390625,
+      "converted_object_release_delta_bytes": -14708736,
+      "converted_object_release_recovered_mib": 14.02734375,
+      "next_frame_residual_bytes": 22376448,
+      "next_frame_residual_mib": 21.33984375,
+      "observation_end_residual_bytes": -38682624,
+      "observation_end_residual_mib": -36.890625,
+      "numpy_asarray_gpu_delta_mib_nearest_sample": 0.0,
+      "gpu_measurement_is_nearest_bounded_sample": true
+    },
+    "active_blocks": {
+      "mean": 24.0,
+      "minimum": 24,
+      "maximum": 24,
+      "c0_mean_difference": -1338.1224489795918,
+      "c0_peak_terminal_comparison_is_not_like_for_like": true
+    },
+    "bounded_memory_evidence": {
+      "private_slope_bytes_per_second": 5445186.535450285,
+      "private_projected_drift_fraction": 0.011183851386862046,
+      "last_half_private_slope_bytes_per_second": 14856473.998919336,
+      "private_high_water_recovered_or_flat": true,
+      "kit_peak_private_bytes": 12049387520,
+      "kit_peak_private_gib": 11.221866607666016,
+      "kit_terminal_private_bytes": 11985248256,
+      "kit_terminal_private_gib": 11.162132263183594,
+      "tree_peak_private_bytes": 12208054272,
+      "gpu0_peak_dedicated_memory_mib": 6672,
+      "minimum_kit_ceiling_margin_bytes": 2982998016,
+      "minimum_kit_ceiling_margin_mib": 2844.80859375
+    },
+    "stage_close_seconds": 2.0490410327911377,
+    "fatal_dump_upload_device_lost_tdr_residual_count": 0
+  },
+  "comparison": {
+    "c1_minus_c0_peak_private_bytes": -2785570816,
+    "c1_minus_c0_terminal_private_bytes": -1913180160,
+    "interpretation": "C1 active-block mean was 24 versus C0 1362.122, so cross-process peak and terminal differences are dominated by Flow field scale and do not isolate numpy.asarray. Synchronous adjacent markers isolate the zero-copy call boundary more directly."
+  },
+  "qualification": {
+    "single_fuel_boundary_qualified": false,
+    "repeated_acquire_convert_allowed": false,
+    "reason": "C1 normal exit and zero-copy lifetime evidence were obtained, but the unchanged dynamic-stationarity contract failed; no post-hoc reclassification or retry was performed"
+  },
+  "production": {
+    "changed": false,
+    "app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A"
+  },
+  "regression": {
+    "release_build": "pass",
+    "phase0_rtx": "pass",
+    "phase3": {
+      "status": "pass",
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "dry_authority_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+      "wet_authority_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+      "active_blocks_final": 244,
+      "active_blocks_peak": 344,
+      "peak_fuel_input": 1.0
+    },
+    "focused_phase6": "232/232 pass",
+    "standard_suite": {
+      "processes": "8/8 pass",
+      "tests": "78/78 pass",
+      "wall_seconds": 292.5
+    },
+    "devlog_static_validation": "pass",
+    "residual_processes": {
+      "kit": 0,
+      "cdb": 0,
+      "nvidia_smi": 0
+    }
+  }
+}

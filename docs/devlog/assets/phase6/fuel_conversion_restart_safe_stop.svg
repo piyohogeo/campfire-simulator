@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6EZ restart result</title>
+  <desc id="desc">C0 formally passed. C1 observed a same-object zero-copy fuel alias and normal exit, but the frozen dynamic stationarity gate failed.</desc>
+  <rect width="1200" height="520" fill="#111827"/>
+  <text x="64" y="70" fill="#f59e0b" font-family="Segoe UI, sans-serif" font-size="24">PHASE 6EZ · FROZEN RESTART POPULATION</text>
+  <text x="64" y="122" fill="#f9fafb" font-family="Segoe UI, sans-serif" font-size="37" font-weight="700">C0 pass · C1 zero-copy observed · formal safe stop</text>
+  <g font-family="Segoe UI, sans-serif">
+    <rect x="64" y="165" width="330" height="245" rx="16" fill="#1f2937" stroke="#34d399" stroke-width="2"/>
+    <text x="88" y="208" fill="#34d399" font-size="23" font-weight="700">C0 acquire/discard</text>
+    <text x="88" y="250" fill="#e5e7eb" font-size="19">Formal gate: PASS</text>
+    <text x="88" y="283" fill="#e5e7eb" font-size="19">Acquire +137.574 MiB</text>
+    <text x="88" y="316" fill="#e5e7eb" font-size="19">Kit peak 13.816 GiB</text>
+    <text x="88" y="349" fill="#e5e7eb" font-size="19">14 GiB margin 188.281 MiB</text>
+    <text x="88" y="382" fill="#9ca3af" font-size="16">normal exit · close 74.329 s</text>
+    <rect x="435" y="165" width="330" height="245" rx="16" fill="#1f2937" stroke="#60a5fa" stroke-width="2"/>
+    <text x="459" y="208" fill="#60a5fa" font-size="23" font-weight="700">C1 np.asarray(fuel)</text>
+    <text x="459" y="250" fill="#e5e7eb" font-size="19">same Python identity</text>
+    <text x="459" y="283" fill="#e5e7eb" font-size="19">shared memory · no new buffer</text>
+    <text x="459" y="316" fill="#e5e7eb" font-size="19">logical 3.108 MiB</text>
+    <text x="459" y="349" fill="#e5e7eb" font-size="19">call boundary +1.566 MiB CPU</text>
+    <text x="459" y="382" fill="#9ca3af" font-size="16">GPU nearest delta 0 MiB</text>
+    <rect x="806" y="165" width="330" height="245" rx="16" fill="#1f2937" stroke="#f59e0b" stroke-width="2"/>
+    <text x="830" y="208" fill="#f59e0b" font-size="23" font-weight="700">Formal C1 result</text>
+    <text x="830" y="250" fill="#e5e7eb" font-size="19">normal exit · lifecycle pass</text>
+    <text x="830" y="283" fill="#e5e7eb" font-size="19">active blocks fixed at 24</text>
+    <text x="830" y="316" fill="#e5e7eb" font-size="19">stationarity predicates failed</text>
+    <text x="830" y="349" fill="#e5e7eb" font-size="19">single boundary NOT qualified</text>
+    <text x="830" y="382" fill="#9ca3af" font-size="16">no retry · no repeated phase</text>
+  </g>
+  <text x="64" y="470" fill="#9ca3af" font-family="Segoe UI, sans-serif" font-size="18">Production unchanged · fatal/dump/upload/device lost/TDR/residual 0 · previous history frozen</text>
+</svg>

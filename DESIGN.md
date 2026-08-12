@@ -1,5 +1,15 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6EZ corrected restart safe stop
+
+The corrected restart passed C0 formally, then stopped fail-closed at C1's unchanged dynamic-stationarity gate after a normal OS exit; it did not retry or reclassify C1. Final regression passed the Release build, Phase 0 RTX, Phase 3, 232/232 focused Phase 6 contracts, the eight-process 78/78 standard suite in 292.5 seconds, and static devlog validation. Phase 3 retained both authority hashes, zero dry/wet mass-balance error, active blocks final/peak 244/344, and peak fuel 1.0. The production app SHA-256 remained `94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`; Kit/CDB/`nvidia-smi` residual counts were zero.
+
+Phase 6EYのqualified結果と`bc7a8bf`までのPhase 6EZ safe-stop履歴を凍結し、新しい空root `artifacts/phase6ez-fuel-conversion-3`からC0/C1を開始した。過去C0 sampleは正式populationへ流用・再分類していない。C0はpublic readback 1回、変換0、weak reference残留0、49 aligned sample、dynamic-stationarity pass、stage close `74.329429秒`、normal OS exitで正式合格した。Kit peakは`14,834,958,336 bytes`（`13.816 GiB`）、14 GiB上限までの最小余裕は`197,427,200 bytes`（`188.281 MiB`）で、fatal/dump/upload/device lost/TDR/CDB/cleanup residualは0だった。
+
+C0合格後だけ別processのC1を開始した。fuel sourceと`np.asarray(source)`の戻り値は同一Python identity、`numpy.ndarray`、shape `[814784]`、dtype `uint32`、logical `3,259,136 bytes`（`3.108 MiB`）、stride `[4]`、C/F contiguous、`owns_data=True`、`.base=None`、`shares_memory=True`だった。したがって新規data bufferを作る変換ではなく、既存readback arrayへのsame-object zero-copy alias境界である。source alias解放後も同一objectは有効で、converted解放直後とscope終了後のweak reference残留は0。`np.asarray()`前後の同期Private Bytes差は`+1,642,496 bytes`（`+1.566 MiB`）、nearest bounded GPU sample差は0 MiBだが、zero-copyなのでこのCPU差をdata copy allocationとは扱わない。source alias解放境界で`1.504 MiB`、converted解放境界で`14.027 MiB`減少し、次frame残留は`+21.340 MiB`、観測終了時は取得前より`36.891 MiB`低かった。
+
+C1 process自体はstage close `2.049041秒`、normal OS exit、lifecycle/resource/fatal gate passだった。しかしdynamic観測のactive blocksが49 sampleすべて24で、凍結済みPhase 6EY contractの`increase_fraction`、`decrease_fraction`、`active_drop_memory_response`がfalseとなった。契約を実測後に変更せずC1をformal failとし、single fuel boundaryは未qualified、反復取得・変換へは進まない。メモリ傾き`+5,445,187 bytes/s`は8 MiB/s以内、projected drift `1.118%`、high-water recovery/plateauはtrue、Kit peak`11.222 GiB`であったが、これらを未達predicateの代替にはしない。またC1 active mean 24に対しC0は1362.122のため、process peak/terminal差はFlow規模支配であり`np.asarray()`差とは扱わない。production SHA-256は不変。詳細は`docs/design/phase6ez_single_fuel_conversion.md`。
+
 # Phase 6EZ single fuel conversion safe stop
 
 事前凍結contract（SHA-256 `66A559032A1795FF45D71E2657149277BDDA3DBFCE259BCB26C72C3650BC20DA`）の最初のrootはguard helper名の誤記をKit起動前に検出し、formal sample 0で停止した。helper存在検査を追加して訂正後、新しいrootでC0を開始した。C0のKit processはpublic readback 1回、49 aligned sample、`shutdown_complete`、stage close `3.091002秒`、OS exit 0まで完了した。fatal/dump/upload/device lost/TDR/cleanup residualは0で、production SHA-256も不変だった。
