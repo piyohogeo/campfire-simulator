@@ -103,7 +103,7 @@ function Invoke-Case([string]$Label, [string]$Mode, [bool]$DecodeFuel) {
     Update-Report
     $guardResult = Get-Content -Raw -Encoding UTF8 $guardPath | ConvertFrom-Json
     if ($guardExit -ne 0 -or $guardResult.status -ne "ok" -or $guardResult.exit_code -ne 0 -or -not $guardResult.process_absent) {
-        return "resource_or_lifecycle:$($guardResult.stop_reason)"
+        return "resource_or_lifecycle:guard_exit=$guardExit;status=$($guardResult.status);process_exit=$($guardResult.exit_code);stop_reason=$($guardResult.stop_reason)"
     }
     $report = Get-Content -Raw -Encoding UTF8 $reportPath | ConvertFrom-Json
     $case = $report.cases.PSObject.Properties[$Label].Value

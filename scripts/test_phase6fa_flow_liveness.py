@@ -87,9 +87,14 @@ class Phase6FaFlowLivenessContract(unittest.TestCase):
         for token in (
             '"flow_liveness_audit"', '"fuel_liveness_decode"', '"fuel_liveness_decode_before"',
             '"fuel_liveness_decode_after"', '"flow_occupancy_mask_claimed": False',
-            'path.unlink(missing_ok=True)', '"flow_liveness_history"',
+            'path.unlink(missing_ok=True)', '"flow_liveness_history"', 'def _nanovdb_component',
+            '_nanovdb_component(index, axis)', '_nanovdb_component(voxel, axis)',
         ):
             self.assertIn(token, self.probe)
+        helper_start = self.probe.index("def _fuel_liveness_decode")
+        helper_end = self.probe.index("def _append_bounded_jsonl", helper_start)
+        self.assertNotIn("round(_component(", self.probe[helper_start:helper_end])
+        self.assertNotIn("float(_component(", self.probe[helper_start:helper_end])
         self.assertIn('"phase6fa"', self.case_runner)
         self.assertIn('"--/phase6ep/flowLivenessAudit=$FlowLivenessAudit"', self.case_runner)
         self.assertIn('"--/phase6ep/fuelLivenessDecode=$FuelLivenessDecode"', self.case_runner)

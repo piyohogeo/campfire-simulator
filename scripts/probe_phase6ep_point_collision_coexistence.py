@@ -208,6 +208,14 @@ def _bounded_object_metadata(value):
     return metadata
 
 
+def _nanovdb_component(value, axis):
+    """Read a NanoVDB vector component without relying on another probe's private helper."""
+    try:
+        return float(value[axis])
+    except TypeError:
+        return float((value.x, value.y, value.z)[axis])
+
+
 def _fuel_liveness_decode(flow, volume, source, positions, path):
     """Decode one public fuel buffer and sample bounded emitter positions.
 
@@ -233,7 +241,7 @@ def _fuel_liveness_decode(flow, volume, source, positions, path):
         values = []
         for position in positions:
             index = grid.applyInverseMap(nanovdb.math.Vec3d(*(float(value) for value in position)))
-            coordinate = tuple(int(round(_component(index, axis))) for axis in range(3))
+            coordinate = tuple(int(round(_nanovdb_component(index, axis))) for axis in range(3))
             values.append(float(accessor.getValue(*coordinate)))
         voxel = grid.voxelSize()
         nonzero = sum(abs(value) > 1.0e-6 for value in values)
@@ -242,7 +250,7 @@ def _fuel_liveness_decode(flow, volume, source, positions, path):
             "private_api_used": False,
             "flow_occupancy_mask_claimed": False,
             "active_voxel_count": int(grid.activeVoxelCount()),
-            "voxel_size": [_component(voxel, axis) for axis in range(3)],
+            "voxel_size": [_nanovdb_component(voxel, axis) for axis in range(3)],
             "emitter_position_sample_count": len(values),
             "emitter_position_nonzero_count_1e_6": int(nonzero),
             "emitter_position_minimum": min(values) if values else None,
