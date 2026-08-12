@@ -500,8 +500,63 @@ def _sample_grid(grid, roi: dict, vector: bool) -> dict:
         "voxel_count": len(values),
         "nonzero_voxel_count": sum(abs(value) > 1.0e-12 for value in values),
         "mean": statistics.fmean(values),
+        "sum": float(sum(values)),
         "p95": ordered[min(len(ordered) - 1, math.ceil(len(ordered) * 0.95) - 1)],
         "maximum": max(values),
+    }
+
+
+def _profile_grid(grid, roi: dict, vector: bool, threshold: float) -> dict:
+    """Return bounded world-space extent statistics for significant voxels."""
+
+    minimum = roi["minimum"]
+    maximum = roi["maximum"]
+    lo = grid.applyInverseMap(nanovdb.math.Vec3d(*minimum))
+    hi = grid.applyInverseMap(nanovdb.math.Vec3d(*maximum))
+    index_min = [math.floor(min(_component(lo, i), _component(hi, i))) - 1 for i in range(3)]
+    index_max = [math.ceil(max(_component(lo, i), _component(hi, i))) + 1 for i in range(3)]
+    accessor = grid.getAccessor()
+    positions = []
+    values = []
+    vertical = []
+    for i in range(index_min[0], index_max[0] + 1):
+        for j in range(index_min[1], index_max[1] + 1):
+            for k in range(index_min[2], index_max[2] + 1):
+                world = grid.applyMap(nanovdb.math.Vec3d(float(i), float(j), float(k)))
+                xyz = [_component(world, axis) for axis in range(3)]
+                if not all(minimum[axis] <= xyz[axis] <= maximum[axis] for axis in range(3)):
+                    continue
+                raw = accessor.getValue(i, j, k)
+                if vector:
+                    value = math.sqrt(sum(_component(raw, axis) ** 2 for axis in range(3)))
+                    vz = _component(raw, 2)
+                else:
+                    value = float(raw)
+                    vz = 0.0
+                if abs(value) < threshold:
+                    continue
+                positions.append(xyz)
+                values.append(value)
+                vertical.append(vz)
+    if not positions:
+        return {"available": True, "threshold": threshold, "significant_voxel_count": 0}
+    array = np.asarray(positions, dtype=np.float64)
+    return {
+        "available": True,
+        "threshold": threshold,
+        "significant_voxel_count": int(array.shape[0]),
+        "world_minimum": array.min(axis=0).tolist(),
+        "world_maximum": array.max(axis=0).tolist(),
+        "world_centroid": array.mean(axis=0).tolist(),
+        "horizontal_extent_x_m": float(np.ptp(array[:, 0])),
+        "horizontal_extent_y_m": float(np.ptp(array[:, 1])),
+        "vertical_extent_m": float(np.ptp(array[:, 2])),
+        "mean_value": statistics.fmean(values),
+        "maximum_value": max(values),
+        "mean_positive_vertical_velocity_m_s": (
+            statistics.fmean(value for value in vertical if value > 0.0)
+            if vector and any(value > 0.0 for value in vertical) else 0.0
+        ),
     }
 
 
@@ -663,6 +718,7 @@ def _save_and_sample(
     spatial_collector=None,
     spatial_velocity_only: bool = False,
     frame: int | None = None,
+    profile_threshold: float | None = None,
 ) -> dict:
     grid_data = flow.buffer_to_volume(buffer)
     parameters = omni.volume.SaveVolumeParameters()
@@ -694,6 +750,8 @@ def _save_and_sample(
         "voxel_size": [_component(voxel_size, axis) for axis in range(3)],
         "rois": {name: _sample_grid(grid, roi, vector) for name, roi in rois.items()},
     }
+    if profile_threshold is not None and "scene" in rois:
+        result["field_profile"] = _profile_grid(grid, rois["scene"], vector, profile_threshold)
     if local_rois is not None and local_to_world is not None:
         result["local_rois"] = _sample_local_grid(grid, local_rois, local_to_world, vector)
         result["alignment_rois"] = _sample_alignment_grid(

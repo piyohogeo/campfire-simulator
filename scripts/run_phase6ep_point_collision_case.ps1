@@ -5,6 +5,10 @@ param(
     [double]$SupportRadiusM = 0.05,
     [ValidateSet("true", "false")][string]$Filtering = "true",
     [ValidateSet("true", "false")][string]$Collision = "true",
+    [ValidateSet("strict_all", "allow_self_support", "allow_self_center")][string]$Policy = "strict_all",
+    [ValidateSet("phase6ep", "phase6eq")][string]$ReportPhase = "phase6ep",
+    [string]$SampleFrames = "60,120,180,200",
+    [switch]$SpatialAllChannels,
     [int]$RunIndex = 1,
     [switch]$Capture,
     [int]$CaptureStart = 21,
@@ -54,6 +58,10 @@ $arguments = @(
     "--/phase6ep/supportRadiusM=$SupportRadiusM",
     "--/phase6ep/filtering=$filterValue",
     "--/phase6ep/collision=$collisionValue",
+    "--/phase6ep/policy=$Policy",
+    "--/phase6ep/reportPhase=$ReportPhase",
+    "--/phase6ep/sampleFrames=$SampleFrames",
+    "--/phase6ep/spatialAllChannels=$($SpatialAllChannels.IsPresent.ToString().ToLowerInvariant())",
     "--/phase6ep/runIndex=$RunIndex",
     "--/phase6ep/capture=$captureValue",
     "--/phase6ep/captureStart=$CaptureStart",
@@ -107,12 +115,15 @@ if ($null -ne $probeReport) {
     $outcome = Invoke-CampfireShutdownOutcomeClassification -Monitor $monitor -ProbeReport $probeReport -LogPath $log -FatalLines $fatalLines -DumpCount $dumps.Count -UploadAttemptCount $uploadAttemptLines.Count -ProductionHashBefore $productionHashBefore -ProductionHashAfter $productionHashAfter -OutputDir $output
 }
 $evidence = [ordered]@{
-    schema = "campfire.phase6ep.point-collision-runner.v1"
-    phase = "phase6ep"
+    schema = "campfire.$ReportPhase.point-collision-runner.v1"
+    phase = $ReportPhase
     scenario = $Scenario
     offset_m = $OffsetM
     filtering = ($Filtering -eq "true")
     collision = ($Collision -eq "true")
+    policy = $Policy
+    sample_frames = $SampleFrames
+    spatial_all_channels = $SpatialAllChannels.IsPresent
     run_index = $RunIndex
     process_exit_code = $monitor.exit_code
     shutdown_monitor = $monitor
@@ -135,4 +146,4 @@ if ($productionHashBefore -ne $productionHashAfter) { throw "Phase 6EP changed p
 if ($dumps.Count -gt 0 -or $fatalLines.Count -gt 0 -or $uploadAttemptLines.Count -gt 0) { throw "Phase 6EP safety evidence failed" }
 if ($null -eq $probeReport -or $probeReport.status -ne "ok" -or $probeReport.lifecycle_marker -ne "shutdown_complete") { throw "Phase 6EP probe failed" }
 if ($null -eq $outcome -or $outcome.functional_status -ne "pass" -or $outcome.lifecycle_status -ne "normal_exit") { throw "Phase 6EP normal exit required" }
-Write-Host "Phase 6EP passed: $Scenario offset=$OffsetM filtering=$Filtering collision=$Collision run=$RunIndex"
+Write-Host "$ReportPhase passed: $Scenario offset=$OffsetM policy=$Policy filtering=$Filtering collision=$Collision run=$RunIndex"

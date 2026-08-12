@@ -1,0 +1,105 @@
+{
+  "schema": "campfire.phase6eq.self-collider-tolerance-contract.v1",
+  "phase": "phase6eq",
+  "declared_before_runtime": true,
+  "production_connected": false,
+  "default_enabled": false,
+  "phase6ep_evidence_policy": "read-only; no sample reuse, reclassification, overwrite, or automatic rerun",
+  "fixed_environment": {
+    "kit": "110.2",
+    "flow": "110.0.0",
+    "density_cell_size_m": 0.025,
+    "velocity_voxel_size_m": 0.05,
+    "conservative_support_radius_m": 0.05,
+    "support_radius_status": "engineering evaluation sphere; exact public Point support radius remains unavailable"
+  },
+  "point_payload": {
+    "points_per_log": 360,
+    "ordering": "owner log order then axial/circumferential/radial surface identity",
+    "fuel_per_active_point": 0.8,
+    "temperature_per_active_point": 2.0,
+    "smoke_per_active_point": 0.08,
+    "disabled_policy": "retain position/index/layout/revision; zero fuel/temperature/smoke",
+    "revision": 1
+  },
+  "policies": {
+    "strict_all": {
+      "self_support_intersection_allowed": false,
+      "self_center_inside_allowed": false,
+      "other_support_intersection_allowed": false,
+      "selected_offset_m": 0.075
+    },
+    "allow_self_support": {
+      "self_support_intersection_allowed": true,
+      "self_center_inside_allowed": false,
+      "other_support_intersection_allowed": false,
+      "selected_offset_m": 0.025
+    },
+    "allow_self_center": {
+      "self_support_intersection_allowed": true,
+      "self_center_inside_allowed": true,
+      "other_support_intersection_allowed": false,
+      "selected_offset_m": -0.0125
+    },
+    "collision_off": {
+      "filtering": false,
+      "collision": false,
+      "selected_offset_m": 0.0
+    }
+  },
+  "offline_offset_sweep_m": [-0.0125, 0.0, 0.0125, 0.025, 0.05, 0.075],
+  "offline_offset_sweep_velocity_voxels": [-0.25, 0.0, 0.25, 0.5, 1.0, 1.5],
+  "runtime_offset_sweep_scenario": "lower_upper",
+  "runtime_offset_sweep_runs": 1,
+  "runtime_offset_sweep_process_count": 18,
+  "formal_scenarios": ["lower_upper", "production_four"],
+  "sample_frames": [30, 60, 90, 120, 150, 180, 200],
+  "formal_runs_per_condition": 3,
+  "formal_process_count": 24,
+  "formal_orders": [
+    ["collision_off", "strict_all", "allow_self_support", "allow_self_center"],
+    ["strict_all", "allow_self_center", "collision_off", "allow_self_support"],
+    ["allow_self_support", "collision_off", "allow_self_center", "strict_all"]
+  ],
+  "thresholds": {
+    "minimum_weighted_supply_retention": 0.5,
+    "maximum_active_other_support_intersections": 0,
+    "other_collider_deep_velocity_maximum_m_s": 0.0001,
+    "other_collider_deep_temperature_maximum": 0.0001,
+    "other_collider_deep_smoke_maximum": 0.00001,
+    "collision_off_other_deep_velocity_minimum_m_s": 0.1,
+    "collision_on_to_off_other_deep_velocity_ratio": 0.01,
+    "external_temperature_profile_threshold": 0.1,
+    "external_smoke_profile_threshold": 0.001,
+    "external_velocity_profile_threshold_m_s": 0.01,
+    "latest_external_ignition_frame": 60,
+    "minimum_external_vertical_extent_m": 0.1,
+    "minimum_active_blocks": 1,
+    "source_channel_sum_tolerance": 0.000001,
+    "maximum_run_relative_variation": 0.1
+  },
+  "visual_conditions": ["collision_off", "strict_all", "allow_self_support", "allow_self_center"],
+  "visual_scenario": "lower_upper",
+  "visual_capture_frames": [21, 200],
+  "visual_review": [
+    "source origin relative to the lower-log surface",
+    "visible lift compared with strict policy",
+    "no flame emerging from the upper log interior or opposite side",
+    "no obvious cross-collider penetration"
+  ],
+  "qualification_scope": "default-off, fixed-layout, static-pose engineering probe only; no production integration",
+  "safety": {
+    "independent_processes": true,
+    "normal_os_exit_required": true,
+    "automatic_retry": false,
+    "phase6ea_resource_guard_reused": true,
+    "phase6eb_phase6ed_shutdown_classifier_reused": true,
+    "phase6el_cdb_path_reused_for_residual_only": true,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592
+  }
+}

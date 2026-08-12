@@ -38,6 +38,10 @@ CAPTURE_RESOLUTION = (1280, 720)
 
 def _settings():
     settings = carb.settings.get_settings()
+    policy = settings.get_as_string("/phase6ep/policy") or "strict_all"
+    report_phase = settings.get_as_string("/phase6ep/reportPhase") or "phase6ep"
+    sample_text = settings.get_as_string("/phase6ep/sampleFrames")
+    sample_frames = tuple(int(value.strip()) for value in sample_text.split(",") if value.strip()) if sample_text else tuple(SAMPLE_FRAMES)
     return {
         "output": Path(settings.get_as_string("/phase6ep/output")).resolve(),
         "scenario": settings.get_as_string("/phase6ep/scenario"),
@@ -45,6 +49,10 @@ def _settings():
         "support_radius_m": float(settings.get_as_float("/phase6ep/supportRadiusM")),
         "filtering": bool(settings.get_as_bool("/phase6ep/filtering")),
         "collision": bool(settings.get_as_bool("/phase6ep/collision")),
+        "policy": policy,
+        "report_phase": report_phase,
+        "sample_frames": sample_frames,
+        "spatial_all_channels": bool(settings.get_as_bool("/phase6ep/spatialAllChannels")),
         "run_index": int(settings.get_as_int("/phase6ep/runIndex")) or 1,
         "capture": bool(settings.get_as_bool("/phase6ep/capture")),
         "capture_start": int(settings.get_as_int("/phase6ep/captureStart")),
@@ -100,7 +108,7 @@ def _build_stage(arguments):
     planning_started = time.perf_counter_ns()
     plan = plan_payload(
         arguments["scenario"], arguments["offset_m"],
-        arguments["support_radius_m"], arguments["filtering"],
+        arguments["support_radius_m"], arguments["filtering"], arguments["policy"],
     )
     planning_ms = (time.perf_counter_ns() - planning_started) / 1_000_000.0
     stage = Usd.Stage.CreateNew(str(path))
@@ -126,7 +134,7 @@ def _build_stage(arguments):
     stage.SetEndTimeCode(600.0)
     stage.SetTimeCodesPerSecond(60.0)
     stage.GetRootLayer().customLayerData = {
-        "campfire:phase": "phase6ep", "campfire:defaultOff": True,
+        "campfire:phase": arguments["report_phase"], "campfire:defaultOff": True,
         "campfire:productionConnected": False,
     }
     if not stage.GetRootLayer().Save():
@@ -142,12 +150,24 @@ def _build_stage(arguments):
         nearest_collider_index=np.asarray([item["nearest_collider_index"] for item in records], dtype=np.int16),
         nearest_face_class=np.asarray([item["nearest_face_class"] for item in records], dtype=np.uint8),
         surface_identity=np.asarray([item["surface_identity"] for item in records], dtype=np.int16),
+        self_signed_distance_m=np.asarray([item["self_signed_distance_m"] for item in records], dtype=np.float32),
+        other_min_signed_distance_m=np.asarray([item["other_min_signed_distance_m"] for item in records], dtype=np.float32),
+        self_center_inside=np.asarray([item["self_center_inside"] for item in records], dtype=bool),
+        other_center_inside=np.asarray([item["other_center_inside"] for item in records], dtype=bool),
+        self_support_intersects=np.asarray([item["self_support_intersects"] for item in records], dtype=bool),
+        other_support_intersects=np.asarray([item["other_support_intersects"] for item in records], dtype=bool),
+        enabled_reason=np.asarray([item["enabled_reason"] for item in records], dtype="U32"),
+        original_supply=np.asarray([[item["original_fuel"], item["original_temperature"], item["original_smoke"]] for item in records], dtype=np.float32),
+        enabled_supply=np.asarray([[item["enabled_fuel"], item["enabled_temperature"], item["enabled_smoke"]] for item in records], dtype=np.float32),
     )
     summary = {key: plan[key] for key in (
-        "scenario", "poses", "original_point_count", "active_point_count",
+        "scenario", "policy", "poses", "original_point_count", "active_point_count",
         "disabled_point_count", "supply_efficiency", "minimum_support_clearance_m",
         "minimum_active_support_clearance_m", "support_intersection_count",
         "active_support_intersection_count", "self_inside_count", "other_inside_count",
+        "self_center_inside_count", "other_center_inside_count",
+        "self_support_intersection_count", "other_support_intersection_count",
+        "active_other_support_intersection_count", "disable_reason_counts", "weighted_supply",
     )}
     summary.update({
         "planning_ms": planning_ms, "usd_publication_ms": publication_ms,
@@ -178,7 +198,7 @@ async def _run():
     arguments = _settings()
     output = arguments["output"]
     report = {
-        "schema": "campfire.phase6ep.point-collision-run.v1", "phase": "phase6ep",
+        "schema": f"campfire.{arguments['report_phase']}.point-collision-run.v1", "phase": arguments["report_phase"],
         "status": "running", "lifecycle_marker": "process_entry",
         "lifecycle_history": [], "arguments": {k: str(v) if isinstance(v, Path) else v for k, v in arguments.items()},
         "samples": [], "captures": [],
@@ -243,7 +263,8 @@ async def _run():
         capture_frames = set()
         if arguments["capture"]:
             capture_frames = set(range(arguments["capture_start"], arguments["capture_end"] + 1))
-        final_frame = max(SAMPLE_FRAMES[-1], max(capture_frames, default=0))
+        sample_frames = tuple(arguments["sample_frames"])
+        final_frame = max(sample_frames[-1], max(capture_frames, default=0))
         for frame in range(1, final_frame + 1):
             await app.next_update_async()
             if frame in capture_frames:
@@ -251,7 +272,7 @@ async def _run():
                 path = output.parent / "frames" / f"frame_{frame:04d}.png"
                 path.parent.mkdir(parents=True, exist_ok=True)
                 report["captures"].append({"frame": frame, **(await _capture(viewport, path))})
-            if frame not in SAMPLE_FRAMES:
+            if frame not in sample_frames:
                 continue
             if int(point_summary["active_point_count"]) == 0:
                 report["samples"].append({
@@ -278,8 +299,12 @@ async def _run():
                 }
                 details = _save_and_sample(
                     flow, volume, array, channel, nvdb_path, bounds,
-                    spatial_collector=collectors if channel == "velocity" else None,
-                    spatial_velocity_only=True, frame=frame,
+                    spatial_collector=(collectors if arguments["spatial_all_channels"] or channel == "velocity" else None),
+                    spatial_velocity_only=not arguments["spatial_all_channels"], frame=frame,
+                    profile_threshold=(
+                        {"velocity": 0.01, "fuel": 0.001, "temperature": 0.1, "burn": 0.001, "smoke": 0.001}[channel]
+                        if arguments["report_phase"] == "phase6eq" else None
+                    ),
                 )
                 sample["channels"][channel] = {"available": True, "word_count": int(array.size), **details}
             report["samples"].append(sample)

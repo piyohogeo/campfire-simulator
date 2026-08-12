@@ -14,6 +14,11 @@ LENGTH_M = 0.72
 RADIUS_M = 0.105
 SURFACE_POINTS_PER_LOG = 360
 SIDES = 12
+FILTER_POLICIES = (
+    "strict_all",
+    "allow_self_support",
+    "allow_self_center",
+)
 
 
 @dataclass(frozen=True)
@@ -102,7 +107,15 @@ def surface_points_and_normals(pose: LogPose):
     )
 
 
-def plan_payload(scenario: str, offset_m: float, support_radius_m: float, filtering: bool):
+def plan_payload(
+    scenario: str,
+    offset_m: float,
+    support_radius_m: float,
+    filtering: bool,
+    policy: str = "strict_all",
+):
+    if policy not in FILTER_POLICIES:
+        raise ValueError(f"unsupported Point/Collision policy: {policy}")
     poses = SCENARIOS[scenario]
     geometries = []
     for pose in poses:
@@ -138,7 +151,23 @@ def plan_payload(scenario: str, offset_m: float, support_radius_m: float, filter
             face_types = face_matrix[row_index]
             nearest = int(np.argmin(distances))
             clearance = distances[nearest] - support_radius_m
-            enabled = (clearance >= -1.0e-9) if filtering else True
+            self_signed = float(distances[owner_index])
+            other_pairs = [(index, float(value)) for index, value in enumerate(distances) if index != owner_index]
+            other_index, other_signed = min(other_pairs, key=lambda item: item[1]) if other_pairs else (-1, math.inf)
+            self_inside = self_signed < 0.0
+            other_inside = other_signed < 0.0
+            self_support_intersects = self_signed - support_radius_m < 0.0
+            other_support_intersects = other_signed - support_radius_m < 0.0
+            if not filtering:
+                enabled, reason = True, "filtering_disabled"
+            elif other_support_intersects:
+                enabled, reason = False, "other_support_intersection"
+            elif policy == "strict_all" and self_support_intersects:
+                enabled, reason = False, "self_support_intersection"
+            elif policy == "allow_self_support" and self_inside:
+                enabled, reason = False, "self_center_inside"
+            else:
+                enabled, reason = True, "enabled"
             positions.append(moved if filtering else raw)
             active.append(enabled)
             records.append(
@@ -159,12 +188,27 @@ def plan_payload(scenario: str, offset_m: float, support_radius_m: float, filter
                     "signed_distance_m": distances[nearest],
                     "support_clearance_m": clearance,
                     "support_intersects": clearance < 0.0,
+                    "self_signed_distance_m": self_signed,
+                    "other_min_signed_distance_m": other_signed,
+                    "other_nearest_collider_index": other_index,
+                    "self_center_inside": self_inside,
+                    "other_center_inside": other_inside,
+                    "self_support_intersects": self_support_intersects,
+                    "other_support_intersects": other_support_intersects,
+                    "enabled_reason": reason,
+                    "original_fuel": 0.8,
+                    "original_temperature": 2.0,
+                    "original_smoke": 0.08,
+                    "enabled_fuel": 0.8 if enabled else 0.0,
+                    "enabled_temperature": 2.0 if enabled else 0.0,
+                    "enabled_smoke": 0.08 if enabled else 0.0,
                     "enabled": enabled,
                 }
             )
     active_array = np.asarray(active, dtype=bool)
     return {
         "scenario": scenario,
+        "policy": policy,
         "poses": [pose.__dict__ for pose in poses],
         "positions": np.asarray(positions, dtype=np.float32),
         "active": active_array,
@@ -184,5 +228,28 @@ def plan_payload(scenario: str, offset_m: float, support_radius_m: float, filter
         ),
         "self_inside_count": int(sum(bool(item["raw_inside_self"]) for item in records)),
         "other_inside_count": int(sum(bool(item["raw_inside_other"]) for item in records)),
+        "self_center_inside_count": int(sum(bool(item["self_center_inside"]) for item in records)),
+        "other_center_inside_count": int(sum(bool(item["other_center_inside"]) for item in records)),
+        "self_support_intersection_count": int(sum(bool(item["self_support_intersects"]) for item in records)),
+        "other_support_intersection_count": int(sum(bool(item["other_support_intersects"]) for item in records)),
+        "active_other_support_intersection_count": int(
+            sum(bool(item["enabled"] and item["other_support_intersects"]) for item in records)
+        ),
+        "disable_reason_counts": {
+            reason: int(sum(item["enabled_reason"] == reason for item in records))
+            for reason in ("enabled", "filtering_disabled", "self_support_intersection", "self_center_inside", "other_support_intersection")
+        },
+        "weighted_supply": {
+            channel: {
+                "original": float(sum(item[f"original_{channel}"] for item in records)),
+                "enabled": float(sum(item[f"enabled_{channel}"] for item in records)),
+                "retention": (
+                    float(sum(item[f"enabled_{channel}"] for item in records))
+                    / float(sum(item[f"original_{channel}"] for item in records))
+                    if records else 0.0
+                ),
+            }
+            for channel in ("fuel", "temperature", "smoke")
+        },
         "geometries": geometries,
     }
