@@ -115,6 +115,8 @@ def _settings():
         ),
         "flow_liveness_audit": bool(settings.get_as_bool("/phase6ep/flowLivenessAudit")),
         "fuel_liveness_decode": bool(settings.get_as_bool("/phase6ep/fuelLivenessDecode")),
+        "startup_probe": bool(settings.get_as_bool("/phase6ep/startupProbe")),
+        "startup_probe_label": settings.get_as_string("/phase6ep/startupProbeLabel") or "",
     }
 
 
@@ -404,6 +406,60 @@ def _stats_attributes(prim):
     return values
 
 
+def _array_contract(value, dtype):
+    array = np.asarray(value, dtype=dtype)
+    contiguous = np.ascontiguousarray(array)
+    return {
+        "python_identity": int(id(value)),
+        "shape": [int(component) for component in contiguous.shape],
+        "dtype": str(contiguous.dtype),
+        "logical_bytes": int(contiguous.nbytes),
+        "sha256": hashlib.sha256(contiguous.tobytes(order="C")).hexdigest().upper(),
+    }
+
+
+def _live_point_emitter_contract(stage, emitter):
+    relationship = emitter.GetRelationship("pointsPrim")
+    targets = [str(path) for path in relationship.GetTargets()]
+    if len(targets) != 1:
+        raise RuntimeError(f"startup probe expected one pointsPrim target, got {targets}")
+    points_prim = stage.GetPrimAtPath(targets[0])
+    points = UsdGeom.Points(points_prim).GetPointsAttr().Get()
+    fuels = emitter.GetAttribute("pointFuels").Get()
+    temperatures = emitter.GetAttribute("pointTemperatures").Get()
+    smokes = emitter.GetAttribute("pointSmokes").Get()
+    enabled_attribute = emitter.GetAttribute("enabled")
+    enabled = enabled_attribute.Get() if enabled_attribute else None
+    revision = emitter.GetAttribute("campfire:residentRevision").Get()
+    fuel_values = np.asarray(fuels, dtype=np.float32)
+    temperature_values = np.asarray(temperatures, dtype=np.float32)
+    smoke_values = np.asarray(smokes, dtype=np.float32)
+    return {
+        "emitter_path": str(emitter.GetPath()),
+        "emitter_type": emitter.GetTypeName(),
+        "emitter_python_identity": int(id(emitter)),
+        "points_prim_path": targets[0],
+        "points_prim_type": points_prim.GetTypeName(),
+        "relationship_targets": targets,
+        "enabled": bool(enabled),
+        "revision": int(revision),
+        "total_point_count": int(len(fuels)),
+        "active_point_count": int(np.count_nonzero(fuel_values > 0.0)),
+        "source_sums": {
+            "fuel": float(np.sum(fuel_values, dtype=np.float64)),
+            "temperature": float(np.sum(temperature_values, dtype=np.float64)),
+            "smoke": float(np.sum(smoke_values, dtype=np.float64)),
+        },
+        "arrays": {
+            "points": _array_contract(points, np.float32),
+            "fuel": _array_contract(fuels, np.float32),
+            "temperature": _array_contract(temperatures, np.float32),
+            "smoke": _array_contract(smokes, np.float32),
+        },
+        "identity_scope_note": "Python identities describe the live wrappers returned in this process, not a provider-owned native allocation.",
+    }
+
+
 def _readback_boundary(flow, volume, arguments, frame, output, liveness_positions=None):
     """Exercise exactly one declared public-readback boundary and return only bounded metadata."""
     marker_path = arguments["resource_marker_path"]
@@ -673,19 +729,38 @@ async def _run():
         if not set(arguments["readback_frames"]).issubset(set(arguments["sample_frames"])):
             raise ValueError("readback frames must be a subset of sample frames")
         mark("process_entry")
+        if arguments["startup_probe"]:
+            mark(
+                "startup_extension_ready", label=arguments["startup_probe_label"],
+                kit_update_number=int(app.get_update_number()),
+            )
         stage_path, point_summary, plan = _build_stage(arguments)
         report["point_payload"] = point_summary
         report["stage_sha256"] = _sha256(stage_path)
         report["lifecycle_marker"] = "offline_stage_complete"
         _write(output, report)
-        mark("offline_stage_complete")
+        mark(
+            "offline_stage_complete", kit_update_number=int(app.get_update_number()),
+            stage_sha256=report["stage_sha256"], payload_sha256=point_summary["payload_sha256"],
+        )
+        if arguments["startup_probe"]:
+            mark("usd_context_connection_started", kit_update_number=int(app.get_update_number()))
         await context.open_stage_async(str(stage_path))
         stage = context.get_stage()
         if stage is None:
             raise RuntimeError("Phase 6EP stage connection failed")
         report["lifecycle_marker"] = "usd_context_connection_complete"
-        mark("usd_context_connection_complete")
+        mark("usd_context_connection_complete", kit_update_number=int(app.get_update_number()))
         emitter = stage.GetPrimAtPath("/World/Flow/EmitterPoint")
+        if arguments["startup_probe"]:
+            report["startup_live_point_emitter_contract"] = _live_point_emitter_contract(stage, emitter)
+            mark(
+                "startup_live_point_emitter_contract_complete",
+                kit_update_number=int(app.get_update_number()),
+                **{key: value for key, value in report["startup_live_point_emitter_contract"].items()
+                   if key in ("emitter_path", "emitter_python_identity", "points_prim_path", "enabled", "revision",
+                              "total_point_count", "active_point_count", "source_sums")},
+            )
         report["public_point_support_attribute_audit"] = {
             "attributes": _stats_attributes(emitter),
             "exact_support_radius_available": False,
@@ -702,10 +777,20 @@ async def _run():
         viewport.camera_path = CAMERA_PATH
         viewport.fill_frame = False
         viewport.resolution = CAPTURE_RESOLUTION
+        if arguments["startup_probe"]:
+            mark("renderer_readiness_started", kit_update_number=int(app.get_update_number()))
         for _ in range(60):
             await omni.kit.viewport.utility.next_viewport_frame_async(viewport)
+        if arguments["startup_probe"]:
+            mark("renderer_readiness_complete", kit_update_number=int(app.get_update_number()))
+            mark("flow_interface_acquire_started", kit_update_number=int(app.get_update_number()))
         flow = _flowusd.acquire_flowusd_interface()
         volume = omni.volume.get_volume_interface()
+        if arguments["startup_probe"]:
+            mark(
+                "flow_interface_acquire_complete", kit_update_number=int(app.get_update_number()),
+                flow_identity=int(id(flow)), volume_identity=int(id(volume)),
+            )
         public_members = sorted(name for name in dir(flow) if not name.startswith("_"))
         if arguments["spatial_collectors_enabled"]:
             selected_colliders = arguments["spatial_collider_indices"]
@@ -722,12 +807,17 @@ async def _run():
                 collectors_by_index[index] = collector
         timeline.stop()
         timeline.set_current_time(0.0)
+        if arguments["startup_probe"]:
+            mark("pre_timeline_updates_started", kit_update_number=int(app.get_update_number()), update_count=12)
         for _ in range(12):
             await app.next_update_async()
+        if arguments["startup_probe"]:
+            mark("pre_timeline_updates_complete", kit_update_number=int(app.get_update_number()), update_count=12)
+            mark("timeline_play_request_before", kit_update_number=int(app.get_update_number()))
         timeline.play()
         report["lifecycle_marker"] = "timeline_playing"
         _write(output, report)
-        mark("timeline_playing")
+        mark("timeline_playing", kit_update_number=int(app.get_update_number()))
         capture_frames = set()
         if arguments["capture"]:
             capture_frames = set(range(arguments["capture_start"], arguments["capture_end"] + 1))
@@ -739,19 +829,40 @@ async def _run():
         initial_stage_identity = str(stage.GetRootLayer().identifier)
         initial_flow_identity = int(id(flow))
         liveness_positions = plan["positions"][plan["active"]]
+        startup_contract = report.get("startup_live_point_emitter_contract")
+        startup_history = []
         for frame in range(1, final_frame + 1):
             await app.next_update_async()
             if arguments["flow_liveness_audit"]:
                 current_active = int(flow.get_active_block_count())
-                report["flow_liveness_history"].append({
+                liveness_sample = {
                     "frame": int(frame),
                     "perf_counter_ns": int(time.perf_counter_ns()),
+                    "kit_update_number": int(app.get_update_number()),
                     "timeline_playing": bool(timeline.is_playing()),
                     "timeline_time": float(timeline.get_current_time()),
                     "active_blocks": current_active,
                     "stage_identity": str(context.get_stage().GetRootLayer().identifier) if context.get_stage() else None,
                     "flow_identity": int(id(flow)),
-                })
+                }
+                report["flow_liveness_history"].append(liveness_sample)
+                if arguments["startup_probe"]:
+                    current_stage = context.get_stage()
+                    current_emitter = emitter if current_stage else None
+                    sample = {
+                        **liveness_sample,
+                        "point_revision": int(current_emitter.GetAttribute("campfire:residentRevision").Get()),
+                        "total_point_count": int(startup_contract["total_point_count"]),
+                        "active_point_count": int(startup_contract["active_point_count"]),
+                        "source_sums": startup_contract["source_sums"],
+                        "emitter_path": str(current_emitter.GetPath()),
+                        "emitter_python_identity": int(id(current_emitter)),
+                        "emitter_enabled": bool(current_emitter.GetAttribute("enabled").Get()),
+                        "renderer_ready": True,
+                        "flow_interface_ready": flow is not None,
+                    }
+                    startup_history.append(sample)
+                    mark("startup_frame_sample", **sample)
             if (
                 arguments["stability_observation_extra_seconds"] > 0.0
                 and frame == arguments["stability_observation_start_frame"]
@@ -923,6 +1034,18 @@ async def _run():
             "smoke": float(sum(emitter.GetAttribute("pointSmokes").Get())),
         }
         report["revision"] = int(emitter.GetAttribute("campfire:residentRevision").Get())
+        if arguments["startup_probe"]:
+            active_values = [item["active_blocks"] for item in startup_history]
+            report["startup_probe"] = {
+                "label": arguments["startup_probe_label"],
+                "history": startup_history,
+                "first_nonzero_frame": next((item["frame"] for item in startup_history if item["active_blocks"] > 0), None),
+                "first_24_frame": next((item["frame"] for item in startup_history if item["active_blocks"] == 24), None),
+                "first_above_24_frame": next((item["frame"] for item in startup_history if item["active_blocks"] > 24), None),
+                "first_representative_frame": next((item["frame"] for item in startup_history if item["active_blocks"] >= 128), None),
+                "minimum_active_blocks": min(active_values) if active_values else None,
+                "maximum_active_blocks": max(active_values) if active_values else None,
+            }
         report["flow_liveness_audit"] = {
             "enabled": bool(arguments["flow_liveness_audit"]),
             "initial_stage_identity": initial_stage_identity,

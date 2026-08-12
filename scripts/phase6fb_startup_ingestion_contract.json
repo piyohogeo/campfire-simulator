@@ -1,0 +1,85 @@
+{
+  "schema": "campfire.phase6fb.point-emitter-startup-ingestion-contract.v1",
+  "phase": "phase6fb",
+  "declared_before_runtime": true,
+  "history": {
+    "safe_commit": "857ab8e",
+    "phase6ey": "frozen qualified; no reclassification",
+    "phase6ez": "frozen C1 stationarity safe stop; zero-copy remains an observation only",
+    "phase6fa": "frozen safe stop; D1 was 24 blocks before readback and corrected D0 later stopped at stage close",
+    "prior_population_reuse": false
+  },
+  "purpose": "locate the first pre-readback startup boundary separating a representative four-log Flow field from a fresh 24-block field",
+  "claim_boundary": "two short readback-free startup processes at most; no D0/D1/D2 long population, conversion, repeated readback, ordering change, production change, or resource-ceiling change",
+  "scenario": "production_four",
+  "geometry_variant": "phase6er_corrected",
+  "point_policy": "allow_self_center",
+  "point_offset_m": -0.0125,
+  "support_radius_m": 0.05,
+  "collision_enabled": true,
+  "point_filtering_enabled": true,
+  "source_scales": {"fuel": 1.0, "temperature": 1.0, "smoke": 1.0},
+  "sample_frames": [30, 60, 90, 120],
+  "startup_order": [
+    "extension/interface access", "offline complete stage and payload authoring", "USD context connection",
+    "active viewport acquisition", "60 renderer viewport frames", "Flow interface acquisition",
+    "timeline stop and time reset", "12 Kit updates", "timeline play", "120 post-play Kit updates"
+  ],
+  "conditions": [
+    {"id": "P0_no_readback", "readback_mode": "none", "maximum_frame": 120},
+    {"id": "P1_no_readback_repeat", "readback_mode": "none", "maximum_frame": 120, "requires": ["P0_representative_ingestion_and_normal_exit"]}
+  ],
+  "classification": {
+    "classification_frame": 60,
+    "final_frame": 120,
+    "representative_active_blocks": 128,
+    "small_field_minimum_blocks": 20,
+    "small_field_maximum_blocks": 32,
+    "expected_point_revision": 1,
+    "expected_total_point_count": 1440,
+    "expected_active_point_count": 1344,
+    "minimum_fuel_sum": 1000.0,
+    "representative_ingestion": "fresh frame/update/timeline samples through frame 120 and >=128 active blocks by frame 60",
+    "small_field_ingestion": "fresh frame/update/timeline samples but every frame through 60 remains within 20..32 blocks",
+    "stale_telemetry": "frame, monotonic timestamp, Kit update number, or timeline time fails to advance",
+    "no_source": "Emitter enabled state, Point revision/count, or positive fuel input is absent",
+    "indeterminate": "missing markers, incomplete history, resource/lifecycle failure, or neither predeclared occupancy class"
+  },
+  "branching": {
+    "automatic_retry": false,
+    "run_second_only_after_first_representative": true,
+    "stop_if_two_processes_split": true,
+    "stop_after_two_representative_processes": true,
+    "public_field_check_in_this_contract": false,
+    "ordering_or_cooldown_ablation_in_this_contract": false
+  },
+  "required_startup_markers": [
+    "startup_extension_ready", "offline_stage_complete", "usd_context_connection_started",
+    "usd_context_connection_complete", "startup_live_point_emitter_contract_complete",
+    "renderer_readiness_started", "renderer_readiness_complete", "flow_interface_acquire_started",
+    "flow_interface_acquire_complete", "pre_timeline_updates_started", "pre_timeline_updates_complete",
+    "timeline_play_request_before", "timeline_playing", "startup_frame_sample"
+  ],
+  "lifecycle": {
+    "renderer_pre_close_drain_updates": 8,
+    "renderer_post_close_drain_updates": 4,
+    "timeline_stop_confirmation_updates": 12,
+    "stage_close_timeout_seconds": 180,
+    "inner_absolute_timeout_seconds": 420,
+    "outer_condition_timeout_seconds": 660,
+    "normal_os_exit_required": true
+  },
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "resource_sampling_seconds": 0.2,
+    "gpu_sampling_ms": 1000,
+    "automatic_upload": false,
+    "private_api": false,
+    "resource_ceiling_change": false
+  }
+}
