@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6fa">最新記録</a>
+        <a href="#phase-6fb">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fa">Phase 6FAの結果を読む</a>
+        <a class="button primary" href="#phase-6fb">Phase 6FBの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FA · Flow liveness safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6FB · startup ingestion bounded</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>stage-close unknown wait · cleanup residual 0</strong></div>
+        <div><span>Lifecycle</span><strong>2 normal exits · cleanup residual 0</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
@@ -49,6 +49,19 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-6fb" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FB startup ingestion entry"><span class="phase-number compact">6FB</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">2 representative startups · exact trigger unconfirmed</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FB · Point Emitter startup ingestion</p><h2>分岐は最初のFlow update。<br>短い再現runは2回とも代表場。</h2><p>凍結済み履歴ではframe 1で269対24 blocksへ分岐していました。readbackより前で、stage・payload・供給量は同一です。新probeはstage接続、renderer／Flow境界、Kit update、Emitter identityを120 frame逐次記録しました。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/point_emitter_startup_ingestion.svg"><img src="assets/phase6/point_emitter_startup_ingestion.svg" alt="Phase 6FBの履歴上の代表場と24-block場、および新しい2回のstartup active block比較" loading="lazy"></a><figcaption><div><strong>new P0/P1 histories are identical</strong><span>frame 1/30/60/120 · 269/505/688/1118 blocks</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Observed</p><h3>payloadは同一、telemetryはfresh</h3><p>新2 runはrevision 1、1,344 active Points、fuel 1075.200016、temperature 2688、smoke 107.519998、stage／payload SHAが一致。frame、timeline、Kit updateは毎sample進みました。</p></section><section class="note"><p class="note-label">Unconfirmed</p><h3>native ingestion trigger</h3><p>P1のstage接続は61.190秒、P0は5.094秒でしたが、Flow成長は完全一致しました。待ち時間だけでは24-block差を説明できず、公開APIから内部source消費完了も取得できません。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Bounded result</p><h3>startup候補は得たが、根本原因は未確定。</h3><p>offline authoring → stage接続 → viewport 60 frame → Flow interface取得 → timeline停止中12 update → PLAYの順序で2/2代表取り込み、normal exit。stage closeは0.482／0.683秒でした。fatal、dump、upload、device lost/TDR、CDB、残留processは0です。</p><p>履歴の24 blocksは合格へ再分類していません。新runで再現しなかったため、public field readbackや順序ablation、長時間populationは開始していません。Phase 6EZのzero-copy観測は維持しますが、fuel lifetime qualificationと繰り返しreadbackは引き続き保留です。</p><p>Release build、Phase 0 RTX、Phase 3、focused <code>25/25</code>、標準suite <code>78/78</code>（8 process、343.8秒）は合格。Phase 3はmass balance error 0、active blocks final/peak <code>260/311</code>、peak fuel 1.0で、production SHA-256は不変でした。</p><p><a href="assets/phase6/point_emitter_startup_ingestion.json">machine report</a> · <a href="assets/phase6/point_emitter_startup_ingestion.svg">comparison SVG</a> · <a href="../design/phase6fb_point_emitter_startup_ingestion.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>P0 / P1</strong><small>representative</small></p></div><div role="listitem"><span>✓</span><p><strong>Telemetry</strong><small>fresh 120/120</small></p></div><div role="listitem"><span>!</span><p><strong>Root cause</strong><small>not reproduced</small></p></div><div role="listitem"><span>✓</span><p><strong>Lifecycle</strong><small>normal exit 2/2</small></p></div><div role="listitem"><span>✓</span><p><strong>Cleanup</strong><small>residual 0</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Next boundary</p><h3>24-block再現または一変数ready-order probe。</h3><p>次は新markerでsmall-fieldを再現するか、payload／renderer／Flow readiness順を一変数ずつ事前凍結して調べます。それまでは反復readbackへ進みません。内部診断のみで画面差がないため、動画とlatest demo pointerは更新していません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6fa" class="section entry-section phase-six">

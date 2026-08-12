@@ -1,5 +1,13 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FB Point Emitter startup ingestion probe
+
+Phase 6EY／6EZ／6FAの結果を凍結し、readback以前のstartup境界だけを最大120 frame・最大2独立processで測定した。履歴監査では代表場D0と24-block D1のstage／payload SHA、1,440 total／1,344 active Point、供給量が一致し、最初の分岐はreadbackより前のframe 1（269対24）だった。D1のtimelineとtimestampは更新していたためstale telemetryとは整合しない。
+
+新しい2 processは、offline完全authoring → stage接続 → viewport 60 frame → Flow interface取得 → timeline停止中12 update → PLAYという既存順序を維持し、全境界とframe 1～120をflush markerへ記録した。両runは全120 active-block履歴が一致し、frame 1/30/60/120=`269/505/688/1118`、最大1124、revision 1、fuel/temperature/smoke=`1075.200016/2688/107.519998`、stage／payload SHA一致、fresh update、normal exitだった。P1のstage接続は61.190秒とP0の5.094秒より長かったが、取り込み結果は同じだった。
+
+したがってreadback、alias解放、`numpy.asarray(fuel)`は歴史的24-block初期場の直接原因ではないという推定を強めるが、native Flow/Point ingestionのexact triggerは未確定である。公開APIにはsource消費完了を示すpositive readiness predicateがない。今回24-blockを再現できなかったためfield readback、cooldown／authoring-order ablation、長時間D0/D1/D2、反復readbackは開始しない。stage closeは0.482／0.683秒、fatal/dump/upload/CDB/residual 0、productionとresource ceilingは不変。詳細は`docs/design/phase6fb_point_emitter_startup_ingestion.md`。
+
 # Phase 6FA Flow liveness safe stop
 
 Phase 6EY/6EZ through `0066ab3` remain frozen. The independent Phase 6FA D1 reproduced 24 active blocks at every fresh per-frame sample from frame 1 through frame 60, while timeline time advanced; readback followed the frame-60 sample. Together with frozen C1's frame-30 value, this excludes public readback, alias release, and `numpy.asarray(fuel)` as the direct cause of the initial small field. Identical audited stage/payload/source inputs place the strongest remaining boundary in per-process Flow/Point-emitter startup or ingestion, but semantic public-field decoding did not complete and the exact trigger remains unconfirmed.

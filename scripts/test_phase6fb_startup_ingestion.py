@@ -1,6 +1,7 @@
 import hashlib
 import json
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from scripts.phase6fb_startup_contract import classify_startup
@@ -74,6 +75,25 @@ class Phase6FbStartupContract(unittest.TestCase):
 
     def test_incomplete_is_indeterminate(self):
         self.assertEqual(classify_startup(rows(lambda _frame: 140)[:60], SOURCE, THRESHOLDS)["classification"], "indeterminate")
+
+    def test_published_result_and_devlog(self):
+        root = self.scripts.parent
+        assets = root / "docs" / "devlog" / "assets" / "phase6"
+        report = json.loads((assets / "point_emitter_startup_ingestion.json").read_text(encoding="utf-8"))
+        self.assertEqual(report["contract_sha256"], self.contract_path.with_suffix(".sha256").read_text(encoding="ascii").split()[0])
+        self.assertTrue(report["active_history_equal_between_new_probes"])
+        self.assertFalse(report["public_field_checked"])
+        self.assertFalse(report["repeated_readback_started"])
+        self.assertFalse(report["production_changed"])
+        for result in report["new_probes"].values():
+            self.assertEqual(result["classification"], "representative_ingestion")
+            self.assertTrue(result["normal_os_exit"])
+            self.assertEqual(result["production_app_sha256_before"], result["production_app_sha256_after"])
+        ET.parse(assets / "point_emitter_startup_ingestion.svg")
+        html = (root / "docs" / "devlog" / "index.html").read_text(encoding="utf-8")
+        self.assertEqual(html.count('id="phase-6fb"'), 1)
+        self.assertIn("point_emitter_startup_ingestion.json", html)
+        self.assertNotIn("\ufffd", html)
 
 
 if __name__ == "__main__":
