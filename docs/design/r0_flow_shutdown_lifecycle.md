@@ -1,3 +1,35 @@
+# Phase 6EW corrected-marker R0 lifecycle qualification
+
+## Frozen scope and runtime contract
+
+Phase 6EW preserves the Phase 6EU unknown-shutdown evidence and the Phase 6EV marker-gate safe stop without overwriting or reclassifying either artifact. The new contract is `campfire.phase6ew.r0-lifecycle-qualification-contract.v1`, SHA-256 `1B549CE271C55CFA62BFB2E4021992658C03692CAE350E6832560ED048D10BB9`. No Phase 6EU/6EV sample is part of its formal population.
+
+The contract fixes a corrected-marker L0 control, three independent readback-free R0 runs through frame 320, and one public `get_latest_nanovdb_readback()` acquire/discard at frame 60 that is allowed only after R0 is 3/3 normal-exit, plateau-qualified, and reproducible. Stage close is bounded at 180 seconds, based on the frozen 102.595644-second Phase 6EV observation plus 77.404356 seconds of margin. The in-process and outer bounds are 540 and 900 seconds. Resource limits remain 14 GiB Kit, 16 GiB unique tree, 512 MiB runner/diagnostic, and 8 GiB physical/commit headroom.
+
+Production code/defaults, Point schema/order/length/revision, wood authority, Flow settings, CollisionProxy geometry, and the corrected four-log layout are unchanged. This is a diagnostic-only lifecycle order and is not a production shutdown recommendation.
+
+## L0 result and bounded report correction
+
+The new L0 process reached active blocks `505/688`, emitted `final_sample_complete` after the common sample loop, completed every timeline/renderer/reference/stage/extension/runner marker, and exited normally with code 0. Stage close took `2.522739 seconds`; Kit and unique-tree peaks were `13,470,588,928` and `13,635,239,936 bytes`. No cleanup was required and fatal, dump, upload, device-loss, TDR, CDB, and residual counts were zero.
+
+The first post-process aggregation stopped because PowerShell's round-trip timestamp contained seven fractional digits (`2026-08-12T09:26:26.7250933Z`), while Python `datetime.fromisoformat()` accepts at most microseconds on this path. This occurred after Kit had exited and did not invalidate the L0 lifecycle evidence. The parser now truncates only excess fractional digits to six and has a focused fixture. A narrowly scoped resume path required the same frozen contract hash, unchanged production hash, a `running/L0_short/0-completed` state, and absence of R0/R1 directories. It re-analysed the one existing L0 process without rerunning Kit, then admitted R0 because every L0 gate passed.
+
+## R0 run 1 and safe stop
+
+R0 run 1 completed all ten frames `30/60/90/120/150/180/200/240/280/320`, with active blocks `505/688/894/1118/1314/1329/1251/1346/1303/1356`. It completed all lifecycle markers, stage close in `4.016914 seconds`, extension shutdown, and normal OS exit. Kit peak was `14,630,817,792 bytes` (`13.626011 GiB`), terminal Kit Private Bytes `13,806,632,960 bytes`, unique-tree peak `14,793,801,728 bytes`, runner peak `96,174,080 bytes`, and diagnostic peak `17,145,856 bytes`. Minimum available physical memory and commit headroom remained `88,234,360,832` and `107,168,890,880 bytes`; GPU 0 dedicated allocation peaked at 6,947 MiB.
+
+The active-block range over frames 240/280/320 was `3.970037%`, below the frozen 15% limit. The fitted Private Bytes slope was `-4,469,949.9 bytes/s`, below the `+8 MiB/s` ceiling, and the series was non-monotonic. However, the same interval contained only `18` outer resource samples against the predeclared minimum `20`. The formal plateau therefore failed. The runner did not retry the condition and did not start R0 runs 2/3 or R1. A normal exit and downward memory trend are useful partial evidence, but the complete R0 population remains `0/3` qualified.
+
+Stage-close observations in this Phase are `2.522739` and `4.016914 seconds`; this is not a three-run distribution and does not supersede the frozen 102.595644-second Phase 6EV observation. Phase 6EW did not reproduce a native residual, so CDB was never invoked. The incomplete Phase 6EU CDB capture still leaves the stage-close/plugin-shutdown SRW-lock owner unknown.
+
+## Verification and next boundary
+
+Release build completed in 6.98 seconds. Phase 0 RTX passed. Phase 3 passed in 25.9 seconds with dry/wet mass-balance error 0, authority hashes `0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10` / `148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9`, Flow active blocks final/peak `229/348`, and peak fuel 1.0. Focused Phase 6E contracts passed 196/196 in 25.337 seconds and the eight-process standard suite passed 78/78 in 306.6 seconds. Production app SHA-256 remains `94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`.
+
+NanoVDB acquisition/lifetime separation cannot proceed from this population because R0 is not 3/3 plateau-qualified. A future Phase must define its telemetry sampling/gate before runtime and use a fresh artifact root; it must not reinterpret this 18/20 result. No visible product behavior changed, so no demo video or latest-demo update is warranted.
+
+---
+
 # Phase 6EV readback-free R0 shutdown lifecycle
 
 ## Scope and frozen evidence

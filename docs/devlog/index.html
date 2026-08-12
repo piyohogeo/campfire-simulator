@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6ev">最新記録</a>
+        <a href="#phase-6ew">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6ev">Phase 6EVの結果を読む</a>
+        <a class="button primary" href="#phase-6ew">Phase 6EWの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6EV L0 marker-gate safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6EW R0 plateau safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>L0 OS exit 0 · marker contract failed</strong></div>
+        <div><span>Lifecycle</span><strong>L0 pass · R0 normal exit · 18/20 sample gate</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
@@ -56,6 +56,19 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6ew" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6EW entry"><span class="phase-number compact">6EW</span><p><time datetime="2026-08-12">2026.08.12</time></p><span class="pill current">L0 qualified · R0 plateau safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6EW · Corrected-marker R0 lifecycle</p><h2>L0は全markerと正常終了を確認。<br>R0は18/20 sampleで安全停止。</h2><p>Phase 6EU／6EVを凍結したまま、stage close 180秒、process 540秒、外側900秒の有限上限でL0→R0 3 run→条件付きR1を事前固定しました。production、Point、Flow、CollisionProxyとresource上限は変えていません。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/r0_lifecycle_qualification_safe_stop.svg"><img src="assets/phase6/r0_lifecycle_qualification_safe_stop.svg" alt="Phase 6EW L0合格とR0 stability sample gateの比較" loading="lazy"></a><figcaption><div><strong>L0 pass / R0 normal exit / formal plateau safe stop</strong><span>L0 close 2.523 s · R0 close 4.017 s · Kit peak 13.626 GiB · R1 not started</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Corrected L0</p><h3>全marker · OS exit 0 · residual 0</h3><p>active blocks <code>505 / 688</code>、Kit peak <code>13,470,588,928 bytes</code>。7桁timestampの集計不備はKit終了後に修正し、同じL0を再実行せず、contract／production hashとL0-only状態を検査して再集計しました。</p></section><section class="note"><p class="note-label">R0 run 1</p><h3>18 / 20 stability samples</h3><p>frame 320まで完了し、blocks変動<code>3.970%</code>、Private Bytes傾き<code>-4,469,950 B/s</code>、stage close <code>4.016914 s</code>、normal exitでした。ただし凍結済み20 sampleへ2件不足しました。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Fail-closed qualification result</p><h3>正常終了をplateau合格へ読み替えない。</h3><p>R0 run 1は全lifecycle gateを通り、fatal、dump、automatic upload、device lost、TDR、CDB、cleanup residualは0でした。しかしsample-count gateを緩和せず、run 2/3とR1を開始していません。正式R0は<code>0 / 3</code>です。</p><p>Release build、Phase 0 RTX、Phase 3、focused <code>196 / 196</code>、標準suite <code>78 / 78</code>（8 process、306.6秒）が合格。Phase 3はmass balance 0、active blocks final/peak <code>229 / 348</code>、peak fuel 1.0で、production SHA-256は不変です。</p><p><a href="assets/phase6/r0_lifecycle_qualification_safe_stop.json">machine report</a> · <a href="assets/phase6/r0_lifecycle_qualification_safe_stop.svg">比較SVG</a> · <a href="../design/r0_flow_shutdown_lifecycle.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>L0 gate</strong><small>complete pass</small></p></div><div role="listitem"><span>✓</span><p><strong>R0 lifecycle</strong><small>normal exit</small></p></div><div role="listitem"><span>!</span><p><strong>Plateau</strong><small>18 / 20 samples</small></p></div><div role="listitem"><span>—</span><p><strong>R0 / R1</strong><small>0/3 · not started</small></p></div><div role="listitem"><span>✓</span><p><strong>Cleanup</strong><small>residual 0</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Safe stop and next</p><h3>NanoVDB lifetime分離へはまだ進めない。</h3><p>次回は新しいPhase／artifact rootでtelemetry sample契約を実行前に固定し、R0を3/3 plateau-qualifiedにする必要があります。Phase 6EUのnative SRW-lock ownerも未確定です。内部診断のみで画面差がないため動画とlatest demoは更新していません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6ev" class="section entry-section phase-six">
@@ -4743,7 +4756,7 @@
         <strong>Campfire Simulator</strong>
         <p>Build the fire. Keep the evidence.</p>
       </div>
-      <p>Last updated <time datetime="2026-08-10">2026.08.10</time></p>
+      <p>Last updated <time datetime="2026-08-12">2026.08.12</time></p>
     </div>
   </footer>
 

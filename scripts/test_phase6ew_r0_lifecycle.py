@@ -103,6 +103,26 @@ class Phase6EwLifecycleContract(unittest.TestCase):
         self.assertEqual(safety["physical_memory_floor_bytes"], 8 * 1024**3)
         self.assertEqual(safety["commit_headroom_floor_bytes"], 8 * 1024**3)
 
+    def test_published_safe_stop_is_fail_closed(self):
+        asset = json.loads(
+            (ROOT / "docs/devlog/assets/phase6/r0_lifecycle_qualification_safe_stop.json").read_text(encoding="utf-8")
+        )
+        devlog = (ROOT / "docs/devlog/index.html").read_text(encoding="utf-8")
+        self.assertEqual(asset["schema"], "campfire.phase6ew.r0-lifecycle-safe-stop.v1")
+        self.assertEqual(asset["status"], "safe_stop")
+        self.assertTrue(asset["l0"]["gate_pass"])
+        self.assertEqual(asset["r0_run01"]["stability_resource_samples"], 18)
+        self.assertEqual(asset["r0_run01"]["required_stability_resource_samples"], 20)
+        self.assertFalse(asset["r0_run01"]["plateau_gate_pass"])
+        self.assertEqual(asset["formal_population"]["accepted_complete_population"], 0)
+        self.assertFalse(asset["formal_population"]["r1_started"])
+        self.assertFalse(asset["production"]["changed"])
+        self.assertFalse(asset["production"]["latest_demo_changed"])
+        self.assertIn('id="phase-6ew"', devlog)
+        self.assertIn("r0_lifecycle_qualification_safe_stop.json", devlog)
+        phase_section = devlog.split('id="phase-6ew"', 1)[1].split('id="phase-6ev"', 1)[0]
+        self.assertNotIn("video-trigger", phase_section)
+
 
 if __name__ == "__main__":
     unittest.main()

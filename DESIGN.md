@@ -1,5 +1,13 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6EW corrected-marker R0 lifecycle qualification safe stop
+
+Phase 6EU／6EVを凍結したまま、別contract `campfire.phase6ew.r0-lifecycle-qualification-contract.v1`（SHA-256 `1B549CE271C55CFA62BFB2E4021992658C03692CAE350E6832560ED048D10BB9`）でL0、R0 3 run、条件付きR1を事前固定した。stage closeはPhase 6EVの102.595644秒を収容する180秒上限、process内540秒、外側900秒とし、Kit 14 GiB、tree 16 GiB、runner/diagnostic各512 MiB、physical/commit headroom各8 GiBは変更していない。production、Point schema/order/revision、wood authority、Flow、CollisionProxy、修正版4本配置も不変である。
+
+新rootのL0は全marker、`shutdown_complete`、extension callback、OS exit 0、残留0を確認し、stage close 2.522739秒、Kit peak `13,470,588,928 bytes`で完全合格した。最初の実行直後、PowerShellが生成する7桁小数秒ISO timestampを集計器が読めない診断不備を発見したため、parserを6桁へbounded正規化した。同じL0 processは再実行せず、contract hash・production hash・L0-only状態・後続directory不在を検証した限定resumeで既存証拠を再集計した。
+
+R0 run 1はframe 320、全marker、normal OS exit、stage close 4.016914秒、残留0まで完了した。stability frame 240/280/320のactive blocksは`1346/1303/1356`、変動3.970%、Private Bytes傾き`-4,469,949.9 bytes/s`、non-monotonic判定は合格し、Kit peakは`14,630,817,792 bytes`、終端は`13,806,632,960 bytes`だった。しかし固定0.20秒telemetryでstability区間が18 sampleとなり、事前必須20 sampleに未達だったためformal plateauは不合格。閾値を緩和せずrun 2/3を開始せず、正式R0は`0/3`、R1未開始で安全停止した。fatal、dump、upload、device lost、TDR、CDB呼出し、cleanup residualはいずれも0である。詳細は`docs/design/r0_flow_shutdown_lifecycle.md`。
+
 # Phase 6EV readback-free R0 lifecycle calibration safe stop
 
 Phase 6EUの既存証拠を凍結したまま、別contract `campfire.phase6ev.r0-lifecycle-contract.v1`（SHA-256 `19FD34C5616DE4090F0EC512646F56E5069BC233C5EF35A4E9D58D28A2F26E92`）でreadbackなし4本Flowの終了順序を診断した。production、Point、wood authority、Flow、CollisionProxy、既定値とresource上限は不変である。

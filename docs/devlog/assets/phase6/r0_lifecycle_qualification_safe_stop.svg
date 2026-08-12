@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650">
+<rect width="1200" height="650" fill="#111318"/><style>.t{font:700 30px sans-serif;fill:#f2f4f8}.s{font:18px sans-serif;fill:#aeb8c8}.v{font:700 25px monospace;fill:#ffb45e}.ok{fill:#63d39b}.warn{fill:#ffb45e}</style>
+<text x="60" y="70" class="t">Phase 6EW - R0 lifecycle qualification safe stop</text>
+<text x="60" y="108" class="s">Corrected markers qualified L0; R0 run 1 exited normally but missed the frozen sample-count gate.</text>
+<rect x="60" y="150" width="500" height="330" rx="18" fill="#1b2029"/><text x="90" y="195" class="t">L0 control</text>
+<text x="90" y="240" class="ok">all markers / OS exit 0 / residual 0</text><text x="90" y="285" class="v">2.523 s stage close</text>
+<text x="90" y="330" class="v">12.545 GiB Kit peak</text><text x="90" y="390" class="s">active blocks 505 / 688</text><text x="90" y="435" class="ok">L0 gate PASS</text>
+<rect x="640" y="150" width="500" height="330" rx="18" fill="#1b2029"/><text x="670" y="195" class="t">R0 run 1</text>
+<text x="670" y="240" class="ok">frame 320 / OS exit 0 / stage close 4.017 s</text><text x="670" y="285" class="v">18 / 20 stability samples</text>
+<text x="670" y="330" class="s">blocks range 3.970% / private slope -4.47 MiB/s</text><text x="670" y="380" class="v">13.626 GiB Kit peak</text><text x="670" y="435" class="warn">plateau gate FAIL</text>
+<text x="60" y="545" class="t">R0 formal 0 / 3 - R1 not started</text>
+<text x="60" y="590" class="s">No retry, no threshold relaxation, no production or latest-demo change.</text>
+</svg>

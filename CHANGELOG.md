@@ -1,5 +1,10 @@
 # Changelog
 
+- Added the production-neutral Phase 6EW contract with an explicit 180-second stage-close timeout, corrected-marker L0 gate, three-run R0 plateau gate, and conditional single R1 acquire/discard boundary. Phase 6EU/6EV evidence, production defaults, Point payload, Flow, CollisionProxy, and resource limits remain unchanged.
+- Corrected the report parser for PowerShell's seven-digit fractional ISO timestamps after the first L0 process. The valid L0 evidence was re-analysed without rerunning Kit: all markers, normal OS exit, 2.523-second stage close, and zero residual qualified L0.
+- Safely stopped at R0 run 1 after normal OS exit because the frozen stability interval contained 18 resource samples instead of the required 20. Active-block variation was 3.970%, Private Bytes slope was -4,469,950 bytes/s, stage close was 4.017 seconds, and Kit peak was 14,630,817,792 bytes; R0 remains 0/3 and R1 was not started.
+- Passed the Release build, Phase 0 RTX, Phase 3 with mass-balance error 0 and Flow active blocks final/peak 229/348, 196/196 focused contracts, and the eight-process standard suite with 78/78 tests in 306.6 seconds. Production app SHA-256 remained unchanged and no Kit/CDB/helper process remained.
+
 - Added the production-neutral Phase 6EV lifecycle contract, corrected synchronous memory markers, per-update renderer/state markers, reused extension shutdown callbacks, and parent-observed OS-exit evidence without changing production or the Phase 6EU history.
 - Audited the frozen Phase 6EU CDB evidence to a stage-close/plugin-shutdown SRW-lock boundary. L0 later completed its 102.596-second stage close, extension shutdown, and normal OS exit under the unchanged resource limits.
 - Safely stopped the new root because `final_sample_complete` was missing from the readback-none branch. Corrected the marker placement without retrying L0; formal R0 remains 0/3 and R1 was not started.

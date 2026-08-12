@@ -1,0 +1,143 @@
+{
+  "schema": "campfire.phase6ew.r0-lifecycle-safe-stop.v1",
+  "phase": "phase6ew",
+  "status": "safe_stop",
+  "reason": "incremental_plateau_gate_failed",
+  "active_condition": "R0_run01",
+  "contract_sha256": "1B549CE271C55CFA62BFB2E4021992658C03692CAE350E6832560ED048D10BB9",
+  "frozen_history": {
+    "phase6eu_changed": false,
+    "phase6ev_changed": false,
+    "phase6ev_stage_close_seconds": 102.595644,
+    "prior_samples_reused": false
+  },
+  "l0": {
+    "gate_pass": true,
+    "normal_exit": true,
+    "markers_complete": true,
+    "active_blocks": {
+      "30": 505,
+      "60": 688
+    },
+    "stage_close_seconds": 2.5227391719818115,
+    "kit_peak_private_bytes": 13470588928,
+    "tree_peak_private_bytes": 13635239936,
+    "process_cleanup": {
+      "root_pid": 21456,
+      "observed_alive_before_cleanup": [],
+      "cleanup_required": false,
+      "killed_pids": [],
+      "remaining": [],
+      "all_observed_absent": true
+    }
+  },
+  "r0_run01": {
+    "normal_exit": true,
+    "markers_complete": true,
+    "active_blocks": {
+      "30": 505,
+      "60": 688,
+      "90": 894,
+      "120": 1118,
+      "150": 1314,
+      "180": 1329,
+      "200": 1251,
+      "240": 1346,
+      "280": 1303,
+      "320": 1356
+    },
+    "stability_frames": [
+      240,
+      280,
+      320
+    ],
+    "stability_resource_samples": 18,
+    "required_stability_resource_samples": 20,
+    "active_block_range_fraction": 0.039700374531835204,
+    "maximum_active_block_range_fraction": 0.15,
+    "private_slope_bytes_per_second": -4469949.899046484,
+    "maximum_private_slope_bytes_per_second": 8388608,
+    "private_non_monotonic_or_flat": true,
+    "plateau_gate_pass": false,
+    "stage_close_seconds": 4.016914129257202,
+    "kit_peak_private_bytes": 14630817792,
+    "terminal_kit_private_bytes": 13806632960,
+    "runner_peak_private_bytes": 96174080,
+    "diagnostic_peak_private_bytes": 17145856,
+    "tree_peak_private_bytes": 14793801728,
+    "gpu0_peak_dedicated_memory_mib": 6947,
+    "minimum_available_physical_bytes": 88234360832,
+    "minimum_commit_headroom_bytes": 107168890880,
+    "process_cleanup": {
+      "root_pid": 41748,
+      "observed_alive_before_cleanup": [],
+      "cleanup_required": false,
+      "killed_pids": [],
+      "remaining": [],
+      "all_observed_absent": true
+    }
+  },
+  "formal_population": {
+    "r0_completed": 1,
+    "r0_normal_exit": 1,
+    "r0_plateau": 0,
+    "r0_required": 3,
+    "accepted_complete_population": 0,
+    "r1_started": false
+  },
+  "stage_close_seconds": [
+    2.5227391719818115,
+    4.016914129257202
+  ],
+  "safety": {
+    "fatal_lines": 0,
+    "dumps": 0,
+    "automatic_upload_attempts": 0,
+    "device_lost_or_tdr": 0,
+    "cdb_invocations": 0,
+    "remaining_processes": 0
+  },
+  "production": {
+    "changed": false,
+    "app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "latest_demo_changed": false
+  },
+  "regression": {
+    "release_build": {
+      "status": "pass",
+      "seconds": 6.98
+    },
+    "phase0_rtx": {
+      "status": "pass",
+      "seconds": 17.9
+    },
+    "phase3": {
+      "status": "pass",
+      "seconds": 25.9,
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "dry_authority_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+      "wet_authority_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+      "active_blocks_final": 229,
+      "active_blocks_peak": 348,
+      "peak_fuel_input": 1.0
+    },
+    "focused_contracts": {
+      "passed": 196,
+      "total": 196,
+      "seconds": 25.337
+    },
+    "standard_suite": {
+      "passed": 78,
+      "total": 78,
+      "processes": 8,
+      "seconds": 306.6
+    }
+  },
+  "conclusion": {
+    "plateau_qualified": false,
+    "r1_allowed": false,
+    "nanovdb_lifetime_next_stage_allowed": false,
+    "unresolved_native_lock_risk": "Phase 6EU's incomplete CDB capture still leaves the stage-close/plugin-shutdown SRW-lock owner unknown; Phase 6EW did not reproduce the residual."
+  }
+}
