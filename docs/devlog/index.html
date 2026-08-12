@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6eq">最新記録</a>
+        <a href="#phase-6er">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6eq">Phase 6EQの結果を読む</a>
+        <a class="button primary" href="#phase-6er">Phase 6ERの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6EQ scalar-gate safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6ER corrected geometry / scalar safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>18 sweep + 2 formal normal exit · no residual</strong></div>
+        <div><span>Lifecycle</span><strong>7 calibration + 4 formal normal exit · no residual</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
@@ -56,6 +56,19 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6er" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6ER entry"><span class="phase-number compact">6ER</span><p><time datetime="2026-08-12">2026.08.12</time></p><span class="pill current">Geometry corrected · scalar safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6ER · Four-log geometry and scalar transport</p><h2>4本配置の重なりを修正。<br>scalar輸送の下流gateで安全停止。</h2><p>Phase 6EQを凍結したまま、診断fixtureだけをproductionの積み方に合わせて修正しました。Point配列、wood authority、Flow、CollisionProxy形状、production既定値は変えていません。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/point_four_log_scalar_safe_stop.svg"><img src="assets/phase6/point_four_log_scalar_safe_stop.svg" alt="Phase 6ERの旧4本配置欠陥、修正版供給率、scalar formal safe stop" loading="lazy"></a><figcaption><div><strong>Exact-Mesh geometry fixed / formal scalar safe stop</strong><span>7 calibration + 4 formal normal exits · accepted population 0 / 24</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Legacy fixture defect</p><h3>0.50 m axial overlap · 480 Points inside</h3><p>上段2本はyaw 90°で長軸がY方向なのに、中心もYへ0.22 mだけ離していました。実Mesh signed distanceは<code>-0.101422 m</code>です。実productionは平行薪を長軸に垂直な方向へ分けており、この欠陥はありません。</p></section><section class="note"><p class="note-label">Corrected offline geometry</p><h3>Other inside 0 · volume overlap 0</h3><p>parallel pair gapは<code>0.23625 m</code>、交差layerは<code>1e-6 m</code>以内の意図した接触です。weighted supplyはstrict <code>80.00%</code>、self-support <code>86.67%</code>、self-center <code>93.33%</code>へ改善しました。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Predeclared scalar contract</p><h3>深部遮蔽は合格。小さな下流ROIは迂回流を分離できない。</h3><p>Emitterなしcalibrationではblocker内部のtemperature/smokeは0でした。formal strict pairはdeep velocity <code>0 m/s</code>、temperature/smoke deep ON/OFF比<code>7.00% / 5.32%</code>で合格しました。</p><p>一方、temperature opposite/far比は<code>123.19% / 86.66%</code>、smoke opposite比は<code>116.48%</code>で事前gateに不合格です。障害物を回り込んだscalarが小さな下流ROIへ入るため、この指標だけでは実Mesh貫通と正当な迂回を区別できません。</p><p>4 processはnormal OS exit、fatal・dump・upload・device lost・TDR・残留processは0。retryせず、後続20条件とvisual/videoを開始していません。production推奨は出さず、latest demoも維持します。</p><p>Release build <code>8.49 s</code>、Phase 0 RTX <code>23.3 s</code>、Phase 3 <code>31.4 s</code>、focused contract <code>153 / 153</code>、標準suite <code>78 / 78</code>（8 process、367.4 s）が合格しました。Phase 3はdry/wet mass balance error 0、active blocks final/peak <code>267 / 338</code>、peak fuel 1.0です。日誌検査も390参照、198 JSON、164 SVG、2 ZIPで合格しました。</p><p><a href="assets/phase6/point_four_log_scalar_safe_stop.json">safe-stop JSON</a> · <a href="assets/phase6/point_four_log_scalar_safe_stop.svg">比較SVG</a> · <a href="../design/point_emitter_four_log_scalar_requalification.md">設計文書</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Geometry</strong><small>inside / overlap 0</small></p></div><div role="listitem"><span>✓</span><p><strong>Calibration</strong><small>7 normal exits</small></p></div><div role="listitem"><span>✓</span><p><strong>Deep transport</strong><small>velocity 0 · scalar pass</small></p></div><div role="listitem"><span>!</span><p><strong>Far / opposite</strong><small>frozen gate failed</small></p></div><div role="listitem"><span>—</span><p><strong>Formal</strong><small>0 / 24 accepted</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Safe stop and next</p><h3>control-volume／directional flux契約を別Phaseで設計する。</h3><p>Phase 6ERのgateを事後緩和せず、貫通と障害物周囲の迂回を区別できる測定を事前凍結する必要があります。数値qualificationが不合格なので比較動画は作らず、既存latest demo pointerを変更しません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6eq" class="section entry-section phase-six">

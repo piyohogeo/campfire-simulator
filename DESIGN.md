@@ -1,5 +1,15 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6ER corrected four-log geometry / scalar transport safe stop
+
+Phase 6EQの凍結結果を変更せず、旧`production_four` fixtureの幾何を監査した。yaw 90度の上段2本を長軸Y方向へ0.22 mだけずらしていたため、0.72 mのCollisionProxy中心線が0.50 m重なり、実Mesh signed distanceは`-0.1014222118 m`、他薪内部の表面Point中心は480個だった。実production配置は平行薪を長軸に垂直な方向へ分離しており、同じ欠陥を持たない。
+
+productionの配置パターンを診断scaleへ写した修正版は、他薪内Point中心0、体積交差pair 0、平行pair surface gap `0.23625 m`、交差layerは事前許容`1e-6 m`以内の接触となった。4本×360 Point、26頂点・36面・120 indexは不変。0.05 m support sphereはFlow公開APIから得た半径ではなく、velocity voxel 1個のengineering仮定である。代表offsetでweighted supplyはstrict 80.00%、allow-self-support 86.67%、allow-self-center 93.33%、active other-support intersectionは全て0だった。
+
+7-process scalar calibrationは全てnormal exitし、Emitterなしblockerのtemperature/smokeはboundary/deep/centerとも0だったため、このprobeでtemperature 1.0はambientではない。別schemaのPhase 6ER contract（SHA-256 `419AF55985060000AB05FDFEB6781859499F38A465741C021BA6B629FE8DADDD`）をformal前に凍結した。fresh rootの4 processはnormal exitしたが、最初のlower/upper strict pairでdeep velocity 0、temperature/smoke deep比0.07004/0.05318は合格する一方、temperature opposite/far比1.23189/0.86660、smoke opposite比1.16482が不合格となった。小さな下流ROIは障害物を迂回したscalarも数えるため、貫通と迂回を分離できない。
+
+同条件をretryせず、残り20 process、visual、動画を開始していない。accepted complete populationは0/24、production推奨なし、latest demo不変。次は別承認でcontrol-volumeまたはdirectional flux契約を事前定義する。詳細は`docs/design/point_emitter_four_log_scalar_requalification.md`。
+
 # Phase 6EQ PointEmitter self-Collider tolerance safe stop
 
 Phase 6EPの18-process数値結果とmedia safe stopをread-onlyで維持し、self support交差、self center-inside、other support交差をPointごとに分離する既定OFF probeを追加した。事前凍結contract `campfire.phase6eq.self-collider-tolerance-contract.v1`（SHA-256 `B9D3169C54ADA5EEB62B712E02C00438C4FBFCE9914CCABE0EFE2FADEC0E1DAF`）はoffset `-0.0125～+0.075 m`、strict/self-support/self-center/collision-offの4規則、lower/upperとproduction-four、3 run、other-Colliderのvelocity/temperature/smoke deep gateを固定した。

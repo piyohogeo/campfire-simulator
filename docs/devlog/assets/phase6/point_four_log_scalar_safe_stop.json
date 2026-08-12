@@ -1,0 +1,300 @@
+{
+  "schema": "campfire.phase6er.safe-stop.v1",
+  "phase": "phase6er",
+  "status": "safe_stop",
+  "overall_qualified": false,
+  "formal_population_accepted": false,
+  "phase6eq_frozen": true,
+  "phase6eq_reclassified": false,
+  "phase6eq_remaining_conditions_restarted": false,
+  "geometry": {
+    "legacy_fixture": {
+      "upper_axis_overlap_m": 0.5,
+      "minimum_signed_distance_m": -0.10142221176035214,
+      "other_log_surface_point_centers_inside": 480,
+      "geometry_sha256": "E3A1CA6076AFFDE66F8A2AB0A91BE581D6541703B25D540E32F22B32A6CE45FF"
+    },
+    "corrected_fixture": {
+      "other_log_surface_point_centers_inside": 0,
+      "volume_overlap_pairs": 0,
+      "minimum_signed_distance_m": 0.0,
+      "parallel_pair_surface_gaps_m": [
+        0.23625000000000004,
+        0.23625000000000004
+      ],
+      "geometry_sha256": "70F7920B6DEB13D4AC05B290C4CB38CAF2ED8B1C99C880AB13A0EBB901F335BF"
+    },
+    "production_same_defect": false,
+    "production_reference": {
+      "source": "source/extensions/campfire.app/campfire/app/phase2_scene.py",
+      "lower_centers_m": [
+        [
+          0.0,
+          -0.34,
+          0.18
+        ],
+        [
+          0.0,
+          0.34,
+          0.18
+        ]
+      ],
+      "upper_centers_m": [
+        [
+          -0.34,
+          0.0,
+          0.5
+        ],
+        [
+          0.34,
+          0.0,
+          0.5
+        ]
+      ],
+      "radius_m": 0.16,
+      "length_m": 1.8,
+      "same_axis_overlap_defect": false,
+      "correction_basis": "production lateral pattern radius-scaled; vertical crossed-layer tangency preserved"
+    },
+    "geometry_tolerance_m": 1e-06
+  },
+  "point_classification": {
+    "support_radius_m": 0.05,
+    "support_radius_status": "engineering assumption equal to one velocity voxel; exact public Flow radius unavailable",
+    "selected": {
+      "strict_all": {
+        "offset_m": 0.075,
+        "point_retention": 0.8,
+        "weighted_supply": {
+          "fuel": {
+            "original": 1151.9999999999688,
+            "enabled": 921.5999999999818,
+            "retention": 0.8000000000000058
+          },
+          "temperature": {
+            "original": 2880.0,
+            "enabled": 2304.0,
+            "retention": 0.8
+          },
+          "smoke": {
+            "original": 115.1999999999979,
+            "enabled": 92.15999999999839,
+            "retention": 0.8000000000000006
+          }
+        },
+        "raw_other_center_inside": 0,
+        "active_other_support_intersections": 0,
+        "other_support_intersections_before_filter": 288
+      },
+      "allow_self_support": {
+        "offset_m": 0.025,
+        "point_retention": 0.8666666666666667,
+        "weighted_supply": {
+          "fuel": {
+            "original": 1151.9999999999688,
+            "enabled": 998.3999999999775,
+            "retention": 0.8666666666666706
+          },
+          "temperature": {
+            "original": 2880.0,
+            "enabled": 2496.0,
+            "retention": 0.8666666666666667
+          },
+          "smoke": {
+            "original": 115.1999999999979,
+            "enabled": 99.83999999999823,
+            "retention": 0.866666666666667
+          }
+        },
+        "raw_other_center_inside": 0,
+        "active_other_support_intersections": 0,
+        "other_support_intersections_before_filter": 192
+      },
+      "allow_self_center": {
+        "offset_m": -0.0125,
+        "point_retention": 0.9333333333333333,
+        "weighted_supply": {
+          "fuel": {
+            "original": 1151.9999999999688,
+            "enabled": 1075.1999999999732,
+            "retention": 0.9333333333333353
+          },
+          "temperature": {
+            "original": 2880.0,
+            "enabled": 2688.0,
+            "retention": 0.9333333333333333
+          },
+          "smoke": {
+            "original": 115.1999999999979,
+            "enabled": 107.51999999999806,
+            "retention": 0.9333333333333336
+          }
+        },
+        "raw_other_center_inside": 0,
+        "active_other_support_intersections": 0,
+        "other_support_intersections_before_filter": 96
+      }
+    }
+  },
+  "scalar_calibration": {
+    "processes": 7,
+    "all_normal_exit": true,
+    "emitterless_baseline": {
+      "temperature": {
+        "boundary": 0.0,
+        "deep": 0.0,
+        "center_axis": 0.0
+      },
+      "smoke": {
+        "boundary": 0.0,
+        "deep": 0.0,
+        "center_axis": 0.0
+      }
+    },
+    "normal_temperature_deep_sum_ratio": 0.07758316780924226,
+    "normal_smoke_deep_sum_ratio": 0.05710119169438488,
+    "temperature_one_is_ambient": false,
+    "flow_occupancy_mask_available": false
+  },
+  "formal": {
+    "contract_sha256": "419AF55985060000AB05FDFEB6781859499F38A465741C021BA6B629FE8DADDD",
+    "processes_completed_as_partial_evidence": 4,
+    "processes_expected": 24,
+    "accepted_complete_population": 0,
+    "failed_condition": "run_1/lower_upper/strict_all pair",
+    "failed_gates": [
+      "temperature_opposite_ratio",
+      "temperature_far_ratio",
+      "smoke_opposite_ratio"
+    ],
+    "pair_metrics": {
+      "velocity": {
+        "off_deep_maximum": 7.911711692810059,
+        "on_deep_maximum": 0.0,
+        "ratio": 0.0
+      },
+      "temperature": {
+        "deep": {
+          "off_sum": 678.0574951171875,
+          "on_sum": 47.49302935600281,
+          "ratio": 0.07004277616280116
+        },
+        "center": {
+          "off_sum": 26.4384765625,
+          "on_sum": 0.495361328125,
+          "ratio": 0.018736379418608947
+        },
+        "opposite_side": {
+          "off_sum": 951.6516375541687,
+          "on_sum": 1172.3260278701782,
+          "ratio": 1.2318856833821699
+        },
+        "far_above": {
+          "off_sum": 2992.7577909231186,
+          "on_sum": 2593.526288688183,
+          "ratio": 0.8666007976169056
+        }
+      },
+      "smoke": {
+        "deep": {
+          "off_sum": 563.7630350589752,
+          "on_sum": 29.979926347732544,
+          "ratio": 0.053178240649631
+        },
+        "center": {
+          "off_sum": 23.837890625,
+          "on_sum": 0.1380615234375,
+          "ratio": 0.005791683736173699
+        },
+        "opposite_side": {
+          "off_sum": 969.5826202630997,
+          "on_sum": 1129.3853872418404,
+          "ratio": 1.1648160390244802
+        },
+        "far_above": {
+          "off_sum": 3176.123684346676,
+          "on_sum": 1839.8635842204094,
+          "ratio": 0.5792795769535237
+        }
+      }
+    },
+    "automatic_retry": false,
+    "later_condition_started": false,
+    "visual_population_started": false,
+    "video_generated": false
+  },
+  "resource": {
+    "runner_peak_bytes": 107155456,
+    "diagnostic_peak_bytes": 16945152,
+    "kit_peak_bytes": 13355417600,
+    "tree_peak_bytes": 13496074240,
+    "all_process_absent": true
+  },
+  "safety": {
+    "normal_exit_processes": 4,
+    "fatal": 0,
+    "dump": 0,
+    "automatic_upload_attempt": 0,
+    "device_lost": 0,
+    "tdr": 0,
+    "residual_process": 0
+  },
+  "production": {
+    "changed": false,
+    "app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "point_schema_changed": false,
+    "flow_setting_changed": false,
+    "collision_proxy_geometry_changed": false,
+    "defaults_changed": false
+  },
+  "regression": {
+    "release_build": {
+      "passed": true,
+      "seconds": 8.49
+    },
+    "phase0_rtx": {
+      "passed": true,
+      "seconds": 23.3
+    },
+    "phase3": {
+      "passed": true,
+      "seconds": 31.4,
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "dry_authority_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+      "wet_authority_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+      "flow_active_blocks_final": 267,
+      "flow_active_blocks_peak": 338,
+      "peak_fuel_input": 1.0
+    },
+    "focused_contracts": {
+      "passed": 153,
+      "total": 153,
+      "seconds": 32.192
+    },
+    "standard_suite": {
+      "processes": 8,
+      "passed": 78,
+      "total": 78,
+      "seconds": 367.4
+    },
+    "devlog": {
+      "references": 390,
+      "ids": 246,
+      "json": 198,
+      "svg": 164,
+      "zip": 2
+    }
+  },
+  "decision": {
+    "self_collider_policy_recommended_for_production": false,
+    "reason": "corrected geometry improves supply, but the frozen far/opposite scalar transport contract failed and needs a separate control-volume/flux design",
+    "next": "design a transport-aware scalar leakage metric that separates blocked deep interior from legitimate around-obstacle transport; do not relax Phase 6ER retroactively"
+  },
+  "artifact_hashes": {
+    "geometry_audit": "A0B436B2E5A9C2934E6129441D14D5DBDEF6138E3318C0E1B4D2670A13CA1423",
+    "offline_classification": "6F17C6E77044294496A2F5E1D10C108D88A1ED9A5A3F560BD2D0D3D086D6B495",
+    "scalar_calibration": "57C530C3D934889CF758D392A485D6F434B319CFF066960DB8D7E73CA576FCEF",
+    "failed_pair": "0CF3ED9FDEA261F642FD0B6F8B8DE5F04778ACE27D1F4D2A29BD2712BD4FA0F5"
+  }
+}

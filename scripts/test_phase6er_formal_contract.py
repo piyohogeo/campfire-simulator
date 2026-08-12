@@ -7,6 +7,7 @@ from pathlib import Path
 
 
 ROOT=Path(__file__).resolve().parents[1];SCRIPTS=ROOT/"scripts"
+SAFE_STOP=ROOT/"docs/devlog/assets/phase6/point_four_log_scalar_safe_stop.json"
 
 
 class Phase6ErFormalContract(unittest.TestCase):
@@ -36,6 +37,36 @@ class Phase6ErFormalContract(unittest.TestCase):
 
     def test_support_radius_remains_an_engineering_assumption(self):
         self.assertIn("not a public Flow support radius",self.contract["support_radius"]["status"])
+
+    def test_published_safe_stop_is_partial_and_fail_closed(self):
+        report=json.loads(SAFE_STOP.read_text(encoding="utf-8"))
+        self.assertEqual("safe_stop",report["status"])
+        self.assertFalse(report["overall_qualified"])
+        self.assertEqual(4,report["formal"]["processes_completed_as_partial_evidence"])
+        self.assertEqual(0,report["formal"]["accepted_complete_population"])
+        self.assertEqual(
+            ["temperature_opposite_ratio","temperature_far_ratio","smoke_opposite_ratio"],
+            report["formal"]["failed_gates"],
+        )
+        self.assertFalse(report["formal"]["automatic_retry"])
+        self.assertFalse(report["formal"]["later_condition_started"])
+        self.assertFalse(report["formal"]["video_generated"])
+
+    def test_phase6eq_and_latest_demo_remain_unchanged(self):
+        report=json.loads(SAFE_STOP.read_text(encoding="utf-8"))
+        latest=json.loads((ROOT/"docs/devlog/assets/latest_demo.json").read_text(encoding="utf-8"))
+        self.assertTrue(report["phase6eq_frozen"])
+        self.assertFalse(report["phase6eq_reclassified"])
+        self.assertFalse(report["phase6eq_remaining_conditions_restarted"])
+        self.assertFalse(report["production"]["changed"])
+        self.assertNotEqual("phase6er",latest["phase"])
+
+    def test_devlog_records_safe_stop_without_phase6er_video(self):
+        html=(ROOT/"docs/devlog/index.html").read_text(encoding="utf-8")
+        section=html.split('id="phase-6er"',1)[1].split('id="phase-6eq"',1)[0]
+        self.assertIn("0 / 24 accepted",section)
+        self.assertIn("latest demo",section)
+        self.assertNotIn("data-video-src",section)
 
 
 if __name__=="__main__":unittest.main()
