@@ -1,13 +1,18 @@
-param([Parameter(Mandatory=$true)][string]$OutputRoot)
+param(
+    [Parameter(Mandatory=$true)][string]$OutputRoot,
+    [switch]$ResumeAfterL0AnalysisFailure
+)
 
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version 3.0
 $repo = Split-Path -Parent $PSScriptRoot
 $OutputRoot = [IO.Path]::GetFullPath($OutputRoot)
-if (Test-Path -LiteralPath $OutputRoot) { throw "Phase 6EW refuses artifact root reuse: $OutputRoot" }
-New-Item -ItemType Directory -Path $OutputRoot | Out-Null
+$rootAlreadyExists = Test-Path -LiteralPath $OutputRoot
+if ($rootAlreadyExists -and -not $ResumeAfterL0AnalysisFailure) { throw "Phase 6EW refuses artifact root reuse: $OutputRoot" }
+if (-not $rootAlreadyExists -and $ResumeAfterL0AnalysisFailure) { throw "Phase 6EW resume requires the existing L0-only artifact root" }
+if (-not $rootAlreadyExists) { New-Item -ItemType Directory -Path $OutputRoot | Out-Null }
 $logs = Join-Path $OutputRoot "runner-logs"
-New-Item -ItemType Directory -Path $logs | Out-Null
+if (-not (Test-Path -LiteralPath $logs)) { New-Item -ItemType Directory -Path $logs | Out-Null }
 
 $contractPath = Join-Path $PSScriptRoot "phase6ew_r0_lifecycle_contract.json"
 $hashPath = Join-Path $PSScriptRoot "phase6ew_r0_lifecycle_contract.sha256"
@@ -15,17 +20,38 @@ $expectedHash = ((Get-Content -Raw -Encoding ASCII $hashPath).Trim().Split(' ')[
 $actualHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $contractPath).Hash
 if ($actualHash -ne $expectedHash) { throw "Phase 6EW contract hash mismatch" }
 $contract = Get-Content -Raw -Encoding UTF8 $contractPath | ConvertFrom-Json
-Copy-Item -LiteralPath $contractPath -Destination (Join-Path $OutputRoot "frozen_contract.json")
-[IO.File]::WriteAllText((Join-Path $OutputRoot "frozen_contract.sha256"), "$actualHash  frozen_contract.json`n", [Text.UTF8Encoding]::new($false))
+if (-not $rootAlreadyExists) {
+    Copy-Item -LiteralPath $contractPath -Destination (Join-Path $OutputRoot "frozen_contract.json")
+    [IO.File]::WriteAllText((Join-Path $OutputRoot "frozen_contract.sha256"), "$actualHash  frozen_contract.json`n", [Text.UTF8Encoding]::new($false))
+} else {
+    $frozenContract = Join-Path $OutputRoot "frozen_contract.json"
+    $frozenHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $frozenContract).Hash
+    if ($frozenHash -ne $actualHash) { throw "Phase 6EW resume rejected a changed frozen contract" }
+}
 
 $guard = Join-Path $PSScriptRoot "phase6eg_resource_guard.py"
 $caseRunner = Join-Path $PSScriptRoot "run_phase6ep_point_collision_case.ps1"
 $analyzer = Join-Path $PSScriptRoot "analyze_phase6ew_r0_lifecycle.py"
 $powershell = (Get-Process -Id $PID).Path
 $productionApp = Join-Path $repo "_build\windows-x86_64\release\apps\campfire.simulator.kit"
-$productionBefore = (Get-FileHash -Algorithm SHA256 -LiteralPath $productionApp).Hash
 $reportPath = Join-Path $OutputRoot "r0_lifecycle_report.json"
 $statePath = Join-Path $OutputRoot "incremental_state.json"
+$resumeState = $null
+if ($ResumeAfterL0AnalysisFailure) {
+    if (-not (Test-Path -LiteralPath $statePath)) { throw "Phase 6EW resume state is missing" }
+    $resumeState = Get-Content -Raw -Encoding UTF8 $statePath | ConvertFrom-Json
+    if ($resumeState.status -ne "running" -or $resumeState.active_condition -ne "L0_short" -or [int]$resumeState.completed_processes -ne 0) {
+        throw "Phase 6EW resume rejected a non-L0 analysis-failure state"
+    }
+    if ($resumeState.contract_sha256 -ne $actualHash -or $resumeState.production_changed) {
+        throw "Phase 6EW resume rejected changed contract or production evidence"
+    }
+    foreach ($unexpected in @("calibration", "R1_acquire_discard")) {
+        if (Test-Path -LiteralPath (Join-Path $OutputRoot $unexpected)) { throw "Phase 6EW resume found a later condition: $unexpected" }
+    }
+}
+$productionBefore = if ($null -ne $resumeState) { [string]$resumeState.production_app_sha256_before } else { (Get-FileHash -Algorithm SHA256 -LiteralPath $productionApp).Hash }
+if ((Get-FileHash -Algorithm SHA256 -LiteralPath $productionApp).Hash -ne $productionBefore) { throw "Phase 6EW production app changed before execution" }
 $limits = $contract.safety
 
 function Write-State([string]$Status, [int]$Completed, [string]$Active, [string]$Reason) {
@@ -108,10 +134,18 @@ function Invoke-Case([string]$Label, [string]$Relative, [string]$Prefix, [int]$R
 }
 
 $completed = 0
-Write-State "running" $completed "L0_short" ""
-$reason = Invoke-Case "L0_short" "L0_short" "L0_short" 0 "none" "" "30,60" $false
-if ($reason) { Stop-Safely $completed "L0_short" $reason }
-$completed++
+if ($ResumeAfterL0AnalysisFailure) {
+    Update-Report
+    $report = Get-Content -Raw -Encoding UTF8 $reportPath | ConvertFrom-Json
+    if (-not $report.l0_gate_pass) { Stop-Safely $completed "L0_short" "existing_l0_gate_failed" }
+    $completed = 1
+    Write-State "running" $completed "R0_run01" "resumed_after_bounded_analyzer_correction_without_rerunning_L0"
+} else {
+    Write-State "running" $completed "L0_short" ""
+    $reason = Invoke-Case "L0_short" "L0_short" "L0_short" 0 "none" "" "30,60" $false
+    if ($reason) { Stop-Safely $completed "L0_short" $reason }
+    $completed++
+}
 
 for ($run = 1; $run -le 3; $run++) {
     $label = "R0_run$('{0:d2}' -f $run)"

@@ -54,6 +54,15 @@ class Phase6EwLifecycleContract(unittest.TestCase):
         self.assertIn('mark("stage_close_timeout"', self.probe)
         self.assertIn("StageCloseTimeoutSeconds", self.case_runner)
 
+    def test_powershell_seven_digit_timestamp_is_bounded(self):
+        from scripts.analyze_phase6ew_r0_lifecycle import _time
+
+        seven_digit = _time("2026-08-12T09:26:26.7250933Z")
+        six_digit = _time("2026-08-12T09:26:26.725093Z")
+        self.assertEqual(seven_digit, six_digit)
+        self.assertIn("ResumeAfterL0AnalysisFailure", self.runner)
+        self.assertIn("without_rerunning_L0", self.runner)
+
     def test_common_final_marker_precedes_shutdown(self):
         common_final = self.probe.index('"final_sample_complete", frame=final_frame')
         self.assertLess(self.probe.index("for frame in range(1, final_frame + 1):"), common_final)

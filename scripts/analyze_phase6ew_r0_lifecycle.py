@@ -5,15 +5,24 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import re
 from datetime import datetime
 from pathlib import Path
 
-from analyze_phase6ev_r0_lifecycle import _case as _base_case
-from analyze_phase6ev_r0_lifecycle import _json, _jsonl
+try:
+    from .analyze_phase6ev_r0_lifecycle import _case as _base_case
+    from .analyze_phase6ev_r0_lifecycle import _json, _jsonl
+except ImportError:
+    from analyze_phase6ev_r0_lifecycle import _case as _base_case
+    from analyze_phase6ev_r0_lifecycle import _json, _jsonl
 
 
 def _time(text: str) -> float:
-    return datetime.fromisoformat(text.replace("Z", "+00:00")).timestamp()
+    normalized = text.replace("Z", "+00:00")
+    match = re.match(r"^(.*\.)(\d+)([+-]\d\d:\d\d)$", normalized)
+    if match and len(match.group(2)) > 6:
+        normalized = f"{match.group(1)}{match.group(2)[:6]}{match.group(3)}"
+    return datetime.fromisoformat(normalized).timestamp()
 
 
 def _range_fraction(values: list[float]) -> float | None:
