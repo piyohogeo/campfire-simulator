@@ -104,6 +104,15 @@ def _settings():
         "lifecycle_calibration": bool(settings.get_as_bool("/phase6ep/lifecycleCalibration")),
         "renderer_drain_updates": max(1, int(settings.get_as_int("/phase6ep/rendererDrainUpdates")) or 8),
         "stage_close_timeout_seconds": max(0.0, float(settings.get_as_float("/phase6ep/stageCloseTimeoutSeconds"))),
+        "stability_observation_start_frame": max(
+            0, int(settings.get_as_int("/phase6ep/stabilityObservationStartFrame"))
+        ),
+        "stability_observation_extra_seconds": max(
+            0.0, float(settings.get_as_float("/phase6ep/stabilityObservationExtraSeconds"))
+        ),
+        "stability_active_block_sample_seconds": max(
+            0.05, float(settings.get_as_float("/phase6ep/stabilityActiveBlockSampleSeconds")) or 0.5
+        ),
     }
 
 
@@ -532,8 +541,22 @@ async def _run():
         sample_frames = tuple(arguments["sample_frames"])
         final_frame = max(sample_frames[-1], max(capture_frames, default=0))
         pending_readback_frame = None
+        stability_started = False
+        stability_samples = []
         for frame in range(1, final_frame + 1):
             await app.next_update_async()
+            if (
+                arguments["stability_observation_extra_seconds"] > 0.0
+                and frame == arguments["stability_observation_start_frame"]
+            ):
+                if not timeline.is_playing():
+                    raise RuntimeError("timeline stopped before the stability observation window")
+                stability_started = True
+                mark(
+                    "stability_observation_started", frame=frame,
+                    active_blocks=int(flow.get_active_block_count()),
+                    **_lifecycle_state(timeline, context, flow, volume, emitter, collectors),
+                )
             if pending_readback_frame is not None:
                 mark("next_frame_started", frame=frame, previous_readback_frame=pending_readback_frame)
                 pending_readback_frame = None
@@ -639,6 +662,49 @@ async def _run():
             "final_sample_complete", frame=final_frame,
             **_lifecycle_state(timeline, context, flow, volume, emitter, collectors),
         )
+        if arguments["stability_observation_extra_seconds"] > 0.0:
+            if not stability_started:
+                raise RuntimeError("stability observation start frame was not reached")
+            extra_seconds = arguments["stability_observation_extra_seconds"]
+            active_interval = arguments["stability_active_block_sample_seconds"]
+            extra_start = time.monotonic()
+            next_active_sample = 0.0
+            extra_updates = 0
+            while True:
+                elapsed = time.monotonic() - extra_start
+                if elapsed >= extra_seconds:
+                    break
+                await app.next_update_async()
+                extra_updates += 1
+                if not timeline.is_playing():
+                    raise RuntimeError("timeline stopped during the stability observation window")
+                elapsed = time.monotonic() - extra_start
+                if elapsed >= next_active_sample:
+                    sample = {
+                        "elapsed_seconds": float(elapsed),
+                        "update_index": int(extra_updates),
+                        "active_blocks": int(flow.get_active_block_count()),
+                        "timeline_time": float(timeline.get_current_time()),
+                    }
+                    stability_samples.append(sample)
+                    mark("stability_observation_sample", **sample)
+                    next_active_sample += active_interval
+            actual_seconds = time.monotonic() - extra_start
+            report["stability_observation"] = {
+                "start_frame": arguments["stability_observation_start_frame"],
+                "extra_seconds_requested": extra_seconds,
+                "extra_seconds_actual": float(actual_seconds),
+                "active_block_sample_seconds": active_interval,
+                "extra_update_count": int(extra_updates),
+                "samples": stability_samples,
+                "timeline_playing_at_end": bool(timeline.is_playing()),
+            }
+            mark(
+                "stability_observation_ended", frame=final_frame,
+                extra_seconds_actual=float(actual_seconds), extra_update_count=int(extra_updates),
+                active_blocks=int(flow.get_active_block_count()),
+                **_lifecycle_state(timeline, context, flow, volume, emitter, collectors),
+            )
         report["spatial_manifest_collider_indices"] = list(collectors_by_index)
         report["spatial_manifests"] = [collectors_by_index[index].finalize() for index in collectors_by_index]
         report["active_blocks_final"] = int(flow.get_active_block_count())

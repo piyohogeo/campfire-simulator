@@ -6,7 +6,7 @@ param(
     [ValidateSet("true", "false")][string]$Filtering = "true",
     [ValidateSet("true", "false")][string]$Collision = "true",
     [ValidateSet("strict_all", "allow_self_support", "allow_self_center", "allow_other_support")][string]$Policy = "strict_all",
-    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev", "phase6ew")][string]$ReportPhase = "phase6ep",
+    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev", "phase6ew", "phase6ex")][string]$ReportPhase = "phase6ep",
     [string]$SampleFrames = "60,120,180,200",
     [string]$ReadbackChannels = "temperature,fuel,burn,smoke,velocity",
     [ValidateSet("legacy", "none", "acquire_discard", "fuel_convert", "fuel_scalar", "fuel_jsonl", "fuel_spatial")][string]$ReadbackMode = "legacy",
@@ -30,6 +30,9 @@ param(
     [switch]$LifecycleCalibration,
     [int]$RendererDrainUpdates = 8,
     [double]$StageCloseTimeoutSeconds = 0.0,
+    [int]$StabilityObservationStartFrame = 0,
+    [double]$StabilityObservationExtraSeconds = 0.0,
+    [double]$StabilityActiveBlockSampleSeconds = 0.5,
     [int]$AbsoluteTimeoutSeconds = 330
 )
 
@@ -105,6 +108,9 @@ $arguments = @(
     "--/phase6ep/lifecycleCalibration=$($LifecycleCalibration.IsPresent.ToString().ToLowerInvariant())",
     "--/phase6ep/rendererDrainUpdates=$RendererDrainUpdates",
     "--/phase6ep/stageCloseTimeoutSeconds=$StageCloseTimeoutSeconds",
+    "--/phase6ep/stabilityObservationStartFrame=$StabilityObservationStartFrame",
+    "--/phase6ep/stabilityObservationExtraSeconds=$StabilityObservationExtraSeconds",
+    "--/phase6ep/stabilityActiveBlockSampleSeconds=$StabilityActiveBlockSampleSeconds",
     "--ext-folder", (Join-Path $PSScriptRoot "phasev3tg_extension"),
     "--enable", "omni.campfire.phasev3tg_shutdown",
     "--/phasev3tg/markers=$extensionMarkerPath",
@@ -185,6 +191,9 @@ $evidence = [ordered]@{
     lifecycle_calibration = $LifecycleCalibration.IsPresent
     renderer_drain_updates = $RendererDrainUpdates
     stage_close_timeout_seconds = $StageCloseTimeoutSeconds
+    stability_observation_start_frame = $StabilityObservationStartFrame
+    stability_observation_extra_seconds = $StabilityObservationExtraSeconds
+    stability_active_block_sample_seconds = $StabilityActiveBlockSampleSeconds
     extension_marker_path = $extensionMarkerPath
     runner_marker_path = $runnerMarkerPath
     spatial_collectors_enabled = ($SpatialCollectorsEnabled -eq "true")
