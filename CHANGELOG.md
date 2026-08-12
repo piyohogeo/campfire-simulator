@@ -1,5 +1,7 @@
 # Changelog
 
+- Re-ran the byte-identical Phase 6EY dynamic-stationarity contract from an empty artifact root without reusing prior evidence. All three readback-free R0 processes passed their finite non-divergence, resource, lifecycle, and cross-run gates with 49 aligned samples each and normal OS exit.
+- Qualified one public NanoVDB acquire/discard boundary without conversion or field persistence. Synchronous Private Bytes rose 138.223 MiB, retained 125.074 MiB after reference release and 111.578 MiB at the next frame, then remained bounded below the unchanged 14 GiB ceiling; R2 was not started and production stayed unchanged.
 - Added the production-neutral Phase 6EY finite dynamic-stationarity contract. Synthetic calibration accepted bounded periodic/recovery cases and rejected linear, accelerating, memory-only, and non-recovering cache growth without changing the frozen Phase 6EX 15% range gate.
 - Phase 6EY R0 run 1 completed 49 aligned samples over 23.982 seconds, passed every dynamic-stationarity check, closed its stage in 2.560 seconds, and exited normally. A post-run analyzer compatibility defect then stopped the matrix fail-closed; run 2/3 and R1 were not started, formal R0 remains 0/3, and production is unchanged.
 - Passed Release build, Phase 0 RTX, Phase 3 with mass-balance error 0 and Flow active blocks final/peak 262/376, 214/214 focused Phase 6E contracts, and the eight-process standard suite with 78/78 tests in 303.6 seconds. Production app SHA-256 remained unchanged and devlog references are complete.

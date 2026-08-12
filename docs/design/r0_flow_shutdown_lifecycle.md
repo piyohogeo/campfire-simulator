@@ -1,3 +1,11 @@
+# Phase 6EY approved qualification restart
+
+The corrected analyzer and byte-identical frozen contract were run from the empty root `artifacts/phase6ey-dynamic-stationarity-2`. Earlier Phase 6EX and Phase 6EY samples remain excluded. R0 completed three independent normal-exit processes with 49 aligned samples each, passed every finite non-divergence predicate, and passed cross-run reproducibility. Stage close was `2.253494–4.842660 seconds`; all required probe, extension, and parent exit markers were complete.
+
+The conditional R1 process then made exactly one public `get_latest_nanovdb_readback()` call. Private Bytes rose `138.223 MiB` immediately, retained `125.074 MiB` after explicit reference deletion, and retained `111.578 MiB` at the next renderer frame. R1 active-block mean was within `0.084%` of R0, so occupancy scale does not explain the synchronous increment. The finite observation remained bounded, Kit peak stayed `208.563 MiB` below 14 GiB, stage close completed in `1.932446 seconds`, and OS exit was normal. CDB, fatal, dump, upload, device-fault, and residual counts were zero.
+
+This qualifies only readback-free dynamic stationarity and one acquire/discard. It does not establish complete reclaim, repeated-acquire stability, conversion lifetime, or resolution of the Phase 6EU SRW-lock owner. R2 fuel conversion is eligible for a new independent contract but was not started.
+
 # Phase 6EY Flow dynamic-stationarity qualification safe stop
 
 Phase 6EY leaves the Phase 6EX `24.382% > 15%` result unchanged. The separately frozen contract is `campfire.phase6ey.dynamic-stationarity-qualification-contract.v1`, SHA-256 `58C9755FF8F3F8E67752E558F572CB1B997A14E1976E0241B586E1DE64CA4AB4`. It removes no previous failure and admits no historical sample to the formal population.

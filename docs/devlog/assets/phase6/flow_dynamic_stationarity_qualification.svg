@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Phase 6EY dynamic-stationarity qualification</title>
+  <desc id="desc">Three readback-free processes and one acquire-discard process passed the frozen finite non-divergence, resource, and lifecycle gates.</desc>
+  <rect width="1200" height="675" fill="#111318"/>
+  <g font-family="Segoe UI, sans-serif">
+    <text x="72" y="78" fill="#f0f2f5" font-size="25" font-weight="700">Phase 6EY · Dynamic-stationarity qualification</text>
+    <text x="72" y="116" fill="#a8b0bd" font-size="18">Fresh population · frozen contract · production unchanged</text>
+    <rect x="72" y="158" width="322" height="170" rx="16" fill="#19241f" stroke="#46c37b" stroke-width="2"/>
+    <text x="98" y="199" fill="#77e5a3" font-size="18" font-weight="700">R0 readback none · PASS</text>
+    <text x="98" y="250" fill="#f0f2f5" font-size="42" font-weight="700">3 / 3</text>
+    <text x="98" y="286" fill="#a8b0bd" font-size="16">49 aligned samples each</text>
+    <text x="98" y="311" fill="#a8b0bd" font-size="16">close 2.253–4.843 s · exit 0</text>
+    <rect x="439" y="158" width="322" height="170" rx="16" fill="#19241f" stroke="#46c37b" stroke-width="2"/>
+    <text x="465" y="199" fill="#77e5a3" font-size="18" font-weight="700">Cross-run · PASS</text>
+    <text x="465" y="250" fill="#f0f2f5" font-size="42" font-weight="700">0.216%</text>
+    <text x="465" y="286" fill="#a8b0bd" font-size="16">active mean range</text>
+    <text x="465" y="311" fill="#a8b0bd" font-size="16">peak memory range 1.102%</text>
+    <rect x="806" y="158" width="322" height="170" rx="16" fill="#19241f" stroke="#46c37b" stroke-width="2"/>
+    <text x="832" y="199" fill="#77e5a3" font-size="18" font-weight="700">R1 acquire/discard · PASS</text>
+    <text x="832" y="250" fill="#f0f2f5" font-size="42" font-weight="700">+138.22</text>
+    <text x="1005" y="250" fill="#a8b0bd" font-size="18">MiB</text>
+    <text x="832" y="286" fill="#a8b0bd" font-size="16">next-frame residual +111.58 MiB</text>
+    <text x="832" y="311" fill="#a8b0bd" font-size="16">peak 13.797 GiB · exit 0</text>
+    <text x="72" y="390" fill="#f0f2f5" font-size="20" font-weight="700">One public readback: synchronous Private Bytes boundary</text>
+    <line x1="110" y1="560" x2="1090" y2="560" stroke="#404753" stroke-width="2"/>
+    <rect x="155" y="500" width="150" height="60" rx="8" fill="#3f8ed0"/>
+    <rect x="390" y="424" width="150" height="136" rx="8" fill="#e39a3b"/>
+    <rect x="625" y="438" width="150" height="122" rx="8" fill="#d8ae51"/>
+    <rect x="860" y="451" width="150" height="109" rx="8" fill="#77b783"/>
+    <text x="230" y="590" fill="#a8b0bd" font-size="15" text-anchor="middle">before</text>
+    <text x="465" y="590" fill="#a8b0bd" font-size="15" text-anchor="middle">acquired +138.22</text>
+    <text x="700" y="590" fill="#a8b0bd" font-size="15" text-anchor="middle">released +125.07</text>
+    <text x="935" y="590" fill="#a8b0bd" font-size="15" text-anchor="middle">next frame +111.58</text>
+    <text x="72" y="638" fill="#77e5a3" font-size="18" font-weight="700">QUALIFIED WITH BOUNDED RESIDUAL · R2 NOT STARTED · NATIVE LOCK RISK REMAINS</text>
+  </g>
+</svg>

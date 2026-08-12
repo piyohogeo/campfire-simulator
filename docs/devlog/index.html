@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6ey">最新記録</a>
+        <a href="#phase-6ey-qualified">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6ey">Phase 6EYの結果を読む</a>
+        <a class="button primary" href="#phase-6ey-qualified">Phase 6EYの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6EY dynamic-stationarity diagnostic safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6EY R0 3/3 · R1 acquire/discard qualified</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>R0 normal exit · numeric pass · analyzer safe stop</strong></div>
+        <div><span>Lifecycle</span><strong>4/4 normal exit · CDB/residual 0</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
@@ -56,6 +56,19 @@
         <header class="entry-header"><p class="section-kicker">Latest demo</p><h2 id="latest-demo-title">最近の変更を、短い動画で見る。</h2><p>Phaseごとに変更点が最も分かりやすいシナリオを選び、実際に再生確認できた最新の1本だけをここから参照します。動画ファイルはPhase assetsに保持し、重複保存しません。</p></header>
         <figure class="capture-card wide"><img id="latest-demo-poster" src="assets/phasev3tl/candidate_performance.png" alt="最新デモを読み込み中" loading="eager"><figcaption><div><strong id="latest-demo-phase">Loading…</strong><span id="latest-demo-focus">verified manifestを確認しています</span></div><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>最新デモを再生</strong><small id="latest-demo-status">読み込み中</small></span></button></figcaption></figure>
       </div>
+    </section>
+
+    <section id="phase-6ey-qualified" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6EY qualification entry"><span class="phase-number compact">6EY</span><p><time datetime="2026-08-12">2026.08.12</time></p><span class="pill current">R0 3/3 · R1 bounded</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6EY · Approved qualification restart</p><h2>Flowの揺らぎを許容したまま3/3合格。<br>1回のreadback増分を分離。</h2><p>Phase 6EXと最初のPhase 6EY safe stopを凍結し、同じcontractを空のartifact rootから再実行しました。過去sampleは正式母集団へ再利用していません。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/flow_dynamic_stationarity_qualification.svg"><img src="assets/phase6/flow_dynamic_stationarity_qualification.svg" alt="Phase 6EY R0三回とR1 acquire discardのqualification結果" loading="lazy"></a><figcaption><div><strong>R0 3/3 · cross-run pass · R1 bounded</strong><span>49 samples each · close 1.932–4.843 s · 4/4 normal exit</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">R0 dynamic stationarity</p><h3>3 / 3 · cross-run pass</h3><p>active meanは<code>1357.408–1360.347</code>、Private Bytes傾きは<code>+2.988–+3.325 MB/s</code>。着火・縮小・再成長を許容し、メモリ傾向、block正規化、high-water復帰を組み合わせた全gateに合格しました。</p></section><section class="note"><p class="note-label">R1 public acquire</p><h3>+138.223 MiB immediate</h3><p>参照破棄直後は<code>+125.074 MiB</code>、次frameは<code>+111.578 MiB</code>。完全回収ではありませんが有界で、Kit peakは14 GiBより<code>208.563 MiB</code>低い値でした。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Qualified boundary</p><h3>block規模とreadback固有増分を分離。</h3><p>R1 active-block meanはR0平均比<code>-0.084%</code>なのに、観測平均Private Bytesは<code>+146.895 MiB</code>でした。単なるFlow規模差より、readback関連のbounded cache／resource lifetimeが有力です。ただしリークや完全回収を断定しません。</p><p>R0 stage closeは<code>2.253494–4.842660 s</code>、R1は<code>1.932446 s</code>。全4 processがnormal exitし、CDB、fatal、dump、upload、device lost/TDR、cleanup residualは0です。production、Point、Flow、CollisionProxy、wood authority、V3、既定値は不変です。</p><p>Release、Phase 0 RTX、Phase 3、focused <code>215/215</code>、標準suite <code>78/78</code>（8 process、291.2秒）が合格。内部メモリ診断だけなので動画とlatest demoは更新していません。</p><p><a href="assets/phase6/flow_dynamic_stationarity_qualification.json">machine report</a> · <a href="assets/phase6/flow_dynamic_stationarity_qualification.svg">比較SVG</a> · <a href="../design/phase6ey_flow_dynamic_stationarity.md">契約文書</a> · <a href="../design/r0_flow_shutdown_lifecycle.md">lifecycle記録</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>R0</strong><small>3 / 3 pass</small></p></div><div role="listitem"><span>✓</span><p><strong>Cross-run</strong><small>reproducible</small></p></div><div role="listitem"><span>✓</span><p><strong>R1</strong><small>one bounded acquire</small></p></div><div role="listitem"><span>✓</span><p><strong>Lifecycle</strong><small>4 / 4 normal</small></p></div><div role="listitem"><span>—</span><p><strong>R2</strong><small>not started</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Next independent boundary</p><h3>R2 fuel変換のみへ進めるが、今回は停止。</h3><p>次は1回のfuel変換だけを取得・handle lifetime・変換allocationへ分離できます。反復readback、他channel、field保存、production統合は引き続き未qualifiedです。Phase 6EUのnative SRW-lock ownerも未解決です。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6ey" class="section entry-section phase-six">

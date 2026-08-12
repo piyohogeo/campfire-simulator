@@ -1,0 +1,165 @@
+{
+  "schema": "campfire.phase6ey.dynamic-stationarity-qualification-publication.v1",
+  "phase": "phase6ey",
+  "status": "qualified",
+  "recorded_utc": "2026-08-12T10:41:00Z",
+  "history": {
+    "phase6ex_safe_stop_frozen": true,
+    "phase6ey_analyzer_safe_stop_frozen": true,
+    "prior_formal_population_reused": false,
+    "safe_stop_asset_unchanged": "flow_dynamic_stationarity_safe_stop.json"
+  },
+  "contract": {
+    "schema": "campfire.phase6ey.dynamic-stationarity-qualification-contract.v1",
+    "sha256": "58C9755FF8F3F8E67752E558F572CB1B997A14E1976E0241B586E1DE64CA4AB4",
+    "meaning_changed_after_runtime": false,
+    "claim_boundary": "finite-interval engineering non-divergence, not proof of physical steady state",
+    "active_block_range_is_a_hard_gate": false,
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184
+  },
+  "formal_root": "artifacts/phase6ey-dynamic-stationarity-2",
+  "raw_report_sha256": "35C88984FF9790E920B8E326EF970BC6F7556FCE131140C1885FD55D6443C63E",
+  "r0": {
+    "qualified_runs": 3,
+    "required_runs": 3,
+    "gate_pass": true,
+    "cross_run_gate_pass": true,
+    "runs": [
+      {
+        "run": 1,
+        "aligned_samples": 49,
+        "duration_seconds": 23.949832916259766,
+        "active_blocks": {"minimum": 1121, "mean": 1360.1632653061224, "median": 1367, "p95": 1536.1999999999998, "maximum": 1567},
+        "kit_private_slope_bytes_per_second": 3325233.9719437645,
+        "kit_private_projected_drift_fraction": 0.005727552369886795,
+        "private_per_block_projected_drift_fraction": 0.03796116286071049,
+        "kit_peak_private_bytes": 14697807872,
+        "terminal_kit_private_bytes": 13899354112,
+        "tree_peak_private_bytes": 14861381632,
+        "gpu_peak_dedicated_memory_mib": 6894,
+        "stage_close_seconds": 3.05147385597229,
+        "normal_exit": true
+      },
+      {
+        "run": 2,
+        "aligned_samples": 49,
+        "duration_seconds": 23.99302887916565,
+        "active_blocks": {"minimum": 1120, "mean": 1360.3469387755101, "median": 1372, "p95": 1515.1999999999998, "maximum": 1564},
+        "kit_private_slope_bytes_per_second": 3036146.5694559193,
+        "kit_private_projected_drift_fraction": 0.005293572028083113,
+        "private_per_block_projected_drift_fraction": 0.026581291631776142,
+        "kit_peak_private_bytes": 14536884224,
+        "terminal_kit_private_bytes": 13715095552,
+        "tree_peak_private_bytes": 14699646976,
+        "gpu_peak_dedicated_memory_mib": 6884,
+        "stage_close_seconds": 2.2534940242767334,
+        "normal_exit": true
+      },
+      {
+        "run": 3,
+        "aligned_samples": 49,
+        "duration_seconds": 23.953804969787598,
+        "active_blocks": {"minimum": 1168, "mean": 1357.408163265306, "median": 1362, "p95": 1514.6, "maximum": 1564},
+        "kit_private_slope_bytes_per_second": 2988120.4343645493,
+        "kit_private_projected_drift_fraction": 0.005191135896218003,
+        "private_per_block_projected_drift_fraction": 0.026592963761044412,
+        "kit_peak_private_bytes": 14574489600,
+        "terminal_kit_private_bytes": 13722845184,
+        "tree_peak_private_bytes": 14737416192,
+        "gpu_peak_dedicated_memory_mib": 6975,
+        "stage_close_seconds": 4.842659950256348,
+        "normal_exit": true
+      }
+    ],
+    "cross_run": {
+      "active_mean_range_fraction": 0.002161967390325206,
+      "active_maximum_range_fraction": 0.0019169329073482429,
+      "peak_private_range_fraction": 0.011019857603139832,
+      "terminal_private_range_fraction": 0.010650047826438377,
+      "private_per_block_mean_range_fraction": 0.010437972802415056,
+      "private_slope_range_bytes_per_second": 337113.53757921513,
+      "stage_close_range_seconds": 2.5891659259796143
+    }
+  },
+  "r1": {
+    "started": true,
+    "gate_pass": true,
+    "public_call_count": 1,
+    "conversion_count": 0,
+    "field_persistence_count": 0,
+    "aligned_samples": 49,
+    "active_block_mean": 1358.1632653061224,
+    "active_block_mean_difference_from_r0_percent": -0.0840765096237539,
+    "acquire_private_bytes": {
+      "before": 13610135552,
+      "after": 13755072512,
+      "immediate_delta_bytes": 144936960,
+      "immediate_delta_mib": 138.22265625,
+      "after_reference_release": 13741285376,
+      "reference_release_residual_bytes": 131149824,
+      "reference_release_residual_mib": 125.07421875,
+      "next_renderer_frame": 13727133696,
+      "next_frame_residual_bytes": 116998144,
+      "next_frame_residual_mib": 111.578125,
+      "recovered_by_next_frame_bytes": 27938816,
+      "recovered_by_next_frame_mib": 26.64453125
+    },
+    "dynamic_window": {
+      "kit_private_mean_delta_from_r0_mib": 146.8947172619046,
+      "private_bytes_per_active_block_delta_percent": 1.1688793155456567,
+      "kit_private_slope_bytes_per_second": 2220598.984855017,
+      "private_projected_drift_fraction": 0.0038060031124079957,
+      "private_high_water_recovered_or_flat": true
+    },
+    "kit_peak_private_bytes": 14813691904,
+    "kit_peak_delta_from_largest_r0_mib": 110.515625,
+    "kit_14_gib_margin_mib": 208.5625,
+    "terminal_kit_private_bytes": 13980000256,
+    "tree_peak_private_bytes": 14976356352,
+    "gpu_peak_dedicated_memory_mib": 6992,
+    "gpu_peak_delta_from_largest_r0_mib": 17,
+    "stage_close_seconds": 1.932446002960205,
+    "normal_exit": true,
+    "interpretation": "One acquisition produced a bounded, partly recovered increment. Similar active-block scale does not explain the immediate delta; the remaining allocation is a readback-associated cache/resource-lifetime candidate, not proof of a leak."
+  },
+  "safety": {
+    "all_required_markers_complete": true,
+    "normal_exit_processes": 4,
+    "cdb_invocations": 0,
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "device_lost_or_tdr_count": 0,
+    "cleanup_residual_count": 0,
+    "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "production_changed": false
+  },
+  "regression": {
+    "release_build": "pass",
+    "phase0_rtx": "pass",
+    "phase3": {
+      "status": "pass",
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "dry_authority_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+      "wet_authority_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+      "active_blocks_final": 242,
+      "active_blocks_peak": 373,
+      "peak_fuel_input": 1.0
+    },
+    "phase6ey_focused": "10/10 pass",
+    "phase6e_focused": "215/215 pass",
+    "standard_suite": "78/78 pass in 8 processes (291.2 seconds)",
+    "devlog_static_validation": "pass (411 references, 254 ids, 206 json, 172 svg, 2 zip)"
+  },
+  "decision": {
+    "r0_qualified": true,
+    "r1_qualified": true,
+    "r2_fuel_conversion_ready_for_separate_phase": true,
+    "r2_started": false,
+    "production_integration_started": false,
+    "remaining_risk": "The allocation did not return to the pre-acquire value within one frame or the finite observation; repeated-acquisition accumulation and the historical native shutdown lock remain unqualified."
+  }
+}

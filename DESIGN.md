@@ -1,5 +1,13 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6EY Flow dynamic-stationarity qualification restart
+
+Phase 6EXと最初のPhase 6EY safe stopを凍結したまま、修正済みanalyzerと同一contract（SHA-256 `58C9755FF8F3F8E67752E558F572CB1B997A14E1976E0241B586E1DE64CA4AB4`）を新しい空rootから実行した。過去sampleは再利用していない。readbackなしR0は3/3で、各49 aligned sample、active mean `1357.408–1360.347`、Kit Private Bytes slope `+2,988,120–+3,325,234 bytes/s`、stage close `2.253494–4.842660秒`、normal OS exitだった。cross-runもactive mean range `0.2162%`、peak Private Bytes range `1.1020%`、terminal range `1.0650%`で凍結gateに合格した。単純なactive-block rangeは合否に用いていない。
+
+条件成立後にpublic `get_latest_nanovdb_readback()`を1回だけ呼び、tupleとhandle参照を`del`した。同期Private Bytesは取得直後`+144,936,960 bytes`（`138.223 MiB`）、参照破棄直後`+131,149,824 bytes`（`125.074 MiB`）、次renderer frameで`+116,998,144 bytes`（`111.578 MiB`）だった。R1 active-block meanはR0平均比`-0.084%`である一方、観測区間の平均Private BytesはR0より`+146.895 MiB`、peakはR0最大より`+110.516 MiB`だったため、単なるblock規模差では説明しにくいreadback関連cache／resource lifetime候補である。ただし傾向は有界でhigh-water recovery/plateau gateに合格し、Kit peak `14,813,691,904 bytes`は14 GiB上限より`208.563 MiB`低く、stage close `1.932446秒`、normal exit、CDB/fatal/dump/upload/device-lost/TDR/residual 0だった。1 frameまたは有限観測内にpre-acquire値へ完全回復したとは扱わない。
+
+したがってR0 dynamic stationarityと単発R1 acquire/discardはqualified、次の独立R2「fuel変換のみ」へ進める状態とするが、R2は未開始である。反復取得で残留が累積しないこと、field変換、production統合、Phase 6EUのnative SRW-lock ownerは未確認。Release build、Phase 0 RTX、Phase 3、focused `215/215`、標準suite `78/78`（8 process、291.2秒）が合格し、Phase 3はmass balance 0、active blocks final/peak `242/373`、peak fuel 1.0だった。production SHA-256は`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`で不変。内部診断のため動画とlatest demoは変更しない。詳細は`docs/design/phase6ey_flow_dynamic_stationarity.md`と`docs/design/r0_flow_shutdown_lifecycle.md`。
+
 # Phase 6EY Flow dynamic-stationarity qualification safe stop
 
 Phase 6EXの24.382%対15% safe stopを凍結したまま、新contract `campfire.phase6ey.dynamic-stationarity-qualification-contract.v1`（SHA-256 `58C9755FF8F3F8E67752E558F572CB1B997A14E1976E0241B586E1DE64CA4AB4`）をruntime前に定義した。旧range gateを遡及緩和せず、24秒・4 window・aligned 40 sample以上でactive block傾向、window復帰、new high、増減、Kit Private Bytes、block当たりメモリ、high-water後の回復を組み合わせる。これは有限区間のengineering non-divergenceであり、物理的定常状態の証明ではない。synthetic 8条件は周期・一時低下後回復・bounded連動メモリを通し、線形／加速発散・memory-only増加・戻らないcacheを落とした。

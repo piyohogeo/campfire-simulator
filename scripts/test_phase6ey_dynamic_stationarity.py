@@ -111,6 +111,26 @@ class Phase6EyDynamicStationarity(unittest.TestCase):
         self.assertFalse(report["safe_stop"]["r1_started"])
         self.assertFalse(report["production"]["changed"])
 
+    def test_fresh_publication_keeps_history_and_qualifies_only_r1(self):
+        report = json.loads(
+            (ROOT / "docs/devlog/assets/phase6/flow_dynamic_stationarity_qualification.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual("qualified", report["status"])
+        self.assertTrue(report["history"]["phase6ex_safe_stop_frozen"])
+        self.assertTrue(report["history"]["phase6ey_analyzer_safe_stop_frozen"])
+        self.assertFalse(report["history"]["prior_formal_population_reused"])
+        self.assertEqual(3, report["r0"]["qualified_runs"])
+        self.assertTrue(report["r0"]["cross_run_gate_pass"])
+        self.assertEqual(1, report["r1"]["public_call_count"])
+        self.assertEqual(0, report["r1"]["conversion_count"])
+        self.assertGreater(report["r1"]["acquire_private_bytes"]["next_frame_residual_bytes"], 0)
+        self.assertLess(report["r1"]["kit_peak_private_bytes"], 14 * 1024**3)
+        self.assertTrue(report["decision"]["r2_fuel_conversion_ready_for_separate_phase"])
+        self.assertFalse(report["decision"]["r2_started"])
+        self.assertFalse(report["safety"]["production_changed"])
+
 
 if __name__ == "__main__":
     unittest.main()
