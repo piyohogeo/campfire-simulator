@@ -1,5 +1,11 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FA Flow functional-liveness contract
+
+Phase 6EY and Phase 6EZ through `0066ab3` remain frozen. Read-only comparison shows that Phase 6EZ C1 already reported 24 active blocks at frame 30, before its frame-60 public readback and `numpy.asarray(fuel)` call. Its timeline and sample timestamps continued to advance, and its returned public buffers were substantially smaller than C0. The initial collapse therefore cannot have been caused directly by `numpy.asarray` or later alias release; a real smaller Flow allocation is more likely than a repeated stale integer, while the exact ingestion/lifecycle trigger remains unconfirmed before the new runtime diagnostic.
+
+The new production-neutral Phase 6FA contract fixes a D0 no-readback control, D1 one readback with the C1 release order, and D2 adding exactly one `numpy.asarray(fuel)`. It records every frame's active-block value with timeline, stage, and Flow identity; D1/D2 additionally decode one public fuel buffer through the public conversion/save boundary, sample only the active emitter positions, and delete the temporary NanoVDB. No private Flow occupancy mask is claimed. Constant occupancy is evaluated separately from dynamic occupancy, but it still requires fresh telemetry, advancing timeline, positive 1,344-point source publication, revision 1, unchanged stage/Flow identity, a meaningful public field, at least 128 active blocks for this fixed four-log fixture, bounded memory, complete lifecycle, and normal OS exit. Thus the historical 24-block trace is not automatically accepted. Details are in `docs/design/phase6fa_flow_functional_liveness.md`.
+
 # Phase 6EZ corrected restart safe stop
 
 The corrected restart passed C0 formally, then stopped fail-closed at C1's unchanged dynamic-stationarity gate after a normal OS exit; it did not retry or reclassify C1. Final regression passed the Release build, Phase 0 RTX, Phase 3, 232/232 focused Phase 6 contracts, the eight-process 78/78 standard suite in 292.5 seconds, and static devlog validation. Phase 3 retained both authority hashes, zero dry/wet mass-balance error, active blocks final/peak 244/344, and peak fuel 1.0. The production app SHA-256 remained `94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`; Kit/CDB/`nvidia-smi` residual counts were zero.

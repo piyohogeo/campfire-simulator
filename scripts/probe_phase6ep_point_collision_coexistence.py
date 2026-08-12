@@ -113,6 +113,8 @@ def _settings():
         "stability_active_block_sample_seconds": max(
             0.05, float(settings.get_as_float("/phase6ep/stabilityActiveBlockSampleSeconds")) or 0.5
         ),
+        "flow_liveness_audit": bool(settings.get_as_bool("/phase6ep/flowLivenessAudit")),
+        "fuel_liveness_decode": bool(settings.get_as_bool("/phase6ep/fuelLivenessDecode")),
     }
 
 
@@ -204,6 +206,52 @@ def _bounded_object_metadata(value):
         metadata["c_contiguous"] = None
         metadata["f_contiguous"] = None
     return metadata
+
+
+def _fuel_liveness_decode(flow, volume, source, positions, path):
+    """Decode one public fuel buffer and sample bounded emitter positions.
+
+    The temporary NanoVDB file is deleted before return.  This is diagnostic
+    evidence that the public field contains meaningful scalar values, not an
+    assertion about a private Flow occupancy mask.
+    """
+    path.unlink(missing_ok=True)
+    try:
+        grid_data = flow.buffer_to_volume(source)
+        parameters = omni.volume.SaveVolumeParameters()
+        parameters.flags = omni.volume.kNanoVDBCodecNone
+        if not volume.save_volume(grid_data, str(path), parameters):
+            raise RuntimeError(f"Unable to save fuel liveness decode: {path}")
+        deadline = time.monotonic() + 5.0
+        while (not path.is_file() or path.stat().st_size == 0) and time.monotonic() < deadline:
+            time.sleep(0.01)
+        if not path.is_file() or path.stat().st_size == 0:
+            raise RuntimeError("fuel liveness NanoVDB did not become durable")
+        handle = nanovdb.io.readGrid(str(path))
+        grid = handle.floatGrid()
+        accessor = grid.getAccessor()
+        values = []
+        for position in positions:
+            index = grid.applyInverseMap(nanovdb.math.Vec3d(*(float(value) for value in position)))
+            coordinate = tuple(int(round(_component(index, axis))) for axis in range(3))
+            values.append(float(accessor.getValue(*coordinate)))
+        voxel = grid.voxelSize()
+        nonzero = sum(abs(value) > 1.0e-6 for value in values)
+        return {
+            "public_decode": "flow.buffer_to_volume + omni.volume.save_volume + bundled nanovdb accessor",
+            "private_api_used": False,
+            "flow_occupancy_mask_claimed": False,
+            "active_voxel_count": int(grid.activeVoxelCount()),
+            "voxel_size": [_component(voxel, axis) for axis in range(3)],
+            "emitter_position_sample_count": len(values),
+            "emitter_position_nonzero_count_1e_6": int(nonzero),
+            "emitter_position_minimum": min(values) if values else None,
+            "emitter_position_mean": float(np.mean(values, dtype=np.float64)) if values else None,
+            "emitter_position_maximum": max(values) if values else None,
+            "temporary_file_bytes": int(path.stat().st_size),
+        }
+    finally:
+        path.unlink(missing_ok=True)
 
 
 def _append_bounded_jsonl(path, payload):
@@ -348,7 +396,7 @@ def _stats_attributes(prim):
     return values
 
 
-def _readback_boundary(flow, volume, arguments, frame, output):
+def _readback_boundary(flow, volume, arguments, frame, output, liveness_positions=None):
     """Exercise exactly one declared public-readback boundary and return only bounded metadata."""
     marker_path = arguments["resource_marker_path"]
     synchronous = arguments["synchronous_memory_markers"]
@@ -382,6 +430,19 @@ def _readback_boundary(flow, volume, arguments, frame, output):
     # lifetime marker.  Historical modes retain their original semantics.
     del value
 
+    if arguments["fuel_liveness_decode"]:
+        if liveness_positions is None or len(liveness_positions) == 0:
+            raise RuntimeError("fuel liveness decode requires active emitter positions")
+        fuel_index = CHANNELS.index("fuel")
+        liveness_source = raw[fuel_index]
+        mark("fuel_liveness_decode_before", source_identity=int(id(liveness_source)))
+        result["fuel_liveness"] = _fuel_liveness_decode(
+            flow, volume, liveness_source, liveness_positions,
+            output.parent / f"fuel_liveness_{frame}.nvdb",
+        )
+        mark("fuel_liveness_decode_after", **result["fuel_liveness"])
+        del liveness_source
+
     exact_release_mode = mode in ("acquire_discard_release", "fuel_convert_release")
     if exact_release_mode:
         result["operation_counts"] = {
@@ -390,6 +451,7 @@ def _readback_boundary(flow, volume, arguments, frame, output):
             "numpy_asarray_calls": 0,
             "explicit_copy_function_calls": 0,
             "field_persistence_calls": 0,
+            "temporary_fuel_liveness_decode_calls": int(arguments["fuel_liveness_decode"]),
         }
         if mode == "acquire_discard_release":
             del raw
@@ -573,6 +635,7 @@ async def _run():
         "status": "running", "lifecycle_marker": "process_entry",
         "lifecycle_history": [], "arguments": {k: str(v) if isinstance(v, Path) else v for k, v in arguments.items()},
         "samples": [], "captures": [],
+        "flow_liveness_history": [],
         "completion_contract": {
             "results_saved": False, "timeline_stopped": False,
             "stage_closed": False, "renderer_drained": False,
@@ -665,8 +728,22 @@ async def _run():
         pending_readback_frame = None
         stability_started = False
         stability_samples = []
+        initial_stage_identity = str(stage.GetRootLayer().identifier)
+        initial_flow_identity = int(id(flow))
+        liveness_positions = plan["positions"][plan["active"]]
         for frame in range(1, final_frame + 1):
             await app.next_update_async()
+            if arguments["flow_liveness_audit"]:
+                current_active = int(flow.get_active_block_count())
+                report["flow_liveness_history"].append({
+                    "frame": int(frame),
+                    "perf_counter_ns": int(time.perf_counter_ns()),
+                    "timeline_playing": bool(timeline.is_playing()),
+                    "timeline_time": float(timeline.get_current_time()),
+                    "active_blocks": current_active,
+                    "stage_identity": str(context.get_stage().GetRootLayer().identifier) if context.get_stage() else None,
+                    "flow_identity": int(id(flow)),
+                })
             if (
                 arguments["stability_observation_extra_seconds"] > 0.0
                 and frame == arguments["stability_observation_start_frame"]
@@ -705,7 +782,9 @@ async def _run():
             if arguments["readback_mode"] != "legacy":
                 sample = {"frame": frame, "active_blocks": int(flow.get_active_block_count()), "channels": {}}
                 if arguments["readback_mode"] != "none" and frame in arguments["readback_frames"]:
-                    boundary, weak_references = _readback_boundary(flow, volume, arguments, frame, output)
+                    boundary, weak_references = _readback_boundary(
+                        flow, volume, arguments, frame, output, liveness_positions=liveness_positions
+                    )
                     alive_after_scope = sum(reference is not None and reference() is not None for reference in weak_references)
                     boundary["weak_reference_supported_count"] = sum(reference is not None for reference in weak_references)
                     boundary["weak_reference_alive_after_scope_count"] = alive_after_scope
@@ -836,6 +915,37 @@ async def _run():
             "smoke": float(sum(emitter.GetAttribute("pointSmokes").Get())),
         }
         report["revision"] = int(emitter.GetAttribute("campfire:residentRevision").Get())
+        report["flow_liveness_audit"] = {
+            "enabled": bool(arguments["flow_liveness_audit"]),
+            "initial_stage_identity": initial_stage_identity,
+            "final_stage_identity": str(context.get_stage().GetRootLayer().identifier) if context.get_stage() else None,
+            "initial_flow_identity": initial_flow_identity,
+            "final_flow_identity": int(id(flow)),
+            "history_sample_count": len(report["flow_liveness_history"]),
+            "first_nonzero_frame": next(
+                (item["frame"] for item in report["flow_liveness_history"] if item["active_blocks"] > 0), None
+            ),
+            "first_24_frame": next(
+                (item["frame"] for item in report["flow_liveness_history"] if item["active_blocks"] == 24), None
+            ),
+            "timeline_advanced": bool(
+                report["flow_liveness_history"]
+                and len({item["timeline_time"] for item in report["flow_liveness_history"]}) > 1
+            ),
+            "telemetry_fresh": bool(
+                report["flow_liveness_history"]
+                and all(
+                    right["perf_counter_ns"] > left["perf_counter_ns"] and right["frame"] > left["frame"]
+                    for left, right in zip(report["flow_liveness_history"], report["flow_liveness_history"][1:])
+                )
+            ),
+            "stage_identity_unchanged": all(
+                item["stage_identity"] == initial_stage_identity for item in report["flow_liveness_history"]
+            ),
+            "flow_identity_unchanged": all(
+                item["flow_identity"] == initial_flow_identity for item in report["flow_liveness_history"]
+            ),
+        }
         report["status"] = "ok"
         report["completion_contract"]["results_saved"] = True
         report["lifecycle_marker"] = "measurement_complete"

@@ -6,7 +6,7 @@ param(
     [ValidateSet("true", "false")][string]$Filtering = "true",
     [ValidateSet("true", "false")][string]$Collision = "true",
     [ValidateSet("strict_all", "allow_self_support", "allow_self_center", "allow_other_support")][string]$Policy = "strict_all",
-    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev", "phase6ew", "phase6ex", "phase6ey", "phase6ez")][string]$ReportPhase = "phase6ep",
+    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev", "phase6ew", "phase6ex", "phase6ey", "phase6ez", "phase6fa")][string]$ReportPhase = "phase6ep",
     [string]$SampleFrames = "60,120,180,200",
     [string]$ReadbackChannels = "temperature,fuel,burn,smoke,velocity",
     [ValidateSet("legacy", "none", "acquire_discard", "acquire_discard_release", "fuel_convert", "fuel_convert_release", "fuel_scalar", "fuel_jsonl", "fuel_spatial")][string]$ReadbackMode = "legacy",
@@ -33,6 +33,8 @@ param(
     [int]$StabilityObservationStartFrame = 0,
     [double]$StabilityObservationExtraSeconds = 0.0,
     [double]$StabilityActiveBlockSampleSeconds = 0.5,
+    [ValidateSet("true", "false")][string]$FlowLivenessAudit = "false",
+    [ValidateSet("true", "false")][string]$FuelLivenessDecode = "false",
     [int]$AbsoluteTimeoutSeconds = 330
 )
 
@@ -111,6 +113,8 @@ $arguments = @(
     "--/phase6ep/stabilityObservationStartFrame=$StabilityObservationStartFrame",
     "--/phase6ep/stabilityObservationExtraSeconds=$StabilityObservationExtraSeconds",
     "--/phase6ep/stabilityActiveBlockSampleSeconds=$StabilityActiveBlockSampleSeconds",
+    "--/phase6ep/flowLivenessAudit=$FlowLivenessAudit",
+    "--/phase6ep/fuelLivenessDecode=$FuelLivenessDecode",
     "--ext-folder", (Join-Path $PSScriptRoot "phasev3tg_extension"),
     "--enable", "omni.campfire.phasev3tg_shutdown",
     "--/phasev3tg/markers=$extensionMarkerPath",
@@ -194,6 +198,8 @@ $evidence = [ordered]@{
     stability_observation_start_frame = $StabilityObservationStartFrame
     stability_observation_extra_seconds = $StabilityObservationExtraSeconds
     stability_active_block_sample_seconds = $StabilityActiveBlockSampleSeconds
+    flow_liveness_audit = ($FlowLivenessAudit -eq "true")
+    fuel_liveness_decode = ($FuelLivenessDecode -eq "true")
     extension_marker_path = $extensionMarkerPath
     runner_marker_path = $runnerMarkerPath
     spatial_collectors_enabled = ($SpatialCollectorsEnabled -eq "true")
