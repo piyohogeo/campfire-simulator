@@ -1,0 +1,163 @@
+{
+  "schema": "campfire.phase6fg.paired-single-readback-contract.v1",
+  "phase": "phase6fg",
+  "declared_before_runtime": true,
+  "safe_commit": "3da4958",
+  "history_frozen": {
+    "phase6fd": "same-sample memory-response failure retained",
+    "phase6fe": "8 MiB/s whole-window slope failure retained",
+    "phase6ff": "three consecutive rolling-slope warning-threshold exceedances retained as its formal failure",
+    "prior_population_reuse": false,
+    "historical_reclassification": false
+  },
+  "purpose": "separate absolute safety gates from waveform telemetry and qualify one readback/fuel alias by balanced paired controls",
+  "formal_decision_layers": {
+    "hard_gate": [
+      "absolute resource ceilings and system headroom",
+      "diagnostic process boundedness and exact cleanup",
+      "fatal/access-violation/dump/upload absence",
+      "complete stage-close/shutdown lifecycle and normal OS exit",
+      "representative startup and exact operation contract"
+    ],
+    "telemetry_warning_only": [
+      "whole-window, last-half, final-window and rolling slopes",
+      "rolling threshold exceedance count",
+      "peak, terminal residual, high-water recovery and projected drift",
+      "Private Bytes per active block, Working Set, GPU dedicated memory",
+      "active-block correlation and lag"
+    ],
+    "paired_operation_evidence": "adjacent synchronous markers are primary; process peak and terminal comparisons are context only"
+  },
+  "balanced_order": [
+    ["A_control", "B_readback", "C_fuel_alias"],
+    ["B_readback", "C_fuel_alias", "A_control"],
+    ["C_fuel_alias", "A_control", "B_readback"]
+  ],
+  "runs_per_condition": 3,
+  "conditions": {
+    "A_control": {"readback_mode": "none", "public_readback_calls": 0, "numpy_asarray_calls": 0},
+    "B_readback": {"readback_mode": "acquire_discard_release", "public_readback_calls": 1, "numpy_asarray_calls": 0},
+    "C_fuel_alias": {"readback_mode": "fuel_convert_release", "public_readback_calls": 1, "numpy_asarray_calls": 1}
+  },
+  "scenario": "production_four",
+  "geometry_variant": "phase6er_corrected",
+  "point_policy": "allow_self_center",
+  "point_offset_m": -0.0125,
+  "support_radius_m": 0.05,
+  "collision_enabled": true,
+  "point_filtering_enabled": true,
+  "source_scales": {"fuel": 1.0, "temperature": 1.0, "smoke": 1.0},
+  "expected_stage": {
+    "normalized_stage_sha256": "790FD078D5790C7C4A51FED7E577C3CE49E72F230AA59ED2CFFF028B5A06671B",
+    "payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389"
+  },
+  "startup": {
+    "classification_frame": 60,
+    "final_frame": 120,
+    "representative_active_blocks": 128,
+    "small_field_minimum_blocks": 20,
+    "small_field_maximum_blocks": 32,
+    "expected_point_revision": 1,
+    "expected_total_point_count": 1440,
+    "expected_active_point_count": 1344,
+    "expected_source_sums": {"fuel": 1075.2000160217285, "temperature": 2688.0, "smoke": 107.51999759674072},
+    "source_sum_absolute_tolerance": 0.000001,
+    "flow_acquire_position": "before_updates",
+    "stopped_update_count": 12,
+    "extra_update_before_play_count": 0,
+    "automatic_retry": false,
+    "automatic_recovery": false,
+    "fixed_sleep": false
+  },
+  "sample_frames": [30, 60, 90, 120, 150, 180, 200, 240, 280, 320],
+  "readback_frame": 120,
+  "observation": {
+    "start_frame": 240,
+    "extra_running_flow_wall_seconds": 24.0,
+    "active_block_sample_seconds": 0.5,
+    "outer_resource_sample_seconds": 0.2,
+    "minimum_aligned_active_resource_samples": 40,
+    "target_aligned_active_resource_samples": 48,
+    "minimum_outer_resource_samples": 100,
+    "target_outer_resource_samples": 120,
+    "minimum_observation_seconds": 20.0,
+    "maximum_observation_wall_seconds": 36.0,
+    "timeline_and_flow_remain_running": true
+  },
+  "waveform_telemetry": {
+    "formal_gate": false,
+    "reference_only_window_count": 6,
+    "reference_only_rolling_window_seconds": 8.0,
+    "reference_only_rolling_stride_seconds": 4.0,
+    "reference_only_slope_bytes_per_second": 8388608,
+    "version_context_required": ["hardware", "driver", "Kit", "Flow", "fixture", "active_block_range", "cache_or_shader_log_evidence"]
+  },
+  "boundedness": {
+    "window_count": 6,
+    "minimum_samples": 40,
+    "minimum_observation_seconds": 20.0,
+    "minimum_samples_per_equal_window": 5,
+    "rolling_window_seconds": 8.0,
+    "rolling_stride_seconds": 4.0,
+    "minimum_samples_per_rolling_window": 5,
+    "minimum_rolling_windows": 4,
+    "diagnostic_local_slope_bytes_per_second": 8388608,
+    "maximum_consecutive_rolling_windows_above_diagnostic_slope": 0,
+    "maximum_transient_growth_bytes": 1,
+    "material_high_water_recovery_bytes": 1,
+    "maximum_high_water_recovery_seconds": 1.0,
+    "maximum_last_half_private_slope_bytes_per_second": 1,
+    "maximum_final_window_private_slope_bytes_per_second": 1,
+    "maximum_window_floor_slope_bytes_per_second": 1,
+    "maximum_projected_private_drift_fraction": 0.000001,
+    "maximum_normalized_projected_drift_fraction": 0.000001,
+    "maximum_terminal_residual_bytes": 1
+  },
+  "operation_gates": {
+    "required_field_persistence_calls": 0,
+    "maximum_fuel_logical_bytes": 536870912,
+    "weak_reference_residual_required": 0,
+    "c_fuel_alias_allocation_classification": "same_object_zero_copy_alias",
+    "forced_gc_calls": 0,
+    "private_release_api_calls": 0
+  },
+  "paired_comparison": {
+    "active_block_comparability_ratio_warning": 1.25,
+    "process_peak_and_terminal_are_primary_operation_evidence": false,
+    "adjacent_synchronous_markers_are_primary_operation_evidence": true,
+    "waveform_metrics_are_formal_gate": false
+  },
+  "repetition_candidate": {
+    "runtime_in_this_phase": false,
+    "synthetic_settled_baseline_count": 6,
+    "staircase_minimum_increment_bytes": 33554432,
+    "staircase_minimum_consecutive_increases": 3,
+    "first_cache_then_plateau_maximum_tail_range_bytes": 16777216
+  },
+  "lifecycle": {
+    "renderer_pre_close_drain_updates": 8,
+    "renderer_post_close_drain_updates": 4,
+    "timeline_stop_confirmation_updates": 12,
+    "stage_close_timeout_seconds": 180,
+    "inner_absolute_timeout_seconds": 600,
+    "outer_condition_timeout_seconds": 960,
+    "bounded_cdb_only_after_timeout": true
+  },
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "resource_sampling_seconds": 0.2,
+    "gpu_sampling_ms": 1000,
+    "resource_ceiling_change": false,
+    "automatic_upload": false
+  },
+  "excluded": [
+    "repeated readback", "multiple-frame field retention", "other-channel conversion",
+    "field aggregation", "field-body persistence", "private release API", "forced GC",
+    "production integration", "resource ceiling increase", "video"
+  ]
+}
