@@ -20,7 +20,7 @@ Copy-Item -LiteralPath $contractPath -Destination (Join-Path $OutputRoot "frozen
 Copy-Item -LiteralPath $hashPath -Destination (Join-Path $OutputRoot "frozen_contract.sha256")
 $productionApp = Join-Path $repo "_build\windows-x86_64\release\apps\campfire.simulator.kit"
 $productionBefore = (Get-FileHash -Algorithm SHA256 -LiteralPath $productionApp).Hash
-$guard = Join-Path $PSScriptRoot "phase6eg_resource_guard.py"
+$guard = Join-Path $PSScriptRoot "phase6fu_resource_guard.py"
 $caseRunner = Join-Path $PSScriptRoot "run_phase6fo_supply_case.ps1"
 $analyzer = Join-Path $PSScriptRoot "analyze_phase6ft_memory_ceiling_qualification.py"
 $powershell = (Get-Command powershell.exe).Source

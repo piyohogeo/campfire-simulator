@@ -19,12 +19,6 @@ from pathlib import Path
 
 import psutil
 
-from phase6fu_process_identity import (
-    exact_cleanup,
-    make_identity,
-    wait_for_cleanup_suppression,
-)
-
 
 MIB = 1024 * 1024
 DIAGNOSTIC_NAMES = {
@@ -56,10 +50,6 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--diagnostic-marker-path", type=Path)
     parser.add_argument("--gpu-csv", type=Path)
     parser.add_argument("--gpu-sample-ms", type=int, default=1000)
-    parser.add_argument("--attempt-id", default="unspecified")
-    parser.add_argument("--cleanup-suppression-lock", type=Path)
-    parser.add_argument("--cleanup-suppression-deadline-seconds", type=float, default=90.0)
-    parser.add_argument("--cleanup-marker-path", type=Path)
     parser.add_argument("command", nargs=argparse.REMAINDER)
     return parser
 
@@ -195,6 +185,70 @@ def _append_cpu_deltas(
                 pass
 
 
+def _terminate_tree(root: psutil.Process) -> None:
+    try:
+        descendants = root.children(recursive=True)
+    except (psutil.AccessDenied, psutil.NoSuchProcess):
+        descendants = []
+    for process in reversed(descendants):
+        try:
+            process.kill()
+        except (psutil.AccessDenied, psutil.NoSuchProcess):
+            pass
+    try:
+        root.kill()
+    except (psutil.AccessDenied, psutil.NoSuchProcess):
+        pass
+    psutil.wait_procs(descendants + [root], timeout=10)
+
+
+def _matching_observed_process(record: dict) -> psutil.Process | None:
+    try:
+        process = psutil.Process(int(record["pid"]))
+        if abs(process.create_time() - float(record["create_time_utc_epoch"])) > 0.01:
+            return None
+        if os.path.normcase(process.exe()) != os.path.normcase(str(record["path"])):
+            return None
+        return process
+    except (psutil.AccessDenied, psutil.NoSuchProcess, psutil.ZombieProcess, OSError):
+        return None
+
+
+def _cleanup_observed_processes(observed: dict[tuple[int, float], dict], root_pid: int) -> dict:
+    alive = []
+    for record in observed.values():
+        process = _matching_observed_process(record)
+        if process is not None:
+            alive.append(process)
+    _, survivors = psutil.wait_procs(alive, timeout=2) if alive else ([], [])
+    killed = []
+    for process in survivors:
+        try:
+            process.kill()
+            killed.append(process.pid)
+        except (psutil.AccessDenied, psutil.NoSuchProcess):
+            pass
+    if survivors:
+        psutil.wait_procs(survivors, timeout=10)
+    remaining = []
+    for record in observed.values():
+        process = _matching_observed_process(record)
+        if process is not None:
+            remaining.append({"pid": process.pid, "path": record["path"], "create_time_utc_epoch": record["create_time_utc_epoch"]})
+    observed_before_cleanup = [
+        {"pid": process.pid, "path": next(record["path"] for record in observed.values() if record["pid"] == process.pid)}
+        for process in alive
+    ]
+    return {
+        "root_pid": root_pid,
+        "observed_alive_before_cleanup": observed_before_cleanup,
+        "cleanup_required": bool(alive),
+        "killed_pids": killed,
+        "remaining": remaining,
+        "all_observed_absent": not remaining,
+    }
+
+
 def _write_json(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".partial")
@@ -264,14 +318,7 @@ def run(arguments: argparse.Namespace) -> int:
         creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
         popen = subprocess.Popen(command, stdout=stdout, stderr=stderr, creationflags=creationflags)
         root = psutil.Process(popen.pid)
-        root_identity = make_identity(
-            pid=root.pid,
-            create_time_utc_epoch=root.create_time(),
-            path=root.exe(),
-            parent_pid=root.ppid(),
-            role="runner",
-            attempt_id=arguments.attempt_id,
-        )
+        root_identity = {"pid": root.pid, "create_time_utc_epoch": root.create_time(), "path": root.exe()}
         while popen.poll() is None:
             timestamp = time.time()
             rows = _tree_rows(root, timestamp, arguments.cpu_telemetry)
@@ -284,10 +331,7 @@ def run(arguments: argparse.Namespace) -> int:
                     "pid": row["pid"],
                     "create_time_utc_epoch": row["create_time_utc_epoch"],
                     "path": row["path"],
-                    "parent_pid": row["parent_pid"],
-                    "observed_at_utc_epoch": timestamp,
                     "role": row["role"],
-                    "root_attempt_id": arguments.attempt_id,
                 }
             if arguments.cpu_telemetry:
                 _append_cpu_deltas(
@@ -365,19 +409,23 @@ def run(arguments: argparse.Namespace) -> int:
             elif timestamp - started >= arguments.timeout_seconds:
                 stop_reason = "timeout"
             if stop_reason:
+                _terminate_tree(root)
                 break
             time.sleep(arguments.sample_seconds)
-        if popen.poll() is not None:
+        try:
             exit_code = popen.wait(timeout=10)
-        else:
-            exit_code = None
+        except subprocess.TimeoutExpired:
+            stop_reason = stop_reason or "exit_wait_timeout"
+            _terminate_tree(root)
+            exit_code = popen.poll()
 
     if gpu_popen is not None and gpu_process is not None:
-        # A live guard-owned GPU helper is included in observed_processes and
-        # follows the same exact identity cleanup below.  Do not bypass that
-        # contract with a PID/process-object-only kill here.
-        if gpu_popen.poll() is not None:
+        if gpu_popen.poll() is None:
+            _terminate_tree(gpu_process)
+        try:
             gpu_popen.wait(timeout=10)
+        except subprocess.TimeoutExpired:
+            _terminate_tree(gpu_process)
     if gpu_stdout is not None:
         gpu_stdout.close()
     if gpu_stderr is not None:
@@ -385,33 +433,9 @@ def run(arguments: argparse.Namespace) -> int:
     if arguments.gpu_csv is not None:
         gpu_status = "completed" if arguments.gpu_csv.is_file() and arguments.gpu_csv.stat().st_size > 0 else "missing_output"
 
-    suppression = wait_for_cleanup_suppression(
-        arguments.cleanup_suppression_lock,
-        deadline_seconds=arguments.cleanup_suppression_deadline_seconds,
-        marker_path=arguments.cleanup_marker_path,
-    )
-    # Refresh the owned tree immediately before cleanup.  These identities are
-    # authority-bearing only because they descend from the exact root identity
-    # (or are helpers started directly by this guard), not because their names
-    # happen to match a broad process pattern.
-    try:
-        refresh_rows = _tree_rows(psutil.Process(root_identity["pid"]), time.time(), arguments.cpu_telemetry)
-    except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess, OSError):
-        refresh_rows = []
-    for row in refresh_rows:
-        observed_processes[(row["pid"], row["create_time_utc_epoch"])] = make_identity(
-            pid=row["pid"], create_time_utc_epoch=row["create_time_utc_epoch"], path=row["path"],
-            parent_pid=row["parent_pid"], role=row["role"], attempt_id=arguments.attempt_id,
-            observed_at_utc_epoch=time.time(),
-        )
-    observed_cleanup = exact_cleanup(
-        observed_processes.values(),
-        marker_path=arguments.cleanup_marker_path,
-        retry_count=4,
-        retry_seconds=0.25,
-    )
-    process_absent = bool(observed_cleanup["all_matching_absent"])
-    if observed_cleanup["killed"] and stop_reason is None:
+    observed_cleanup = _cleanup_observed_processes(observed_processes, root_identity["pid"])
+    process_absent = bool(observed_cleanup["all_observed_absent"])
+    if observed_cleanup["cleanup_required"] and stop_reason is None:
         stop_reason = "observed_descendant_residual"
     summary = {
         "schema": "campfire.phase6eg.resource-guard.v1",
@@ -422,7 +446,6 @@ def run(arguments: argparse.Namespace) -> int:
         "stop_reason": stop_reason,
         "process_absent": process_absent,
         "observed_process_cleanup": observed_cleanup,
-        "cleanup_suppression": suppression,
         "duration_seconds": time.time() - started,
         "sample_count": sample_count,
         "peaks": peaks,
@@ -459,12 +482,6 @@ def run(arguments: argparse.Namespace) -> int:
         "stderr_path": str(arguments.stderr.resolve()),
         "deduplication_key": ["pid", "create_time_utc_epoch"],
         "large_output_buffered_in_parent": False,
-        "identity_state_contract": [
-            "alive_identity_match", "alive_identity_mismatch", "confirmed_exited",
-            "query_failed_unknown", "access_denied_unknown",
-            "creation_time_unavailable_unknown", "path_unavailable_unknown",
-        ],
-        "cleanup_authority": "exact observed pid+creation-time+absolute-path identities for this attempt only",
     }
     _write_json(arguments.summary, summary)
     return 0 if summary["status"] == "ok" else 2

@@ -19,7 +19,7 @@ from scripts.phase6fu_process_identity import (
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "scripts"
-GUARD = (SCRIPTS / "phase6eg_resource_guard.py").read_text(encoding="utf-8")
+GUARD = (SCRIPTS / "phase6fu_resource_guard.py").read_text(encoding="utf-8")
 POLICY = (SCRIPTS / "kit_shutdown_policy.ps1").read_text(encoding="utf-8")
 COMMON = (SCRIPTS / "phase6ea_diagnostic_common.ps1").read_text(encoding="utf-8")
 CONTRACT = SCRIPTS / "phase6fu_diagnostic_cleanup_contract.json"
@@ -50,7 +50,7 @@ class Phase6FuDiagnosticCleanup(unittest.TestCase):
         self.assertIn("--cleanup-suppression-lock", GUARD)
         self.assertIn("wait_for_cleanup_suppression", GUARD)
         self.assertIn("exact_cleanup", GUARD)
-        self.assertNotIn("observed_cleanup = _cleanup_observed_processes", GUARD)
+        self.assertIn("legacy._cleanup_observed_processes = cleanup_observed_exact", GUARD)
 
     def test_powershell_state_model_and_dual_query(self):
         for state in (

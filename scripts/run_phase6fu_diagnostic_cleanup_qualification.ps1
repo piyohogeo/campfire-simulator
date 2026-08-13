@@ -40,7 +40,7 @@ if (-not $identityPass) { throw "Phase 6FU identity fixture gate failed" }
 $race = Join-Path $output "guard-race"
 New-Item -ItemType Directory -Path $race | Out-Null
 $lock = Join-Path $race "diagnostic.ownership.json"
-$guard = Join-Path $PSScriptRoot "phase6eg_resource_guard.py"
+$guard = Join-Path $PSScriptRoot "phase6fu_resource_guard.py"
 $fixture = Join-Path $PSScriptRoot "phase6fu_process_tree_fixture.py"
 & $python $guard `
     --trace (Join-Path $race "resource.jsonl") --summary (Join-Path $race "guard.json") `
