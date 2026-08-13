@@ -1,5 +1,11 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FD one-readback fuel alias lifetime contract
+
+Phase 6EY／6EZ／6FA／6FB／6FCを凍結し、startup反復診断を低頻度監視へ移した。Phase 6FCの0/6は問題解決とは扱わない。新しいPhase 6FDは同じstartup順序を使い、frame 60までに代表場を確認したprocessだけがframe 120の単発public readbackへ進む。未達processはreadbackせずframe 120でdelayed／small-fieldを分類して停止し、自動retry・sleep・recoveryを行わない。
+
+正式境界は別processのC0 acquire/discardと、C0合格後だけ実行するC1 fuel `numpy.asarray()` 1回である。alias identity・共有・解放、finite memory、stage close、normal OS exitまでを判定し、反復readback、他channel、field保存、production統合は含めない。契約SHA-256は`120DCF250B39C1E30715C4387360DDECF658B7BFF69955ADB4A86D7C502AF9FC`。詳細は`docs/design/phase6fd_fuel_alias_lifetime.md`。
+
 # Phase 6FC Point Emitter startup reproduction
 
 Phase 6EY／6EZ／6FA／6FBを凍結し、同じreadbackなしstartup probeを新rootで6独立process実行した。全runが`representative_ingestion`、active blocksは全履歴一致、frame 1/30/60/120=`269/505/688/1118`で、24-block再現率は0/6だった。stage接続0.428～5.436秒、前process終了から次開始6.016～8.902秒の範囲でも履歴は同一だったため、相関は算出不能で観測上の関連はない。明示的なGPU／shader cache cold/warm状態は公開されたbounded logだけでは確定できない。

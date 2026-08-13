@@ -1,0 +1,11 @@
+# Phase 6FD — one-readback fuel alias lifetime
+
+## Frozen boundary before runtime
+
+Phase 6EY, 6EZ, 6FA, 6FB, and 6FC remain historical evidence. In particular, the old 24-block process is not reclassified, while Phase 6FC's zero reproductions in six baselines are not treated as resolution. Repetitive startup diagnosis is closed for now: detailed markers remain enabled, a natural recurrence must be saved, and no additional ordering ablation, fixed sleep, automatic retry, or production recovery is introduced without new evidence.
+
+The predeclared contract is `scripts/phase6fd_fuel_alias_lifetime_contract.json`, SHA-256 `120DCF250B39C1E30715C4387360DDECF658B7BFF69955ADB4A86D7C502AF9FC`. It reuses the Phase 6FC startup order and adds a hard pre-readback liveness boundary. The fixed four-log source must retain revision 1, 1,440 total / 1,344 active Points, the frozen fuel/temperature/smoke sums, stable stage/payload/Flow/Emitter identities, fresh per-frame timeline/update telemetry, and at least 128 active blocks by frame 60. A below-threshold process continues without readback only through frame 120 so that delayed or small-field ingestion can be recorded, then stops fail-closed without retry.
+
+C0 performs one public `get_latest_nanovdb_readback()` and explicitly releases the list and channel aliases without conversion. Only a formally passing C0 permits the separate C1 process. C1 performs the same one readback, applies `numpy.asarray()` exactly once to fuel, records identity/base/sharing/ownership/shape/strides/logical bytes, releases source aliases and the converted object in order, and requires zero observable weak-reference residual. It does not persist field contents, convert another channel, aggregate values, force GC, invoke a private release API, repeat readback, or change production.
+
+The 14 GiB Kit, 16 GiB unique-tree, 512 MiB runner/diagnostic, and 8 GiB system-headroom gates are unchanged. The finite 24-second running-Flow observation retains the Phase 6EY bounded-memory contract without using raw active-block range as a gate. Stage close remains independently bounded to 180 seconds; only a timeout may trigger bounded CDB diagnosis. Runtime results are pending and will be recorded without changing this contract.

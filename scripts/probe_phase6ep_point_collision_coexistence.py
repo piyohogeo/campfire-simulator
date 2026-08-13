@@ -35,6 +35,7 @@ from phase6ep_point_collision_geometry import plan_payload
 from phase6er_point_collision_geometry import corrected_plan_payload
 from phase6ee_velocity_distribution import SpatialNeighborhoodCollector
 from phase6eu_process_memory import process_memory_snapshot
+from phase6fc_startup_contract import classify_startup
 from probe_phase6dt_flow_collision_reference import CHANNELS, SAMPLE_FRAMES, _capture, _save_and_sample
 
 
@@ -128,7 +129,52 @@ def _settings():
         "startup_extra_update_before_play_count": max(
             0, int(startup_extra_update_value) if startup_extra_update_value is not None else 0
         ),
+        "startup_liveness_gate": bool(settings.get_as_bool("/phase6ep/startupLivenessGate")),
+        "startup_expected_fuel_sum": float(settings.get_as_float("/phase6ep/startupExpectedFuelSum")),
+        "startup_expected_temperature_sum": float(settings.get_as_float("/phase6ep/startupExpectedTemperatureSum")),
+        "startup_expected_smoke_sum": float(settings.get_as_float("/phase6ep/startupExpectedSmokeSum")),
+        "startup_source_sum_tolerance": max(
+            0.0, float(settings.get_as_float("/phase6ep/startupSourceSumTolerance")) or 1.0e-6
+        ),
     }
+
+
+def _startup_identity_and_source_gate(history, source, arguments):
+    """Return the bounded pre-readback identity/source evidence for Phase 6FD."""
+    if not history:
+        return {"pass": False, "failures": ["history_missing"]}
+    first = history[0]
+    identity_keys = (
+        "stage_identity", "flow_identity", "stage_sha256", "payload_sha256",
+        "stage_python_identity", "emitter_path", "emitter_python_identity",
+        "points_prim_python_identity", "viewport_identity",
+    )
+    failures = []
+    for key in identity_keys:
+        if any(row.get(key) != first.get(key) for row in history):
+            failures.append(f"{key}_changed")
+    if not all(bool(row.get("renderer_ready")) and bool(row.get("flow_interface_ready")) for row in history):
+        failures.append("readiness")
+    if not all(bool(row.get("emitter_enabled")) for row in history):
+        failures.append("emitter_disabled")
+    if int(source.get("revision", -1)) != 1:
+        failures.append("point_revision")
+    if int(source.get("total_point_count", 0)) != 1440:
+        failures.append("total_point_count")
+    if int(source.get("active_point_count", 0)) != 1344:
+        failures.append("active_point_count")
+    sums = source.get("source_sums") or {}
+    tolerance = float(arguments["startup_source_sum_tolerance"])
+    for key, expected_key in (
+        ("fuel", "startup_expected_fuel_sum"),
+        ("temperature", "startup_expected_temperature_sum"),
+        ("smoke", "startup_expected_smoke_sum"),
+    ):
+        expected = float(arguments[expected_key])
+        actual = float(sums.get(key, float("nan")))
+        if not np.isfinite(actual) or abs(actual - expected) > tolerance:
+            failures.append(f"{key}_sum")
+    return {"pass": not failures, "failures": failures, "identity_reference": {key: first.get(key) for key in identity_keys}}
 
 
 def _write(path, payload):
@@ -739,6 +785,10 @@ async def _run():
         }
         if arguments["readback_mode"] not in valid_readback_modes:
             raise ValueError(f"unsupported readback mode: {arguments['readback_mode']}")
+        if arguments["startup_liveness_gate"] and not (arguments["startup_probe"] and arguments["flow_liveness_audit"]):
+            raise ValueError("startup liveness gate requires startup probe and Flow liveness audit")
+        if arguments["startup_liveness_gate"] and any(frame < 120 for frame in arguments["readback_frames"]):
+            raise ValueError("startup liveness gate forbids readback before frame 120")
         if not set(arguments["readback_frames"]).issubset(set(arguments["sample_frames"])):
             raise ValueError("readback frames must be a subset of sample frames")
         mark("process_entry")
@@ -897,6 +947,7 @@ async def _run():
         liveness_positions = plan["positions"][plan["active"]]
         startup_contract = report.get("startup_live_point_emitter_contract")
         startup_history = []
+        startup_liveness_confirmed = not arguments["startup_liveness_gate"]
         for frame in range(1, final_frame + 1):
             await app.next_update_async()
             if arguments["flow_liveness_audit"]:
@@ -935,6 +986,40 @@ async def _run():
                     }
                     startup_history.append(sample)
                     mark("startup_frame_sample", **sample)
+                    if arguments["startup_liveness_gate"] and frame in (60, 120):
+                        thresholds = {
+                            "classification_frame": 60,
+                            "final_frame": frame,
+                            "representative_active_blocks": 128,
+                            "small_field_minimum_blocks": 20,
+                            "small_field_maximum_blocks": 32,
+                            "expected_point_revision": 1,
+                            "expected_total_point_count": 1440,
+                            "expected_active_point_count": 1344,
+                            "minimum_fuel_sum": arguments["startup_expected_fuel_sum"] - arguments["startup_source_sum_tolerance"],
+                            "minimum_temperature_sum": arguments["startup_expected_temperature_sum"] - arguments["startup_source_sum_tolerance"],
+                            "minimum_smoke_sum": arguments["startup_expected_smoke_sum"] - arguments["startup_source_sum_tolerance"],
+                        }
+                        classification = classify_startup(startup_history, startup_contract, thresholds)
+                        identity_source = _startup_identity_and_source_gate(startup_history, startup_contract, arguments)
+                        evidence = {
+                            **classification,
+                            "identity_and_exact_source": identity_source,
+                            "gate_frame": int(frame),
+                            "readback_permitted": bool(
+                                classification.get("classification") == "representative_ingestion"
+                                and identity_source["pass"]
+                            ),
+                        }
+                        report["startup_liveness_gate"] = evidence
+                        if evidence["readback_permitted"]:
+                            startup_liveness_confirmed = True
+                            mark("startup_liveness_confirmed", **evidence)
+                        elif frame == 60 and classification.get("classification") not in ("no_source", "stale_telemetry", "lifecycle_failure") and identity_source["pass"]:
+                            mark("startup_liveness_pending", **evidence)
+                        else:
+                            mark("startup_liveness_rejected", **evidence)
+                            raise RuntimeError(f"startup liveness rejected before readback: {classification.get('classification')}")
             if (
                 arguments["stability_observation_extra_seconds"] > 0.0
                 and frame == arguments["stability_observation_start_frame"]
@@ -973,6 +1058,8 @@ async def _run():
             if arguments["readback_mode"] != "legacy":
                 sample = {"frame": frame, "active_blocks": int(flow.get_active_block_count()), "channels": {}}
                 if arguments["readback_mode"] != "none" and frame in arguments["readback_frames"]:
+                    if arguments["startup_liveness_gate"] and not startup_liveness_confirmed:
+                        raise RuntimeError("readback blocked because startup liveness was not confirmed")
                     boundary, weak_references = _readback_boundary(
                         flow, volume, arguments, frame, output, liveness_positions=liveness_positions
                     )
