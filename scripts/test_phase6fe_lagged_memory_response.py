@@ -93,6 +93,24 @@ class Phase6FeLaggedMemoryResponse(unittest.TestCase):
         self.assertIn('not_same_object_zero_copy_alias', analyzer)
         self.assertIn('repeated_readback_qualified', analyzer)
 
+    def test_published_runtime_safe_stop_is_fail_closed(self):
+        report_path = ROOT / "docs/devlog/assets/phase6/lagged_memory_response_safe_stop.json"
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+        formal = report["runtime"]["formal_root"]
+        expected_hash = CONTRACT_PATH.with_suffix(".sha256").read_text(encoding="utf-8").split()[0]
+        self.assertEqual(report["contract_sha256"], expected_hash)
+        self.assertEqual(formal["executed_conditions"], 1)
+        self.assertEqual(formal["accepted_conditions"], 0)
+        self.assertTrue(formal["normal_os_exit"])
+        self.assertTrue(formal["lagged_response_checks_pass"])
+        self.assertFalse(formal["global_boundedness_pass"])
+        self.assertEqual(formal["failed_gate"], "private_slope")
+        self.assertFalse(formal["c1_started"])
+        self.assertFalse(report["decision"]["phase6fe_qualified"])
+        self.assertFalse(report["decision"]["repeated_readback_ready"])
+        self.assertEqual(report["safety"]["fatal_count"], 0)
+        self.assertEqual(report["safety"]["cleanup_residual_count"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()

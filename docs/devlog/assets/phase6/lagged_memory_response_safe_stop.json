@@ -1,0 +1,160 @@
+{
+  "schema": "campfire.devlog.phase6fe.lagged-memory-response-safe-stop.v1",
+  "phase": "phase6fe",
+  "date": "2026-08-13",
+  "safe_commit": "e692915",
+  "contract_sha256": "9BD808EF0383CE531E653AC85DE75DE1BD62B43E02AAAD0C1D9821986DC2BAF5",
+  "history": {
+    "phase6fd_reclassified": false,
+    "phase6fd_c1_frozen_failure": "active_drop_private_increase_fraction=0.8095238095 > 0.75",
+    "historical_samples_used_in_formal_population": false
+  },
+  "historical_audit": {
+    "sample_cadence_seconds": 0.5,
+    "lag_samples": 4,
+    "maximum_lag_seconds": 3.0,
+    "phase6fd_c0": {
+      "eligible_drop_events": 15,
+      "classification_counts": {
+        "immediate_reclaim": 0,
+        "delayed_reclaim": 3,
+        "active_rebound_overlap": 6,
+        "bounded_cache_retention": 5,
+        "post_drop_continued_growth": 1
+      },
+      "delayed_reclaim_samples": [4, 2, 2],
+      "delayed_reclaim_seconds": [1.996069, 0.991493, 0.995653]
+    },
+    "phase6fd_c1": {
+      "eligible_drop_events": 15,
+      "classification_counts": {
+        "immediate_reclaim": 2,
+        "delayed_reclaim": 3,
+        "active_rebound_overlap": 6,
+        "bounded_cache_retention": 2,
+        "post_drop_continued_growth": 2
+      },
+      "immediate_reclaim_samples": [1, 1],
+      "immediate_reclaim_seconds": [0.512196, 0.527676],
+      "delayed_reclaim_samples": [4, 2, 4],
+      "delayed_reclaim_seconds": [2.010068, 0.984754, 2.006434],
+      "maximum_four_sample_transient_bytes": 161542144,
+      "complete_observation_recovery_bytes": 765456384
+    }
+  },
+  "synthetic_calibration": {
+    "status": "pass",
+    "accepted": [
+      "immediate_reclaim",
+      "delayed_reclaim",
+      "bounded_cache_retention",
+      "periodic_bounded",
+      "drop_cancelled_by_rebound",
+      "constant_occupancy_bounded_noise"
+    ],
+    "rejected": [
+      "occupancy_independent_monotonic_growth",
+      "constant_accelerating_growth",
+      "post_drop_continued_growth",
+      "repeated_accumulation",
+      "short_plateau_long_divergence",
+      "stale_telemetry",
+      "resource_ceiling",
+      "shutdown_incomplete"
+    ]
+  },
+  "runtime": {
+    "initial_root": {
+      "status": "safe_stop_before_kit",
+      "reason": "shared diagnostic runner did not yet allow the phase6fe report label",
+      "kit_started": false,
+      "formal_samples": 0,
+      "fix_commit": "b11d217"
+    },
+    "formal_root": {
+      "executed_conditions": 1,
+      "accepted_conditions": 0,
+      "planned_conditions": 6,
+      "active_condition": "run01_C0_acquire_discard",
+      "startup_classification": "representative_ingestion",
+      "startup_active_blocks_frames_1_30_60_120": [269, 505, 688, 1118],
+      "normal_os_exit": true,
+      "stage_close_seconds": 2.957713,
+      "readback_immediate_cpu_bytes": 302252032,
+      "readback_immediate_gpu_mib": 0.0,
+      "next_frame_residual_bytes": 268763136,
+      "observation_end_residual_bytes": -760311808,
+      "kit_peak_private_bytes": 14865702912,
+      "kit_limit_margin_bytes": 166682624,
+      "tree_peak_private_bytes": 15028686848,
+      "private_slope_bytes_per_second": 9743456.437384402,
+      "private_slope_limit_bytes_per_second": 8388608,
+      "projected_private_drift_fraction": 0.01654359246906326,
+      "high_water_recovered_or_flat": true,
+      "lagged_drop_events": 16,
+      "lagged_classification_counts": {
+        "immediate_reclaim": 1,
+        "delayed_reclaim": 2,
+        "active_rebound_overlap": 8,
+        "bounded_cache_retention": 2,
+        "post_drop_continued_growth": 3
+      },
+      "lagged_response_checks_pass": true,
+      "global_boundedness_pass": false,
+      "failed_gate": "private_slope",
+      "c1_started": false
+    }
+  },
+  "decision": {
+    "phase6fe_qualified": false,
+    "one_fuel_alias_lifetime_qualified": false,
+    "repeated_readback_ready": false,
+    "phase6fd_history_unchanged": true,
+    "production_changed": false,
+    "latest_demo_changed": false
+  },
+  "safety": {
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "cdb_invocation_count": 0,
+    "cleanup_residual_count": 0,
+    "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A"
+  },
+  "regression": {
+    "release_build": "pass",
+    "focused_phase6e": "221/221",
+    "focused_phase6f": "40/40",
+    "focused_total": "262/262",
+    "phase0_rtx": {
+      "status": "pass",
+      "render_gpu": "NVIDIA GeForce RTX 3090",
+      "cuda_device": 0
+    },
+    "phase3": {
+      "status": "pass",
+      "dry_authority_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+      "wet_authority_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "flow_active_blocks_final": 258,
+      "flow_active_blocks_peak": 328,
+      "peak_fuel_input": 1.0
+    },
+    "standard_suite": {
+      "status": "pass",
+      "processes": 8,
+      "tests": "78/78",
+      "wall_seconds": 317.6
+    },
+    "static_devlog_inspection": {
+      "status": "pass",
+      "json_files": 213,
+      "svg_files": 177,
+      "zip_files": 2,
+      "missing_local_references": 0,
+      "duplicate_ids": 0,
+      "utf8_replacement_characters": 0
+    }
+  }
+}
