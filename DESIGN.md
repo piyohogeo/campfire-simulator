@@ -8,6 +8,8 @@ formal rootは7 launchで代表6本を収集し`lifecycle_qualification_pass`と
 
 native lifecycle／operation／absolute safety failure、CDB、fatal、access violation、dump、upload、cleanup residualはいずれも0。代表stage closeはmin/median/mean/max 2.027/2.754/4.151/8.551秒で、Phase 6FGの180秒failureは6代表runではbounded non-reproductionだった。最大Kit 14,574,084,096 bytes、最大tree 14,736,871,424 bytesで上限内、production SHAは不変。Phase 6FGは新rootからの再開候補になったが自動承認せず、明示的承認を待つ。
 
+Final Phase 6FI regression passed the Release build in 6.44 seconds, Phase 0 RTX in 19.4 seconds, Phase 3, 126/126 focused Phase 6F/6EA/6EB/6EL contracts, and the standard 8-process 78/78 suite in 315.3 seconds. Phase 3 retained dry/wet mass-balance error 0, authority SHA-256 `0dec57f3...e84be10` / `148585f8...fd2b20c9`, Flow active blocks final/peak 230/356, and peak fuel 1.0. Static devlog validation passed; production SHA-256 `94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`, contract SHA-256 `A0B68CFC006A4B28205AACB70AB50C075CF40628C7EC29898A19D9A7001A0387`, and zero Kit/CDB/GPU-helper residuals were reverified.
+
 # Phase 6FH readback-free lifecycle qualification safe stop
 
 Phase 6FGの5 passとsequence 2 A lifecycle failureは凍結し、readbackなしA controlだけを6独立processで評価するPhase 6FHを事前契約した。contract SHA-256は`F5F193FD772527B261F4CF23605FB03A8E5A95DF1D1CA9654371BD20479706A9`。memory waveform契約、14 GiB Kit／16 GiB tree ceiling、4本fixture、Point payload、Flow、CollisionProxy、V3、productionは変更していない。CDBはcache-onlyのattach/module 30秒、all-thread stack 45秒、必要時detach recovery 30秒へ分割し、各出力を直接ファイルへstreamする。Phase 6EL fixtureはnormal attach/detach、locked log、target exit、timeout、abnormal exitをすべて合格し、CDB残留0だった。

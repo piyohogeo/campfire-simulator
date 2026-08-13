@@ -75,5 +75,25 @@
   "production_changed": false,
   "phase6fg_restart_candidate": true,
   "phase6fg_restart_authorized": false,
+  "regression": {
+    "release_build": "pass_6.44_seconds",
+    "phase0_rtx": "pass_19.4_seconds",
+    "phase3": {
+      "status": "ok",
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "dry_authority_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+      "wet_authority_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+      "flow_active_blocks_final": 230,
+      "flow_active_blocks_peak": 356,
+      "peak_fuel_input": 1.0
+    },
+    "focused_contracts": "126_of_126",
+    "standard_suite": "8_processes_78_of_78_315.3_seconds",
+    "devlog_static_validation": "pass",
+    "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "contract_sha256_verified": "A0B68CFC006A4B28205AACB70AB50C075CF40628C7EC29898A19D9A7001A0387",
+    "process_residual_count": 0
+  },
   "scope": "bounded non-reproduction in six representative readback-free controls; the native stage-close issue is not declared absent"
 }
