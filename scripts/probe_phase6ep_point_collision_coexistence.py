@@ -52,6 +52,8 @@ def _settings():
     spatial_collider_text = settings.get_as_string("/phase6ep/spatialColliderIndices")
     readback_text = settings.get_as_string("/phase6ep/readbackChannels")
     readback_frame_text = settings.get_as_string("/phase6ep/readbackFrames")
+    operation_frame_text = settings.get_as_string("/phase6ep/operationFrames")
+    settling_end_text = settings.get_as_string("/phase6ep/settlingEndFrames")
     startup_pre_update_value = settings.get("/phase6ep/startupPreTimelineUpdateCount")
     startup_extra_update_value = settings.get("/phase6ep/startupExtraUpdateBeforePlayCount")
     sample_frames = tuple(int(value.strip()) for value in sample_text.split(",") if value.strip()) if sample_text else tuple(SAMPLE_FRAMES)
@@ -74,6 +76,14 @@ def _settings():
         "readback_frames": (
             tuple(int(value.strip()) for value in readback_frame_text.split(",") if value.strip())
             if readback_frame_text else sample_frames
+        ),
+        "operation_frames": (
+            tuple(int(value.strip()) for value in operation_frame_text.split(",") if value.strip())
+            if operation_frame_text else sample_frames
+        ),
+        "settling_end_frames": (
+            tuple(int(value.strip()) for value in settling_end_text.split(",") if value.strip())
+            if settling_end_text else tuple()
         ),
         "reference_disposal": settings.get_as_string("/phase6ep/referenceDisposal") or "natural",
         "synchronous_memory_markers": bool(settings.get_as_bool("/phase6ep/synchronousMemoryMarkers")),
@@ -529,14 +539,15 @@ def _live_point_emitter_contract(stage, emitter):
     }
 
 
-def _readback_boundary(flow, volume, arguments, frame, output, liveness_positions=None):
+def _readback_boundary(flow, volume, arguments, frame, output, liveness_positions=None, operation_state=None):
     """Exercise exactly one declared public-readback boundary and return only bounded metadata."""
     marker_path = arguments["resource_marker_path"]
     synchronous = arguments["synchronous_memory_markers"]
     mode = arguments["readback_mode"]
+    operation_state = operation_state or {}
     mark = lambda name, **values: _append_resource_marker(
         marker_path, name, synchronous_memory=synchronous, frame=frame,
-        active_blocks=int(flow.get_active_block_count()), **values
+        active_blocks=int(flow.get_active_block_count()), **operation_state, **values
     )
     mark("readback_call_before", mode=mode)
     raw = flow.get_latest_nanovdb_readback()
@@ -968,6 +979,9 @@ async def _run():
         sample_frames = tuple(arguments["sample_frames"])
         final_frame = max(sample_frames[-1], max(capture_frames, default=0))
         pending_readback_frame = None
+        last_field_element_count = None
+        last_field_logical_bytes = None
+        last_field_measurement_frame = None
         stability_started = False
         stability_samples = []
         initial_stage_identity = str(stage.GetRootLayer().identifier)
@@ -1048,6 +1062,21 @@ async def _run():
                         else:
                             mark("startup_liveness_rejected", **evidence)
                             raise RuntimeError(f"startup liveness rejected before readback: {classification.get('classification')}")
+            if frame in arguments["settling_end_frames"]:
+                settling_iteration = arguments["settling_end_frames"].index(frame) + 1
+                mark(
+                    "settling_end", frame=frame, settling_iteration=int(settling_iteration),
+                    active_blocks=int(flow.get_active_block_count()),
+                    timeline_time=float(timeline.get_current_time()),
+                    kit_update_index=int(app.get_update_number()),
+                    field_element_count=last_field_element_count,
+                    field_logical_bytes=last_field_logical_bytes,
+                    field_measurement_frame=last_field_measurement_frame,
+                    field_measurement_source=(
+                        "previous_public_readback" if last_field_measurement_frame is not None
+                        else "unavailable_without_public_readback"
+                    ),
+                )
             if (
                 arguments["stability_observation_extra_seconds"] > 0.0
                 and frame == arguments["stability_observation_start_frame"]
@@ -1070,7 +1099,25 @@ async def _run():
                 report["captures"].append({"frame": frame, **(await _capture(viewport, path))})
             if frame not in sample_frames:
                 continue
-            mark("sample_started", frame=frame, active_blocks=int(flow.get_active_block_count()))
+            if arguments["readback_mode"] != "legacy" and frame not in arguments["operation_frames"]:
+                report["samples"].append({
+                    "frame": frame, "active_blocks": int(flow.get_active_block_count()),
+                    "channels": {}, "operation": False, "sentinel": True,
+                })
+                mark("sample_persisted", frame=frame, readback=False, operation=False, sentinel=True)
+                continue
+            operation_state = {
+                "timeline_time": float(timeline.get_current_time()),
+                "kit_update_index": int(app.get_update_number()),
+            }
+            mark(
+                "pre_operation", frame=frame, active_blocks=int(flow.get_active_block_count()),
+                field_element_count=last_field_element_count,
+                field_logical_bytes=last_field_logical_bytes,
+                field_measurement_frame=last_field_measurement_frame,
+                **operation_state,
+            )
+            mark("sample_started", frame=frame, active_blocks=int(flow.get_active_block_count()), **operation_state)
             if int(point_summary["active_point_count"]) == 0:
                 report["samples"].append({
                     "frame": frame,
@@ -1089,8 +1136,17 @@ async def _run():
                     if arguments["startup_liveness_gate"] and not startup_liveness_confirmed:
                         raise RuntimeError("readback blocked because startup liveness was not confirmed")
                     boundary, weak_references = _readback_boundary(
-                        flow, volume, arguments, frame, output, liveness_positions=liveness_positions
+                        flow, volume, arguments, frame, output, liveness_positions=liveness_positions,
+                        operation_state=operation_state,
                     )
+                    fuel_metadata = (
+                        boundary.get("fuel_source")
+                        or boundary.get("channel_objects", [None] * len(CHANNELS))[CHANNELS.index("fuel")]
+                    )
+                    if fuel_metadata:
+                        last_field_element_count = fuel_metadata.get("element_count", fuel_metadata.get("size"))
+                        last_field_logical_bytes = fuel_metadata.get("nbytes")
+                        last_field_measurement_frame = int(frame)
                     alive_after_scope = sum(reference is not None and reference() is not None for reference in weak_references)
                     boundary["weak_reference_supported_count"] = sum(reference is not None for reference in weak_references)
                     boundary["weak_reference_alive_after_scope_count"] = alive_after_scope
@@ -1098,6 +1154,7 @@ async def _run():
                     mark(
                         "python_references_released", frame=frame,
                         disposal=arguments["reference_disposal"], weak_reference_alive_count=alive_after_scope,
+                        **operation_state,
                     )
                     if arguments["readback_mode"] == "fuel_jsonl":
                         bounded = {
@@ -1116,7 +1173,25 @@ async def _run():
                 mark(
                     "sample_metadata_complete", frame=frame,
                     readback=bool(sample.get("readback_boundary")), active_blocks=sample["active_blocks"],
+                    **operation_state,
                 )
+                mark(
+                    "operation_completed", frame=frame,
+                    readback=bool(sample.get("readback_boundary")), active_blocks=sample["active_blocks"],
+                    field_element_count=last_field_element_count,
+                    field_logical_bytes=last_field_logical_bytes,
+                    field_measurement_frame=last_field_measurement_frame,
+                    **operation_state,
+                )
+                mark(
+                    "release_completed", frame=frame,
+                    readback=bool(sample.get("readback_boundary")),
+                    weak_reference_alive_count=(
+                        sample.get("readback_boundary", {}).get("weak_reference_alive_after_scope_count", 0)
+                    ),
+                    **operation_state,
+                )
+                mark("settling_started", frame=frame, active_blocks=sample["active_blocks"], **operation_state)
                 continue
             if not arguments["readback_channels"]:
                 report["samples"].append({"frame": frame, "active_blocks": int(flow.get_active_block_count()), "channels": {}})

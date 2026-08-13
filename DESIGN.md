@@ -1,5 +1,11 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FM settled post-release three-iteration qualification contract
+
+Phase 6FKの単回qualificationとPhase 6FLの3/9 safe stopを凍結し、新しい空rootでexplicit `settling_end`だけをformal accumulation baselineにするPhase 6FMを事前定義した。`pre_operation`はFlow成長・allocator・cacheを含むtelemetryとして保存するがformal gateにしない。各iterationは`pre_operation`、`operation_completed`、`release_completed`、`settling_started`、`settling_end`を別markerで持ち、frame 620は4回目のoperationを行わないsentinelである。
+
+material thresholdは91,184,640 bytesのまま、candidateのsettled二段増加、R0差引後の二段material増加、fuel logical-byte成長控除後の二段material増加が同一conditionで2 sequence以上再現した場合だけformal accumulation failureとする。R0 field metadataはreadback禁止のためnullとし、推測値を作らない。pointer、identity、weak、marker、settling sample、native lifecycle、absolute resource、cleanup違反は従来どおり置換不能で即停止する。contract SHA-256は`9251855314FD710B6C3D1A36FF156DD6833166A7F37B216BE3F9CC09BE2CC5F5`。詳細は`docs/design/phase6fm_settled_three_iteration.md`を参照する。
+
 # Phase 6FL three-iteration readback / fuel-alias pilot safe stop
 
 Phase 6FKの単回qualificationを凍結したまま、同一process内でreadbackまたはfuel aliasを正確に3回だけ反復するPhase 6FLを独立契約化した。operation frameは120 / 360 / 540、final settling sentinelは620、各条件3 processの順序は`R0/R1/R2`、`R1/R2/R0`、`R2/R0/R1`である。material stepはPhase 6FKのfuel logical bytesと同期粒度から91,184,640 bytesに固定し、同じsequenceのR0を差し引いた2 stepとtotalで操作固有累積を判定する。contract SHA-256は`8F2BB5FD237CB162865B7FCBAB3B75AC6C54C9A86C4753BFAC7FA85D6BEFDB62`。詳細は`docs/design/phase6fl_three_iteration_readback_alias.md`を参照する。
