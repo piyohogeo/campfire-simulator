@@ -89,6 +89,35 @@
     "changed": false,
     "app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A"
   },
+  "regression": {
+    "release_build": {"status": "pass", "seconds": 6.56},
+    "phase0_rtx": {"status": "pass", "seconds": 18.0},
+    "phase3": {
+      "status": "pass",
+      "seconds": 25.9,
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "dry_authority_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+      "wet_authority_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+      "flow_active_blocks_final": 235,
+      "flow_active_blocks_peak": 327,
+      "peak_fuel_input": 1.0
+    },
+    "focused": {
+      "status": "pass",
+      "phase6f": "84/84",
+      "phase6ea_resource": "7/7",
+      "phase6ea_static": "6/6",
+      "phase6eb": "31/31",
+      "phase6el": "9/9",
+      "total": "137/137"
+    },
+    "standard_suite": {"status": "pass", "processes": 8, "tests": "78/78", "seconds": 314.1},
+    "devlog_static": {"status": "pass", "references": 439, "ids": 266, "json": 218, "svg": 177, "zip": 2},
+    "new_dump": 0,
+    "device_lost_or_tdr": 0,
+    "kit_cdb_gpu_helper_residual": 0
+  },
   "video_created": false,
   "latest_demo_changed": false,
   "next_boundary": "A new explicitly approved empty-root population must use pointer-complete probe evidence. Repeated readback remains excluded."

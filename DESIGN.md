@@ -8,6 +8,8 @@ Aはreadbackなし、Bはpublic readback 1回とalias解放、Cはreadback 1回�
 
 formal rootは10 launchを実行し、attempt03の24-block startup prerequisiteを1枠置換した。代表startup 9本はA/B/C各3本の操作とnormal lifecycleを完了したが、事後integrity監査でC 3本とも必須のNumPy data pointerがartifactへ保存されていないことを確認した。Python identity／`shares_memory`／weak residual 0だけではpointer契約の代替にならないため、attempt04を最初の非置換operation evidence failureとしてPhase 6FJをsafe stopとした。attempt05～10はpartial evidenceとして保持し、単回readback／fuel alias／反復readbackはいずれも未qualifiedである。probeは将来run向けにsource／converted pointerを別々に保存し、欠落・不一致をfail-closedにした。productionは変更していない。
 
+最終回帰はRelease 6.56秒、Phase 0 RTX 18.0秒、Phase 3 25.9秒、focused Phase 6F／6EA／6EB／6EL 137/137、標準8 process 78/78（314.1秒）、日誌静的検査に合格した。Phase 3のdry/wet mass-balance errorは0、authority SHAは既知値と一致、Flow active blocks final/peakは235/327、peak fuelは1.0。production app SHA-256は`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`のままで、Kit／CDB／GPU helper残留は0。
+
 # Phase 6FI bounded startup replacement lifecycle contract
 
 Phase 6FG／6FHを凍結し、Phase 6FHのreadbackなしA controlとshutdown処理をそのまま再利用する後継contractを事前定義した。代表lifecycle sampleは6本、`startup_prerequisite_failure`専用replacement budgetは2、最大launchは8。各attemptは一意で、startup失敗も削除・上書きせず監視証拠へ残す。operation、native lifecycle、absolute safety failureは置換せず即停止する。readback、NumPy、field保存、startup原因追跡、自動recovery、production変更、Phase 6FG自動再開は対象外。詳細は`docs/design/phase6fi_lifecycle_replacement.md`。
