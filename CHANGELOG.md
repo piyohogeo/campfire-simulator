@@ -1,5 +1,8 @@
 # Changelog
 
+- Added the frozen Phase 6FJ balanced single-readback contract without reclassifying Phase 6FG–6FI. It requires `ABC / BCA / CAB` across nine representative independent processes, allows at most two unique replacements only for pre-operation startup-prerequisite failures, and caps total launches at eleven.
+- Reused the unchanged Phase 6FG operation/telemetry contract and Phase 6FI replacement/lifecycle contract by verified SHA-256. Operation, native lifecycle, absolute safety, cleanup, diagnostic, and replacement-budget failures remain nonreplaceable; repeated readback and production changes remain excluded.
+
 - Added the pre-runtime Phase 6FI bounded startup-replacement contract without reclassifying Phase 6FG/6FH. It requires six representative readback-free lifecycle controls, permits at most two additional unique launches only for preserved startup-prerequisite failures, and caps the total at eight.
 - Kept operation, native lifecycle, and absolute-safety failures nonreplaceable and fail-fast. The Phase 6FH fixture, Point payload, Flow, shutdown ordering, 14/16 GiB ceilings, staged 30/45/30-second CDB path, production, and memory-waveform policy remain unchanged; Phase 6FG is not automatically restarted.
 - Completed Phase 6FI in seven launches: six representative controls passed normal OS exit and one preserved startup-prerequisite launch stayed at 24 fresh blocks through frame 120, consuming one of two replacement slots. The observed startup-prerequisite rate was 1/7; no attempt was retried or overwritten.

@@ -1,0 +1,101 @@
+{
+  "schema": "campfire.phase6fj.balanced-single-readback-contract.v1",
+  "phase": "phase6fj",
+  "declared_before_runtime": true,
+  "history_frozen": ["phase6fg", "phase6fh", "phase6fi"],
+  "base_operation_contract": {
+    "path": "scripts/phase6fg_paired_readback_contract.json",
+    "sha256": "54FD6185ADD41B9333506ACC55BF3472F7BBA4F0D726679071F1126572541EED"
+  },
+  "base_replacement_contract": {
+    "path": "scripts/phase6fi_lifecycle_replacement_contract.json",
+    "sha256": "A0B68CFC006A4B28205AACB70AB50C075CF40628C7EC29898A19D9A7001A0387"
+  },
+  "purpose": "qualify one public NanoVDB readback and one fuel NumPy alias lifetime in a fresh balanced population",
+  "balanced_order": [
+    ["A_control", "B_readback", "C_fuel_alias"],
+    ["B_readback", "C_fuel_alias", "A_control"],
+    ["C_fuel_alias", "A_control", "B_readback"]
+  ],
+  "conditions": {
+    "A_control": {"label": "R0_none", "readback_mode": "none", "public_readback_calls": 0, "numpy_asarray_calls": 0},
+    "B_readback": {"label": "C0_acquire_discard", "readback_mode": "acquire_discard_release", "public_readback_calls": 1, "numpy_asarray_calls": 0},
+    "C_fuel_alias": {"label": "C1_fuel_alias", "readback_mode": "fuel_convert_release", "public_readback_calls": 1, "numpy_asarray_calls": 1}
+  },
+  "population": {
+    "target_representative_processes": 9,
+    "runs_per_condition": 3,
+    "startup_prerequisite_replacement_budget": 2,
+    "maximum_launches": 11,
+    "replacement_preserves_balanced_slot": true,
+    "attempt_identity_unique": true,
+    "artifact_reuse": false,
+    "automatic_retry": false
+  },
+  "classification_priority": [
+    "absolute_safety_failure",
+    "native_lifecycle_failure",
+    "startup_prerequisite_failure",
+    "operation_failure",
+    "representative_pass"
+  ],
+  "replaceable_only": "startup_prerequisite_failure_before_operation",
+  "nonreplaceable": [
+    "operation_failure",
+    "native_lifecycle_failure",
+    "absolute_safety_failure",
+    "cleanup_failure",
+    "diagnostic_failure",
+    "replacement_budget_exhausted"
+  ],
+  "three_layer_decision": {
+    "hard_gate": "Phase 6FG absolute, operation, evidence-integrity, lifecycle, normal-exit and cleanup gates",
+    "waveform_telemetry": "recorded and warning-only; 8 MiB/s and rolling persistence are not formal gates",
+    "operation_specific": "adjacent synchronous markers are primary; process-wide peak differences are context only"
+  },
+  "unchanged_runtime": {
+    "fixture": "production_four/phase6er_corrected",
+    "policy": "allow_self_center",
+    "offset_m": -0.0125,
+    "total_points": 1440,
+    "active_points": 1344,
+    "revision": 1,
+    "operation_frame": 120,
+    "running_flow_observation_seconds": 24.0,
+    "stage_close_timeout_seconds": 180,
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592
+  },
+  "bounded_cdb": {
+    "native_failure_only": true,
+    "module_seconds": 30,
+    "all_thread_depth": 16,
+    "all_thread_seconds": 45,
+    "detach_recovery_seconds": 30,
+    "total_seconds": 105,
+    "automatic_full_dump": false
+  },
+  "qualification": {
+    "requires_all_nine_representative_slots": true,
+    "requires_each_condition_count": 3,
+    "requires_all_operation_axes": true,
+    "requires_all_lifecycle_axes": true,
+    "requires_c_alias_contract_consistent": true,
+    "repeated_readback_qualified": false
+  },
+  "excluded": [
+    "historical population reuse",
+    "repeated readback",
+    "multiple channel conversion",
+    "field JSON or NPZ persistence",
+    "multiple-frame field retention",
+    "forced GC",
+    "private release API",
+    "production changes",
+    "video"
+  ]
+}

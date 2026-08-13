@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6fi">最新記録</a>
+        <a href="#phase-6fj">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fi">Phase 6FIの結果を読む</a>
+        <a class="button primary" href="#phase-6fj">Phase 6FJの契約を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FI · lifecycle replacement qualified</strong></div>
+        <div><span>現在地</span><strong>Phase 6FJ · balanced single-readback contract frozen</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>6 representative · 1 bounded replacement</strong></div>
+        <div><span>Population</span><strong>9 representative · up to 2 startup replacements</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
@@ -51,9 +51,20 @@
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
     </section>
 
+    <section id="phase-6fj" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FJ balanced single-readback entry"><span class="phase-number compact">6FJ</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">contract frozen · runtime pending</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FJ · balanced single-readback qualification</p><h2>A/B/Cを新しい母集団で、<br>位置偏りなく測る。</h2><p>Phase 6FG〜6FIを凍結し、Phase 6FGの単回operation判定とPhase 6FIのstartup限定replacementを合成しました。過去の部分populationは再利用しません。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Balanced population</p><h3><code>ABC / BCA / CAB</code></h3><p>Aはreadbackなし、Bはpublic readback 1回、Cはreadback 1回と<code>numpy.asarray(fuel)</code> 1回です。各条件3本、代表9 processを要求します。</p></section><section class="note"><p class="note-label">Replacement boundary</p><h3>startup前提だけ最大2枠</h3><p>24-blockなどoperation前のstartup failureだけを同じslotへ新attemptで置換します。operation、native lifecycle、resource、cleanup、diagnostic failureは置換せず即時停止します。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Frozen decision</p><h3>波形はwarning、隣接markerが主証拠。</h3><p>14 GiB Kit／16 GiB tree、正常stage close／OS exit、call count、identity、weak referenceはhard gateです。slopeやrolling exceedanceは保存しますがformal failへ戻しません。</p><p>contract SHA-256は<code>4CD6006F...607ABDD</code>。production、Point、Flow、CollisionProxy、V3、latest demoは変更していません。</p><p><a href="../design/phase6fj_balanced_single_readback.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>9</span><p><strong>Representative</strong><small>required</small></p></div><div role="listitem"><span>2</span><p><strong>Replacement</strong><small>startup only</small></p></div><div role="listitem"><span>11</span><p><strong>Max launches</strong><small>unique artifacts</small></p></div><div role="listitem"><span>1</span><p><strong>Readback</strong><small>per B/C process</small></p></div><div role="listitem"><span>0</span><p><strong>Repeated</strong><small>excluded</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+        </div>
+      </article>
+    </section>
+
     <section id="phase-6fi" class="section entry-section phase-six">
       <article class="shell entry">
-        <aside class="entry-meta" aria-label="Phase 6FI lifecycle replacement entry"><span class="phase-number compact">6FI</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">6 representative · lifecycle qualified</span></aside>
+        <aside class="entry-meta" aria-label="Phase 6FI lifecycle replacement entry"><span class="phase-number compact">6FI</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill">6 representative · lifecycle qualified</span></aside>
         <div class="entry-body">
           <header class="entry-header"><p class="section-kicker">Phase 6FI · bounded startup replacement lifecycle qualification</p><h2>startup前提失敗を限定置換し、<br>readbackなしlifecycleを6件確認。</h2><p>Phase 6FG／6FHの履歴を変更せず、startup prerequisiteだけを最大2件まで置換できる契約を事前凍結しました。operation、native lifecycle、absolute safetyの失敗は置換せず即時停止する二軸分類です。</p></header>
           <div class="notes-grid"><section class="note"><p class="note-label">Formal population</p><h3>7 launches · 6 representative</h3><p>attempt03だけがfresh telemetryと正しいPoint供給を保ったまま120 frameすべて24 blocksの<code>startup_prerequisite_failure</code>でした。1枠を消費して継続し、残る6件はframe 1／60／120がすべて269／688／1118 blocksでした。</p></section><section class="note"><p class="note-label">Lifecycle axis</p><h3>6 / 6 normal OS exit</h3><p>代表sampleのstage closeは2.027～8.551秒、中央値2.754秒。operation failure、native lifecycle failure、absolute safety failure、CDB起動、fatal、dump、upload、残留processはすべて0でした。</p></section></div>
