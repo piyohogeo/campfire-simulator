@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6ff">最新記録</a>
+        <a href="#phase-6fg">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6ff">Phase 6FFの結果を読む</a>
+        <a class="button primary" href="#phase-6fg">Phase 6FGの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FF · multi-window memory safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6FG · paired readback lifecycle safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>control run01 normal exit · later runs not started</strong></div>
+        <div><span>Lifecycle</span><strong>5 pass · sequence02 A stage-close timeout</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
@@ -49,6 +49,18 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-6fg" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FG paired single-readback entry"><span class="phase-number compact">6FG</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">waveform telemetry only · lifecycle safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FG · paired single-readback qualification</p><h2>波形への過剰適合を終了。<br>USD context closeで停止。</h2><p>6FD～6FFを凍結し、hard gateを絶対安全・lifecycle・操作契約へ限定。slopeやrolling超過はversioned telemetry／warningとして保存し、balanced <code>ABC / BCA / CAB</code>比較を開始しました。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Operation evidence</p><h3>readback 288～324 MiB</h3><p>B 2 runの同期増分は306,528,256／339,447,808 bytes。C 2 runは302,247,936 bytes、fuel 39.480 MiB、<code>np.asarray()</code>増分0 bytes、same-object zero-copy、weak residual 0でした。settling後は全B/Cで取得前を下回りました。</p></section><section class="note"><p class="note-label">Hard gate</p><h3>5 pass · 6th stop</h3><p>sequence 1 A/B/Cとsequence 2 B/Cはnormal exit。sequence 2 A controlはreadbackなしでもstage closeが180秒timeoutとなり、後続3条件は開始しませんでした。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Unknown lifecycle failure</p><h3><code>omni_usd!UsdManager::destroyContext</code>境界。</h3><p>CDBはattach、module、all-thread stack開始まで到達しましたが45秒timeoutでdetach markerなし。既知NGX 5-token signatureには一致せず、lock ownerも未確定なのでunknown shutdown failureです。full dump、fatal、access violation、automatic uploadは0でした。</p><p>guardはKit／conhost／telemetryの記録済みidentityだけをcleanupし、remaining 0を確認。Kit peak 13.884 GiB、14 GiBまで118.68 MiB、tree peak 14.038 GiBです。</p><p>Release build、Phase 0 RTX、Phase 3、focused 56/56、標準suite 78/78（314.8秒）は合格。production SHA-256は不変です。内部診断だけなので動画とlatest demo pointerは変更していません。</p><p><a href="assets/phase6/paired_readback_safe_stop.json">machine report</a> · <a href="../design/phase6fg_paired_readback.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Wave gate removal</strong><small>telemetry only</small></p></div><div role="listitem"><span>5</span><p><strong>Passing conditions</strong><small>of 9 planned</small></p></div><div role="listitem"><span>0</span><p><strong>asarray copy</strong><small>same object</small></p></div><div role="listitem"><span>!</span><p><strong>Stage close</strong><small>180 s timeout</small></p></div><div role="listitem"><span>0</span><p><strong>Cleanup residual</strong><small>none</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Next boundary</p><h3>反復readbackへはまだ進まない。</h3><p>単回操作の数値は再現しましたが、9/9 populationとnormal lifecycleが未完了です。次の承認Phaseでは、低頻度のUSD context stage-close failureを解消または独立qualificationしてから、新しい空rootでbalanced populationを最初から再開します。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6ff" class="section entry-section phase-six">

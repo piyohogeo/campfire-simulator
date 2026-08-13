@@ -1,5 +1,13 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FG paired single-readback qualification
+
+Phase 6FD／6FE／6FFの契約とsafe stopは凍結し、静的なメモリ波形への過剰適合を新Phaseへ持ち込まない。Phase 6FGは正式判定を3層へ分離した。hard gateは14 GiB Kit、16 GiB tree、system headroom、診断process上限、fatal／access violation／dump／upload 0、stage close／shutdown／normal OS exit、exact cleanup、代表startup、操作回数だけである。slope、rolling超過、terminal残差、high-water回復、projected drift、Working Set、GPU memory、active-block相関は全sampleをversion付きtelemetryとして保存するが、単独では不合格にしない。操作差分はprocess peakではなく隣接同期markerを主証拠とする。契約SHA-256は`54FD6185ADD41B9333506ACC55BF3472F7BBA4F0D726679071F1126572541EED`。詳細は`docs/design/phase6fg_paired_readback.md`。
+
+formal orderは独立processの`ABC / BCA / CAB`、A=readbackなし、B=public readback 1回＋即解放、C=B＋`numpy.asarray(fuel)` 1回である。synthetic 5/5は一時増加をwarningに留め、ceiling／lifecycle／反復階段増加をrejectし、初回cache後plateauをacceptした。実機はsequence 1のA/B/Cとsequence 2のB/Cがhard gate合格。B readback同期増分は306,528,256／339,447,808 bytes、Cは302,247,936 bytes×2、fuelは41,398,016 bytes、`np.asarray`同期増分0 bytes、same-object zero-copy、weak残留0だった。settling後は全B/Cで取得前よりメモリが低かったが、partial evidenceであり正式qualifiedではない。
+
+sequence 2 A controlは観測と参照解放後、`stage_close_request_before`から180秒でtimeoutした。CDBはattach／module／all-thread stack開始まで到達し、先頭threadは`omni_usd!UsdManager::destroyContext`からextension/plugin shutdownへ続いたが、45秒timeoutでdetach markerなし、既知NGX signature不一致である。exact identity cleanupはremaining 0、full dump／fatal／access violation／upload 0。したがって6FGはlifecycle safe stopで、sequence 3は未開始、単回readback／fuel alias／反復readbackは未qualified。Kit peak 14,907,940,864 bytes、14 GiB余裕124,444,672 bytes、tree peak 15,070,949,376 bytes。production SHA-256は不変。Release、Phase 0、Phase 3、focused 56/56、標準78/78は合格した。
+
 # Phase 6FF multi-window memory boundedness
 
 Phase 6FD／6FEは凍結し、6FEの`9.292 MiB/s > 8 MiB/s`を遡及合格・緩和しない。新契約は48秒、最低80 aligned sample、6等分window、8秒rolling windowを用い、14 GiB Kit／16 GiB treeの絶対安全、最大1 GiBの有限transient、64 MiB／32秒のhigh-water回復、後半・最終・floor・projected／normalized drift、readbackなしcontrolとの差分を独立判定する。8 MiB/sはlate rolling persistenceの診断値として保持するが、旧Phaseの判定は変更しない。
