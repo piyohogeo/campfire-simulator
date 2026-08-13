@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6ft">最新記録</a>
+        <a href="#phase-6fu">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,22 +27,34 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6ft">Phase 6FTの結果を読む</a>
+        <a class="button primary" href="#phase-6fu">Phase 6FUの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FT · memory ceiling safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6FU · diagnostic cleanup qualified</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Population</span><strong>8 normal / 9 · stage-close timeout</strong></div>
+        <div><span>Qualification</span><strong>12 boundaries · fixture pass</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
   </header>
 
   <main>
+    <section id="phase-6fu" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FU diagnostic identity and cleanup qualification"><span class="phase-number compact">6FU</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">diagnostic · qualified</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FU · diagnostic identity / exact cleanup</p><h2>「不在」と「確認不能」を分離し、<br>stack取得からcleanupまで閉じた。</h2><p>Phase 6FT attempt09を凍結したまま、実Kitや9-process母集団を起動せず、CDB、process identity、診断ownership、exact cleanupだけを専用fixtureで検証しました。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Seven-state identity</p><h3>unknownはabsenceではない</h3><p>PID、creation time、absolute path、parentage、role、attempt IDを保存し、match、mismatch、confirmed exit、query/access/creation/path unknownへ分類します。psutilとnative Win32の双方がexitを確認するまでsummaryを確定しません。</p></section><section class="note"><p class="note-label">Bounded CDB</p><h3>stack-first · explicit detach</h3><p>non-empty all-thread native stackをmodule passより先に取得しました。module timeoutでもstackを保持し、forced stack timeoutはpartial evidenceのまま明示detachしてtargetを生存させました。full dump、symbol server wait、自動uploadはありません。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Final root 4</p><h3>identity／cleanup全境界合格、残留0。</h3><p>normal exit、transient query failure、identity mismatch保護、parent exit後のchild、diagnostic/cleanup race、suppression deadline、unknown-not-absentの7群が合格しました。outer guardは4 exact identityを再列挙し、生存match 2件だけを停止、二系統で全件exitを確認しました。</p><p>runner peakは9,482,240 bytes、diagnostic peakは94,515,200 bytesで、各512 MiB上限内です。旧guardは凍結SHAへ復元し、新しい挙動をPhase 6FU adapterへ隔離したため、Phase 6FM／6FN runtime hash回帰も維持しました。</p><p>Release build、Phase 0 RTX、Phase 3（mass balance 0、wood-owned Flow）、focused 168/168、標準suite 8 process・78/78、devlog検査に合格しました。production SHA-256は不変です。</p><p>Phase 6FTは8/9 safe stopのままです。Phase 6FO、9-process母集団、16/17 GiB採用、production、動画、latest demoは開始・変更していません。次のmemory populationは新rootと明示承認がある場合だけ再開候補です。</p><p><a href="assets/phase6/diagnostic_identity_cleanup_qualification.json">machine summary</a> · <a href="../design/phase6fu_diagnostic_identity_cleanup.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>CDB stack</strong><small>detach complete</small></p></div><div role="listitem"><span>7/7</span><p><strong>Identity groups</strong><small>fail-closed</small></p></div><div role="listitem"><span>2</span><p><strong>Absence paths</strong><small>psutil + Win32</small></p></div><div role="listitem"><span>0</span><p><strong>Residual</strong><small>exact cleanup</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Pending roadmap</p><h3>memory populationは再承認待ち。Phase 6FOはblocked。</h3><p>診断・identity・cleanup境界だけがqualifiedです。16/17 GiBと9-process分布は未qualifiedで、S93/S100、動画、P4、productionへは進みません。自然再発時は同じstack-first CDBとexact attempt-tree cleanupで証拠を確定します。</p></section>
+        </div>
+      </article>
+    </section>
+
     <section id="phase-6ft" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6FT memory ceiling qualification"><span class="phase-number compact">6FT</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">8 / 9 · lifecycle safe stop</span></aside>
@@ -5045,7 +5057,7 @@
       <div class="shell">
         <p class="section-kicker">Roadmap</p>
         <h2>小さく燃やして、確かめながら進む。</h2>
-        <p>Phase 6FTは8/9でnative stage-close safe stop。14 GiBは正常high-waterへ近すぎるが、16/17 GiB候補はlifecycle・diagnostic・cleanup gate未完のため未採用。Phase 6FOはblockedで、次はbounded CDBとexact cleanupの整合確認。</p>
+        <p>Phase 6FUでstack-first CDB、7状態identity、diagnostic ownership、二系統absence確認、exact cleanupが専用fixture合格。Phase 6FTは8/9 safe stop、16/17 GiBは未qualified、Phase 6FOはblockedのまま。次の9-process memory populationは新rootと明示承認がある場合だけ再開候補。</p>
         <ol class="roadmap">
           <li class="done"><span>0</span><div><strong>環境成立確認</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>1</span><div><strong>Flow単体検証</strong><small>完了 · 2026.08.04</small></div></li>
@@ -5053,7 +5065,7 @@
           <li class="done"><span>3</span><div><strong>木材熱モデル</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>4</span><div><strong>配置と通気</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>5</span><div><strong>崩壊</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · release-after-close候補確認、memory ceiling qualification待ち</small></div></li>
+          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · diagnostic/cleanup qualified、memory population再承認待ち</small></div></li>
         </ol>
       </div>
     </section>

@@ -6,6 +6,12 @@ Phase 6FTは`146ded9`のsafe stopとして凍結する。attempt09は`stage_clos
 
 timeout後はdiagnostic ownership lockでouter cleanupをboundedに抑止し、stack-first CDB、補助module pass、explicit detach、完全またはpartial diagnostic JSON、exact attempt-tree cleanup、二重absence確認、summary確定の順を固定する。専用fixtureが全件合格するまで実Kit、Phase 6FO、9-process memory population、16 GiB採用を開始しない。詳細は`docs/design/phase6fu_diagnostic_identity_cleanup.md`を参照する。
 
+最終fixture root 4はcontract SHA-256 `745522077F7481C41A121EC732188FF6BDF0706FB2CE3313AD7288E4B6328132`で合格した。stack-first CDBはnon-empty all-thread native stack、独立module pass、explicit detachを完了し、module timeout時も先に得たstackを保持してtargetを生存させた。identity/cleanup 7群、locked-log、target-exit-before-attach、outer guard suppression raceも合格し、psutilとnative Win32の双方がexact attempt identity 4件のexitを確認してからsummaryを確定した。runner peakは9,482,240 bytes、diagnostic peakは94,515,200 bytes、残留0、full dump／upload 0である。旧`phase6eg_resource_guard.py`は凍結SHA-256 `A16FA82606A4265093E88816540A0E293205AADC9A15FA11B7CA09C6B32CC45E`へ戻し、新しい挙動はPhase 6FU adapterへ隔離した。
+
+したがってdiagnostic／process identity／exact cleanup境界は、将来の明示承認された9-process memory populationへ使用可能である。ただしPhase 6FT attempt09のnative原因は未確定のまま、16/17 GiBは未qualified、Phase 6FOはblockedである。このPhaseでは実Kit、memory population、S93/S100比較、production、動画、latest demoを開始・変更していない。
+
+最終回帰はRelease build 6.30秒、Phase 0 RTX、Phase 3、focused Phase 6F 168/168、Phase 6FU/6FR/6EA safety 28/28、標準suite 8 process・78/78（294.3秒）、日誌静的検査に合格した。Phase 3はdry/wet mass balance error 0、既存authority SHA、wood-owned Flow input、active blocks final/peak 260/332、peak fuel 1.0を維持した。production app SHA-256は`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`で不変である。
+
 # Phase 6FS B-first release-after-close qualification contract
 
 Phase 6FTは8/9 normal exit後、attempt09 M1のreadback 0条件が`stage_close_request_before`から180.021秒でtimeoutしsafe stopした。8正常runのKit peakは14,494,695,424～14,986,518,528 bytes、16 GiB余裕は2,193,350,656 bytes、追加allocationに追従する増加はなかった。旧14 GiBまでの最小余裕は45,867,008 bytesで異常検出上限として厳しすぎるが、9/9 lifecycleとbounded CDB/exact cleanupが不成立のため16 GiB/17 GiB候補は未qualified、Phase 6FOもblockedのままとする。詳細は`docs/design/phase6ft_memory_ceiling_qualification.md`を参照する。

@@ -23,6 +23,8 @@ GUARD = (SCRIPTS / "phase6fu_resource_guard.py").read_text(encoding="utf-8")
 POLICY = (SCRIPTS / "kit_shutdown_policy.ps1").read_text(encoding="utf-8")
 COMMON = (SCRIPTS / "phase6ea_diagnostic_common.ps1").read_text(encoding="utf-8")
 CONTRACT = SCRIPTS / "phase6fu_diagnostic_cleanup_contract.json"
+PUBLISHED = ROOT / "docs" / "devlog" / "assets" / "phase6" / "diagnostic_identity_cleanup_qualification.json"
+DEVLOG = ROOT / "docs" / "devlog" / "index.html"
 
 
 class Phase6FuDiagnosticCleanup(unittest.TestCase):
@@ -76,6 +78,17 @@ class Phase6FuDiagnosticCleanup(unittest.TestCase):
         sidecar = CONTRACT.with_suffix(".sha256")
         expected = sidecar.read_text(encoding="utf-8").split()[0].upper()
         self.assertEqual(expected, hashlib.sha256(CONTRACT.read_bytes()).hexdigest().upper())
+
+    def test_published_result_preserves_progression_boundary(self):
+        report = json.loads(PUBLISHED.read_text(encoding="utf-8"))
+        self.assertEqual("qualified", report["status"])
+        self.assertFalse(report["history"]["phase6fo_restarted"])
+        self.assertFalse(report["history"]["memory_population_restarted"])
+        self.assertFalse(report["next"]["kit_16_gib_qualified"])
+        self.assertEqual(0, report["residual_process_count"])
+        devlog = DEVLOG.read_text(encoding="utf-8")
+        self.assertIn('id="phase-6fu"', devlog)
+        self.assertIn("Phase 6FOはblocked", devlog)
 
 
 if __name__ == "__main__":

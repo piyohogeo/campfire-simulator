@@ -1,0 +1,130 @@
+{
+  "schema": "campfire.phase6fu.diagnostic-cleanup-summary.v1",
+  "phase": "phase6fu",
+  "status": "qualified",
+  "date": "2026-08-14",
+  "contract": {
+    "schema": "campfire.phase6fu.diagnostic-cleanup-contract.v1",
+    "sha256": "745522077F7481C41A121EC732188FF6BDF0706FB2CE3313AD7288E4B6328132"
+  },
+  "authoritative_runtime_artifact": "artifacts/phase6fu-diagnostic-cleanup-4",
+  "history": {
+    "phase6ft_reclassified": false,
+    "phase6fo_restarted": false,
+    "memory_population_restarted": false,
+    "kit_started": false,
+    "root1_preserved_harness_failure": true,
+    "root3_preserved_adapter_schema_failure": true
+  },
+  "cdb": {
+    "status": "pass",
+    "cases": {
+      "wait_stack_first": {
+        "stack_complete": true,
+        "module_complete": true,
+        "explicit_detach": true,
+        "target_alive_after_detach": true
+      },
+      "module_timeout_fallback": {
+        "stack_complete": true,
+        "module_complete": false,
+        "explicit_detach": true,
+        "target_alive_after_detach": true
+      },
+      "stack_timeout_cleanup": {
+        "stack_complete": false,
+        "module_complete": true,
+        "explicit_detach": true,
+        "target_alive_after_detach": true,
+        "classification": "incomplete_evidence"
+      },
+      "locked_log_end_to_end": "pass",
+      "normal_exit_before_attach": "pass"
+    },
+    "symbol_policy": "local cache only",
+    "full_dump_created": false,
+    "automatic_upload_enabled": false
+  },
+  "identity_state_model": [
+    "alive_identity_match",
+    "alive_identity_mismatch",
+    "confirmed_exited",
+    "query_failed_unknown",
+    "access_denied_unknown",
+    "creation_time_unavailable_unknown",
+    "path_unavailable_unknown"
+  ],
+  "identity_fixture_groups": {
+    "normal_exit": "pass",
+    "transient_query_failure": "pass",
+    "identity_mismatch_protected": "pass",
+    "parent_exit_child_remains": "pass",
+    "diagnostic_cleanup_race": "pass",
+    "suppression_deadline": "pass",
+    "unknown_is_not_absent": "pass"
+  },
+  "outer_guard_race": {
+    "status": "pass",
+    "observed_identity_count": 4,
+    "cleanup_suppression_observed": true,
+    "cleanup_suppression_released": true,
+    "matching_fixture_pids_stopped": 2,
+    "protected_identity_mismatch_count": 0,
+    "final_unknown_count": 0,
+    "absence_confirmation_sources": [
+      "psutil",
+      "win32"
+    ],
+    "all_matching_absent": true
+  },
+  "resources": {
+    "runner_peak_private_bytes": 9482240,
+    "diagnostic_peak_private_bytes": 94515200,
+    "runner_limit_bytes": 536870912,
+    "diagnostic_limit_bytes": 536870912
+  },
+  "compatibility": {
+    "frozen_phase6eg_guard_sha256": "A16FA82606A4265093E88816540A0E293205AADC9A15FA11B7CA09C6B32CC45E",
+    "phase6fu_adapter_isolated": true
+  },
+  "residual_process_count": 0,
+  "production_changed": false,
+  "ceilings_changed": false,
+  "regression": {
+    "release_build": {
+      "status": "pass",
+      "seconds": 6.30
+    },
+    "phase0_rtx": "pass",
+    "phase3": {
+      "status": "pass",
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "active_blocks_final": 260,
+      "active_blocks_peak": 332,
+      "peak_fuel_input": 1.0
+    },
+    "focused_phase6f": "168/168",
+    "focused_diagnostic_safety": "28/28",
+    "standard_suite": {
+      "processes": 8,
+      "tests": "78/78",
+      "seconds": 294.3
+    },
+    "devlog_validation": {
+      "references": 461,
+      "ids": 277,
+      "json": 229,
+      "svg": 177,
+      "zip": 2
+    },
+    "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A"
+  },
+  "next": {
+    "memory_population_may_be_explicitly_reauthorized": true,
+    "memory_population_started": false,
+    "phase6fo_authorized": false,
+    "kit_16_gib_qualified": false,
+    "tree_17_gib_qualified": false
+  }
+}
