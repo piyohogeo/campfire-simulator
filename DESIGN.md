@@ -1,5 +1,13 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FW PID reuse identity policy contract
+
+Phase 6FVは`445a1da`のidentity safe stopとして凍結し、attempt03や旧contractを遡及合格にしない。Phase 6FUの7状態identity query・exact cleanup・停止権限は変更せず、その完了証拠を読む独立した最終policy層だけを追加する。正式contractはschema `campfire.phase6fw.pid-reuse-policy-contract.v1`、SHA-256 `4DA8B0C71F7AAF0A9BA437D0D7712674C87F80AF982F413148E317C4EF4CDBA0`である。
+
+同一PIDの現在identityについて、creation timeまたは安全に正規化したabsolute pathが明確に異なり、少なくとも1つのtrusted queryが完全なidentityを返し、match・query競合・unknown・新identityへのstop要求・summary後再発見がなく、suppression解放・cleanup marker・他identity absenceが完備した場合だけ`protected_pid_reuse_non_residual`とする。creation timeはUTC Unix epoch秒、許容差1.0秒を固定する。path aliasを解決できない場合はfail closedとし、access denied単独をreuse証拠にしない。詳細は`docs/design/phase6fw_pid_reuse_policy.md`を参照する。
+
+正式runtime前に15 fixture、10秒child timeout、runner/child各512 MiB、CDB/Kit 0を固定する。Phase 6FV attempt03は元artifactを変更せず、新rootへhash付きの最小証拠だけを読み出してoffline比較する。Phase 6FWでは9-process memory population、Phase 6FO、16/17 GiB採用、production、既定値、動画を開始・変更しない。
+
 # Phase 6FV post-6FU memory-ceiling qualification contract
 
 Phase 6FTは`146ded9`の8/9 lifecycle safe stopとして凍結し、既存sample／artifact／判定を新母集団へ流用しない。Phase 6FUのdiagnostic・7状態identity・cleanup suppression・exact attempt-tree cleanup・psutil/Win32二経路absence確認を前提に、新しいPhase 6FVを新rootでM0/M1/M2各3 process、balanced order `M0/M1/M2`、`M1/M2/M0`、`M2/M0/M1`として最初から実行する。正式contract SHA-256は`C917FE4463E3BCA600714A51EFEDF64E9E505F19F082647CCF5683269071AF0C`である。

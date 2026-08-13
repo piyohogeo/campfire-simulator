@@ -1,0 +1,98 @@
+{
+  "schema": "campfire.phase6fw.pid-reuse-policy-contract.v1",
+  "phase": "phase6fw",
+  "purpose": "Classify a sufficiently proven PID reuse as a protected non-residual without changing Phase 6FU exact cleanup or Phase 6FV history.",
+  "frozen_history": {
+    "phase6fv_commit": "445a1da",
+    "phase6fv_reclassified": false,
+    "phase6fv_population_resumed": false,
+    "phase6fo_restarted": false
+  },
+  "identity": {
+    "required_fields": [
+      "pid",
+      "create_time_utc_epoch",
+      "path",
+      "root_attempt_id"
+    ],
+    "creation_time_unit": "UTC Unix epoch seconds",
+    "creation_time_query_tolerance_seconds": 1.0,
+    "minimum_clear_reuse_separation_seconds": 1.0,
+    "creation_time_comparison": "finite absolute difference greater than 1.0 seconds is a clear mismatch; a difference at or below 1.0 seconds is the same creation-time identity component",
+    "clock_contract": "Do not infer ordering from wall-clock time. Compare independently captured process creation timestamps only; clock adjustment is not absence evidence.",
+    "trusted_query_sources": [
+      "psutil",
+      "win32"
+    ],
+    "path_contract": {
+      "require_absolute": true,
+      "case_insensitive": true,
+      "normalize_separators": true,
+      "strip_windows_namespace_prefixes": [
+        "\\\\?\\",
+        "\\??\\"
+      ],
+      "resolve_existing_paths_when_possible": true,
+      "short_long_alias_requires_resolution": true,
+      "system32_redirection_requires_resolution": true,
+      "unresolved_alias_is_unknown": true,
+      "different_executable_basenames_are_never_collapsed": true
+    }
+  },
+  "states": {
+    "phase6fu_seven_state_model_unchanged": true,
+    "final_policy_states": [
+      "attempt_identity_absent",
+      "attempt_owned_residual",
+      "protected_pid_reuse_non_residual",
+      "unresolved_identity_failure"
+    ]
+  },
+  "protected_pid_reuse_requirements": [
+    "current process uses the observed attempt PID",
+    "creation time or canonical absolute path clearly differs",
+    "at least one trusted query returns a complete current identity",
+    "no trusted query matches the original identity",
+    "complete trusted queries do not conflict about the current identity",
+    "the original identity is absent by confirmed exit or displacement by the proven current identity",
+    "matching_remaining is empty",
+    "final_unknown is empty",
+    "no termination was requested for the mismatched current identity",
+    "cleanup suppression is released and did not time out",
+    "cleanup_suppression_released, exact_cleanup_started, and exact_cleanup_complete markers are present in order",
+    "all other attempt identities are confirmed exited or independently protected reuse",
+    "no attempt-owned identity is rediscovered after the cleanup summary",
+    "the machine-readable decision retains original identity, query evidence, path comparison, time comparison, and stop evidence",
+    "final attempt-owned residual count is zero"
+  ],
+  "fail_closed": [
+    "missing or non-finite creation time",
+    "missing, relative, or unresolved ambiguous path",
+    "conflicting complete query identities",
+    "any trusted query matches the original identity",
+    "unresolved identity query",
+    "termination request for a mismatched current identity",
+    "matching residual or rediscovery after summary",
+    "cleanup marker omission or inversion",
+    "cleanup suppression not released or timed out",
+    "artifact and stop evidence mismatch"
+  ],
+  "qualification": {
+    "fixture_process_timeout_seconds": 10,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_child_private_limit_bytes": 536870912,
+    "minimum_fixture_count": 15,
+    "phase6fv_offline_equivalent_required": true,
+    "mismatched_identity_stop_requests_required": 0,
+    "matching_residual_required": 0,
+    "unresolved_unknown_required": 0,
+    "fixture_child_residual_required": 0,
+    "cdb_invocations_required": 0,
+    "production_changed": false
+  },
+  "next_phase_boundary": {
+    "memory_population_started_here": false,
+    "phase6fo_started_here": false,
+    "eligible_followup_if_qualified": "A separately authorized fresh-root 9-process memory-ceiling population using release-after-close, provisional Kit 16 GiB/tree 17 GiB, Phase 6FU guard plus this policy, and stack-first CDB."
+  }
+}
