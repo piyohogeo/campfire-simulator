@@ -1,0 +1,177 @@
+{
+  "schema": "campfire.phase6fi.lifecycle-replacement-contract.v1",
+  "phase": "phase6fi",
+  "declared_before_runtime": true,
+  "safe_commit": "60e25fe",
+  "history_frozen": {
+    "phase6fg_status": "lifecycle_safe_stop",
+    "phase6fh_status": "prerequisite_safe_stop",
+    "phase6fg_contract_sha256": "54FD6185ADD41B9333506ACC55BF3472F7BBA4F0D726679071F1126572541EED",
+    "phase6fh_contract_sha256": "F5F193FD772527B261F4CF23605FB03A8E5A95DF1D1CA9654371BD20479706A9",
+    "historical_reclassification": false,
+    "artifact_overwrite": false
+  },
+  "purpose": "qualify six representative readback-free lifecycle controls while allowing only two bounded replacement launches for preserved startup-prerequisite failures",
+  "population": {
+    "target_representative_processes": 6,
+    "startup_prerequisite_replacement_budget": 2,
+    "maximum_launches": 8,
+    "independent_processes": true,
+    "unique_attempt_ids": true,
+    "automatic_retry": false,
+    "native_lifecycle_replacement": false,
+    "operation_failure_replacement": false,
+    "absolute_safety_replacement": false,
+    "no_reproduction_claim": "six representative normal exits are bounded non-reproduction, not proof that the native stage-close issue does not exist"
+  },
+  "launch_classifications": [
+    "representative_startup",
+    "startup_prerequisite_failure",
+    "operation_failure",
+    "native_lifecycle_failure",
+    "absolute_safety_failure"
+  ],
+  "replacement_policy": {
+    "replaceable_classification": "startup_prerequisite_failure",
+    "preserve_failed_attempt": true,
+    "count_in_startup_monitoring": true,
+    "count_in_representative_lifecycle_population": false,
+    "stop_when_budget_exceeded": "prerequisite_population_incomplete",
+    "nonreplaceable": [
+      "operation_failure",
+      "native_lifecycle_failure",
+      "absolute_safety_failure"
+    ]
+  },
+  "condition": {
+    "name": "A_readback_none_lifecycle_control",
+    "scenario": "production_four",
+    "geometry_variant": "phase6er_corrected",
+    "point_policy": "allow_self_center",
+    "point_offset_m": -0.0125,
+    "support_radius_m": 0.05,
+    "collision_enabled": true,
+    "point_filtering_enabled": true,
+    "readback_mode": "none",
+    "readback_channels": "none",
+    "public_readback_calls": 0,
+    "numpy_asarray_calls": 0,
+    "field_persistence_calls": 0,
+    "spatial_collectors_enabled": false,
+    "source_scales": {
+      "fuel": 1.0,
+      "temperature": 1.0,
+      "smoke": 1.0
+    },
+    "sample_frames": [30, 60, 90, 120, 150, 180, 200, 240, 280, 320],
+    "running_flow_observation_seconds": 24.0
+  },
+  "startup": {
+    "classification_frame": 60,
+    "final_frame": 120,
+    "representative_active_blocks": 128,
+    "expected_point_revision": 1,
+    "expected_total_point_count": 1440,
+    "expected_active_point_count": 1344,
+    "expected_payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389",
+    "expected_source_sums": {
+      "fuel": 1075.2000160217285,
+      "temperature": 2688.0,
+      "smoke": 107.51999759674072
+    },
+    "source_sum_absolute_tolerance": 0.000001,
+    "flow_acquire_position": "before_updates",
+    "stopped_update_count": 12,
+    "extra_update_before_play_count": 0,
+    "preserve_full_startup_history": true
+  },
+  "operation": {
+    "required_markers_for_representative_launch": [
+      "startup_liveness_confirmed",
+      "final_sample_complete",
+      "measurement_complete",
+      "timeline_stop_confirmed",
+      "renderer_drain_complete",
+      "flow_references_release_complete",
+      "provider_readback_references_release_complete",
+      "stage_close_request_before"
+    ],
+    "expected_public_readback_calls": 0,
+    "expected_numpy_asarray_calls": 0,
+    "expected_field_persistence_calls": 0
+  },
+  "lifecycle": {
+    "timeline_stop_confirmation_updates": 12,
+    "renderer_pre_close_drain_updates": 8,
+    "renderer_post_close_drain_updates": 4,
+    "release_order": [
+      "Flow interface and Emitter",
+      "volume/readback/collector",
+      "close_stage_async",
+      "USD context disconnect",
+      "post-close renderer drain",
+      "app close"
+    ],
+    "stage_close_timeout_seconds": 180,
+    "inner_absolute_timeout_seconds": 600,
+    "outer_condition_timeout_seconds": 960,
+    "normal_os_exit_required_for_representative_launch": true,
+    "startup_prerequisite_exit_code_one_is_not_native_failure_when_stage_close_and_cleanup_complete": true
+  },
+  "bounded_cdb": {
+    "only_after_native_lifecycle_failure": true,
+    "noninvasive": true,
+    "worst_case_total_timeout_seconds": 105,
+    "attach_and_module_timeout_seconds": 30,
+    "all_thread_stack_timeout_seconds": 45,
+    "detach_recovery_timeout_seconds": 30,
+    "stack_depth": 16,
+    "stdout_direct_to_file": true,
+    "stderr_direct_to_file": true,
+    "symbol_policy": "local cache only; retain raw module+offset and fail closed when private symbols are absent",
+    "stack_output_limit_bytes": 16777216,
+    "stderr_output_limit_bytes": 2097152,
+    "private_bytes_limit": 536870912,
+    "single_capture_lock": true,
+    "exact_identity": "pid+creation_time+absolute_executable_path",
+    "full_dump_automatic": false,
+    "known_ngx_requires_all_five_tokens": true
+  },
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "resource_sampling_seconds": 0.2,
+    "gpu_sampling_ms": 1000,
+    "resource_ceiling_change": false,
+    "automatic_upload": false
+  },
+  "completion_states": [
+    "lifecycle_qualification_pass",
+    "prerequisite_population_incomplete",
+    "operation_safe_stop",
+    "native_lifecycle_safe_stop",
+    "absolute_safety_stop"
+  ],
+  "phase6fg_restart": {
+    "automatic": false,
+    "candidate_only_after": "six representative_startup launches pass lifecycle and absolute safety gates",
+    "explicit_approval_required": true
+  },
+  "excluded": [
+    "NanoVDB readback",
+    "NumPy conversion",
+    "field conversion or persistence",
+    "forced garbage collection",
+    "private release API",
+    "startup root-cause investigation",
+    "startup automatic recovery",
+    "production changes",
+    "Phase 6FG automatic restart",
+    "automatic full dump",
+    "video"
+  ]
+}

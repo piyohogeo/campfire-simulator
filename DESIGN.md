@@ -1,5 +1,9 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FI bounded startup replacement lifecycle contract
+
+Phase 6FG／6FHを凍結し、Phase 6FHのreadbackなしA controlとshutdown処理をそのまま再利用する後継contractを事前定義した。代表lifecycle sampleは6本、`startup_prerequisite_failure`専用replacement budgetは2、最大launchは8。各attemptは一意で、startup失敗も削除・上書きせず監視証拠へ残す。operation、native lifecycle、absolute safety failureは置換せず即停止する。readback、NumPy、field保存、startup原因追跡、自動recovery、production変更、Phase 6FG自動再開は対象外。詳細は`docs/design/phase6fi_lifecycle_replacement.md`。
+
 # Phase 6FH readback-free lifecycle qualification safe stop
 
 Phase 6FGの5 passとsequence 2 A lifecycle failureは凍結し、readbackなしA controlだけを6独立processで評価するPhase 6FHを事前契約した。contract SHA-256は`F5F193FD772527B261F4CF23605FB03A8E5A95DF1D1CA9654371BD20479706A9`。memory waveform契約、14 GiB Kit／16 GiB tree ceiling、4本fixture、Point payload、Flow、CollisionProxy、V3、productionは変更していない。CDBはcache-onlyのattach/module 30秒、all-thread stack 45秒、必要時detach recovery 30秒へ分割し、各出力を直接ファイルへstreamする。Phase 6EL fixtureはnormal attach/detach、locked log、target exit、timeout、abnormal exitをすべて合格し、CDB残留0だった。

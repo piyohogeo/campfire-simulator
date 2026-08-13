@@ -1,5 +1,8 @@
 # Changelog
 
+- Added the pre-runtime Phase 6FI bounded startup-replacement contract without reclassifying Phase 6FG/6FH. It requires six representative readback-free lifecycle controls, permits at most two additional unique launches only for preserved startup-prerequisite failures, and caps the total at eight.
+- Kept operation, native lifecycle, and absolute-safety failures nonreplaceable and fail-fast. The Phase 6FH fixture, Point payload, Flow, shutdown ordering, 14/16 GiB ceilings, staged 30/45/30-second CDB path, production, and memory-waveform policy remain unchanged; Phase 6FG is not automatically restarted.
+
 - Added the independent Phase 6FH readback-free lifecycle contract without reclassifying Phase 6FG or changing memory-waveform policy, production, the four-log fixture, Flow, payload, or resource ceilings. It freezes six independent A controls and separates operation evidence from lifecycle qualification.
 - Split bounded CDB collection into cache-only attach/module, all-thread stack, and detach-recovery passes with individual caps, direct-to-file output, exact target identity, and the existing 512 MiB diagnostic ceiling. Phase 6EL fixtures passed normal, locked-log, target-exit, timeout, and abnormal-exit cases with zero residual.
 - Stopped Phase 6FH at run01 without retry because the prerequisite startup stayed at 24 fresh active blocks through frame 120. Source counts, revision, supply totals, identities, and telemetry were valid, but the fixed fixture did not reach representative occupancy. Stage close completed in 3.003 seconds and the process disappeared without forced cleanup; exit code 1 was not relabeled as a normal OS exit. No CDB, fatal, dump, upload, or residual occurred.
