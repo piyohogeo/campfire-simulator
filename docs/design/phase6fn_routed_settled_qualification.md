@@ -31,3 +31,15 @@ Kit起動前に、probeと同じdirectory、raw JSON、resource/extension JSONL�
 ## 適用範囲
 
 9 representative processが全層を通過した場合だけ、固定4本fixtureにおける同一process内public readback 3回、ordered release 3回、fuel zero-copy alias 3回、settled baselineでの操作固有階段状累積なし、normal shutdownをqualifiedとする。4回以上、毎frame、他channel、field永続化、長時間、production統合は未qualifiedのままで、次Phaseは自動開始しない。production、Flow、Point、CollisionProxy、V3、既定値は変更しない。
+
+## 実測結果
+
+E2E preflightは実artifact形状の19/19 checkに合格し、正式root `artifacts/phase6fn-routed-settled-1`を新規作成した。balanced 9 processは9 launch、startup replacement 0で完了し、R0/R1/R2各3本が全てrepresentative passだった。operation integrityは9/9、explicit settlingは27/27で、最小elapsed 5.258秒、resource sample 17、renderer update 80だった。frame 620に4回目operationはない。
+
+全3 sequenceでR1/R2のfield-adjusted paired gateが合格し、replicated staircaseは0。R2の9 iterationは正の同一pointer、same object、shares-memory、metadata一致、weak residual 0。`np.asarray()`隣接CPU増分は0～1,052,672 bytes、GPU増分は全て0 MiBだった。public field logical bytesはiteration 1/2/3で41,398,016／49,253,632／55,666,688 bytesへ成長しており、この正の増加をpaired gateで控除した。
+
+Kit peakは14,918,832,128 bytesで14 GiBまで113,553,408 bytes、tree peakは15,082,119,168 bytesで16 GiBまで2,097,750,016 bytes。runner peak 160,165,888 bytes、diagnostic peak 17,231,872 bytes、physical/commitの最小余裕は82,548,654,080／101,827,108,864 bytesだった。stage closeは2.501～34.329秒、中央値4.097秒。9/9 normal OS exit、CDB/fatal/dump/upload/cleanup residual 0である。
+
+したがって固定条件における3回readbackと3回fuel zero-copy alias lifetimeをqualifiedとする。4回以上、他channel、field永続化、長時間、production統合は未qualifiedであり、次Phaseには新contractと明示承認が必要である。内部診断で画面差がないため動画は作らず、latest demo pointerも変更しない。
+
+ここで「residual 0」は、公開Python参照のweak-reference残留0、全aliasのordered-release marker、process cleanup residual 0を意味する。Flow内部/native readback resourceの所有handle数を列挙する公開APIは確認できないため、内部handle count 0を直接観測したとは主張しない。

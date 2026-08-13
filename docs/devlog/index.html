@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6fm">最新記録</a>
+        <a href="#phase-6fn">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fm">Phase 6FMのsafe stopを読む</a>
+        <a class="button primary" href="#phase-6fn">Phase 6FNのqualificationを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FM · analyzer integration safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6FN · 3-iteration qualified</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Population</span><strong>1 launch · later 8 not started</strong></div>
+        <div><span>Population</span><strong>9 / 9 · replacement 0</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
@@ -49,6 +49,18 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-6fn" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FN routed settled qualification entry"><span class="phase-number compact">6FN</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">9 / 9 · 3-iteration qualified</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FN · routed settled-baseline qualification</p><h2>旧analyzerをformal判定から分離。<br>3回のreadbackとfuel aliasをqualified。</h2><p>Phase 6FL／6FMのsafe stopを変更せず、schema routing、operation、explicit settling、pointer、paired accumulation、安全性、lifecycle、cleanupを独立判定する新analyzerを構築しました。iteration 3は<code>settling_end(frame=620)</code>を正式に読み、620は4回目operationのないsentinelとして検査します。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">E2E before Kit</p><h3>19 / 19 real-shaped fixtures</h3><p>実probeと同じraw JSON、JSONL、runner evidence、guard、resource traceをanalyzer CLIへ通しました。settling欠落、call／pointer／weak破損、lifecycle、cleanup、resource、parse、routing、停止後launchを各層でfail closedにできることを確認してから正式runを開始しています。</p></section><section class="note"><p class="note-label">Formal population</p><h3>27 / 27 explicit settling</h3><p><code>R0/R1/R2 · R1/R2/R0 · R2/R0/R1</code>の9独立processをreplacement 0で完了。各processはframe 120／360／540の3 operationだけを実行し、settling最小値は5.258秒、17 resource samples、80 renderer updatesでした。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Qualified scope</p><h3>同一process内3回まで、settled累積なし。</h3><p>全3 sequenceでR1/R2のR0控除・field増加控除後paired gateが合格。R2の9 iterationは正の同一pointer、same Python object、shared memory、weak residual 0でした。<code>np.asarray()</code>隣接CPU増分は0～1,052,672 bytes、GPU増分0 MiB。field logical bytesは41,398,016→49,253,632→55,666,688で、その成長を隠さず補正しています。</p><p>Kit peakは14,918,832,128 bytes、14 GiBまで113,553,408 bytes。tree peak 15,082,119,168 bytes。stage closeは2.501～34.329秒、中央値4.097秒で、9/9 normal OS exit。CDB、fatal、dump、upload、cleanup residualは0でした。</p><p>Release build、Phase 0 RTX、Phase 3（dry/wet mass balance 0、authority SHA維持、Flow blocks final/peak 287/334）、focused <code>173/173</code>、標準8 process <code>78/78</code>（344.2秒）に合格。production SHAは不変です。</p><p>4回以上、毎frame、他channel、field保存、長時間、production統合は未qualifiedです。内部メモリ診断で画面差がないため新動画は作らず、latest demoも変更していません。</p><p><a href="assets/phase6/routed_settled_three_iteration_qualification.json">machine report</a> · <a href="../design/phase6fn_routed_settled_qualification.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>9/9</span><p><strong>Processes</strong><small>normal exits</small></p></div><div role="listitem"><span>27</span><p><strong>Settling</strong><small>all explicit pass</small></p></div><div role="listitem"><span>9/9</span><p><strong>R2 pointer</strong><small>zero-copy complete</small></p></div><div role="listitem"><span>34.3</span><p><strong>Max close</strong><small>seconds</small></p></div><div role="listitem"><span>0</span><p><strong>Residual</strong><small>none</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Next explicit approval boundary</p><h3>4回以上は新しい独立契約で。</h3><p>今回の合格範囲は固定4本fixtureの3回反復までです。より長い反復、他channel、field保持、Point Emitter＋CollisionProxy本線への復帰は、新contractと明示承認後にだけ開始します。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6fm" class="section entry-section phase-six">

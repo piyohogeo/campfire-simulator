@@ -1,0 +1,18 @@
+{
+  "schema": "campfire.phase6fn.devlog-summary.v1",
+  "phase": "phase6fn",
+  "status": "qualified",
+  "contract_sha256": "33D7A1751EE8CF474A34D8104B59A0CC8D7749E48108D5BE8A3F263771BC0247",
+  "preflight": {"checks_passed": 19, "checks_total": 19, "real_artifact_shape": true},
+  "population": {"total_launches": 9, "representative_processes": 9, "startup_replacements": 0, "R0": 3, "R1": 3, "R2": 3},
+  "operation": {"operations_per_process": 3, "operation_frames": [120, 360, 540], "settling_end_frames": [360, 540, 620], "frame_620_nonoperation": true, "integrity_passed": 9},
+  "settling": {"interval_count": 27, "minimum_elapsed_seconds": 5.258, "minimum_resource_samples": 17, "minimum_renderer_updates": 80, "integrity_passed": 27},
+  "paired_accumulation": {"material_threshold_bytes": 91184640, "replicated_failures": 0, "R1_sequences_passed": 3, "R2_sequences_passed": 3},
+  "pointer_alias": {"R2_iterations": 9, "positive_equal_pointer": 9, "same_python_object": 9, "shares_memory": 9, "weak_reference_residual": 0, "numpy_asarray_private_delta_bytes": {"minimum": 0, "maximum": 1052672}, "numpy_asarray_gpu_delta_mib": {"minimum": 0.0, "maximum": 0.0}, "field_logical_bytes_by_iteration": [41398016, 49253632, 55666688]},
+  "resource": {"kit_peak_bytes": 14918832128, "kit_14_gib_margin_bytes": 113553408, "tree_peak_bytes": 15082119168, "tree_16_gib_margin_bytes": 2097750016, "runner_peak_bytes": 160165888, "diagnostic_peak_bytes": 17231872, "minimum_available_physical_bytes": 82548654080, "minimum_commit_headroom_bytes": 101827108864},
+  "lifecycle": {"normal_os_exits": 9, "stage_close_seconds": {"minimum": 2.501284, "median": 4.096623, "maximum": 34.329465}, "cdb_invocations": 0, "fatal": 0, "dump": 0, "automatic_upload": 0, "cleanup_residual": 0},
+  "qualification": {"three_readbacks": true, "three_fuel_alias_lifetimes": true, "more_than_three_iterations": false, "other_channels": false, "production_integration": false},
+  "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "production_changed": false,
+  "video_created": false
+}
