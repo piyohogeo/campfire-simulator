@@ -56,5 +56,38 @@
     "paired_readback_qualified": false,
     "production_changed": false
   },
+  "regression": {
+    "release_build": "pass",
+    "release_build_seconds": 6.29,
+    "focused_tests": {
+      "passed": 117,
+      "total": 117
+    },
+    "phase0_rtx": "pass",
+    "phase3": {
+      "status": "pass",
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "active_blocks_final": 237,
+      "active_blocks_peak": 362,
+      "peak_fuel_input": 1.0
+    },
+    "standard_suite": {
+      "passed": 78,
+      "total": 78,
+      "seconds": 319.2
+    },
+    "devlog_validation": {
+      "status": "pass",
+      "references": 435,
+      "ids": 264,
+      "json": 216,
+      "svg": 177,
+      "zip": 2
+    },
+    "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "contract_sha256_verified": true,
+    "final_process_residual_count": 0
+  },
   "next_approval": "A new contract/root may predeclare at most two startup-prerequisite replacement slots; operation or native lifecycle failures remain fail-fast and non-replaceable."
 }

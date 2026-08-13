@@ -57,3 +57,7 @@ The formal result is `prerequisite_safe_stop`: 1 of 6 launch slots was attempted
 Phase 6FG remains frozen and is not restarted. A future explicitly approved lifecycle contract may predeclare at most two extra launch slots for startup-prerequisite failures. Such a launch is preserved in startup-monitoring evidence and is not called a retry or a lifecycle pass. An operation failure or native lifecycle failure is never replaced and stops the population immediately. A later paired A/B/C contract may use the same distinction, but overall single-readback qualification still requires both operation and lifecycle axes to pass.
 
 No full dump is proposed from the current evidence. A bounded one-time dump remains an approval-only option if a representative control reproduces the same `omni_usd` boundary and the staged cache-only CDB path cannot extend the public module+offset evidence.
+
+## Regression
+
+Release build completed in 6.29 seconds. Focused Phase 6F plus Phase 6EA/6EB/6EL safety contracts passed 117/117. Phase 0 RTX passed on the RTX 3090 selected device. Phase 3 passed with dry/wet mass-balance error 0, active blocks final/peak 237/362, and peak fuel input 1.0. The standard eight-process suite passed 78/78 in 319.2 seconds. Static devlog validation reported 435 references, 264 IDs, 216 JSON files, 177 SVG files, two ZIP files, and no missing references. Production SHA-256 remained `94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`; the frozen contract hash also matched, and the final Kit/CDB/GPU-helper residual count was zero.

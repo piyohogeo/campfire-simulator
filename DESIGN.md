@@ -8,6 +8,8 @@ formal run01はreadback前のstartup gateで`small_field_ingestion`となった�
 
 operation axisとlifecycle axisは独立報告する。operationはmarker、ceiling、call count、alias identity、settling、paired order、lifecycleはstage close、extension shutdown、normal OS exit、residual、timeout／CDB／forced cleanupを持つ。production採用には両軸passが必要で、operation evidenceをlifecycle成功やmemory passへ読み替えない。次回候補は明示承認された新contract／新rootで、startup prerequisiteだけ最大2つの事前枠で置換可能とし、元runも監視母集団へ保持する。operation failureまたはnative lifecycle failureは置換せず即停止する。Phase 6FGのbalanced 9-processは自動再開しない。
 
+回帰はRelease build 6.29秒、focused Phase 6F／6EA／6EB／6EL 117/117、Phase 0 RTX、Phase 3、標準suite 78/78（319.2秒）が合格した。Phase 3はdry/wet authority SHAを生成し、mass-balance error 0、Flow active blocks final/peak 237/362、peak fuel 1.0だった。日誌検査は435 reference、264 ID、JSON 216、SVG 177、ZIP 2で欠落なし。production app SHA-256は`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`、contract SHAも凍結値と一致し、Kit／CDB／GPU helper残留は0だった。
+
 # Phase 6FG paired single-readback qualification
 
 Phase 6FD／6FE／6FFの契約とsafe stopは凍結し、静的なメモリ波形への過剰適合を新Phaseへ持ち込まない。Phase 6FGは正式判定を3層へ分離した。hard gateは14 GiB Kit、16 GiB tree、system headroom、診断process上限、fatal／access violation／dump／upload 0、stage close／shutdown／normal OS exit、exact cleanup、代表startup、操作回数だけである。slope、rolling超過、terminal残差、high-water回復、projected drift、Working Set、GPU memory、active-block相関は全sampleをversion付きtelemetryとして保存するが、単独では不合格にしない。操作差分はprocess peakではなく隣接同期markerを主証拠とする。契約SHA-256は`54FD6185ADD41B9333506ACC55BF3472F7BBA4F0D726679071F1126572541EED`。詳細は`docs/design/phase6fg_paired_readback.md`。
