@@ -6,6 +6,8 @@ Phase 6FG〜6FIの履歴を凍結し、Phase 6FGのthree-layer A/B/C operation�
 
 Aはreadbackなし、Bはpublic readback 1回とalias解放、Cはreadback 1回＋`numpy.asarray(fuel)` 1回と既存順序のalias解放である。Phase 6FG contract SHA `54FD6185...2541EED`とPhase 6FI contract SHA `A0B68CFC...1A0387`を基礎としてbyte hashを固定し、fixture、Point、Flow、stage、startup、24秒観測、shutdown、14/16 GiB上限を変更しない。波形はwarning telemetryのままで、operation固有差分は隣接同期markerを主証拠とする。Phase 6FJ contract SHA-256は`4CD6006F1716367C3F092B75E04BAE99C4B24030D3665DFB92F26313B607ABDD`。繰り返しreadback、production変更、動画は対象外。詳細は`docs/design/phase6fj_balanced_single_readback.md`。
 
+formal rootは10 launchを実行し、attempt03の24-block startup prerequisiteを1枠置換した。代表startup 9本はA/B/C各3本の操作とnormal lifecycleを完了したが、事後integrity監査でC 3本とも必須のNumPy data pointerがartifactへ保存されていないことを確認した。Python identity／`shares_memory`／weak residual 0だけではpointer契約の代替にならないため、attempt04を最初の非置換operation evidence failureとしてPhase 6FJをsafe stopとした。attempt05～10はpartial evidenceとして保持し、単回readback／fuel alias／反復readbackはいずれも未qualifiedである。probeは将来run向けにsource／converted pointerを別々に保存し、欠落・不一致をfail-closedにした。productionは変更していない。
+
 # Phase 6FI bounded startup replacement lifecycle contract
 
 Phase 6FG／6FHを凍結し、Phase 6FHのreadbackなしA controlとshutdown処理をそのまま再利用する後継contractを事前定義した。代表lifecycle sampleは6本、`startup_prerequisite_failure`専用replacement budgetは2、最大launchは8。各attemptは一意で、startup失敗も削除・上書きせず監視証拠へ残す。operation、native lifecycle、absolute safety failureは置換せず即停止する。readback、NumPy、field保存、startup原因追跡、自動recovery、production変更、Phase 6FG自動再開は対象外。詳細は`docs/design/phase6fi_lifecycle_replacement.md`。

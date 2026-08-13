@@ -19,3 +19,13 @@ Absolute safety, exact operation counts and identities, representative startup, 
 Only native lifecycle failure may invoke the existing bounded 30/45/30-second CDB path. It is nonreplaceable and stops the population. Full dump capture remains disabled without separate approval.
 
 Only nine representative passes, three per condition, qualify one readback and one fuel alias lifetime. Repeated readback remains excluded and requires a later explicit phase.
+
+## Runtime result and fail-closed evidence audit
+
+The new root launched ten independent processes. Attempt 03 preserved a fresh, source-valid 24-block `startup_prerequisite_failure` and consumed one of two replacement slots. Nine later/startup-valid A/B/C processes completed the intended operations, stage close, extension shutdown, normal OS exit, and exact cleanup. Stage close was 2.176–12.161 seconds (median 3.970 seconds); CDB, fatal, dump, automatic upload, and cleanup residual counts were zero.
+
+The six B/C partial observations recorded a 302,206,976–311,742,464-byte immediate readback increase and a 268,693,504–302,338,048-byte next-frame residual. Settling ended 757,747,712–776,646,656 bytes below the pre-readback marker. Every C observation reported a 41,398,016-byte fuel array, zero adjacent `np.asarray()` Private Bytes increase, the same Python object, shared memory, and zero weak-reference residual.
+
+The post-runtime integrity audit found that the probe had not persisted the NumPy data-buffer pointer for either the source or converted object. Python object identity is not a substitute for a data pointer, and the frozen qualification explicitly required identity, pointer, and weak-reference agreement for all three C processes. This is an operation-evidence failure, not a startup prerequisite, so it is nonreplaceable. Attempt 04 is the first point at which the corrected analyzer would have stopped; attempts 05–10 are retained only as partial diagnostic evidence. Phase 6FJ therefore remains a safe stop: single readback, single fuel-alias lifetime, and repeated readback are all unqualified.
+
+The diagnostic probe now records the public NumPy `__array_interface__.data[0]` pointer independently for source and converted arrays, writes both to synchronized markers, and requires positive equal pointers in addition to same-object/shared-memory evidence. Missing or inconsistent pointer evidence is fail-closed. This correction changes no production path, Point payload, Flow setting, CollisionProxy, V3 setting, resource ceiling, or prior Phase artifact.

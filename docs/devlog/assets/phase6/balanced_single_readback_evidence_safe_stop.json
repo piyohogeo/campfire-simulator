@@ -1,0 +1,95 @@
+{
+  "schema": "campfire.phase6fj.balanced-single-readback-safe-stop.v1",
+  "phase": "phase6fj",
+  "date": "2026-08-13",
+  "contract_sha256": "4CD6006F1716367C3F092B75E04BAE99C4B24030D3665DFB92F26313B607ABDD",
+  "artifact_root": "artifacts/phase6fj-balanced-single-readback-1",
+  "history_frozen": ["phase6fg", "phase6fh", "phase6fi"],
+  "launches": {
+    "total": 10,
+    "representative_startup": 9,
+    "startup_prerequisite_failures": 1,
+    "replacement_budget_used": 1,
+    "small_field_attempt": "attempt03",
+    "small_field_active_blocks": 24
+  },
+  "formal_decision": {
+    "qualified": false,
+    "safe_stop": true,
+    "first_required_stop_attempt": "attempt04",
+    "failure": "c_buffer_pointer_evidence_missing_or_inconsistent",
+    "attempts_after_required_stop_retained_as_partial_evidence": [
+      "attempt05", "attempt06", "attempt07", "attempt08", "attempt09", "attempt10"
+    ],
+    "one_readback_qualified": false,
+    "one_fuel_alias_lifetime_qualified": false,
+    "repeated_readback_qualified": false
+  },
+  "partial_operation_evidence": {
+    "completed_A": 3,
+    "completed_B": 3,
+    "completed_C": 3,
+    "readback_immediate_bytes": {
+      "minimum": 302206976,
+      "median": 302247936,
+      "mean": 303824213.3333333,
+      "maximum": 311742464
+    },
+    "next_frame_residual_bytes": {
+      "minimum": 268693504,
+      "median": 268957696,
+      "mean": 276026709.3333333,
+      "maximum": 302338048
+    },
+    "settling_end_residual_bytes": {
+      "minimum": -776646656,
+      "median": -770273280,
+      "mean": -769196714.6666666,
+      "maximum": -757747712
+    },
+    "fuel_logical_bytes": 41398016,
+    "numpy_asarray_immediate_bytes": [0, 0, 0],
+    "python_same_object": [true, true, true],
+    "shares_memory": [true, true, true],
+    "weak_reference_residual": [0, 0, 0],
+    "source_data_pointer": [null, null, null],
+    "converted_data_pointer": [null, null, null],
+    "pointer_contract_complete": false,
+    "note": "Python object identity and shares_memory were recorded, but the mandatory public NumPy data pointers were not persisted. These C observations are partial evidence, not qualification."
+  },
+  "lifecycle": {
+    "representative_startup_processes_completed": 9,
+    "normal_exit_and_cleanup_passes": 9,
+    "stage_close_seconds": {
+      "minimum": 2.176218032836914,
+      "median": 3.970247983932495,
+      "mean": 4.704153935114543,
+      "maximum": 12.160622119903564
+    },
+    "cdb_invocations": 0,
+    "fatal": 0,
+    "dump": 0,
+    "automatic_upload": 0,
+    "cleanup_residual": 0
+  },
+  "resources": {
+    "runner_peak_bytes": 160808960,
+    "diagnostic_peak_bytes": 17096704,
+    "kit_peak_bytes": 14923444224,
+    "unique_tree_peak_bytes": 15086448640,
+    "minimum_kit_ceiling_margin_bytes": 108941312,
+    "minimum_available_physical_bytes": 85629755392,
+    "minimum_commit_headroom_bytes": 104898572288
+  },
+  "waveform_telemetry": {
+    "formal_gate": false,
+    "warning_count": 40
+  },
+  "production": {
+    "changed": false,
+    "app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A"
+  },
+  "video_created": false,
+  "latest_demo_changed": false,
+  "next_boundary": "A new explicitly approved empty-root population must use pointer-complete probe evidence. Repeated readback remains excluded."
+}

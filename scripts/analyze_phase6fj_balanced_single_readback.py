@@ -97,6 +97,17 @@ def _common(attempt_root: Path, metadata: dict, overlay: dict, base: dict) -> di
             operation_case = _case(attempt_root, condition, base)
             if not operation_case.get("condition_gate_pass"):
                 operation.extend(operation_case.get("condition_gate_failures") or ["condition_gate_failed"])
+            if condition == "C_fuel_alias":
+                observable = ((operation_case.get("boundary") or {}).get("observable_copy_contract") or {})
+                source_pointer = observable.get("source_data_pointer")
+                converted_pointer = observable.get("converted_data_pointer")
+                pointer_complete = bool(
+                    isinstance(source_pointer, int) and source_pointer > 0
+                    and isinstance(converted_pointer, int) and converted_pointer > 0
+                    and observable.get("same_data_pointer") is True
+                )
+                if not pointer_complete:
+                    operation.append("c_buffer_pointer_evidence_missing_or_inconsistent")
         except Exception as exc:  # fail closed and preserve the analyzer boundary
             operation.append(f"operation_analyzer:{type(exc).__name__}:{exc}")
 
@@ -179,23 +190,73 @@ def main() -> None:
 
     representative = [item for item in attempts if item["classification"] == "representative_pass"]
     by_condition = {name: [item for item in representative if item["condition"] == name] for name in LABELS}
-    operation_cases = [item["operation_evidence"] for item in representative if item["operation_evidence"]]
+    operation_attempts = [item for item in attempts if item["operation_evidence"]]
+    operation_cases = [item["operation_evidence"] for item in operation_attempts]
     b_cases = [item["operation_evidence"] for item in by_condition["B_readback"] if item["operation_evidence"]]
-    c_cases = [item["operation_evidence"] for item in by_condition["C_fuel_alias"] if item["operation_evidence"]]
+    # Preserve C measurements as partial evidence even when the mandatory
+    # pointer evidence is missing and the attempt is therefore nonreplaceable.
+    c_cases = [
+        item["operation_evidence"] for item in operation_attempts
+        if item["condition"] == "C_fuel_alias"
+    ]
     allocation = [((case.get("boundary") or {}).get("observable_copy_contract") or {}).get("allocation_classification") for case in c_cases]
     weak = [(case.get("boundary") or {}).get("weak_reference_alive_after_scope_count") for case in c_cases]
-    c_consistent = len(c_cases) == 3 and len(set(allocation)) == 1 and allocation[0] == "same_object_zero_copy_alias" and weak == [0, 0, 0]
+    pointer_evidence = []
+    for case in c_cases:
+        observable = ((case.get("boundary") or {}).get("observable_copy_contract") or {})
+        source_pointer = observable.get("source_data_pointer")
+        converted_pointer = observable.get("converted_data_pointer")
+        pointer_evidence.append({
+            "source_data_pointer": source_pointer,
+            "converted_data_pointer": converted_pointer,
+            "same_data_pointer": observable.get("same_data_pointer"),
+            "complete": bool(
+                isinstance(source_pointer, int) and source_pointer > 0
+                and isinstance(converted_pointer, int) and converted_pointer > 0
+                and observable.get("same_data_pointer") is True
+            ),
+        })
+    c_pointer_contract_complete = len(pointer_evidence) == 3 and all(item["complete"] for item in pointer_evidence)
+    c_consistent = bool(
+        len(c_cases) == 3
+        and len(set(allocation)) == 1
+        and allocation[0] == "same_object_zero_copy_alias"
+        and weak == [0, 0, 0]
+        and c_pointer_contract_complete
+    )
     counts = {name: len(items) for name, items in by_condition.items()}
     nonreplaceable = [item for item in attempts if item["classification"] in {"operation_failure", "native_lifecycle_failure", "absolute_safety_failure"}]
     prereq = [item for item in attempts if item["classification"] == "startup_prerequisite_failure"]
-    qualified = len(representative) == 9 and all(value == 3 for value in counts.values()) and not nonreplaceable and c_consistent
+    evidence_integrity_failures = []
+    if c_cases and not c_pointer_contract_complete:
+        evidence_integrity_failures.append("c_buffer_pointer_evidence_missing_or_inconsistent")
+    first_nonreplaceable_index = next(
+        (index for index, item in enumerate(attempts) if item["classification"] in {
+            "operation_failure", "native_lifecycle_failure", "absolute_safety_failure"
+        }),
+        None,
+    )
+    attempts_after_required_stop = attempts[first_nonreplaceable_index + 1:] if first_nonreplaceable_index is not None else []
+    qualified = bool(
+        len(representative) == 9
+        and all(value == 3 for value in counts.values())
+        and not nonreplaceable
+        and not evidence_integrity_failures
+        and c_consistent
+    )
 
     readback_increments = [case.get("memory_deltas_bytes", {}).get("readback_immediate") for case in b_cases + c_cases]
     next_residuals = [case.get("memory_deltas_bytes", {}).get("next_frame_residual") for case in b_cases + c_cases]
     settled_residuals = [case.get("memory_deltas_bytes", {}).get("observation_end_residual") for case in b_cases + c_cases]
     stage_closes = [item.get("stage_close_seconds") for item in representative]
+    representative_startup_attempts = [item for item in attempts if item["representative_startup"]]
+    all_representative_stage_closes = [item.get("stage_close_seconds") for item in representative_startup_attempts]
     kit_peaks = [((item.get("guard") or {}).get("peaks") or {}).get("kit") for item in attempts]
     tree_peaks = [((item.get("guard") or {}).get("peaks") or {}).get("tree") for item in attempts]
+    runner_peaks = [((item.get("guard") or {}).get("peaks") or {}).get("runner") for item in attempts]
+    diagnostic_peaks = [((item.get("guard") or {}).get("peaks") or {}).get("diagnostic") for item in attempts]
+    physical_minima = [((item.get("guard") or {}).get("machine_minima") or {}).get("available_physical_bytes") for item in attempts]
+    commit_minima = [((item.get("guard") or {}).get("machine_minima") or {}).get("estimated_commit_headroom_bytes") for item in attempts]
     margins = [case.get("minimum_kit_ceiling_margin_bytes") for case in operation_cases]
     warnings = [case.get("waveform_telemetry", {}).get("warning_count", 0) for case in operation_cases]
     report = {
@@ -211,23 +272,48 @@ def main() -> None:
         "condition_counts": counts,
         "attempts": attempts,
         "nonreplaceable_failures": nonreplaceable,
+        "post_runtime_protocol_audit": {
+            "first_required_stop_attempt": (
+                attempts[first_nonreplaceable_index]["attempt_id"] if first_nonreplaceable_index is not None else None
+            ),
+            "attempts_after_required_stop": [item["attempt_id"] for item in attempts_after_required_stop],
+            "reason": "The runtime analyzer did not yet require C buffer-pointer evidence; later attempts are retained only as partial diagnostic evidence.",
+        },
         "operation_summary": {
             "readback_immediate_bytes": _distribution(readback_increments),
             "next_frame_residual_bytes": _distribution(next_residuals),
             "settling_end_residual_bytes": _distribution(settled_residuals),
             "c_allocation_classifications": allocation,
             "c_weak_reference_residuals": weak,
+            "c_buffer_pointer_evidence": pointer_evidence,
+            "c_buffer_pointer_contract_complete": c_pointer_contract_complete,
             "c_alias_contract_consistent": c_consistent,
             "fuel_logical_bytes": _distribution([(case.get("boundary") or {}).get("fuel_array", {}).get("nbytes") for case in c_cases]),
             "numpy_asarray_immediate_bytes": _distribution([case.get("memory_deltas_bytes", {}).get("fuel_conversion_immediate") for case in c_cases]),
         },
-        "lifecycle_summary": {"stage_close_seconds": _distribution(stage_closes)},
+        "lifecycle_summary": {
+            "formally_accepted_stage_close_seconds": _distribution(stage_closes),
+            "all_representative_startup_stage_close_seconds": _distribution(all_representative_stage_closes),
+            "all_representative_startup_lifecycle_completed": bool(
+                len(representative_startup_attempts) == 9
+                and all(not item["native_lifecycle_failures"] and not item["absolute_safety_failures"] for item in representative_startup_attempts)
+            ),
+            "cdb_invocation_count": sum(
+                int(bool((item.get("operation_evidence") or {}).get("cdb_invoked"))) for item in attempts
+            ),
+        },
         "resource_summary": {
+            "runner_peak_bytes": max(_finite(runner_peaks), default=None),
+            "diagnostic_peak_bytes": max(_finite(diagnostic_peaks), default=None),
             "kit_peak_bytes": max(_finite(kit_peaks), default=None),
             "tree_peak_bytes": max(_finite(tree_peaks), default=None),
+            "minimum_available_physical_bytes": min(_finite(physical_minima), default=None),
+            "minimum_commit_headroom_bytes": min(_finite(commit_minima), default=None),
             "minimum_kit_ceiling_margin_bytes": min(_finite(margins), default=None),
         },
         "waveform_telemetry": {"formal_gate": False, "warning_counts": warnings, "total_warnings": sum(warnings)},
+        "post_runtime_evidence_integrity_failures": evidence_integrity_failures,
+        "safe_stop": bool(evidence_integrity_failures or nonreplaceable),
         "qualified": qualified,
         "one_readback_qualified": qualified,
         "one_fuel_alias_lifetime_qualified": qualified,

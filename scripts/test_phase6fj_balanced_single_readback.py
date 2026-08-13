@@ -7,6 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT = ROOT / "scripts" / "phase6fj_balanced_single_readback_contract.json"
 HASH = ROOT / "scripts" / "phase6fj_balanced_single_readback_contract.sha256"
+SAFE_STOP = ROOT / "docs" / "devlog" / "assets" / "phase6" / "balanced_single_readback_evidence_safe_stop.json"
 
 
 class Phase6FjContract(unittest.TestCase):
@@ -65,9 +66,32 @@ class Phase6FjContract(unittest.TestCase):
     def test_analyzer_keeps_waveform_out_of_qualification(self):
         text = (ROOT / "scripts" / "analyze_phase6fj_balanced_single_readback.py").read_text(encoding="utf-8")
         self.assertIn('"formal_gate": False', text)
-        qualification = "qualified = len(representative) == 9"
-        self.assertIn(qualification, text)
+        self.assertIn("len(representative) == 9", text)
         self.assertNotIn("total_warnings == 0", text)
+
+    def test_probe_persists_source_and_converted_buffer_pointers(self):
+        text = (ROOT / "scripts" / "probe_phase6ep_point_collision_coexistence.py").read_text(encoding="utf-8")
+        self.assertIn('metadata["data_pointer"] = int(data[0])', text)
+        self.assertIn('"source_data_pointer": source_metadata["data_pointer"]', text)
+        self.assertIn('"converted_data_pointer": fuel_array["data_pointer"]', text)
+        self.assertIn('"same_data_pointer": bool(', text)
+
+    def test_analyzer_fails_closed_without_complete_pointer_evidence(self):
+        text = (ROOT / "scripts" / "analyze_phase6fj_balanced_single_readback.py").read_text(encoding="utf-8")
+        self.assertIn("c_pointer_contract_complete", text)
+        self.assertIn("c_buffer_pointer_evidence_missing_or_inconsistent", text)
+        self.assertIn("and not evidence_integrity_failures", text)
+
+    def test_published_result_is_fail_closed_and_preserves_partial_evidence(self):
+        report = json.loads(SAFE_STOP.read_text(encoding="utf-8"))
+        self.assertFalse(report["formal_decision"]["qualified"])
+        self.assertEqual(report["formal_decision"]["first_required_stop_attempt"], "attempt04")
+        self.assertEqual(report["formal_decision"]["failure"], "c_buffer_pointer_evidence_missing_or_inconsistent")
+        self.assertEqual(report["launches"]["total"], 10)
+        self.assertEqual(report["launches"]["representative_startup"], 9)
+        self.assertFalse(report["partial_operation_evidence"]["pointer_contract_complete"])
+        self.assertEqual(report["partial_operation_evidence"]["numpy_asarray_immediate_bytes"], [0, 0, 0])
+        self.assertFalse(report["production"]["changed"])
 
 
 if __name__ == "__main__":

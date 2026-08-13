@@ -264,6 +264,17 @@ def _bounded_object_metadata(value):
     except Exception:
         metadata["c_contiguous"] = None
         metadata["f_contiguous"] = None
+    # NumPy's public array interface exposes the address of the first byte of
+    # the logical data buffer.  Keep this separate from Python object identity:
+    # equal identities imply the same live wrapper, while equal data pointers
+    # establish that two wrappers address the same buffer.  Non-array channel
+    # wrappers may not expose this interface, so absence remains explicit.
+    try:
+        array_interface = value.__array_interface__
+        data = array_interface.get("data")
+        metadata["data_pointer"] = int(data[0]) if data and data[0] is not None else None
+    except Exception:
+        metadata["data_pointer"] = None
     return metadata
 
 
@@ -588,12 +599,18 @@ def _readback_boundary(flow, volume, arguments, frame, output, liveness_position
 
         fuel_index = CHANNELS.index("fuel")
         source = raw[fuel_index]
+        source_metadata = _bounded_object_metadata(source)
         result["operation_counts"]["fuel_handle_selections"] = 1
+        result["fuel_source"] = source_metadata
         mark(
             "fuel_handle_selected", fuel_channel_index=fuel_index,
             source_type=_type_name(source), source_identity=int(id(source)),
+            source_data_pointer=source_metadata["data_pointer"],
         )
-        mark("fuel_conversion_before", source_type=_type_name(source), source_identity=int(id(source)))
+        mark(
+            "fuel_conversion_before", source_type=_type_name(source), source_identity=int(id(source)),
+            source_data_pointer=source_metadata["data_pointer"],
+        )
         array = np.asarray(source)
         result["operation_counts"]["numpy_asarray_calls"] = 1
         base = getattr(array, "base", None)
@@ -613,6 +630,13 @@ def _readback_boundary(flow, volume, arguments, frame, output, liveness_position
             "explicit_copy_function_calls": 0,
             "same_identity": fuel_array["same_identity_as_source"],
             "shares_memory": fuel_array["shares_memory_with_source"],
+            "source_data_pointer": source_metadata["data_pointer"],
+            "converted_data_pointer": fuel_array["data_pointer"],
+            "same_data_pointer": bool(
+                source_metadata["data_pointer"] is not None
+                and fuel_array["data_pointer"] is not None
+                and source_metadata["data_pointer"] == fuel_array["data_pointer"]
+            ),
             "exact_internal_copy_count_known": bool(fuel_array["same_identity_as_source"]),
             "internal_public_readback_copy_count_known": False,
         }
@@ -639,6 +663,9 @@ def _readback_boundary(flow, volume, arguments, frame, output, liveness_position
             f_contiguous=bool(array.flags.f_contiguous),
             owns_data=bool(array.flags.owndata), same_identity_as_source=bool(array is source),
             shares_memory_with_source=fuel_array["shares_memory_with_source"],
+            source_data_pointer=source_metadata["data_pointer"],
+            converted_data_pointer=fuel_array["data_pointer"],
+            same_data_pointer=result["observable_copy_contract"]["same_data_pointer"],
             allocation_classification=allocation_classification,
         )
         del base
@@ -656,11 +683,13 @@ def _readback_boundary(flow, volume, arguments, frame, output, liveness_position
             retained_converted_object=True,
             retained_converted_identity=converted_identity,
             retained_converted_is_original_fuel_object=converted_is_original,
+            retained_converted_data_pointer=converted_after_source_release["data_pointer"],
             converted_object_valid=True,
         )
         mark(
             "converted_buffer_only_held", converted_identity=converted_identity,
             converted_is_original_fuel_object=converted_is_original,
+            converted_data_pointer=converted_after_source_release["data_pointer"],
             buffer_bytes=int(array.nbytes), element_count=int(array.size),
         )
         converted_weak_reference = weakref.ref(array)
