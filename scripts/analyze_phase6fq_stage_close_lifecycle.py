@@ -97,9 +97,10 @@ def _attempt(path: Path, contract: dict) -> dict:
         "marker_count": len(markers),
         "missing_markers": missing,
         "stage_close_seconds": _duration(markers, "stage_close_request_before", "stage_close_request_after"),
+        "stage_close_timeout_seconds": _duration(markers, "stage_close_request_before", "stage_close_timeout"),
         "renderer_drain_seconds": _duration(markers, "renderer_drain_started", "renderer_drain_complete"),
         "extension_shutdown_markers": [
-            row.get("marker") for row in _jsonl(case / "extension_lifecycle_markers.jsonl")
+            row.get("marker") or row.get("name") for row in _jsonl(case / "extension_lifecycle_markers.jsonl")
         ],
         "capture_preparation": capture,
         "active_blocks_final": raw.get("active_blocks_final"),
@@ -114,10 +115,14 @@ def _attempt(path: Path, contract: dict) -> dict:
             "started": bool(diagnostic),
             "lifecycle_marker": diagnostic.get("lifecycle_marker"),
             "capture_succeeded": diagnostic.get("diagnostic_capture_succeeded"),
-            "cdb_timed_out": (debugger.get("cdb") or {}).get("timed_out"),
-            "modules_observed": (debugger.get("cdb") or {}).get("loaded_modules_observed"),
-            "all_thread_stack_observed": (debugger.get("cdb") or {}).get("all_thread_stack_observed"),
-            "detach_observed": (debugger.get("cdb") or {}).get("detach_observed"),
+            "cdb_timed_out": debugger.get("timed_out"),
+            "modules_observed": debugger.get("loaded_modules_observed"),
+            "all_thread_stack_observed": debugger.get("all_thread_stack_observed"),
+            "detach_observed": debugger.get("detach_observed"),
+            "attach_observed": debugger.get("attach_observed"),
+            "module_pass": (debugger.get("passes") or {}).get("attach_and_modules"),
+            "all_thread_stack_pass": (debugger.get("passes") or {}).get("all_thread_stacks"),
+            "detach_recovery_pass": (debugger.get("passes") or {}).get("detach_recovery"),
             "known_ngx_signature": stack.get("matched"),
         },
     }

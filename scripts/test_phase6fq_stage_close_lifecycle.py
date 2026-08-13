@@ -1,7 +1,10 @@
 import hashlib
 import json
 from pathlib import Path
+import tempfile
 import unittest
+
+from scripts.analyze_phase6fq_stage_close_lifecycle import _attempt
 
 
 ROOT = Path(__file__).resolve().parent
@@ -68,6 +71,38 @@ class Phase6FqStageCloseLifecycleContract(unittest.TestCase):
         self.assertEqual(delta("L7_c5_release_after_close", "L8_c5_release_before_close_control"), ["reference_release_order"])
         self.assertIn("Phase 6FQ nonreplaceable failure", self.matrix_runner)
         self.assertIn("throw", self.matrix_runner)
+
+    def test_analyzer_preserves_bounded_cdb_timeout_and_cleanup_evidence(self):
+        with tempfile.TemporaryDirectory() as directory:
+            attempt = Path(directory)
+            (attempt / "case" / "sensitive-shutdown-diagnostics").mkdir(parents=True)
+            (attempt / "runner-logs").mkdir()
+            (attempt / "attempt_metadata.json").write_text(json.dumps({
+                "attempt_id": "attempt07", "condition": "L6_c5_normal_drain_control"
+            }), encoding="utf-8")
+            (attempt / "case" / "raw.json").write_text(json.dumps({
+                "status": "error", "completion_contract": {},
+                "startup_liveness_gate": {"classification": "representative_ingestion", "readback_permitted": True},
+                "capture_lifecycle_preparation": {"capture_calls": 0, "pixel_buffer_bytes": 0,
+                                                   "video_generation_calls": 0}
+            }), encoding="utf-8")
+            (attempt / "runner-logs" / "guard.json").write_text(json.dumps({
+                "status": "failed", "stop_reason": "observed_descendant_residual", "exit_code": 1,
+                "observed_process_cleanup": {"all_observed_absent": True, "remaining": []}
+            }), encoding="utf-8")
+            diagnostic = {
+                "diagnostic_capture_succeeded": False, "lifecycle_marker": "stage_close_timeout",
+                "debugger": {"timed_out": True, "loaded_modules_observed": False,
+                             "all_thread_stack_observed": False, "detach_observed": False,
+                             "attach_observed": False, "passes": {"attach_and_modules": {"timed_out": True}}},
+                "stack_fingerprint": {"matched": False}
+            }
+            path = attempt / "case" / "sensitive-shutdown-diagnostics" / "lightweight_shutdown_diagnostic.json"
+            path.write_text(json.dumps(diagnostic), encoding="utf-8")
+            row = _attempt(attempt, {"required_markers": []})
+            self.assertTrue(row["diagnostic"]["cdb_timed_out"])
+            self.assertFalse(row["diagnostic"]["known_ngx_signature"])
+            self.assertTrue(row["cleanup"]["all_observed_absent"])
 
 
 if __name__ == "__main__":

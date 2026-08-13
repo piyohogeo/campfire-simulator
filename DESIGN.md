@@ -6,6 +6,8 @@ Phase 6FP attempt11のreadback 0／C5条件で発生した180.007436秒の`close
 
 Phase 6FQの全slotがnormal OS exitするまでmemory ceilingの第2段階へ進まず、第2段階が完了するまでPhase 6FOを再開しない。未知timeoutが再発した場合は自動retryせず、そのactive conditionと最後のmarkerでsafe stopする。
 
+実測ではroot 2のattempt01～06がnormal exitし、stage closeは2.149～35.770秒だった。C5 metadata、bounded manifest、public viewport alias、drainなしはいずれも停止を再現しなかった。しかしattempt07のcapture準備なし・8-update drain・release-before-close controlが`stage_close_request_before`後に180.023808秒timeoutした。CDB module passも30.401秒timeoutし、complete stack、module/offset、owner threadは未取得。known NGX signatureは成立せず、exact observed-descendant cleanup後の残留は0だった。従ってcapture準備を直接原因から除外できる一方、安全なstage-close順序は未qualifiedである。Stage 2、14/16 GiB上限qualification、Phase 6FO再開は行わない。
+
 # Phase 6FP pre-readback allocation calibration safe stop
 
 Phase 6FOの15,127,232,512-byte pre-readback safe stopを凍結し、Phase 6FN相当baselineからcollector、spatial metadata、channel metadata、lazy buffer plan、capture準備、S93 identity、6FO-equivalent状態を累積追加する24-process契約を固定した。Phase 6FN baseline自体がS93の同一1,344/1,440 Point payloadであり、near-Mesh field bodyはpublic grid metadataを得るreadback後まで生成されず、capture bodyもcapture callまで生成されない。

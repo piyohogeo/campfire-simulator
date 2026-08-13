@@ -1,0 +1,71 @@
+{
+  "schema": "campfire.devlog.phase6fq-stage-close-lifecycle-safe-stop.v1",
+  "phase": "phase6fq",
+  "date": "2026-08-13",
+  "contract_sha256": "BE4EBDF547E1468232CB8096E4B6F0B842951C079E2A0058AA30D110F9F31B17",
+  "artifact_root": "artifacts/phase6fq-stage-close-lifecycle-2",
+  "population": {
+    "planned": 18,
+    "launched": 7,
+    "normal_exit": 6,
+    "safe_stop": 1,
+    "readback_calls": 0,
+    "capture_calls": 0
+  },
+  "runs": [
+    {"attempt": 1, "condition": "L0_phase6fn_baseline", "stage_close_seconds": 35.7698631, "exit": "normal"},
+    {"attempt": 2, "condition": "L1_c5_without_capture_prep", "stage_close_seconds": 2.1987167, "exit": "normal"},
+    {"attempt": 3, "condition": "L2_c5_disabled_state", "stage_close_seconds": 2.8197243, "exit": "normal"},
+    {"attempt": 4, "condition": "L3_c5_manifest", "stage_close_seconds": 5.1710951, "exit": "normal"},
+    {"attempt": 5, "condition": "L4_c5_provider_alias", "stage_close_seconds": 2.1491088, "exit": "normal"},
+    {"attempt": 6, "condition": "L5_c5_no_preclose_drain", "stage_close_seconds": 3.911707, "exit": "normal"},
+    {"attempt": 7, "condition": "L6_c5_normal_drain_control", "stage_close_timeout_seconds": 180.023808, "exit": "timeout"}
+  ],
+  "safe_stop": {
+    "active_condition": "L6_c5_normal_drain_control",
+    "capture_preparation_mode": "none",
+    "renderer_drain_updates": 8,
+    "reference_release_order": "before_stage_close",
+    "last_marker": "stage_close_timeout",
+    "active_blocks_final": 948,
+    "kit_peak_bytes": 14668775424,
+    "tree_peak_bytes": 14833041408,
+    "fatal": 0,
+    "dump": 0,
+    "automatic_upload": 0,
+    "known_ngx_signature": false,
+    "cdb": {
+      "module_pass_timeout_seconds": 30.4008857,
+      "module_list_complete": false,
+      "all_thread_stack_started": false,
+      "detach_marker": false,
+      "cdb_process_absent": true
+    },
+    "cleanup": {
+      "killed_exact_observed_pids": [26440, 27972, 40592],
+      "remaining": [],
+      "all_observed_absent": true
+    }
+  },
+  "decision": {
+    "capture_preparation_is_reproducible_trigger": false,
+    "safe_stage_close_order_qualified": false,
+    "lifecycle_classification": "low-frequency nondeterministic native lifecycle failure remains the leading interpretation; owner module/thread is unconfirmed",
+    "memory_ceiling_stage_started": false,
+    "kit_14_gib_qualified": false,
+    "kit_16_gib_adopted": false,
+    "phase6fo_resumed": false
+  },
+  "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "production_changed": false,
+  "verification": {
+    "release_build": "pass",
+    "phase0_rtx": "pass",
+    "phase3": {"status": "pass", "dry_mass_balance_error_kg": 0.0, "wet_mass_balance_error_kg": 0.0, "flow_active_blocks_final": 292, "flow_active_blocks_peak": 316},
+    "focused_phase6f": "139/139",
+    "standard_suite": "78/78",
+    "devlog_static": "pass"
+  },
+  "video_changed": false,
+  "latest_demo_changed": false
+}

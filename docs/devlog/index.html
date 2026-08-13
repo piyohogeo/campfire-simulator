@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6fn">最新記録</a>
+        <a href="#phase-6fq">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,22 +27,34 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fp">Phase 6FPの診断を読む</a>
+        <a class="button primary" href="#phase-6fq">Phase 6FQの診断を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FP · lifecycle safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6FQ · lifecycle safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Population</span><strong>9 / 9 · replacement 0</strong></div>
+        <div><span>Population</span><strong>6 normal · attempt07 safe stop</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
   </header>
 
   <main>
+    <section id="phase-6fq" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FQ stage-close lifecycle qualification"><span class="phase-number compact">6FQ</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">6 / 18 · lifecycle safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FQ · stage-close lifecycle qualification</p><h2>capture準備なしでも、<br>stage closeが180秒で停止。</h2><p>Phase 6FPのmemory high-waterからlifecycleを分離し、readbackもcapture callも行わない短い独立processで、C5 metadata、manifest、provider alias、renderer drain、参照解放順を切り分けました。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Normal controls</p><h3>6 process · 2.149–35.770 s</h3><p>baseline、C5直前、C5 disabled metadata、bounded manifest、public viewport alias、pre-close drain 0はいずれもrepresentative field、stage close、extension shutdown、normal OS exitまで完了しました。全条件readback/capture/pixel/videoは0です。</p></section><section class="note"><p class="note-label">Fail-closed lifecycle</p><h3>attempt07 · 180.024 s</h3><p>capture準備なし、既存8-update drain、release-before-close controlが同じstage-close境界でtimeoutしました。CDB module passも30.401秒でtimeoutし、stack・module/offset・owner threadは未確定です。known NGX signatureとしては扱っていません。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Current decision</p><h3>Phase 6FOはblocked、memory Stage 2は未開始。</h3><p>capture準備は再現可能な必要条件ではありません。低頻度で非決定的なFlow/RTX/Kit native lifecycle障害が最有力ですが、public evidenceだけでは根本moduleを確定できません。outer guardは正確なKit/conhost/telemetry PIDだけをcleanupし、残留0、fatal/dump/upload 0、production SHA-256不変を確認しました。</p><p>Release build、Phase 0 RTX、Phase 3、focused <code>139/139</code>、標準suite <code>78/78</code>、devlog検査は合格しました。14 GiBはqualifiedしておらず、16 GiBも採用していません。S93/S100比較、動画、production、latest demoは変更していません。</p><p><a href="assets/phase6/stage_close_lifecycle_safe_stop.json">machine report</a> · <a href="../design/phase6fq_stage_close_lifecycle_qualification.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>6</span><p><strong>Normal exits</strong><small>before safe stop</small></p></div><div role="listitem"><span>0</span><p><strong>Readbacks</strong><small>lifecycle only</small></p></div><div role="listitem"><span>180.0</span><p><strong>Timeout</strong><small>seconds</small></p></div><div role="listitem"><span>0</span><p><strong>Residual</strong><small>after cleanup</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Pending roadmap</p><h3>自然再発stackまたは安全なshutdown順序が次の境界。</h3><p>complete all-thread stackを得るbounded診断改善、または一変数のrelease-after-close候補を別Phaseで承認・検証するまで、memory ceiling qualificationとPhase 6FOは開始しません。</p></section>
+        </div>
+      </article>
+    </section>
+
     <section class="section shell intro" aria-labelledby="about-title">
       <div>
         <p class="section-kicker">About this log</p>

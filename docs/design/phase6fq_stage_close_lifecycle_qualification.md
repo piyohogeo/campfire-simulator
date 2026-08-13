@@ -15,3 +15,19 @@ Phase 6FP attempt11の`readback=0`、`C5_capture_prep`条件は、Flow測定を�
 timeout時はmodule一覧、all-thread stack、detachをbounded fileへ直接出力する。CDB timeoutやprivate symbol不足を既知NGXへ読み替えず、既存5-token signatureがすべて実stackに現れた場合だけknown候補とする。正常だが長いcloseと180秒timeoutを区別し、少数runで再現しない場合は無期限に反復しない。
 
 Phase 6FQが全slotで正常終了した場合だけ、次の独立PhaseでPhase 6FN baseline、C7 Phase 6FO-equivalent、readback予定直前のno-readback条件を各3 run取得し、14 GiBと16 GiB候補を事前qualificationする。Phase 6FOはそのresource契約まで完了しない限り再開しない。
+
+## Runtime result: lifecycle safe stop
+
+最初のrootは空文字の`ReadbackFrames`をPowerShell parameterへ渡したため、Kit起動前のparameter bindingで停止した。process残留とproduction接触は0であり、このharness不整合を独立修正してroot 2を最初から開始した。
+
+root 2は18 slot中7 processを起動した。attempt01～06はすべてrepresentative startup、948 active blocks at frame 96、readback/capture call 0、stage close、extension shutdown、normal OS exit、residual 0を満たした。stage close時間は順に`35.7698631, 2.1987167, 2.8197243, 5.1710951, 2.1491088, 3.911707`秒だった。C5 disabled metadata、bounded manifest、追加active-viewport aliasはすべて正常終了し、capture準備に追従する再現可能な停止は確認されなかった。pre-close drainを0にしたattempt06も正常終了したが、1 sampleだけなのでdrain除去を安全な修正とはしない。
+
+attempt07 `L6_c5_normal_drain_control`は、capture preparation `none`、8 renderer updates、release-before-closeという既存順序で、`stage_close_request_before`後に停止し、`stage_close_timeout`まで`180.023808`秒だった。最後のFlow場は948 blocks、readback/capture/pixel/videoは0である。これはPhase 6FP attempt11と同じlifecycle境界だが、capture準備なしでも発生したため、C5 metadataまたはcapture providerを必要条件から除外できた。release-after-closeのablationは後続停止により未実行であり、安全な終了順序はqualifiedしていない。
+
+timeout時の診断はPID、creation time、full executable pathを確認し、Kit logの排他lockを記録して継続した。CDB module passは30.4008857秒でtimeoutし、CDB process自体は消滅したが、complete module list、all-thread stack、explicit detach markerは得られなかった。したがって既知NGX 5-token signatureは成立せず、module、offset、wait ownerは未確定である。full dumpと自動uploadは0。outer guardは起動時から観測したKit、conhost、telemetryの正確なPIDだけを停止し、remaining 0を確認した。
+
+確認済み事実は、同じfixtureと物理入力でもstage closeが2.149～35.770秒で正常終了するrunと180秒timeoutするrunがあり、timeoutはreadback/capture preparationなしでも発生すること、timeout時もKit peak 14,668,775,424 bytes、tree peak 14,833,041,408 bytesでresource ceiling内だったことである。最有力の推定はFlow/RTX/Kit内の低頻度で非決定的なnative lifecycle障害だが、CDB stack不足のためmodule、lock、owner threadは断定しない。
+
+Stage 1が全populationを完了しなかったため、memory ceilingのStage 2は開始していない。14 GiBはPhase 6FPで正常high-waterまで97.277 MiBしかなかった事実を維持するが、今回これをqualifiedまたは変更していない。16 GiBも採用しない。Phase 6FOはblockedのままであり、過去6FO artifactは正式比較へ再利用しない。自然再発時にcomplete module/all-thread stackを取得できる診断改善、または安全な一変数shutdown-order候補を別承認で検証する必要がある。
+
+検証はRelease build（7.93秒）、Phase 0 RTX、Phase 3、focused Phase 6F `139/139`、標準suite `78/78`、devlog静的検査に合格した。Phase 3のdry/wet mass balance errorはともに0、authority SHA-256は`0dec57f3...be10`／`148585f8...20c9`、Flow final/peakは292/316 blocksだった。production app SHA-256は前後とも`94162F82...F02A`。最終Kit/CDB/nvidia-smi残留は0で、内部診断だけのため動画とlatest demo pointerは変更していない。
