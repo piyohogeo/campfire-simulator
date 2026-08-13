@@ -110,7 +110,12 @@ def fixture_cases() -> list[dict[str, Any]]:
     add("10_original_identity_still_alive", original_alive, False, "attempt_owned_residual")
 
     child = {**ORIGINAL, "pid": 4201, "create_time_utc_epoch": 1001.0, "path": r"C:\Windows\System32\notepad.exe"}
-    add("11_protected_reuse_and_clean_matching_child", payload([row("alive_identity_mismatch", [query("psutil")]), exited(child)]), True, "protected_pid_reuse_non_residual")
+    protected_and_clean = payload([row("alive_identity_mismatch", [query("psutil")]), exited(child)])
+    protected_and_clean["termination_requests"] = [
+        {"marker": "exact_identity_stop_requested", "identity": copy.deepcopy(child)}
+    ]
+    protected_and_clean["cleanup"]["killed_pids"] = [child["pid"]]
+    add("11_protected_reuse_and_clean_matching_child", protected_and_clean, True, "protected_pid_reuse_non_residual")
 
     attempted = payload([row("alive_identity_mismatch", [query("psutil")])])
     attempted["termination_requests"] = [{"marker": "exact_identity_stop_requested", "identity": copy.deepcopy(ORIGINAL)}]
@@ -118,7 +123,7 @@ def fixture_cases() -> list[dict[str, Any]]:
 
     rediscovered = payload([row("alive_identity_mismatch", [query("psutil")])])
     rediscovered["post_summary_rediscovered"] = [copy.deepcopy(ORIGINAL)]
-    add("13_attempt_identity_rediscovered_after_summary", rediscovered, False, "protected_pid_reuse_non_residual")
+    add("13_attempt_identity_rediscovered_after_summary", rediscovered, False, "attempt_owned_residual")
 
     add("14_normal_exit_without_pid_reuse", payload([exited()]), True, "attempt_identity_absent")
 

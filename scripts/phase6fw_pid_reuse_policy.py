@@ -268,7 +268,8 @@ def classify(payload: dict[str, Any]) -> dict[str, Any]:
         global_failures.append("cleanup_suppression_not_released")
     if not marker_integrity.get("complete") or not marker_integrity.get("ordered"):
         global_failures.append("cleanup_marker_integrity")
-    if payload.get("post_summary_rediscovered"):
+    rediscovered = payload.get("post_summary_rediscovered") or []
+    if rediscovered:
         global_failures.append("attempt_identity_rediscovered_after_summary")
 
     rows: list[dict[str, Any]] = []
@@ -314,6 +315,20 @@ def classify(payload: dict[str, Any]) -> dict[str, Any]:
         counts[classification] += 1
         rows.append({"classification": classification, "failures": failures, "evidence": evidence})
 
+    for identity in rediscovered:
+        if not isinstance(identity, dict):
+            continue
+        counts["attempt_identity_absent"] = max(0, counts["attempt_identity_absent"] - 1)
+        counts["attempt_owned_residual"] += 1
+        counts["matching_residual"] += 1
+        rows.append(
+            {
+                "classification": "attempt_owned_residual",
+                "failures": ["attempt_identity_rediscovered_after_summary"],
+                "evidence": {"identity": identity, "phase6fu_state": "post_summary_rediscovered"},
+            }
+        )
+
     if not final:
         global_failures.append("final_identity_evidence_missing")
     all_other_ended = all(
@@ -335,6 +350,7 @@ def classify(payload: dict[str, Any]) -> dict[str, Any]:
         "qualified": qualified,
         "phase6fu_model_changed": False,
         "phase6fv_reclassified": False,
+        "source_artifact": payload.get("source_artifact"),
         "identities": rows,
         "counts": {
             **counts,
