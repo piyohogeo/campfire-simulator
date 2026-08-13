@@ -1,0 +1,28 @@
+{
+  "schema": "campfire.phase6ft.devlog-summary.v1",
+  "phase": "phase6ft",
+  "status": "safe_stop",
+  "contract_sha256": "B71CA4E5E5B54B65E67E38C6FFFCE641B2CEC02DB1B31D049AAFF7987541CCA1",
+  "population": {"planned": 9, "normal_exit": 8, "lifecycle_failure": 1, "startup_replacements": 0},
+  "runs": [
+    {"attempt": 1, "condition": "M0", "kit_peak_bytes": 14800875520, "tree_peak_bytes": 14964547584, "runner_peak_bytes": 116899840, "diagnostic_peak_bytes": 16977920, "gpu_dedicated_peak_bytes": 7381975040, "active_blocks": {"60": 688, "96": 948}, "stage_close_seconds": 5.3333931, "result": "normal_exit"},
+    {"attempt": 2, "condition": "M1", "kit_peak_bytes": 14861185024, "tree_peak_bytes": 15024582656, "runner_peak_bytes": 111108096, "diagnostic_peak_bytes": 17141760, "gpu_dedicated_peak_bytes": 7402946560, "active_blocks": {"60": 688, "96": 948}, "stage_close_seconds": 2.6753219, "result": "normal_exit"},
+    {"attempt": 3, "condition": "M2", "kit_peak_bytes": 14494695424, "tree_peak_bytes": 14657794048, "runner_peak_bytes": 114360320, "diagnostic_peak_bytes": 16896000, "gpu_dedicated_peak_bytes": 7392460800, "active_blocks": {"60": 688, "96": 948, "179": 1322}, "stage_close_seconds": 12.3739791, "result": "normal_exit"},
+    {"attempt": 4, "condition": "M1", "kit_peak_bytes": 14855274496, "tree_peak_bytes": 15018622976, "runner_peak_bytes": 118439936, "diagnostic_peak_bytes": 16842752, "gpu_dedicated_peak_bytes": 7504658432, "active_blocks": {"60": 688, "96": 948}, "stage_close_seconds": 3.9268276, "result": "normal_exit"},
+    {"attempt": 5, "condition": "M2", "kit_peak_bytes": 14581649408, "tree_peak_bytes": 14744342528, "runner_peak_bytes": 113782784, "diagnostic_peak_bytes": 17145856, "gpu_dedicated_peak_bytes": 7391412224, "active_blocks": {"60": 688, "96": 948, "179": 1322}, "stage_close_seconds": 5.4527581, "result": "normal_exit"},
+    {"attempt": 6, "condition": "M0", "kit_peak_bytes": 14986518528, "tree_peak_bytes": 15149535232, "runner_peak_bytes": 116224000, "diagnostic_peak_bytes": 16953344, "gpu_dedicated_peak_bytes": 7407140864, "active_blocks": {"60": 688, "96": 948}, "stage_close_seconds": 23.5761526, "result": "normal_exit"},
+    {"attempt": 7, "condition": "M2", "kit_peak_bytes": 14569025536, "tree_peak_bytes": 14731632640, "runner_peak_bytes": 122200064, "diagnostic_peak_bytes": 16838656, "gpu_dedicated_peak_bytes": 7415529472, "active_blocks": {"60": 688, "96": 948, "179": 1322}, "stage_close_seconds": 3.3773293, "result": "normal_exit"},
+    {"attempt": 8, "condition": "M0", "kit_peak_bytes": 14888665088, "tree_peak_bytes": 15052001280, "runner_peak_bytes": 109432832, "diagnostic_peak_bytes": 16846848, "gpu_dedicated_peak_bytes": 7417626624, "active_blocks": {"60": 688, "96": 948}, "stage_close_seconds": 8.1295545, "result": "normal_exit"},
+    {"attempt": 9, "condition": "M1", "kit_peak_bytes": 14873911296, "tree_peak_bytes": 15037014016, "runner_peak_bytes": 111640576, "diagnostic_peak_bytes": 16900096, "gpu_dedicated_peak_bytes": 7433355264, "active_blocks": {"60": 688, "96": 948}, "stage_close_seconds": null, "last_marker": "stage_close_timeout", "result": "lifecycle_and_diagnostic_failure"}
+  ],
+  "legacy_14_gib": {"normal_crossings": 0, "minimum_normal_margin_bytes": 45867008, "decision": "too_strict_as_anomaly_ceiling"},
+  "candidate_16_gib": {"minimum_headroom_from_normal_maximum_bytes": 2193350656, "qualified": false, "reason": "frozen 9/9 lifecycle and cleanup gate failed"},
+  "candidate_tree_limit_bytes": 18253611008,
+  "minimum_machine_headroom_bytes": {"available_physical": 82912354304, "commit": 102266773504},
+  "public_field_metadata": {"available": false, "reason": "readback_zero", "estimated": false},
+  "gpu_shared_memory": {"available": false, "estimated": false},
+  "attempt09": {"cdb_artifact": false, "dump_count": 0, "manual_exact_identity_cleanup_required": true, "checked_residual_count_after_cleanup": 0},
+  "phase6fo_restarted": false,
+  "production_changed": false,
+  "video_generated": false
+}

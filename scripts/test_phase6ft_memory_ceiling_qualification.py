@@ -74,6 +74,21 @@ class Phase6FtMemoryCeilingQualification(unittest.TestCase):
         actual = hashlib.sha256(CONTRACT.read_bytes()).hexdigest().upper()
         self.assertEqual(expected, actual)
 
+    def test_published_safe_stop_is_not_a_ceiling_qualification(self):
+        report_path = ROOT / "artifacts" / "phase6ft-memory-ceiling-1" / "memory_ceiling_qualification_report.json"
+        if not report_path.exists():
+            self.skipTest("runtime artifact is produced after the frozen contract is committed")
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+        self.assertEqual(8, report["population"]["representative_pass"])
+        self.assertEqual(1, report["population"]["nonreplaceable_failure"])
+        self.assertFalse(report["qualification_complete"])
+        self.assertFalse(report["candidate_16_gib_qualified"])
+        self.assertFalse(report["phase6fo_restart_ready"])
+        self.assertEqual("stage_close_timeout", report["safe_stop"]["last_marker"])
+        summary = json.loads((ROOT / "docs" / "devlog" / "assets" / "phase6" / "memory_ceiling_qualification_safe_stop.json").read_text(encoding="utf-8"))
+        self.assertFalse(summary["candidate_16_gib"]["qualified"])
+        self.assertFalse(summary["phase6fo_restarted"])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -2,7 +2,7 @@
 
 # Phase 6FS B-first release-after-close qualification contract
 
-Phase 6FTはPhase 6FSの3/3 normal exitを凍結し、同じ`release-after-close`でM0 baseline、M1 Phase 6FO-equivalent、M2 pre-readback frame 179をbalanced order各3 run測定する。旧14 GiBは分布を打ち切らないsoft評価値、Kit 16 GiBとunique tree 17 GiBは事前凍結した暫定hard stopとし、16 GiB候補には正常最大peakから512 MiB以上を要求する。readback/capture/video/production変更とPhase 6FO再開は行わない。詳細は`docs/design/phase6ft_memory_ceiling_qualification.md`を参照する。
+Phase 6FTは8/9 normal exit後、attempt09 M1のreadback 0条件が`stage_close_request_before`から180.021秒でtimeoutしsafe stopした。8正常runのKit peakは14,494,695,424～14,986,518,528 bytes、16 GiB余裕は2,193,350,656 bytes、追加allocationに追従する増加はなかった。旧14 GiBまでの最小余裕は45,867,008 bytesで異常検出上限として厳しすぎるが、9/9 lifecycleとbounded CDB/exact cleanupが不成立のため16 GiB/17 GiB候補は未qualified、Phase 6FOもblockedのままとする。詳細は`docs/design/phase6ft_memory_ceiling_qualification.md`を参照する。
 
 Phase 6FRのsafe stopは`a55b49b`で凍結し、A release-before-closeの180.0144794秒timeoutと149-thread stackを再分類しない。Phase 6FSはB release-after-closeだけを3独立processで実行し、stage／viewport／Flow／provider／Emitter／collector参照を明示ownership containerへ保持したまま`close_stage_async()`、USD detach、4 post-close updateまで完了し、その後にPython-owned slotを解放する。14 GiB Kit、16 GiB unique tree、各512 MiB runner/diagnostic、8 GiB physical/commit floorは変更しない。詳細は`docs/design/phase6fs_release_after_close_qualification.md`を参照する。
 

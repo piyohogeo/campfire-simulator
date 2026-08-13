@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6fs">最新記録</a>
+        <a href="#phase-6ft">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,22 +27,34 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fs">Phase 6FSの結果を読む</a>
+        <a class="button primary" href="#phase-6ft">Phase 6FTの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FS · release-after-close 3/3</strong></div>
+        <div><span>現在地</span><strong>Phase 6FT · memory ceiling safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Population</span><strong>B-only 3/3 · normal OS exit</strong></div>
+        <div><span>Population</span><strong>8 normal / 9 · stage-close timeout</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
   </header>
 
   <main>
+    <section id="phase-6ft" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FT memory ceiling qualification"><span class="phase-number compact">6FT</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">8 / 9 · lifecycle safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FT · memory ceiling qualification</p><h2>通常high-waterは測れたが、<br>最後のstage closeで停止。</h2><p>Phase 6FSのrelease-after-closeを直接再利用し、M0 baseline、M1 Phase 6FO-equivalent、M2 readback直前frameをbalanced orderで各3回測定しました。readback、capture、動画、production変更はありません。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Memory distribution</p><h3>14.495–14.987 GB · 8 normal runs</h3><p>正常runのKit peak rangeは491,823,104 bytesでした。M2はframe 179で1,322 blocksへ増えても最も低いpeak群で、collector/metadata/pre-readback stateに追従する固定増分は確認できません。GPU shared memoryとpublic field shapeは公開telemetry/readback 0の境界上、推定していません。</p></section><section class="note"><p class="note-label">Lifecycle safe stop</p><h3>attempt09 · 180.021 s</h3><p>3回目のM1は688/948 blocks、readback 0、全8 renderer drain、参照保持まで正常でしたが、stage closeがtimeoutしました。Kit peakは14,873,911,296 bytesでmemory ceiling原因ではありません。CDB artifactは確定せず、照合済みattempt treeを限定cleanupして残留0を確認しました。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Fail-closed decision</p><h3>14 GiBは厳しすぎる。しかし16 GiBは未qualified。</h3><p>14 GiB crossingは正常8 runで0回でしたが、最小余裕は45,867,008 bytes（43.742 MiB）だけで、事前固定した256 MiB基準を下回りました。異常検出hard stopとしては正常変動へ近すぎます。</p><p>正常最大から16 GiBまでは2,193,350,656 bytes（2.043 GiB）ありました。ただし契約は9/9 normal lifecycle、bounded CDB、exact cleanupを要求します。attempt09がそれを満たさないため、Kit 16 GiB／tree 17 GiBを採用せず、Phase 6FOも再開しません。</p><p>Release build、Phase 0 RTX、Phase 3（mass balance 0、wood-owned Flow）、focused 161/161、標準suite 78/78、devlog検査に合格しました。production SHA、既定値、S93/S100物理条件、latest demoは不変です。内部診断のため新しい動画はありません。</p><p><a href="assets/phase6/memory_ceiling_qualification_safe_stop.json">machine summary</a> · <a href="../design/phase6ft_memory_ceiling_qualification.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>8/9</span><p><strong>Normal exit</strong><small>balanced population</small></p></div><div role="listitem"><span>43.7</span><p><strong>14 GiB margin</strong><small>MiB · too small</small></p></div><div role="listitem"><span>2.043</span><p><strong>16 GiB margin</strong><small>GiB · partial evidence</small></p></div><div role="listitem"><span>0</span><p><strong>Final residual</strong><small>after exact cleanup</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Pending roadmap</p><h3>Phase 6FOはblocked。diagnostic/cleanup境界が先。</h3><p>次は同じ9条件の無断再実行ではありません。release-after-close再発時にbounded stack-first CDBが確実に完成し、guardのpath aliasを含むexact cleanup結果とOS列挙が一致することを独立検証してから、memory populationを再承認します。</p></section>
+        </div>
+      </article>
+    </section>
+
     <section id="phase-6fs" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6FS release-after-close qualification"><span class="phase-number compact">6FS</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">B-only 3 / 3 · candidate</span></aside>
@@ -5033,6 +5045,7 @@
       <div class="shell">
         <p class="section-kicker">Roadmap</p>
         <h2>小さく燃やして、確かめながら進む。</h2>
+        <p>Phase 6FTは8/9でnative stage-close safe stop。14 GiBは正常high-waterへ近すぎるが、16/17 GiB候補はlifecycle・diagnostic・cleanup gate未完のため未採用。Phase 6FOはblockedで、次はbounded CDBとexact cleanupの整合確認。</p>
         <ol class="roadmap">
           <li class="done"><span>0</span><div><strong>環境成立確認</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>1</span><div><strong>Flow単体検証</strong><small>完了 · 2026.08.04</small></div></li>
