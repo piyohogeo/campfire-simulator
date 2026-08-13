@@ -1,5 +1,6 @@
 param(
-    [Parameter(Mandatory = $true)][string]$OutputRoot
+    [Parameter(Mandatory = $true)][string]$OutputRoot,
+    [switch]$SmokeOnly
 )
 
 $ErrorActionPreference = "Stop"
@@ -89,44 +90,46 @@ function Invoke-DirectCase(
 
 $cases = @()
 $cases += Invoke-DirectCase "wait-stack-first" 30 20 15 0 0 "complete"
-$cases += Invoke-DirectCase "module-timeout-fallback" 30 5 15 0 10000 "module_timeout_partial"
-$cases += Invoke-DirectCase "stack-timeout-cleanup" 5 10 15 10000 0 "stack_timeout_cleanup"
+if (-not $SmokeOnly) {
+    $cases += Invoke-DirectCase "module-timeout-fallback" 30 5 15 0 10000 "module_timeout_partial"
+    $cases += Invoke-DirectCase "stack-timeout-cleanup" 5 10 15 10000 0 "stack_timeout_cleanup"
 
-$lockedTarget = Start-Target -Name "locked-log-end-to-end" -SleepSeconds 180 -ExclusiveLogLock
-try {
-    $diagnostic = Join-Path $lockedTarget.Directory "diagnostic"
-    $result = Invoke-CampfireLightweightNgxDiagnostic -ProcessId $lockedTarget.Process.Id -ExpectedExecutable $powershell -ExpectedStartTimeUtc $lockedTarget.ExpectedStartUtc -OutputDir $diagnostic -LifecyclePath $lockedTarget.Lifecycle -LogPath $lockedTarget.Log -DebuggerTimeoutSeconds 30
-    $report = Read-CampfireBoundedJson -Path (Join-Path $diagnostic "lightweight_shutdown_diagnostic.json")
-    $targetAlive = $null -ne (Get-Process -Id $lockedTarget.Process.Id -ErrorAction SilentlyContinue)
-    $pass = $result.diagnostic_capture_succeeded -and $report.debugger.all_thread_stack_observed -and $report.debugger.native_frames_observed -and $report.debugger.detach_observed -and $report.debugger.process_absent -and $targetAlive -and -not [string]::IsNullOrWhiteSpace([string]$report.log_capture_error)
-    $cases += [ordered]@{
-        name="locked-log-end-to-end"; expected_outcome="bounded_log_error_with_complete_stack"; status=if ($pass) { "pass" } else { "fail" }
-        target_alive_after_detach=$targetAlive; log_capture_error_recorded=-not [string]::IsNullOrWhiteSpace([string]$report.log_capture_error)
-        diagnostic_capture_succeeded=[bool]$result.diagnostic_capture_succeeded; debugger=$report.debugger; helper_guard=$result.helper_guard
-    }
-} finally { Stop-ExactTarget $lockedTarget }
-
-$normalTarget = Start-Target -Name "normal-exit-before-attach" -SleepSeconds 1
-try {
-    $normalTarget.Process.WaitForExit(10000) | Out-Null
-    $diagnostic = Join-Path $normalTarget.Directory "diagnostic"
-    New-Item -ItemType Directory -Path $diagnostic | Out-Null
-    $threw = $false
-    $capture = $null
+    $lockedTarget = Start-Target -Name "locked-log-end-to-end" -SleepSeconds 180 -ExclusiveLogLock
     try {
-        $capture = Invoke-CampfireCdbStackFirstCapture -ProcessId $normalTarget.Process.Id -ExpectedExecutable $powershell -ExpectedStartTimeUtc $normalTarget.ExpectedStartUtc -OutputDir $diagnostic -MarkerPath (Join-Path $normalTarget.Directory "cdb.markers.jsonl") -StackTimeoutSeconds 5 -ModuleTimeoutSeconds 5 -DetachTimeoutSeconds 5
-    } catch { $threw = $true }
-    $cdbRemainder = @(Get-Process cdb -ErrorAction SilentlyContinue).Count
-    $identityRejected = $threw -or ($null -ne $capture -and -not [string]::IsNullOrWhiteSpace([string]$capture.error) -and $null -eq $capture.stack_guard -and -not $capture.stack_attach_observed)
-    $cases += [ordered]@{
-        name="normal-exit-before-attach"; expected_outcome="identity_fail_closed"; status=if ($identityRejected -and $cdbRemainder -eq 0) { "pass" } else { "fail" }
-        identity_rejected=$identityRejected; error=if ($null -ne $capture) { $capture.error } else { $null }; cdb_remainder=$cdbRemainder
-    }
-} finally { $normalTarget.Process.Dispose() }
+        $diagnostic = Join-Path $lockedTarget.Directory "diagnostic"
+        $result = Invoke-CampfireLightweightNgxDiagnostic -ProcessId $lockedTarget.Process.Id -ExpectedExecutable $powershell -ExpectedStartTimeUtc $lockedTarget.ExpectedStartUtc -OutputDir $diagnostic -LifecyclePath $lockedTarget.Lifecycle -LogPath $lockedTarget.Log -DebuggerTimeoutSeconds 30
+        $report = Read-CampfireBoundedJson -Path (Join-Path $diagnostic "lightweight_shutdown_diagnostic.json")
+        $targetAlive = $null -ne (Get-Process -Id $lockedTarget.Process.Id -ErrorAction SilentlyContinue)
+        $pass = $result.diagnostic_capture_succeeded -and $report.debugger.all_thread_stack_observed -and $report.debugger.native_frames_observed -and $report.debugger.detach_observed -and $report.debugger.process_absent -and $targetAlive -and -not [string]::IsNullOrWhiteSpace([string]$report.log_capture_error)
+        $cases += [ordered]@{
+            name="locked-log-end-to-end"; expected_outcome="bounded_log_error_with_complete_stack"; status=if ($pass) { "pass" } else { "fail" }
+            target_alive_after_detach=$targetAlive; log_capture_error_recorded=-not [string]::IsNullOrWhiteSpace([string]$report.log_capture_error)
+            diagnostic_capture_succeeded=[bool]$result.diagnostic_capture_succeeded; debugger=$report.debugger; helper_guard=$result.helper_guard
+        }
+    } finally { Stop-ExactTarget $lockedTarget }
+
+    $normalTarget = Start-Target -Name "normal-exit-before-attach" -SleepSeconds 1
+    try {
+        $normalTarget.Process.WaitForExit(10000) | Out-Null
+        $diagnostic = Join-Path $normalTarget.Directory "diagnostic"
+        New-Item -ItemType Directory -Path $diagnostic | Out-Null
+        $threw = $false
+        $capture = $null
+        try {
+            $capture = Invoke-CampfireCdbStackFirstCapture -ProcessId $normalTarget.Process.Id -ExpectedExecutable $powershell -ExpectedStartTimeUtc $normalTarget.ExpectedStartUtc -OutputDir $diagnostic -MarkerPath (Join-Path $normalTarget.Directory "cdb.markers.jsonl") -StackTimeoutSeconds 5 -ModuleTimeoutSeconds 5 -DetachTimeoutSeconds 5
+        } catch { $threw = $true }
+        $cdbRemainder = @(Get-Process cdb -ErrorAction SilentlyContinue).Count
+        $identityRejected = $threw -or ($null -ne $capture -and -not [string]::IsNullOrWhiteSpace([string]$capture.error) -and $null -eq $capture.stack_guard -and -not $capture.stack_attach_observed)
+        $cases += [ordered]@{
+            name="normal-exit-before-attach"; expected_outcome="identity_fail_closed"; status=if ($identityRejected -and $cdbRemainder -eq 0) { "pass" } else { "fail" }
+            identity_rejected=$identityRejected; error=if ($null -ne $capture) { $capture.error } else { $null }; cdb_remainder=$cdbRemainder
+        }
+    } finally { $normalTarget.Process.Dispose() }
+}
 
 $allPass = -not ($cases | Where-Object { $_.status -ne "pass" })
 $report = [ordered]@{
-    schema="campfire.phase6fr.cdb-stack-first-fixtures.v1"; phase="phase6fr"
+    schema="campfire.phase6fr.cdb-stack-first-fixtures.v1"; phase="phase6fr"; smoke_only=$SmokeOnly.IsPresent
     status=if ($allPass) { "pass" } else { "fail" }; cdb=$cdbMetadata
     contract=[ordered]@{
         stack_first=$true; module_pass_auxiliary=$true; module_timeout_fallback=$true

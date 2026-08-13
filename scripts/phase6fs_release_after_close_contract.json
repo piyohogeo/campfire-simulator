@@ -1,0 +1,142 @@
+{
+  "schema": "campfire.phase6fs.release-after-close-qualification-contract.v1",
+  "phase": "phase6fs",
+  "purpose": "Qualify only the B-first release-after-close lifecycle order in three independent processes without restarting Phase 6FO or changing production.",
+  "frozen_history": {
+    "phase6fr_commit": "a55b49b",
+    "phase6fr_reclassified": false,
+    "phase6fr_active_condition": "A_release_before_close",
+    "phase6fr_last_marker": "stage_close_timeout",
+    "phase6fr_main_thread_boundary": "omni_usd!UsdManager::destroyContext+0x160",
+    "phase6fr_loader_wait_boundary": "RtlAcquireSRWLockExclusive from loadRenderSettingsFromStage/closeStage",
+    "phase6fr_known_ngx_tokens": "0/5",
+    "phase6fo_restarted": false
+  },
+  "cdb_smoke": {
+    "mode": "single_wait_stack_first_fixture",
+    "reuse_phase6fr_helper_unchanged": true,
+    "required_before_kit": true,
+    "stack_before_modules": true,
+    "module_process_independent": true,
+    "explicit_detach_independent": true,
+    "symbol_path": "local_cache_only",
+    "microsoft_symbol_server_wait": false,
+    "full_dump_created": false,
+    "automatic_upload": false,
+    "system_wide_debugger_registration": false,
+    "known_ngx_requires_all_five_stack_tokens": true
+  },
+  "physical_fixture": {
+    "scenario": "production_four",
+    "geometry_variant": "phase6er_corrected",
+    "point_policy": "allow_self_center",
+    "active_points": 1344,
+    "total_points": 1440,
+    "payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389",
+    "point_offset_m": -0.0125,
+    "support_radius_m": 0.05,
+    "sample_frames": [60, 96],
+    "readback_mode": "none",
+    "readback_calls": 0,
+    "capture_calls": 0,
+    "expected_source_sums": {
+      "fuel": 1075.2000160217285,
+      "temperature": 2688.0,
+      "smoke": 107.51999759674072
+    },
+    "source_sum_absolute_tolerance": 0.0001
+  },
+  "startup": {
+    "flow_acquire_position": "before_updates",
+    "stopped_update_count": 12,
+    "extra_update_before_play_count": 0,
+    "representative_active_block_minimum_at_frame_60": 128,
+    "startup_replacement_budget": 1
+  },
+  "condition": {
+    "id": "B_release_after_close",
+    "allocation_level": 5,
+    "capture_preparation_mode": "none",
+    "renderer_drain_updates": 8,
+    "post_close_renderer_updates": 4,
+    "reference_release_order": "after_stage_close",
+    "sequence": [
+      "timeline_stop",
+      "renderer_drain_8",
+      "retain_explicit_ownership_container",
+      "close_stage_async",
+      "usd_context_detach",
+      "post_close_renderer_updates_4",
+      "release_owned_references",
+      "extension_shutdown",
+      "kit_shutdown",
+      "normal_os_exit"
+    ]
+  },
+  "population": {
+    "order": ["B_release_after_close", "B_release_after_close", "B_release_after_close"],
+    "independent_processes": 3,
+    "automatic_retry": false,
+    "stop_on_first_nonreplaceable_failure": true
+  },
+  "ownership": {
+    "explicit_container_required": true,
+    "required_slots": [
+      "stage", "viewport", "capture_provider_alias", "flow_interface",
+      "volume_provider", "emitter_prim", "collectors", "collectors_by_index"
+    ],
+    "required_present_before_close": [
+      "stage", "viewport", "flow_interface", "volume_provider", "emitter_prim",
+      "collectors", "collectors_by_index"
+    ],
+    "capture_provider_alias_expected_present": false,
+    "python_owned_slots_clear_after_release": true,
+    "weak_reference_liveness_is_diagnostic_only": true,
+    "reason": "SDK/framework ownership may keep an object alive after this probe clears every Python-owned alias."
+  },
+  "required_resource_markers_in_order": [
+    "startup_liveness_confirmed",
+    "timeline_stop_request_before", "timeline_stop_request_after", "timeline_stop_confirmed",
+    "renderer_drain_started",
+    "renderer_update_started", "renderer_update_complete", "renderer_drain_complete",
+    "reference_release_order_selected",
+    "owned_reference_retained", "ownership_container_complete",
+    "stage_close_request_before", "stage_close_request_after", "stage_close_complete",
+    "usd_context_disconnected",
+    "post_close_renderer_update_started", "post_close_renderer_update_complete",
+    "references_retained_through_post_close",
+    "capture_related_objects_release_started", "capture_related_objects_release_complete",
+    "flow_references_release_started", "flow_references_release_complete",
+    "provider_readback_references_release_started", "provider_readback_references_release_complete",
+    "stage_viewport_references_release_started", "stage_viewport_references_release_complete",
+    "ownership_container_released",
+    "app_close_requested", "shutdown_complete"
+  ],
+  "required_extension_markers_in_order": [
+    "extension_on_startup", "extension_on_shutdown_begin", "extension_on_shutdown_end"
+  ],
+  "required_runner_markers_in_order": ["os_process_exit_observed"],
+  "safety": {
+    "stage_close_timeout_seconds": 180,
+    "inner_absolute_timeout_seconds": 420,
+    "outer_condition_timeout_seconds": 660,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "limits_changed": false,
+    "stage_close_timeout_is_nonreplaceable": true,
+    "diagnostic_failure_is_nonreplaceable": true,
+    "cleanup_failure_is_nonreplaceable": true
+  },
+  "qualification": {
+    "required_normal_runs": 3,
+    "cdb_invocations_expected_on_normal_population": 0,
+    "candidate_only": true,
+    "production_shutdown_order_changed": false,
+    "phase6fo_restarted": false,
+    "memory_ceiling_qualification_may_follow_only_after_three_normal_runs": true
+  }
+}

@@ -1,5 +1,11 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FS B-first release-after-close qualification contract
+
+Phase 6FRのsafe stopは`a55b49b`で凍結し、A release-before-closeの180.0144794秒timeoutと149-thread stackを再分類しない。Phase 6FSはB release-after-closeだけを3独立processで実行し、stage／viewport／Flow／provider／Emitter／collector参照を明示ownership containerへ保持したまま`close_stage_async()`、USD detach、4 post-close updateまで完了し、その後にPython-owned slotを解放する。14 GiB Kit、16 GiB unique tree、各512 MiB runner/diagnostic、8 GiB physical/commit floorは変更しない。詳細は`docs/design/phase6fs_release_after_close_qualification.md`を参照する。
+
+正式run前の契約は`campfire.phase6fs.release-after-close-qualification-contract.v1`としてSHA-256を固定する。Phase 6FRでqualifiedしたstack-first CDB helperは変更せず、実Kit前はwait-target 1件だけのsmokeとする。Bが3/3 normal OS exit、全marker順序、ownership解放、CDB発動0、exact cleanup／残留0を満たしてもproduction shutdown順序は変更せず、「有力候補」に限定する。Phase 6FO、S93/S100比較、14→16 GiB変更、動画、P4は開始しない。
+
 # Phase 6FR stack-first CDB and stage-close shutdown-order contract
 
 Phase 6FQのsafe stopは`778623c`で凍結する。CDB診断はmodule-first依存を廃止し、exact identity確認後にboundedな全thread stackを先に取得し、module一覧は独立した補助pass、detachは独立cleanup passとする。fixtureが合格した場合だけ、readback/capture 0のA release-before-closeとB release-after-closeを`AB/BA/AB`で各3 runまで比較する。14/16 GiBの採否とPhase 6FO再開は行わない。詳細は`docs/design/phase6fr_stage_close_native_lifecycle.md`を参照する。

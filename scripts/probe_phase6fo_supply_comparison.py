@@ -1035,13 +1035,72 @@ async def _run():
     capture_provider_alias = None
     capture_manifest_path = None
     emitter = None
+    stage = None
+    viewport = None
+    lifecycle_ownership = {}
+    lifecycle_weak_references = {}
     exit_code = 1
 
+    def ownership_snapshot():
+        populated = {name: value is not None for name, value in lifecycle_ownership.items()}
+        weak_alive = {
+            name: reference() is not None
+            for name, reference in lifecycle_weak_references.items()
+            if reference is not None
+        }
+        return {
+            "ownership_container_count": sum(populated.values()),
+            "ownership_container_slots": populated,
+            "ownership_weak_reference_supported_count": len(weak_alive),
+            "ownership_weak_reference_alive_count": sum(weak_alive.values()),
+            "ownership_weak_reference_alive": weak_alive,
+        }
+
+    def retain_owned_references(state):
+        lifecycle_ownership.clear()
+        lifecycle_weak_references.clear()
+        owned = {
+            "stage": stage,
+            "viewport": viewport,
+            "capture_provider_alias": capture_provider_alias,
+            "flow_interface": flow,
+            "volume_provider": volume,
+            "emitter_prim": emitter,
+            "collectors": collectors,
+            "collectors_by_index": collectors_by_index,
+        }
+        for name, value in owned.items():
+            lifecycle_ownership[name] = value
+            try:
+                lifecycle_weak_references[name] = weakref.ref(value) if value is not None else None
+            except TypeError:
+                lifecycle_weak_references[name] = None
+            mark(
+                "owned_reference_retained", reference_name=name,
+                reference_present=value is not None,
+                reference_identity=int(id(value)) if value is not None else None,
+                reference_type=_type_name(value) if value is not None else None,
+                weak_reference_supported=lifecycle_weak_references[name] is not None,
+            )
+        report["lifecycle_reference_ownership"] = {
+            "retained": {
+                name: {
+                    "present": value is not None,
+                    "identity": int(id(value)) if value is not None else None,
+                    "type": _type_name(value) if value is not None else None,
+                }
+                for name, value in owned.items()
+            },
+            "release_order": arguments["lifecycle_reference_release_order"],
+        }
+        mark("ownership_container_complete", **state(), **ownership_snapshot())
+
     def release_owned_references(state):
-        nonlocal flow, volume, emitter, capture_provider_alias
+        nonlocal flow, volume, emitter, capture_provider_alias, stage, viewport
         report["lifecycle_marker"] = "capture_related_objects_release_started"
         mark("capture_related_objects_release_started", **state())
         capture_provider_alias = None
+        lifecycle_ownership["capture_provider_alias"] = None
         report["lifecycle_marker"] = "capture_related_objects_release_complete"
         mark("capture_related_objects_release_complete", **state())
 
@@ -1051,6 +1110,8 @@ async def _run():
             _flowusd.release_flowusd_interface(flow)
             flow = None
         emitter = None
+        lifecycle_ownership["flow_interface"] = None
+        lifecycle_ownership["emitter_prim"] = None
         report["lifecycle_marker"] = "flow_references_release_complete"
         mark("flow_references_release_complete", **state())
 
@@ -1059,8 +1120,34 @@ async def _run():
         volume = None
         collectors.clear()
         collectors_by_index.clear()
+        lifecycle_ownership["volume_provider"] = None
+        lifecycle_ownership["collectors"] = None
+        lifecycle_ownership["collectors_by_index"] = None
         report["lifecycle_marker"] = "provider_readback_references_release_complete"
         mark("provider_readback_references_release_complete", **state())
+
+        report["lifecycle_marker"] = "stage_viewport_references_release_started"
+        mark("stage_viewport_references_release_started", **state())
+        stage = None
+        viewport = None
+        lifecycle_ownership["stage"] = None
+        lifecycle_ownership["viewport"] = None
+        report["lifecycle_marker"] = "stage_viewport_references_release_complete"
+        mark("stage_viewport_references_release_complete", **state())
+
+        snapshot = ownership_snapshot()
+        report["lifecycle_reference_ownership"]["released"] = snapshot
+        report["lifecycle_reference_ownership"]["python_owned_slots_clear"] = (
+            snapshot["ownership_container_count"] == 0
+            and flow is None and volume is None and emitter is None
+            and capture_provider_alias is None and stage is None and viewport is None
+            and not collectors and not collectors_by_index
+        )
+        mark(
+            "ownership_container_released",
+            python_owned_slots_clear=report["lifecycle_reference_ownership"]["python_owned_slots_clear"],
+            **state(), **snapshot,
+        )
 
     try:
         if arguments["python_memory_telemetry"] and not tracemalloc.is_tracing():
@@ -1204,7 +1291,7 @@ async def _run():
                 )
                 collectors.append(collector)
                 collectors_by_index[index] = collector
-        if arguments["report_phase"] in ("phase6fp", "phase6fq", "phase6fr"):
+        if arguments["report_phase"] in ("phase6fp", "phase6fq", "phase6fr", "phase6fs"):
             allocation_state = _phase6fp_allocation_state(
                 arguments["allocation_calibration_level"], output, plan, point_summary, public_members, collectors
             )
@@ -1707,6 +1794,7 @@ async def _run():
                 if release_order not in ("before_stage_close", "after_stage_close"):
                     raise ValueError(f"unsupported lifecycle reference release order: {release_order}")
                 mark("reference_release_order_selected", release_order=release_order, **state())
+                retain_owned_references(state)
                 if release_order == "before_stage_close":
                     release_owned_references(state)
 
@@ -1724,6 +1812,8 @@ async def _run():
                     raise RuntimeError(f"close_stage_async exceeded {close_timeout:.3f} seconds")
                 report["lifecycle_marker"] = "stage_close_request_after"
                 mark("stage_close_request_after", **state())
+                report["lifecycle_marker"] = "stage_close_complete"
+                mark("stage_close_complete", **state(), **ownership_snapshot())
                 report["completion_contract"]["stage_closed"] = True
                 if context.get_stage() is not None:
                     raise RuntimeError("USD context still exposes a stage after close_stage_async")
