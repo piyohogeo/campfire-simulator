@@ -51,6 +51,18 @@
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
     </section>
 
+    <section id="phase-6fo" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FO supply comparison safe stop"><span class="phase-number compact">6FO</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">preflight · resource safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FO · S93 / S100 Point supply comparison</p><h2>供給方式の比較前に、<br>14 GiB hard gateで安全停止。</h2><p>修正版4本fixtureで、他薪support交差96点を止めるS93（1,344/1,440）と、Point中心侵入だけを止めるS100（1,440/1,440）の比較契約を固定しました。過去artifactは再利用せず、全Point判断、実Mesh距離、stage hashを新しいrootへ保存しています。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Frozen offline geometry</p><h3>他薪内部Point中心 0</h3><p>S93のactiveな他薪support交差は0、S100は96です。0.05 mは公開APIのsupport radiusではなく、velocity voxel 1個に等しいengineering仮定です。proxyのsampled volume overlapも0でした。</p></section><section class="note"><p class="note-label">Fail-closed boundary</p><h3>readback 0 · formal 0</h3><p>root 1のharness不整合を独立修正後、root 2はframe 60で688 active blocksへ成長しました。しかしframe 180のchannel readback前、frame 96付近でKit Private Bytesが上限を超えました。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Absolute resource gate</p><h3>15,127,232,512 bytes · 90.453 MiB超過</h3><p>14 GiB上限は変更していません。同期marker最大は15,130,648,576 bytes、last complete frameは96、active blocksは948でした。guardは正確なprocess treeをcleanupし、fatal、dump、自動upload、残留processは0でした。</p><p>channel schema、深部field、方向付きflux、S93/S100数値差、比較動画は未到達です。小さな値を理由にS100を拒否したのでも、S93を採用したのでもありません。production、既定値、latest demoは不変で、P4へは進みません。</p><p>Release build、Phase 0 RTX、Phase 3（dry/wet mass balance 0）、focused Phase 6 <code>359/359</code>、標準suite <code>78/78</code>に合格しました。production SHA-256は不変です。</p><p><a href="assets/phase6/s93_s100_supply_comparison_safe_stop.json">machine report</a> · <a href="../design/phase6fo_s93_s100_supply_comparison.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>688</span><p><strong>Frame 60</strong><small>representative blocks</small></p></div><div role="listitem"><span>948</span><p><strong>Frame 96</strong><small>last complete</small></p></div><div role="listitem"><span>0</span><p><strong>Readbacks</strong><small>preflight not reached</small></p></div><div role="listitem"><span>0/6</span><p><strong>Formal</strong><small>not launched</small></p></div><div role="listitem"><span>0</span><p><strong>Residual</strong><small>exact cleanup</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Next explicit approval boundary</p><h3>resource境界を先に分離する。</h3><p>同じ条件を再試行せず、14 GiBを無断で引き上げません。次はreadback以前の4本Flow高水位と、channel preflight用diagnostic stageの追加resourceを一変数で切り分ける独立Phaseが必要です。</p></section>
+        </div>
+      </article>
+    </section>
+
     <section id="phase-6fn" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6FN routed settled qualification entry"><span class="phase-number compact">6FN</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">9 / 9 · 3-iteration qualified</span></aside>

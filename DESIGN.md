@@ -4,6 +4,10 @@
 
 最初のartifact rootはchannel readback前・formal 0件でharness safe stopとした。Flowはframe 60で688 active blocksへ到達した一方、float32 payload合計に相対許容値`1e-6`を絶対値として渡したためfuel差約`1.60e-5`とsmoke差約`2.40e-6`を誤って`no_source`とした。またrunnerの`channel_attempt*`とanalyzerの`attempt*`が不一致だった。root 1は再分類・再利用せず、contract v2でstartup serialization専用の絶対許容値`1e-4`を物理比較用の相対gateから分離し、artifact探索と欠落時fail-closedを修正した。物理gate、形状、供給、readback回数、安全上限は不変である。
 
+新しいroot 2は修正済みstartup gateを通り、active blocksはframe 60の688からframe 96の948まで成長した。しかしframe 180のchannel readback前にKit Private Bytesが14 GiBを超え、guard値15,127,232,512 bytes（90.453 MiB超過）、同期marker最大15,130,648,576 bytesで絶対resource safe stopした。readback 0、formal S93/S100 0、fatal/dump/upload/residual 0である。上限を引き上げず、channel・field・flux・映像・採用候補は未判定、productionとlatest demoは不変、P4へは進まない。
+
+最終回帰はRelease build 8.29秒、Phase 0 RTX、Phase 3（dry/wet mass balance error 0、Flow active blocks final/peak 223/314）、focused Phase 6 359/359、標準suite 8 process・78/78、日誌静的検査に合格した。production SHA-256は`94162F82...F02A`で不変、Kit/CDB/GPU helper残留は0である。
+
 Phase 6FNの3回readback／fuel alias qualificationを凍結し、readback反復診断を終了してPoint Emitter–CollisionProxyロードマップP3へ戻る。修正版4本fixtureのoffset `-0.0125 m`、同一1,440 Pointに対し、他薪との仮定0.05 m support sphere交差96点を停止するS93（1,344点、93.33%）と、Point中心の他薪内部侵入だけを禁止するS100（1,440点、100%）を比較する。両方式とも他薪内部Point中心0、proxy体積交差0であり、0.05 mは公開Flow support radiusではない。
 
 正式runtime前に全Point判断JSONL、stage blueprint、channel schema、判定閾値を凍結する。public readbackは各process frame 180/360/540の最大3回。velocity／temperature／smoke／fuelは直接返却NumPy bufferから一時NanoVDBと近傍NPZを順次生成し、channelごとにaliasを解放する。`np.asarray()`、material field copy、forced GC、4回目readbackを禁止する。実Mesh signed distanceでdeep/boundaryを分け、同一control volumeの方向付きtransport、gap／opposite／flame-rise領域、火炎高さproxyを比較する。S100のdeep scalar／opposite transport／floored velocityがS93より25%超悪化する場合をmaterial failureと事前定義し、数値合格後だけ同一cameraの15秒比較動画を生成する。
