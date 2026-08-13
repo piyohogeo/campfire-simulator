@@ -5,7 +5,7 @@ Set-StrictMode -Version 3.0
 $output = [IO.Path]::GetFullPath($OutputRoot)
 if (Test-Path -LiteralPath $output) { throw "Phase 6FU refuses artifact root reuse: $output" }
 New-Item -ItemType Directory -Path $output | Out-Null
-. (Join-Path $PSScriptRoot "phase6ea_diagnostic_common.ps1")
+. (Join-Path $PSScriptRoot "kit_shutdown_policy.ps1")
 
 $contract = Join-Path $PSScriptRoot "phase6fu_diagnostic_cleanup_contract.json"
 $sidecar = Join-Path $PSScriptRoot "phase6fu_diagnostic_cleanup_contract.sha256"
