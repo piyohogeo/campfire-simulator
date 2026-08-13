@@ -21,4 +21,6 @@ R2の全9 iterationは、正のsource/converted pointer、同一pointer、同一
 
 最初のartifact rootはR0へ空文字の`-ReadbackFrames`を渡したため、PowerShell parameter bindingで停止した。Kit起動は0回、GPU/Flow operationも0回だった。旧analyzerはraw未生成のguard failureをstartup prerequisiteと誤分類し3 replacementを消費した。このrootとv1 contractは凍結し、正式母集団には使用しない。v2ではR0の空引数を省略し、raw未生成のdiagnostic process failureをnonreplaceable absolute safety failureとしてfail closedにする。
 
+2番目のartifact rootは共有case runnerの凍結済み`ReportPhase` ValidateSetがPhase 6FKまでであるため、Phase 6FL labelをparameter bindingで拒否した。ここでもKit起動は0回、v2 contractとrootは凍結し、正式母集団へ流用しない。Phase 6FKのhash対象共有runnerは変更せず、v3外側runnerだけがembedded probe compatibility label `phase6fk`を渡す。正式なcontract、attempt metadata、集計schema、artifact phaseは`phase6fl`を維持する。
+
 実測結果は正式run後に追記する。

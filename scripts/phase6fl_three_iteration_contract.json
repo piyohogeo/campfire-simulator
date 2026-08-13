@@ -1,23 +1,33 @@
 {
-  "schema": "campfire.phase6fl.three-iteration-readback-alias-contract.v2",
+  "schema": "campfire.phase6fl.three-iteration-readback-alias-contract.v3",
   "phase": "phase6fl",
   "declared_before_runtime": true,
   "safe_commit": "b32cfcb",
   "history_frozen": ["phase6fg", "phase6fh", "phase6fi", "phase6fj", "phase6fk"],
-  "prelaunch_safe_stop_frozen": {
-    "artifact_root": "artifacts/phase6fl-three-iteration-readback-alias-1",
-    "contract_sha256": "E85B153B2E6FDAE52FEA1BD306C4AB0528065ED078E9505008CE6A577E32EC96",
-    "kit_launches": 0,
-    "cause": "empty ReadbackFrames argument caused PowerShell parameter binding failure",
-    "formal_population_reuse": false
-  },
+  "prelaunch_safe_stops_frozen": [
+    {
+      "artifact_root": "artifacts/phase6fl-three-iteration-readback-alias-1",
+      "contract_sha256": "E85B153B2E6FDAE52FEA1BD306C4AB0528065ED078E9505008CE6A577E32EC96",
+      "kit_launches": 0,
+      "cause": "empty ReadbackFrames argument caused PowerShell parameter binding failure",
+      "formal_population_reuse": false
+    },
+    {
+      "artifact_root": "artifacts/phase6fl-three-iteration-readback-alias-2",
+      "contract_sha256": "374301D6B38CC357CDA76038E0744139ACFF2E1CCF318FD2CB882B889EBC0E84",
+      "kit_launches": 0,
+      "cause": "shared case runner ReportPhase ValidateSet rejected phase6fl",
+      "formal_population_reuse": false
+    }
+  ],
+  "embedded_probe_report_phase": "phase6fk",
   "base_operation_contract": {
     "path": "scripts/phase6fg_paired_readback_contract.json",
     "sha256": "54FD6185ADD41B9333506ACC55BF3472F7BBA4F0D726679071F1126572541EED"
   },
   "runtime_implementation": [
     {"path": "scripts/analyze_phase6fl_three_iteration.py", "sha256": "B0B2A538A5A4BBEBC86FBEDB67541E7E52A2D25DAE86003254114C1F1ADED3D7"},
-    {"path": "scripts/run_phase6fl_three_iteration.ps1", "sha256": "33F82877333EE2B4F0F55B0F4C95C7FD1F75AC1F6CAAA93602271D571BECF17C"},
+    {"path": "scripts/run_phase6fl_three_iteration.ps1", "sha256": "0A9AF7715E61CF3EBF35C4E59BD80DFC22FDA74E345180ADA1203B5B289506DA"},
     {"path": "scripts/probe_phase6ep_point_collision_coexistence.py", "sha256": "325FDE191D7F52178B87561461803C21B8256330615DC377EB1F217260C8893F"},
     {"path": "scripts/run_phase6ep_point_collision_case.ps1", "sha256": "5FEDA1DC5AD87E47800C875E4F5BC58E047B437331C339F8BA225ADAFC1CD897"},
     {"path": "scripts/phase6eg_resource_guard.py", "sha256": "A16FA82606A4265093E88816540A0E293205AADC9A15FA11B7CA09C6B32CC45E"},

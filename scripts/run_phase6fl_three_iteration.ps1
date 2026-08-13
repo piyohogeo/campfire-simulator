@@ -109,7 +109,7 @@ while ($slotIndex -lt $slots.Count -and $attempted -lt [int]$contract.population
         "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", $caseRunner,
         "-Scenario", $base.scenario, "-OutputDir", $caseDir, "-OffsetM", "$($base.point_offset_m)",
         "-SupportRadiusM", "$($base.support_radius_m)", "-Filtering", "true", "-Collision", "true",
-        "-Policy", $base.point_policy, "-ReportPhase", "phase6fl", "-GeometryVariant", $base.geometry_variant,
+        "-Policy", $base.point_policy, "-ReportPhase", $contract.embedded_probe_report_phase, "-GeometryVariant", $base.geometry_variant,
         "-FuelScale", "1", "-TemperatureScale", "1", "-SmokeScale", "1",
         "-SampleFrames", $frameCsv, "-ReadbackChannels", "none", "-ReadbackMode", $mode,
         "-ReferenceDisposal", "natural",

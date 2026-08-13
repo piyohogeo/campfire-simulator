@@ -92,6 +92,9 @@ class Phase6FlThreeIterationContract(unittest.TestCase):
         self.assertNotIn('"-ReadbackFrames", $readbackCsv, "-ReferenceDisposal"', runner)
         analyzer = (ROOT / "scripts" / "analyze_phase6fl_three_iteration.py").read_text(encoding="utf-8")
         self.assertIn('diagnostic_process_failed_before_raw_evidence', analyzer)
+        contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
+        self.assertEqual(contract["embedded_probe_report_phase"], "phase6fk")
+        self.assertIn('"-ReportPhase", $contract.embedded_probe_report_phase', runner)
 
 
 if __name__ == "__main__":
