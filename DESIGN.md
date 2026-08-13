@@ -1,5 +1,15 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FE lag-aware occupancy memory response
+
+Phase 6FDの`active_drop_private_increase_fraction=0.809524 > 0.75`は凍結し、遡及合格にしない。Phase 6FEは約0.5秒cadenceの4 sample（最大3秒）を有限lag windowとし、16 block以上のdropをimmediate reclaim、delayed reclaim、active rebound overlap、bounded cache retention、post-drop continued growthへ分類する。event層に加えて、8 MiB/s slope、5% projected drift、normalized drift、high-water recovery／plateau、14 GiB Kit、16 GiB tree、stage close、normal exitのglobal boundednessを独立必須gateとして維持する。詳細は`docs/design/phase6fe_lagged_memory_response.md`。
+
+historical C1の15 eventには1-sample回収2件、2／4／4-sample（0.985～2.010秒）遅延回収3件、active rebound 6件、bounded cache 2件があり、同時刻応答は不変条件ではない。synthetic contractはboundedな即時／遅延／cache／周期／constant系列を通し、線形・加速・drop後継続・readback比例・長期発散・stale・ceiling超過・shutdown未完了を拒否する。
+
+正式rootのrun01 C0は代表startup、readback 1回、stage close 2.958秒、normal exit、lagged response合格だったが、Private Bytes slopeが`9,743,456 bytes/s`で凍結上限`8,388,608 bytes/s`を超えた。projected drift 1.654%、high-water回復ありでもhard gateを変更せずsafe stopとし、C1とrun 2/3は未開始。単発fuel alias lifetimeは未qualified、反復readback、Point Emitter＋CollisionProxy本線、production統合は引き続き保留する。productionコード、payload、Flow、CollisionProxy、authority、V3、resource ceilingは不変である。
+
+回帰はRelease build、Phase 0 RTX、Phase 3（dry/wet mass balance error 0、Flow active block final/peak 258/328、peak fuel 1.0）、focused Phase 6E/6F 262/262、標準suite 78/78に合格した。production app SHA-256は`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`で不変、fatal／dump／automatic upload／CDB／cleanup residualは0だった。
+
 # Phase 6FD one-readback fuel alias lifetime contract
 
 Phase 6EY／6EZ／6FA／6FB／6FCを凍結し、startup反復診断を低頻度監視へ移した。Phase 6FCの0/6は問題解決とは扱わない。新しいPhase 6FDは同じstartup順序を使い、frame 60までに代表場を確認したprocessだけがframe 120の単発public readbackへ進む。未達processはreadbackせずframe 120でdelayed／small-fieldを分類して停止し、自動retry・sleep・recoveryを行わない。

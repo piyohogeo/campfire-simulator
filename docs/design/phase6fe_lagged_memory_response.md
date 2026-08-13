@@ -28,4 +28,16 @@ This is an engineering qualification over the observed finite interval. It is no
 
 Before Kit runtime, fixtures must recognize immediate reclaim, two-sample delayed reclaim, and bounded cache retention as safe, while rejecting occupancy-independent monotonic growth, post-drop continued growth, and repeated accumulation. Calibration artifacts are separate from formal runtime artifacts. If those fixtures do not separate safe and leak-like patterns, runtime must not start.
 
-Runtime status is pending. Formal order is `run01 C0/C1`, `run02 C0/C1`, `run03 C0/C1`, with fail-closed evaluation after every process and pair.
+## Runtime safe stop
+
+The first artifact root stopped before Kit launch because the shared diagnostic runner's `ReportPhase` validation set did not yet contain `phase6fe`. It produced no physical or formal sample. That compatibility omission was fixed independently in `b11d217`; the root remains a frozen harness safe stop.
+
+A second empty root then started the six-process formal order. `run01 C0` passed representative startup with active blocks `269 / 505 / 688 / 1118` at frames 1/30/60/120, exact Point/source identities, one public readback, complete lifecycle, a 2.958-second stage close, and normal OS exit. Fatal, dump, upload, CDB, and cleanup-residual counts were zero.
+
+The lagged event layer passed: 16 eligible drops classified as 1 immediate reclaim, 2 delayed reclaims, 8 active-rebound overlaps, 2 bounded-cache retentions, and 3 short continued-growth events. The continued-growth fraction was 18.75%, the longest overlap remained within the frozen bound, and the maximum four-sample transient was 130.918 MiB. The obsolete same-sample predicate would also have passed in this C0.
+
+Global boundedness did not pass. Kit Private Bytes slope was `9,743,456 bytes/s` (`9.292 MiB/s`) against the predeclared `8 MiB/s` maximum. Projected drift was only 1.654%, high-water recovery/plateau was true, and observation-end memory was 760,311,808 bytes below the pre-readback marker, but the hard slope gate remains authoritative. Kit peak was 14,865,702,912 bytes (13.845 GiB), leaving 166,682,624 bytes (158.961 MiB) below the unchanged 14 GiB ceiling. C1 and runs 2/3 were not started; there was no retry or threshold change.
+
+Therefore Phase 6FE is not qualified, one fuel-alias lifetime remains unqualified, and repeated readback remains blocked. The result narrows the current failure from the old same-sample response model to run-to-run global slope variability near the fixed ceiling. A future phase would need a separately frozen longer observation or repeated independent readback-free controls to distinguish bounded transient slope from sustained growth; this phase does not make that change.
+
+Regression remained green: Release build, Phase 0 RTX, Phase 3 authority/mass-balance/Flow input, focused Phase 6E/6F contracts 262/262, and the eight-process standard suite 78/78. Phase 3 reported zero dry/wet mass-balance error, active blocks final/peak 258/328, and peak fuel input 1.0. The production app SHA-256 remained `94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`; fatal, dump, automatic-upload, CDB, and cleanup-residual counts were zero.
