@@ -62,12 +62,14 @@ class Phase6FeLaggedMemoryResponse(unittest.TestCase):
 
     def test_runner_is_sequential_fail_closed_and_does_not_retry(self):
         runner = (ROOT / "scripts/run_phase6fe_lagged_memory_response.ps1").read_text(encoding="utf-8")
+        shared_runner = (ROOT / "scripts/run_phase6ep_point_collision_case.ps1").read_text(encoding="utf-8")
         self.assertIn('foreach ($runIndex in 1..3)', runner)
         self.assertLess(runner.index('Label="C0_acquire_discard"'), runner.index('Label="C1_fuel_alias"'))
         self.assertIn('if ($reason) { Stop-Safely $completed $active $reason }', runner)
         self.assertNotIn("Start-Sleep", runner)
         self.assertIn('"-StartupLivenessGate", "true"', runner)
         self.assertIn('"-StabilityObservationExtraSeconds", "$($window.extra_running_flow_wall_seconds)"', runner)
+        self.assertIn('"phase6fd", "phase6fe"', shared_runner)
 
     def test_analyzer_replaces_only_the_legacy_same_sample_gate(self):
         analyzer = (ROOT / "scripts/analyze_phase6fe_lagged_memory_response.py").read_text(encoding="utf-8")
