@@ -96,6 +96,17 @@ class Phase6FiLifecycleReplacementContract(unittest.TestCase):
                     report = analyzer.report_for(Path("unused"), self.contract, "HASH")
                 self.assertEqual(report["status"], status)
 
+    def test_published_result_preserves_replacement_and_approval_boundaries(self):
+        published = json.loads((ROOT / "docs" / "devlog" / "assets" / "phase6" / "lifecycle_replacement_qualification.json").read_text(encoding="utf-8"))
+        self.assertEqual(published["status"], "lifecycle_qualification_pass")
+        self.assertEqual(published["population"]["total_launches"], 7)
+        self.assertEqual(published["population"]["representative_startup"], 6)
+        self.assertEqual(published["population"]["startup_prerequisite_failure"], 1)
+        self.assertEqual(published["population"]["replacement_budget_used"], 1)
+        self.assertEqual(published["startup_prerequisite_attempt"]["active_blocks_maximum"], 24)
+        self.assertTrue(published["phase6fg_restart_candidate"])
+        self.assertFalse(published["phase6fg_restart_authorized"])
+
 
 if __name__ == "__main__":
     unittest.main()

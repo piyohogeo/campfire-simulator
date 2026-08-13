@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6fh">最新記録</a>
+        <a href="#phase-6fi">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fh">Phase 6FHの結果を読む</a>
+        <a class="button primary" href="#phase-6fi">Phase 6FIの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FH · lifecycle prerequisite safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6FI · lifecycle replacement qualified</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>0 representative · startup 24-block stop</strong></div>
+        <div><span>Lifecycle</span><strong>6 representative · 1 bounded replacement</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
@@ -51,9 +51,21 @@
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
     </section>
 
+    <section id="phase-6fi" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FI lifecycle replacement entry"><span class="phase-number compact">6FI</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">6 representative · lifecycle qualified</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FI · bounded startup replacement lifecycle qualification</p><h2>startup前提失敗を限定置換し、<br>readbackなしlifecycleを6件確認。</h2><p>Phase 6FG／6FHの履歴を変更せず、startup prerequisiteだけを最大2件まで置換できる契約を事前凍結しました。operation、native lifecycle、absolute safetyの失敗は置換せず即時停止する二軸分類です。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Formal population</p><h3>7 launches · 6 representative</h3><p>attempt03だけがfresh telemetryと正しいPoint供給を保ったまま120 frameすべて24 blocksの<code>startup_prerequisite_failure</code>でした。1枠を消費して継続し、残る6件はframe 1／60／120がすべて269／688／1118 blocksでした。</p></section><section class="note"><p class="note-label">Lifecycle axis</p><h3>6 / 6 normal OS exit</h3><p>代表sampleのstage closeは2.027～8.551秒、中央値2.754秒。operation failure、native lifecycle failure、absolute safety failure、CDB起動、fatal、dump、upload、残留processはすべて0でした。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Bounded evidence</p><h3>startup異常を隠さず、正常lifecycle母集団だけを満了。</h3><p>小field runもstage close 2.514秒で安全に終了し、stage／payload SHA、1,440 total／1,344 active Point、revision 1、fuel／temperature／smoke供給は代表runと一致しました。process間隔と粗いshader/cache指標から直接原因は説明できず、startup問題は未解決の低頻度監視事項です。</p><p>Kit peakは14,574,084,096 bytes、unique tree peakは14,736,871,424 bytesで凍結済み上限内。physical memoryとcommit headroomの最低値も各8 GiBを上回り、production SHA-256は不変です。</p><p>Phase 6FGのbalanced A/B/C再開は候補になりましたが、未承認です。新しいartifact rootと同じreplacement policyを明示承認されるまで開始しません。内部検証のため新動画は作らず、latest demo pointerも変更していません。</p><p><a href="assets/phase6/lifecycle_replacement_qualification.json">machine report</a> · <a href="../design/phase6fi_lifecycle_replacement.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>6</span><p><strong>Representative</strong><small>target met</small></p></div><div role="listitem"><span>1</span><p><strong>Replacement</strong><small>of 2 allowed</small></p></div><div role="listitem"><span>0</span><p><strong>Native failure</strong><small>CDB unused</small></p></div><div role="listitem"><span>2.754</span><p><strong>Median close</strong><small>seconds</small></p></div><div role="listitem"><span>0</span><p><strong>Residual</strong><small>none</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Explicit approval boundary</p><h3>Phase 6FGは自動再開しない。</h3><p>次は新しいrootでbalanced 9-process populationを最初から実行する候補です。startup prerequisiteだけを最大2件置換し、operation／native lifecycle／absolute safety failureは即時停止する同一policyを用いる明示承認が必要です。</p></section>
+        </div>
+      </article>
+    </section>
+
     <section id="phase-6fh" class="section entry-section phase-six">
       <article class="shell entry">
-        <aside class="entry-meta" aria-label="Phase 6FH readback-free lifecycle entry"><span class="phase-number compact">6FH</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">bounded CDB · prerequisite safe stop</span></aside>
+        <aside class="entry-meta" aria-label="Phase 6FH readback-free lifecycle entry"><span class="phase-number compact">6FH</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill">bounded CDB · prerequisite safe stop</span></aside>
         <div class="entry-body">
           <header class="entry-header"><p class="section-kicker">Phase 6FH · readback-free lifecycle qualification</p><h2>shutdownを独立評価。<br>代表startup前に停止。</h2><p>Phase 6FGのUSD context close failureをメモリ／readback評価から切り離し、readbackなしA controlを6独立processで測る契約を凍結しました。6FGの5 passとsafe stopは変更していません。</p></header>
           <div class="notes-grid"><section class="note"><p class="note-label">Phase 6FG audit</p><h3><code>destroyContext</code>までが確認範囲</h3><p>失敗runはtimeline stop、8 renderer drain、Flow／provider参照解放後にstage closeが180秒timeout。旧CDBはmodule取得後、先頭threadの<code>omni_usd!UsdManager::destroyContext+0x160</code>を得ましたが145 thread中ごく一部でtimeoutし、lock owner／GPU fence／renderer／Python callbackは未確定です。既知NGX signatureには一致しません。</p></section><section class="note"><p class="note-label">Bounded diagnostic</p><h3>30 + 45 + 30秒へ分割</h3><p>CDBをcache-only attach/module、all-thread stack、detach recoveryへ分け、direct-file output、512 MiB、exact identity、atomic lockを維持。normal、locked log、target exit、timeout、abnormal exit fixtureは全合格し、残留は0でした。</p></section></div>

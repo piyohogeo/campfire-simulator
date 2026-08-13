@@ -4,6 +4,10 @@
 
 Phase 6FG／6FHを凍結し、Phase 6FHのreadbackなしA controlとshutdown処理をそのまま再利用する後継contractを事前定義した。代表lifecycle sampleは6本、`startup_prerequisite_failure`専用replacement budgetは2、最大launchは8。各attemptは一意で、startup失敗も削除・上書きせず監視証拠へ残す。operation、native lifecycle、absolute safety failureは置換せず即停止する。readback、NumPy、field保存、startup原因追跡、自動recovery、production変更、Phase 6FG自動再開は対象外。詳細は`docs/design/phase6fi_lifecycle_replacement.md`。
 
+formal rootは7 launchで代表6本を収集し`lifecycle_qualification_pass`となった。attempt01/02/04/05/06/07はframe 1/60/120が同一の269/688/1118 blocks、normal OS exit、stage close 2.027～8.551秒。attempt03だけはfresh telemetry、同一stage／payload SHA、1,440 total／1,344 active Point、revision 1、同一供給、同じGPU／driver／shader-cache countのままframe 1～120が24 blocks固定となり、startup prerequisite evidenceとして保存してreplacement 1/2を消費した。24-block発生率は1/7（14.286%）で、原因追跡やrecoveryは行っていない。
+
+native lifecycle／operation／absolute safety failure、CDB、fatal、access violation、dump、upload、cleanup residualはいずれも0。代表stage closeはmin/median/mean/max 2.027/2.754/4.151/8.551秒で、Phase 6FGの180秒failureは6代表runではbounded non-reproductionだった。最大Kit 14,574,084,096 bytes、最大tree 14,736,871,424 bytesで上限内、production SHAは不変。Phase 6FGは新rootからの再開候補になったが自動承認せず、明示的承認を待つ。
+
 # Phase 6FH readback-free lifecycle qualification safe stop
 
 Phase 6FGの5 passとsequence 2 A lifecycle failureは凍結し、readbackなしA controlだけを6独立processで評価するPhase 6FHを事前契約した。contract SHA-256は`F5F193FD772527B261F4CF23605FB03A8E5A95DF1D1CA9654371BD20479706A9`。memory waveform契約、14 GiB Kit／16 GiB tree ceiling、4本fixture、Point payload、Flow、CollisionProxy、V3、productionは変更していない。CDBはcache-onlyのattach/module 30秒、all-thread stack 45秒、必要時detach recovery 30秒へ分割し、各出力を直接ファイルへstreamする。Phase 6EL fixtureはnormal attach/detach、locked log、target exit、timeout、abnormal exitをすべて合格し、CDB残留0だった。

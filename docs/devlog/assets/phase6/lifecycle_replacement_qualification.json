@@ -1,0 +1,79 @@
+{
+  "schema": "campfire.phase6fi.lifecycle-replacement-qualification.v1",
+  "phase": "phase6fi",
+  "date": "2026-08-13",
+  "contract_sha256": "A0B68CFC006A4B28205AACB70AB50C075CF40628C7EC29898A19D9A7001A0387",
+  "artifact_root": "artifacts/phase6fi-lifecycle-replacement-1",
+  "phase6fg_history_frozen": true,
+  "phase6fh_history_frozen": true,
+  "status": "lifecycle_qualification_pass",
+  "population": {
+    "total_launches": 7,
+    "representative_startup": 6,
+    "startup_prerequisite_failure": 1,
+    "replacement_budget": 2,
+    "replacement_budget_used": 1,
+    "startup_prerequisite_failure_rate": 0.14285714285714285,
+    "operation_failure": 0,
+    "native_lifecycle_failure": 0,
+    "absolute_safety_failure": 0
+  },
+  "representative_stage_close_seconds": {
+    "values": [2.6698029041290283, 6.767685890197754, 2.837977886199951, 8.550827980041504, 2.0527141094207764, 2.026505947113037],
+    "minimum": 2.026505947113037,
+    "median": 2.7538903951644897,
+    "mean": 4.150919119517009,
+    "maximum": 8.550827980041504
+  },
+  "startup_prerequisite_attempt": {
+    "attempt_id": "attempt03",
+    "classification": "small_field_ingestion",
+    "sample_count": 120,
+    "active_blocks_minimum": 24,
+    "active_blocks_maximum": 24,
+    "telemetry_fresh": true,
+    "timeline_and_update_advanced": true,
+    "point_revision": 1,
+    "total_points": 1440,
+    "active_points": 1344,
+    "fuel_sum": 1075.2000160217285,
+    "temperature_sum": 2688.0,
+    "smoke_sum": 107.51999759674072,
+    "payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389",
+    "stage_sha256": "7C35DEF1AF46A78933AEA17C7A49EA9748B583821360625BEAB0B4AE904253D9",
+    "previous_exit_to_start_seconds": 0.5418387,
+    "shader_cache_line_count": 29,
+    "shader_compile_token_line_count": 6,
+    "stage_close_seconds": 2.5142459869384766,
+    "process_absent_without_forced_cleanup": true
+  },
+  "environment": {
+    "render_gpu": "NVIDIA GeForce RTX 3090",
+    "secondary_gpu": "NVIDIA GeForce RTX 2070",
+    "driver": "591.86",
+    "flow": "110.0.0"
+  },
+  "resource_peaks_bytes": {
+    "runner": 153980928,
+    "kit": 14574084096,
+    "diagnostic": 17145856,
+    "child": 64745472,
+    "unique_tree": 14736871424
+  },
+  "machine_minima_bytes": {
+    "available_physical": 85795512320,
+    "commit_headroom": 105116684288
+  },
+  "diagnostics": {
+    "cdb_invocations": 0,
+    "fatal_count": 0,
+    "access_violation_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "cleanup_residual_count": 0
+  },
+  "production_changed": false,
+  "phase6fg_restart_candidate": true,
+  "phase6fg_restart_authorized": false,
+  "scope": "bounded non-reproduction in six representative readback-free controls; the native stage-close issue is not declared absent"
+}
