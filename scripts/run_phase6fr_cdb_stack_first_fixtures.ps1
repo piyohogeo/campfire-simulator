@@ -112,13 +112,15 @@ try {
     $diagnostic = Join-Path $normalTarget.Directory "diagnostic"
     New-Item -ItemType Directory -Path $diagnostic | Out-Null
     $threw = $false
+    $capture = $null
     try {
-        $null = Invoke-CampfireCdbStackFirstCapture -ProcessId $normalTarget.Process.Id -ExpectedExecutable $powershell -ExpectedStartTimeUtc $normalTarget.ExpectedStartUtc -OutputDir $diagnostic -MarkerPath (Join-Path $normalTarget.Directory "cdb.markers.jsonl") -StackTimeoutSeconds 5 -ModuleTimeoutSeconds 5 -DetachTimeoutSeconds 5
+        $capture = Invoke-CampfireCdbStackFirstCapture -ProcessId $normalTarget.Process.Id -ExpectedExecutable $powershell -ExpectedStartTimeUtc $normalTarget.ExpectedStartUtc -OutputDir $diagnostic -MarkerPath (Join-Path $normalTarget.Directory "cdb.markers.jsonl") -StackTimeoutSeconds 5 -ModuleTimeoutSeconds 5 -DetachTimeoutSeconds 5
     } catch { $threw = $true }
     $cdbRemainder = @(Get-Process cdb -ErrorAction SilentlyContinue).Count
+    $identityRejected = $threw -or ($null -ne $capture -and -not [string]::IsNullOrWhiteSpace([string]$capture.error) -and $null -eq $capture.stack_guard -and -not $capture.stack_attach_observed)
     $cases += [ordered]@{
-        name="normal-exit-before-attach"; expected_outcome="identity_fail_closed"; status=if ($threw -and $cdbRemainder -eq 0) { "pass" } else { "fail" }
-        identity_rejected=$threw; cdb_remainder=$cdbRemainder
+        name="normal-exit-before-attach"; expected_outcome="identity_fail_closed"; status=if ($identityRejected -and $cdbRemainder -eq 0) { "pass" } else { "fail" }
+        identity_rejected=$identityRejected; error=if ($null -ne $capture) { $capture.error } else { $null }; cdb_remainder=$cdbRemainder
     }
 } finally { $normalTarget.Process.Dispose() }
 
