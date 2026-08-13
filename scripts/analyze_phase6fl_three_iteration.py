@@ -257,6 +257,8 @@ def _attempt(attempt_root: Path, metadata: dict, contract: dict, base: dict) -> 
     monitor = evidence.get("shutdown_monitor") or {}
     cleanup = guard.get("observed_process_cleanup") or {}
     absolute = []
+    if guard.get("status") != "ok" and not raw:
+        absolute.append("diagnostic_process_failed_before_raw_evidence")
     if guard.get("stop_reason"):
         absolute.append(f"resource_guard:{guard.get('stop_reason')}")
     if evidence.get("fatal_lines"):

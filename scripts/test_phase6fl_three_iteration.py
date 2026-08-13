@@ -86,6 +86,13 @@ class Phase6FlThreeIterationContract(unittest.TestCase):
         self.assertIn('Write-Error "Phase 6FL captured nonreplaceable', runner)
         self.assertIn("exit 2", runner)
 
+    def test_r0_omits_empty_readback_frames_and_prelaunch_failure_is_nonreplaceable(self):
+        runner = (ROOT / "scripts" / "run_phase6fl_three_iteration.ps1").read_text(encoding="utf-8")
+        self.assertIn('if (-not [string]::IsNullOrWhiteSpace($readbackCsv))', runner)
+        self.assertNotIn('"-ReadbackFrames", $readbackCsv, "-ReferenceDisposal"', runner)
+        analyzer = (ROOT / "scripts" / "analyze_phase6fl_three_iteration.py").read_text(encoding="utf-8")
+        self.assertIn('diagnostic_process_failed_before_raw_evidence', analyzer)
+
 
 if __name__ == "__main__":
     unittest.main()

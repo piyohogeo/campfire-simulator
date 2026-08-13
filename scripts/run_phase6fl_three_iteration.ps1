@@ -112,7 +112,7 @@ while ($slotIndex -lt $slots.Count -and $attempted -lt [int]$contract.population
         "-Policy", $base.point_policy, "-ReportPhase", "phase6fl", "-GeometryVariant", $base.geometry_variant,
         "-FuelScale", "1", "-TemperatureScale", "1", "-SmokeScale", "1",
         "-SampleFrames", $frameCsv, "-ReadbackChannels", "none", "-ReadbackMode", $mode,
-        "-ReadbackFrames", $readbackCsv, "-ReferenceDisposal", "natural",
+        "-ReferenceDisposal", "natural",
         "-SynchronousMemoryMarkers", "true", "-PythonMemoryTelemetry", "true",
         "-SpatialCollectorsEnabled", "false", "-RunIndex", "$($slot.sequence)", "-LifecycleCalibration",
         "-RendererDrainUpdates", "$($base.lifecycle.renderer_pre_close_drain_updates)",
@@ -129,6 +129,9 @@ while ($slotIndex -lt $slots.Count -and $attempted -lt [int]$contract.population
         "-StartupSourceSumTolerance", "$($base.startup.source_sum_absolute_tolerance)",
         "-AbsoluteTimeoutSeconds", "$($base.lifecycle.inner_absolute_timeout_seconds)"
     )
+    if (-not [string]::IsNullOrWhiteSpace($readbackCsv)) {
+        $arguments += @("-ReadbackFrames", $readbackCsv)
+    }
     if (-not [string]::IsNullOrWhiteSpace($previousExitUtc)) { $arguments += @("-PreviousProcessExitUtc", $previousExitUtc) }
     $limits = $base.safety
     $guardArgs = @(

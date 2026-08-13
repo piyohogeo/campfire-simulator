@@ -1,16 +1,23 @@
 {
-  "schema": "campfire.phase6fl.three-iteration-readback-alias-contract.v1",
+  "schema": "campfire.phase6fl.three-iteration-readback-alias-contract.v2",
   "phase": "phase6fl",
   "declared_before_runtime": true,
   "safe_commit": "b32cfcb",
   "history_frozen": ["phase6fg", "phase6fh", "phase6fi", "phase6fj", "phase6fk"],
+  "prelaunch_safe_stop_frozen": {
+    "artifact_root": "artifacts/phase6fl-three-iteration-readback-alias-1",
+    "contract_sha256": "E85B153B2E6FDAE52FEA1BD306C4AB0528065ED078E9505008CE6A577E32EC96",
+    "kit_launches": 0,
+    "cause": "empty ReadbackFrames argument caused PowerShell parameter binding failure",
+    "formal_population_reuse": false
+  },
   "base_operation_contract": {
     "path": "scripts/phase6fg_paired_readback_contract.json",
     "sha256": "54FD6185ADD41B9333506ACC55BF3472F7BBA4F0D726679071F1126572541EED"
   },
   "runtime_implementation": [
-    {"path": "scripts/analyze_phase6fl_three_iteration.py", "sha256": "4809D9FC4C75AD63029091328D70A1A8CE6392E32997666321363D5D1970EEFE"},
-    {"path": "scripts/run_phase6fl_three_iteration.ps1", "sha256": "B7AF3B8A7E4C68ED8833419BEE4031E950CE02AB3ECFE2C46FF41F784C4F3853"},
+    {"path": "scripts/analyze_phase6fl_three_iteration.py", "sha256": "B0B2A538A5A4BBEBC86FBEDB67541E7E52A2D25DAE86003254114C1F1ADED3D7"},
+    {"path": "scripts/run_phase6fl_three_iteration.ps1", "sha256": "33F82877333EE2B4F0F55B0F4C95C7FD1F75AC1F6CAAA93602271D571BECF17C"},
     {"path": "scripts/probe_phase6ep_point_collision_coexistence.py", "sha256": "325FDE191D7F52178B87561461803C21B8256330615DC377EB1F217260C8893F"},
     {"path": "scripts/run_phase6ep_point_collision_case.ps1", "sha256": "5FEDA1DC5AD87E47800C875E4F5BC58E047B437331C339F8BA225ADAFC1CD897"},
     {"path": "scripts/phase6eg_resource_guard.py", "sha256": "A16FA82606A4265093E88816540A0E293205AADC9A15FA11B7CA09C6B32CC45E"},

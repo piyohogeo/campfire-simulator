@@ -17,4 +17,8 @@ Phase 6FKで観測したfuel logical bufferは41,398,016 bytes、同期markerの
 
 R2の全9 iterationは、正のsource/converted pointer、同一pointer、同一Python object、`shares_memory=True`、shape/dtype/strides/size/nbytes一致、weak-reference残留0を要求する。absolute resource ceiling、正常stage close、extension shutdown、normal OS exit、残留process 0は従来どおりhard gateである。
 
+## Prelaunch safe stop
+
+最初のartifact rootはR0へ空文字の`-ReadbackFrames`を渡したため、PowerShell parameter bindingで停止した。Kit起動は0回、GPU/Flow operationも0回だった。旧analyzerはraw未生成のguard failureをstartup prerequisiteと誤分類し3 replacementを消費した。このrootとv1 contractは凍結し、正式母集団には使用しない。v2ではR0の空引数を省略し、raw未生成のdiagnostic process failureをnonreplaceable absolute safety failureとしてfail closedにする。
+
 実測結果は正式run後に追記する。
