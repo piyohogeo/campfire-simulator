@@ -1,0 +1,132 @@
+{
+  "schema": "campfire.phase6ff.memory-boundedness-contract.v1",
+  "phase": "phase6ff",
+  "declared_before_runtime": true,
+  "safe_commit": "e77fb4e",
+  "history_frozen": {
+    "phase6fd": "same-sample response failure retained",
+    "phase6fe": "9.292 MiB/s single-slope failure retained",
+    "prior_population_reuse": false,
+    "old_8_mib_s_gate_reinterpreted": false
+  },
+  "purpose": "separate absolute safety, finite transient response, sustained boundedness, and readback-added memory without repeated readback",
+  "runtime_order": [
+    "control run01", "control run02", "control run03",
+    "C0 run01", "C0 run02", "C0 run03",
+    "C1 run01", "C1 run02", "C1 run03"
+  ],
+  "runs_per_condition": 3,
+  "scenario": "production_four",
+  "geometry_variant": "phase6er_corrected",
+  "point_policy": "allow_self_center",
+  "point_offset_m": -0.0125,
+  "support_radius_m": 0.05,
+  "collision_enabled": true,
+  "point_filtering_enabled": true,
+  "source_scales": {"fuel": 1.0, "temperature": 1.0, "smoke": 1.0},
+  "expected_stage": {
+    "normalized_stage_sha256": "790FD078D5790C7C4A51FED7E577C3CE49E72F230AA59ED2CFFF028B5A06671B",
+    "payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389"
+  },
+  "startup": {
+    "classification_frame": 60,
+    "final_frame": 120,
+    "representative_active_blocks": 128,
+    "small_field_minimum_blocks": 20,
+    "small_field_maximum_blocks": 32,
+    "expected_point_revision": 1,
+    "expected_total_point_count": 1440,
+    "expected_active_point_count": 1344,
+    "expected_source_sums": {"fuel": 1075.2000160217285, "temperature": 2688.0, "smoke": 107.51999759674072},
+    "source_sum_absolute_tolerance": 0.000001,
+    "flow_acquire_position": "before_updates",
+    "stopped_update_count": 12,
+    "extra_update_before_play_count": 0,
+    "automatic_retry": false,
+    "automatic_recovery": false,
+    "fixed_sleep": false
+  },
+  "sample_frames": [30, 60, 90, 120, 150, 180, 200, 240, 280, 320],
+  "readback_frame": 120,
+  "observation": {
+    "start_frame": 240,
+    "extra_running_flow_wall_seconds": 48.0,
+    "active_block_sample_seconds": 0.5,
+    "outer_resource_sample_seconds": 0.2,
+    "minimum_aligned_active_resource_samples": 80,
+    "target_aligned_active_resource_samples": 96,
+    "minimum_outer_resource_samples": 200,
+    "target_outer_resource_samples": 240,
+    "minimum_observation_seconds": 42.0,
+    "maximum_observation_wall_seconds": 60.0,
+    "timeline_and_flow_remain_running": true
+  },
+  "boundedness": {
+    "window_count": 6,
+    "minimum_samples": 80,
+    "minimum_observation_seconds": 42.0,
+    "minimum_samples_per_equal_window": 10,
+    "rolling_window_seconds": 8.0,
+    "rolling_stride_seconds": 4.0,
+    "minimum_samples_per_rolling_window": 10,
+    "minimum_rolling_windows": 9,
+    "diagnostic_local_slope_bytes_per_second": 8388608,
+    "maximum_consecutive_rolling_windows_above_diagnostic_slope": 2,
+    "maximum_transient_growth_bytes": 1073741824,
+    "material_high_water_recovery_bytes": 67108864,
+    "maximum_high_water_recovery_seconds": 32.0,
+    "maximum_last_half_private_slope_bytes_per_second": 2097152,
+    "maximum_final_window_private_slope_bytes_per_second": 524288,
+    "maximum_window_floor_slope_bytes_per_second": 1048576,
+    "maximum_projected_private_drift_fraction": 0.05,
+    "maximum_normalized_projected_drift_fraction": 0.25,
+    "maximum_terminal_residual_bytes": 536870912
+  },
+  "control_comparison": {
+    "maximum_active_mean_ratio": 1.25,
+    "maximum_control_peak_range_fraction": 0.10,
+    "maximum_control_terminal_range_fraction": 0.10,
+    "maximum_stage_close_seconds": 180.0,
+    "maximum_readback_added_peak_bytes": 1073741824,
+    "maximum_readback_added_terminal_bytes": 536870912,
+    "maximum_c0_immediate_delta_spread_bytes": 268435456,
+    "maximum_absolute_c1_asarray_delta_bytes": 16777216
+  },
+  "gates": {
+    "startup_liveness_required": true,
+    "normal_os_exit_required": true,
+    "required_control_public_readback_calls": 0,
+    "required_c0_public_readback_calls": 1,
+    "required_c1_public_readback_calls": 1,
+    "required_c1_numpy_asarray_calls": 1,
+    "required_field_persistence_calls": 0,
+    "maximum_fuel_logical_bytes": 536870912,
+    "weak_reference_residual_required": 0
+  },
+  "lifecycle": {
+    "renderer_pre_close_drain_updates": 8,
+    "renderer_post_close_drain_updates": 4,
+    "timeline_stop_confirmation_updates": 12,
+    "stage_close_timeout_seconds": 180,
+    "inner_absolute_timeout_seconds": 600,
+    "outer_condition_timeout_seconds": 960,
+    "bounded_cdb_only_after_timeout": true
+  },
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "resource_sampling_seconds": 0.2,
+    "gpu_sampling_ms": 1000,
+    "resource_ceiling_change": false,
+    "automatic_upload": false
+  },
+  "excluded": [
+    "repeated readback", "multiple-frame field retention", "other-channel conversion",
+    "field aggregation", "field-body persistence", "private release API", "forced GC",
+    "production integration", "resource ceiling increase"
+  ]
+}
