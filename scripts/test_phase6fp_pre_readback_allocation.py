@@ -42,6 +42,21 @@ class Phase6FpContractTests(unittest.TestCase):
         self.assertIn("AllocationCalibrationLevel", runner)
         self.assertIn('"phase6fp"', runner)
 
+    def test_published_safe_stop_preserves_scope(self):
+        result = json.loads(
+            (ROOT / "docs" / "devlog" / "assets" / "phase6" / "pre_readback_allocation_safe_stop.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual("native_lifecycle_safe_stop", result["status"])
+        self.assertEqual(10, result["population"]["representative_normal_exit"])
+        self.assertEqual(0, result["population"]["readback_calls"])
+        self.assertFalse(result["conclusion"]["phase6fo_ready_at_14_gib"])
+        self.assertFalse(result["conclusion"]["candidate_16_gib_adopted"])
+        devlog = (ROOT / "docs" / "devlog" / "index.html").read_text(encoding="utf-8")
+        self.assertIn('id="phase-6fp"', devlog)
+        self.assertIn("pre_readback_allocation_safe_stop.json", devlog)
+
 
 if __name__ == "__main__":
     unittest.main()

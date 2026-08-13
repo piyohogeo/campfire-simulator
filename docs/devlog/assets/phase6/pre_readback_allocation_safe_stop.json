@@ -1,0 +1,68 @@
+{
+  "schema": "campfire.phase6fp.pre-readback-allocation-safe-stop.v1",
+  "phase": "phase6fp",
+  "status": "native_lifecycle_safe_stop",
+  "contract_sha256": "3ED0700845DADCFB7997CF27D3C0ED5E3E3B5C6C3FC87B0D18FD77B9C5A55F45",
+  "history_reclassified": false,
+  "phase6fo_restarted": false,
+  "population": {
+    "planned": 24,
+    "representative_normal_exit": 10,
+    "nonreplaceable_failure": 1,
+    "not_started": 13,
+    "readback_calls": 0
+  },
+  "memory": {
+    "kit_private_limit_bytes": 15032385536,
+    "normal_minimum_peak_bytes": 14583508992,
+    "normal_maximum_peak_bytes": 14930382848,
+    "normal_peak_range_bytes": 346873856,
+    "minimum_normal_margin_bytes": 102002688,
+    "phase6fo_reference_peak_bytes": 15127232512,
+    "maximum_unique_tree_peak_bytes": 15093272576,
+    "minimum_available_physical_bytes": 81296306176,
+    "minimum_commit_headroom_bytes": 100617502720,
+    "rtx3090_dedicated_peak_mib_range": [7066, 7145],
+    "gpu_shared_memory": "unavailable; not estimated"
+  },
+  "flow": {
+    "frame60_active_blocks_all_attempts": 688,
+    "frame96_active_blocks_all_attempts": 948,
+    "payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389"
+  },
+  "pre_readback_allocations": {
+    "collector_field_body_bytes": 0,
+    "near_mesh_control_volume_body_bytes": 0,
+    "capture_pixel_buffer_bytes": 0,
+    "reason": "all bodies are readback/capture-call lazy and no readback/capture occurred"
+  },
+  "safe_stop": {
+    "attempt": "attempt11",
+    "condition": "C5_capture_prep",
+    "last_marker": "stage_close_timeout",
+    "stage_close_seconds": 180.007436,
+    "cdb_modules": "completed",
+    "cdb_all_thread_stack": "45 second timeout",
+    "cdb_detach_recovery": "completed",
+    "known_ngx_signature": false,
+    "cleanup_residual_final": 0,
+    "fatal": 0,
+    "dump": 0,
+    "automatic_upload": 0
+  },
+  "conclusion": {
+    "most_likely": "normal four-log Flow/RTX/Kit allocator or cache high-water variability",
+    "confirmed_root_cause": false,
+    "phase6fo_specific_preallocation_supported": false,
+    "phase6fo_ready_at_14_gib": false,
+    "candidate_16_gib_adopted": false
+  },
+  "regression": {
+    "release_build": "pass (8.08 s)",
+    "phase0_rtx": "pass",
+    "phase3": "pass; mass balance 0/0; Flow blocks final/peak 214/306",
+    "focused_phase6f": "131/131 pass",
+    "standard_suite": "78/78 pass across 8 processes (339.7 s)",
+    "production_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A"
+  }
+}

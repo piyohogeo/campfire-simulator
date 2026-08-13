@@ -135,6 +135,14 @@ def classify_attempt(attempt_dir: Path, contract):
                 "timestamp_utc": marker.get("timestamp_utc"),
             }
             marker_times[f"frame_{frame}"] = epoch(marker.get("timestamp_utc"))
+    close_before = next((item for item in markers if item.get("marker") == "stage_close_request_before"), None)
+    close_after = next((item for item in markers if item.get("marker") == "stage_close_request_after"), None)
+    close_timeout = next((item for item in markers if item.get("marker") == "stage_close_timeout"), None)
+    close_end = close_after or close_timeout
+    stage_close_seconds = (
+        None if close_before is None or close_end is None else
+        epoch(close_end.get("timestamp_utc")) - epoch(close_before.get("timestamp_utc"))
+    )
     trace = summarize_trace(logs / "resource.jsonl", marker_times)
     gpu = summarize_gpu(logs / "gpu.csv")
     failures = []
@@ -178,6 +186,11 @@ def classify_attempt(attempt_dir: Path, contract):
         "frames": frames,
         "resource": trace,
         "gpu": gpu,
+        "stage_close": {
+            "seconds": stage_close_seconds,
+            "completed": close_after is not None,
+            "timed_out": close_timeout is not None,
+        },
         "guard_status": guard.get("status"),
         "guard_stop_reason": guard.get("stop_reason"),
         "process_exit_code": evidence.get("process_exit_code"),

@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fn">Phase 6FNのqualificationを読む</a>
+        <a class="button primary" href="#phase-6fp">Phase 6FPの診断を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FN · 3-iteration qualified</strong></div>
+        <div><span>現在地</span><strong>Phase 6FP · lifecycle safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Population</span><strong>9 / 9 · replacement 0</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -49,6 +49,18 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-6fp" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FP pre-readback allocation calibration"><span class="phase-number compact">6FP</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">10 / 24 · lifecycle safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FP · pre-readback allocation calibration</p><h2>15 GB級の高水位は診断配列ではなく、<br>通常の4本Flow起動変動が最有力。</h2><p>Phase 6FOの結果を変更せず、readback 0のままcollector、領域／channel metadata、buffer plan、capture準備を一つずつ追加しました。Phase 6FN基準はすでにS93そのもので、near-Mesh配列はpublic gridを得るreadback後まで生成されません。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Memory evidence</p><h3>13.582～13.905 GiB</h3><p>正常10 runはすべてframe 60/96で688/948 active blocks。6FO-equivalentの2 runも14 GiB未満で、追加要素に追従する増加はありませんでした。diagnostic field bodyとcapture pixel bufferはともに0 byteです。</p></section><section class="note"><p class="note-label">Fail-closed lifecycle</p><h3>attempt11 · close 180.007 s</h3><p>C5 reverseがstage close timeout。CDB module取得後のall-thread stackは45秒timeoutし、detach recoveryとexact cleanupは完了しました。known NGX signatureではなく、原因threadは未確定です。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Current decision</p><h3>14 GiBのままPhase 6FOは再開不可。</h3><p>正常peakの最大は14,930,382,848 bytesで、hard limitまで97.277 MiBしかありません。旧6FOの超過は特定のPython/NumPy/capture事前allocationでは説明できず、通常のFlow/RTX/Kit high-water変動が有力です。ただし3-run母集団はnative lifecycle safe stopで未完です。</p><p>Release build、Phase 0 RTX、Phase 3、focused <code>131/131</code>、標準suite <code>78/78</code>は合格。production SHA-256は不変です。内部診断だけなので動画とlatest demoは変更していません。</p><p><a href="assets/phase6/pre_readback_allocation_safe_stop.json">machine report</a> · <a href="../design/phase6fp_pre_readback_allocation_calibration.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>10</span><p><strong>Normal exits</strong><small>of 24 planned</small></p></div><div role="listitem"><span>0</span><p><strong>Readbacks</strong><small>pre-readback only</small></p></div><div role="listitem"><span>948</span><p><strong>Frame 96</strong><small>all attempts</small></p></div><div role="listitem"><span>97.3</span><p><strong>Min margin</strong><small>MiB to 14 GiB</small></p></div><div role="listitem"><span>0</span><p><strong>Final residual</strong><small>exact cleanup</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Pending roadmap</p><h3>lifecycleとresource ceilingを別Phaseでqualifiedする。</h3><p>Phase 6FOの再開には、readbackなしstage-close問題の境界、各条件3 runの分布、必要なら16 GiB候補を採用前に検証する新しい安全契約が必要です。S93/S100比較、動画、production統合はまだ開始しません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6fo" class="section entry-section phase-six">

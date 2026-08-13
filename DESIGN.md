@@ -1,5 +1,13 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FP pre-readback allocation calibration safe stop
+
+Phase 6FOの15,127,232,512-byte pre-readback safe stopを凍結し、Phase 6FN相当baselineからcollector、spatial metadata、channel metadata、lazy buffer plan、capture準備、S93 identity、6FO-equivalent状態を累積追加する24-process契約を固定した。Phase 6FN baseline自体がS93の同一1,344/1,440 Point payloadであり、near-Mesh field bodyはpublic grid metadataを得るreadback後まで生成されず、capture bodyもcapture callまで生成されない。
+
+forward 8条件とreverse C7/C6までの10 processはnormal exitした。全runでframe 60/96 active blocksは688/948、Kit peakは14,583,508,992～14,930,382,848 bytesだった。6FO-equivalent C7は14,871,994,368／14,894,997,504 bytesで旧6FO超過を再現せず、診断要素に追従する増加はなかった。最有力は4本Flow/RTX/Kit allocator/cacheのrun間高水位変動だが、各条件3 run未完了なので確定とはしない。
+
+attempt11 C5は参照解放後の`close_stage_async()`で180.007秒timeoutした。CDB module取得とdetach recoveryは完了、all-thread stackは45秒timeout、known NGX signatureは不一致、exact cleanup後のKit/CDB/helper残留は0。非置換lifecycle failureとして10/24で停止し、6FOは再開していない。14 GiBまでの最小正常余白は102,002,688 bytesにすぎず、16 GiB候補は未採用。再開にはlifecycle境界、未完3-run分布、必要なら新しい上限qualificationの独立承認が必要。詳細は`docs/design/phase6fp_pre_readback_allocation_calibration.md`。
+
 # Phase 6FO S93 / S100 Point supply comparison contract
 
 最初のartifact rootはchannel readback前・formal 0件でharness safe stopとした。Flowはframe 60で688 active blocksへ到達した一方、float32 payload合計に相対許容値`1e-6`を絶対値として渡したためfuel差約`1.60e-5`とsmoke差約`2.40e-6`を誤って`no_source`とした。またrunnerの`channel_attempt*`とanalyzerの`attempt*`が不一致だった。root 1は再分類・再利用せず、contract v2でstartup serialization専用の絶対許容値`1e-4`を物理比較用の相対gateから分離し、artifact探索と欠落時fail-closedを修正した。物理gate、形状、供給、readback回数、安全上限は不変である。
