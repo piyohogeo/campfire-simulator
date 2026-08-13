@@ -1,5 +1,13 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FO S93 / S100 Point supply comparison contract
+
+Phase 6FNの3回readback／fuel alias qualificationを凍結し、readback反復診断を終了してPoint Emitter–CollisionProxyロードマップP3へ戻る。修正版4本fixtureのoffset `-0.0125 m`、同一1,440 Pointに対し、他薪との仮定0.05 m support sphere交差96点を停止するS93（1,344点、93.33%）と、Point中心の他薪内部侵入だけを禁止するS100（1,440点、100%）を比較する。両方式とも他薪内部Point中心0、proxy体積交差0であり、0.05 mは公開Flow support radiusではない。
+
+正式runtime前に全Point判断JSONL、stage blueprint、channel schema、判定閾値を凍結する。public readbackは各process frame 180/360/540の最大3回。velocity／temperature／smoke／fuelは直接返却NumPy bufferから一時NanoVDBと近傍NPZを順次生成し、channelごとにaliasを解放する。`np.asarray()`、material field copy、forced GC、4回目readbackを禁止する。実Mesh signed distanceでdeep/boundaryを分け、同一control volumeの方向付きtransport、gap／opposite／flame-rise領域、火炎高さproxyを比較する。S100のdeep scalar／opposite transport／floored velocityがS93より25%超悪化する場合をmaterial failureと事前定義し、数値合格後だけ同一cameraの15秒比較動画を生成する。
+
+14 GiB Kit、16 GiB tree、512 MiB runner/diagnostic、8 GiB headroom、180秒stage closeを維持する。production、Flow、Point schema/order/revision、CollisionProxy、V3、既定値は変更しない。詳細は`docs/design/phase6fo_s93_s100_supply_comparison.md`。
+
 # Phase 6FM settled post-release three-iteration qualification contract
 
 Phase 6FKの単回qualificationとPhase 6FLの3/9 safe stopを凍結し、新しい空rootでexplicit `settling_end`だけをformal accumulation baselineにするPhase 6FMを事前定義した。`pre_operation`はFlow成長・allocator・cacheを含むtelemetryとして保存するがformal gateにしない。各iterationは`pre_operation`、`operation_completed`、`release_completed`、`settling_started`、`settling_end`を別markerで持ち、frame 620は4回目のoperationを行わないsentinelである。

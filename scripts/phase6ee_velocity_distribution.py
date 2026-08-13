@@ -238,6 +238,7 @@ class SpatialNeighborhoodCollector:
         face_indices,
         local_to_world,
         flow_public_members,
+        forced_gc: bool = True,
     ) -> None:
         self.output_root = Path(output_root).resolve()
         self.output_root.mkdir(parents=True, exist_ok=True)
@@ -246,6 +247,10 @@ class SpatialNeighborhoodCollector:
         self.local_to_world = np.asarray(local_to_world, dtype=np.float64).reshape((4, 4))
         self.world_to_local = np.linalg.inv(self.local_to_world)
         self.flow_public_members = sorted(str(value) for value in flow_public_members)
+        # Historical Phase 6EE callers retain their original explicit-GC
+        # behavior.  New lifetime qualifications can disable it so collection
+        # cannot make an otherwise unqualified release look successful.
+        self.forced_gc = bool(forced_gc)
         terms = ("collision", "mask", "occup")
         self.collision_mask_candidates = [
             name for name in self.flow_public_members if any(term in name.lower() for term in terms)
@@ -400,7 +405,8 @@ class SpatialNeighborhoodCollector:
         }
         self.files.append(record)
         del payload, values, magnitude, selected
-        gc.collect()
+        if self.forced_gc:
+            gc.collect()
         self._rss()
         return record
 
@@ -434,6 +440,7 @@ class SpatialNeighborhoodCollector:
                 if self.rss_baseline is None or self.peak_rss is None
                 else int(self.peak_rss - self.rss_baseline)
             ),
+            "forced_gc": self.forced_gc,
         }
         path = self.output_root / "manifest.json"
         path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
