@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6fc">最新記録</a>
+        <a href="#phase-6fd">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fc">Phase 6FCの結果を読む</a>
+        <a class="button primary" href="#phase-6fd">Phase 6FDの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FC · startup reproduction bounded</strong></div>
+        <div><span>現在地</span><strong>Phase 6FD · fuel alias lifetime safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>10 normal exits · cleanup residual 0</strong></div>
+        <div><span>Lifecycle</span><strong>C0/C1 normal exits · cleanup residual 0</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
@@ -49,6 +49,18 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-6fd" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FD fuel alias lifetime entry"><span class="phase-number compact">6FD</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">C0 pass · C1 memory-response safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FD · one-readback fuel alias lifetime</p><h2>startupは代表場。<br>zero-copyでも正式gateは不合格。</h2><p>startup反復診断を低頻度監視へ移し、同じ詳細markerをreadback前gateとして再利用しました。C0合格後だけ、別processのC1でpublic readbackとfuel <code>np.asarray()</code>を各1回実行しました。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Startup</p><h3>269／505／688／1118</h3><p>C0/C1ともframe 1／30／60／120が一致。revision 1、1,440 total／1,344 active Points、供給量、stage／payload／Flow／Emitter identityも合格し、24-blockとdelayed ingestionは再発しませんでした。</p></section><section class="note"><p class="note-label">Alias</p><h3>39.480 MiB · same object</h3><p>fuelは<code>numpy.ndarray</code>、<code>uint32[10,349,504]</code>。sourceとconverted identityは同一、shared memory、<code>np.asarray()</code>同期増分はCPU/GPUとも0でした。observable weak reference残留も0です。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Fail-closed result</p><h3>C1 active-drop memory responseだけが凍結閾値を外れた。</h3><p>C0は正式合格。C1はnormal exitし、memory slope 0.756 MiB/s、projected drift 0.135%、high-water recoveryあり、観測終了時はreadback前より729.996 MiB低下しました。ただしactive block低下時にPrivate Bytesが増えた割合が<code>0.809524</code>で、事前上限<code>0.75</code>を超えたため、単発fuel alias lifetimeは未qualifiedです。</p><p>C0/C1 stage closeは3.498／7.990秒。CDB、fatal、dump、upload、device lost/TDR、残留processは0。Kit peakは最大13.817 GiB、14 GiB上限までの最小余裕は187.5 MiBでした。</p><p>Release build、Phase 0 RTX、Phase 3、focused <code>90/90</code>、標準suite <code>78/78</code>（8 process、320.9秒）は合格。production SHA-256は不変です。</p><p><a href="assets/phase6/fuel_alias_lifetime_safe_stop.json">machine report</a> · <a href="../design/phase6fd_fuel_alias_lifetime.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>C0</strong><small>formal pass</small></p></div><div role="listitem"><span>!</span><p><strong>C1</strong><small>memory-response fail</small></p></div><div role="listitem"><span>0</span><p><strong>Startup recurrence</strong><small>none</small></p></div><div role="listitem"><span>✓</span><p><strong>Zero-copy</strong><small>observed</small></p></div><div role="listitem"><span>—</span><p><strong>Repeated readback</strong><small>blocked</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Roadmap</p><h3>startupは監視課題、alias lifetimeは未qualified。</h3><p>startupは自然再発時だけ証拠を保存し、追加反復・sleep・自動recoveryを行いません。Point Emitter＋CollisionProxy本線や反復readbackへ戻る前に、active-drop memory-responseの意味を別の事前凍結contractで解決する必要があります。内部診断のみなので動画とlatest demo pointerは変更していません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6fc" class="section entry-section phase-six">
@@ -4848,7 +4860,7 @@
           <li class="done"><span>3</span><div><strong>木材熱モデル</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>4</span><div><strong>配置と通気</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>5</span><div><strong>崩壊</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · transactional USD発行の局所予算へ</small></div></li>
+          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · startup監視化、fuel alias memory-response safe stop</small></div></li>
         </ol>
       </div>
     </section>
@@ -4860,7 +4872,7 @@
         <strong>Campfire Simulator</strong>
         <p>Build the fire. Keep the evidence.</p>
       </div>
-      <p>Last updated <time datetime="2026-08-12">2026.08.12</time></p>
+        <p>Last updated <time datetime="2026-08-13">2026.08.13</time></p>
     </div>
   </footer>
 

@@ -77,6 +77,21 @@ class Phase6FdFuelAliasLifetime(unittest.TestCase):
         self.assertFalse(disposition["additional_repetition_without_new_evidence"])
         self.assertFalse(disposition["automatic_recovery_implemented"])
 
+    def test_published_safe_stop_and_devlog(self):
+        report_path = ROOT / "docs" / "devlog" / "assets" / "phase6" / "fuel_alias_lifetime_safe_stop.json"
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+        self.assertEqual(report["contract_sha256"], hashlib.sha256(CONTRACT_PATH.read_bytes()).hexdigest().upper())
+        self.assertTrue(report["decision"]["c0_formal_pass"])
+        self.assertFalse(report["decision"]["c1_formal_pass"])
+        self.assertEqual(report["decision"]["safe_stop_reason"], "condition_gate:dynamic_stationarity")
+        self.assertEqual(report["comparison"]["allocation_classification"], "same_object_zero_copy_alias")
+        self.assertFalse(report["decision"]["repeated_readback_ready"])
+        self.assertFalse(report["production_changed"])
+        html = (ROOT / "docs" / "devlog" / "index.html").read_text(encoding="utf-8")
+        self.assertEqual(html.count('id="phase-6fd"'), 1)
+        self.assertIn("fuel_alias_lifetime_safe_stop.json", html)
+        self.assertNotIn("\ufffd", html)
+
 
 if __name__ == "__main__":
     unittest.main()

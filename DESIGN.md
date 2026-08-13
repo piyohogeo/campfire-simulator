@@ -6,6 +6,8 @@ Phase 6EY／6EZ／6FA／6FB／6FCを凍結し、startup反復診断を低頻度�
 
 正式境界は別processのC0 acquire/discardと、C0合格後だけ実行するC1 fuel `numpy.asarray()` 1回である。alias identity・共有・解放、finite memory、stage close、normal OS exitまでを判定し、反復readback、他channel、field保存、production統合は含めない。契約SHA-256は`120DCF250B39C1E30715C4387360DDECF658B7BFF69955ADB4A86D7C502AF9FC`。詳細は`docs/design/phase6fd_fuel_alias_lifetime.md`。
 
+新rootのC0/C1はともに代表startupでframe 1/30/60/120=`269/505/688/1118`、24-block／delayed再発0、normal exitだった。C0は正式合格。C1 fuelは`numpy.ndarray uint32[10,349,504]`、39.480 MiBで、`np.asarray()`はsame identity・shared memory・0-byte同期増分のzero-copy aliasだった。weak reference残留も0。しかしC1は凍結済み`active_drop_private_increase_fraction`が`0.809524 > 0.75`となり、他のmemory gateが全て合格しても正式safe stopとした。単発alias lifetimeは未qualified、反復readbackは保留。startup問題は詳細markerを維持する低頻度監視へ移し、自動recoveryは未実装である。
+
 # Phase 6FC Point Emitter startup reproduction
 
 Phase 6EY／6EZ／6FA／6FBを凍結し、同じreadbackなしstartup probeを新rootで6独立process実行した。全runが`representative_ingestion`、active blocksは全履歴一致、frame 1/30/60/120=`269/505/688/1118`で、24-block再現率は0/6だった。stage接続0.428～5.436秒、前process終了から次開始6.016～8.902秒の範囲でも履歴は同一だったため、相関は算出不能で観測上の関連はない。明示的なGPU／shader cache cold/warm状態は公開されたbounded logだけでは確定できない。

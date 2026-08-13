@@ -156,7 +156,9 @@ def main() -> None:
             "active_block_mean_c0": active0,
             "active_block_mean_c1": active1,
             "active_block_scale_ratio": active_scale_ratio,
-            "process_peak_difference_is_conversion_evidence": bool(active_scale_ratio is not None and 0.9 <= active_scale_ratio <= 1.1),
+            "process_peak_difference_comparable_for_context": bool(active_scale_ratio is not None and 0.9 <= active_scale_ratio <= 1.1),
+            "process_peak_difference_is_primary_conversion_evidence": False,
+            "primary_conversion_cost_evidence": "adjacent synchronous fuel_conversion_before/after markers",
             "c1_minus_c0_peak_private_bytes": c1["kit_peak_private_bytes"] - c0["kit_peak_private_bytes"],
             "c1_minus_c0_terminal_private_bytes": c1["terminal_kit_private_bytes"] - c0["terminal_kit_private_bytes"],
         }

@@ -1,0 +1,398 @@
+{
+  "schema": "campfire.phase6fd.fuel-alias-lifetime-safe-stop-summary.v1",
+  "phase": "phase6fd",
+  "status": "safe_stop",
+  "contract_sha256": "120DCF250B39C1E30715C4387360DDECF658B7BFF69955ADB4A86D7C502AF9FC",
+  "history_frozen": [
+    "phase6ey",
+    "phase6ez",
+    "phase6fa",
+    "phase6fb",
+    "phase6fc"
+  ],
+  "incremental_state": {
+    "schema": "campfire.phase6fd.incremental-state.v1",
+    "phase": "phase6fd",
+    "status": "safe_stop",
+    "completed_conditions": 1,
+    "active_condition": "C1_fuel_alias",
+    "stop_reason": "condition_gate:dynamic_stationarity",
+    "contract_sha256": "120DCF250B39C1E30715C4387360DDECF658B7BFF69955ADB4A86D7C502AF9FC",
+    "timestamp_utc": "2026-08-13T00:43:17.5564729Z"
+  },
+  "cases": {
+    "C0_acquire_discard": {
+      "startup": {
+        "classification": "representative_ingestion",
+        "frame_values": {
+          "1": 269,
+          "30": 505,
+          "60": 688,
+          "120": 1118
+        },
+        "telemetry_fresh": true,
+        "source_ok": true,
+        "identity_and_exact_source_pass": true,
+        "readback_permitted": true,
+        "payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389",
+        "normalized_stage_sha256": "790FD078D5790C7C4A51FED7E577C3CE49E72F230AA59ED2CFFF028B5A06671B"
+      },
+      "condition_gate_pass": true,
+      "condition_gate_failures": [],
+      "normal_os_exit": true,
+      "stage_close_seconds": 3.4980740547180176,
+      "extension_shutdown_seconds": 0.0034989,
+      "shutdown_complete_to_os_exit_seconds": 33.30549097061157,
+      "cdb_invoked": false,
+      "resource": {
+        "kit_peak_private_bytes": 14777962496,
+        "kit_peak_private_gib": 13.763050079345703,
+        "kit_terminal_private_bytes": 13718728704,
+        "tree_peak_private_bytes": 14941290496,
+        "runner_peak_private_bytes": 144281600,
+        "diagnostic_peak_private_bytes": 16859136,
+        "minimum_available_physical_bytes": 84316176384,
+        "minimum_commit_headroom_bytes": 103598977024,
+        "minimum_kit_ceiling_margin_bytes": 254423040,
+        "minimum_kit_ceiling_margin_mib": 242.63671875
+      },
+      "memory_deltas_bytes": {
+        "readback_immediate": 294105088,
+        "fuel_conversion_immediate": null,
+        "original_alias_release": null,
+        "converted_buffer_release": null,
+        "next_frame_residual": 260681728,
+        "observation_end_residual": -765304832,
+        "stage_close_before_residual": -878538752
+      },
+      "gpu_deltas_mib": {
+        "readback_immediate": 0.0,
+        "fuel_conversion_immediate": null,
+        "next_frame_residual": 0.0,
+        "observation_end_residual": -70.0
+      },
+      "dynamic_memory": {
+        "gate_pass": true,
+        "checks": {
+          "minimum_samples": true,
+          "minimum_duration": true,
+          "window_samples": true,
+          "active_maximum": true,
+          "active_projected_drift": true,
+          "private_slope": true,
+          "private_projected_drift": true,
+          "normalized_private_drift": true,
+          "half_active_mean_ratio": true,
+          "half_active_median_ratio": true,
+          "half_private_mean_ratio": true,
+          "window_active_mean_ratio": true,
+          "window_active_median_ratio": true,
+          "final_window_mean_return": true,
+          "final_window_median_return": true,
+          "increase_fraction": true,
+          "decrease_fraction": true,
+          "late_new_high_fraction": true,
+          "consecutive_new_highs": true,
+          "active_drop_memory_response": true,
+          "private_high_water_recovery_or_plateau": true
+        },
+        "sample_count": 49,
+        "duration_seconds": 24.004963159561157,
+        "active_blocks": {
+          "count": 49,
+          "minimum": 1129.0,
+          "mean": 1359.3061224489795,
+          "median": 1359.0,
+          "p95": 1514.6,
+          "maximum": 1564.0
+        },
+        "private_bytes": {
+          "count": 49,
+          "minimum": 13711167488.0,
+          "mean": 13808535259.428572,
+          "median": 13743083520.0,
+          "p95": 14083777331.2,
+          "maximum": 14146945024.0
+        },
+        "private_slope_bytes_per_second": 5134241.539662239,
+        "private_projected_drift_fraction": 0.00892544188767063,
+        "active_drop_private_increase_fraction": 0.6111111111111112,
+        "private_high_water_recovered_or_flat": true,
+        "last_half_private_slope_bytes_per_second": -12412120.195426133
+      },
+      "readback_boundary": {
+        "returned_type": "builtins.list",
+        "returned_channel_count": 7,
+        "operation_counts": {
+          "public_readback_calls": 1,
+          "fuel_handle_selections": 0,
+          "numpy_asarray_calls": 0,
+          "explicit_copy_function_calls": 0,
+          "field_persistence_calls": 0,
+          "temporary_fuel_liveness_decode_calls": 0
+        },
+        "fuel_array": null,
+        "observable_copy_contract": null,
+        "converted_valid_after_source_release": null,
+        "converted_weak_reference_alive_after_release": null,
+        "channel_weak_reference_alive_after_scope_count": 0
+      },
+      "runner_safety": {
+        "fatal_count": 0,
+        "dump_count": 0,
+        "upload_attempt_count": 0,
+        "production_changed": false,
+        "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+        "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+        "functional_status": "pass",
+        "lifecycle_status": "normal_exit",
+        "normal_exit_sample_accepted": true
+      }
+    },
+    "C1_fuel_alias": {
+      "startup": {
+        "classification": "representative_ingestion",
+        "frame_values": {
+          "1": 269,
+          "30": 505,
+          "60": 688,
+          "120": 1118
+        },
+        "telemetry_fresh": true,
+        "source_ok": true,
+        "identity_and_exact_source_pass": true,
+        "readback_permitted": true,
+        "payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389",
+        "normalized_stage_sha256": "790FD078D5790C7C4A51FED7E577C3CE49E72F230AA59ED2CFFF028B5A06671B"
+      },
+      "condition_gate_pass": false,
+      "condition_gate_failures": [
+        "dynamic_stationarity"
+      ],
+      "normal_os_exit": true,
+      "stage_close_seconds": 7.98974084854126,
+      "extension_shutdown_seconds": 0.0019994,
+      "shutdown_complete_to_os_exit_seconds": 32.829509019851685,
+      "cdb_invoked": false,
+      "resource": {
+        "kit_peak_private_bytes": 14835777536,
+        "kit_peak_private_gib": 13.81689453125,
+        "kit_terminal_private_bytes": 14081974272,
+        "tree_peak_private_bytes": 14999142400,
+        "runner_peak_private_bytes": 145874944,
+        "diagnostic_peak_private_bytes": 16908288,
+        "minimum_available_physical_bytes": 84090466304,
+        "minimum_commit_headroom_bytes": 103373266944,
+        "minimum_kit_ceiling_margin_bytes": 196608000,
+        "minimum_kit_ceiling_margin_mib": 187.5
+      },
+      "memory_deltas_bytes": {
+        "readback_immediate": 302252032,
+        "fuel_conversion_immediate": 0,
+        "original_alias_release": -33619968,
+        "converted_buffer_release": 0,
+        "next_frame_residual": 268894208,
+        "observation_end_residual": -765456384,
+        "stage_close_before_residual": -789200896
+      },
+      "gpu_deltas_mib": {
+        "readback_immediate": 0.0,
+        "fuel_conversion_immediate": 0.0,
+        "next_frame_residual": 13.0,
+        "observation_end_residual": -153.0
+      },
+      "dynamic_memory": {
+        "gate_pass": false,
+        "checks": {
+          "minimum_samples": true,
+          "minimum_duration": true,
+          "window_samples": true,
+          "active_maximum": true,
+          "active_projected_drift": true,
+          "private_slope": true,
+          "private_projected_drift": true,
+          "normalized_private_drift": true,
+          "half_active_mean_ratio": true,
+          "half_active_median_ratio": true,
+          "half_private_mean_ratio": true,
+          "window_active_mean_ratio": true,
+          "window_active_median_ratio": true,
+          "final_window_mean_return": true,
+          "final_window_median_return": true,
+          "increase_fraction": true,
+          "decrease_fraction": true,
+          "late_new_high_fraction": true,
+          "consecutive_new_highs": true,
+          "active_drop_memory_response": false,
+          "private_high_water_recovery_or_plateau": true
+        },
+        "sample_count": 49,
+        "duration_seconds": 23.944832801818848,
+        "active_blocks": {
+          "count": 49,
+          "minimum": 1144.0,
+          "mean": 1359.3469387755101,
+          "median": 1367.0,
+          "p95": 1532.3999999999999,
+          "maximum": 1560.0
+        },
+        "private_bytes": {
+          "count": 49,
+          "minimum": 13784702976.0,
+          "mean": 14069853622.857143,
+          "median": 14045179904.0,
+          "p95": 14220100403.2,
+          "maximum": 14306553856.0
+        },
+        "private_slope_bytes_per_second": 793108.2919256331,
+        "private_projected_drift_fraction": 0.0013497543011424006,
+        "active_drop_private_increase_fraction": 0.8095238095238095,
+        "private_high_water_recovered_or_flat": true,
+        "last_half_private_slope_bytes_per_second": -6428523.876429534
+      },
+      "readback_boundary": {
+        "returned_type": "builtins.list",
+        "returned_channel_count": 7,
+        "operation_counts": {
+          "public_readback_calls": 1,
+          "fuel_handle_selections": 1,
+          "numpy_asarray_calls": 1,
+          "explicit_copy_function_calls": 0,
+          "field_persistence_calls": 0,
+          "temporary_fuel_liveness_decode_calls": 0
+        },
+        "fuel_array": {
+          "type": "numpy.ndarray",
+          "identity": 1917812774864,
+          "dtype": "uint32",
+          "shape": [
+            10349504
+          ],
+          "strides": [
+            4
+          ],
+          "size": 10349504,
+          "nbytes": 41398016,
+          "c_contiguous": true,
+          "f_contiguous": true,
+          "owns_data": true,
+          "base_type": null,
+          "base_identity": null,
+          "same_identity_as_source": true,
+          "shares_memory_with_source": true
+        },
+        "observable_copy_contract": {
+          "explicit_copy_function_calls": 0,
+          "same_identity": true,
+          "shares_memory": true,
+          "exact_internal_copy_count_known": true,
+          "internal_public_readback_copy_count_known": false,
+          "allocation_classification": "same_object_zero_copy_alias",
+          "new_data_buffer_allocated": false
+        },
+        "converted_valid_after_source_release": true,
+        "converted_weak_reference_alive_after_release": false,
+        "channel_weak_reference_alive_after_scope_count": 0
+      },
+      "runner_safety": {
+        "fatal_count": 0,
+        "dump_count": 0,
+        "upload_attempt_count": 0,
+        "production_changed": false,
+        "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+        "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+        "functional_status": "pass",
+        "lifecycle_status": "normal_exit",
+        "normal_exit_sample_accepted": true
+      }
+    }
+  },
+  "comparison": {
+    "allocation_classification": "same_object_zero_copy_alias",
+    "new_data_buffer_allocated": false,
+    "fuel_logical_bytes": 41398016,
+    "numpy_asarray_cpu_increment_bytes": 0,
+    "numpy_asarray_cpu_increment_to_logical_ratio": 0.0,
+    "numpy_asarray_gpu_increment_mib": 0.0,
+    "source_alias_release_delta_bytes": -33619968,
+    "converted_alias_release_delta_bytes": 0,
+    "next_frame_residual_bytes": 268894208,
+    "observation_end_residual_bytes": -765456384,
+    "stage_close_before_residual_bytes": -789200896,
+    "active_block_mean_c0": 1359.3061224489795,
+    "active_block_mean_c1": 1359.3469387755101,
+    "active_block_scale_ratio": 1.0000300273248657,
+    "process_peak_difference_comparable_for_context": true,
+    "process_peak_difference_is_primary_conversion_evidence": false,
+    "primary_conversion_cost_evidence": "adjacent synchronous fuel_conversion_before/after markers",
+    "c1_minus_c0_peak_private_bytes": 57815040,
+    "c1_minus_c0_terminal_private_bytes": 363245568
+  },
+  "decision": {
+    "c0_formal_pass": true,
+    "c1_started": true,
+    "c1_formal_pass": false,
+    "qualified_boundary": false,
+    "safe_stop_reason": "condition_gate:dynamic_stationarity",
+    "startup_recurrence": false,
+    "startup_issue_moved_to_monitoring": true,
+    "automatic_recovery_implemented": false,
+    "one_readback_alias_observation_complete": true,
+    "one_readback_alias_lifetime_qualified": false,
+    "repeated_readback_ready": false,
+    "point_emitter_collision_mainline_resume_condition": "a separately frozen contract must resolve or explicitly replace the failed active-drop memory-response predicate without reclassifying Phase 6FD"
+  },
+  "observed": [
+    "C0 and C1 had identical representative startup frame values 269/505/688/1118 and no 24-block or delayed ingestion",
+    "C0 passed; C1 exited normally but failed only the frozen dynamic-stationarity active-drop memory-response check",
+    "fuel np.asarray returned the same object, shared memory, and allocated no new data buffer",
+    "all observable channel weak references were dead after scope and no fatal, dump, upload, CDB, or cleanup residual occurred"
+  ],
+  "strong_inference": [
+    "the zero-byte adjacent np.asarray delta is consistent with an alias operation rather than a fuel data copy",
+    "overall memory recovered below the pre-readback marker, but the predeclared local active-drop response threshold still makes the formal qualification fail"
+  ],
+  "unconfirmed": [
+    "internal provider/readback copy count and ownership below the public Python objects",
+    "repeated readback accumulation",
+    "the low-frequency native startup trigger and safe automatic recovery",
+    "the owner of historical native shutdown waits"
+  ],
+  "regression": {
+    "release_build": "pass (6.56 seconds)",
+    "phase0_rtx": "pass",
+    "phase3": {
+      "status": "pass",
+      "dry_authority_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+      "wet_authority_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "flow_active_blocks_final": 289,
+      "flow_active_blocks_peak": 315,
+      "peak_fuel_input": 1.0
+    },
+    "focused_contracts": {
+      "passed": 90,
+      "total": 90
+    },
+    "standard_suite": {
+      "passed": 78,
+      "total": 78,
+      "processes": 8,
+      "seconds": 320.9
+    },
+    "devlog_validation": {
+      "status": "pass",
+      "references": 427,
+      "ids": 260,
+      "json": 212,
+      "svg": 177,
+      "zip": 2
+    },
+    "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "residual_process_count": 0
+  },
+  "production_changed": false,
+  "video_created": false,
+  "latest_demo_changed": false
+}
