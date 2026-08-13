@@ -280,11 +280,15 @@ function Invoke-CampfireLightweightNgxDiagnosticCore {
 
         $cdb = Get-CampfireCdbPath
         $cdbMetadata = Get-CampfireCdbMetadata -Path $cdb
+        $moduleLog = Join-Path $output "cdb-modules.log"
+        $moduleError = Join-Path $output "cdb-modules.stderr.log"
         $stackLog = Join-Path $output "cdb-thread-stacks.log"
         $stackError = Join-Path $output "cdb-thread-stacks.stderr.log"
         $symbolCache = Join-Path $output "symbols"
         New-Item -ItemType Directory -Path $symbolCache | Out-Null
-        $guard = $null
+        $moduleGuard = $null
+        $stackGuard = $null
+        $detachGuard = $null
         $cdbError = $null
         $attachObserved = $false
         $stackObserved = $false
@@ -295,33 +299,72 @@ function Invoke-CampfireLightweightNgxDiagnosticCore {
         if ($null -ne $cdb) {
             try {
                 $symbolPath = "srv*$symbolCache*https://msdl.microsoft.com/download/symbols"
-                $commandFile = Join-Path $output "cdb-commands.txt"
-                $commands = @(
+                $moduleCommandFile = Join-Path $output "cdb-module-commands.txt"
+                $stackCommandFile = Join-Path $output "cdb-stack-commands.txt"
+                $detachCommandFile = Join-Path $output "cdb-detach-commands.txt"
+                [IO.File]::WriteAllLines($moduleCommandFile, @(
                     ".echo ===== CDB_ATTACH_CONFIRMED =====",
-                    ".reload /f ntdll.dll KERNELBASE.dll",
                     ".echo ===== LOADED_MODULES =====",
                     "lm",
+                    ".echo ===== LOADED_MODULES_COMPLETE =====",
+                    ".echo ===== CDB_DETACHING =====",
+                    "qd"
+                ), [Text.UTF8Encoding]::new($false))
+                $stackCommands = @(
+                    ".echo ===== CDB_STACK_ATTACH_CONFIRMED =====",
                     ".echo ===== THREAD_STACKS =====",
-                    "~* kPn 64"
+                    "~* kPn 16"
                 )
-                if ($FixtureCdbSleepMilliseconds -gt 0) { $commands += ".sleep $FixtureCdbSleepMilliseconds" }
-                $commands += @(".echo ===== CDB_DETACHING =====", "qd")
-                [IO.File]::WriteAllLines($commandFile, $commands, [Text.UTF8Encoding]::new($false))
+                if ($FixtureCdbSleepMilliseconds -gt 0) { $stackCommands += ".sleep $FixtureCdbSleepMilliseconds" }
+                $stackCommands += @(
+                    ".echo ===== THREAD_STACKS_COMPLETE =====",
+                    ".echo ===== CDB_DETACHING =====",
+                    "qd"
+                )
+                [IO.File]::WriteAllLines($stackCommandFile, $stackCommands, [Text.UTF8Encoding]::new($false))
+                [IO.File]::WriteAllLines($detachCommandFile, @(
+                    ".echo ===== CDB_RECOVERY_ATTACH_CONFIRMED =====",
+                    ".echo ===== CDB_DETACHING =====",
+                    "qd"
+                ), [Text.UTF8Encoding]::new($false))
                 Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_attach_started" -Details @{ target_pid = $ProcessId; debugger_path = $cdb }
-                Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_stack_capture_started" -Details @{ stdout_limit_bytes = $CampfireCdbStackLogLimitBytes; stderr_limit_bytes = $CampfireCdbStderrLimitBytes }
-                $guard = Invoke-Phase6EaGuardedHelper -FilePath $cdb -ArgumentList @("-p", [string]$ProcessId, "-pv", "-y", $symbolPath, "-cf", $commandFile) -StdoutPath $stackLog -StderrPath $stackError -TimeoutSeconds $DebuggerTimeoutSeconds -PrivateBytesLimit $CampfireShutdownHelperPrivateBytesLimit -MaximumStdoutBytes $CampfireCdbStackLogLimitBytes -MaximumStderrBytes $CampfireCdbStderrLimitBytes
-                $attachObserved = Test-CampfireLogPattern -Path $stackLog -Pattern "CDB_ATTACH_CONFIRMED"
-                $stackObserved = Test-CampfireLogPattern -Path $stackLog -Pattern "THREAD_STACKS"
-                $nativeFramesObserved = Test-CampfireLogPattern -Path $stackLog -Pattern "Child-SP\s+RetAddr|ntdll!|KERNELBASE!"
-                $modulesObserved = Test-CampfireLogPattern -Path $stackLog -Pattern "LOADED_MODULES"
-                $detachObserved = Test-CampfireLogPattern -Path $stackLog -Pattern "CDB_DETACHING"
+                Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_module_capture_started" -Details @{ timeout_seconds = 30 }
+                # Module enumeration does not require symbol-server traffic. Keeping
+                # this pass cache-only prevents network/PDB latency from consuming
+                # the attach/module boundary before `lm` is reached.
+                $moduleGuard = Invoke-Phase6EaGuardedHelper -FilePath $cdb -ArgumentList @("-p", [string]$ProcessId, "-pv", "-y", $symbolCache, "-cf", $moduleCommandFile) -StdoutPath $moduleLog -StderrPath $moduleError -TimeoutSeconds ([math]::Min(30, $DebuggerTimeoutSeconds)) -PrivateBytesLimit $CampfireShutdownHelperPrivateBytesLimit -MaximumStdoutBytes $CampfireCdbStackLogLimitBytes -MaximumStderrBytes $CampfireCdbStderrLimitBytes
+                $attachObserved = Test-CampfireLogPattern -Path $moduleLog -Pattern "CDB_ATTACH_CONFIRMED"
+                $modulesObserved = (Test-CampfireLogPattern -Path $moduleLog -Pattern "LOADED_MODULES") -and (Test-CampfireLogPattern -Path $moduleLog -Pattern "LOADED_MODULES_COMPLETE")
+                $moduleDetached = Test-CampfireLogPattern -Path $moduleLog -Pattern "CDB_DETACHING"
                 if ($attachObserved) { Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_attach_complete" }
-                if ($stackObserved) { Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_stack_capture_complete" -Details @{ bytes = if (Test-Path -LiteralPath $stackLog) { (Get-Item -LiteralPath $stackLog).Length } else { 0 } } }
-                if ($detachObserved -and $guard.process_absent) { Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_detach_complete" }
-                Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_cleanup_complete" -Details @{ process_absent = [bool]$guard.process_absent; timed_out = [bool]$guard.timed_out; output_bytes_exceeded = [bool]$guard.output_bytes_exceeded }
+                if ($modulesObserved) { Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_module_capture_complete" -Details @{ bytes = if (Test-Path -LiteralPath $moduleLog) { (Get-Item -LiteralPath $moduleLog).Length } else { 0 } } }
+
+                $stackDetached = $false
+                if (-not $moduleGuard.timed_out -and $moduleGuard.process_absent -and $attachObserved -and $modulesObserved -and $moduleDetached) {
+                    Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_stack_capture_started" -Details @{ timeout_seconds = 45; stack_depth = 16; stdout_limit_bytes = $CampfireCdbStackLogLimitBytes; stderr_limit_bytes = $CampfireCdbStderrLimitBytes }
+                    # Private Omniverse symbols are not expected. Use only the
+                    # bounded per-run cache here so a symbol-server stall cannot
+                    # consume the all-thread stack deadline; raw module+offset
+                    # frames remain valid fail-closed evidence.
+                    $stackGuard = Invoke-Phase6EaGuardedHelper -FilePath $cdb -ArgumentList @("-p", [string]$ProcessId, "-pv", "-y", $symbolCache, "-cf", $stackCommandFile) -StdoutPath $stackLog -StderrPath $stackError -TimeoutSeconds $DebuggerTimeoutSeconds -PrivateBytesLimit $CampfireShutdownHelperPrivateBytesLimit -MaximumStdoutBytes $CampfireCdbStackLogLimitBytes -MaximumStderrBytes $CampfireCdbStderrLimitBytes
+                    $stackObserved = (Test-CampfireLogPattern -Path $stackLog -Pattern "THREAD_STACKS") -and (Test-CampfireLogPattern -Path $stackLog -Pattern "THREAD_STACKS_COMPLETE")
+                    $nativeFramesObserved = Test-CampfireLogPattern -Path $stackLog -Pattern "Child-SP\s+RetAddr|ntdll!|KERNELBASE!"
+                    $stackDetached = Test-CampfireLogPattern -Path $stackLog -Pattern "CDB_DETACHING"
+                    if ($stackObserved) { Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_stack_capture_complete" -Details @{ bytes = if (Test-Path -LiteralPath $stackLog) { (Get-Item -LiteralPath $stackLog).Length } else { 0 } } }
+                    if (-not $stackDetached) {
+                        $detachTimeoutSeconds = [math]::Min(30, [math]::Max(5, $DebuggerTimeoutSeconds))
+                        Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_detach_recovery_started" -Details @{ timeout_seconds = $detachTimeoutSeconds }
+                        $detachGuard = Invoke-Phase6EaGuardedHelper -FilePath $cdb -ArgumentList @("-p", [string]$ProcessId, "-pv", "-y", $symbolCache, "-cf", $detachCommandFile) -StdoutPath (Join-Path $output "cdb-detach.log") -StderrPath (Join-Path $output "cdb-detach.stderr.log") -TimeoutSeconds $detachTimeoutSeconds -PrivateBytesLimit $CampfireShutdownHelperPrivateBytesLimit -MaximumStdoutBytes 2MB -MaximumStderrBytes $CampfireCdbStderrLimitBytes
+                        $stackDetached = (Test-CampfireLogPattern -Path (Join-Path $output "cdb-detach.log") -Pattern "CDB_DETACHING") -and $detachGuard.process_absent -and -not $detachGuard.timed_out
+                    }
+                }
+                $detachObserved = $moduleDetached -and $stackDetached
+                $allCdbAbsent = $moduleGuard.process_absent -and ($null -eq $stackGuard -or $stackGuard.process_absent) -and ($null -eq $detachGuard -or $detachGuard.process_absent)
+                if ($detachObserved -and $allCdbAbsent) { Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_detach_complete" }
+                Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_cleanup_complete" -Details @{ process_absent = [bool]$allCdbAbsent; module_timed_out = [bool]$moduleGuard.timed_out; stack_timed_out = if ($null -ne $stackGuard) { [bool]$stackGuard.timed_out } else { $false }; detach_recovery_used = ($null -ne $detachGuard) }
             } catch {
                 $cdbError = $_.Exception.Message
-                Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_cleanup_complete" -Details @{ process_absent = if ($null -ne $guard) { [bool]$guard.process_absent } else { $true }; error = $cdbError }
+                Write-CampfireDiagnosticMarker -Path $MarkerPath -Marker "cdb_cleanup_complete" -Details @{ process_absent = $true; error = $cdbError }
             }
         } else {
             $cdbError = "installed WinDbg CDB not found"
@@ -333,7 +376,9 @@ function Invoke-CampfireLightweightNgxDiagnosticCore {
             telemetry_named_pipe_wait = Test-CampfireLogPattern -Path $stackLog -Pattern "KERNELBASE!WaitNamedPipeW"
             telemetry_bridge_stack = Test-CampfireLogPattern -Path $stackLog -Pattern "NvTelemetryBridge64(?:!|\.dll\+)"
         }
-        $guardSucceeded = $null -ne $guard -and -not $guard.timed_out -and -not $guard.private_bytes_exceeded -and -not $guard.output_bytes_exceeded -and $guard.process_absent -and $guard.exit_code_error -eq $null -and $guard.exit_code -eq 0
+        $cdbGuards = [Collections.Generic.List[object]]::new()
+        foreach ($item in @($moduleGuard, $stackGuard, $detachGuard)) { if ($null -ne $item) { $cdbGuards.Add([pscustomobject]$item) } }
+        $guardSucceeded = $null -ne $moduleGuard -and $null -ne $stackGuard -and $detachObserved -and -not ($cdbGuards | Where-Object { $_.timed_out -or $_.private_bytes_exceeded -or $_.output_bytes_exceeded -or -not $_.process_absent -or $_.exit_code_error -ne $null -or $_.exit_code -ne 0 })
         $cdbCaptureComplete = $attachObserved -and $stackObserved -and $nativeFramesObserved -and $modulesObserved -and $detachObserved
         $knownSignature = $guardSucceeded -and -not ($tokens.Values -contains $false)
         $fingerprint = [ordered]@{
@@ -378,19 +423,19 @@ function Invoke-CampfireLightweightNgxDiagnosticCore {
                 cdb = $cdbMetadata
                 noninvasive_attach = $true
                 timeout_seconds = $DebuggerTimeoutSeconds
-                timed_out = if ($null -ne $guard) { [bool]$guard.timed_out } else { $false }
-                private_bytes_exceeded = if ($null -ne $guard) { [bool]$guard.private_bytes_exceeded } else { $false }
-                output_bytes_exceeded = if ($null -ne $guard) { [bool]$guard.output_bytes_exceeded } else { $false }
-                peak_private_bytes = if ($null -ne $guard) { $guard.peak_private_bytes } else { $null }
-                user_cpu_seconds = if ($null -ne $guard) { $guard.user_cpu_seconds } else { $null }
-                kernel_cpu_seconds = if ($null -ne $guard) { $guard.kernel_cpu_seconds } else { $null }
-                total_cpu_seconds = if ($null -ne $guard) { $guard.total_cpu_seconds } else { $null }
-                stdout_bytes = if ($null -ne $guard) { $guard.stdout_bytes } else { $null }
-                stderr_bytes = if ($null -ne $guard) { $guard.stderr_bytes } else { $null }
+                timed_out = [bool]($cdbGuards | Where-Object { $_.timed_out })
+                private_bytes_exceeded = [bool]($cdbGuards | Where-Object { $_.private_bytes_exceeded })
+                output_bytes_exceeded = [bool]($cdbGuards | Where-Object { $_.output_bytes_exceeded })
+                peak_private_bytes = if ($cdbGuards.Count) { ($cdbGuards | Measure-Object -Property peak_private_bytes -Maximum).Maximum } else { $null }
+                user_cpu_seconds = if ($cdbGuards.Count) { ($cdbGuards | Measure-Object -Property user_cpu_seconds -Sum).Sum } else { $null }
+                kernel_cpu_seconds = if ($cdbGuards.Count) { ($cdbGuards | Measure-Object -Property kernel_cpu_seconds -Sum).Sum } else { $null }
+                total_cpu_seconds = if ($cdbGuards.Count) { ($cdbGuards | Measure-Object -Property total_cpu_seconds -Sum).Sum } else { $null }
+                stdout_bytes = if ($cdbGuards.Count) { ($cdbGuards | Measure-Object -Property stdout_bytes -Sum).Sum } else { $null }
+                stderr_bytes = if ($cdbGuards.Count) { ($cdbGuards | Measure-Object -Property stderr_bytes -Sum).Sum } else { $null }
                 stdout_limit_bytes = $CampfireCdbStackLogLimitBytes
                 stderr_limit_bytes = $CampfireCdbStderrLimitBytes
-                process_absent = if ($null -ne $guard) { [bool]$guard.process_absent } else { $true }
-                exit_code = if ($null -ne $guard) { $guard.exit_code } else { $null }
+                process_absent = -not [bool]($cdbGuards | Where-Object { -not $_.process_absent })
+                exit_code = if ($guardSucceeded) { 0 } else { $null }
                 error = $cdbError
                 attach_observed = $attachObserved
                 all_thread_stack_observed = $stackObserved
@@ -398,9 +443,12 @@ function Invoke-CampfireLightweightNgxDiagnosticCore {
                 loaded_modules_observed = $modulesObserved
                 detach_observed = $detachObserved
                 raw_stack_log = $stackLog
+                raw_module_log = $moduleLog
                 stderr_log = $stackError
                 symbol_cache = $symbolCache
                 full_dump_created = $false
+                stage_timeouts_seconds = [ordered]@{ attach_and_modules = 30; all_thread_stacks = $DebuggerTimeoutSeconds; detach_recovery = 30; worst_case_total = (60 + $DebuggerTimeoutSeconds) }
+                passes = [ordered]@{ attach_and_modules = $moduleGuard; all_thread_stacks = $stackGuard; detach_recovery = $detachGuard }
             }
             stack_fingerprint = $fingerprint
             machine_wide_configuration_changed = $false

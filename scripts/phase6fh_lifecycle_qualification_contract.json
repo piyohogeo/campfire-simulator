@@ -1,0 +1,110 @@
+{
+  "schema": "campfire.phase6fh.lifecycle-qualification-contract.v1",
+  "phase": "phase6fh",
+  "declared_before_runtime": true,
+  "safe_commit": "acf5305",
+  "history_frozen": {
+    "phase6fg_status": "safe_stop",
+    "phase6fg_completed_passing_conditions": 5,
+    "phase6fg_active_failure": "sequence02_A_control",
+    "phase6fg_contract_sha256": "54FD6185ADD41B9333506ACC55BF3472F7BBA4F0D726679071F1126572541EED",
+    "historical_reclassification": false,
+    "artifact_overwrite": false
+  },
+  "purpose": "measure the incidence and native boundary of the readback-free four-log stage-close lifecycle failure independently from operation memory evidence",
+  "population": {
+    "planned_processes": 6,
+    "independent_processes": true,
+    "automatic_retry": false,
+    "stop_after_first_lifecycle_failure": true,
+    "no_reproduction_claim": "zero failures in six runs is bounded non-reproduction, not root-cause resolution"
+  },
+  "condition": {
+    "name": "A_readback_none_lifecycle_control",
+    "scenario": "production_four",
+    "geometry_variant": "phase6er_corrected",
+    "point_policy": "allow_self_center",
+    "point_offset_m": -0.0125,
+    "support_radius_m": 0.05,
+    "collision_enabled": true,
+    "point_filtering_enabled": true,
+    "readback_mode": "none",
+    "readback_channels": "none",
+    "public_readback_calls": 0,
+    "numpy_asarray_calls": 0,
+    "field_persistence_calls": 0,
+    "spatial_collectors_enabled": false,
+    "source_scales": {"fuel": 1.0, "temperature": 1.0, "smoke": 1.0},
+    "sample_frames": [30, 60, 90, 120, 150, 180, 200, 240, 280, 320],
+    "running_flow_observation_seconds": 24.0
+  },
+  "startup": {
+    "classification_frame": 60,
+    "final_frame": 120,
+    "representative_active_blocks": 128,
+    "expected_point_revision": 1,
+    "expected_total_point_count": 1440,
+    "expected_active_point_count": 1344,
+    "expected_payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389",
+    "expected_source_sums": {"fuel": 1075.2000160217285, "temperature": 2688.0, "smoke": 107.51999759674072},
+    "source_sum_absolute_tolerance": 0.000001,
+    "flow_acquire_position": "before_updates",
+    "stopped_update_count": 12,
+    "extra_update_before_play_count": 0
+  },
+  "lifecycle": {
+    "timeline_stop_confirmation_updates": 12,
+    "renderer_pre_close_drain_updates": 8,
+    "renderer_post_close_drain_updates": 4,
+    "release_order": ["Flow interface and Emitter", "volume/readback/collector", "close_stage_async", "USD context disconnect", "post-close renderer drain", "app close"],
+    "stage_close_timeout_seconds": 180,
+    "inner_absolute_timeout_seconds": 600,
+    "outer_condition_timeout_seconds": 960,
+    "normal_os_exit_required": true
+  },
+  "bounded_cdb": {
+    "only_after_hang": true,
+    "noninvasive": true,
+    "worst_case_total_timeout_seconds": 105,
+    "attach_and_module_timeout_seconds": 30,
+    "all_thread_stack_timeout_seconds": 45,
+    "detach_recovery_timeout_seconds": 30,
+    "stack_depth": 16,
+    "stdout_direct_to_file": true,
+    "stderr_direct_to_file": true,
+    "attach_and_module_symbol_policy": "local cache only",
+    "all_thread_stack_symbol_policy": "local cache only; raw module+offset is retained and missing private symbols fail closed",
+    "stack_output_limit_bytes": 16777216,
+    "stderr_output_limit_bytes": 2097152,
+    "private_bytes_limit": 536870912,
+    "single_capture_lock": true,
+    "exact_identity": "pid+creation_time+absolute_executable_path",
+    "full_dump_automatic": false,
+    "known_ngx_requires_all_five_tokens": true
+  },
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "resource_sampling_seconds": 0.2,
+    "gpu_sampling_ms": 1000,
+    "resource_ceiling_change": false,
+    "automatic_upload": false
+  },
+  "stop_rules": [
+    "stop after all six normal exits",
+    "stop after the first lifecycle failure without retry",
+    "stop after one same-boundary hang when public evidence does not extend beyond omni_usd or extension shutdown internals",
+    "do not acquire a full dump automatically",
+    "do not restart Phase 6FG without explicit approval"
+  ],
+  "two_axis_policy_proposal": {
+    "operation_axis": ["operation markers complete", "absolute memory ceilings", "no fatal or access violation", "exact readback and NumPy call counts", "settling complete", "paired order maintained"],
+    "lifecycle_axis": ["stage close complete", "extension shutdown complete", "normal OS exit", "no residual process", "timeout/CDB/forced cleanup reported"],
+    "overall_production_qualification": "both axes must pass; operation evidence may be reported separately but a lifecycle failure is never converted to a memory pass or normal exit"
+  },
+  "excluded": ["NanoVDB readback", "NumPy conversion", "field persistence", "memory waveform contract changes", "production changes", "Phase 6FG restart", "automatic full dump", "video"]
+}

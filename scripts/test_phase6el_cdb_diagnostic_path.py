@@ -34,9 +34,10 @@ class Phase6ElCdbDiagnosticContract(unittest.TestCase):
     def test_cdb_output_is_direct_bounded_and_includes_all_threads(self):
         self.assertIn('$CampfireCdbStackLogLimitBytes = 16MB', POLICY)
         self.assertIn('$CampfireCdbStderrLimitBytes = 2MB', POLICY)
-        self.assertIn('"~* kPn 64"', POLICY)
+        self.assertIn('"~* kPn 16"', POLICY)
         self.assertIn('"lm"', POLICY)
         self.assertIn('"qd"', POLICY)
+        self.assertIn('stage_timeouts_seconds = [ordered]@{ attach_and_modules = 30; all_thread_stacks = $DebuggerTimeoutSeconds; detach_recovery = 30', POLICY)
         self.assertIn("-MaximumStdoutBytes $CampfireCdbStackLogLimitBytes", POLICY)
         self.assertIn("-MaximumStderrBytes $CampfireCdbStderrLimitBytes", POLICY)
         self.assertIn("-RedirectStandardOutput $StdoutPath", COMMON)
@@ -48,6 +49,8 @@ class Phase6ElCdbDiagnosticContract(unittest.TestCase):
         for marker in (
             "cdb_attach_started",
             "cdb_attach_complete",
+            "cdb_module_capture_started",
+            "cdb_module_capture_complete",
             "cdb_stack_capture_started",
             "cdb_stack_capture_complete",
             "cdb_detach_complete",
