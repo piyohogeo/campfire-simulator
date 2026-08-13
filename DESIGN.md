@@ -1,5 +1,9 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FR stack-first CDB and stage-close shutdown-order contract
+
+Phase 6FQのsafe stopは`778623c`で凍結する。CDB診断はmodule-first依存を廃止し、exact identity確認後にboundedな全thread stackを先に取得し、module一覧は独立した補助pass、detachは独立cleanup passとする。fixtureが合格した場合だけ、readback/capture 0のA release-before-closeとB release-after-closeを`AB/BA/AB`で各3 runまで比較する。14/16 GiBの採否とPhase 6FO再開は行わない。詳細は`docs/design/phase6fr_stage_close_native_lifecycle.md`を参照する。
+
 # Phase 6FQ stage-close lifecycle qualification contract
 
 Phase 6FP attempt11のreadback 0／C5条件で発生した180.007436秒の`close_stage_async()` timeoutをmemory ceilingから分離するため、Phase 6FQを事前凍結した。Phase 6FOの比較条件、production、Point payload、Flow、CollisionProxy、V3、14/16 GiB safety ceilingは変更しない。既存のPhase 6FO probe/runner、resource guard、bounded CDB、exact cleanupを直接再利用し、C5 metadata、bounded manifest、active viewport alias、renderer drain、release-before/after-closeを一変数ずつ比較する。詳細は`docs/design/phase6fq_stage_close_lifecycle_qualification.md`を参照する。

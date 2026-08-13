@@ -1,0 +1,127 @@
+{
+  "schema": "campfire.phase6fr.stage-close-native-lifecycle-contract.v1",
+  "phase": "phase6fr",
+  "purpose": "Qualify stack-first bounded CDB evidence and compare only release-before-close with release-after-close without restarting Phase 6FO.",
+  "frozen_history": {
+    "phase6fq_commit": "778623c",
+    "phase6fq_completed_normal_processes": 6,
+    "phase6fq_active_failure": "attempt07_L6_c5_normal_drain_control",
+    "phase6fq_last_marker": "stage_close_timeout",
+    "phase6fq_stage_close_timeout_seconds": 180,
+    "phase6fq_cdb_failure_boundary": "module pass timed out before all-thread stack",
+    "phase6fq_reclassified": false
+  },
+  "cdb_fixture": {
+    "must_pass_before_kit": true,
+    "diagnostic_order": ["all_thread_stack", "auxiliary_module_list", "explicit_detach"],
+    "stack_timeout_seconds": 30,
+    "module_timeout_seconds": 20,
+    "detach_timeout_seconds": 15,
+    "symbol_path": "local_cache_only",
+    "microsoft_symbol_server_wait": false,
+    "stdout_limit_bytes": 16777216,
+    "stderr_limit_bytes": 2097152,
+    "private_bytes_limit": 536870912,
+    "module_timeout_must_not_gate_stack": true,
+    "empty_stack_is_failure": true,
+    "known_ngx_requires_all_five_stack_tokens": true,
+    "full_dump_created": false,
+    "system_wide_debugger_registration": false
+  },
+  "physical_fixture": {
+    "scenario": "production_four",
+    "geometry_variant": "phase6er_corrected",
+    "point_policy": "allow_self_center",
+    "active_points": 1344,
+    "total_points": 1440,
+    "point_offset_m": -0.0125,
+    "support_radius_m": 0.05,
+    "sample_frames": [60, 96],
+    "readback_mode": "none",
+    "readback_calls": 0,
+    "capture_calls": 0,
+    "pixel_buffer_bytes": 0,
+    "video_generation_calls": 0,
+    "expected_source_sums": {
+      "fuel": 1075.2000160217285,
+      "temperature": 2688.0,
+      "smoke": 107.51999759674072
+    },
+    "source_sum_absolute_tolerance": 0.0001
+  },
+  "startup": {
+    "flow_acquire_position": "before_updates",
+    "stopped_update_count": 12,
+    "extra_update_before_play_count": 0,
+    "representative_active_block_minimum_at_frame_60": 128
+  },
+  "conditions": [
+    {
+      "id": "A_release_before_close",
+      "allocation_level": 5,
+      "capture_preparation_mode": "none",
+      "renderer_drain_updates": 8,
+      "reference_release_order": "before_stage_close",
+      "sequence": "timeline stop -> drain 8 -> release Flow/provider/collector/viewport aliases -> stage close"
+    },
+    {
+      "id": "B_release_after_close",
+      "allocation_level": 5,
+      "capture_preparation_mode": "none",
+      "renderer_drain_updates": 8,
+      "reference_release_order": "after_stage_close",
+      "sequence": "timeline stop -> drain 8 -> stage close -> USD detach -> post-close updates -> release Flow/provider/collector/viewport aliases"
+    }
+  ],
+  "population": {
+    "order": [
+      "A_release_before_close", "B_release_after_close",
+      "B_release_after_close", "A_release_before_close",
+      "A_release_before_close", "B_release_after_close"
+    ],
+    "runs_per_condition": 3,
+    "automatic_retry": false,
+    "startup_replacement_budget": 1,
+    "stop_on_first_nonreplaceable_failure": true
+  },
+  "required_markers": [
+    "timeline_stop_request_before", "timeline_stop_request_after", "timeline_stop_confirmed",
+    "renderer_drain_started", "renderer_drain_complete",
+    "reference_release_order_selected",
+    "capture_related_objects_release_started", "capture_related_objects_release_complete",
+    "flow_references_release_started", "flow_references_release_complete",
+    "provider_readback_references_release_started", "provider_readback_references_release_complete",
+    "stage_close_request_before", "stage_close_request_after", "usd_context_disconnected",
+    "app_close_requested", "shutdown_complete"
+  ],
+  "safety": {
+    "stage_close_timeout_seconds": 180,
+    "inner_absolute_timeout_seconds": 420,
+    "outer_condition_timeout_seconds": 660,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "resource_limits_are_not_qualified_or_changed": true,
+    "crash_upload_enabled": false
+  },
+  "classification": {
+    "A_timeout_B_three_normal": "release_after_close_candidate_only; separate qualification required",
+    "A_and_B_timeout": "reference release order insufficient",
+    "A_and_B_three_normal": "low-frequency nondeterministic native lifecycle issue; no safe-order claim",
+    "timeout_with_complete_stack": "classify module+offset and wait boundary; unknown unless accepted five-token NGX signature",
+    "timeout_without_complete_stack": "diagnostic limit; stop without unbounded repetition"
+  },
+  "progression": {
+    "phase6fo_restarted": false,
+    "memory_ceiling_qualification_may_be_next_only_if": [
+      "candidate shutdown order normal in limited population",
+      "bounded timeout diagnostic and exact cleanup demonstrated",
+      "lifecycle separated from memory ceiling",
+      "zero residual processes",
+      "production unchanged"
+    ]
+  }
+}

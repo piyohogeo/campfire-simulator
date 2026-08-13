@@ -1725,8 +1725,6 @@ async def _run():
                 report["lifecycle_marker"] = "stage_close_request_after"
                 mark("stage_close_request_after", **state())
                 report["completion_contract"]["stage_closed"] = True
-                if release_order == "after_stage_close":
-                    release_owned_references(state)
                 if context.get_stage() is not None:
                     raise RuntimeError("USD context still exposes a stage after close_stage_async")
                 report["lifecycle_marker"] = "usd_context_disconnected"
@@ -1735,6 +1733,12 @@ async def _run():
                     mark("post_close_renderer_update_started", update_index=update_index, **state())
                     await app.next_update_async()
                     mark("post_close_renderer_update_complete", update_index=update_index, **state())
+                if release_order == "after_stage_close":
+                    # The release-after-close ablation retains every owned Flow,
+                    # provider, collector, and viewport alias until USD detach and
+                    # the bounded post-close renderer drain have completed.
+                    mark("references_retained_through_post_close", **state())
+                    release_owned_references(state)
             else:
                 report["lifecycle_marker"] = "timeline_stopping"
                 mark("timeline_stopping")

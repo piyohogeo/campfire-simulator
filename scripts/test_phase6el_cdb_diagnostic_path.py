@@ -26,7 +26,8 @@ class Phase6ElCdbDiagnosticContract(unittest.TestCase):
         self.assertNotIn("New-ItemProperty", combined)
 
     def test_identity_is_verified_before_attach(self):
-        identity = POLICY.index("Test-Phase6EaProcessIdentity", POLICY.index("function Invoke-CampfireLightweightNgxDiagnosticCore"))
+        start = POLICY.index("function Invoke-CampfireCdbStackFirstCapture")
+        identity = POLICY.index("Test-Phase6EaProcessIdentity", start)
         attach = POLICY.index('Marker "cdb_attach_started"', identity)
         self.assertLess(identity, attach)
         self.assertIn('identity = "pid+process_start_time+absolute_executable_path"', FIXTURE)
@@ -37,7 +38,8 @@ class Phase6ElCdbDiagnosticContract(unittest.TestCase):
         self.assertIn('"~* kPn 16"', POLICY)
         self.assertIn('"lm"', POLICY)
         self.assertIn('"qd"', POLICY)
-        self.assertIn('stage_timeouts_seconds = [ordered]@{ attach_and_modules = 30; all_thread_stacks = $DebuggerTimeoutSeconds; detach_recovery = 30', POLICY)
+        self.assertIn('diagnostic_order = "stack_first_then_auxiliary_modules_then_explicit_detach"', POLICY)
+        self.assertIn("stage_timeouts_seconds = $cdbCapture.timeout_seconds", POLICY)
         self.assertIn("-MaximumStdoutBytes $CampfireCdbStackLogLimitBytes", POLICY)
         self.assertIn("-MaximumStderrBytes $CampfireCdbStderrLimitBytes", POLICY)
         self.assertIn("-RedirectStandardOutput $StdoutPath", COMMON)
