@@ -1,0 +1,60 @@
+{
+  "schema": "campfire.phase6fh.lifecycle-qualification-safe-stop.v1",
+  "phase": "phase6fh",
+  "date": "2026-08-13",
+  "contract_sha256": "F5F193FD772527B261F4CF23605FB03A8E5A95DF1D1CA9654371BD20479706A9",
+  "phase6fg_frozen": true,
+  "phase6fg_restart_authorized": false,
+  "memory_waveform_contract_changed": false,
+  "population": {
+    "planned_processes": 6,
+    "attempted_processes": 1,
+    "representative_lifecycle_samples": 0,
+    "remaining_not_started": 5,
+    "status": "prerequisite_safe_stop"
+  },
+  "run01": {
+    "startup_classification": "small_field_ingestion",
+    "active_blocks_frame_1_120": {
+      "minimum": 24,
+      "maximum": 24
+    },
+    "source": {
+      "total_points": 1440,
+      "active_points": 1344,
+      "revision": 1,
+      "payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389"
+    },
+    "stage_sha256": "06DF22DA68F5CD0544A99F63BDF6406E6FFBA8A2D60CEA1AEA217C69E9A89004",
+    "timeline_stop_seconds": 0.056063,
+    "renderer_drain_seconds": 0.415005,
+    "reference_release_seconds": 0.031546,
+    "stage_close_seconds": 3.002983,
+    "extension_shutdown_seconds": 0.0025,
+    "process_exit_code": 1,
+    "process_absent_without_forced_cleanup": true,
+    "normal_os_exit": false,
+    "cdb_invoked": false,
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "cleanup_residual_count": 0,
+    "resource_peaks_bytes": {
+      "runner": 100339712,
+      "kit": 11602333696,
+      "diagnostic": 16867328,
+      "child": 62402560,
+      "unique_tree": 11765993472
+    },
+    "minimum_kit_ceiling_margin_bytes": 3430051840,
+    "minimum_tree_ceiling_margin_bytes": 5413875712
+  },
+  "conclusion": {
+    "phase6fg_stage_close_reproduced": false,
+    "native_lifecycle_failure_rate_qualified": false,
+    "reason": "No representative startup lifecycle sample completed.",
+    "paired_readback_qualified": false,
+    "production_changed": false
+  },
+  "next_approval": "A new contract/root may predeclare at most two startup-prerequisite replacement slots; operation or native lifecycle failures remain fail-fast and non-replaceable."
+}

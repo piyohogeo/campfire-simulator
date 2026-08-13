@@ -170,6 +170,14 @@ performance_sample_accepted: false
 
 Phase 6EBのfixtureはnormal、既知NGX、未知signature、shutdown marker欠落、functional gate失敗、Windows exception、未知module/offset、dump、timeout、残留停止失敗、入力破損、複数runの既知・未知混在を24/24で確認した。既存正常runnerの最終`kit_only`実processは1.423秒、exit 0、`normal_exit`、性能母集団accepted、fatal/dump/upload 0である。既知hang条件は再実行せず、保存済みWinDbg summaryだけをsignature定義の根拠にした。Phase 6EA resource safety 7/7・静的契約6/6、標準suite 8 process・78/78件・302.2秒、日誌338 reference／JSON 180／SVG 146の静的検査も合格した。Production app SHA-256は`94162F82...F02A`で前後一致した。
 
+### Phase 6FH: USD context close境界のbounded診断
+
+Phase 6FGのreadbackなしcontrolは、参照解放後の`close_stage_async()`で180秒timeoutし、CDB先頭threadが`omni_usd!UsdManager::destroyContext+0x160`からextension/plugin shutdownへ続いた。全145 threadの取得は完了せず、lock owner、GPU fence、renderer wait、Python callback ownerは未確定で、既知NGX 5-token signatureとは一致しない。これは確認済みのmodule境界であり、SRW lockやGPU/renderer待ちを確定した結果ではない。
+
+以後のlightweight CDBは、cache-only attach/module 30秒、all-thread stack depth 16を45秒、必要時detach recoveryを30秒に分ける。stdout/stderrは上限付きファイルへ直接streamし、atomic lock、PID＋creation time＋path、512 MiB、exact cleanupを維持する。symbol不足はraw module＋offsetとして保存し、既知signatureへは昇格しない。full dumpは自動生成せず、同じ境界が代表startup controlで再現し、この経路でもpublic evidenceが増えず、ディスクと最大1回採取を別承認できる場合だけ候補にする。
+
+Phase 6FH run01はstartup prerequisiteの24-block固定で停止したため、代表lifecycle母集団は0件である。そのprocessはstage close 3.003秒、extension callback 0.0025秒で完了し、forced cleanupなしに消滅したがexit code 1なのでnormal exitではない。したがって6FG hangの発生率を0%とは報告しない。startup prerequisite、operation axis、lifecycle axisは分離し、native lifecycle failureをreplacementで隠さない。
+
 ### Phase 6ECで検出したexception matcherの再開blocker
 
 Phase 6ECのexact Phase 6DY controlはprobe完了、`shutdown_complete`、OS exit 0、fatal/dump/upload 0だったが、GPU inventoryの`Sub System Id : 0xC75C1462`が一般的な`0xC[0-9A-F]{7}`patternに一致し、`windows_exception_present=true`となった。現logで一致したのはこの1行だけであり、観測上はPCI subsystem identifierである。ただしPhase 6ECは本policyを変更しないため、結果は`unknown_shutdown_failure`のまま保持し、同条件を再実行していない。

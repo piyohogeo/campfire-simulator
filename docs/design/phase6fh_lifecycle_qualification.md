@@ -43,3 +43,17 @@ Each pass writes stdout/stderr directly to capped files, runs below the 512 MiB 
 Future paired evidence must report two independent axes. The operation axis covers exact A/B/C markers, resource ceilings, call counts, alias identity, settling, and paired order. The lifecycle axis covers stage close, extension shutdown, normal OS exit, residual processes, and any timeout/CDB/forced cleanup. Operation evidence may remain useful when lifecycle fails after the operation completed, but overall production qualification requires both axes. A lifecycle failure is never relabeled as a memory pass or a normal exit.
 
 Phase 6FG is not restarted by this phase. After Phase 6FH, a new explicit approval is required. If all six controls exit normally, the result is bounded non-reproduction and detailed markers remain armed. If the same native boundary recurs without new public evidence, it becomes a monitored known lifecycle issue rather than an indefinitely repeated investigation. If a self-owned ordering difference appears, it must be tested later as a one-variable probe before any paired-harness change.
+
+## Runtime result: prerequisite safe stop
+
+The frozen population stopped after run01. Its per-frame startup samples were fresh and remained at exactly 24 active blocks from frame 1 through frame 120. Timeline time and Kit update index advanced; the Point contract remained 1,440 total, 1,344 active, revision 1, with the expected fuel, temperature, and smoke totals. Stage, payload, Flow-interface, and Emitter identities remained stable. The fixed four-log fixture nevertheless failed its predeclared representative threshold of 128 blocks, so this is `small_field_ingestion`, not a valid lifecycle-control sample.
+
+No readback or NumPy conversion occurred. Timeline stop took 0.056063 seconds, eight renderer drains 0.415005 seconds, reference release 0.031546 seconds, `close_stage_async()` 3.002983 seconds, and the extension shutdown callback 0.002500 seconds. The Kit process disappeared without outer forced cleanup, but the prerequisite failure produced exit code 1; it is therefore not a normal OS exit. Fatal, dump, automatic upload, device lost, TDR, and cleanup residual counts were zero. CDB was not invoked.
+
+The formal result is `prerequisite_safe_stop`: 1 of 6 launch slots was attempted, 0 representative lifecycle controls completed, and the remaining five were not started. The Phase 6FG stage-close failure did not reproduce in this non-representative sample, but the native lifecycle failure incidence is not measurable from it. This result neither resolves nor strengthens any particular lock-owner hypothesis.
+
+## Restart and replacement proposal
+
+Phase 6FG remains frozen and is not restarted. A future explicitly approved lifecycle contract may predeclare at most two extra launch slots for startup-prerequisite failures. Such a launch is preserved in startup-monitoring evidence and is not called a retry or a lifecycle pass. An operation failure or native lifecycle failure is never replaced and stops the population immediately. A later paired A/B/C contract may use the same distinction, but overall single-readback qualification still requires both operation and lifecycle axes to pass.
+
+No full dump is proposed from the current evidence. A bounded one-time dump remains an approval-only option if a representative control reproduces the same `omni_usd` boundary and the staged cache-only CDB path cannot extend the public module+offset evidence.

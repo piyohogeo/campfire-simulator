@@ -46,6 +46,20 @@ class Phase6FhLifecycleQualificationContract(unittest.TestCase):
         self.assertIn("both axes must pass", proposal["overall_production_qualification"])
         self.assertIn("normal OS exit", proposal["lifecycle_axis"])
 
+    def test_analyzer_separates_startup_prerequisite_from_native_lifecycle(self):
+        analyzer = (SCRIPTS / "analyze_phase6fh_lifecycle_qualification.py").read_text(encoding="utf-8")
+        self.assertIn('status = "prerequisite_failure"', analyzer)
+        self.assertIn('"native_lifecycle_failure": native_lifecycle_failure', analyzer)
+        self.assertIn('None if not representative_cases', analyzer)
+
+    def test_published_safe_stop_keeps_native_incidence_unqualified(self):
+        published = json.loads((ROOT / "docs" / "devlog" / "assets" / "phase6" / "lifecycle_qualification_safe_stop.json").read_text(encoding="utf-8"))
+        self.assertEqual(published["population"]["representative_lifecycle_samples"], 0)
+        self.assertEqual(published["population"]["status"], "prerequisite_safe_stop")
+        self.assertFalse(published["conclusion"]["native_lifecycle_failure_rate_qualified"])
+        self.assertFalse(published["conclusion"]["phase6fg_stage_close_reproduced"])
+        self.assertFalse(published["phase6fg_restart_authorized"])
+
 
 if __name__ == "__main__":
     unittest.main()

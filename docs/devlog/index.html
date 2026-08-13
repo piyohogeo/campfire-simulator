@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6fg">最新記録</a>
+        <a href="#phase-6fh">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fg">Phase 6FGの結果を読む</a>
+        <a class="button primary" href="#phase-6fh">Phase 6FHの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FG · paired readback lifecycle safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6FH · lifecycle prerequisite safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>5 pass · sequence02 A stage-close timeout</strong></div>
+        <div><span>Lifecycle</span><strong>0 representative · startup 24-block stop</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
@@ -51,9 +51,21 @@
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
     </section>
 
+    <section id="phase-6fh" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FH readback-free lifecycle entry"><span class="phase-number compact">6FH</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">bounded CDB · prerequisite safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FH · readback-free lifecycle qualification</p><h2>shutdownを独立評価。<br>代表startup前に停止。</h2><p>Phase 6FGのUSD context close failureをメモリ／readback評価から切り離し、readbackなしA controlを6独立processで測る契約を凍結しました。6FGの5 passとsafe stopは変更していません。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Phase 6FG audit</p><h3><code>destroyContext</code>までが確認範囲</h3><p>失敗runはtimeline stop、8 renderer drain、Flow／provider参照解放後にstage closeが180秒timeout。旧CDBはmodule取得後、先頭threadの<code>omni_usd!UsdManager::destroyContext+0x160</code>を得ましたが145 thread中ごく一部でtimeoutし、lock owner／GPU fence／renderer／Python callbackは未確定です。既知NGX signatureには一致しません。</p></section><section class="note"><p class="note-label">Bounded diagnostic</p><h3>30 + 45 + 30秒へ分割</h3><p>CDBをcache-only attach/module、all-thread stack、detach recoveryへ分け、direct-file output、512 MiB、exact identity、atomic lockを維持。normal、locked log、target exit、timeout、abnormal exit fixtureは全合格し、残留は0でした。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Formal run01</p><h3>fresh telemetryのまま24 blocks。</h3><p>frame 1～120はactive block 24固定。timeline／Kit update、1,440 total／1,344 active Point、revision 1、fuel／temperature／smoke供給、stage／payload／Flow／Emitter identityは正常でしたが、固定fixtureの代表閾値128へ届かず<code>small_field_ingestion</code>です。契約どおり後続5 processは開始していません。</p><p>stage close 3.003秒、extension callback 0.0025秒。Kitはforced cleanupなしに消滅しましたがstartup gateのexit code 1なのでnormal OS exitではありません。CDB未発動、fatal／dump／upload／device lost／TDR／cleanup residualは0です。</p><p>代表lifecycle sampleは0件です。6FG hangはこの無効sampleでは再現しませんでしたが、発生率0%とは扱いません。内部診断のみのため動画とlatest demo pointerは変更していません。</p><p><a href="assets/phase6/lifecycle_qualification_safe_stop.json">machine report</a> · <a href="../design/phase6fh_lifecycle_qualification.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>1</span><p><strong>Attempted</strong><small>of 6 planned</small></p></div><div role="listitem"><span>0</span><p><strong>Representative</strong><small>startup samples</small></p></div><div role="listitem"><span>24</span><p><strong>Active blocks</strong><small>frame 1–120</small></p></div><div role="listitem"><span>3.0</span><p><strong>Stage close</strong><small>seconds</small></p></div><div role="listitem"><span>0</span><p><strong>Residual</strong><small>none</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Next approval boundary</p><h3>balanced 9-processは自動再開しない。</h3><p>次回は新contract／新rootを明示承認し、startup prerequisiteだけ最大2枠の限定replacement候補を事前定義します。operation failureまたはnative lifecycle failureは置換せず即停止し、production qualificationにはoperation／lifecycle両軸のpassを要求します。</p></section>
+        </div>
+      </article>
+    </section>
+
     <section id="phase-6fg" class="section entry-section phase-six">
       <article class="shell entry">
-        <aside class="entry-meta" aria-label="Phase 6FG paired single-readback entry"><span class="phase-number compact">6FG</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">waveform telemetry only · lifecycle safe stop</span></aside>
+        <aside class="entry-meta" aria-label="Phase 6FG paired single-readback entry"><span class="phase-number compact">6FG</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill">waveform telemetry only · lifecycle safe stop</span></aside>
         <div class="entry-body">
           <header class="entry-header"><p class="section-kicker">Phase 6FG · paired single-readback qualification</p><h2>波形への過剰適合を終了。<br>USD context closeで停止。</h2><p>6FD～6FFを凍結し、hard gateを絶対安全・lifecycle・操作契約へ限定。slopeやrolling超過はversioned telemetry／warningとして保存し、balanced <code>ABC / BCA / CAB</code>比較を開始しました。</p></header>
           <div class="notes-grid"><section class="note"><p class="note-label">Operation evidence</p><h3>readback 288～324 MiB</h3><p>B 2 runの同期増分は306,528,256／339,447,808 bytes。C 2 runは302,247,936 bytes、fuel 39.480 MiB、<code>np.asarray()</code>増分0 bytes、same-object zero-copy、weak residual 0でした。settling後は全B/Cで取得前を下回りました。</p></section><section class="note"><p class="note-label">Hard gate</p><h3>5 pass · 6th stop</h3><p>sequence 1 A/B/Cとsequence 2 B/Cはnormal exit。sequence 2 A controlはreadbackなしでもstage closeが180秒timeoutとなり、後続3条件は開始しませんでした。</p></section></div>

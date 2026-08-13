@@ -1,5 +1,13 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FH readback-free lifecycle qualification safe stop
+
+Phase 6FGの5 passとsequence 2 A lifecycle failureは凍結し、readbackなしA controlだけを6独立processで評価するPhase 6FHを事前契約した。contract SHA-256は`F5F193FD772527B261F4CF23605FB03A8E5A95DF1D1CA9654371BD20479706A9`。memory waveform契約、14 GiB Kit／16 GiB tree ceiling、4本fixture、Point payload、Flow、CollisionProxy、V3、productionは変更していない。CDBはcache-onlyのattach/module 30秒、all-thread stack 45秒、必要時detach recovery 30秒へ分割し、各出力を直接ファイルへstreamする。Phase 6EL fixtureはnormal attach/detach、locked log、target exit、timeout、abnormal exitをすべて合格し、CDB残留0だった。
+
+formal run01はreadback前のstartup gateで`small_field_ingestion`となった。frame 1～120のactive blocksはfresh sampleのまま24固定、timeline／Kit updateは進行し、1,440 total／1,344 active Point、revision 1、fuel／temperature／smoke供給、payload SHA、stage／Flow／Emitter identityは期待どおりだったが、固定4本fixtureの代表場128 blocksへ到達しなかった。凍結契約どおり後続5 processを開始していない。stage closeは3.002983秒、extension callbackは0.002500秒で完了し、Kitはouter cleanupなしに自身で消滅したが、startup gateによりexit code 1であるためnormal OS exitではない。fatal／dump／upload／device lost／TDR／残留processは0、CDBは未発動だった。したがってnative stage-close failureはこの1件では再現していないが、有効な代表startup母集団が0件なので発生率もqualifiedとは扱わない。
+
+operation axisとlifecycle axisは独立報告する。operationはmarker、ceiling、call count、alias identity、settling、paired order、lifecycleはstage close、extension shutdown、normal OS exit、residual、timeout／CDB／forced cleanupを持つ。production採用には両軸passが必要で、operation evidenceをlifecycle成功やmemory passへ読み替えない。次回候補は明示承認された新contract／新rootで、startup prerequisiteだけ最大2つの事前枠で置換可能とし、元runも監視母集団へ保持する。operation failureまたはnative lifecycle failureは置換せず即停止する。Phase 6FGのbalanced 9-processは自動再開しない。
+
 # Phase 6FG paired single-readback qualification
 
 Phase 6FD／6FE／6FFの契約とsafe stopは凍結し、静的なメモリ波形への過剰適合を新Phaseへ持ち込まない。Phase 6FGは正式判定を3層へ分離した。hard gateは14 GiB Kit、16 GiB tree、system headroom、診断process上限、fatal／access violation／dump／upload 0、stage close／shutdown／normal OS exit、exact cleanup、代表startup、操作回数だけである。slope、rolling超過、terminal残差、high-water回復、projected drift、Working Set、GPU memory、active-block相関は全sampleをversion付きtelemetryとして保存するが、単独では不合格にしない。操作差分はprocess peakではなく隣接同期markerを主証拠とする。契約SHA-256は`54FD6185ADD41B9333506ACC55BF3472F7BBA4F0D726679071F1126572541EED`。詳細は`docs/design/phase6fg_paired_readback.md`。

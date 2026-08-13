@@ -62,17 +62,19 @@ def case_for(root: Path, run_index: int, contract: dict) -> dict | None:
     representative = startup.get("classification") == "representative_ingestion" and startup.get("source_ok") is True and startup.get("telemetry_fresh") is True
     if not representative:
         failures.append("representative_startup")
-    if guard.get("status") != "ok":
-        failures.append("resource_or_process_guard")
+    if guard.get("stop_reason"):
+        failures.append("resource_guard")
     if completion.get("timeline_stopped") is not True:
         failures.append("timeline_stop")
     if completion.get("renderer_drained") is not True:
         failures.append("renderer_drain")
     if completion.get("stage_closed") is not True:
         failures.append("stage_close")
-    if outcome.get("shutdown_complete_reached") is not True:
+    shutdown_marker_complete = raw.get("lifecycle_marker") == "shutdown_complete" and completion.get("shutdown_requested") is True
+    if not shutdown_marker_complete:
         failures.append("shutdown_complete")
-    if outcome.get("os_process_normal_exit") is not True:
+    process_exit_code = monitor.get("exit_code")
+    if monitor.get("lifecycle_candidate") != "normal_exit" or process_exit_code != 0:
         failures.append("normal_os_exit")
     if cleanup.get("remaining"):
         failures.append("cleanup_residual")
@@ -86,11 +88,22 @@ def case_for(root: Path, run_index: int, contract: dict) -> dict | None:
     payload = (raw.get("point_payload") or {}).get("payload_sha256")
     if payload != expected_payload:
         failures.append("payload_hash")
+    prerequisite_failures = [failure for failure in failures if failure in ("representative_startup", "payload_hash")]
+    native_lifecycle_failure = any(failure in failures for failure in ("timeline_stop", "renderer_drain", "stage_close", "shutdown_complete", "cleanup_residual")) or monitor.get("residual_process") is True
+    status = "pass"
+    if prerequisite_failures:
+        status = "prerequisite_failure"
+    elif native_lifecycle_failure:
+        status = "native_lifecycle_failure"
+    elif failures:
+        status = "process_or_safety_failure"
     return {
         "run": run_index,
         "path": run.name,
-        "status": "pass" if not failures else "lifecycle_failure",
+        "status": status,
         "failures": failures,
+        "prerequisite_failures": prerequisite_failures,
+        "native_lifecycle_failure": native_lifecycle_failure,
         "startup_classification": startup.get("classification"),
         "representative_startup": representative,
         "stage_sha256": raw.get("stage_sha256"),
@@ -103,7 +116,10 @@ def case_for(root: Path, run_index: int, contract: dict) -> dict | None:
         "stage_close_seconds": duration(markers, "stage_close_request_before", "stage_close_request_after"),
         "stage_close_timeout": "stage_close_timeout" in markers,
         "extension_shutdown_seconds": duration(extensions, "extension_on_shutdown_begin", "extension_on_shutdown_end"),
-        "normal_os_exit": outcome.get("os_process_normal_exit") is True,
+        "shutdown_complete_marker": shutdown_marker_complete,
+        "process_exit_code": process_exit_code,
+        "process_absent_without_forced_cleanup": monitor.get("pid_absent_after_termination") is True and monitor.get("terminated_by_outer_runner") is not True,
+        "normal_os_exit": monitor.get("lifecycle_candidate") == "normal_exit" and process_exit_code == 0,
         "lifecycle_status": outcome.get("lifecycle_status"),
         "guard_status": guard.get("status"),
         "guard_stop_reason": guard.get("stop_reason"),
@@ -139,6 +155,9 @@ def main() -> None:
     contract = load(args.contract)
     cases = [case for i in range(1, contract["population"]["planned_processes"] + 1) if (case := case_for(args.root, i, contract))]
     failures = [case for case in cases if case["status"] != "pass"]
+    native_failures = [case for case in cases if case["native_lifecycle_failure"]]
+    prerequisites = [case for case in cases if case["status"] == "prerequisite_failure"]
+    representative_cases = [case for case in cases if case["representative_startup"]]
     report = {
         "schema": "campfire.phase6fh.lifecycle-qualification-report.v1",
         "phase": "phase6fh",
@@ -146,10 +165,12 @@ def main() -> None:
         "phase6fg_history_frozen": True,
         "planned_processes": contract["population"]["planned_processes"],
         "attempted_processes": len(cases),
+        "representative_processes": len(representative_cases),
         "normal_processes": len(cases) - len(failures),
-        "lifecycle_failures": len(failures),
-        "observed_failure_rate": None if not cases else len(failures) / len(cases),
-        "status": "lifecycle_failure_captured" if failures else ("completed_no_reproduction" if len(cases) == contract["population"]["planned_processes"] else "incomplete"),
+        "native_lifecycle_failures": len(native_failures),
+        "native_lifecycle_failure_rate": None if not representative_cases else len(native_failures) / len(representative_cases),
+        "prerequisite_failures": len(prerequisites),
+        "status": "prerequisite_safe_stop" if prerequisites else ("native_lifecycle_failure_captured" if native_failures else ("completed_no_reproduction" if len(cases) == contract["population"]["planned_processes"] else "incomplete")),
         "cases": cases,
         "readback_calls": 0,
         "numpy_asarray_calls": 0,
