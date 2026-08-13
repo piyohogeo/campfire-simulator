@@ -72,6 +72,21 @@ class Phase6FsReleaseAfterCloseQualification(unittest.TestCase):
         ):
             self.assertIn(token, ANALYZER)
 
+    def test_result_documentation_keeps_phase6fo_and_latest_demo_unchanged(self):
+        devlog = (ROOT / "docs" / "devlog" / "index.html").read_text(encoding="utf-8")
+        start = devlog.index('<section id="phase-6fs"')
+        end = devlog.index('<section id="phase-6fr"', start)
+        entry = devlog[start:end]
+        self.assertIn("B-only 3 / 3", entry)
+        self.assertIn("Phase 6FOはまだ再開せず", entry)
+        self.assertNotIn("video-trigger", entry)
+        result = json.loads((ROOT / "docs" / "devlog" / "assets" / "phase6" / "release_after_close_qualification.json").read_text(encoding="utf-8"))
+        self.assertFalse(result["phase6fo_restarted"])
+        self.assertFalse(result["production_shutdown_order_changed"])
+        self.assertEqual(3, result["population"]["passed"])
+        latest = json.loads((ROOT / "docs" / "devlog" / "assets" / "latest_demo.json").read_text(encoding="utf-8"))
+        self.assertNotIn("phase6fs", json.dumps(latest).lower())
+
     def test_contract_hash_sidecar_matches(self):
         sidecar = CONTRACT_PATH.with_suffix(".sha256")
         if not sidecar.exists():

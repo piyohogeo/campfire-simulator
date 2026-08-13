@@ -6,6 +6,8 @@ Phase 6FRのsafe stopは`a55b49b`で凍結し、A release-before-closeの180.014
 
 正式run前の契約は`campfire.phase6fs.release-after-close-qualification-contract.v1`としてSHA-256を固定する。Phase 6FRでqualifiedしたstack-first CDB helperは変更せず、実Kit前はwait-target 1件だけのsmokeとする。Bが3/3 normal OS exit、全marker順序、ownership解放、CDB発動0、exact cleanup／残留0を満たしてもproduction shutdown順序は変更せず、「有力候補」に限定する。Phase 6FO、S93/S100比較、14→16 GiB変更、動画、P4は開始しない。
 
+実測ではBが3/3 normal OS exitし、stage closeは`2.2236896～21.8791366秒`、payload SHAとframe 60/96 active blockは全runで同一、startup置換・CDB・fatal・dump・upload・残留は0だった。明示ownership containerと全local slotはclose後に空となり、extension shutdownも3/3完了した。Kit peak最大は`14,941,323,264 bytes`で14 GiBまで`86.844 MiB`、tree peak最大は`15,105,253,376 bytes`だった。従ってrelease-after-closeは次の限定qualificationに用いる有力候補であり、lifecycleを次のmemory ceiling qualificationから分離して進められる。ただしproduction順序は未変更、低頻度native障害は未解決、14/16 GiB採否も未変更で、Phase 6FOは停止を維持する。
+
 # Phase 6FR stack-first CDB and stage-close shutdown-order contract
 
 Phase 6FQのsafe stopは`778623c`で凍結する。CDB診断はmodule-first依存を廃止し、exact identity確認後にboundedな全thread stackを先に取得し、module一覧は独立した補助pass、detachは独立cleanup passとする。fixtureが合格した場合だけ、readback/capture 0のA release-before-closeとB release-after-closeを`AB/BA/AB`で各3 runまで比較する。14/16 GiBの採否とPhase 6FO再開は行わない。詳細は`docs/design/phase6fr_stage_close_native_lifecycle.md`を参照する。

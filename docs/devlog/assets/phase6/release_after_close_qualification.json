@@ -1,0 +1,81 @@
+{
+  "schema": "campfire.devlog.phase6fs.release-after-close-qualification.v1",
+  "phase": "phase6fs",
+  "status": "qualified_candidate_only",
+  "contract_sha256": "F7C43DC90330AB00A15E5FEC1516E5F9CFC881527F915BA736A9F27BD2A9B432",
+  "production_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "phase6fr_reclassified": false,
+  "phase6fo_restarted": false,
+  "production_shutdown_order_changed": false,
+  "condition": "B_release_after_close",
+  "payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389",
+  "active_points": 1344,
+  "total_points": 1440,
+  "active_blocks": {"frame60": 688, "frame96": 948},
+  "population": {"planned": 3, "passed": 3, "startup_replacements": 0},
+  "runs": [
+    {
+      "run": 1,
+      "stage_close_seconds": 2.9165363,
+      "kit_peak_bytes": 14941323264,
+      "tree_peak_bytes": 15105253376,
+      "runner_peak_bytes": 109060096,
+      "diagnostic_peak_bytes": 16936960
+    },
+    {
+      "run": 2,
+      "stage_close_seconds": 2.2236896,
+      "kit_peak_bytes": 14880235520,
+      "tree_peak_bytes": 15031345152,
+      "runner_peak_bytes": 117436416,
+      "diagnostic_peak_bytes": 16891904
+    },
+    {
+      "run": 3,
+      "stage_close_seconds": 21.8791366,
+      "kit_peak_bytes": 14887927808,
+      "tree_peak_bytes": 15051411456,
+      "runner_peak_bytes": 109248512,
+      "diagnostic_peak_bytes": 17104896
+    }
+  ],
+  "minimum_kit_margin_bytes": 91062272,
+  "minimum_kit_margin_mib": 86.84375,
+  "ownership": {
+    "required_slots_retained": true,
+    "retained_through_post_close": true,
+    "python_owned_slots_clear": true,
+    "weak_alive_after_scope": ["stage", "volume_provider", "emitter_prim"],
+    "weak_alive_interpretation": "diagnostic_only_independent_sdk_ownership"
+  },
+  "lifecycle": {
+    "normal_os_exit": 3,
+    "stage_close_timeout": 0,
+    "cdb_invocations": 0,
+    "fatal": 0,
+    "dump": 0,
+    "automatic_upload": 0,
+    "residual_process": 0
+  },
+  "decision": {
+    "release_after_close": "strong_candidate_requires_separate_limited_qualification",
+    "memory_ceiling_qualification_ready": true,
+    "phase6fo_ready": false,
+    "production_adopted": false
+  },
+  "verification": {
+    "release_build_seconds": 8.26,
+    "phase0_rtx_exit_code": 0,
+    "phase3_status": "ok",
+    "phase3_mass_balance_error_kg": {"dry": 0.0, "wet": 0.0},
+    "phase3_flow_active_blocks": {"final": 262, "peak": 337},
+    "focused_phase6f": {"passed": 154, "total": 154},
+    "standard_suite": {"passed": 78, "total": 78, "seconds": 342.4},
+    "devlog_validation": {"status": "pass", "refs": 457, "ids": 275, "json": 227, "svg": 177, "zip": 2},
+    "production_sha256_unchanged": true,
+    "defaults_changed": false,
+    "new_video": false,
+    "latest_demo_changed": false,
+    "final_named_process_residuals": {"kit": 0, "cdb": 0, "nvidia_smi": 0}
+  }
+}

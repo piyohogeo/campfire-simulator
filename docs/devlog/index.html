@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6fr">最新記録</a>
+        <a href="#phase-6fs">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,22 +27,34 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fr">Phase 6FRの診断を読む</a>
+        <a class="button primary" href="#phase-6fs">Phase 6FSの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FR · native lifecycle safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6FS · release-after-close 3/3</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Population</span><strong>CDB pass · A attempt01 safe stop</strong></div>
+        <div><span>Population</span><strong>B-only 3/3 · normal OS exit</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
   </header>
 
   <main>
+    <section id="phase-6fs" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FS release-after-close qualification"><span class="phase-number compact">6FS</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">B-only 3 / 3 · candidate</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FS · B-first release-after-close</p><h2>参照をclose後まで保持し、<br>3 processすべて正常終了。</h2><p>Phase 6FRのA timeoutを変更せず、未試験だったrelease-after-closeだけを新しいrootで3回検証しました。stage、viewport、Flow、provider、Emitter、collectorを明示containerへ保持し、USD detachと4 post-close updateの後に解放しています。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Frozen input</p><h3>S93 · 1,344 / 1,440 Points</h3><p>全runで同じpayload SHA、frame 60/96は688/948 active blocks、readback/captureは0でした。startup置換はなく、Flowやproduction条件は変更していません。</p></section><section class="note"><p class="note-label">Stage close</p><h3>2.224 · 2.917 · 21.879 s</h3><p>180秒timeoutは再発せず、extension shutdownとnormal OS exitまで3/3完了しました。CDBは発動せず、fatal、dump、upload、残留processも0です。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Candidate boundary</p><h3>release-after-closeは有力候補。production採用ではない。</h3><p>明示ownership containerとprobe-owned local slotは3 runすべて空になりました。Stage、volume provider、Emitterのweak referenceはSDK側所有により生存したため診断値として分離し、Python alias解放のhard gateとは混同していません。</p><p>Kit peak最大は14,941,323,264 bytes（13.915 GiB）で、現行14 GiB上限まで86.844 MiBでした。tree peak最大は15,105,253,376 bytesです。上限は変更せず、次は別Phaseのmemory ceiling qualificationへ進める状態です。Phase 6FO、S93/S100比較、動画、P4、production shutdown順序は未変更です。</p><p>Release build、Phase 0 RTX、Phase 3（dry/wet mass balance 0）、focused 154/154、標準suite 78/78、devlog検査に合格しました。production SHA-256、既定値、latest demoは不変で、内部lifecycle診断のため新しい動画はありません。</p><p><a href="assets/phase6/release_after_close_qualification.json">machine report</a> · <a href="../design/phase6fs_release_after_close_qualification.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>3/3</span><p><strong>Normal exit</strong><small>B-only</small></p></div><div role="listitem"><span>21.879</span><p><strong>Max close</strong><small>seconds</small></p></div><div role="listitem"><span>86.8</span><p><strong>Min margin</strong><small>MiB to 14 GiB</small></p></div><div role="listitem"><span>0</span><p><strong>CDB / residual</strong><small>not invoked / none</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Pending roadmap</p><h3>次は独立したmemory ceiling qualification。</h3><p>release-after-closeを候補順序として限定母集団で使い、通常high-waterを収容する上限根拠を検証します。Phase 6FOはまだ再開せず、14→16 GiB変更もこの結果だけでは行いません。低頻度native lifecycle問題はstack-first CDBで自然再発を監視します。</p></section>
+        </div>
+      </article>
+    </section>
+
     <section id="phase-6fr" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6FR stack-first native lifecycle diagnostic"><span class="phase-number compact">6FR</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">CDB pass · A safe stop</span></aside>
@@ -5028,7 +5040,7 @@
           <li class="done"><span>3</span><div><strong>木材熱モデル</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>4</span><div><strong>配置と通気</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>5</span><div><strong>崩壊</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · startup監視化、fuel alias memory-response safe stop</small></div></li>
+          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · release-after-close候補確認、memory ceiling qualification待ち</small></div></li>
         </ol>
       </div>
     </section>
@@ -5040,7 +5052,7 @@
         <strong>Campfire Simulator</strong>
         <p>Build the fire. Keep the evidence.</p>
       </div>
-        <p>Last updated <time datetime="2026-08-13">2026.08.13</time></p>
+        <p>Last updated <time datetime="2026-08-14">2026.08.14</time></p>
     </div>
   </footer>
 
