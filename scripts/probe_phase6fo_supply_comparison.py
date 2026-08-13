@@ -219,7 +219,11 @@ def _settings():
             if settings.get_as_string("/phase6ep/resourceMarkerPath") else None
         ),
         "lifecycle_calibration": bool(settings.get_as_bool("/phase6ep/lifecycleCalibration")),
-        "renderer_drain_updates": max(1, int(settings.get_as_int("/phase6ep/rendererDrainUpdates")) or 8),
+        "renderer_drain_updates": max(0, int(settings.get_as_int("/phase6ep/rendererDrainUpdates"))),
+        "lifecycle_reference_release_order": (
+            settings.get_as_string("/phase6ep/lifecycleReferenceReleaseOrder") or "before_stage_close"
+        ),
+        "capture_preparation_mode": settings.get_as_string("/phase6ep/capturePreparationMode") or "none",
         "stage_close_timeout_seconds": max(0.0, float(settings.get_as_float("/phase6ep/stageCloseTimeoutSeconds"))),
         "stability_observation_start_frame": max(
             0, int(settings.get_as_int("/phase6ep/stabilityObservationStartFrame"))
@@ -1024,11 +1028,40 @@ async def _run():
     context = omni.usd.get_context()
     timeline = omni.timeline.get_timeline_interface()
     flow = None
+    volume = None
     collectors = []
     collectors_by_index = {}
     allocation_state = None
+    capture_provider_alias = None
+    capture_manifest_path = None
     emitter = None
     exit_code = 1
+
+    def release_owned_references(state):
+        nonlocal flow, volume, emitter, capture_provider_alias
+        report["lifecycle_marker"] = "capture_related_objects_release_started"
+        mark("capture_related_objects_release_started", **state())
+        capture_provider_alias = None
+        report["lifecycle_marker"] = "capture_related_objects_release_complete"
+        mark("capture_related_objects_release_complete", **state())
+
+        report["lifecycle_marker"] = "flow_references_release_started"
+        mark("flow_references_release_started", **state())
+        if flow is not None:
+            _flowusd.release_flowusd_interface(flow)
+            flow = None
+        emitter = None
+        report["lifecycle_marker"] = "flow_references_release_complete"
+        mark("flow_references_release_complete", **state())
+
+        report["lifecycle_marker"] = "provider_readback_references_release_started"
+        mark("provider_readback_references_release_started", **state())
+        volume = None
+        collectors.clear()
+        collectors_by_index.clear()
+        report["lifecycle_marker"] = "provider_readback_references_release_complete"
+        mark("provider_readback_references_release_complete", **state())
+
     try:
         if arguments["python_memory_telemetry"] and not tracemalloc.is_tracing():
             tracemalloc.start(10)
@@ -1171,7 +1204,7 @@ async def _run():
                 )
                 collectors.append(collector)
                 collectors_by_index[index] = collector
-        if arguments["report_phase"] == "phase6fp":
+        if arguments["report_phase"] in ("phase6fp", "phase6fq", "phase6fr"):
             allocation_state = _phase6fp_allocation_state(
                 arguments["allocation_calibration_level"], output, plan, point_summary, public_members, collectors
             )
@@ -1188,6 +1221,49 @@ async def _run():
                 logical_buffer_bytes=allocation_state["logical_buffer_bytes"],
                 step_count=len(allocation_state["steps"]),
             )
+        capture_preparation_mode = arguments["capture_preparation_mode"]
+        if capture_preparation_mode not in ("none", "manifest", "provider_alias"):
+            raise ValueError(f"unsupported capture preparation mode: {capture_preparation_mode}")
+        capture_preparation = {
+            "mode": capture_preparation_mode,
+            "capture_calls": 0,
+            "pixel_buffer_bytes": 0,
+            "video_generation_calls": 0,
+            "manifest_written": False,
+            "provider_alias_created": False,
+            "provider_alias_identity": None,
+        }
+        if capture_preparation_mode in ("manifest", "provider_alias"):
+            capture_manifest_path = output.parent / "capture_preparation_manifest.json"
+            _write(capture_manifest_path, {
+                "schema": "campfire.phase6fq.capture-preparation-manifest.v1",
+                "capture_enabled": False,
+                "capture_calls": 0,
+                "pixel_buffer_bytes": 0,
+                "video_generation_calls": 0,
+                "resolution": list(CAPTURE_RESOLUTION),
+            })
+            capture_preparation["manifest_written"] = True
+            capture_preparation["manifest_path"] = str(capture_manifest_path)
+            capture_preparation["manifest_bytes"] = capture_manifest_path.stat().st_size
+        if capture_preparation_mode == "provider_alias":
+            # This is deliberately only an additional owned reference to the
+            # already-public active viewport.  It does not call capture or
+            # allocate a pixel buffer.
+            capture_provider_alias = viewport
+            capture_preparation["provider_alias_created"] = True
+            capture_preparation["provider_alias_identity"] = int(id(capture_provider_alias))
+        report["capture_lifecycle_preparation"] = capture_preparation
+        mark(
+            "capture_related_objects_prepared",
+            mode=capture_preparation_mode,
+            manifest_written=capture_preparation["manifest_written"],
+            provider_alias_created=capture_preparation["provider_alias_created"],
+            provider_alias_identity=capture_preparation["provider_alias_identity"],
+            capture_calls=0,
+            pixel_buffer_bytes=0,
+            video_generation_calls=0,
+        )
         extra_update_count = arguments["startup_extra_update_before_play_count"]
         if arguments["startup_probe"]:
             mark(
@@ -1627,22 +1703,12 @@ async def _run():
                 mark("renderer_drain_complete", **state())
                 report["completion_contract"]["renderer_drained"] = True
 
-                report["lifecycle_marker"] = "flow_references_release_started"
-                mark("flow_references_release_started", **state())
-                if flow is not None:
-                    _flowusd.release_flowusd_interface(flow)
-                    flow = None
-                emitter = None
-                report["lifecycle_marker"] = "flow_references_release_complete"
-                mark("flow_references_release_complete", **state())
-
-                report["lifecycle_marker"] = "provider_readback_references_release_started"
-                mark("provider_readback_references_release_started", **state())
-                volume = None
-                collectors.clear()
-                collectors_by_index.clear()
-                report["lifecycle_marker"] = "provider_readback_references_release_complete"
-                mark("provider_readback_references_release_complete", **state())
+                release_order = arguments["lifecycle_reference_release_order"]
+                if release_order not in ("before_stage_close", "after_stage_close"):
+                    raise ValueError(f"unsupported lifecycle reference release order: {release_order}")
+                mark("reference_release_order_selected", release_order=release_order, **state())
+                if release_order == "before_stage_close":
+                    release_owned_references(state)
 
                 report["lifecycle_marker"] = "stage_close_request_before"
                 mark("stage_close_request_before", **state())
@@ -1659,6 +1725,8 @@ async def _run():
                 report["lifecycle_marker"] = "stage_close_request_after"
                 mark("stage_close_request_after", **state())
                 report["completion_contract"]["stage_closed"] = True
+                if release_order == "after_stage_close":
+                    release_owned_references(state)
                 if context.get_stage() is not None:
                     raise RuntimeError("USD context still exposes a stage after close_stage_async")
                 report["lifecycle_marker"] = "usd_context_disconnected"

@@ -1,0 +1,101 @@
+{
+  "schema": "campfire.phase6fq.stage-close-lifecycle-contract.v1",
+  "phase": "phase6fq",
+  "purpose": "Separate the Phase 6FP attempt11 stage-close timeout from pre-readback memory calibration.",
+  "frozen_history": {
+    "phase6fp_commit": "417cbe1",
+    "phase6fp_attempt11_condition": "C5_capture_prep",
+    "phase6fp_attempt11_last_marker": "stage_close_timeout",
+    "phase6fp_attempt11_readback_calls": 0,
+    "phase6fp_attempt11_stage_close_timeout_seconds": 180,
+    "phase6fp_attempt11_known_ngx_signature": false
+  },
+  "physical_fixture": {
+    "scenario": "production_four",
+    "geometry_variant": "phase6er_corrected",
+    "point_policy": "allow_self_center",
+    "point_offset_m": -0.0125,
+    "support_radius_m": 0.05,
+    "sample_frames": [60, 96],
+    "readback_mode": "none",
+    "readback_calls": 0,
+    "capture_calls": 0,
+    "pixel_buffer_bytes": 0,
+    "video_generation_calls": 0,
+    "expected_source_sums": {
+      "fuel": 1075.2000160217285,
+      "temperature": 2688.0,
+      "smoke": 107.51999759674072
+    },
+    "source_sum_absolute_tolerance": 0.0001
+  },
+  "startup": {
+    "flow_acquire_position": "before_updates",
+    "stopped_update_count": 12,
+    "extra_update_before_play_count": 0,
+    "representative_active_block_minimum_at_frame_60": 128
+  },
+  "conditions": [
+    {"id": "L0_phase6fn_baseline", "allocation_level": 0, "capture_preparation_mode": "none", "renderer_drain_updates": 8, "reference_release_order": "before_stage_close", "variable": "Phase 6FN-equivalent baseline"},
+    {"id": "L1_c5_without_capture_prep", "allocation_level": 4, "capture_preparation_mode": "none", "renderer_drain_updates": 8, "reference_release_order": "before_stage_close", "variable": "collector/spatial/channel/buffer-plan state without C5 capture preparation"},
+    {"id": "L2_c5_disabled_state", "allocation_level": 5, "capture_preparation_mode": "none", "renderer_drain_updates": 8, "reference_release_order": "before_stage_close", "variable": "C5 disabled-state metadata only"},
+    {"id": "L3_c5_manifest", "allocation_level": 5, "capture_preparation_mode": "manifest", "renderer_drain_updates": 8, "reference_release_order": "before_stage_close", "variable": "bounded capture manifest file only"},
+    {"id": "L4_c5_provider_alias", "allocation_level": 5, "capture_preparation_mode": "provider_alias", "renderer_drain_updates": 8, "reference_release_order": "before_stage_close", "variable": "one additional public active-viewport alias; no capture call"},
+    {"id": "L5_c5_no_preclose_drain", "allocation_level": 5, "capture_preparation_mode": "none", "renderer_drain_updates": 0, "reference_release_order": "before_stage_close", "variable": "remove the eight pre-close renderer updates"},
+    {"id": "L6_c5_normal_drain_control", "allocation_level": 5, "capture_preparation_mode": "none", "renderer_drain_updates": 8, "reference_release_order": "before_stage_close", "variable": "restore the qualified eight-update renderer drain"},
+    {"id": "L7_c5_release_after_close", "allocation_level": 5, "capture_preparation_mode": "none", "renderer_drain_updates": 8, "reference_release_order": "after_stage_close", "variable": "retain Flow/provider/collector references until close_stage_async returns"},
+    {"id": "L8_c5_release_before_close_control", "allocation_level": 5, "capture_preparation_mode": "none", "renderer_drain_updates": 8, "reference_release_order": "before_stage_close", "variable": "ending control using the existing release-before-close order"}
+  ],
+  "population": {
+    "runs_per_condition": 2,
+    "maximum_runs_per_condition": 3,
+    "orders": [
+      ["L0_phase6fn_baseline", "L1_c5_without_capture_prep", "L2_c5_disabled_state", "L3_c5_manifest", "L4_c5_provider_alias", "L5_c5_no_preclose_drain", "L6_c5_normal_drain_control", "L7_c5_release_after_close", "L8_c5_release_before_close_control"],
+      ["L8_c5_release_before_close_control", "L7_c5_release_after_close", "L6_c5_normal_drain_control", "L5_c5_no_preclose_drain", "L4_c5_provider_alias", "L3_c5_manifest", "L2_c5_disabled_state", "L1_c5_without_capture_prep", "L0_phase6fn_baseline"]
+    ],
+    "automatic_retry": false,
+    "startup_replacement_budget": 1,
+    "stop_on_unknown_stage_close_timeout": true
+  },
+  "required_markers": [
+    "timeline_stop_request_before", "timeline_stop_request_after", "timeline_stop_confirmed",
+    "renderer_drain_started", "renderer_drain_complete",
+    "capture_related_objects_prepared", "capture_related_objects_release_started", "capture_related_objects_release_complete",
+    "flow_references_release_started", "flow_references_release_complete",
+    "provider_readback_references_release_started", "provider_readback_references_release_complete",
+    "stage_close_request_before", "stage_close_request_after", "usd_context_disconnected",
+    "app_close_requested", "shutdown_complete"
+  ],
+  "safety": {
+    "stage_close_timeout_seconds": 180,
+    "inner_absolute_timeout_seconds": 420,
+    "outer_condition_timeout_seconds": 660,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "cdb_all_thread_timeout_seconds": 45,
+    "crash_upload_enabled": false
+  },
+  "recording": {
+    "resource_sample_seconds": 0.2,
+    "gpu_sample_ms": 1000,
+    "large_output_buffered_in_parent": false,
+    "exact_process_identity_cleanup": true
+  },
+  "qualification": {
+    "all_frozen_slots_must_pass": true,
+    "representative_startup_required": true,
+    "normal_os_exit_required": true,
+    "complete_marker_sequence_required": true,
+    "fatal_dump_upload_device_lost_tdr_count": 0,
+    "residual_process_count": 0,
+    "readback_call_count": 0
+  },
+  "excluded": [
+    "NanoVDB readback", "field conversion", "pixel capture", "video generation",
+    "production changes", "S93/S100 comparison", "resource ceiling changes"
+  ]
+}

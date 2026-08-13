@@ -1,5 +1,11 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FQ stage-close lifecycle qualification contract
+
+Phase 6FP attempt11のreadback 0／C5条件で発生した180.007436秒の`close_stage_async()` timeoutをmemory ceilingから分離するため、Phase 6FQを事前凍結した。Phase 6FOの比較条件、production、Point payload、Flow、CollisionProxy、V3、14/16 GiB safety ceilingは変更しない。既存のPhase 6FO probe/runner、resource guard、bounded CDB、exact cleanupを直接再利用し、C5 metadata、bounded manifest、active viewport alias、renderer drain、release-before/after-closeを一変数ずつ比較する。詳細は`docs/design/phase6fq_stage_close_lifecycle_qualification.md`を参照する。
+
+Phase 6FQの全slotがnormal OS exitするまでmemory ceilingの第2段階へ進まず、第2段階が完了するまでPhase 6FOを再開しない。未知timeoutが再発した場合は自動retryせず、そのactive conditionと最後のmarkerでsafe stopする。
+
 # Phase 6FP pre-readback allocation calibration safe stop
 
 Phase 6FOの15,127,232,512-byte pre-readback safe stopを凍結し、Phase 6FN相当baselineからcollector、spatial metadata、channel metadata、lazy buffer plan、capture準備、S93 identity、6FO-equivalent状態を累積追加する24-process契約を固定した。Phase 6FN baseline自体がS93の同一1,344/1,440 Point payloadであり、near-Mesh field bodyはpublic grid metadataを得るreadback後まで生成されず、capture bodyもcapture callまで生成されない。

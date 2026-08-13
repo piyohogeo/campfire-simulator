@@ -6,7 +6,7 @@ param(
     [ValidateSet("true", "false")][string]$Filtering = "true",
     [ValidateSet("true", "false")][string]$Collision = "true",
     [ValidateSet("strict_all", "allow_self_support", "allow_self_center", "allow_other_support")][string]$Policy = "strict_all",
-    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev", "phase6ew", "phase6ex", "phase6ey", "phase6ez", "phase6fa", "phase6fb", "phase6fc", "phase6fd", "phase6fe", "phase6ff", "phase6fg", "phase6fh", "phase6fi", "phase6fj", "phase6fk", "phase6fn", "phase6fo", "phase6fp")][string]$ReportPhase = "phase6ep",
+    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev", "phase6ew", "phase6ex", "phase6ey", "phase6ez", "phase6fa", "phase6fb", "phase6fc", "phase6fd", "phase6fe", "phase6ff", "phase6fg", "phase6fh", "phase6fi", "phase6fj", "phase6fk", "phase6fn", "phase6fo", "phase6fp", "phase6fq", "phase6fr")][string]$ReportPhase = "phase6ep",
     [string]$SampleFrames = "60,120,180,200",
     [string]$ReadbackChannels = "temperature,fuel,burn,smoke,velocity",
     [ValidateSet("legacy", "none", "acquire_discard", "acquire_discard_release", "fuel_convert", "fuel_convert_release", "fuel_scalar", "fuel_jsonl", "fuel_spatial", "p3_spatial_release")][string]$ReadbackMode = "legacy",
@@ -31,7 +31,9 @@ param(
     [double]$TemperatureScale = 1.0,
     [double]$SmokeScale = 1.0,
     [switch]$LifecycleCalibration,
-    [int]$RendererDrainUpdates = 8,
+    [ValidateRange(0, 64)][int]$RendererDrainUpdates = 8,
+    [ValidateSet("before_stage_close", "after_stage_close")][string]$LifecycleReferenceReleaseOrder = "before_stage_close",
+    [ValidateSet("none", "manifest", "provider_alias")][string]$CapturePreparationMode = "none",
     [double]$StageCloseTimeoutSeconds = 0.0,
     [int]$StabilityObservationStartFrame = 0,
     [double]$StabilityObservationExtraSeconds = 0.0,
@@ -126,6 +128,8 @@ $arguments = @(
     "--/phase6ep/resourceMarkerPath=$resourceMarkerPath",
     "--/phase6ep/lifecycleCalibration=$($LifecycleCalibration.IsPresent.ToString().ToLowerInvariant())",
     "--/phase6ep/rendererDrainUpdates=$RendererDrainUpdates",
+    "--/phase6ep/lifecycleReferenceReleaseOrder=$LifecycleReferenceReleaseOrder",
+    "--/phase6ep/capturePreparationMode=$CapturePreparationMode",
     "--/phase6ep/stageCloseTimeoutSeconds=$StageCloseTimeoutSeconds",
     "--/phase6ep/stabilityObservationStartFrame=$StabilityObservationStartFrame",
     "--/phase6ep/stabilityObservationExtraSeconds=$StabilityObservationExtraSeconds",
@@ -227,6 +231,8 @@ $evidence = [ordered]@{
     python_memory_telemetry = ($PythonMemoryTelemetry -eq "true")
     lifecycle_calibration = $LifecycleCalibration.IsPresent
     renderer_drain_updates = $RendererDrainUpdates
+    lifecycle_reference_release_order = $LifecycleReferenceReleaseOrder
+    capture_preparation_mode = $CapturePreparationMode
     stage_close_timeout_seconds = $StageCloseTimeoutSeconds
     stability_observation_start_frame = $StabilityObservationStartFrame
     stability_observation_extra_seconds = $StabilityObservationExtraSeconds

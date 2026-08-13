@@ -1,5 +1,6 @@
 # Changelog
 
+- Added the default-off Phase 6FQ contract and isolated harness to separate the Phase 6FP C5 stage-close timeout from memory-ceiling calibration. It reuses the existing Phase 6FO lifecycle, guarded CDB, and exact cleanup while varying only bounded capture preparation, renderer drain, and reference-release order; readback, capture calls, production, and all resource ceilings remain unchanged.
 - Added default-off Phase 6FP to isolate the Phase 6FO pre-readback 14 GiB crossing with a frozen forward/reverse/interleaved 8-condition allocation matrix. The Phase 6FN baseline is explicitly the same S93 payload; collector, region/channel metadata, lazy buffer plan, capture preparation, and Phase 6FO-equivalent state remain readback-free and production-neutral.
 - Phase 6FP safely stopped at attempt11 after 10 normal exits when the second capture-preparation control timed out at stage close after 180.007 seconds. The completed runs held identical 688/948 active blocks and varied from 14,583,508,992 to 14,930,382,848 Kit Private Bytes; both Phase 6FO-equivalent runs stayed below 14 GiB. No pre-readback field/capture body allocation was found, making ordinary four-log Flow/RTX/Kit high-water variability the leading but not fully proven explanation. CDB stack capture timed out, detach and exact cleanup succeeded, and Phase 6FO was not resumed.
 
