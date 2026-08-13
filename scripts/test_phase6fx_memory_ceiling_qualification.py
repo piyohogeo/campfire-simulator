@@ -101,6 +101,23 @@ class Phase6FxMemoryCeilingQualification(unittest.TestCase):
                 self.assertTrue(path.exists())
                 self.assertEqual(expected, hashlib.sha256(path.read_bytes()).hexdigest().upper())
 
+    def test_published_safe_stop_never_qualifies_or_restarts(self) -> None:
+        summary = json.loads(
+            (ROOT / "docs/devlog/assets/phase6/memory_ceiling_phase6fx_safe_stop.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual("lifecycle_safe_stop", summary["status"])
+        self.assertEqual(5, summary["population"]["representative_pass"])
+        self.assertEqual("attempt06", summary["lifecycle_safe_stop"]["active_attempt"])
+        self.assertFalse(summary["partial_memory_evidence"]["candidate_16_gib_qualified"])
+        self.assertFalse(summary["partial_memory_evidence"]["candidate_17_gib_tree_qualified"])
+        self.assertFalse(summary["decision"]["phase6fo_restart_ready"])
+        self.assertEqual(0, summary["identity_cleanup"]["final_kit_cdb_gpu_helper_residual"])
+        html = (ROOT / "docs/devlog/index.html").read_text(encoding="utf-8")
+        self.assertIn('id="phase-6fx"', html)
+        self.assertIn("memory_ceiling_phase6fx_safe_stop.json", html)
+
 
 if __name__ == "__main__":
     unittest.main()

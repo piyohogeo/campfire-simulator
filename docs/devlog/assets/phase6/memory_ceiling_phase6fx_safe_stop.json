@@ -1,0 +1,135 @@
+{
+  "schema": "campfire.phase6fx.devlog-summary.v1",
+  "phase": "phase6fx",
+  "status": "lifecycle_safe_stop",
+  "date": "2026-08-14",
+  "contract": {
+    "schema": "campfire.phase6fx.memory-ceiling-qualification-contract.v1",
+    "sha256": "A32F9FB6CB94E733DC1B0B3A4133A1434B35CB4706B62EB2CCE7152993B0D0D6",
+    "artifact_root": "artifacts/phase6fx-memory-ceiling-1",
+    "balanced_order": ["M0/M1/M2", "M1/M2/M0", "M2/M0/M1"],
+    "planned_processes": 9,
+    "readback_calls": 0,
+    "capture_calls": 0
+  },
+  "frozen_history": {
+    "phase6ft_reclassified": false,
+    "phase6fv_reclassified": false,
+    "phase6fv_artifact_reused": false,
+    "phase6fv_report_sha256": "914611039770492DECE4A0ACE8EBE4F877580E75F39AF432E65380E6306AF4AA",
+    "phase6fo_restarted": false
+  },
+  "population": {
+    "launched": 6,
+    "representative_pass": 5,
+    "startup_replacements": 0,
+    "nonreplaceable_failure": 1,
+    "unlaunched_after_safe_stop": 3,
+    "attempts": [
+      {"id": "attempt01", "condition": "M0_baseline", "classification": "representative_pass", "kit_peak_bytes": 14888349696, "tree_peak_bytes": 15052058624, "terminal_active_blocks": 948, "stage_close_seconds": 14.023475, "identity_policy": "qualified"},
+      {"id": "attempt02", "condition": "M1_phase6fo_equivalent", "classification": "representative_pass", "kit_peak_bytes": 14869356544, "tree_peak_bytes": 15032672256, "terminal_active_blocks": 948, "stage_close_seconds": 4.2116109, "identity_policy": "qualified"},
+      {"id": "attempt03", "condition": "M2_pre_readback_frame", "classification": "representative_pass", "kit_peak_bytes": 14534746112, "tree_peak_bytes": 14697562112, "terminal_active_blocks": 1322, "stage_close_seconds": 7.1675343, "identity_policy": "qualified"},
+      {"id": "attempt04", "condition": "M1_phase6fo_equivalent", "classification": "representative_pass", "kit_peak_bytes": 14967640064, "tree_peak_bytes": 15130378240, "terminal_active_blocks": 948, "stage_close_seconds": 3.0378219, "identity_policy": "qualified"},
+      {"id": "attempt05", "condition": "M2_pre_readback_frame", "classification": "representative_pass", "kit_peak_bytes": 14561755136, "tree_peak_bytes": 14724997120, "terminal_active_blocks": 1322, "stage_close_seconds": 13.1654832, "identity_policy": "qualified"},
+      {"id": "attempt06", "condition": "M0_baseline", "classification": "nonreplaceable_failure", "kit_peak_bytes": 14851428352, "tree_peak_bytes": 15014383616, "terminal_active_blocks": 948, "last_marker": "stage_close_timeout", "stage_close_timeout_seconds": 180.016801, "identity_policy": "qualified"}
+    ]
+  },
+  "partial_memory_evidence": {
+    "formal_qualification_complete": false,
+    "representative_kit_peak_minimum_bytes": 14534746112,
+    "representative_kit_peak_median_bytes": 14869356544,
+    "representative_kit_peak_maximum_bytes": 14967640064,
+    "representative_kit_peak_range_bytes": 432893952,
+    "legacy_14_gib_threshold_bytes": 15032385536,
+    "legacy_14_gib_crossings": 0,
+    "minimum_normal_margin_below_14_gib_bytes": 64745472,
+    "legacy_threshold_too_close_to_normal_high_water": true,
+    "kit_16_gib_limit_bytes": 17179869184,
+    "headroom_from_partial_normal_maximum_to_16_gib_bytes": 2212229120,
+    "tree_17_gib_limit_bytes": 18253611008,
+    "headroom_from_partial_normal_maximum_to_17_gib_bytes": 3123232768,
+    "candidate_16_gib_qualified": false,
+    "candidate_17_gib_tree_qualified": false,
+    "persistent_unexplained_accumulation_detected": false,
+    "public_field_shape_and_logical_bytes": "unavailable because readback count is zero",
+    "gpu_shared_memory": "unavailable from the bounded public telemetry and not estimated"
+  },
+  "lifecycle_safe_stop": {
+    "active_attempt": "attempt06",
+    "condition": "M0_baseline",
+    "last_completed_marker_before_failure": "stage_close_request_before",
+    "failure_marker": "stage_close_timeout",
+    "timeout_seconds": 180.016801,
+    "completion": {
+      "timeline_stopped": true,
+      "renderer_drained": true,
+      "stage_closed": false,
+      "shutdown_requested": false,
+      "normal_os_exit": false
+    },
+    "post_timeout_cpu_percent_of_logical_total": {
+      "average": 0.7485492399,
+      "maximum": 3.1811615589,
+      "samples": 1377,
+      "interpretation": "low-CPU wait is likely, but no native stack was acquired"
+    },
+    "known_ngx_signature_matched": false,
+    "stack_boundary": "unavailable: CDB did not observe attach or native frames"
+  },
+  "cdb": {
+    "invocations": 1,
+    "path": "C:\\Program Files (x86)\\Windows Kits\\10\\Debuggers\\x64\\cdb.exe",
+    "version": "10.0.28000.2526",
+    "sha256": "506D1FD7AD306F6F53D8D157375A03A8368446923DEF9457CDFB2E3214054376",
+    "stack_pass_timed_out": true,
+    "stack_pass_seconds": 30.3535329,
+    "native_frames_observed": false,
+    "module_pass_timed_out": true,
+    "module_pass_seconds": 20.2884686,
+    "loaded_modules_observed": false,
+    "explicit_detach_complete": true,
+    "detach_seconds": 13.3564032,
+    "cdb_process_absent": true,
+    "full_dump_created": false,
+    "automatic_upload_attempts": 0
+  },
+  "identity_cleanup": {
+    "attempt_identity_absent": 236,
+    "protected_pid_reuse_non_residual": 0,
+    "attempt_owned_residual": 0,
+    "unresolved_unknown": 0,
+    "termination_attempted_for_mismatch": 0,
+    "dual_source_absence_attempts": 6,
+    "cleanup_suppression_released_attempts": 6,
+    "final_kit_cdb_gpu_helper_residual": 0
+  },
+  "resource_extrema": {
+    "runner_private_peak_bytes": 117755904,
+    "diagnostic_private_peak_bytes": 117792768,
+    "available_physical_minimum_bytes": 82824302592,
+    "commit_headroom_minimum_bytes": 102242107392,
+    "rtx3090_dedicated_memory_peak_mib": 7171,
+    "rtx2070_dedicated_memory_peak_mib": 442
+  },
+  "decision": {
+    "legacy_14_gib_as_anomaly_ceiling": "too close to observed normal high-water, but no replacement ceiling is adopted in an incomplete population",
+    "kit_16_gib": "unqualified",
+    "unique_tree_17_gib": "unqualified",
+    "phase6fo_restart_ready": false,
+    "phase6fo_restart_blocker": "complete fresh 9/9 lifecycle population is still missing; timeout CDB also yielded no native stack",
+    "production_changed": false,
+    "production_shutdown_order_changed": false,
+    "new_video_created": false,
+    "latest_demo_changed": false
+  },
+  "regression": {
+    "release_build": "pass (7.98 s)",
+    "phase0_rtx": "pass",
+    "phase3": {"status": "pass", "dry_mass_balance_error_kg": 0.0, "wet_mass_balance_error_kg": 0.0, "flow_input_owner": "wood thermal model", "active_blocks_final": 225, "active_blocks_peak": 330, "peak_fuel_input": 1.0},
+    "focused_phase6f": "191/191 pass",
+    "standard_suite": "8 processes, 78/78 pass (337.9 s)",
+    "production_app_sha256_before_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "latest_demo_manifest_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285"
+  },
+  "raw_report_sha256": "8DF6498BF944314C6B8E7EF7D0C7B1DA34A90C6438221755EBCB7DB34FC7CAB8"
+}

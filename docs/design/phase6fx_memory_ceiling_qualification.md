@@ -57,3 +57,46 @@ If all gates pass, Phase 6FX may retire 14 GiB as the four-log anomaly ceiling,
 qualify 16 GiB Kit and 17 GiB unique-tree candidates, and report that a later,
 explicitly approved fresh-root Phase 6FO restart is ready. Phase 6FX itself
 does not start Phase 6FO or change production shutdown order or defaults.
+
+## Runtime result: lifecycle safe stop
+
+The fresh root launched six processes and stopped without retry at attempt06,
+the second M0 baseline. Attempts01--05 passed operation, resource, lifecycle,
+normal OS exit, Phase 6FU cleanup, and Phase 6FW final identity gates. Their
+Kit peaks were 14,534,746,112--14,967,640,064 bytes (median
+14,869,356,544; range 432,893,952), and their stage-close times were
+3.038--14.023 seconds (median 7.168). M1 did not show a fixed increase over
+M0. Both completed M2 runs had 1,322 terminal blocks and lower peaks than the
+frame-96 controls. This is partial evidence, not a complete distribution.
+
+Attempt06 used the same payload and had 948 frame-96 blocks. Its Kit and tree
+peaks were 14,851,428,352 and 15,014,383,616 bytes. It reached
+`stage_close_request_before` after timeline stop, eight renderer updates, and
+explicit ownership retention, then emitted `stage_close_timeout` after
+180.016801 seconds. It never emitted close, post-close, release, extension
+shutdown, or normal-exit markers. Attempts07--09 were not launched.
+
+The timeout interval averaged 0.749% Kit CPU on the all-logical-CPU scale and
+peaked at 3.181%, consistent with a low-CPU wait rather than a spin. This is
+an inference only: stack-first CDB timed out after 30.354 seconds before an
+attach/native frame was observed, the module pass also timed out, and only
+explicit detach completed. No module, offset, owner thread, or wait object can
+be asserted. The accepted NGX five-token signature did not match.
+
+Phase 6FU cleanup and Phase 6FW classification completed for all six attempts:
+236 identities absent, protected reuse 0, attempt-owned residual 0, unknown 0,
+mismatch stop 0, and dual-source absence 6. Final Kit/CDB/GPU-helper residual
+is zero. No full dump or upload occurred.
+
+The largest representative normal peak left only 64,745,472 bytes below the
+old 14 GiB value, so 14 GiB remains too close to normal high-water to be a
+useful anomaly ceiling. Because only 5/9 normal exits completed, this Phase
+does not adopt a replacement: Kit 16 GiB and tree 17 GiB remain unqualified,
+and Phase 6FO remains blocked. The recurrent release-after-close failure and
+CDB attach limitation must be addressed before another population.
+
+Release build, Phase 0 RTX, Phase 3 authority/mass-balance/Flow input, 191/191
+focused Phase 6F contracts, and the standard 8-process 78/78 suite passed.
+Production app SHA-256 remained
+`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`.
+Production, defaults, video, and latest demo were unchanged.

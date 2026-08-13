@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6fw">最新記録</a>
+        <a href="#phase-6fx">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,22 +27,34 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fw">Phase 6FWの結果を読む</a>
+        <a class="button primary" href="#phase-6fx">Phase 6FXの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FW · PID reuse policy qualified</strong></div>
+        <div><span>現在地</span><strong>Phase 6FX · 5 / 9 lifecycle safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Qualification</span><strong>15 / 15 · offline evidence pass</strong></div>
+        <div><span>Qualification</span><strong>16 / 17 GiB · unqualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
   </header>
 
   <main>
+    <section id="phase-6fx" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FX memory ceiling lifecycle safe stop"><span class="phase-number compact">6FX</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">5 / 9 · lifecycle safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FX · post-6FW memory ceiling qualification</p><h2>メモリ上限ではなく、<br>6本目のstage closeで安全停止。</h2><p>Phase 6FT/6FVを凍結し、Phase 6FU exact cleanupとPhase 6FW PID reuse policyを組み込んだ新しい9-process母集団を開始しました。readback、capture、動画、Phase 6FO、production変更はありません。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Partial memory evidence</p><h3>14.535–14.968 GB · 5 normal exits</h3><p>正常5 runのKit peak rangeは432,893,952 bytes、中央値は14,869,356,544 bytesでした。旧14 GiBまでの最小余裕は64,745,472 bytesしかなく、異常検出上限として近すぎます。ただし正式母集団は5/9なので、16 GiB Kitと17 GiB treeは採用していません。</p></section><section class="note"><p class="note-label">Lifecycle boundary</p><h3>M0 · 180.016801 s timeout</h3><p>attempt06は同一payload、948 active blocks、readback 0、resource上限内で、<code>stage_close_request_before</code>後に停止しました。後続3 processは未起動です。CDB stack/moduleはattach前にtimeoutし、detachとexact cleanupだけが完了しました。known NGXではなくunknown native lifecycle failureです。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Fail-closed outcome</p><h3>cleanupは完全、qualificationは未完了。</h3><p>Phase 6FW集計はattempt identity absent 236、protected reuse 0、owned residual 0、unknown 0、wrong stop 0でした。最終Kit/CDB/GPU helper残留は0、full dumpと自動uploadも0です。</p><p>Release build、Phase 0 RTX、Phase 3（dry/wet mass balance 0、wood-owned Flow input）、focused Phase 6F 191/191、標準suite 8 process・78/78に合格しました。production app SHA-256とlatest demoは不変です。</p><p><a href="assets/phase6/memory_ceiling_phase6fx_safe_stop.json">machine summary</a> · <a href="../design/phase6fx_memory_ceiling_qualification.md">design note</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>既存の最新デモ</strong><small>今回の内部診断では新規動画なし</small></span></button></div><div class="check-list" role="list"><div role="listitem"><span>5/9</span><p><strong>Normal exit</strong><small>no retry</small></p></div><div role="listitem"><span>61.7</span><p><strong>14 GiB margin</strong><small>MiB · too close</small></p></div><div role="listitem"><span>0</span><p><strong>Owned residual</strong><small>unknown also zero</small></p></div><div role="listitem"><span>—</span><p><strong>16 / 17 GiB</strong><small>unqualified</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Pending roadmap</p><h3>Phase 6FOはblocked。native closeとCDB attachが残課題。</h3><p>同じ母集団を自動再開しません。release-after-closeでも再発した低頻度stage-close障害と、timeout時にnative frameを取得できなかったCDB境界を先に扱う必要があります。新しい明示承認なしにPhase 6FO、S93/S100比較、動画、P4、productionへは進みません。</p></section>
+        </div>
+      </article>
+    </section>
+
     <section id="phase-6fw" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6FW PID reuse policy qualification"><span class="phase-number compact">6FW</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">15 / 15 · qualified</span></aside>

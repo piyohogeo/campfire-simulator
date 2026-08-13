@@ -14,6 +14,15 @@ maximum at or below 15.5 GiB. Phase 6FO, readback, capture, video, production,
 defaults, and physics are excluded. See
 `docs/design/phase6fx_memory_ceiling_qualification.md`.
 
+Runtimeはattempt01--05がnormal exitし、attempt06 M0がreadback 0・resource
+上限内のまま`stage_close_request_before`から180.016801秒でtimeoutしたため
+5/9 safe stopとなった。後続3 processは未起動、CDB stack/module passは
+attach前にtimeoutしexplicit detachだけ成功、known NGX tokenは不一致である。
+Phase 6FU/6FW cleanupはowned residual 0・unknown 0・最終残留0。正常最大
+14,967,640,064 bytesは旧14 GiBまで64,745,472 bytesしかないため旧基準は
+異常検出上限として近すぎるが、母集団未完了のため16/17 GiBは採用せず、
+Phase 6FOもblockedのままとする。
+
 # Phase 6FW PID reuse identity policy contract
 
 Phase 6FVは`445a1da`のidentity safe stopとして凍結し、attempt03や旧contractを遡及合格にしない。Phase 6FUの7状態identity query・exact cleanup・停止権限は変更せず、その完了証拠を読む独立した最終policy層だけを追加する。正式contractはschema `campfire.phase6fw.pid-reuse-policy-contract.v1`、SHA-256 `4DA8B0C71F7AAF0A9BA437D0D7712674C87F80AF982F413148E317C4EF4CDBA0`である。
