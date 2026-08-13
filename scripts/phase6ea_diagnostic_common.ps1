@@ -40,21 +40,84 @@ public static class Phase6EaFileSafety {
 '@
 }
 
+function Get-Phase6EaProcessIdentityState {
+    param(
+        [Parameter(Mandatory = $true)][int]$ProcessId,
+        [Parameter(Mandatory = $true)][string]$ExpectedExecutable,
+        [Parameter(Mandatory = $true)][datetime]$ExpectedStartTimeUtc
+    )
+    $expectedPath = [IO.Path]::GetFullPath($ExpectedExecutable)
+    $getProcessState = $null
+    $process = $null
+    try {
+        $process = Get-Process -Id $ProcessId -ErrorAction Stop
+        $actualStartUtc = $process.StartTime.ToUniversalTime()
+        $actualPath = $null
+        try { $actualPath = [IO.Path]::GetFullPath($process.Path) } catch {
+            $getProcessState = "path_unavailable_unknown"
+        }
+        if ($null -eq $getProcessState) {
+            if ([math]::Abs(($actualStartUtc - $ExpectedStartTimeUtc.ToUniversalTime()).TotalMilliseconds) -gt 1000 -or $actualPath -ne $expectedPath) {
+                $getProcessState = "alive_identity_mismatch"
+            } else { $getProcessState = "alive_identity_match" }
+        }
+    } catch [Microsoft.PowerShell.Commands.ProcessCommandException] {
+        $getProcessState = "confirmed_exited"
+    } catch [System.ComponentModel.Win32Exception] {
+        $getProcessState = if ($_.Exception.NativeErrorCode -eq 5) { "access_denied_unknown" } else { "query_failed_unknown" }
+    } catch {
+        $getProcessState = "query_failed_unknown"
+    }
+
+    $cimState = $null
+    $cim = $null
+    try {
+        $cim = Get-CimInstance Win32_Process -Filter "ProcessId = $ProcessId" -ErrorAction Stop
+        if ($null -eq $cim) { $cimState = "confirmed_exited" }
+        elseif ([string]::IsNullOrWhiteSpace([string]$cim.ExecutablePath)) { $cimState = "path_unavailable_unknown" }
+        elseif ($null -eq $cim.CreationDate) { $cimState = "creation_time_unavailable_unknown" }
+        else {
+            $cimPath = [IO.Path]::GetFullPath([string]$cim.ExecutablePath)
+            $cimStartUtc = ([datetime]$cim.CreationDate).ToUniversalTime()
+            if ([math]::Abs(($cimStartUtc - $ExpectedStartTimeUtc.ToUniversalTime()).TotalMilliseconds) -gt 1000 -or $cimPath -ne $expectedPath) {
+                $cimState = "alive_identity_mismatch"
+            } else { $cimState = "alive_identity_match" }
+        }
+    } catch [System.UnauthorizedAccessException] { $cimState = "access_denied_unknown" }
+    catch { $cimState = "query_failed_unknown" }
+
+    $combined = if ($getProcessState -eq "alive_identity_mismatch" -or $cimState -eq "alive_identity_mismatch") {
+        "alive_identity_mismatch"
+    } elseif ($getProcessState -eq "alive_identity_match" -or $cimState -eq "alive_identity_match") {
+        "alive_identity_match"
+    } elseif ($getProcessState -eq "confirmed_exited" -and $cimState -eq "confirmed_exited") {
+        "confirmed_exited"
+    } elseif ($getProcessState -eq "access_denied_unknown" -or $cimState -eq "access_denied_unknown") {
+        "access_denied_unknown"
+    } elseif ($getProcessState -eq "creation_time_unavailable_unknown" -or $cimState -eq "creation_time_unavailable_unknown") {
+        "creation_time_unavailable_unknown"
+    } elseif ($getProcessState -eq "path_unavailable_unknown" -or $cimState -eq "path_unavailable_unknown") {
+        "path_unavailable_unknown"
+    } else { "query_failed_unknown" }
+    return [pscustomobject]@{
+        state=$combined; pid=$ProcessId; expected_path=$expectedPath
+        expected_start_time_utc=$ExpectedStartTimeUtc.ToUniversalTime().ToString("o")
+        get_process_state=$getProcessState; cim_state=$cimState; process=$process
+        parent_pid=if ($null -ne $cim) { [int]$cim.ParentProcessId } else { $null }
+        observed_at_utc=[datetime]::UtcNow.ToString("o")
+    }
+}
+
 function Test-Phase6EaProcessIdentity {
     param(
         [Parameter(Mandatory = $true)][int]$ProcessId,
         [Parameter(Mandatory = $true)][string]$ExpectedExecutable,
         [Parameter(Mandatory = $true)][datetime]$ExpectedStartTimeUtc
     )
-    $process = Get-Process -Id $ProcessId -ErrorAction Stop
-    $actualPath = [IO.Path]::GetFullPath($process.Path)
-    $expectedPath = [IO.Path]::GetFullPath($ExpectedExecutable)
-    $actualStartUtc = $process.StartTime.ToUniversalTime()
-    if ($actualPath -ne $expectedPath) { throw "Process executable mismatch: $actualPath" }
-    if ([math]::Abs(($actualStartUtc - $ExpectedStartTimeUtc.ToUniversalTime()).TotalMilliseconds) -gt 1000) {
-        throw "Process start time mismatch for PID $ProcessId"
-    }
-    return $process
+    $result = Get-Phase6EaProcessIdentityState -ProcessId $ProcessId -ExpectedExecutable $ExpectedExecutable -ExpectedStartTimeUtc $ExpectedStartTimeUtc
+    if ($result.state -ne "alive_identity_match") { throw "Process identity is not an exact live match: $($result.state)" }
+    if ($null -ne $result.process) { return $result.process }
+    return Get-Process -Id $ProcessId -ErrorAction Stop
 }
 
 function Enter-Phase6EaCaptureLock {

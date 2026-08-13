@@ -108,6 +108,10 @@ function Invoke-MemoryCase([string]$AttemptRoot, [object]$Condition, [int]$RunIn
         "--gpu-sample-ms", "$($contract.recording.gpu_sample_ms)",
         "--lifecycle-path", (Join-Path $caseDir "raw.json"),
         "--diagnostic-marker-path", (Join-Path $caseDir "resource_markers.jsonl"),
+        "--attempt-id", $AttemptId,
+        "--cleanup-suppression-lock", ((Join-Path $caseDir "sensitive-shutdown-diagnostics") + ".ownership.json"),
+        "--cleanup-suppression-deadline-seconds", "90",
+        "--cleanup-marker-path", (Join-Path $logs "cleanup_markers.jsonl"),
         "--", $powershell
     ) + $arguments
     & python @guardArgs

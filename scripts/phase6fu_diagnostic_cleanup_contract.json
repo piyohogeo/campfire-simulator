@@ -1,0 +1,65 @@
+{
+  "schema": "campfire.phase6fu.diagnostic-cleanup-contract.v1",
+  "phase": "phase6fu",
+  "declared_before_runtime": true,
+  "purpose": "Qualify stack-first CDB ownership, fail-closed process identity, and exact attempt-scoped cleanup before any new Kit population.",
+  "frozen_history": {
+    "phase6ft_commit": "146ded9",
+    "phase6ft_reclassified": false,
+    "normal_processes": 8,
+    "attempt09_stage_close_timeout_seconds": 180.021,
+    "phase6ft_partial_distribution_reused": false
+  },
+  "identity_states": [
+    "alive_identity_match",
+    "alive_identity_mismatch",
+    "confirmed_exited",
+    "query_failed_unknown",
+    "access_denied_unknown",
+    "creation_time_unavailable_unknown",
+    "path_unavailable_unknown"
+  ],
+  "identity_fields": ["pid", "create_time_utc_epoch", "absolute_path", "parent_pid", "observed_at_utc", "role", "root_attempt_id"],
+  "absence_contract": {
+    "independent_queries": ["psutil_or_Get-Process", "Win32_native_or_CIM"],
+    "both_confirmed_exited_required": true,
+    "unknown_is_absent": false,
+    "retry_count": 4,
+    "retry_interval_seconds": 0.25
+  },
+  "diagnostic_order": [
+    "timeout_confirmed", "kit_identity_reverified", "cleanup_suppression_acquired",
+    "stack_first_cdb", "stack_complete_or_bounded_timeout", "module_complete_or_bounded_timeout",
+    "explicit_detach", "cdb_child_absent", "diagnostic_json_or_partial_json_committed",
+    "cleanup_suppression_released", "observed_identities_reenumerated", "exact_matches_stopped",
+    "dual_absence_confirmed", "cleanup_summary_committed"
+  ],
+  "limits": {
+    "runner_private_bytes": 536870912,
+    "diagnostic_private_bytes": 536870912,
+    "stack_timeout_seconds": 30,
+    "module_timeout_seconds": 20,
+    "detach_timeout_seconds": 15,
+    "diagnostic_helper_timeout_seconds": 90,
+    "cleanup_suppression_deadline_seconds": 90,
+    "cdb_stack_stdout_bytes": 8388608,
+    "cdb_stderr_bytes": 2097152
+  },
+  "fixtures": [
+    "normal_exit", "attachable_wait", "alive_during_stack", "stack_timeout", "module_timeout",
+    "target_exits_before_cdb", "transient_identity_query_failure", "identity_mismatch",
+    "parent_exit_child_remains", "conhost_equivalent_child", "diagnostic_cleanup_race",
+    "summary_after_cleanup"
+  ],
+  "prohibited": [
+    "full_dump", "automatic_upload", "microsoft_symbol_server", "postmortem_debugger_registration",
+    "pid_only_stop", "process_name_only_stop", "glob_stop", "Phase 6FO restart",
+    "memory nine-process restart", "production change", "video generation"
+  ],
+  "progression": {
+    "phase6fo_restarted": false,
+    "memory_population_restarted": false,
+    "candidate_16_gib_adopted": false,
+    "next_memory_population_requires_explicit_approval": true
+  }
+}

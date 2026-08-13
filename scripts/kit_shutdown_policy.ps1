@@ -569,6 +569,8 @@ function Invoke-CampfireLightweightNgxDiagnostic {
     $stdout = "$output.helper.stdout.log"
     $stderr = "$output.helper.stderr.log"
     $resultPath = Join-Path $output "lightweight_shutdown_diagnostic.json"
+    $partialResultPath = "$output.partial-diagnostic.json"
+    $ownershipPath = "$output.ownership.json"
     $helper = Join-Path $PSScriptRoot "run_lightweight_shutdown_diagnostic_helper.ps1"
     $powershell = (Get-Process -Id $PID).Path
     $arguments = @(
@@ -583,22 +585,41 @@ function Invoke-CampfireLightweightNgxDiagnostic {
         "-MarkerPath", $markerPath,
         "-DebuggerTimeoutSeconds", [string]$DebuggerTimeoutSeconds
     )
-    $guard = Invoke-Phase6EaGuardedHelper -FilePath $powershell -ArgumentList $arguments -StdoutPath $stdout -StderrPath $stderr -TimeoutSeconds $CampfireShutdownDiagnosticTimeoutSeconds -PrivateBytesLimit $CampfireShutdownHelperPrivateBytesLimit -MaximumStdoutBytes $CampfireShutdownDiagnosticJsonLimitBytes -MaximumStderrBytes $CampfireShutdownDiagnosticJsonLimitBytes
-    Write-CampfireDiagnosticMarker -Path $markerPath -Marker "parent_process_returned" -Details @{ helper_exit_code = $guard.exit_code; timed_out = $guard.timed_out; private_bytes_exceeded = $guard.private_bytes_exceeded }
-    if ($guard.timed_out -or $guard.private_bytes_exceeded -or $guard.output_bytes_exceeded -or -not $guard.process_absent -or $guard.exit_code_error -ne $null -or $guard.exit_code -ne 0) {
-        return [ordered]@{
-            diagnostic_capture_succeeded = $false
-            error = "isolated lightweight diagnostic helper failed"
-            helper_guard = $guard
-            marker_path = $markerPath
-            stack_fingerprint = [ordered]@{ name = $CampfireKnownNgxSignature; matched = $false }
-        }
+    $ownership = [ordered]@{
+        schema="campfire.shutdown-diagnostic-ownership.v1"; owner_pid=$PID
+        owner_start_time_utc=(Get-Process -Id $PID).StartTime.ToUniversalTime().ToString("o")
+        target_pid=$ProcessId; target_start_time_utc=$ExpectedStartTimeUtc.ToUniversalTime().ToString("o")
+        target_path=[IO.Path]::GetFullPath($ExpectedExecutable); acquired_at_utc=[datetime]::UtcNow.ToString("o")
+        absolute_deadline_utc=[datetime]::UtcNow.AddSeconds($CampfireShutdownDiagnosticTimeoutSeconds + 15).ToString("o")
     }
-    if (-not (Test-Path -LiteralPath $resultPath -PathType Leaf)) { throw "isolated lightweight diagnostic did not write its bounded result" }
-    $result = Read-CampfireBoundedJson -Path $resultPath
-    $result | Add-Member -NotePropertyName helper_guard -NotePropertyValue $guard -Force
-    $result | Add-Member -NotePropertyName marker_path -NotePropertyValue $markerPath -Force
-    return $result
+    $ownershipBytes = [Text.UTF8Encoding]::new($false).GetBytes(($ownership | ConvertTo-Json -Depth 8) + [Environment]::NewLine)
+    $ownershipStream = [IO.FileStream]::new($ownershipPath, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::Read)
+    try { $ownershipStream.Write($ownershipBytes, 0, $ownershipBytes.Length); $ownershipStream.Flush($true) } finally { $ownershipStream.Dispose() }
+    Write-CampfireDiagnosticMarker -Path $markerPath -Marker "diagnostic_ownership_acquired" -Details @{ ownership_path=$ownershipPath; absolute_deadline_utc=$ownership.absolute_deadline_utc }
+    $guard = $null
+    try {
+        $guard = Invoke-Phase6EaGuardedHelper -FilePath $powershell -ArgumentList $arguments -StdoutPath $stdout -StderrPath $stderr -TimeoutSeconds $CampfireShutdownDiagnosticTimeoutSeconds -PrivateBytesLimit $CampfireShutdownHelperPrivateBytesLimit -MaximumStdoutBytes $CampfireShutdownDiagnosticJsonLimitBytes -MaximumStderrBytes $CampfireShutdownDiagnosticJsonLimitBytes
+        Write-CampfireDiagnosticMarker -Path $markerPath -Marker "parent_process_returned" -Details @{ helper_exit_code = $guard.exit_code; timed_out = $guard.timed_out; private_bytes_exceeded = $guard.private_bytes_exceeded }
+        if ($guard.timed_out -or $guard.private_bytes_exceeded -or $guard.output_bytes_exceeded -or -not $guard.process_absent -or $guard.exit_code_error -ne $null -or $guard.exit_code -ne 0) {
+            $partial = [ordered]@{
+                schema="campfire.kit-lightweight-shutdown-diagnostic-partial.v1"
+                diagnostic_capture_succeeded=$false; error="isolated lightweight diagnostic helper failed"
+                helper_guard=$guard; marker_path=$markerPath; target_identity=$ownership
+                partial_artifact_committed=$true; committed_at_utc=[datetime]::UtcNow.ToString("o")
+                stack_fingerprint=[ordered]@{ name=$CampfireKnownNgxSignature; matched=$false }
+            }
+            Write-CampfireBoundedJson -Path $partialResultPath -Value $partial
+            return $partial
+        }
+        if (-not (Test-Path -LiteralPath $resultPath -PathType Leaf)) { throw "isolated lightweight diagnostic did not write its bounded result" }
+        $result = Read-CampfireBoundedJson -Path $resultPath
+        $result | Add-Member -NotePropertyName helper_guard -NotePropertyValue $guard -Force
+        $result | Add-Member -NotePropertyName marker_path -NotePropertyValue $markerPath -Force
+        return $result
+    } finally {
+        if (Test-Path -LiteralPath $ownershipPath -PathType Leaf) { Remove-Item -LiteralPath $ownershipPath -Force }
+        Write-CampfireDiagnosticMarker -Path $markerPath -Marker "diagnostic_ownership_released"
+    }
 }
 
 function Wait-CampfireKitProcessWithShutdownPolicy {
@@ -618,7 +639,18 @@ function Wait-CampfireKitProcessWithShutdownPolicy {
     $shutdownObserved = $null
     $lastMarker = $null
     $absoluteTimedOut = $false
-    while (-not $Process.HasExited) {
+    $confirmedExited = $false
+    while (-not $confirmedExited) {
+        $cachedExited = $false
+        try { $cachedExited = [bool]$Process.HasExited } catch { $cachedExited = $false }
+        if ($cachedExited) {
+            $identityState = Get-Phase6EaProcessIdentityState -ProcessId $Process.Id -ExpectedExecutable $expected -ExpectedStartTimeUtc $expectedStartUtc
+            if ($identityState.state -eq "confirmed_exited") { $confirmedExited = $true; break }
+            # A cached Process/handle result is never sufficient evidence of
+            # absence.  Unknown or a live exact match remains on the bounded
+            # diagnostic path; identity mismatch fails closed below.
+            if ($identityState.state -eq "alive_identity_mismatch") { break }
+        }
         $now = Get-Date
         $lastMarker = Get-CampfireLifecycleMarker -LifecyclePath $LifecyclePath
         if ($lastMarker -in @("shutdown_requested", "shutdown_complete") -and $null -eq $shutdownObserved) { $shutdownObserved = $now }
@@ -627,8 +659,8 @@ function Wait-CampfireKitProcessWithShutdownPolicy {
         Start-Sleep -Milliseconds 250
         $Process.Refresh()
     }
-    $Process.Refresh()
-    if ($Process.HasExited) {
+    try { $Process.Refresh() } catch {}
+    if ($confirmedExited) {
         $lastMarker = Get-CampfireLifecycleMarker -LifecyclePath $LifecyclePath
         if ($lastMarker -in @("shutdown_requested", "shutdown_complete") -and $null -eq $shutdownObserved) { $shutdownObserved = Get-Date }
         $exitCode = $null
@@ -671,7 +703,7 @@ function Wait-CampfireKitProcessWithShutdownPolicy {
         $diagnostic = [ordered]@{ diagnostic_capture_succeeded = $false; error = $_.Exception.Message; stack_fingerprint = [ordered]@{ name = $CampfireKnownNgxSignature; matched = $false } }
     }
     $diagnosticSucceeded = [bool]($null -ne $diagnostic -and $diagnostic.diagnostic_capture_succeeded)
-    if ($diagnosticSucceeded) {
+    if ($identityVerified) {
         try {
             $live = Test-Phase6EaProcessIdentity -ProcessId $Process.Id -ExpectedExecutable $expected -ExpectedStartTimeUtc $expectedStartUtc
             $identityVerified = $true
@@ -679,7 +711,8 @@ function Wait-CampfireKitProcessWithShutdownPolicy {
             $terminationAttempted = $true
             Stop-Process -Id $Process.Id -Force
             $Process.WaitForExit(10000) | Out-Null
-            $terminationSucceeded = $null -eq (Get-Process -Id $Process.Id -ErrorAction SilentlyContinue)
+            $absenceState = Get-Phase6EaProcessIdentityState -ProcessId $Process.Id -ExpectedExecutable $expected -ExpectedStartTimeUtc $expectedStartUtc
+            $terminationSucceeded = $absenceState.state -eq "confirmed_exited"
         } catch {
             $diagnostic | Add-Member -NotePropertyName termination_error -NotePropertyValue $_.Exception.Message -Force
         }

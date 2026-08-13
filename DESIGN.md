@@ -1,5 +1,11 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FU hang diagnostic identity and cleanup contract
+
+Phase 6FTは`146ded9`のsafe stopとして凍結する。attempt09は`stage_close_timeout`後にCDB artifactを確定せず、guardの二値identity queryは問い合わせ失敗と不在を区別できないままcleanup summaryを確定した。Phase 6FUはprocess stateを7分類し、PID・creation time・absolute path・parentage・role・attempt IDを保存する。psutil/Get-Processとnative Win32/CIMの独立照合がともにexitを確認した場合だけ`confirmed_exited`とし、unknownやidentity mismatchを停止対象にしない。
+
+timeout後はdiagnostic ownership lockでouter cleanupをboundedに抑止し、stack-first CDB、補助module pass、explicit detach、完全またはpartial diagnostic JSON、exact attempt-tree cleanup、二重absence確認、summary確定の順を固定する。専用fixtureが全件合格するまで実Kit、Phase 6FO、9-process memory population、16 GiB採用を開始しない。詳細は`docs/design/phase6fu_diagnostic_identity_cleanup.md`を参照する。
+
 # Phase 6FS B-first release-after-close qualification contract
 
 Phase 6FTは8/9 normal exit後、attempt09 M1のreadback 0条件が`stage_close_request_before`から180.021秒でtimeoutしsafe stopした。8正常runのKit peakは14,494,695,424～14,986,518,528 bytes、16 GiB余裕は2,193,350,656 bytes、追加allocationに追従する増加はなかった。旧14 GiBまでの最小余裕は45,867,008 bytesで異常検出上限として厳しすぎるが、9/9 lifecycleとbounded CDB/exact cleanupが不成立のため16 GiB/17 GiB候補は未qualified、Phase 6FOもblockedのままとする。詳細は`docs/design/phase6ft_memory_ceiling_qualification.md`を参照する。
