@@ -1,0 +1,151 @@
+{
+  "schema": "campfire.phase6ft.memory-ceiling-qualification-contract.v1",
+  "phase": "phase6ft",
+  "declared_before_runtime": true,
+  "purpose": "Measure the normal four-log Kit high-water distribution under the Phase 6FS release-after-close lifecycle and decide whether 16 GiB is a safe candidate ceiling without restarting Phase 6FO.",
+  "frozen_history": {
+    "phase6fs_commit": "0c2b582",
+    "phase6fs_reclassified": false,
+    "phase6fs_release_after_close_runs": "3/3 normal OS exit",
+    "phase6fo_restarted": false,
+    "prior_artifact_reuse": false
+  },
+  "physical_fixture": {
+    "scenario": "production_four",
+    "geometry_variant": "phase6er_corrected",
+    "point_policy": "allow_self_center",
+    "point_offset_m": -0.0125,
+    "support_radius_m": 0.05,
+    "active_points": 1344,
+    "total_points": 1440,
+    "revision": 1,
+    "payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389",
+    "expected_source_sums": {
+      "fuel": 1075.2000160217285,
+      "temperature": 2688.0,
+      "smoke": 107.51999759674072
+    },
+    "source_sum_absolute_tolerance": 0.0001,
+    "readback_calls": 0,
+    "capture_calls": 0,
+    "video_generated": false
+  },
+  "startup": {
+    "flow_acquire_position": "before_updates",
+    "stopped_update_count": 12,
+    "extra_update_before_play_count": 0,
+    "representative_active_block_minimum_at_frame_60": 128,
+    "startup_replacement_budget": 1
+  },
+  "conditions": [
+    {
+      "id": "M0_baseline",
+      "allocation_level": 0,
+      "spatial_collectors_enabled": false,
+      "sample_frames": [60, 96],
+      "terminal_frame": 96,
+      "description": "Phase 6FN-equivalent S93 baseline without readback"
+    },
+    {
+      "id": "M1_phase6fo_equivalent",
+      "allocation_level": 7,
+      "spatial_collectors_enabled": true,
+      "sample_frames": [60, 96],
+      "terminal_frame": 96,
+      "description": "Phase 6FO-equivalent S93 diagnostic state without readback"
+    },
+    {
+      "id": "M2_pre_readback_frame",
+      "allocation_level": 7,
+      "spatial_collectors_enabled": true,
+      "sample_frames": [60, 96, 179],
+      "terminal_frame": 179,
+      "planned_phase6fo_first_readback_frame": 180,
+      "description": "Phase 6FO-equivalent state advanced to the frame immediately before planned readback"
+    }
+  ],
+  "population": {
+    "runs_per_condition": 3,
+    "required_representative_processes": 9,
+    "automatic_retry": false,
+    "stop_on_first_nonreplaceable_failure": true,
+    "orders": [
+      ["M0_baseline", "M1_phase6fo_equivalent", "M2_pre_readback_frame"],
+      ["M1_phase6fo_equivalent", "M2_pre_readback_frame", "M0_baseline"],
+      ["M2_pre_readback_frame", "M0_baseline", "M1_phase6fo_equivalent"]
+    ]
+  },
+  "lifecycle": {
+    "reference_release_order": "after_stage_close",
+    "renderer_drain_updates": 8,
+    "post_close_renderer_updates": 4,
+    "explicit_ownership_container_required": true,
+    "sequence": [
+      "timeline_stop",
+      "renderer_drain_8",
+      "retain_stage_viewport_flow_provider_emitter_collector_references",
+      "close_stage_async",
+      "usd_context_detach",
+      "post_close_renderer_updates_4",
+      "release_owned_references",
+      "extension_shutdown",
+      "kit_shutdown",
+      "normal_os_exit"
+    ],
+    "stack_first_cdb_reused_unchanged": true,
+    "production_shutdown_order_changed": false
+  },
+  "recording": {
+    "resource_sample_seconds": 0.2,
+    "gpu_sample_ms": 1000,
+    "streamed_jsonl": true,
+    "kit_and_unique_tree_separate": true,
+    "gpu_shared_memory": "record only if exposed by existing bounded public telemetry; otherwise unavailable and never estimated",
+    "public_field_shape_and_logical_bytes": "unavailable_without_readback; do not infer from active blocks or diagnostic buffer plans",
+    "cache_state": "record bounded shader/cache/RTX log activity; do not infer cold or warm when evidence is absent"
+  },
+  "safety": {
+    "legacy_kit_evaluation_threshold_bytes": 15032385536,
+    "legacy_threshold_is_kill_condition": false,
+    "kit_provisional_hard_limit_bytes": 17179869184,
+    "unique_tree_provisional_hard_limit_bytes": 18253611008,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "inner_absolute_timeout_seconds": 540,
+    "outer_condition_timeout_seconds": 780,
+    "minimum_candidate_headroom_bytes": 536870912,
+    "candidate_peak_maximum_bytes": 16642998272,
+    "tree_limit_rationale": "17 GiB equals the 16 GiB Kit candidate plus 1 GiB; after the Phase 6FS maximum observed non-Kit tree overhead of 163,930,112 bytes it retains 909,811,712 bytes of fixed headroom.",
+    "startup_prerequisite_replacement_only": true,
+    "resource_or_lifecycle_replacement": false
+  },
+  "boundedness": {
+    "slope_alone_is_gate": false,
+    "persistent_unexplained_accumulation": {
+      "sample_count": 10,
+      "minimum_total_rise_bytes": 536870912,
+      "maximum_drop_between_adjacent_samples_bytes": 0,
+      "requires_no_active_block_growth_between_physics_markers": true,
+      "classification": "nonreplaceable failure"
+    },
+    "all_other_waveform_metrics": "telemetry and warnings only; absolute limits and persistent unexplained accumulation remain gates"
+  },
+  "decision": {
+    "legacy_14_gib_too_strict_if": "at least two normal runs cross 14 GiB, or the largest normal peak leaves less than 256 MiB below 14 GiB",
+    "legacy_small_margin_bytes": 268435456,
+    "candidate_16_gib_qualified_if": "all nine representative processes pass, maximum Kit peak is at most 16 GiB minus 512 MiB, all separated resource limits/floors pass, traces are non-divergent, and all lifecycle/cleanup gates pass",
+    "condition_effect_is_diagnostic": "report distribution overlap and median deltas; it is not a standalone hard gate",
+    "phase6fo_restart": "not authorized in Phase 6FT; only report readiness for a later explicitly approved phase"
+  },
+  "excluded": [
+    "NanoVDB readback",
+    "S93 versus S100 scalar or flux comparison",
+    "video capture",
+    "P4 integration",
+    "production change",
+    "production shutdown-order change"
+  ]
+}
