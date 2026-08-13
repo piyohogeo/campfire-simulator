@@ -25,4 +25,14 @@ R2の全9 iterationは、正のsource/converted pointer、同一pointer、同一
 
 3番目のartifact rootのattempt01 R0は、3 control marker、全settling、stage close（2.362秒）、extension shutdown begin/end、OS exit 0、残留0まで完了した。しかしv3 analyzerがextension JSONLの既存キー`name`を`marker`としてのみ読んだため、`extension_shutdown_incomplete`と誤分類してfail closedした。rootとv3 contractは正式safe stopとして凍結し、後から正式合格へ変更しない。v4 analyzerは`name`を正規化して読み、修正確認は別のoffline診断出力へ保存する。
 
-実測結果は正式run後に追記する。
+## Formal result: paired pre-operation safe stop
+
+新しいformal root 4はsequence 1のR0 / R1 / R2を各1 process実行した。3 processともrepresentative startup、正確な3 operation、settling、stage close、extension shutdown、normal OS exit、cleanup residual 0を満たし、startup replacement、CDB、fatal、dump、upload、device lost、TDRは0だった。R2の3 iterationはすべてpositive equal pointer、same Python object、shared memory、weak residual 0で、`np.asarray()`隣接CPU増分は0 / -1,056,768 / -4,206,592 bytes、GPU増分は全件0だった。fuel shapeはFlow場の成長に伴い10,349,504 / 12,313,408 / 13,916,672要素、logical bytesは41,398,016 / 49,253,632 / 55,666,688だった。
+
+一方、R0を差し引いたpre-operation baseline stepは、R1が210,575,360 / 111,161,344 bytes（total 321,736,704）、R2が169,799,680 / 108,544,000 bytes（total 278,343,680）だった。いずれも2 stepがmaterial threshold 91,184,640 bytesを超え、totalも182,369,280 bytesを超えたため、凍結済みpaired accumulation gateに不合格となった。R0 / R1 / R2のsettled paired stepは同じ二段累積を示さなかったが、formal resultを事後変更する根拠には使わない。後続sequence 2 / 3は開始せず、正式populationは3/9でsafe stopとした。3回のreadbackまたはfuel alias lifetimeはqualifiedではなく、4回以上とproduction統合も未qualifiedである。
+
+stage closeはR0 / R1 / R2で2.272 / 2.473 / 2.660秒。Kit peakは14,778,347,520 bytes、14 GiB上限までの最小余裕は254,038,016 bytes、tree peakは14,941,483,008 bytesだった。全settlingは5.25秒以上・17 sample以上で、hard resource/lifecycle gateは合格した。次へ進むには、pre-operation baselineとsettled baselineのどちらを操作固有累積の正式根拠にするかを、今回の結果へ遡及しない新contractで事前定義する明示承認が必要である。
+
+prelaunch root 1 / 2、analyzer false safe stopのroot 3、formal root 4はすべて別rootのまま凍結した。production、Phase 6FK、latest demo pointerは変更していない。内部resource診断だけで画面差がないため新動画は作成しない。
+
+最終回帰はRelease build 7.85秒、Phase 0 RTX合格、Phase 3 25.923秒、focused Phase 6FA〜6FL / 6EA / 6EB / 6EL 156/156、標準8 process 78/78（346.9秒）、日誌静的検査に合格した。Phase 3はdry/wet mass-balance error 0、authority SHA-256 `0dec57f3...e84be10` / `148585f8...fd2b20c9`、Flow active blocks final/peak 271/356、peak fuel 1.0だった。production app SHA-256は`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`のまま、最終Kit/CDB/GPU-helper残留は0である。

@@ -1,5 +1,15 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FL three-iteration readback / fuel-alias pilot safe stop
+
+Phase 6FKの単回qualificationを凍結したまま、同一process内でreadbackまたはfuel aliasを正確に3回だけ反復するPhase 6FLを独立契約化した。operation frameは120 / 360 / 540、final settling sentinelは620、各条件3 processの順序は`R0/R1/R2`、`R1/R2/R0`、`R2/R0/R1`である。material stepはPhase 6FKのfuel logical bytesと同期粒度から91,184,640 bytesに固定し、同じsequenceのR0を差し引いた2 stepとtotalで操作固有累積を判定する。contract SHA-256は`8F2BB5FD237CB162865B7FCBAB3B75AC6C54C9A86C4753BFAC7FA85D6BEFDB62`。詳細は`docs/design/phase6fl_three_iteration_readback_alias.md`を参照する。
+
+formal rootはsequence 1のR0/R1/R2だけを実行し、各processの3 operation、settling、stage close、extension shutdown、normal OS exit、cleanupを完了した。しかしR1のR0差引pre-operation stepが210,575,360 / 111,161,344 bytes、R2が169,799,680 / 108,544,000 bytesとなり、凍結済み二段累積gateに不合格だった。settled paired値は二段累積を示さなかったが、事後的にgateを変更せず3/9でsafe stopした。したがって3回のreadback／fuel alias lifetime、4回以上、production統合は未qualifiedである。R2のpointer、same-object、shared-memory、weak residual 0、`np.asarray()`隣接CPU/GPU非増加はpartial evidenceとしてのみ保持する。
+
+次Phase候補は、pre-operation baselineとsettled baselineの意味を分離した新しい事前凍結contractであり、Phase 6FLを遡及合格にしてはならない。production、Flow、Point payload、CollisionProxy、V3、resource ceiling、latest demoは変更しない。
+
+最終回帰はRelease build 7.85秒、Phase 0 RTX、Phase 3、focused contracts 156/156、標準8 process 78/78（346.9秒）、日誌静的検査に合格した。Phase 3はdry/wet mass-balance error 0、authority SHA既知値一致、Flow active blocks final/peak 271/356、peak fuel 1.0。production app SHA-256は`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`のまま、Kit/CDB/GPU-helper残留は0だった。
+
 # Phase 6FK pointer-complete single-readback qualification contract
 
 Phase 6FJのsafe stopは凍結し、既存10 launchを再分類・正式母集団へ再利用しない。新Phase 6FKはpublic `__array_interface__.data[0]`によるsource／converted pointerを必須証拠とする。pointerは正のbuilt-in integerで一致し、Python identity一致、`numpy.shares_memory()` true、shape／dtype／strides／size／nbytes一致、weak residual 0を同時に要求する。identityまたはshared-memoryだけでは合格しない。欠落、0、負値、型不正、不一致は置換不能なoperation failureで、最初のC failure後に後続slotを開始しない。

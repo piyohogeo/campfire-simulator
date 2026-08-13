@@ -106,6 +106,20 @@ class Phase6FlThreeIterationContract(unittest.TestCase):
         analyzer = (ROOT / "scripts" / "analyze_phase6fl_three_iteration.py").read_text(encoding="utf-8")
         self.assertIn('item.get("name") or item.get("marker")', analyzer)
 
+    def test_published_safe_stop_preserves_scope(self):
+        report = json.loads(
+            (ROOT / "docs/devlog/assets/phase6/three_iteration_readback_safe_stop.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual(report["status"], "safe_stop")
+        self.assertEqual(report["population"]["completed_representative_processes"], 3)
+        self.assertFalse(report["qualification"]["three_readbacks_qualified"])
+        self.assertFalse(report["production"]["changed"])
+        devlog = (ROOT / "docs/devlog/index.html").read_text(encoding="utf-8")
+        self.assertIn('id="phase-6fl"', devlog)
+        self.assertIn("three_iteration_readback_safe_stop.json", devlog)
+
 
 if __name__ == "__main__":
     unittest.main()
