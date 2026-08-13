@@ -87,3 +87,26 @@ fresh-root nine-process memory-ceiling qualification may combine the unchanged
 Phase 6FU cleanup with this final reuse policy. It would still use the
 diagnostic-only release-after-close order, provisional 16/17 GiB stops, and
 stack-first CDB. It is not started by Phase 6FW.
+
+## Result
+
+The final fresh root `phase6fw-pid-reuse-policy-2` passed all 15 isolated
+fixtures and the read-only Phase 6FV-equivalent comparison. Runner and maximum
+child Private Bytes were 9,568,256 and 8,208,384 bytes; fixture, helper, and CDB
+residual counts were zero. The matching-child fixture requested a stop only for
+the exact matching child while retaining the reused PID. The post-summary
+rediscovery fixture became an attempt-owned residual and failed closed.
+
+The Phase 6FV comparison produced 39 confirmed-absent attempt identities and
+one `protected_pid_reuse_non_residual`. It had zero matching residual, zero
+unresolved unknown, zero stop request for the reused PID, released suppression,
+complete ordered markers, and zero final attempt-owned residual. Its source
+guard and cleanup-marker hashes were retained in the new artifact; the old
+Phase 6FV report and summary hashes did not change.
+
+Release build, Phase 0 RTX, Phase 3, 185/185 focused Phase 6F tests, the
+eight-process 78/78 standard suite, and static devlog validation passed. Phase
+3 dry and wet mass-balance errors were zero and the Flow input owner remained
+the wood thermal model. Production app and latest-demo hashes were unchanged.
+The next nine-process population is eligible for a new explicit authorization,
+but Phase 6FO and memory qualification remain unstarted here.

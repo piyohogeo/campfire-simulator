@@ -71,6 +71,18 @@ class Phase6FwPidReusePolicy(unittest.TestCase):
         self.assertIn("cleanup_marker_integrity", decision["global_failures"])
         self.assertIn("cleanup_suppression_not_released", decision["global_failures"])
 
+    def test_published_qualification_keeps_phase6fv_and_next_population_frozen(self) -> None:
+        summary = json.loads(
+            (ROOT / "docs/devlog/assets/phase6/pid_reuse_policy_qualification.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual("qualified", summary["status"])
+        self.assertEqual(15, summary["fixture_qualification"]["passed"])
+        self.assertEqual(1, summary["phase6fv_offline_comparison"]["protected_pid_reuse_count"])
+        self.assertEqual(0, summary["phase6fv_offline_comparison"]["termination_attempted_for_mismatch_count"])
+        self.assertFalse(summary["phase6fv_offline_comparison"]["phase6fv_formal_result_changed"])
+        self.assertFalse(summary["scope"]["memory_population_started"])
+        self.assertFalse(summary["scope"]["phase6fo_restarted"])
+
 
 if __name__ == "__main__":
     unittest.main()

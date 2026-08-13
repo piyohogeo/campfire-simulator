@@ -1,0 +1,115 @@
+{
+  "schema": "campfire.phase6fw.devlog-summary.v1",
+  "phase": "phase6fw",
+  "status": "qualified",
+  "date": "2026-08-14",
+  "contract": {
+    "schema": "campfire.phase6fw.pid-reuse-policy-contract.v1",
+    "sha256": "4DA8B0C71F7AAF0A9BA437D0D7712674C87F80AF982F413148E317C4EF4CDBA0",
+    "creation_time_unit": "UTC Unix epoch seconds",
+    "creation_time_tolerance_seconds": 1.0,
+    "classification": "protected_pid_reuse_non_residual"
+  },
+  "scope": {
+    "phase6fv_reclassified": false,
+    "phase6fv_population_resumed": false,
+    "memory_population_started": false,
+    "phase6fo_restarted": false,
+    "production_changed": false,
+    "defaults_changed": false,
+    "video_created": false
+  },
+  "fixture_qualification": {
+    "artifact_root": "artifacts/phase6fw-pid-reuse-policy-2",
+    "fixture_processes": 15,
+    "passed": 15,
+    "failed": 0,
+    "runner_private_bytes_peak": 9568256,
+    "diagnostic_child_private_bytes_peak": 8208384,
+    "runner_limit_bytes": 536870912,
+    "diagnostic_child_limit_bytes": 536870912,
+    "fixture_process_residual": 0,
+    "cdb_invocations": 0,
+    "helper_residual": 0,
+    "cases": [
+      {"id": "01", "name": "reuse_after_original_exit", "result": "protected_pid_reuse_non_residual", "qualified": true},
+      {"id": "02", "name": "same_pid_time_and_path_mismatch", "result": "protected_pid_reuse_non_residual", "qualified": true},
+      {"id": "03", "name": "time_mismatch_path_same", "result": "protected_pid_reuse_non_residual", "qualified": true},
+      {"id": "04", "name": "time_same_path_mismatch", "result": "protected_pid_reuse_non_residual", "qualified": true},
+      {"id": "05", "name": "both_identity_components_same", "result": "attempt_owned_residual", "qualified": false},
+      {"id": "06", "name": "creation_time_unknown", "result": "unresolved_identity_failure", "qualified": false},
+      {"id": "07", "name": "path_unknown", "result": "unresolved_identity_failure", "qualified": false},
+      {"id": "08", "name": "psutil_mismatch_win32_access_denied", "result": "protected_pid_reuse_non_residual", "qualified": true},
+      {"id": "09", "name": "psutil_win32_conflict", "result": "unresolved_identity_failure", "qualified": false},
+      {"id": "10", "name": "original_identity_still_alive", "result": "attempt_owned_residual", "qualified": false},
+      {"id": "11", "name": "protected_reuse_and_clean_matching_child", "result": "protected_reuse_plus_absent_matching_child", "qualified": true},
+      {"id": "12", "name": "attempted_mismatch_stop", "result": "unresolved_identity_failure", "qualified": false},
+      {"id": "13", "name": "attempt_identity_rediscovered_after_summary", "result": "attempt_owned_residual", "qualified": false},
+      {"id": "14", "name": "normal_exit_without_pid_reuse", "result": "attempt_identity_absent", "qualified": true},
+      {"id": "15", "name": "parent_exit_then_child_pid_reused", "result": "absent_parent_plus_protected_child_reuse", "qualified": true}
+    ]
+  },
+  "phase6fv_offline_comparison": {
+    "source_read_only": true,
+    "source_guard_sha256": "B3702F735926103672824F944DE867184485DC40BDC603AFDC78E07983647B3B",
+    "source_cleanup_markers_sha256": "007D74A2ED2594E8B02F5051E06F7235D02DA51169ED9A6B83B8F6A6CDEF3224",
+    "old_report_sha256": "914611039770492DECE4A0ACE8EBE4F877580E75F39AF432E65380E6306AF4AA",
+    "old_devlog_summary_sha256": "C465B2D257C55027B33D21151A7569A61DD98F96A825832E8D114AFAA3CE295F",
+    "original": {
+      "pid": 43676,
+      "create_time_utc_epoch": 1786657112.7231607,
+      "path": "C:\\Windows\\System32\\conhost.exe"
+    },
+    "current_psutil": {
+      "pid": 43676,
+      "create_time_utc_epoch": 1786657296.362193,
+      "path": "C:\\Windows\\System32\\wbem\\WmiPrvSE.exe"
+    },
+    "win32": "access_denied_unknown",
+    "creation_time_delta_seconds": 183.6390323638916,
+    "classification": "protected_pid_reuse_non_residual",
+    "attempt_identity_absent_count": 39,
+    "protected_pid_reuse_count": 1,
+    "matching_residual_count": 0,
+    "unresolved_unknown_count": 0,
+    "termination_attempted_for_mismatch_count": 0,
+    "dual_source_cleanup_evidence": true,
+    "cleanup_suppression_released": true,
+    "final_attempt_owned_residual": 0,
+    "phase6fv_formal_result_changed": false
+  },
+  "frozen_hashes": {
+    "phase6fu_contract": "745522077F7481C41A121EC732188FF6BDF0706FB2CE3313AD7288E4B6328132",
+    "phase6fu_process_identity": "ECD95E4BB578FF886C5761F06C00B52E96CC83FAC0E76B671654A2B843BA89C4",
+    "phase6fu_resource_guard_adapter": "79C7C5B5E21E644EA344795FCE5D5D9AFD13C566E4F9A4E3B19E50CDFE02AC23",
+    "phase6eg_legacy_resource_guard": "A16FA82606A4265093E88816540A0E293205AADC9A15FA11B7CA09C6B32CC45E",
+    "phase6fm_contract": "9251855314FD710B6C3D1A36FF156DD6833166A7F37B216BE3F9CC09BE2CC5F5",
+    "phase6fn_contract": "33D7A1751EE8CF474A34D8104B59A0CC8D7749E48108D5BE8A3F263771BC0247",
+    "phase6fv_contract": "C917FE4463E3BCA600714A51EFEDF64E9E505F19F082647CCF5683269071AF0C"
+  },
+  "regression": {
+    "release_build": "pass (9.61 seconds)",
+    "phase0_rtx": "pass (RTX 3090 selected)",
+    "phase3": {
+      "status": "pass",
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "flow_input_owner": "wood thermal model",
+      "active_blocks_final": 289,
+      "active_blocks_peak": 337,
+      "peak_fuel_input": 1.0
+    },
+    "focused_phase6f": "185/185 pass",
+    "standard_suite": "8 processes, 78/78 pass (308.0 seconds)",
+    "automatic_upload": false,
+    "final_kit_cdb_gpu_fixture_residual": 0,
+    "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "latest_demo_manifest_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285"
+  },
+  "next_step": {
+    "fresh_authorization_required": true,
+    "eligible": true,
+    "description": "Fresh-root nine-process memory-ceiling qualification with release-after-close, provisional Kit 16 GiB/tree 17 GiB stops, unchanged Phase 6FU guard plus Phase 6FW policy, and stack-first CDB.",
+    "started": false
+  }
+}

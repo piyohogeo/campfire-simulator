@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6fv">最新記録</a>
+        <a href="#phase-6fw">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,22 +27,34 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fv">Phase 6FVの結果を読む</a>
+        <a class="button primary" href="#phase-6fw">Phase 6FWの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FV · identity safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6FW · PID reuse policy qualified</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Qualification</span><strong>12 boundaries · fixture pass</strong></div>
+        <div><span>Qualification</span><strong>15 / 15 · offline evidence pass</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
   </header>
 
   <main>
+    <section id="phase-6fw" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FW PID reuse policy qualification"><span class="phase-number compact">6FW</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">15 / 15 · qualified</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FW · protected PID reuse classification</p><h2>別processへ再利用されたPIDを、<br>attempt残留から安全に分離。</h2><p>Phase 6FVをsafe stopのまま凍結し、Phase 6FUの7状態queryとexact cleanupを変更せず、完了証拠を読む最終policy層を追加しました。実Kit、9-process母集団、Phase 6FO、productionは開始していません。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Fail-closed identity</p><h3>time / path / source / stop evidence</h3><p>UTC creation timeの許容差は1.0秒。absolute Windows pathはnamespace、separator、caseを正規化し、同basenameのaliasは解決できない限りunknownです。完全なtrusted identityが1つもない、queryが競合する、originalが生存する、mismatch PIDへstopを要求する、summary後に再発見する場合はすべてfailureです。</p></section><section class="note"><p class="note-label">Phase 6FV offline</p><h3>conhost PID → WmiPrvSE PID</h3><p>PID 43676のcreation time差は約183.639秒で、path basenameも異なりました。psutilは完全な別identityを確認し、Win32はaccess denied。別identityへのstop 0、matching residual 0、unknown 0、suppression解放、39 identity absentなので、offlineでは<code>protected_pid_reuse_non_residual</code>です。旧Phase 6FV reportは変更していません。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Qualified boundary</p><h3>保護とabsenceを両立、残留0。</h3><p>15 fixtureは全件合格しました。reuse PIDを保護しつつ別matching childだけを停止するcase、access denied単独を拒否するcase、query競合、欠落identity、summary後再発見も含みます。runner／child peakは9,568,256／8,208,384 bytesで各512 MiB以内、fixture/CDB/helper残留は0でした。</p><p>Release build、Phase 0 RTX、Phase 3（mass balance 0、wood-owned Flow）、focused 185/185、標準suite 8 process・78/78、devlog検査に合格。production appとlatest demoのSHA-256、凍結guard/contract hashは不変です。</p><p><a href="assets/phase6/pid_reuse_policy_qualification.json">machine summary</a> · <a href="../design/phase6fw_pid_reuse_policy.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>15/15</span><p><strong>Fixtures</strong><small>separate process</small></p></div><div role="listitem"><span>1</span><p><strong>Protected reuse</strong><small>Phase 6FV equivalent</small></p></div><div role="listitem"><span>0</span><p><strong>Owned residual</strong><small>unknown also zero</small></p></div><div role="listitem"><span>0</span><p><strong>Wrong stops</strong><small>mismatch protected</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Pending roadmap</p><h3>9-process memory qualificationは再承認待ち。</h3><p>次は新contract・新root・明示承認がある場合だけ、release-after-close、暫定Kit 16 GiB／tree 17 GiB、Phase 6FU guard＋今回のpolicy、stack-first CDBを組み合わせて最初から実行できます。Phase 6FO、S93/S100、production、動画、P4はまだ進めません。</p></section>
+        </div>
+      </article>
+    </section>
+
     <section id="phase-6fv" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6FV memory ceiling identity safe stop"><span class="phase-number compact">6FV</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">3 / 9 · identity safe stop</span></aside>

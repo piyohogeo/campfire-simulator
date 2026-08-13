@@ -8,6 +8,10 @@ Phase 6FVは`445a1da`のidentity safe stopとして凍結し、attempt03や旧co
 
 正式runtime前に15 fixture、10秒child timeout、runner/child各512 MiB、CDB/Kit 0を固定する。Phase 6FV attempt03は元artifactを変更せず、新rootへhash付きの最小証拠だけを読み出してoffline比較する。Phase 6FWでは9-process memory population、Phase 6FO、16/17 GiB採用、production、既定値、動画を開始・変更しない。
 
+正式root 2は15/15 fixtureとPhase 6FV offline比較に合格した。証拠十分なtime/path mismatchだけをprotected reuseとし、exact match、生存original、creation/path不明、照会競合、mismatchへのstop要求、summary後再発見はすべてfail closedになった。fixture 11ではreuse PIDを保護したまま別matching childだけをstop、fixture 13ではsummary後の再発見をattempt-owned residualへ戻した。runner/child peakは9,568,256／8,208,384 bytes、fixture/CDB/helper残留は0である。Phase 6FV相当caseは39 absent＋1 protected reuse、matching residual 0、unknown 0、mismatch stop 0、suppression解放として診断分類できたが、旧Phase 6FV判定は変更していない。
+
+Release build、Phase 0 RTX、Phase 3（dry/wet mass balance error 0、wood-owned Flow input、active blocks final/peak 289/337）、focused Phase 6F 185/185、標準suite 8 process・78/78、devlog静的検査に合格した。production app SHA-256とlatest demo manifest SHA-256、Phase 6FU/6FM/6FN/6FVの凍結hashは不変、最終Kit/CDB/GPU helper/fixture残留は0である。次は明示承認と新contract／新rootがある場合だけ、release-after-close、暫定16/17 GiB、Phase 6FU guard＋Phase 6FW policy、stack-first CDBを使う9-process memory qualificationへ進める。Phase 6FOは引き続きblockedである。
+
 # Phase 6FV post-6FU memory-ceiling qualification contract
 
 Phase 6FTは`146ded9`の8/9 lifecycle safe stopとして凍結し、既存sample／artifact／判定を新母集団へ流用しない。Phase 6FUのdiagnostic・7状態identity・cleanup suppression・exact attempt-tree cleanup・psutil/Win32二経路absence確認を前提に、新しいPhase 6FVを新rootでM0/M1/M2各3 process、balanced order `M0/M1/M2`、`M1/M2/M0`、`M2/M0/M1`として最初から実行する。正式contract SHA-256は`C917FE4463E3BCA600714A51EFEDF64E9E505F19F082647CCF5683269071AF0C`である。
