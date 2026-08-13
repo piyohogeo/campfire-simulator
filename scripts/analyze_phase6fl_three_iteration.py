@@ -107,10 +107,37 @@ def evaluate_staircase(values: list[int | None], threshold: int) -> dict:
     }
 
 
+def evaluate_paired_accumulation(control: list[int | None], candidate: list[int | None], threshold: int) -> dict:
+    control_result = evaluate_staircase(control, threshold)
+    candidate_result = evaluate_staircase(candidate, threshold)
+    if not control_result["complete"] or not candidate_result["complete"]:
+        return {"complete": False, "gate_pass": False, "failures": ["paired_three_baselines_required"]}
+    control_steps = [control[1] - control[0], control[2] - control[1]]
+    candidate_steps = [candidate[1] - candidate[0], candidate[2] - candidate[1]]
+    excess = [candidate_steps[index] - control_steps[index] for index in range(2)]
+    control_total = control[2] - control[0]
+    candidate_total = candidate[2] - candidate[0]
+    excess_total = candidate_total - control_total
+    accumulation = excess[0] > threshold and excess[1] > threshold and excess_total > 2 * threshold
+    return {
+        "complete": True,
+        "control": control_result,
+        "candidate": candidate_result,
+        "control_steps_bytes": control_steps,
+        "candidate_steps_bytes": candidate_steps,
+        "candidate_minus_control_steps_bytes": excess,
+        "candidate_minus_control_total_bytes": excess_total,
+        "material_threshold_bytes": threshold,
+        "operation_specific_staircase_accumulation": accumulation,
+        "gate_pass": not accumulation,
+        "failures": ["paired_material_two_step_staircase"] if accumulation else [],
+    }
+
+
 def _iteration(
     index: int,
     frame: int,
-    next_frame: int | None,
+    settling_end_frame: int,
     condition: str,
     markers: list[dict],
     boundary: dict | None,
@@ -124,16 +151,12 @@ def _iteration(
     pre = _first(markers, pre_name, frame)
     post = _first(markers, post_name, frame)
     next_renderer = _first(markers, "startup_frame_sample", frame + 1)
-    if next_frame is not None:
-        settling_end = _first(markers, "sample_started", next_frame)
-        settling_end_kind = "next_iteration_pre_operation"
-    else:
-        settling_end = _first(markers, "stability_observation_ended", frame)
-        settling_end_kind = "final_stability_observation_end"
+    settling_end = _first(markers, "sample_started", settling_end_frame)
+    settling_end_kind = "next_iteration_pre_operation" if settling_end_frame in contract["operation_frames"] else "finite_settling_sentinel"
     interval = _outer_interval(outer, _epoch(post or {}), _epoch(settling_end or {})) if post and settling_end else []
     kit_interval = [item for sample in interval if (item := _kit_from_outer(sample)) is not None]
     duration = _epoch(settling_end or {}) - _epoch(post or {}) if post and settling_end else None
-    frame_span = (next_frame - frame) if next_frame is not None else (settling_end or {}).get("extra_update_count")
+    frame_span = settling_end_frame - frame
     failures = []
     if pre is None or post is None or next_renderer is None or settling_end is None:
         failures.append("required_iteration_marker_missing")
@@ -277,7 +300,7 @@ def _attempt(attempt_root: Path, metadata: dict, contract: dict, base: dict) -> 
         absolute.append("cleanup_failure")
 
     names = [item.get("marker") for item in markers]
-    extension_names = [item.get("marker") for item in extension]
+    extension_names = [item.get("name") or item.get("marker") for item in extension]
     completion = raw.get("completion_contract") or {}
     native = []
     if "stage_close_request_before" in names and (
@@ -313,7 +336,7 @@ def _attempt(attempt_root: Path, metadata: dict, contract: dict, base: dict) -> 
         for index, frame in enumerate(frames, 1):
             boundary = None if condition == "R0_control" else (boundaries[index - 1] if index <= len(boundaries) else None)
             item = _iteration(
-                index, frame, frames[index] if index < len(frames) else None,
+                index, frame, contract["settling_end_frames"][index - 1],
                 condition, markers, boundary, outer, gpu, contract,
             )
             iterations.append(item)
@@ -321,8 +344,6 @@ def _attempt(attempt_root: Path, metadata: dict, contract: dict, base: dict) -> 
         threshold = contract["accumulation_gate"]["material_step_bytes"]
         pre_gate = evaluate_staircase([item["pre_operation_private_bytes"] for item in iterations], threshold)
         settled_gate = evaluate_staircase([item["settling_end_private_bytes"] for item in iterations], threshold)
-        operation.extend(f"pre_baseline:{item}" for item in pre_gate["failures"])
-        operation.extend(f"settled_baseline:{item}" for item in settled_gate["failures"])
     else:
         pre_gate = evaluate_staircase([], contract["accumulation_gate"]["material_step_bytes"])
         settled_gate = evaluate_staircase([], contract["accumulation_gate"]["material_step_bytes"])
@@ -403,11 +424,29 @@ def main() -> None:
     first_stop = next((index for index, item in enumerate(attempts) if item in nonreplaceable), None)
     post_stop = attempts[first_stop + 1:] if first_stop is not None else []
     paired = []
+    paired_failures = []
+    threshold = contract["accumulation_gate"]["material_step_bytes"]
     for sequence in range(1, 4):
         cases = {item["condition"]: item for item in representative if item["sequence"] == sequence}
         if len(cases) != 3:
             continue
-        paired.append({
+        r0 = cases["R0_control"]
+        comparisons = {}
+        sequence_failures = []
+        for name in ("R1_readback", "R2_fuel_alias"):
+            candidate = cases[name]
+            pre_gate = evaluate_paired_accumulation(
+                r0["pre_operation_accumulation"]["values_bytes"],
+                candidate["pre_operation_accumulation"]["values_bytes"], threshold,
+            )
+            settled_gate = evaluate_paired_accumulation(
+                r0["settling_end_accumulation"]["values_bytes"],
+                candidate["settling_end_accumulation"]["values_bytes"], threshold,
+            )
+            comparisons[name] = {"pre_operation": pre_gate, "settling_end": settled_gate}
+            sequence_failures.extend(f"{name}:pre:{failure}" for failure in pre_gate["failures"])
+            sequence_failures.extend(f"{name}:settled:{failure}" for failure in settled_gate["failures"])
+        pair = {
             "sequence": sequence,
             "active_block_pre_operation": {
                 name: [iteration["active_blocks"]["pre_operation"] for iteration in case["iterations"]]
@@ -419,12 +458,19 @@ def main() -> None:
             },
             "process_peak_differences_are_operation_cost_evidence": False,
             "r0_is_context_for_allocator_and_flow_variance": True,
-        })
+            "operation_specific_accumulation": comparisons,
+            "failures": sequence_failures,
+            "gate_pass": not sequence_failures,
+        }
+        paired.append(pair)
+        if sequence_failures:
+            paired_failures.append(pair)
     qualified = bool(
         len(representative) == 9
         and all(value == 3 for value in counts.values())
         and not nonreplaceable
         and not post_stop
+        and not paired_failures
     )
     all_iterations = [iteration for item in representative for iteration in item["iterations"]]
     r1r2 = [item for item in representative if item["condition"] != "R0_control"]
@@ -441,6 +487,8 @@ def main() -> None:
         "condition_counts": counts,
         "attempts": attempts,
         "paired_context": paired,
+        "paired_nonreplaceable_failures": paired_failures,
+        "first_complete_pair_failure": paired_failures[0] if paired_failures else None,
         "operation_summary": {
             "readback_immediate_bytes": _distribution(
                 iteration["operation_immediate_delta_bytes"] for item in r1r2 for iteration in item["iterations"]

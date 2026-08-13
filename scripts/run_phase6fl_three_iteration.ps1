@@ -103,8 +103,9 @@ while ($slotIndex -lt $slots.Count -and $attempted -lt [int]$contract.population
     [IO.File]::WriteAllText((Join-Path $attemptRoot "attempt_metadata.json"), ($metadata | ConvertTo-Json -Depth 8) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
     Write-State "running" $attemptId $slot.slot_id "" ""
     $source = $base.startup.expected_source_sums
-    $frameCsv = $contract.operation_frames -join ','
-    $readbackCsv = if ($mode -eq "none") { "" } else { $frameCsv }
+    $frameCsv = $contract.sample_frames -join ','
+    $operationFrameCsv = $contract.operation_frames -join ','
+    $readbackCsv = if ($mode -eq "none") { "" } else { $operationFrameCsv }
     $arguments = @(
         "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", $caseRunner,
         "-Scenario", $base.scenario, "-OutputDir", $caseDir, "-OffsetM", "$($base.point_offset_m)",
@@ -117,7 +118,7 @@ while ($slotIndex -lt $slots.Count -and $attempted -lt [int]$contract.population
         "-SpatialCollectorsEnabled", "false", "-RunIndex", "$($slot.sequence)", "-LifecycleCalibration",
         "-RendererDrainUpdates", "$($base.lifecycle.renderer_pre_close_drain_updates)",
         "-StageCloseTimeoutSeconds", "$($base.lifecycle.stage_close_timeout_seconds)",
-        "-StabilityObservationStartFrame", "$($contract.operation_frames[2])",
+        "-StabilityObservationStartFrame", "$($contract.sample_frames[-1])",
         "-StabilityObservationExtraSeconds", "$($contract.settling.final_extra_running_flow_seconds)",
         "-StabilityActiveBlockSampleSeconds", "$($contract.settling.active_block_sample_seconds)",
         "-FlowLivenessAudit", "true", "-StartupProbe", "true", "-StartupProbeLabel", $attemptId,
@@ -158,7 +159,15 @@ while ($slotIndex -lt $slots.Count -and $attempted -lt [int]$contract.population
     $case = @($report.attempts | Where-Object { $_.attempt_id -eq $attemptId })[0]
     if ($null -eq $case) { Write-State "absolute_safety_stop" $attemptId $slot.slot_id "absolute_safety_failure" "attempt_report_missing"; exit 2 }
     $classification = [string]$case.classification
-    if ($classification -eq "representative_pass") { $representative++; $slotIndex++; Write-State "running" $attemptId $slot.slot_id $classification ""; continue }
+    if ($classification -eq "representative_pass") {
+        if ($null -ne $report.first_complete_pair_failure) {
+            $pairReason = @($report.first_complete_pair_failure.failures) -join ','
+            Write-State "operation_safe_stop" $attemptId $slot.slot_id "operation_failure" $pairReason
+            Write-Error "Phase 6FL captured nonreplaceable paired accumulation failure; later slots were not started"
+            exit 2
+        }
+        $representative++; $slotIndex++; Write-State "running" $attemptId $slot.slot_id $classification ""; continue
+    }
     if ($classification -eq "startup_prerequisite_failure") {
         $prerequisite++
         Write-State "running" $attemptId $slot.slot_id $classification "preserved_startup_prerequisite;guard_exit=$guardExit"

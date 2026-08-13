@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.analyze_phase6fl_three_iteration import evaluate_staircase
+from scripts.analyze_phase6fl_three_iteration import evaluate_paired_accumulation, evaluate_staircase
 from scripts.phase6fk_pointer_evidence import pointer_evidence_from_boundary
 
 
@@ -18,6 +18,10 @@ class Phase6FlThreeIterationContract(unittest.TestCase):
     def test_r0_like_variance_is_accepted(self):
         self.assertTrue(evaluate_staircase([300, 240, 290], 50)["gate_pass"])
 
+    def test_paired_control_removes_r0_staircase_context(self):
+        self.assertTrue(evaluate_paired_accumulation([100, 160, 230], [200, 260, 330], 50)["gate_pass"])
+        self.assertFalse(evaluate_paired_accumulation([100, 160, 230], [200, 320, 510], 50)["gate_pass"])
+
     def test_two_material_steps_are_rejected(self):
         result = evaluate_staircase([100, 160, 230], 50)
         self.assertFalse(result["gate_pass"])
@@ -28,7 +32,9 @@ class Phase6FlThreeIterationContract(unittest.TestCase):
 
     def test_contract_is_exactly_three_iterations_and_balanced(self):
         contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
-        self.assertEqual(contract["operation_frames"], [120, 360, 600])
+        self.assertEqual(contract["operation_frames"], [120, 360, 540])
+        self.assertEqual(contract["settling_end_frames"], [360, 540, 620])
+        self.assertEqual(contract["sample_frames"], [120, 360, 540, 620])
         self.assertEqual(contract["population"]["target_representative_processes"], 9)
         self.assertEqual(contract["population"]["startup_prerequisite_replacement_budget"], 2)
         self.assertEqual(contract["population"]["maximum_launches"], 11)
@@ -95,6 +101,10 @@ class Phase6FlThreeIterationContract(unittest.TestCase):
         contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
         self.assertEqual(contract["embedded_probe_report_phase"], "phase6fk")
         self.assertIn('"-ReportPhase", $contract.embedded_probe_report_phase', runner)
+
+    def test_extension_lifecycle_accepts_the_existing_name_key(self):
+        analyzer = (ROOT / "scripts" / "analyze_phase6fl_three_iteration.py").read_text(encoding="utf-8")
+        self.assertIn('item.get("name") or item.get("marker")', analyzer)
 
 
 if __name__ == "__main__":

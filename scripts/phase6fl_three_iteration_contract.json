@@ -1,10 +1,10 @@
 {
-  "schema": "campfire.phase6fl.three-iteration-readback-alias-contract.v3",
+  "schema": "campfire.phase6fl.three-iteration-readback-alias-contract.v5",
   "phase": "phase6fl",
   "declared_before_runtime": true,
   "safe_commit": "b32cfcb",
   "history_frozen": ["phase6fg", "phase6fh", "phase6fi", "phase6fj", "phase6fk"],
-  "prelaunch_safe_stops_frozen": [
+  "safe_stops_frozen": [
     {
       "artifact_root": "artifacts/phase6fl-three-iteration-readback-alias-1",
       "contract_sha256": "E85B153B2E6FDAE52FEA1BD306C4AB0528065ED078E9505008CE6A577E32EC96",
@@ -18,6 +18,14 @@
       "kit_launches": 0,
       "cause": "shared case runner ReportPhase ValidateSet rejected phase6fl",
       "formal_population_reuse": false
+    },
+    {
+      "artifact_root": "artifacts/phase6fl-three-iteration-readback-alias-3",
+      "contract_sha256": "1EBB9B859E6E96D1A7F249A6CE859344A23A95552C982C0E2EBAA2F822212B42",
+      "kit_launches": 1,
+      "cause": "v3 analyzer read extension lifecycle JSONL name as marker and falsely reported extension shutdown incomplete",
+      "actual_lifecycle_evidence": "stage close complete, extension begin/end, OS exit 0, residual 0",
+      "formal_population_reuse": false
     }
   ],
   "embedded_probe_report_phase": "phase6fk",
@@ -26,8 +34,8 @@
     "sha256": "54FD6185ADD41B9333506ACC55BF3472F7BBA4F0D726679071F1126572541EED"
   },
   "runtime_implementation": [
-    {"path": "scripts/analyze_phase6fl_three_iteration.py", "sha256": "B0B2A538A5A4BBEBC86FBEDB67541E7E52A2D25DAE86003254114C1F1ADED3D7"},
-    {"path": "scripts/run_phase6fl_three_iteration.ps1", "sha256": "0A9AF7715E61CF3EBF35C4E59BD80DFC22FDA74E345180ADA1203B5B289506DA"},
+    {"path": "scripts/analyze_phase6fl_three_iteration.py", "sha256": "7AE5EAD01F3760354D463EEF6446D7282EFFDD233434FD6F63F085F57805A4A7"},
+    {"path": "scripts/run_phase6fl_three_iteration.ps1", "sha256": "6C3269EDA9692B164C2A50CBC58157C99AAEF3B0D023FDD75B67C9A2C7DCE7E2"},
     {"path": "scripts/probe_phase6ep_point_collision_coexistence.py", "sha256": "325FDE191D7F52178B87561461803C21B8256330615DC377EB1F217260C8893F"},
     {"path": "scripts/run_phase6ep_point_collision_case.ps1", "sha256": "5FEDA1DC5AD87E47800C875E4F5BC58E047B437331C339F8BA225ADAFC1CD897"},
     {"path": "scripts/phase6eg_resource_guard.py", "sha256": "A16FA82606A4265093E88816540A0E293205AADC9A15FA11B7CA09C6B32CC45E"},
@@ -44,7 +52,9 @@
     "R1_readback": {"label": "R1_readback", "readback_mode": "acquire_discard_release", "public_readback_calls": 1, "numpy_asarray_calls": 0},
     "R2_fuel_alias": {"label": "R2_fuel_alias", "readback_mode": "fuel_convert_release", "public_readback_calls": 1, "numpy_asarray_calls": 1}
   },
-  "operation_frames": [120, 360, 600],
+  "operation_frames": [120, 360, 540],
+  "settling_end_frames": [360, 540, 620],
+  "sample_frames": [120, 360, 540, 620],
   "population": {
     "target_representative_processes": 9,
     "runs_per_condition": 3,
@@ -58,12 +68,12 @@
     "minimum_wall_seconds": 4.0,
     "minimum_outer_resource_samples": 8,
     "minimum_renderer_updates": 60,
-    "inter_iteration_frame_gap": 240,
+    "settling_renderer_update_spans": [240, 180, 80],
     "final_extra_running_flow_seconds": 5.0,
     "active_block_sample_seconds": 0.5,
     "timeline_and_flow_remain_running": true,
     "iteration_1_and_2_end_marker": "next iteration sample_started",
-    "iteration_3_end_marker": "stability_observation_ended"
+    "iteration_3_end_marker": "readback-free frame-620 sample_started sentinel"
   },
   "accumulation_gate": {
     "fuel_logical_bytes_reference": 41398016,
@@ -72,9 +82,11 @@
     "material_step_bytes": 91184640,
     "requires_two_consecutive_material_positive_steps": true,
     "requires_total_growth_above_two_material_steps": true,
-    "pre_operation_baselines_formal": true,
-    "settling_end_baselines_formal": true,
-    "r0_process_pair_is_context_not_operation_cost": true,
+    "standalone_pre_operation_staircase_is_formal": false,
+    "standalone_settling_end_staircase_is_formal": false,
+    "paired_r0_subtracted_pre_operation_staircase_is_formal": true,
+    "paired_r0_subtracted_settling_end_staircase_is_formal": true,
+    "r0_process_pair_is_context_for_operation_specific_accumulation": true,
     "short_window_slope_is_formal_gate": false
   },
   "pointer_contract": {
