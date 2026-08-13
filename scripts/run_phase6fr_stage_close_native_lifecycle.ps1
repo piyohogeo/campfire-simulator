@@ -21,8 +21,8 @@ Copy-Item -LiteralPath $hashPath -Destination (Join-Path $OutputRoot "frozen_con
 $productionApp = Join-Path $repo "_build\windows-x86_64\release\apps\campfire.simulator.kit"
 $productionBefore = (Get-FileHash -Algorithm SHA256 -LiteralPath $productionApp).Hash
 $powershell = (Get-Command powershell.exe).Source
-$common = Join-Path $PSScriptRoot "phase6ea_diagnostic_common.ps1"
-. $common
+$policy = Join-Path $PSScriptRoot "kit_shutdown_policy.ps1"
+. $policy
 
 # No Kit process may start until the stoppable CDB fixtures have proved stack,
 # timeout, detach, target survival, and cleanup behavior end-to-end.
