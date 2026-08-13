@@ -1,0 +1,112 @@
+{
+  "schema": "campfire.phase6fl.three-iteration-readback-alias-contract.v1",
+  "phase": "phase6fl",
+  "declared_before_runtime": true,
+  "safe_commit": "b32cfcb",
+  "history_frozen": ["phase6fg", "phase6fh", "phase6fi", "phase6fj", "phase6fk"],
+  "base_operation_contract": {
+    "path": "scripts/phase6fg_paired_readback_contract.json",
+    "sha256": "54FD6185ADD41B9333506ACC55BF3472F7BBA4F0D726679071F1126572541EED"
+  },
+  "runtime_implementation": [
+    {"path": "scripts/analyze_phase6fl_three_iteration.py", "sha256": "4809D9FC4C75AD63029091328D70A1A8CE6392E32997666321363D5D1970EEFE"},
+    {"path": "scripts/run_phase6fl_three_iteration.ps1", "sha256": "B7AF3B8A7E4C68ED8833419BEE4031E950CE02AB3ECFE2C46FF41F784C4F3853"},
+    {"path": "scripts/probe_phase6ep_point_collision_coexistence.py", "sha256": "325FDE191D7F52178B87561461803C21B8256330615DC377EB1F217260C8893F"},
+    {"path": "scripts/run_phase6ep_point_collision_case.ps1", "sha256": "5FEDA1DC5AD87E47800C875E4F5BC58E047B437331C339F8BA225ADAFC1CD897"},
+    {"path": "scripts/phase6eg_resource_guard.py", "sha256": "A16FA82606A4265093E88816540A0E293205AADC9A15FA11B7CA09C6B32CC45E"},
+    {"path": "scripts/phase6fk_pointer_evidence.py", "sha256": "8C1CE0888E9FAB7F365A9BE74193BDA1BFF7C022C35DF0ED9293D1FB5ACD5493"}
+  ],
+  "purpose": "qualify exactly three public NanoVDB readbacks and three fuel NumPy alias lifetimes without staircase accumulation",
+  "balanced_order": [
+    ["R0_control", "R1_readback", "R2_fuel_alias"],
+    ["R1_readback", "R2_fuel_alias", "R0_control"],
+    ["R2_fuel_alias", "R0_control", "R1_readback"]
+  ],
+  "conditions": {
+    "R0_control": {"label": "R0_control", "readback_mode": "none", "public_readback_calls": 0, "numpy_asarray_calls": 0},
+    "R1_readback": {"label": "R1_readback", "readback_mode": "acquire_discard_release", "public_readback_calls": 1, "numpy_asarray_calls": 0},
+    "R2_fuel_alias": {"label": "R2_fuel_alias", "readback_mode": "fuel_convert_release", "public_readback_calls": 1, "numpy_asarray_calls": 1}
+  },
+  "operation_frames": [120, 360, 600],
+  "population": {
+    "target_representative_processes": 9,
+    "runs_per_condition": 3,
+    "startup_prerequisite_replacement_budget": 2,
+    "maximum_launches": 11,
+    "replacement_preserves_balanced_slot": true,
+    "artifact_reuse": false,
+    "automatic_retry": false
+  },
+  "settling": {
+    "minimum_wall_seconds": 4.0,
+    "minimum_outer_resource_samples": 8,
+    "minimum_renderer_updates": 60,
+    "inter_iteration_frame_gap": 240,
+    "final_extra_running_flow_seconds": 5.0,
+    "active_block_sample_seconds": 0.5,
+    "timeline_and_flow_remain_running": true,
+    "iteration_1_and_2_end_marker": "next iteration sample_started",
+    "iteration_3_end_marker": "stability_observation_ended"
+  },
+  "accumulation_gate": {
+    "fuel_logical_bytes_reference": 41398016,
+    "synchronous_marker_noise_allowance_bytes": 8388608,
+    "material_step_formula": "2 * fuel_logical_bytes_reference + synchronous_marker_noise_allowance_bytes",
+    "material_step_bytes": 91184640,
+    "requires_two_consecutive_material_positive_steps": true,
+    "requires_total_growth_above_two_material_steps": true,
+    "pre_operation_baselines_formal": true,
+    "settling_end_baselines_formal": true,
+    "r0_process_pair_is_context_not_operation_cost": true,
+    "short_window_slope_is_formal_gate": false
+  },
+  "pointer_contract": {
+    "all_r2_iterations_required": 9,
+    "require_positive_source_and_converted_pointer": true,
+    "require_equal_data_pointers": true,
+    "require_same_python_identity": true,
+    "require_numpy_shares_memory": true,
+    "require_equal_metadata": ["shape", "dtype", "strides", "size", "nbytes"],
+    "maximum_absolute_numpy_asarray_private_delta_bytes": 8388608,
+    "weak_reference_residual_required": 0
+  },
+  "absolute_safety": {
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "fatal_dump_upload_device_lost_tdr_allowed": 0,
+    "cleanup_residual_allowed": 0
+  },
+  "waveform_telemetry": {
+    "record_all_samples": true,
+    "slope_is_formal_gate": false,
+    "process_peak_difference_is_operation_cost": false,
+    "active_blocks_are_context": true
+  },
+  "replaceable_only": "startup_prerequisite_failure_before_first_operation",
+  "nonreplaceable": [
+    "operation failure", "pointer evidence failure", "weak reference residual",
+    "resource or headroom failure", "native lifecycle failure", "fatal or dump or upload",
+    "cleanup failure", "diagnostic failure", "replacement budget exhausted"
+  ],
+  "qualification": {
+    "requires_all_nine_representative_slots": true,
+    "requires_three_iterations_per_process": true,
+    "requires_all_27_iteration_contracts": true,
+    "requires_all_9_r2_pointer_contracts": true,
+    "requires_no_material_staircase": true,
+    "requires_normal_lifecycle_all_processes": true,
+    "three_readbacks_qualified_on_pass": true,
+    "three_fuel_alias_lifetimes_qualified_on_pass": true,
+    "more_than_three_iterations_qualified": false
+  },
+  "excluded": [
+    "more than three iterations", "other channel conversion", "field aggregation or persistence",
+    "multiple-frame field retention", "forced GC", "private release API", "production changes",
+    "resource ceiling increase", "video"
+  ]
+}
