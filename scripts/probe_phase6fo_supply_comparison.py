@@ -44,6 +44,93 @@ CAPTURE_RESOLUTION = (1280, 720)
 P3_CHANNELS = ("velocity", "temperature", "smoke", "fuel")
 
 
+def _phase6fp_allocation_state(level, output, plan, point_summary, public_members, collectors):
+    """Build only the bounded pre-readback state frozen by Phase 6FP.
+
+    The real Phase 6FO neighborhood arrays require public NanoVDB grid metadata
+    and are therefore lazy readback allocations.  Level 4 records their dtype
+    and ownership plan without inventing a grid or allocating a field body.
+    """
+    state = {
+        "schema": "campfire.phase6fp.pre-readback-allocation-state.v1",
+        "level": int(level),
+        "owned_python_objects": [],
+        "logical_buffer_bytes": 0,
+        "weak_references": [],
+        "steps": [],
+    }
+    if level >= 1:
+        state["owned_python_objects"].extend(collectors)
+        state["weak_references"].extend(
+            reference for reference in (weakref.ref(value) for value in collectors) if reference is not None
+        )
+        state["steps"].append({
+            "step": "collector_object",
+            "collector_count": len(collectors),
+            "collector_cache_entries": sum(len(value.cache) for value in collectors),
+        })
+    if level >= 2:
+        state["spatial_region_metadata"] = _p3_world_rois()
+        state["steps"].append({
+            "step": "spatial_region_metadata",
+            "region_count": len(state["spatial_region_metadata"]),
+        })
+    if level >= 3:
+        state["channel_metadata"] = [
+            {"name": name, "conversion": "deferred_until_public_readback", "field_body_allocated": False}
+            for name in P3_CHANNELS
+        ]
+        state["steps"].append({"step": "channel_metadata", "channel_count": len(P3_CHANNELS)})
+    if level >= 4:
+        state["buffer_plan"] = {
+            "field_body_allocated": False,
+            "reason": "public NanoVDB origin, basis and shape do not exist before readback",
+            "planned_arrays": [
+                {"name": "indices", "dtype": "int32", "shape": [None, 3]},
+                {"name": "world", "dtype": "float64", "shape": [None, 3]},
+                {"name": "local", "dtype": "float64", "shape": [None, 3]},
+                {"name": "signed_distance", "dtype": "float64", "shape": [None]},
+                {"name": "channel_value", "dtype": "float32", "shape": [None]},
+            ],
+            "logical_bytes": 0,
+        }
+        state["steps"].append({"step": "near_mesh_control_volume_buffer_plan", "logical_bytes": 0})
+    if level >= 5:
+        state["capture_preparation"] = {
+            "enabled": False,
+            "frame_count": 0,
+            "output_directory": str(output.parent / "captures"),
+            "resolution": list(CAPTURE_RESOLUTION),
+            "renderer_capture_calls": 0,
+            "pixel_buffers_allocated": 0,
+        }
+        state["steps"].append({"step": "capture_video_preparation", "logical_bytes": 0})
+    if level >= 6:
+        state["s93_equivalence"] = {
+            "scenario": "production_four",
+            "geometry_variant": "phase6er_corrected",
+            "policy": "allow_self_center",
+            "active_point_count": int(plan["active"].sum()),
+            "payload_sha256": point_summary["payload_sha256"],
+            "note": "Phase 6FN baseline is already the S93 configuration; this step is a zero-delta identity control",
+        }
+        state["steps"].append({"step": "s93_stage_point_identity_control", "logical_bytes": 0})
+    if level >= 7:
+        state["phase6fo_pre_readback_equivalence"] = {
+            "representative_spatial_collector_count": len(collectors),
+            "readback_channels": list(P3_CHANNELS),
+            "readback_calls": 0,
+            "capture_enabled": False,
+            "field_bodies_allocated": False,
+            "flow_public_member_count": len(public_members),
+        }
+        state["steps"].append({"step": "phase6fo_pre_readback_equivalent", "logical_bytes": 0})
+    state["owned_object_count"] = len(state["owned_python_objects"])
+    state["weak_reference_count"] = len(state["weak_references"])
+    state["live_weak_reference_count"] = sum(reference() is not None for reference in state["weak_references"])
+    return state
+
+
 def _p3_world_rois():
     """Fixed corrected-four regions used by the Phase 6FO comparison.
 
@@ -119,6 +206,7 @@ def _settings():
             if scalar_collider_text else None
         ),
         "run_index": int(settings.get_as_int("/phase6ep/runIndex")) or 1,
+        "allocation_calibration_level": int(settings.get_as_int("/phase6ep/allocationCalibrationLevel")),
         "capture": bool(settings.get_as_bool("/phase6ep/capture")),
         "capture_start": int(settings.get_as_int("/phase6ep/captureStart")),
         "capture_end": int(settings.get_as_int("/phase6ep/captureEnd")),
@@ -938,6 +1026,7 @@ async def _run():
     flow = None
     collectors = []
     collectors_by_index = {}
+    allocation_state = None
     emitter = None
     exit_code = 1
     try:
@@ -955,7 +1044,8 @@ async def _run():
             raise ValueError(f"unsupported readback mode: {arguments['readback_mode']}")
         if arguments["startup_liveness_gate"] and not (arguments["startup_probe"] and arguments["flow_liveness_audit"]):
             raise ValueError("startup liveness gate requires startup probe and Flow liveness audit")
-        if arguments["startup_liveness_gate"] and any(frame < 120 for frame in arguments["readback_frames"]):
+        if (arguments["startup_liveness_gate"] and arguments["readback_mode"] != "none"
+                and any(frame < 120 for frame in arguments["readback_frames"])):
             raise ValueError("startup liveness gate forbids readback before frame 120")
         if not set(arguments["readback_frames"]).issubset(set(arguments["sample_frames"])):
             raise ValueError("readback frames must be a subset of sample frames")
@@ -1081,6 +1171,23 @@ async def _run():
                 )
                 collectors.append(collector)
                 collectors_by_index[index] = collector
+        if arguments["report_phase"] == "phase6fp":
+            allocation_state = _phase6fp_allocation_state(
+                arguments["allocation_calibration_level"], output, plan, point_summary, public_members, collectors
+            )
+            report["allocation_calibration"] = {
+                key: value for key, value in allocation_state.items()
+                if key not in ("owned_python_objects", "weak_references")
+            }
+            mark(
+                "allocation_calibration_prepared",
+                level=arguments["allocation_calibration_level"],
+                owned_object_count=allocation_state["owned_object_count"],
+                weak_reference_count=allocation_state["weak_reference_count"],
+                live_weak_reference_count=allocation_state["live_weak_reference_count"],
+                logical_buffer_bytes=allocation_state["logical_buffer_bytes"],
+                step_count=len(allocation_state["steps"]),
+            )
         extra_update_count = arguments["startup_extra_update_before_play_count"]
         if arguments["startup_probe"]:
             mark(
@@ -1427,6 +1534,10 @@ async def _run():
         report["spatial_manifest_collider_indices"] = list(collectors_by_index)
         report["spatial_manifests"] = [collectors_by_index[index].finalize() for index in collectors_by_index]
         report["active_blocks_final"] = int(flow.get_active_block_count())
+        if allocation_state is not None:
+            report["allocation_calibration"]["live_weak_reference_count_before_shutdown"] = sum(
+                reference() is not None for reference in allocation_state["weak_references"]
+            )
         report["source_sums"] = {
             "fuel": float(sum(emitter.GetAttribute("pointFuels").Get())),
             "temperature": float(sum(emitter.GetAttribute("pointTemperatures").Get())),

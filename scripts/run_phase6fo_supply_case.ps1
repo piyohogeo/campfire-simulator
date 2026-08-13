@@ -6,7 +6,7 @@ param(
     [ValidateSet("true", "false")][string]$Filtering = "true",
     [ValidateSet("true", "false")][string]$Collision = "true",
     [ValidateSet("strict_all", "allow_self_support", "allow_self_center", "allow_other_support")][string]$Policy = "strict_all",
-    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev", "phase6ew", "phase6ex", "phase6ey", "phase6ez", "phase6fa", "phase6fb", "phase6fc", "phase6fd", "phase6fe", "phase6ff", "phase6fg", "phase6fh", "phase6fi", "phase6fj", "phase6fk", "phase6fn", "phase6fo")][string]$ReportPhase = "phase6ep",
+    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev", "phase6ew", "phase6ex", "phase6ey", "phase6ez", "phase6fa", "phase6fb", "phase6fc", "phase6fd", "phase6fe", "phase6ff", "phase6fg", "phase6fh", "phase6fi", "phase6fj", "phase6fk", "phase6fn", "phase6fo", "phase6fp")][string]$ReportPhase = "phase6ep",
     [string]$SampleFrames = "60,120,180,200",
     [string]$ReadbackChannels = "temperature,fuel,burn,smoke,velocity",
     [ValidateSet("legacy", "none", "acquire_discard", "acquire_discard_release", "fuel_convert", "fuel_convert_release", "fuel_scalar", "fuel_jsonl", "fuel_spatial", "p3_spatial_release")][string]$ReadbackMode = "legacy",
@@ -22,6 +22,7 @@ param(
     [switch]$SpatialAllChannels,
     [string]$SpatialScalarColliderIndices = "",
     [int]$RunIndex = 1,
+    [ValidateRange(0, 7)][int]$AllocationCalibrationLevel = 0,
     [switch]$Capture,
     [int]$CaptureStart = 21,
     [int]$CaptureEnd = 200,
@@ -114,6 +115,7 @@ $arguments = @(
     "--/phase6ep/spatialAllChannels=$($SpatialAllChannels.IsPresent.ToString().ToLowerInvariant())",
     "--/phase6ep/spatialScalarColliderIndices=$SpatialScalarColliderIndices",
     "--/phase6ep/runIndex=$RunIndex",
+    "--/phase6ep/allocationCalibrationLevel=$AllocationCalibrationLevel",
     "--/phase6ep/capture=$captureValue",
     "--/phase6ep/captureStart=$CaptureStart",
     "--/phase6ep/captureEnd=$CaptureEnd",
@@ -247,6 +249,7 @@ $evidence = [ordered]@{
     spatial_all_channels = $SpatialAllChannels.IsPresent
     spatial_scalar_collider_indices = $SpatialScalarColliderIndices
     run_index = $RunIndex
+    allocation_calibration_level = $AllocationCalibrationLevel
     geometry_variant = $GeometryVariant
     source_scales = [ordered]@{ fuel=$FuelScale; temperature=$TemperatureScale; smoke=$SmokeScale }
     process_exit_code = $monitor.exit_code

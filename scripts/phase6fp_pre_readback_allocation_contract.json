@@ -1,0 +1,106 @@
+{
+  "schema": "campfire.phase6fp.pre-readback-allocation-contract.v1",
+  "phase": "phase6fp",
+  "declared_before_runtime": true,
+  "purpose": "isolate the Phase 6FO pre-readback 14 GiB crossing from normal Flow/Kit startup variability",
+  "history_frozen": {
+    "phase6fn": "qualified evidence retained read-only",
+    "phase6fo": "15,127,232,512-byte resource safe stop retained",
+    "prior_artifact_reuse": false,
+    "historical_reclassification": false
+  },
+  "physical_fixture": {
+    "scenario": "production_four",
+    "geometry_variant": "phase6er_corrected",
+    "point_policy": "allow_self_center",
+    "point_offset_m": -0.0125,
+    "support_radius_m": 0.05,
+    "collision_enabled": true,
+    "point_filtering_enabled": true,
+    "expected_total_points": 1440,
+    "expected_active_points": 1344,
+    "expected_revision": 1,
+    "expected_source_sums": {
+      "fuel": 1075.2000160217285,
+      "temperature": 2688.0,
+      "smoke": 107.51999759674072
+    },
+    "source_sum_absolute_tolerance": 0.0001,
+    "expected_payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389",
+    "s93_identity_note": "Phase 6FN baseline already is the corrected-four S93 allow_self_center payload; C6 is an explicit zero-delta identity control"
+  },
+  "startup": {
+    "viewport_readiness_frames": 60,
+    "flow_acquire_position": "before_updates",
+    "stopped_update_count": 12,
+    "extra_update_before_play_count": 0,
+    "representative_frame": 60,
+    "representative_active_blocks": 128,
+    "final_frame": 96,
+    "readback_calls": 0,
+    "capture_calls": 0
+  },
+  "conditions": [
+    {"id": "C0_baseline", "level": 0, "addition": "Phase 6FN-equivalent S93 readback-none baseline", "collector_count": 0},
+    {"id": "C1_collector", "level": 1, "addition": "one representative SpatialNeighborhoodCollector object", "collector_count": 1},
+    {"id": "C2_spatial_metadata", "level": 2, "addition": "fixed spatial-region metadata", "collector_count": 1},
+    {"id": "C3_channel_metadata", "level": 3, "addition": "velocity/temperature/smoke/fuel metadata", "collector_count": 1},
+    {"id": "C4_buffer_plan", "level": 4, "addition": "near-Mesh/control-volume buffer ownership and dtype plan", "collector_count": 1},
+    {"id": "C5_capture_prep", "level": 5, "addition": "capture/video disabled-state preparation", "collector_count": 1},
+    {"id": "C6_s93_identity", "level": 6, "addition": "explicit S93 stage/payload identity audit", "collector_count": 1},
+    {"id": "C7_phase6fo_equivalent", "level": 7, "addition": "Phase 6FO pre-readback-equivalent diagnostic state", "collector_count": 1}
+  ],
+  "pre_readback_allocation_boundary": {
+    "collector_constructor_allocates_field_body": false,
+    "near_mesh_body_requires_public_grid_metadata": true,
+    "grid_metadata_available_before_readback": false,
+    "buffer_body_logical_bytes_before_readback": 0,
+    "capture_enabled": false,
+    "capture_pixel_buffer_bytes_before_readback": 0,
+    "private_api_allowed": false
+  },
+  "population": {
+    "runs_per_condition": 3,
+    "required_representative_processes": 24,
+    "startup_replacement_budget": 2,
+    "automatic_retry": false,
+    "orders": [
+      ["C0_baseline", "C1_collector", "C2_spatial_metadata", "C3_channel_metadata", "C4_buffer_plan", "C5_capture_prep", "C6_s93_identity", "C7_phase6fo_equivalent"],
+      ["C7_phase6fo_equivalent", "C6_s93_identity", "C5_capture_prep", "C4_buffer_plan", "C3_channel_metadata", "C2_spatial_metadata", "C1_collector", "C0_baseline"],
+      ["C3_channel_metadata", "C4_buffer_plan", "C2_spatial_metadata", "C5_capture_prep", "C1_collector", "C6_s93_identity", "C0_baseline", "C7_phase6fo_equivalent"]
+    ]
+  },
+  "recording": {
+    "resource_sample_seconds": 0.2,
+    "gpu_sample_ms": 1000,
+    "required_frames": [60, 96],
+    "kit_and_unique_tree_separate": true,
+    "gpu_shared_memory": "record only if available from the existing bounded public telemetry; otherwise unavailable, never estimated",
+    "diagnostic_output": "streamed JSONL and direct file redirection",
+    "owned_resource_count_scope": "objects owned by this probe, not a global interpreter scan"
+  },
+  "safety": {
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "inner_absolute_timeout_seconds": 420,
+    "outer_condition_timeout_seconds": 660,
+    "stage_close_timeout_seconds": 180,
+    "resource_or_lifecycle_replacement": false,
+    "startup_prerequisite_replacement_only": true,
+    "candidate_16_gib_adopted": false
+  },
+  "decision": {
+    "reproducible_increment": "the same added element shifts the three-run distribution relative to C0",
+    "runtime_variability": "conditions overlap without an element-following shift and track Flow occupancy/cache state",
+    "field_explanation": "compare active-block evolution and declared diagnostic logical bytes; do not infer private allocation from logical bytes alone",
+    "phase6fo_restart": "not authorized in this phase"
+  },
+  "excluded": [
+    "NanoVDB readback", "temperature/smoke/velocity/flux comparison", "video capture",
+    "S93 versus S100 decision", "production change", "resource-ceiling increase"
+  ]
+}
