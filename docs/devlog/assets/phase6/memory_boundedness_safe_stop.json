@@ -1,0 +1,158 @@
+{
+  "schema": "campfire.devlog.phase6ff.memory-boundedness-safe-stop.v1",
+  "phase": "phase6ff",
+  "date": "2026-08-13",
+  "safe_commit": "e77fb4e",
+  "contract_sha256": "0D69ACADBEC942103081E8892D35866D13E4254FA4A1E15B77CEC3FD27E0612C",
+  "history": {
+    "phase6fd_reclassified": false,
+    "phase6fe_reclassified": false,
+    "phase6fe_failure_retained": "9.292 MiB/s > frozen 8 MiB/s whole-window slope",
+    "historical_population_reused": false
+  },
+  "historical_audit": {
+    "aligned_samples_per_case": 49,
+    "observation_seconds_approximately": 24.0,
+    "phase6fd_c0": {
+      "overall_slope_mib_per_second": 4.896,
+      "last_half_slope_mib_per_second": -11.837,
+      "final_window_slope_mib_per_second": 1.326,
+      "terminal_residual_mib": 23.227,
+      "high_water_recovery_mib": 385.152,
+      "recovery_seconds": 0.450851
+    },
+    "phase6fd_c1": {
+      "overall_slope_mib_per_second": 0.756,
+      "last_half_slope_mib_per_second": -6.131,
+      "final_window_slope_mib_per_second": -77.864,
+      "terminal_residual_mib": -277.5,
+      "high_water_recovery_mib": 491.676,
+      "recovery_seconds": 0.527676
+    },
+    "phase6fe_c0": {
+      "overall_slope_mib_per_second": 9.292,
+      "last_half_slope_mib_per_second": 12.142,
+      "final_window_slope_mib_per_second": -148.904,
+      "projected_drift_fraction": 0.01654,
+      "terminal_residual_mib": -209.285,
+      "high_water_recovery_mib": 666.449,
+      "recovery_seconds": 0.498148,
+      "late_rolling_windows_above_8_mib_per_second": 2,
+      "longest_consecutive": 2
+    },
+    "new_contract_offline_status": "reference_only; all historical cases fail new 42-second/80-sample coverage and are not reclassified"
+  },
+  "synthetic_calibration": {
+    "status": "pass",
+    "accepted": [
+      "startup_then_plateau",
+      "brief_over_8mib_then_recovery",
+      "bounded_allocator_cache",
+      "active_following_bounded",
+      "shader_resource_transient",
+      "delayed_reclaim_after_disappearance"
+    ],
+    "rejected": [
+      "occupancy_independent_monotonic",
+      "late_positive_slope",
+      "staircase_accumulation",
+      "per_block_growth",
+      "absolute_limit",
+      "shutdown_incomplete"
+    ]
+  },
+  "runtime": {
+    "artifact_root": "artifacts/phase6ff-memory-boundedness-1",
+    "planned_conditions": 9,
+    "executed_conditions": 1,
+    "accepted_conditions": 0,
+    "active_condition": "control_run01",
+    "later_conditions_started": false,
+    "startup_classification": "representative_ingestion",
+    "normal_os_exit": true,
+    "sample_count": 97,
+    "observation_seconds": 47.966306,
+    "active_blocks": {
+      "minimum": 1121,
+      "mean": 1374.247423,
+      "maximum": 1643
+    },
+    "memory": {
+      "overall_slope_mib_per_second": 8.837325,
+      "last_half_slope_mib_per_second": 25.655541,
+      "final_window_slope_mib_per_second": 0.488376,
+      "late_window_floor_slope_mib_per_second": 0.525251,
+      "projected_drift_fraction": 0.0320918,
+      "normalized_projected_drift_fraction": 0.00778971,
+      "terminal_residual_mib": 46.488281,
+      "maximum_transient_growth_mib": 673.191406,
+      "high_water_recovery_mib": 626.703125,
+      "high_water_recovery_seconds": 0.527644,
+      "late_rolling_windows_above_8_mib_per_second": 3,
+      "longest_consecutive_late_rolling_windows_above_8_mib_per_second": 3,
+      "frozen_maximum_consecutive": 2,
+      "rolling_window_slopes_mib_per_second": [
+        -2.495828,
+        -0.091024,
+        21.773787,
+        53.82262,
+        -48.702693,
+        -16.901016,
+        3.60318,
+        17.027704,
+        49.265645,
+        40.604494
+      ]
+    },
+    "resource": {
+      "kit_peak_private_bytes": 14534762496,
+      "kit_peak_gib": 13.536552,
+      "kit_limit_margin_bytes": 497623040,
+      "kit_limit_margin_mib": 474.570313,
+      "kit_working_set_peak_gib": 8.299538,
+      "tree_peak_gib": 13.689533,
+      "tree_limit_margin_mib": 2365.917969,
+      "gpu_dedicated_peak_mib": 6967,
+      "runner_peak_mib": 121.355469,
+      "diagnostic_peak_mib": 16.0625,
+      "minimum_available_physical_gib": 80.940815,
+      "minimum_commit_headroom_gib": 98.931133
+    },
+    "stage_close_seconds": 2.346952,
+    "failed_gate": "persistent_local_growth",
+    "decision": "safe_stop"
+  },
+  "qualification": {
+    "new_contract_distinguishes_synthetic_transient_and_sustained_growth": true,
+    "control_three_run_qualification": false,
+    "c0_started": false,
+    "c1_started": false,
+    "one_fuel_alias_lifetime_qualified": false,
+    "repeated_readback_ready": false
+  },
+  "safety": {
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "cdb_invocation_count": 0,
+    "cleanup_residual_count": 0,
+    "production_changed": false,
+    "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A"
+  },
+  "regression": {
+    "release_build": "pass",
+    "phase0_rtx": "pass",
+    "phase3": {
+      "status": "pass",
+      "dry_authority_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+      "wet_authority_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "flow_active_blocks_final": 271,
+      "flow_active_blocks_peak": 335,
+      "peak_fuel_input": 1.0
+    },
+    "standard_suite": "78/78 in 320.5 seconds",
+    "static_devlog_inspection": "pending"
+  }
+}

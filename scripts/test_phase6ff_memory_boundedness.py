@@ -68,6 +68,23 @@ class Phase6FfMemoryBoundedness(unittest.TestCase):
         self.assertIn("field-body persistence", excluded)
         self.assertIn("resource ceiling increase", excluded)
 
+    def test_published_runtime_result_is_fail_closed(self):
+        path = ROOT / "docs/devlog/assets/phase6/memory_boundedness_safe_stop.json"
+        report = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(
+            report["contract_sha256"],
+            CONTRACT_PATH.with_suffix(".sha256").read_text(encoding="utf-8").split()[0],
+        )
+        runtime = report["runtime"]
+        self.assertEqual(runtime["executed_conditions"], 1)
+        self.assertEqual(runtime["accepted_conditions"], 0)
+        self.assertTrue(runtime["normal_os_exit"])
+        self.assertEqual(runtime["failed_gate"], "persistent_local_growth")
+        self.assertFalse(report["qualification"]["c0_started"])
+        self.assertFalse(report["qualification"]["c1_started"])
+        self.assertFalse(report["qualification"]["repeated_readback_ready"])
+        self.assertEqual(report["safety"]["cleanup_residual_count"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()
