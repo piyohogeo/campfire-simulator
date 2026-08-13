@@ -4,6 +4,8 @@
 
 Phase 6FQのsafe stopは`778623c`で凍結する。CDB診断はmodule-first依存を廃止し、exact identity確認後にboundedな全thread stackを先に取得し、module一覧は独立した補助pass、detachは独立cleanup passとする。fixtureが合格した場合だけ、readback/capture 0のA release-before-closeとB release-after-closeを`AB/BA/AB`で各3 runまで比較する。14/16 GiBの採否とPhase 6FO再開は行わない。詳細は`docs/design/phase6fr_stage_close_native_lifecycle.md`を参照する。
 
+実測ではCDB fixtureが全case合格し、module timeout後もcomplete stackを保持、forced stack timeout後もtarget生存、explicit detach、CDB残留0を確認した。正式attempt01のAはrepresentative startup・readback/capture 0・8 renderer drain・release-before-close後、`close_stage_async()`が180.0144794秒timeoutした。全149 thread stackを取得し、main close pathは`omni_usd!UsdManager::destroyContext+0x160`、loader threadは`RtlAcquireSRWLockExclusive`から`loadRenderSettingsFromStage`／`closeStage`境界だった。ownerは不明、known NGX tokenは0/5、exact cleanup後の残留は0。fail-fastによりBは未実行であり、release-after-close、安全順序、低頻度監視移行、memory ceiling qualificationはいずれも未qualified。次は明示承認されたB-first限定qualificationが最小境界で、Phase 6FOは開始しない。
+
 # Phase 6FQ stage-close lifecycle qualification contract
 
 Phase 6FP attempt11のreadback 0／C5条件で発生した180.007436秒の`close_stage_async()` timeoutをmemory ceilingから分離するため、Phase 6FQを事前凍結した。Phase 6FOの比較条件、production、Point payload、Flow、CollisionProxy、V3、14/16 GiB safety ceilingは変更しない。既存のPhase 6FO probe/runner、resource guard、bounded CDB、exact cleanupを直接再利用し、C5 metadata、bounded manifest、active viewport alias、renderer drain、release-before/after-closeを一変数ずつ比較する。詳細は`docs/design/phase6fq_stage_close_lifecycle_qualification.md`を参照する。

@@ -1,0 +1,125 @@
+{
+  "schema": "campfire.phase6fr.stage-close-native-lifecycle-summary.v1",
+  "phase": "phase6fr",
+  "status": "safe_stop",
+  "phase6fq_reclassified": false,
+  "phase6fo_restarted": false,
+  "contract_sha256": "3409331216A4D8EFC6557D90F83215B129A8B4790FC4D27EC682BB6E7E8C65DF",
+  "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "cdb": {
+    "path": "C:\\Program Files (x86)\\Windows Kits\\10\\Debuggers\\x64\\cdb.exe",
+    "file_version": "10.0.28000.2526 (WinBuild.160101.0800)",
+    "sha256": "506D1FD7AD306F6F53D8D157375A03A8368446923DEF9457CDFB2E3214054376",
+    "order": ["all_thread_stack", "auxiliary_modules", "explicit_detach"],
+    "symbol_path": "local cache only",
+    "microsoft_symbol_server_wait": false,
+    "full_dump_created": false,
+    "automatic_upload": false
+  },
+  "fixture": {
+    "root": "artifacts/phase6fr-cdb-stack-first-2",
+    "status": "pass",
+    "cases": [
+      {"name": "wait-stack-first", "status": "pass", "stack_complete": true, "modules_complete": true, "explicit_detach": true, "target_alive_after_detach": true, "peak_cdb_private_bytes": 17190912},
+      {"name": "module-timeout-fallback", "status": "pass", "stack_complete": true, "modules_complete": false, "module_timed_out": true, "explicit_detach": true, "target_alive_after_detach": true, "peak_cdb_private_bytes": 46596096},
+      {"name": "stack-timeout-cleanup", "status": "pass", "stack_complete": false, "stack_timed_out": true, "explicit_detach": true, "target_alive_after_detach": true, "peak_cdb_private_bytes": 47153152},
+      {"name": "locked-log-end-to-end", "status": "pass", "stack_complete": true, "log_capture_error_recorded": true, "explicit_detach": true, "target_alive_after_detach": true},
+      {"name": "normal-exit-before-attach", "status": "pass", "identity_rejected": true, "cdb_started": false}
+    ],
+    "cdb_residual_processes": 0
+  },
+  "formal_population": {
+    "root": "artifacts/phase6fr-stage-close-native-lifecycle-2",
+    "planned": 6,
+    "launched": 1,
+    "passed": 0,
+    "active_failure": "attempt01 A_release_before_close run01",
+    "later_conditions_started": false,
+    "readback_calls": 0,
+    "capture_calls": 0,
+    "active_blocks_frame_96": 948,
+    "point_payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389",
+    "last_marker": "stage_close_timeout",
+    "stage_close_timeout_seconds": 180.0144794,
+    "normal_os_exit": false,
+    "cleanup_residual_processes": 0
+  },
+  "resources": {
+    "kit_peak_bytes": 14678245376,
+    "kit_peak_gib": 13.670181274414063,
+    "unique_tree_peak_bytes": 14839545856,
+    "unique_tree_peak_gib": 13.820404052734375,
+    "runner_peak_bytes": 112254976,
+    "diagnostic_peak_bytes": 115720192,
+    "minimum_available_physical_bytes": 81115897856,
+    "minimum_commit_headroom_bytes": 100415016960,
+    "kit_margin_to_14_gib_bytes": 354140160,
+    "kit_margin_to_14_gib_mib": 337.734375,
+    "resource_limit_failure": false,
+    "resource_limit_adoption_decided": false
+  },
+  "timeout_stack": {
+    "thread_count": 149,
+    "stack_log_bytes": 118514,
+    "stack_capture_seconds": 22.2674227,
+    "module_capture_seconds": 1.0902311,
+    "explicit_detach_seconds": 1.0253879,
+    "all_thread_stack_complete": true,
+    "modules_complete": true,
+    "explicit_detach_complete": true,
+    "cdb_process_absent": true,
+    "main_thread": {
+      "id": "0xc5d0.0x34a0",
+      "boundary": "omni_usd!omni::usd::UsdManager::destroyContext+0x160",
+      "upper_frames": ["carb_eventdispatcher_plugin!carbOnPluginRegisterEx2+0x26b8", "omni_usd export-symbol frames", "Python close_stage_async call chain"]
+    },
+    "loader_thread": {
+      "id": "0xc5d0.0xaa60",
+      "name": "std::async UsdContext loader thread",
+      "wait": "ntdll!RtlAcquireSRWLockExclusive+0x165",
+      "boundary": "omni_usd!omni::usd::UsdContext::loadRenderSettingsFromStage+0xed -> UsdContext::closeStage+0x360/+0xcba"
+    },
+    "lock_owner": "unknown",
+    "gpu_fence_wait_observed_as_cause": false,
+    "known_ngx_signature": false,
+    "known_ngx_tokens_matched": 0,
+    "classification": "unknown omni.usd context-close native synchronization failure"
+  },
+  "confirmed": [
+    "The release-before-close control reproduced the 180-second stage-close timeout without readback or capture.",
+    "The stack-first path captured all 149 thread stacks before module enumeration and detached cleanly.",
+    "The main stack was inside UsdManager::destroyContext while the named UsdContext loader thread waited for an exclusive SRW lock inside closeStage/loadRenderSettingsFromStage.",
+    "No accepted NGX signature token, fatal, dump, upload, device-lost, TDR, resource ceiling violation, or residual process was present."
+  ],
+  "inferences": [
+    "The failure is independent of NanoVDB readback and capture preparation.",
+    "The narrowest public-symbol boundary is omni.usd context destruction and loader-thread synchronization, not an identified Flow allocation or NGX telemetry shutdown.",
+    "Lock ownership and the exact internal invariant cannot be proven without additional private symbols or lock-owner evidence."
+  ],
+  "decision": {
+    "release_after_close_tested": false,
+    "release_after_close_promising": "undetermined",
+    "move_to_low_frequency_monitoring": false,
+    "memory_ceiling_qualification_ready": false,
+    "phase6fo_ready": false,
+    "required_next_evidence": "Explicit approval for a new B-first release-after-close-only limited qualification, because the frozen fail-fast order stopped before B."
+  },
+  "regression": {
+    "release_build_seconds": 6.59,
+    "phase0_rtx": "pass",
+    "phase3": {
+      "status": "pass",
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "dry_authoritative_state_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+      "wet_authoritative_state_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9"
+    },
+    "focused_tests": {"passed": 68, "failed": 0},
+    "standard_suite": {"processes": 8, "passed": 78, "failed": 0, "seconds": 296.2},
+    "devlog_static": {"json_valid": true, "duplicate_ids": 0, "replacement_characters": 0},
+    "residual_processes": {"kit": 0, "cdb": 0, "nvidia_smi": 0},
+    "latest_demo_changed": false,
+    "video_created": false,
+    "production_changed": false
+  }
+}

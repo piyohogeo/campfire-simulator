@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6fq">最新記録</a>
+        <a href="#phase-6fr">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,22 +27,34 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fq">Phase 6FQの診断を読む</a>
+        <a class="button primary" href="#phase-6fr">Phase 6FRの診断を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FQ · lifecycle safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6FR · native lifecycle safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Population</span><strong>6 normal · attempt07 safe stop</strong></div>
+        <div><span>Population</span><strong>CDB pass · A attempt01 safe stop</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
   </header>
 
   <main>
+    <section id="phase-6fr" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FR stack-first native lifecycle diagnostic"><span class="phase-number compact">6FR</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">CDB pass · A safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FR · stack-first CDB / shutdown order</p><h2>全149 threadを取得。<br>停止境界はomni.usd context close。</h2><p>Phase 6FQを変更せず、CDBをstack-first・module独立・explicit detachへ改めました。停止可能fixtureを先に通し、readback／capture 0のrelease-before/after-closeだけを比較する契約を固定しました。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">CDB fixture</p><h3>5 / 5 · bounded cleanup</h3><p>complete stack、module timeout fallback、forced stack timeout、locked log、target exitを分離しました。module timeoutでも先行stackを保持し、targetを誤停止せず、CDB残留は0でした。</p></section><section class="note"><p class="note-label">Formal A control</p><h3>180.014 s · stage close timeout</h3><p>representative startup、frame 96で948 blocks、8 renderer drain、release-before-closeまで完了後に停止しました。Kit peakは13.670 GiBで14 GiB未満、readback/captureは0です。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Native boundary</p><h3>destroyContextとUsdContext loader SRW wait。</h3><p>main close pathは<code>omni_usd!UsdManager::destroyContext+0x160</code>、loader threadは<code>RtlAcquireSRWLockExclusive</code>から<code>loadRenderSettingsFromStage</code>／<code>closeStage</code>へ続いていました。public symbolだけではownerを確定できず、known NGX tokenは0/5です。stack、module、detachは完了し、exact cleanup後の残留は0でした。</p><p>Aのtimeoutは非置換failureなのでBを開始していません。release-after-close、安全順序、memory ceilingは未qualifiedで、Phase 6FOもblockedです。内部診断だけのため動画とlatest demoは変更していません。</p><p><a href="assets/phase6/stage_close_native_lifecycle_safe_stop.json">machine report</a> · <a href="../design/phase6fr_stage_close_native_lifecycle.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>149</span><p><strong>Thread stacks</strong><small>complete</small></p></div><div role="listitem"><span>0/1</span><p><strong>A passed</strong><small>B not started</small></p></div><div role="listitem"><span>13.670</span><p><strong>Kit peak</strong><small>GiB</small></p></div><div role="listitem"><span>0</span><p><strong>Residual</strong><small>exact cleanup</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Pending roadmap</p><h3>B-first限定qualificationが最小の未確定境界。</h3><p>新しい明示承認なしに同じAを反復しません。release-after-closeだけを先に少数runで検証できるまでは、低頻度既知問題への移行、memory ceiling qualification、Phase 6FO再開へ進みません。</p></section>
+        </div>
+      </article>
+    </section>
+
     <section id="phase-6fq" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6FQ stage-close lifecycle qualification"><span class="phase-number compact">6FQ</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">6 / 18 · lifecycle safe stop</span></aside>
