@@ -150,6 +150,23 @@ class Phase6FvMemoryCeilingQualification(unittest.TestCase):
         expected = sidecar.read_text(encoding="utf-8").split()[0].upper()
         self.assertEqual(expected, hashlib.sha256(CONTRACT.read_bytes()).hexdigest().upper())
 
+    def test_published_identity_safe_stop_does_not_qualify_or_restart(self):
+        summary = json.loads(
+            (ROOT / "docs" / "devlog" / "assets" / "phase6" / "memory_ceiling_post6fu_safe_stop.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual("identity_safe_stop", summary["status"])
+        self.assertEqual(3, summary["population"]["launched"])
+        self.assertEqual(1, summary["population"]["nonreplaceable_failure"])
+        self.assertFalse(summary["memory_decision"]["kit_16_gib_qualified"])
+        self.assertFalse(summary["memory_decision"]["tree_17_gib_qualified"])
+        self.assertFalse(summary["phase6fo_restarted"])
+        identity = summary["identity_safe_stop"]
+        self.assertFalse(identity["termination_attempted_for_mismatch"])
+        self.assertEqual(0, identity["matching_remaining"])
+        self.assertEqual(0, identity["final_unknown"])
+
 
 if __name__ == "__main__":
     unittest.main()

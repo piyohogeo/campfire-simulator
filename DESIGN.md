@@ -6,6 +6,10 @@ Phase 6FTは`146ded9`の8/9 lifecycle safe stopとして凍結し、既存sample
 
 全runはPhase 6FSのdiagnostic-only `release-after-close`、修正版4本fixture、S93、1,344/1,440 Points、同一payload、readback/capture/video 0を固定する。旧14 GiBはsoft evaluation threshold、Kit 16 GiB／unique tree 17 GiBをabsolute stop、runner/diagnostic各512 MiB、physical/commit floor各8 GiB、stage close 180秒とする。16 GiB qualificationは9/9 normal exit、正常最大15.5 GiB以下、512 MiB以上の余裕、tree 17 GiB以内、persistent unexplained accumulation 0、全lifecycle marker、Phase 6FU exact cleanupと二経路absence、残留0を要求する。Phase 6FVは上限qualificationだけを行い、Phase 6FO、S93/S100比較、production変更、動画、P4を開始しない。詳細は`docs/design/phase6fv_memory_ceiling_qualification.md`を参照する。
 
+正式rootはattempt03 M2で`identity_mismatch_observed`として安全停止した。attempt01 M0とattempt02 M1はrepresentative pass、attempt03も688/948/1,322 blocks、resource上限内、stage close 34.468秒、`shutdown_complete`、OS exit 0まで到達したが、記録済み`conhost.exe` PID 43676がcleanup時には別creation timeの`WmiPrvSE.exe`へ再利用されていた。guardは新processを停止せず、matching残留・final unknown・killはいずれも0、二経路absenceとsuppression解放を確定した。一方、事前契約はprotected identity mismatchを非置換failureとしたため後続6条件を開始していない。2代表runのKit peakは14,899,392,512～14,945,353,728 bytes、14 GiB最小余裕は87,031,808 bytesで旧上限は依然厳しすぎるが、9/9未完了のため16/17 GiBは未qualified、Phase 6FOはblockedである。
+
+最終回帰はRelease build 7.96秒、Phase 0 RTX、Phase 3（dry/wet mass balance 0、wood-owned Flow input、active blocks final/peak 254/342、peak fuel 1.0）、focused Phase 6F 177/177、Phase 6EA resource/static 7/7・6/6、標準suite 8 process・78/78（351.1秒）、devlog検査に合格した。production app SHA-256とlatest demo manifest SHA-256は不変で、Kit/CDB/nvidia-smi残留は0である。
+
 # Phase 6FU hang diagnostic identity and cleanup contract
 
 Phase 6FTは`146ded9`のsafe stopとして凍結する。attempt09は`stage_close_timeout`後にCDB artifactを確定せず、guardの二値identity queryは問い合わせ失敗と不在を区別できないままcleanup summaryを確定した。Phase 6FUはprocess stateを7分類し、PID・creation time・absolute path・parentage・role・attempt IDを保存する。psutil/Get-Processとnative Win32/CIMの独立照合がともにexitを確認した場合だけ`confirmed_exited`とし、unknownやidentity mismatchを停止対象にしない。

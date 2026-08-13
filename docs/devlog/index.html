@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6fu">最新記録</a>
+        <a href="#phase-6fv">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fu">Phase 6FUの結果を読む</a>
+        <a class="button primary" href="#phase-6fv">Phase 6FVの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FU · diagnostic cleanup qualified</strong></div>
+        <div><span>現在地</span><strong>Phase 6FV · identity safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>12 boundaries · fixture pass</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,18 @@
   </header>
 
   <main>
+    <section id="phase-6fv" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FV memory ceiling identity safe stop"><span class="phase-number compact">6FV</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">3 / 9 · identity safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FV · post-6FU memory ceiling qualification</p><h2>3本とも正常終了。<br>PID再利用を検出して安全停止。</h2><p>Phase 6FTを凍結したまま、Phase 6FUのexact identity／cleanup guardを使い、新しいrootでM0／M1／M2の9-process母集団を開始しました。readback、capture、動画、production変更はありません。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Completed evidence</p><h3>M0 / M1 pass · M2 OS exit 0</h3><p>active blocksはM0/M1で688→948、M2で688→948→1,322でした。Kit peakは14,474,739,712～14,945,353,728 bytes、stage closeは3.942～34.468秒で、resource上限、fatal、dump、upload、stage-close timeout、CDB発動はありません。</p></section><section class="note"><p class="note-label">Fail-closed identity</p><h3>conhost PID → WmiPrvSE PID</h3><p>attempt03で記録したconhost.exeのPID 43676が、cleanup時には別creation timeのWmiPrvSE.exeへ再利用されていました。guardは別processを停止せず、matching残留0、final unknown 0、kill 0、psutil/Win32 absence完了を保存しましたが、凍結契約のno-mismatch gateに従って後続6条件を開始しませんでした。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Frozen decision</p><h3>14 GiBは近すぎる。16 / 17 GiBは未qualified。</h3><p>正式pass 2 runの14 GiB最小余裕は87,031,808 bytesで、事前の256 MiB margin規則を下回りました。ただし必要な9/9 populationが未完了なので、Kit 16 GiBとtree 17 GiBは採用しません。Phase 6FO、S93/S100、動画、P4、productionはblocked／不変です。</p><p>Release build、Phase 0 RTX、Phase 3（mass balance 0、wood-owned Flow）、focused 177/177、標準suite 8 process・78/78、devlog検査に合格しました。production appとlatest demoのSHA-256は不変、Kit/CDB/nvidia-smi残留は0です。</p><p><a href="assets/phase6/memory_ceiling_post6fu_safe_stop.json">machine summary</a> · <a href="../design/phase6fv_memory_ceiling_qualification.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>3/9</span><p><strong>Launched</strong><small>no retry</small></p></div><div role="listitem"><span>3</span><p><strong>OS exit 0</strong><small>close complete</small></p></div><div role="listitem"><span>0</span><p><strong>Owned residual</strong><small>dual absence</small></p></div><div role="listitem"><span>—</span><p><strong>16 / 17 GiB</strong><small>unqualified</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Pending roadmap</p><h3>PID再利用を残留と分離する契約判断が先。</h3><p>Phase 6FV自体はsafe stopのまま再分類しません。次は、誤停止を防いで元identityのabsenceも確定したPID再利用を、non-residualの別軸として扱えるかを独立契約で判断します。新しい明示承認なしに残り6条件やPhase 6FOを開始しません。</p></section>
+        </div>
+      </article>
+    </section>
+
     <section id="phase-6fu" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6FU diagnostic identity and cleanup qualification"><span class="phase-number compact">6FU</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">diagnostic · qualified</span></aside>
@@ -5057,7 +5069,7 @@
       <div class="shell">
         <p class="section-kicker">Roadmap</p>
         <h2>小さく燃やして、確かめながら進む。</h2>
-        <p>Phase 6FUでstack-first CDB、7状態identity、diagnostic ownership、二系統absence確認、exact cleanupが専用fixture合格。Phase 6FTは8/9 safe stop、16/17 GiBは未qualified、Phase 6FOはblockedのまま。次の9-process memory populationは新rootと明示承認がある場合だけ再開候補。</p>
+        <p>Phase 6FVはPhase 6FU guardで3 processを起動し、全Kitが正常終了した後、attempt03のconhost PIDがWmiPrvSEへ再利用されたことを検出して契約どおり停止。誤停止・attempt残留・unknownは0だが、9/9未完了のため16/17 GiBは未qualified、Phase 6FOはblocked。次はPID再利用をnon-residual lifecycle outcomeとして分離できるかの独立契約判断。</p>
         <ol class="roadmap">
           <li class="done"><span>0</span><div><strong>環境成立確認</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>1</span><div><strong>Flow単体検証</strong><small>完了 · 2026.08.04</small></div></li>

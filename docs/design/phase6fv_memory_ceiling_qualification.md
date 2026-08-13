@@ -83,3 +83,46 @@ video, P4, production change, or production adoption.
 
 Runtime results are appended only after the contract, implementation, focused
 tests, and Release build are committed and pass.
+
+## Runtime result — frozen identity safe stop
+
+The fresh `phase6fv-memory-ceiling-1` population stopped after attempt03. M0
+and M1 were representative passes. Their Kit peaks were 14,945,353,728 and
+14,899,392,512 bytes, tree peaks were 15,109,410,816 and 15,062,315,008 bytes,
+and stage-close times were 8.8809413 and 3.9417643 seconds. Attempt03 M2 also
+formed the expected 688/948/1,322-block field, remained below every resource
+limit, closed the stage in 34.467623 seconds, reached `shutdown_complete`, and
+returned OS exit code zero. No readback, capture, CDB, fatal, dump, upload, or
+stage-close timeout occurred.
+
+Phase 6FU cleanup then protected a reused PID. The attempt had observed PID
+43676 as `conhost.exe`, creation time 1786657112.7231607. At final cleanup,
+psutil found the same PID owned by `WmiPrvSE.exe`, creation time
+1786657296.362193; native Win32 access was denied. This is confirmed identity
+reuse, not an attempt-owned residual. The guard did not terminate the new
+process. Exact matching remaining identities, final unknown identities, and
+killed PIDs were all zero; cleanup suppression was released and original
+attempt identities were absent. Nevertheless, the predeclared Phase 6FV gate
+requires no protected mismatch, so attempt03 is a nonreplaceable
+`identity_mismatch_observed` failure and attempts04–09 were not launched.
+
+The two formal representative runs left only 87,031,808 bytes below the old
+14 GiB threshold, so the frozen margin rule again classifies 14 GiB as too
+close to normal high-water for anomaly detection. That partial observation
+does not qualify 16 GiB or the 17 GiB tree limit: the required 9/9 population
+did not complete. Phase 6FO remains blocked. This result does not alter Phase
+6FT, production code/defaults/shutdown order, S93/S100 physics, video, latest
+demo, or P4. A future phase must first decide whether a safely protected,
+confirmed PID-reuse event should remain a population-stopping integrity event
+or be represented as a separate non-residual lifecycle outcome; Phase 6FV is
+not reclassified while that policy is considered.
+
+Final regression passed the Release build (7.96 seconds), Phase 0 RTX, Phase 3
+(dry/wet mass-balance error zero, wood-owned Flow input, active blocks
+final/peak 254/342, peak fuel 1.0), focused Phase 6F 177/177, Phase 6EA
+resource/static 7/7 and 6/6, the standard eight-process 78/78 suite (351.1
+seconds), and devlog validation. Production app SHA-256 remained
+`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`;
+the latest-demo manifest remained
+`1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285`.
+Final Kit/CDB/nvidia-smi residual count was zero.
