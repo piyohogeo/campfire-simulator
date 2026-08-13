@@ -62,6 +62,18 @@ class Phase6FgContract(unittest.TestCase):
         self.assertNotIn("fuel_scalar", runner)
         self.assertIn('"phase6fg"', (ROOT / "scripts" / "run_phase6ep_point_collision_case.ps1").read_text(encoding="utf-8"))
 
+    def test_published_safe_stop_and_devlog(self):
+        published = json.loads((ROOT / "docs" / "devlog" / "assets" / "phase6" / "paired_readback_safe_stop.json").read_text(encoding="utf-8"))
+        self.assertEqual(published["status"], "safe_stop")
+        self.assertEqual(published["completed_passing_conditions"], 5)
+        self.assertEqual(published["active_failed_condition"], "sequence02_A_control")
+        self.assertFalse(published["decision_model"]["waveform_metrics_formal_gate"])
+        self.assertFalse(published["qualification"]["one_readback_qualified"])
+        self.assertTrue(published["failed_lifecycle"]["cleanup_all_absent"])
+        devlog = (ROOT / "docs" / "devlog" / "index.html").read_text(encoding="utf-8")
+        self.assertIn('id="phase-6fg"', devlog)
+        self.assertIn("paired_readback_safe_stop.json", devlog)
+
 
 if __name__ == "__main__":
     unittest.main()
