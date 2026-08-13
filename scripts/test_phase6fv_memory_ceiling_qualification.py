@@ -52,7 +52,8 @@ class Phase6FvMemoryCeilingQualification(unittest.TestCase):
     def test_runner_reuses_shared_lifecycle_and_phase6fu_guard(self):
         self.assertIn('$guard = Join-Path $PSScriptRoot "phase6fu_resource_guard.py"', self.runner)
         self.assertIn('$caseRunner = Join-Path $PSScriptRoot "run_phase6fo_supply_case.ps1"', self.runner)
-        self.assertIn('"-ReportPhase", "phase6fv"', self.runner)
+        self.assertIn('[ValidateSet("phase6fv")][string]$CaseReportPhase = "phase6fv"', self.runner)
+        self.assertIn('"-ReportPhase", $CaseReportPhase', self.runner)
         self.assertIn('"--kit-private-limit", "$($contract.safety.kit_absolute_stop_bytes)"', self.runner)
         self.assertIn('"--tree-private-limit", "$($contract.safety.unique_tree_absolute_stop_bytes)"', self.runner)
         self.assertIn('"--cleanup-suppression-lock"', self.runner)

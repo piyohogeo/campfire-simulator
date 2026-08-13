@@ -1,5 +1,19 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FX memory-ceiling qualification contract
+
+Phase 6FT/6FV remain frozen safe stops and their runtime artifacts are not part
+of the new formal population. Phase 6FX freezes a fresh balanced M0/M1/M2
+three-run population under contract SHA-256
+`A32F9FB6CB94E733DC1B0B3A4133A1434B35CB4706B62EB2CCE7152993B0D0D6`.
+It directly reuses the Phase 6FS `release-after-close` lifecycle, Phase 6FU
+guard/exact cleanup, Phase 6FW final PID-reuse classifier, and Phase 6FR
+stack-first CDB path. Old 14 GiB is evaluation-only; Kit 16 GiB and unique
+tree 17 GiB are absolute stops, with qualification requiring a fresh normal
+maximum at or below 15.5 GiB. Phase 6FO, readback, capture, video, production,
+defaults, and physics are excluded. See
+`docs/design/phase6fx_memory_ceiling_qualification.md`.
+
 # Phase 6FW PID reuse identity policy contract
 
 Phase 6FVは`445a1da`のidentity safe stopとして凍結し、attempt03や旧contractを遡及合格にしない。Phase 6FUの7状態identity query・exact cleanup・停止権限は変更せず、その完了証拠を読む独立した最終policy層だけを追加する。正式contractはschema `campfire.phase6fw.pid-reuse-policy-contract.v1`、SHA-256 `4DA8B0C71F7AAF0A9BA437D0D7712674C87F80AF982F413148E317C4EF4CDBA0`である。

@@ -1,20 +1,23 @@
 param(
     [Parameter(Mandatory = $true)][string]$OutputRoot,
-    [string]$ContractPath = ""
+    [string]$ContractPath = "",
+    [ValidateSet("phase6fv", "phase6fx")][string]$Phase = "phase6fv",
+    [string]$AnalyzerPath = "",
+    [ValidateSet("phase6fv")][string]$CaseReportPhase = "phase6fv"
 )
 
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version 3.0
 $repo = Split-Path -Parent $PSScriptRoot
 $OutputRoot = [IO.Path]::GetFullPath($OutputRoot)
-if (Test-Path -LiteralPath $OutputRoot) { throw "Phase 6FV refuses artifact root reuse: $OutputRoot" }
+if (Test-Path -LiteralPath $OutputRoot) { throw "$Phase refuses artifact root reuse: $OutputRoot" }
 $contractPath = if ([string]::IsNullOrWhiteSpace($ContractPath)) { Join-Path $PSScriptRoot "phase6fv_memory_ceiling_qualification_contract.json" } else { [IO.Path]::GetFullPath($ContractPath) }
 $hashPath = [IO.Path]::ChangeExtension($contractPath, ".sha256")
 $expectedHash = ((Get-Content -Encoding UTF8 $hashPath | Select-Object -First 1) -split '\s+')[0].ToUpperInvariant()
 $actualHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $contractPath).Hash
-if ($actualHash -ne $expectedHash) { throw "Phase 6FV contract hash mismatch" }
+if ($actualHash -ne $expectedHash) { throw "$Phase contract hash mismatch" }
 $contract = Get-Content -Raw -Encoding UTF8 $contractPath | ConvertFrom-Json
-if ($contract.phase -ne "phase6fv") { throw "Phase 6FV contract phase mismatch" }
+if ($contract.phase -ne $Phase) { throw "$Phase contract phase mismatch" }
 
 $runtimeFiles = [ordered]@{
     phase6fu_resource_guard_sha256 = Join-Path $PSScriptRoot "phase6fu_resource_guard.py"
@@ -24,10 +27,19 @@ $runtimeFiles = [ordered]@{
     shared_case_runner_sha256 = Join-Path $PSScriptRoot "run_phase6fo_supply_case.ps1"
     shared_probe_sha256 = Join-Path $PSScriptRoot "probe_phase6fo_supply_comparison.py"
 }
+$optionalRuntimeFiles = [ordered]@{
+    qualification_runner_sha256 = $PSCommandPath
+    phase6fw_policy_sha256 = Join-Path $PSScriptRoot "phase6fw_pid_reuse_policy.py"
+}
+foreach ($entry in $optionalRuntimeFiles.GetEnumerator()) {
+    if ($contract.runtime_hashes.PSObject.Properties.Name -contains $entry.Key) {
+        $runtimeFiles[$entry.Key] = $entry.Value
+    }
+}
 foreach ($entry in $runtimeFiles.GetEnumerator()) {
     $observed = (Get-FileHash -Algorithm SHA256 -LiteralPath $entry.Value).Hash
     $required = [string]$contract.runtime_hashes.($entry.Key)
-    if ($observed -ne $required) { throw "Phase 6FV runtime hash mismatch: $($entry.Key)" }
+    if ($observed -ne $required) { throw "$Phase runtime hash mismatch: $($entry.Key)" }
 }
 
 New-Item -ItemType Directory -Path $OutputRoot | Out-Null
@@ -37,7 +49,7 @@ $productionApp = Join-Path $repo "_build\windows-x86_64\release\apps\campfire.si
 $productionBefore = (Get-FileHash -Algorithm SHA256 -LiteralPath $productionApp).Hash
 $guard = Join-Path $PSScriptRoot "phase6fu_resource_guard.py"
 $caseRunner = Join-Path $PSScriptRoot "run_phase6fo_supply_case.ps1"
-$analyzer = Join-Path $PSScriptRoot "analyze_phase6fv_memory_ceiling_qualification.py"
+$analyzer = if ([string]::IsNullOrWhiteSpace($AnalyzerPath)) { Join-Path $PSScriptRoot "analyze_phase6fv_memory_ceiling_qualification.py" } else { [IO.Path]::GetFullPath($AnalyzerPath) }
 $powershell = (Get-Command powershell.exe).Source
 $reportPath = Join-Path $OutputRoot "memory_ceiling_qualification_report.json"
 $statePath = Join-Path $OutputRoot "incremental_state.json"
@@ -48,7 +60,7 @@ $previousExitUtc = ""
 
 function Write-State([string]$Status, [string]$AttemptId, [string]$SlotId, [string]$Classification, [string]$Reason) {
     $state = [ordered]@{
-        schema="campfire.phase6fv.incremental-state.v1"; phase="phase6fv"; status=$Status
+        schema="campfire.$Phase.incremental-state.v1"; phase=$Phase; status=$Status
         launches=$attempted; completed_representative_slots=$completed; startup_prerequisite_failures=$startupFailures
         active_attempt=$AttemptId; active_slot=$SlotId; active_classification=$Classification; stop_reason=$Reason
         legacy_14_gib_is_soft_evaluation_threshold=$true
@@ -84,7 +96,7 @@ function Invoke-MemoryCase([string]$AttemptRoot, [object]$Condition, [int]$RunIn
         "-Scenario", $contract.physical_fixture.scenario, "-OutputDir", $caseDir,
         "-OffsetM", "$($contract.physical_fixture.point_offset_m)", "-SupportRadiusM", "$($contract.physical_fixture.support_radius_m)",
         "-Filtering", "true", "-Collision", "true", "-Policy", $contract.physical_fixture.point_policy,
-        "-ReportPhase", "phase6fv", "-GeometryVariant", $contract.physical_fixture.geometry_variant,
+        "-ReportPhase", $CaseReportPhase, "-GeometryVariant", $contract.physical_fixture.geometry_variant,
         "-FuelScale", "1", "-TemperatureScale", "1", "-SmokeScale", "1",
         "-SampleFrames", $sampleFrames, "-OperationFrames", "$($Condition.terminal_frame)",
         "-ReadbackChannels", "none", "-ReadbackMode", "none", "-ReferenceDisposal", "del",
@@ -153,7 +165,7 @@ while ($completed -lt $slots.Count) {
     New-Item -ItemType Directory -Path $attemptRoot | Out-Null
     $condition = @($contract.conditions | Where-Object { $_.id -eq $slot.condition })[0]
     $metadata = [ordered]@{
-        schema="campfire.phase6fv.attempt-metadata.v1"; phase="phase6fv"; attempt_id=$attemptId
+        schema="campfire.$Phase.attempt-metadata.v1"; phase=$Phase; attempt_id=$attemptId
         slot_id=$slot.slot_id; sequence=$slot.sequence; position=$slot.position; condition=$slot.condition
         run_index=$slot.sequence
         settings=[ordered]@{
@@ -177,10 +189,10 @@ while ($completed -lt $slots.Count) {
         $startupFailures++
         if ($startupFailures -le [int]$contract.startup.startup_replacement_budget) { continue }
         Write-State "startup_safe_stop" $attemptId $slot.slot_id $case.classification "startup_replacement_budget_exhausted"
-        throw "Phase 6FV startup replacement budget exhausted"
+        throw "$Phase startup replacement budget exhausted"
     }
     Write-State "safe_stop" $attemptId $slot.slot_id $case.classification ($case.failures -join ',')
-    throw "Phase 6FV nonreplaceable failure: $($case.failures -join ',')"
+    throw "$Phase nonreplaceable failure: $($case.failures -join ',')"
 }
 
 Update-Report
@@ -188,7 +200,7 @@ Assert-Production "complete"
 $final = Get-Content -Raw -Encoding UTF8 $reportPath | ConvertFrom-Json
 if (-not $final.qualification_complete -or -not $final.candidate_16_gib_qualified -or -not $final.candidate_17_gib_tree_qualified) {
     Write-State "safe_stop" "complete" "" "nonreplaceable_failure" "final_report_not_qualified"
-    throw "Phase 6FV memory ceiling qualification did not qualify"
+    throw "$Phase memory ceiling qualification did not qualify"
 }
 Write-State "qualified" "complete" "complete" "representative_pass" ""
-Write-Host "Phase 6FV memory ceiling qualification completed; Phase 6FO remains stopped"
+Write-Host "$Phase memory ceiling qualification completed; Phase 6FO remains stopped"

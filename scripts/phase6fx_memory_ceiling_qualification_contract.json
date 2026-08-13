@@ -1,0 +1,195 @@
+{
+  "schema": "campfire.phase6fx.memory-ceiling-qualification-contract.v1",
+  "phase": "phase6fx",
+  "declared_before_runtime": true,
+  "purpose": "Acquire a fresh balanced nine-process normal four-log Kit high-water population after Phase 6FW and qualify or reject 16 GiB Kit and 17 GiB unique-tree ceilings without starting Phase 6FO.",
+  "frozen_history": {
+    "phase6ft_reclassified": false,
+    "phase6fv_reclassified": false,
+    "phase6fv_artifact_reused": false,
+    "phase6fw_commit": "39de323",
+    "phase6fw_pid_reuse_policy": "qualified",
+    "phase6fo_restarted": false
+  },
+  "runtime_hashes": {
+    "phase6fu_resource_guard_sha256": "79C7C5B5E21E644EA344795FCE5D5D9AFD13C566E4F9A4E3B19E50CDFE02AC23",
+    "phase6fu_process_identity_sha256": "ECD95E4BB578FF886C5761F06C00B52E96CC83FAC0E76B671654A2B843BA89C4",
+    "frozen_phase6eg_resource_guard_sha256": "A16FA82606A4265093E88816540A0E293205AADC9A15FA11B7CA09C6B32CC45E",
+    "kit_shutdown_policy_sha256": "07D52B2BEB45B17D16AE768068C56E7537F02948C349231BE15843578B58216D",
+    "shared_case_runner_sha256": "3BBCD95997132A41AFAD49A00F2ECEFACF12B5002D84AF913A490522359BA096",
+    "shared_probe_sha256": "1FC443EFA81D10A5ECDAB1635AEE5E66E75F63A456D4C7C2A86A966B3FCBE47E",
+    "qualification_runner_sha256": "ED6F912FCD98F37612178A6B6B28EC1117AC2DA307C1678B35945BA0D4017A94",
+    "phase6fw_policy_sha256": "625837617F7240F74E49A875B0895ACD06D0134FFA9ED13342C71E0F401E0DBA"
+  },
+  "physical_fixture": {
+    "scenario": "production_four",
+    "geometry_variant": "phase6er_corrected",
+    "point_policy": "allow_self_center",
+    "point_offset_m": -0.0125,
+    "support_radius_m": 0.05,
+    "active_points": 1344,
+    "total_points": 1440,
+    "revision": 1,
+    "payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389",
+    "expected_source_sums": {
+      "fuel": 1075.2000160217285,
+      "temperature": 2688.0,
+      "smoke": 107.51999759674072
+    },
+    "source_sum_absolute_tolerance": 0.0001,
+    "readback_calls": 0,
+    "capture_calls": 0,
+    "video_generated": false
+  },
+  "startup": {
+    "flow_acquire_position": "before_updates",
+    "stopped_update_count": 12,
+    "extra_update_before_play_count": 0,
+    "representative_active_block_minimum_at_frame_60": 128,
+    "startup_replacement_budget": 1,
+    "only_startup_prerequisite_may_be_replaced": true
+  },
+  "conditions": [
+    {
+      "id": "M0_baseline",
+      "allocation_level": 0,
+      "spatial_collectors_enabled": false,
+      "sample_frames": [60, 96],
+      "terminal_frame": 96,
+      "description": "Phase 6FN-equivalent S93 baseline without readback"
+    },
+    {
+      "id": "M1_phase6fo_equivalent",
+      "allocation_level": 7,
+      "spatial_collectors_enabled": true,
+      "sample_frames": [60, 96],
+      "terminal_frame": 96,
+      "description": "Phase 6FO-equivalent S93 diagnostic state without readback"
+    },
+    {
+      "id": "M2_pre_readback_frame",
+      "allocation_level": 7,
+      "spatial_collectors_enabled": true,
+      "sample_frames": [60, 96, 179],
+      "terminal_frame": 179,
+      "planned_phase6fo_first_readback_frame": 180,
+      "description": "Phase 6FO-equivalent state advanced to the frame immediately before the first planned readback"
+    }
+  ],
+  "population": {
+    "runs_per_condition": 3,
+    "required_representative_processes": 9,
+    "automatic_retry": false,
+    "stop_on_first_nonreplaceable_failure": true,
+    "orders": [
+      ["M0_baseline", "M1_phase6fo_equivalent", "M2_pre_readback_frame"],
+      ["M1_phase6fo_equivalent", "M2_pre_readback_frame", "M0_baseline"],
+      ["M2_pre_readback_frame", "M0_baseline", "M1_phase6fo_equivalent"]
+    ]
+  },
+  "lifecycle": {
+    "reference_release_order": "after_stage_close",
+    "renderer_drain_updates": 8,
+    "post_close_renderer_updates": 4,
+    "explicit_ownership_container_required": true,
+    "sequence": [
+      "timeline_stop",
+      "renderer_drain_8",
+      "retain_stage_viewport_flow_provider_emitter_collector_references",
+      "close_stage_async",
+      "usd_context_detach",
+      "post_close_renderer_updates_4",
+      "release_owned_references",
+      "extension_shutdown",
+      "kit_shutdown",
+      "normal_os_exit",
+      "phase6fu_exact_cleanup",
+      "phase6fw_final_identity_classification"
+    ],
+    "stack_first_cdb_reused": true,
+    "production_shutdown_order_changed": false
+  },
+  "identity_cleanup": {
+    "adapter": "phase6fu_resource_guard.py",
+    "final_policy": "phase6fw_pid_reuse_policy.py",
+    "identity_fields": ["pid", "create_time_utc_epoch", "path", "parent_pid", "observed_at_utc_epoch", "role", "root_attempt_id"],
+    "absence_confirmation_sources": ["psutil", "win32"],
+    "unknown_is_absent": false,
+    "identity_mismatch_is_termination_authority": false,
+    "cleanup_suppression_deadline_seconds": 90,
+    "protected_reuse_requires_complete_current_identity": true,
+    "protected_reuse_requires_time_or_path_difference": true,
+    "access_denied_alone_is_not_reuse_evidence": true,
+    "final_attempt_owned_residual_required": 0,
+    "unresolved_unknown_required": 0
+  },
+  "recording": {
+    "resource_sample_seconds": 0.2,
+    "gpu_sample_ms": 1000,
+    "streamed_jsonl": true,
+    "kit_and_unique_tree_separate": true,
+    "gpu_shared_memory": "record only if exposed by existing bounded public telemetry; otherwise unavailable and never estimated",
+    "public_field_shape_and_logical_bytes": "unavailable_without readback and never inferred",
+    "cache_state": "record bounded shader/cache/RTX log activity; do not infer cold or warm without evidence"
+  },
+  "safety": {
+    "legacy_kit_evaluation_threshold_bytes": 15032385536,
+    "legacy_threshold_is_kill_condition": false,
+    "kit_absolute_stop_bytes": 17179869184,
+    "unique_tree_absolute_stop_bytes": 18253611008,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "inner_absolute_timeout_seconds": 540,
+    "outer_condition_timeout_seconds": 780,
+    "minimum_candidate_headroom_bytes": 536870912,
+    "candidate_peak_maximum_bytes": 16642998272,
+    "startup_prerequisite_replacement_only": true,
+    "resource_or_lifecycle_replacement": false
+  },
+  "timeout_diagnostic_order": [
+    "timeout_confirmed",
+    "kit_identity_reverified",
+    "cleanup_suppression_acquired",
+    "stack_first_cdb",
+    "all_thread_stack",
+    "independent_module_pass",
+    "explicit_detach",
+    "diagnostic_json_committed",
+    "cleanup_suppression_released",
+    "attempt_identities_reenumerated",
+    "exact_matches_stopped",
+    "dual_source_absence_confirmed",
+    "phase6fw_final_identity_classification"
+  ],
+  "boundedness": {
+    "slope_alone_is_gate": false,
+    "persistent_unexplained_accumulation": {
+      "sample_count": 10,
+      "minimum_total_rise_bytes": 536870912,
+      "maximum_drop_between_adjacent_samples_bytes": 0,
+      "requires_no_active_block_growth_between_physics_markers": true,
+      "classification": "nonreplaceable failure"
+    },
+    "all_other_waveform_metrics": "telemetry and warnings only"
+  },
+  "decision": {
+    "legacy_14_gib_too_strict_if": "at least two fresh normal runs cross 14 GiB, or the largest fresh normal peak leaves less than 256 MiB below 14 GiB",
+    "legacy_small_margin_bytes": 268435456,
+    "candidate_16_gib_qualified_if": "all nine representative processes pass; maximum Kit peak is at most 15.5 GiB; minimum Kit headroom is 512 MiB; tree stays below 17 GiB; separated resource floors, lifecycle, exact cleanup, Phase 6FW identity classification, and dual-source absence all pass; and no persistent unexplained accumulation is present",
+    "candidate_17_gib_tree_qualified_if": "the same complete nine-process population stays below 17 GiB with all exact cleanup and identity gates passing",
+    "phase6fo_restart": "not authorized in Phase 6FX; only report readiness for a later explicitly approved new-root phase"
+  },
+  "excluded": [
+    "NanoVDB readback",
+    "Phase 6FO execution",
+    "S93 versus S100 scalar velocity or flux comparison",
+    "Point supply adoption",
+    "video capture",
+    "P4 integration",
+    "production change",
+    "production shutdown-order change"
+  ]
+}
