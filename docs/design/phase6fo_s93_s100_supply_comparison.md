@@ -1,5 +1,7 @@
 # Phase 6FO S93 / S100 Point supply comparison
 
+Contract correction: the first artifact root stopped before channel readback and before every formal comparison process. Its representative Flow field reached 688 active blocks at frame 60, but the startup source gate compared float32 sums with an accidentally absolute `1e-6` tolerance: fuel differed from the authored decimal by about `1.60e-5` and smoke by about `2.40e-6`. The analyzer also searched `attempt*` although the runner durably wrote `channel_attempt*`. That root remains a frozen harness safe stop and contributes no formal evidence. Contract v2 separates a `1e-4` absolute startup serialization tolerance from the unchanged `1e-6` relative physical source gate, fixes the artifact route, and fails explicitly if exactly one preflight report cannot be found. Geometry, source values, comparison thresholds, readback count, and safety ceilings are unchanged.
+
 Status: pre-runtime contract. Phase 6FN is frozen as the qualification boundary for three public NanoVDB readbacks and three fuel zero-copy aliases in one process. Phase 6FO does not extend that count, connect production, or reinterpret Phase 6EP–6ES.
 
 ## Question

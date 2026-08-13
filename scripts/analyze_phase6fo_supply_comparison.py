@@ -285,7 +285,7 @@ def analyze_root(root: Path, contract_path: Path, offline_path: Path) -> dict:
         case_dir = metadata_path.parent / metadata["label"]
         attempts.append({**metadata, **analyze_case(case_dir, metadata["condition"], contract)})
     preflights = []
-    for metadata_path in sorted(root.glob("channel-preflight/attempt*/attempt_metadata.json")):
+    for metadata_path in sorted(root.glob("channel-preflight/channel_attempt*/attempt_metadata.json")):
         metadata = _read(metadata_path)
         preflights.append({**metadata, **analyze_case(metadata_path.parent / metadata["label"], metadata["condition"], contract, preflight=True)})
     pairs = []

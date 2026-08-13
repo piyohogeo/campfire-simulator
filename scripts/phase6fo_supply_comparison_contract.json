@@ -1,8 +1,8 @@
 {
-  "schema": "campfire.phase6fo.s93-s100-supply-comparison-contract.v1",
+  "schema": "campfire.phase6fo.s93-s100-supply-comparison-contract.v2",
   "phase": "phase6fo",
   "declared_before_runtime": true,
-  "safe_commit": "9e4e7f9",
+  "safe_commit": "a9d5d36",
   "history_frozen": ["phase6ep", "phase6eq", "phase6er", "phase6es", "phase6fn"],
   "prior_population_reuse": false,
   "purpose": "compare the corrected-four S93 other-support-clear policy with the S100 other-center-clear policy before production integration",
@@ -59,7 +59,9 @@
     "material_copy_allowed": false,
     "weak_reference_residual_required": 0,
     "maximum_public_readback_calls": 1,
-    "forced_gc": false
+    "forced_gc": false,
+    "startup_source_sum_absolute_tolerance": 0.0001,
+    "startup_source_sum_tolerance_basis": "absolute float32 payload-sum tolerance; physical source ratios retain the separate relative gate"
   },
   "sample_frames": [60, 120, 180, 360, 540, 600],
   "readback_frames": [180, 360, 540],

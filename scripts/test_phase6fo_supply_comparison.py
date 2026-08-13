@@ -27,6 +27,7 @@ class Phase6FOSupplyComparison(unittest.TestCase):
         self.assertEqual(self.contract["formal_population"]["startup_prerequisite_replacement_budget"], 2)
         self.assertEqual(self.contract["safety"]["kit_private_limit_bytes"], 14 * 1024**3)
         self.assertEqual(self.contract["safety"]["unique_tree_private_limit_bytes"], 16 * 1024**3)
+        self.assertEqual(self.contract["channel_preflight"]["startup_source_sum_absolute_tolerance"], 0.0001)
         self.assertIn("fourth or per-frame readback", self.contract["excluded"])
 
     def test_offline_point_decisions_are_exact(self):
@@ -63,6 +64,13 @@ class Phase6FOSupplyComparison(unittest.TestCase):
         ):
             self.assertIn(token, runner)
         self.assertNotIn("KitPrivateLimitBytes =", runner)
+        self.assertIn("channel_preflight.startup_source_sum_absolute_tolerance", runner)
+        self.assertIn("preflight_report_missing_or_ambiguous", runner)
+
+    def test_channel_preflight_artifact_route_matches_runner(self):
+        analyzer = (SCRIPTS / "analyze_phase6fo_supply_comparison.py").read_text(encoding="utf-8")
+        self.assertIn('channel-preflight/channel_attempt*/attempt_metadata.json', analyzer)
+        self.assertNotIn('channel-preflight/attempt*/attempt_metadata.json', analyzer)
 
     def test_visual_is_numeric_gated(self):
         source = (SCRIPTS / "run_phase6fo_supply_visual.ps1").read_text(encoding="utf-8")

@@ -98,7 +98,7 @@ function Invoke-GuardedCase([string]$AttemptRoot, [string]$AttemptId, [string]$C
         "-StartupFlowAcquirePosition", "before_updates", "-StartupPreTimelineUpdateCount", "12",
         "-StartupExtraUpdateBeforePlayCount", "0", "-StartupLivenessGate", "true",
         "-StartupExpectedFuelSum", "$($source.fuel)", "-StartupExpectedTemperatureSum", "$($source.temperature)",
-        "-StartupExpectedSmokeSum", "$($source.smoke)", "-StartupSourceSumTolerance", "$($contract.hard_gates.source_sum_relative_tolerance)",
+        "-StartupExpectedSmokeSum", "$($source.smoke)", "-StartupSourceSumTolerance", "$($contract.channel_preflight.startup_source_sum_absolute_tolerance)",
         "-AbsoluteTimeoutSeconds", "$($contract.safety.inner_absolute_timeout_seconds)"
     )
     if (-not [string]::IsNullOrWhiteSpace($previousExitUtc)) { $arguments += @("-PreviousProcessExitUtc", $previousExitUtc) }
@@ -132,7 +132,12 @@ while (-not $preflightComplete) {
     Invoke-GuardedCase $attemptRoot $attemptId "S93" 0 $true
     Update-Report; Assert-Production $attemptId
     $report = Get-Content -Raw -Encoding UTF8 $reportPath | ConvertFrom-Json
-    $case = @($report.channel_preflight | Where-Object { $_.attempt_id -eq $attemptId })[0]
+    $matchingCases = @($report.channel_preflight | Where-Object { $_.attempt_id -eq $attemptId })
+    if ($matchingCases.Count -ne 1) {
+        Write-State "channel_preflight_safe_stop" $attemptId "channel_preflight" "harness_failure" "preflight_report_missing_or_ambiguous"
+        throw "Phase 6FO channel preflight report is missing or ambiguous"
+    }
+    $case = $matchingCases[0]
     if ($case.classification -eq "representative_pass") { $preflightComplete = $true; break }
     if ($case.classification -eq "startup_prerequisite_failure") { $startupFailures++; continue }
     Write-State "channel_preflight_safe_stop" $attemptId "channel_preflight" $case.classification ($case.failures -join ',')
