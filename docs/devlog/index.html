@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6fb">最新記録</a>
+        <a href="#phase-6fc">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fb">Phase 6FBの結果を読む</a>
+        <a class="button primary" href="#phase-6fc">Phase 6FCの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FB · startup ingestion bounded</strong></div>
+        <div><span>現在地</span><strong>Phase 6FC · startup reproduction bounded</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>2 normal exits · cleanup residual 0</strong></div>
+        <div><span>Lifecycle</span><strong>10 normal exits · cleanup residual 0</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
@@ -49,6 +49,19 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-6fc" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FC startup reproduction entry"><span class="phase-number compact">6FC</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">baseline 6/6 representative · trigger unconfirmed</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FC · Point Emitter startup reproduction</p><h2>24 blocksは0/6。<br>停止中updateは初期成長量へ影響。</h2><p>Phase 6FBと同じreadbackなしstartupを6独立processで反復し、全frameのPoint契約・identity・active blocksを記録しました。6回すべて代表場だった場合だけ、Flow interface取得、12 update、play直前境界を一変数ずつ比較しました。</p></header>
+          <figure class="capture-card wide"><a href="assets/phase6/point_emitter_startup_reproduction.svg"><img src="assets/phase6/point_emitter_startup_reproduction.svg" alt="Phase 6FC baselineと一変数startup ablationのactive block履歴" loading="lazy"></a><figcaption><div><strong>six baselines identical · small-field 0/6</strong><span>A2 without 12 stopped updates starts lower but remains representative</span></div></figcaption></figure>
+          <div class="notes-grid"><section class="note"><p class="note-label">Observed</p><h3>baseline 269／505／688／1118</h3><p>全6 runのframe 1／30／60／120と全120-frame履歴が一致しました。stage接続は0.428～5.436秒、process間隔は6.016～8.902秒でしたが、出力が一定なので相関は算出不能です。</p></section><section class="note"><p class="note-label">Ordering</p><h3>A1同一、A2初期値176</h3><p>Flow interfaceを12 update後へ移したA1はA0と完全一致。12 updateを0にしたA2は176／402／611／1066、play前に1 update足したA3は269／517／705／1117で、いずれも代表場でした。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Bounded result</p><h3>更新順は初期進行量を変えるが、exact triggerではない。</h3><p>stage・payload・供給量は全条件一致し、live identityも各process内で安定しました。A2の最初の差はframe 1、A3はframe 2です。公開Flow interface取得位置は決定要因ではなく、12 updateは最初の観測までに進むFlow work量へ影響するという強い推定に留めます。</p><p>全10 processはnormal exit。stage closeは0.127～8.401秒、CDB、fatal、dump、upload、device lost/TDR、残留processは0でした。Release build、Phase 0 RTX、Phase 3、focused <code>82/82</code>、標準suite <code>78/78</code>（8 process、328.2秒）は合格。production SHA-256は不変です。</p><p><a href="assets/phase6/point_emitter_startup_reproduction.json">machine report</a> · <a href="assets/phase6/point_emitter_startup_reproduction.svg">comparison SVG</a> · <a href="../design/phase6fc_point_emitter_startup_reproduction.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Baseline</strong><small>6/6 representative</small></p></div><div role="listitem"><span>0</span><p><strong>24-block</strong><small>0/6</small></p></div><div role="listitem"><span>✓</span><p><strong>A0–A3</strong><small>bounded</small></p></div><div role="listitem"><span>!</span><p><strong>Trigger</strong><small>unconfirmed</small></p></div><div role="listitem"><span>✓</span><p><strong>Lifecycle</strong><small>10/10 normal exit</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Monitoring proposal only</p><h3>frame 60／128は異常候補、再初期化条件ではない。</h3><p>将来はfresh telemetry、Point契約、Emitter、identity、resource、delayed ingestionを合わせて判定し、recoveryを最大1回へ制限します。失敗を再現できず安全なrecoveryも未qualificationなので、自動再初期化と反復readbackはまだ開始しません。内部診断だけのため新動画とlatest demo pointerは更新していません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6fb" class="section entry-section phase-six">

@@ -1,6 +1,7 @@
 import hashlib
 import json
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from scripts.phase6fc_startup_contract import classify_startup
@@ -100,6 +101,22 @@ class Phase6FcStartupReproduction(unittest.TestCase):
         self.assertEqual(safety["diagnostic_private_limit_bytes"], 512 * 1024**2)
         self.assertEqual(safety["kit_private_limit_bytes"], 14 * 1024**3)
         self.assertEqual(safety["unique_tree_private_limit_bytes"], 16 * 1024**3)
+
+    def test_published_result_and_devlog(self):
+        assets = ROOT / "docs" / "devlog" / "assets" / "phase6"
+        report = json.loads((assets / "point_emitter_startup_reproduction.json").read_text(encoding="utf-8"))
+        self.assertEqual(report["contract_sha256"], hashlib.sha256(CONTRACT_PATH.read_bytes()).hexdigest().upper())
+        self.assertEqual(report["baseline"]["classification_counts"], {"representative_ingestion": 6})
+        self.assertEqual(report["baseline"]["small_field_reproduction_rate"], 0.0)
+        self.assertEqual(report["resource_and_lifecycle"]["normal_os_exit_count"], 10)
+        self.assertFalse(report["public_field_checked"])
+        self.assertFalse(report["repeated_readback_started"])
+        self.assertFalse(report["production_changed"])
+        ET.parse(assets / "point_emitter_startup_reproduction.svg")
+        html = (ROOT / "docs" / "devlog" / "index.html").read_text(encoding="utf-8")
+        self.assertEqual(html.count('id="phase-6fc"'), 1)
+        self.assertIn("point_emitter_startup_reproduction.json", html)
+        self.assertNotIn("\ufffd", html)
 
 
 if __name__ == "__main__":

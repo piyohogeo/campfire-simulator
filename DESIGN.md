@@ -1,5 +1,13 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FC Point Emitter startup reproduction
+
+Phase 6EY／6EZ／6FA／6FBを凍結し、同じreadbackなしstartup probeを新rootで6独立process実行した。全runが`representative_ingestion`、active blocksは全履歴一致、frame 1/30/60/120=`269/505/688/1118`で、24-block再現率は0/6だった。stage接続0.428～5.436秒、前process終了から次開始6.016～8.902秒の範囲でも履歴は同一だったため、相関は算出不能で観測上の関連はない。明示的なGPU／shader cache cold/warm状態は公開されたbounded logだけでは確定できない。
+
+baseline 6/6代表場を受け、凍結済み一変数ablationを各1 process実施した。A1（Flow interface取得を12 update後へ移動）はA0と完全一致。A2（停止中12 updateを0）は`176/402/611/1066`へ初期成長が遅れたが代表場。A3（play直前に1 update追加）は`269/517/705/1117`で代表場だった。12 updateは最初の観測時点までのFlow進行量へ影響するが、歴史的24-block固定のtriggerとは確定できない。全10 processはnormal exit、stage close 0.127～8.401秒、CDB/fatal/dump/upload/residual 0、productionとresource ceilingは不変。
+
+将来のproduction監視候補は`startup_pending`、`representative_ready`、`small_field_detected`、`recovery_pending`、`recovery_failed`、`running`。固定4本fixtureのframe 60で128未満は異常候補にできるが、active block単独で再初期化してはならない。fresh telemetry、Point契約、Emitter有効、identity、resource、delayed ingestionを併用し、recoveryは最大1回等に制限する。失敗再現と安全なrecovery lifecycle qualificationがないため自動再初期化は未実装、反復readbackも保留する。詳細は`docs/design/phase6fc_point_emitter_startup_reproduction.md`。
+
 # Phase 6FB Point Emitter startup ingestion probe
 
 Phase 6EY／6EZ／6FAの結果を凍結し、readback以前のstartup境界だけを最大120 frame・最大2独立processで測定した。履歴監査では代表場D0と24-block D1のstage／payload SHA、1,440 total／1,344 active Point、供給量が一致し、最初の分岐はreadbackより前のframe 1（269対24）だった。D1のtimelineとtimestampは更新していたためstale telemetryとは整合しない。
