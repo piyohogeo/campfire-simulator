@@ -1,5 +1,11 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FV post-6FU memory-ceiling qualification contract
+
+Phase 6FTは`146ded9`の8/9 lifecycle safe stopとして凍結し、既存sample／artifact／判定を新母集団へ流用しない。Phase 6FUのdiagnostic・7状態identity・cleanup suppression・exact attempt-tree cleanup・psutil/Win32二経路absence確認を前提に、新しいPhase 6FVを新rootでM0/M1/M2各3 process、balanced order `M0/M1/M2`、`M1/M2/M0`、`M2/M0/M1`として最初から実行する。正式contract SHA-256は`C917FE4463E3BCA600714A51EFEDF64E9E505F19F082647CCF5683269071AF0C`である。
+
+全runはPhase 6FSのdiagnostic-only `release-after-close`、修正版4本fixture、S93、1,344/1,440 Points、同一payload、readback/capture/video 0を固定する。旧14 GiBはsoft evaluation threshold、Kit 16 GiB／unique tree 17 GiBをabsolute stop、runner/diagnostic各512 MiB、physical/commit floor各8 GiB、stage close 180秒とする。16 GiB qualificationは9/9 normal exit、正常最大15.5 GiB以下、512 MiB以上の余裕、tree 17 GiB以内、persistent unexplained accumulation 0、全lifecycle marker、Phase 6FU exact cleanupと二経路absence、残留0を要求する。Phase 6FVは上限qualificationだけを行い、Phase 6FO、S93/S100比較、production変更、動画、P4を開始しない。詳細は`docs/design/phase6fv_memory_ceiling_qualification.md`を参照する。
+
 # Phase 6FU hang diagnostic identity and cleanup contract
 
 Phase 6FTは`146ded9`のsafe stopとして凍結する。attempt09は`stage_close_timeout`後にCDB artifactを確定せず、guardの二値identity queryは問い合わせ失敗と不在を区別できないままcleanup summaryを確定した。Phase 6FUはprocess stateを7分類し、PID・creation time・absolute path・parentage・role・attempt IDを保存する。psutil/Get-Processとnative Win32/CIMの独立照合がともにexitを確認した場合だけ`confirmed_exited`とし、unknownやidentity mismatchを停止対象にしない。

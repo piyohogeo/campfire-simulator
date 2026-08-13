@@ -1291,7 +1291,7 @@ async def _run():
                 )
                 collectors.append(collector)
                 collectors_by_index[index] = collector
-        if arguments["report_phase"] in ("phase6fp", "phase6fq", "phase6fr", "phase6fs", "phase6ft"):
+        if arguments["report_phase"] in ("phase6fp", "phase6fq", "phase6fr", "phase6fs", "phase6ft", "phase6fv"):
             allocation_state = _phase6fp_allocation_state(
                 arguments["allocation_calibration_level"], output, plan, point_summary, public_members, collectors
             )
