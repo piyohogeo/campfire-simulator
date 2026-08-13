@@ -1,0 +1,86 @@
+{
+  "schema": "campfire.phase6fm.devlog-summary.v1",
+  "phase": "phase6fm",
+  "date": "2026-08-13",
+  "contract_sha256": "9251855314FD710B6C3D1A36FF156DD6833166A7F37B216BE3F9CC09BE2CC5F5",
+  "artifact_root": "artifacts/phase6fm-settled-three-iteration-1",
+  "status": "operation_safe_stop",
+  "total_launches": 1,
+  "formal_representative_processes": 0,
+  "startup_replacements": 0,
+  "active_slot": "sequence01_position01_R0_control",
+  "startup": {
+    "classification": "representative_ingestion",
+    "frame_1_active_blocks": 269,
+    "frame_120_active_blocks": 1118,
+    "total_points": 1440,
+    "active_points": 1344,
+    "revision": 1
+  },
+  "explicit_settling": [
+    {"iteration": 1, "frame": 360, "seconds": 15.9236900806427, "resource_samples": 51, "renderer_updates": 240, "private_bytes": 13666217984, "active_blocks": 1364, "gate_pass": true},
+    {"iteration": 2, "frame": 540, "seconds": 12.132670164108276, "resource_samples": 39, "renderer_updates": 180, "private_bytes": 13699375104, "active_blocks": 1539, "gate_pass": true},
+    {"iteration": 3, "frame": 620, "seconds": 5.515350818634033, "resource_samples": 18, "renderer_updates": 80, "private_bytes": 13701984256, "active_blocks": 1386, "gate_pass": true}
+  ],
+  "settled_steps_bytes": [33157120, 2609152],
+  "settled_total_bytes": 35766272,
+  "material_threshold_bytes": 91184640,
+  "formal_failure": {
+    "kind": "diagnostic_harness_integration",
+    "failures": [
+      "iteration3:required_iteration_marker_missing",
+      "iteration3:settling_resource_samples",
+      "iteration3:settling_wall_time"
+    ],
+    "cause": "The reused Phase 6FL compatibility analyzer required sample_started at the frame-620 non-operation sentinel instead of consuming the valid explicit settling_end marker."
+  },
+  "lifecycle": {
+    "stage_close_seconds": 3.3389739990234375,
+    "shutdown_complete": true,
+    "normal_os_exit": true,
+    "exit_code": 0,
+    "cdb_invocations": 0,
+    "fatal": 0,
+    "dump": 0,
+    "automatic_upload_attempt": 0,
+    "cleanup_residual": 0
+  },
+  "resources": {
+    "kit_peak_bytes": 14475513856,
+    "kit_limit_bytes": 15032385536,
+    "kit_minimum_margin_bytes": 556871680,
+    "tree_peak_bytes": 14639017984,
+    "tree_limit_bytes": 17179869184,
+    "runner_peak_bytes": 150720512,
+    "diagnostic_peak_bytes": 16896000
+  },
+  "qualification": {
+    "three_readbacks": false,
+    "three_fuel_alias_lifetimes": false,
+    "more_than_three_iterations": false,
+    "production_integration": false
+  },
+  "regression": {
+    "release_build": "pass (8.33 seconds)",
+    "phase0_rtx": "pass",
+    "phase3": {
+      "status": "pass",
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "dry_authority_sha256": "0dec57f324fadbdb0c7f5908ac16fe9437d81726cfec047fda5c88f52e84be10",
+      "wet_authority_sha256": "148585f8ea43ddda826db198be6a6c03c151ce2c857009e171a9c93cfd2b20c9",
+      "active_blocks_final": 231,
+      "active_blocks_peak": 359,
+      "peak_fuel_input": 1.0
+    },
+    "focused_contracts": "167/167 pass",
+    "standard_suite": "8 processes, 78/78 pass, 348.9 seconds",
+    "devlog_static": "445 references, 269 ids, 221 json, 177 svg, 2 zip; pass",
+    "production_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "final_process_residual": 0
+  },
+  "history_reclassified": false,
+  "automatic_retry": false,
+  "production_changed": false,
+  "latest_demo_changed": false
+}

@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6fl">最新記録</a>
+        <a href="#phase-6fm">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fl">Phase 6FLのsafe stopを読む</a>
+        <a class="button primary" href="#phase-6fm">Phase 6FMのsafe stopを読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FL · three-iteration safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6FM · analyzer integration safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Population</span><strong>3 / 9 · paired accumulation gate</strong></div>
+        <div><span>Population</span><strong>1 launch · later 8 not started</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
@@ -51,9 +51,21 @@
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
     </section>
 
+    <section id="phase-6fm" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FM settled baseline entry"><span class="phase-number compact">6FM</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">1 launch · analyzer safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FM · settled post-release three-iteration qualification</p><h2>明示的なsettlingは3回とも成立。<br>旧analyzer境界で安全停止。</h2><p>Phase 6FLを遡及変更せず、operation直前値とrelease後のsettled値を分離する新contractを凍結しました。frame 620は4回目を行わないsentinelとし、formal gateは独立<code>settling_end</code>だけを見る設計です。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Explicit evidence</p><h3>3 / 3 settling intervals pass</h3><p>最初のR0 processは代表startupと3 control operationを完了しました。settlingは15.924／12.133／5.515秒、resource sampleは51／39／18、renderer updateは240／180／80。settled Private Bytesの二段増加は33,157,120／2,609,152 bytesでした。</p></section><section class="note"><p class="note-label">Fail-closed boundary</p><h3>legacy sentinel lookup</h3><p>再利用したPhase 6FL互換analyzerだけがframe 620に旧<code>sample_started</code>を要求しました。新contractどおりの<code>settling_end</code>は存在しましたが、diagnostic/harness failureは置換不可なので後続8 slotを開始していません。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Formal result</p><h3>0 / 9 representative · 再試行なし。</h3><p>attempt01はstage close 3.339秒、extension shutdown、exit code 0、normal OS exit、exact cleanupまで完了しました。Kit peak 14,475,513,856 bytes、14 GiBまで556,871,680 bytes、tree peak 14,639,017,984 bytesです。</p><p>CDB、fatal、dump、automatic upload、device lost、TDR、残留processは0。Flow、Point payload、CollisionProxy、V3、production、resource ceiling、latest demoは変更していません。内部診断で画面差がないため新動画はありません。</p><p>このrunを遡及合格・startup replacement・自動retryには扱いません。3回readback／fuel alias、4回以上、production統合は未qualifiedです。次のPhaseではlegacy operation integrityとexplicit settling classifierを分離したend-to-end fixtureをruntime前に通す必要があります。</p><p>Release build、Phase 0 RTX、Phase 3、focused <code>167/167</code>、標準8 process <code>78/78</code>（348.9秒）、日誌検査に合格。Phase 3 mass balance errorはdry/wetとも0、Flow active blocks final/peakは231/359、production SHAは不変です。</p><p><a href="assets/phase6/settled_three_iteration_analyzer_safe_stop.json">machine report</a> · <a href="../design/phase6fm_settled_three_iteration.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>1</span><p><strong>Launch</strong><small>of 9 planned</small></p></div><div role="listitem"><span>3/3</span><p><strong>Settling</strong><small>explicit pass</small></p></div><div role="listitem"><span>!</span><p><strong>Analyzer</strong><small>legacy mismatch</small></p></div><div role="listitem"><span>3.34</span><p><strong>Stage close</strong><small>seconds</small></p></div><div role="listitem"><span>0</span><p><strong>Residual</strong><small>none</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Next explicit approval boundary</p><h3>新contractでanalyzer integrationを修正する。</h3><p>Phase 6FMのcontractとsafe stopを凍結したまま、非operation sentinelをlegacy markerへ戻さず評価できる新しいPhaseが必要です。新rootのruntimeはend-to-end fixture合格と明示承認後にだけ開始します。</p></section>
+        </div>
+      </article>
+    </section>
+
     <section id="phase-6fl" class="section entry-section phase-six">
       <article class="shell entry">
-        <aside class="entry-meta" aria-label="Phase 6FL three-iteration readback entry"><span class="phase-number compact">6FL</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">3 / 9 · paired gate safe stop</span></aside>
+        <aside class="entry-meta" aria-label="Phase 6FL three-iteration readback entry"><span class="phase-number compact">6FL</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill">3 / 9 · paired gate safe stop</span></aside>
         <div class="entry-body">
           <header class="entry-header"><p class="section-kicker">Phase 6FL · three-iteration readback / fuel-alias pilot</p><h2>3回の操作と正常終了を確認。<br>事前凍結した累積gateで停止。</h2><p>Phase 6FKの単回qualificationを凍結し、同一process内でreadback／fuel aliasを正確に3回だけ行う低反復pilotを新しいrootで開始しました。operation frame、settling、balanced順序、pointer／weak証拠、14／16 GiB上限をruntime前に固定しています。</p></header>
           <div class="notes-grid"><section class="note"><p class="note-label">Partial operation evidence</p><h3>R0 / R1 / R2 · 3 iterations</h3><p>sequence 1の3 processは代表startup、全operation、settling、stage close、extension shutdown、normal OS exit、cleanupを完了しました。R2は3回ともpositive equal pointer、same Python object、shared memory、weak residual 0。<code>np.asarray()</code>隣接CPU増分は0以下、GPU増分は0でした。</p></section><section class="note"><p class="note-label">Frozen gate</p><h3>pre-operation paired accumulation</h3><p>R0差引後のR1 stepは210,575,360／111,161,344 bytes、R2は169,799,680／108,544,000 bytes。両条件とも事前閾値91,184,640 bytesを2区間連続で超えたため、後続6 processを開始せずsafe stopしました。</p></section></div>
