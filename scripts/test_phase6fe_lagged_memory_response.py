@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.calibrate_phase6fe_lagged_memory_response import _synthetic_rows
+from scripts.calibrate_phase6fe_lagged_memory_response import _synthetic_rows, synthetic_evaluation
 from scripts.phase6fe_lagged_memory_response import evaluate
 
 
@@ -45,14 +45,29 @@ class Phase6FeLaggedMemoryResponse(unittest.TestCase):
         self.assertTrue(result["gate_pass"])
         self.assertGreater(result["lagged_response"]["classification_counts"]["bounded_cache_retention"], 0)
 
+    def test_other_required_bounded_series_are_accepted(self):
+        for name in (
+            "periodic_bounded", "drop_cancelled_by_rebound", "constant_occupancy_bounded_noise",
+        ):
+            with self.subTest(name=name):
+                result = synthetic_evaluation(name, self.contract)
+                self.assertTrue(result["full_contract_gate_pass"])
+                if name == "drop_cancelled_by_rebound":
+                    self.assertGreater(result["lagged_response"]["classification_counts"]["active_rebound_overlap"], 0)
+
     def test_leaks_are_rejected(self):
         for name in (
             "occupancy_independent_monotonic_growth",
+            "constant_accelerating_growth",
             "post_drop_continued_growth",
             "repeated_accumulation",
+            "short_plateau_long_divergence",
+            "stale_telemetry",
+            "resource_ceiling",
+            "shutdown_incomplete",
         ):
             with self.subTest(name=name):
-                self.assertFalse(evaluate(_synthetic_rows(name), self.contract)["gate_pass"])
+                self.assertFalse(synthetic_evaluation(name, self.contract)["full_contract_gate_pass"])
 
     def test_contract_hash_file_matches(self):
         hash_path = CONTRACT_PATH.with_suffix(".sha256")

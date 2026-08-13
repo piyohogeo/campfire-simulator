@@ -121,6 +121,11 @@ def evaluate(rows: list[dict], contract: dict) -> dict:
     ) if len(rows) > 1 else None
     event_fraction = len(continued) / len(events) if events else 0.0
     dynamic_occupancy = bool(events)
+    if not dynamic_occupancy:
+        # Constant occupancy is valid when telemetry is fresh and memory is bounded;
+        # increase/decrease fractions are not meaningful in that branch.
+        global_checks.pop("increase_fraction", None)
+        global_checks.pop("decrease_fraction", None)
     lag_checks = {
         "lag_window_is_finite": (
             median_interval is not None

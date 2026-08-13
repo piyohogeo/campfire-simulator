@@ -74,12 +74,28 @@ def _synthetic_rows(kind: str, count: int = 80) -> list[dict]:
             private = 12.8 * 1024**3 + delayed_active * 0.22 * MIB
         elif kind == "bounded_cache_retention":
             private = 13.0 * 1024**3 + 24 * MIB * math.sin(index * 0.19)
+        elif kind == "periodic_bounded":
+            private = 12.8 * 1024**3 + active * 0.2 * MIB + 8 * MIB * math.sin(index * 0.4)
+        elif kind == "drop_cancelled_by_rebound":
+            private = 13.0 * 1024**3 + 20 * MIB * math.sin(index * 0.3)
+        elif kind == "constant_occupancy_bounded_noise":
+            active = 1300.0
+            private = 13.0 * 1024**3 + 12 * MIB * math.sin(index * 0.37)
         elif kind == "occupancy_independent_monotonic_growth":
             private = 12.2 * 1024**3 + index * 10 * MIB
+        elif kind == "constant_accelerating_growth":
+            active = 1300.0
+            private = 12.0 * 1024**3 + index * index * 0.30 * MIB
         elif kind == "post_drop_continued_growth":
             private = 12.2 * 1024**3 + index * 18 * MIB
         elif kind == "repeated_accumulation":
             private = 12.3 * 1024**3 + index * 12 * MIB + (index // 12) * 96 * MIB
+        elif kind == "short_plateau_long_divergence":
+            private = 12.4 * 1024**3 + max(0, index - 20) * 11 * MIB
+        elif kind in ("stale_telemetry", "resource_ceiling", "shutdown_incomplete"):
+            private = 13.0 * 1024**3 + active * 0.1 * MIB
+            if kind == "resource_ceiling":
+                private += 2.0 * 1024**3
         else:
             raise ValueError(kind)
         rows.append({
@@ -94,6 +110,18 @@ def _synthetic_rows(kind: str, count: int = 80) -> list[dict]:
             "gpu_dedicated_memory_mib": 6800.0,
         })
     return rows
+
+
+def synthetic_evaluation(kind: str, contract: dict) -> dict:
+    result = evaluate(_synthetic_rows(kind), contract)
+    evidence = {
+        "telemetry_fresh": kind != "stale_telemetry",
+        "resource_ceiling_ok": kind != "resource_ceiling",
+        "shutdown_complete": kind != "shutdown_incomplete",
+    }
+    result["synthetic_external_checks"] = evidence
+    result["full_contract_gate_pass"] = result["gate_pass"] and all(evidence.values())
+    return result
 
 
 def main() -> None:
@@ -113,15 +141,23 @@ def main() -> None:
         "immediate_reclaim": True,
         "delayed_reclaim": True,
         "bounded_cache_retention": True,
+        "periodic_bounded": True,
+        "drop_cancelled_by_rebound": True,
+        "constant_occupancy_bounded_noise": True,
         "occupancy_independent_monotonic_growth": False,
+        "constant_accelerating_growth": False,
         "post_drop_continued_growth": False,
         "repeated_accumulation": False,
+        "short_plateau_long_divergence": False,
+        "stale_telemetry": False,
+        "resource_ceiling": False,
+        "shutdown_incomplete": False,
     }
     synthetic = {}
     for name, expected in expectations.items():
-        result = evaluate(_synthetic_rows(name), contract)
+        result = synthetic_evaluation(name, contract)
         result["expected_gate_pass"] = expected
-        result["expectation_met"] = result["gate_pass"] is expected
+        result["expectation_met"] = result["full_contract_gate_pass"] is expected
         synthetic[name] = result
     report = {
         "schema": "campfire.phase6fe.lagged-memory-response-calibration.v1",
