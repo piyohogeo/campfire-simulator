@@ -54,7 +54,8 @@ $fixture = Join-Path $PSScriptRoot "phase6fu_process_tree_fixture.py"
     --child-ready (Join-Path $race "child.json") --lock $lock --seconds 120
 $guardExit = $LASTEXITCODE
 $guardReport = Read-CampfireBoundedJson -Path (Join-Path $race "guard.json")
-$racePass = $guardExit -eq 2 -and $guardReport.cleanup_suppression.observed -and $guardReport.cleanup_suppression.released -and `
+$racePass = $guardExit -eq 2 -and $guardReport.observed_process_cleanup.cleanup_suppression.observed -and `
+    $guardReport.observed_process_cleanup.cleanup_suppression.released -and `
     $guardReport.observed_process_cleanup.all_matching_absent -and $guardReport.observed_process_cleanup.killed_pids.Count -ge 1
 if (-not $racePass) { throw "Phase 6FU outer guard suppression fixture failed" }
 
