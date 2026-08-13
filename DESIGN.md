@@ -6,6 +6,10 @@ Phase 6FJのsafe stopは凍結し、既存10 launchを再分類・正式母集�
 
 正式順序は新しい空rootで`ABC / BCA / CAB`、代表A/B/C各3本の計9 process。置換できるのはoperation前のstartup prerequisiteだけで最大2件、総launch最大11。Kit 14 GiB、tree 16 GiB、runner／diagnostic 512 MiB、system floor 8 GiB、180秒stage close、bounded CDB、normal OS exit、exact cleanupを維持する。`np.asarray()`隣接Private Bytesは8 MiB以内を要求し、波形slopeはwarning telemetryのままとする。契約SHA-256は`3BEC199CC4590276575E5C6A2A7742630AFC913164FA053A41ADDE54FDE5CF84`。反復readback、他channel、field保存、production変更、動画は対象外。詳細は`docs/design/phase6fk_pointer_complete_single_readback.md`。
 
+正式rootは置換なし9 launchでA/B/C各3本を完了した。全runが代表startup、operation、stage close、extension shutdown、normal OS exit、cleanupを合格し、CDB／fatal／dump／upload／residualは0。C 3本のsource／converted pointerは各run内で正かつ一致し、same Python object、shared memory、`uint32[10,349,504]`、41,398,016 logical bytes、`np.asarray()`隣接CPU/GPU増分0、weak residual 0だった。したがって固定条件のpublic readback 1回とfuel alias 1回のlifetimeはqualified。readback CPU即時増分は302,247,936～313,995,264 bytes、次frame残留268,759,040～280,702,976 bytes、24秒後は取得前より413,995,008～784,977,920 bytes低かった。Kit peak 14,900,314,112 bytes、14 GiBまでの最小余裕132,071,424 bytes。stage closeは2.538～140.481秒、中央値5.801秒で全件180秒以内だが、140.481秒sampleは低頻度native lifecycle riskが残る証拠である。反復readbackは未qualifiedで、次Phaseを自動開始しない。
+
+最終回帰はRelease 6.88秒、Phase 0 RTX 17.4秒、Phase 3 25.7秒、focused Phase 6F／6EA／6EB／6EL 143/143、標準8 process 78/78（317.8秒）、日誌静的検査に合格した。Phase 3はdry/wet mass-balance error 0、authority SHA-256 `0dec57f3...e84be10`／`148585f8...fd2b20c9`、Flow active blocks final/peak 283/330、peak fuel 1.0。production app SHA-256は`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`のまま。
+
 # Phase 6FJ balanced single-readback qualification contract
 
 Phase 6FG〜6FIの履歴を凍結し、Phase 6FGのthree-layer A/B/C operation判定とPhase 6FIのstartup前提専用replacementを合成する新contractを事前定義した。順序は`ABC / BCA / CAB`、代表9 process、startup前提failure専用replacement最大2、総launch最大11。置換は同一balanced slotへ一意attemptで行い、operation／native lifecycle／absolute safety／cleanup／diagnostic failureは置換せず即時停止する。

@@ -1,0 +1,78 @@
+{
+  "schema": "campfire.phase6fk.devlog-summary.v1",
+  "phase": "phase6fk",
+  "status": "qualified",
+  "contract_sha256": "3BEC199CC4590276575E5C6A2A7742630AFC913164FA053A41ADDE54FDE5CF84",
+  "artifact_root": "artifacts/phase6fk-pointer-complete-single-readback-1",
+  "population": {
+    "total_launches": 9,
+    "representative_processes": 9,
+    "startup_prerequisite_failures": 0,
+    "condition_counts": {"A_control": 3, "B_readback": 3, "C_fuel_alias": 3},
+    "order": ["A/B/C", "B/C/A", "C/A/B"]
+  },
+  "pointer_complete_fuel_alias": {
+    "complete_cases": 3,
+    "source_data_pointers": [3703402725376, 3977508880384, 2704655056896],
+    "converted_data_pointers": [3703402725376, 3977508880384, 2704655056896],
+    "same_data_pointer": [true, true, true],
+    "same_python_identity": [true, true, true],
+    "shares_memory": [true, true, true],
+    "allocation_classification": ["same_object_zero_copy_alias", "same_object_zero_copy_alias", "same_object_zero_copy_alias"],
+    "shape": [10349504],
+    "dtype": "uint32",
+    "strides": [4],
+    "logical_bytes": 41398016,
+    "numpy_asarray_adjacent_private_delta_bytes": [0, 0, 0],
+    "numpy_asarray_adjacent_gpu_delta_mib": [0, 0, 0],
+    "channel_weak_reference_residual": [0, 0, 0],
+    "converted_weak_reference_alive_after_release": [false, false, false]
+  },
+  "single_readback": {
+    "immediate_private_delta_bytes": [305414144, 313995264, 302252032, 302247936, 302252032, 302247936],
+    "minimum_immediate_private_delta_bytes": 302247936,
+    "median_immediate_private_delta_bytes": 302252032,
+    "maximum_immediate_private_delta_bytes": 313995264,
+    "next_frame_residual_bytes": [275947520, 280702976, 268763136, 268890112, 268959744, 268759040],
+    "settling_end_residual_bytes": [-746254336, -758829056, -413995008, -761618432, -784977920, -777170944],
+    "immediate_gpu_delta_mib": [0, 0, 0, 0, 26, 0],
+    "settling_end_gpu_delta_mib": [60, -54, -69, -63, -133, -89]
+  },
+  "lifecycle": {
+    "normal_os_exit_count": 9,
+    "stage_close_seconds": [12.507930040359497, 2.5377650260925293, 10.45547890663147, 140.48084211349487, 5.800841808319092, 4.164648056030273, 4.356723070144653, 8.88083791732788, 3.353817939758301],
+    "stage_close_minimum_seconds": 2.5377650260925293,
+    "stage_close_median_seconds": 5.800841808319092,
+    "stage_close_maximum_seconds": 140.48084211349487,
+    "cdb_invocations": 0,
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "cleanup_residual_count": 0
+  },
+  "resources": {
+    "kit_peak_private_bytes": 14900314112,
+    "tree_peak_private_bytes": 15063629824,
+    "runner_peak_private_bytes": 181149696,
+    "diagnostic_peak_private_bytes": 16998400,
+    "minimum_kit_ceiling_margin_bytes": 132071424,
+    "minimum_available_physical_bytes": 84910170112,
+    "minimum_commit_headroom_bytes": 104178999296,
+    "waveform_warning_count": 40,
+    "waveform_warnings_are_formal_gate": false
+  },
+  "qualification": {
+    "one_public_readback": true,
+    "one_fuel_numpy_alias_lifetime": true,
+    "repeated_readback": false,
+    "production_changed": false,
+    "latest_demo_changed": false
+  },
+  "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "remaining_risks": [
+    "one B control required 140.481 seconds to close the stage, below but near the frozen 180-second bound",
+    "repeated readback and repeated alias release are not qualified",
+    "the 14 GiB Kit ceiling margin was only 132071424 bytes at the worst sample",
+    "the public readback allocation and internal copy topology remain opaque beyond the observed public boundary"
+  ]
+}
