@@ -3411,3 +3411,10 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - wait、排他log、正常終了済みtarget、強制CDB timeout、CDB異常終了の5 fixtureは全合格。正常attachでは37.4～37.8 KiBの全thread stackを保存し、targetはdetach後も生存、CDBは消滅した。排他logは`log_capture_error`を記録してJSON確定まで継続し、timeoutはCDBだけを停止した。runner／診断child／CDBは512 MiB以内、残留process 0、system-wide debugger設定hash前後一致である。
 - CDBの利用可能性だけで既知NGXとは判定しない。受理済み5-token stack signatureが実際のKit stackに揃う場合だけknown候補とし、未知module／offset、symbol不足、曖昧stack、marker欠落、timeoutはfail closedを維持する。Phase 6EGの36条件は再開せず、production appと凍結contractのSHA-256は不変である。
 - 回帰はRelease build 6.57秒、Phase 6EA/6EB/6ED/6EJ/6ELとPhase 6EG静的契約79/79、標準suite 8 process・78/78件（310.2秒）に合格した。CDB／fixture target／診断helper残留は0である。
+
+## Phase 6FN routed settled-baseline qualification
+
+- Phase 6FL/6FMの履歴、contract、artifact、safe-stopを凍結し、Phase 6FM attempt01を正式母集団へ再利用しない。Phase 6FNはschema routing、startup、operation、explicit settling、pointer/alias、paired accumulation、absolute safety、lifecycle、cleanupを独立判定し、Phase 6FL legacy evaluatorをformal decisionから除外する。
+- iteration 3の正式終端は`settling_end(frame=620, settling_iteration=3)`である。frame 620は非operation sentinelであり、`sample_started`を要求せず、control/readback/NumPy markerがあれば4回目operationとして不合格にする。settlingは各iterationで4秒、8 resource sample、60 renderer updateを要求する。
+- contract SHA-256 `33D7A1751EE8CF474A34D8104B59A0CC8D7749E48108D5BE8A3F263771BC0247`とruntime実装hashをKit起動前に固定した。実artifact directory、raw JSON、JSONL、runner evidence、guard、resource traceを通すE2E preflightは19/19合格した。未知schema、raw欠落/parse、diagnostic harness failureは置換せずfail closedとする。
+- formal populationは新rootの9 representative process、balanced `R0/R1/R2`、`R1/R2/R0`、`R2/R0/R1`である。startup prerequisiteだけ最大2 replacement、総launch最大11。paired threshold 91,184,640 bytesと14/16 GiB等の安全上限はPhase 6FMから変更しない。3回を超えるreadback、他channel、field永続化、production統合は対象外である。詳細は`docs/design/phase6fn_routed_settled_qualification.md`。

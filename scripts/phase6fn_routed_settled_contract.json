@@ -1,0 +1,121 @@
+{
+  "schema": "campfire.phase6fn.routed-settled-contract.v1",
+  "phase": "phase6fn",
+  "declared_before_runtime": true,
+  "safe_commit": "f9c5cdf",
+  "history_frozen": ["phase6fl", "phase6fm"],
+  "prior_population_reuse": false,
+  "embedded_probe_report_phase": "phase6fk",
+  "base_operation_contract": {
+    "path": "scripts/phase6fg_paired_readback_contract.json",
+    "sha256": "54FD6185ADD41B9333506ACC55BF3472F7BBA4F0D726679071F1126572541EED"
+  },
+  "runtime_implementation": [
+    {"path": "scripts/analyze_phase6fn_routed_settled.py", "sha256": "C19C716A7B1983A2E48FD78BC168541ADE77ACEBC777F993E3A6AD59F252AE49"},
+    {"path": "scripts/run_phase6fn_e2e_preflight.py", "sha256": "BEF2E60D0B09393E2BC45BB098BC0DB84FC04D44A28729B0DEAA0AE25280FF9F"},
+    {"path": "scripts/run_phase6fn_routed_settled.ps1", "sha256": "76DE0987F1299282B388FA65510AB7A59D4B871CB990EB191CBEA79DFBC36081"},
+    {"path": "scripts/probe_phase6ep_point_collision_coexistence.py", "sha256": "F2BD4CAB803C32FE3F9E02B24DA1C533D34B53E519BB2B5272E48725B07C2E66"},
+    {"path": "scripts/run_phase6ep_point_collision_case.ps1", "sha256": "AA0B3512D355F707BD31DF34BB4E2F1E412B111E1C2CE8168E20D50CADAAC5D2"},
+    {"path": "scripts/phase6eg_resource_guard.py", "sha256": "A16FA82606A4265093E88816540A0E293205AADC9A15FA11B7CA09C6B32CC45E"},
+    {"path": "scripts/phase6fk_pointer_evidence.py", "sha256": "8C1CE0888E9FAB7F365A9BE74193BDA1BFF7C022C35DF0ED9293D1FB5ACD5493"}
+  ],
+  "analyzer_layers": [
+    "phase_schema_routing", "startup_prerequisite", "operation_integrity",
+    "explicit_settling_integrity", "pointer_alias_integrity",
+    "paired_settled_accumulation", "absolute_resource_safety", "lifecycle", "cleanup"
+  ],
+  "formal_decision_authority": "phase6fn_explicit_layers",
+  "legacy_compatibility": {
+    "formal_use": false,
+    "historical_diagnostic_only": true,
+    "legacy_warning_can_fail_formal": false,
+    "unknown_phase_or_schema": "fail_closed"
+  },
+  "balanced_order": [
+    ["R0_control", "R1_readback", "R2_fuel_alias"],
+    ["R1_readback", "R2_fuel_alias", "R0_control"],
+    ["R2_fuel_alias", "R0_control", "R1_readback"]
+  ],
+  "conditions": {
+    "R0_control": {"label": "R0_control", "readback_mode": "none", "public_readback_calls": 0, "numpy_asarray_calls": 0},
+    "R1_readback": {"label": "R1_readback", "readback_mode": "acquire_discard_release", "public_readback_calls": 1, "numpy_asarray_calls": 0},
+    "R2_fuel_alias": {"label": "R2_fuel_alias", "readback_mode": "fuel_convert_release", "public_readback_calls": 1, "numpy_asarray_calls": 1}
+  },
+  "operation_frames": [120, 360, 540],
+  "settling_end_frames": [360, 540, 620],
+  "sample_frames": [120, 360, 540, 620],
+  "population": {
+    "target_representative_processes": 9,
+    "runs_per_condition": 3,
+    "startup_prerequisite_replacement_budget": 2,
+    "maximum_launches": 11,
+    "automatic_retry": false,
+    "artifact_reuse": false
+  },
+  "settling": {
+    "minimum_wall_seconds": 4.0,
+    "minimum_outer_resource_samples": 8,
+    "minimum_renderer_updates": 60,
+    "final_extra_running_flow_seconds": 5.0,
+    "active_block_sample_seconds": 0.5,
+    "formal_marker": "settling_end",
+    "pre_operation_is_telemetry_only": true,
+    "frame_620_is_nonoperation_sentinel": true
+  },
+  "accumulation_gate": {
+    "formal_baseline": "explicit_settling_end_after_ordered_release",
+    "fuel_logical_bytes_reference": 41398016,
+    "synchronous_marker_noise_allowance_bytes": 8388608,
+    "material_step_bytes": 91184640,
+    "minimum_reproducing_sequences": 2,
+    "requires_candidate_two_positive_steps": true,
+    "requires_r0_subtracted_two_material_steps": true,
+    "requires_total_above_two_material_steps": true,
+    "field_growth_adjustment": "subtract positive candidate field logical-byte growth",
+    "slope_is_formal": false,
+    "active_blocks_are_context_only": true
+  },
+  "pointer_contract": {
+    "all_r2_iterations_required": 9,
+    "require_positive_builtin_integer_pointers": true,
+    "require_equal_data_pointers": true,
+    "require_same_python_identity": true,
+    "require_numpy_shares_memory": true,
+    "require_equal_metadata": ["shape", "dtype", "strides", "size", "nbytes"],
+    "maximum_absolute_numpy_asarray_private_delta_bytes": 8388608,
+    "maximum_absolute_numpy_asarray_gpu_delta_mib": 8.0,
+    "weak_reference_residual_required": 0
+  },
+  "absolute_safety": {
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "cdb_module_seconds": 30,
+    "cdb_all_thread_stack_seconds": 45,
+    "cdb_detach_recovery_seconds": 30,
+    "cleanup_residual_allowed": 0
+  },
+  "preflight": {
+    "required_before_kit_runtime": true,
+    "schema": "campfire.phase6fn.e2e-preflight.v1",
+    "must_use_real_artifact_shape": true,
+    "all_fixtures_must_pass": true
+  },
+  "replaceable_only": "startup_prerequisite_failure_before_first_operation",
+  "nonreplaceable": [
+    "analyzer runner or probe failure", "raw marker parse or routing failure",
+    "operation or explicit settling failure", "pointer identity or weak failure",
+    "paired accumulation failure", "native lifecycle or resource failure",
+    "fatal dump upload or cleanup failure", "replacement budget exhausted"
+  ],
+  "excluded": [
+    "more than three readbacks", "per-frame readback", "other channels",
+    "field persistence or long retention", "JSON or NPZ field storage",
+    "forced GC", "private release API", "production integration",
+    "Flow Point CollisionProxy or V3 changes", "video update"
+  ]
+}
