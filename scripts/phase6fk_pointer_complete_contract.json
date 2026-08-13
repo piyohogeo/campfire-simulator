@@ -1,0 +1,148 @@
+{
+  "schema": "campfire.phase6fk.pointer-complete-single-readback-contract.v1",
+  "phase": "phase6fk",
+  "declared_before_runtime": true,
+  "history_frozen": ["phase6fg", "phase6fh", "phase6fi", "phase6fj"],
+  "base_operation_contract": {
+    "path": "scripts/phase6fg_paired_readback_contract.json",
+    "sha256": "54FD6185ADD41B9333506ACC55BF3472F7BBA4F0D726679071F1126572541EED"
+  },
+  "base_replacement_contract": {
+    "path": "scripts/phase6fi_lifecycle_replacement_contract.json",
+    "sha256": "A0B68CFC006A4B28205AACB70AB50C075CF40628C7EC29898A19D9A7001A0387"
+  },
+  "runtime_implementation": [
+    {"path": "scripts/phase6fk_pointer_evidence.py", "sha256": "8C1CE0888E9FAB7F365A9BE74193BDA1BFF7C022C35DF0ED9293D1FB5ACD5493"},
+    {"path": "scripts/probe_phase6ep_point_collision_coexistence.py", "sha256": "325FDE191D7F52178B87561461803C21B8256330615DC377EB1F217260C8893F"},
+    {"path": "scripts/analyze_phase6fj_balanced_single_readback.py", "sha256": "53A61BEBD697042870D5A998C0B4EC9E725B0551D2C44D60B54A982E88D6DAF6"},
+    {"path": "scripts/run_phase6fj_balanced_single_readback.ps1", "sha256": "F8516E046E7B68F8B1073EFDB673FA0CEBAD9EDB4CCC3E641C2C37BCD7DB5CFA"},
+    {"path": "scripts/run_phase6fk_pointer_complete.ps1", "sha256": "C244557DC10FFEBEEA3086474ED2D91F55285B4BE8BC435F84FB0C4D2C7A2048"},
+    {"path": "scripts/run_phase6ep_point_collision_case.ps1", "sha256": "5FEDA1DC5AD87E47800C875E4F5BC58E047B437331C339F8BA225ADAFC1CD897"}
+  ],
+  "purpose": "qualify one public NanoVDB readback and one fuel NumPy alias lifetime with mandatory public data-pointer evidence",
+  "balanced_order": [
+    ["A_control", "B_readback", "C_fuel_alias"],
+    ["B_readback", "C_fuel_alias", "A_control"],
+    ["C_fuel_alias", "A_control", "B_readback"]
+  ],
+  "conditions": {
+    "A_control": {"label": "R0_none", "readback_mode": "none", "public_readback_calls": 0, "numpy_asarray_calls": 0},
+    "B_readback": {"label": "C0_acquire_discard", "readback_mode": "acquire_discard_release", "public_readback_calls": 1, "numpy_asarray_calls": 0},
+    "C_fuel_alias": {"label": "C1_fuel_alias", "readback_mode": "fuel_convert_release", "public_readback_calls": 1, "numpy_asarray_calls": 1}
+  },
+  "population": {
+    "target_representative_processes": 9,
+    "runs_per_condition": 3,
+    "startup_prerequisite_replacement_budget": 2,
+    "maximum_launches": 11,
+    "replacement_preserves_balanced_slot": true,
+    "attempt_identity_unique": true,
+    "artifact_reuse": false,
+    "automatic_retry": false
+  },
+  "classification_priority": [
+    "absolute_safety_failure",
+    "native_lifecycle_failure",
+    "startup_prerequisite_failure",
+    "operation_failure",
+    "representative_pass"
+  ],
+  "replaceable_only": "startup_prerequisite_failure_before_operation",
+  "nonreplaceable": [
+    "operation_failure",
+    "pointer_evidence_failure",
+    "native_lifecycle_failure",
+    "absolute_safety_failure",
+    "cleanup_failure",
+    "diagnostic_failure",
+    "replacement_budget_exhausted"
+  ],
+  "pointer_complete_contract": {
+    "source_data_pointer": "positive built-in integer from __array_interface__.data[0]",
+    "converted_data_pointer": "positive built-in integer from __array_interface__.data[0]",
+    "require_equal_data_pointers": true,
+    "require_same_python_identity": true,
+    "require_numpy_shares_memory": true,
+    "identity_or_shares_memory_without_pointers_is_insufficient": true,
+    "require_equal_metadata": ["shape", "dtype", "strides", "size", "nbytes"],
+    "maximum_absolute_numpy_asarray_private_delta_bytes": 8388608,
+    "maximum_channel_weak_reference_residual": 0,
+    "require_converted_weak_reference_absent_after_release": true,
+    "required_raw_markers": [
+      "fuel_handle_selected",
+      "fuel_conversion_before",
+      "fuel_conversion_after",
+      "original_tuple_and_all_handle_aliases_released",
+      "converted_buffer_only_held",
+      "converted_buffer_released"
+    ],
+    "required_final_summary_fields": [
+      "source_python_identity",
+      "converted_python_identity",
+      "source_data_pointer",
+      "converted_data_pointer",
+      "same_data_pointer",
+      "same_python_identity",
+      "shares_memory",
+      "shape",
+      "dtype",
+      "strides",
+      "element_count",
+      "logical_bytes",
+      "channel_weak_reference_residual",
+      "converted_weak_reference_alive_after_release"
+    ],
+    "first_missing_or_invalid_pointer_evidence": "nonreplaceable operation failure; do not launch the next balanced slot"
+  },
+  "three_layer_decision": {
+    "hard_gate": "Phase 6FG absolute, operation, evidence-integrity, lifecycle, normal-exit and cleanup gates plus the pointer-complete C contract",
+    "waveform_telemetry": "recorded and warning-only; slopes and rolling persistence are not formal gates",
+    "operation_specific": "adjacent synchronous markers and positive equal public data pointers are primary; process-wide peak differences are context only"
+  },
+  "unchanged_runtime": {
+    "fixture": "production_four/phase6er_corrected",
+    "policy": "allow_self_center",
+    "offset_m": -0.0125,
+    "total_points": 1440,
+    "active_points": 1344,
+    "revision": 1,
+    "operation_frame": 120,
+    "running_flow_observation_seconds": 24.0,
+    "stage_close_timeout_seconds": 180,
+    "kit_private_limit_bytes": 15032385536,
+    "unique_tree_private_limit_bytes": 17179869184,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592
+  },
+  "bounded_cdb": {
+    "native_failure_only": true,
+    "module_seconds": 30,
+    "all_thread_depth": 16,
+    "all_thread_seconds": 45,
+    "detach_recovery_seconds": 30,
+    "total_seconds": 105,
+    "automatic_full_dump": false
+  },
+  "qualification": {
+    "requires_all_nine_representative_slots": true,
+    "requires_each_condition_count": 3,
+    "requires_all_operation_axes": true,
+    "requires_all_lifecycle_axes": true,
+    "requires_c_alias_contract_consistent": true,
+    "requires_c_pointer_contract_complete": true,
+    "repeated_readback_qualified": false
+  },
+  "excluded": [
+    "historical population reuse",
+    "repeated readback",
+    "multiple channel conversion",
+    "field JSON or NPZ persistence",
+    "multiple-frame field retention",
+    "forced GC",
+    "private release API",
+    "production changes",
+    "video"
+  ]
+}

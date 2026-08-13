@@ -1,5 +1,8 @@
 # Changelog
 
+- Froze the independent Phase 6FK pointer-complete contract without reclassifying or reusing Phase 6FJ. The new `ABC / BCA / CAB` population requires positive equal public NumPy data pointers in every C case in addition to identity, shared-memory, metadata, weak-reference, lifecycle, and absolute-safety evidence.
+- Generalized the balanced runner for phase-owned contracts, added fail-closed pointer normalization and fixtures, and fixed the diagnostic probe to persist source and converted `__array_interface__.data[0]` values through raw markers and the final report. The first invalid C pointer is nonreplaceable and prevents later launches.
+
 - Added the frozen Phase 6FJ balanced single-readback contract without reclassifying Phase 6FG–6FI. It requires `ABC / BCA / CAB` across nine representative independent processes, allows at most two unique replacements only for pre-operation startup-prerequisite failures, and caps total launches at eleven.
 - Reused the unchanged Phase 6FG operation/telemetry contract and Phase 6FI replacement/lifecycle contract by verified SHA-256. Operation, native lifecycle, absolute safety, cleanup, diagnostic, and replacement-budget failures remain nonreplaceable; repeated readback and production changes remain excluded.
 - Ran ten unique Phase 6FJ attempts. One 24-block startup prerequisite consumed one replacement; nine representative-startup A/B/C processes completed their operations, lifecycle, normal OS exits, and cleanup under the frozen ceilings with no CDB, fatal, dump, upload, or residual.

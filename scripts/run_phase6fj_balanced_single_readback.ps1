@@ -1,22 +1,40 @@
-param([Parameter(Mandatory = $true)][string]$OutputRoot)
+param(
+    [Parameter(Mandatory = $true)][string]$OutputRoot,
+    [string]$ContractPath = ""
+)
 
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version 3.0
 $root = Split-Path -Parent $PSScriptRoot
 $OutputRoot = [IO.Path]::GetFullPath($OutputRoot)
-if (Test-Path -LiteralPath $OutputRoot) { throw "Phase 6FJ refuses artifact root reuse: $OutputRoot" }
-$contractPath = Join-Path $PSScriptRoot "phase6fj_balanced_single_readback_contract.json"
-$hashPath = Join-Path $PSScriptRoot "phase6fj_balanced_single_readback_contract.sha256"
+if (Test-Path -LiteralPath $OutputRoot) { throw "Balanced single-readback runner refuses artifact root reuse: $OutputRoot" }
+$contractPath = if ([string]::IsNullOrWhiteSpace($ContractPath)) {
+    Join-Path $PSScriptRoot "phase6fj_balanced_single_readback_contract.json"
+} else {
+    [IO.Path]::GetFullPath($ContractPath)
+}
+$hashPath = [IO.Path]::ChangeExtension($contractPath, ".sha256")
 $expectedHash = ((Get-Content -Encoding UTF8 $hashPath | Select-Object -First 1) -split '\s+')[0].ToUpperInvariant()
 $actualHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $contractPath).Hash
-if ($actualHash -ne $expectedHash) { throw "Phase 6FJ contract hash mismatch" }
+if ($actualHash -ne $expectedHash) { throw "Balanced single-readback contract hash mismatch" }
 $contract = Get-Content -Raw -Encoding UTF8 $contractPath | ConvertFrom-Json
+$phase = [string]$contract.phase
+if ([string]::IsNullOrWhiteSpace($phase)) { throw "Balanced single-readback contract phase is missing" }
+if ($contract.PSObject.Properties.Name -contains "runtime_implementation") {
+    foreach ($item in $contract.runtime_implementation) {
+        $implementationPath = Join-Path $root ([string]$item.path)
+        $implementationHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $implementationPath).Hash
+        if ($implementationHash -ne [string]$item.sha256) {
+            throw "$phase runtime implementation hash changed: $($item.path)"
+        }
+    }
+}
 $basePath = Join-Path $root $contract.base_operation_contract.path
 $baseHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $basePath).Hash
-if ($baseHash -ne $contract.base_operation_contract.sha256) { throw "Phase 6FJ base operation contract changed" }
+if ($baseHash -ne $contract.base_operation_contract.sha256) { throw "$phase base operation contract changed" }
 $replacementPath = Join-Path $root $contract.base_replacement_contract.path
 $replacementHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $replacementPath).Hash
-if ($replacementHash -ne $contract.base_replacement_contract.sha256) { throw "Phase 6FJ replacement contract changed" }
+if ($replacementHash -ne $contract.base_replacement_contract.sha256) { throw "$phase replacement contract changed" }
 $base = Get-Content -Raw -Encoding UTF8 $basePath | ConvertFrom-Json
 
 New-Item -ItemType Directory -Path $OutputRoot | Out-Null
@@ -55,8 +73,8 @@ for ($sequence = 1; $sequence -le 3; $sequence++) {
 
 function Write-State([string]$Status, [string]$ActiveAttempt, [string]$ActiveSlot, [string]$Classification, [string]$Reason) {
     $payload = [ordered]@{
-        schema = "campfire.phase6fj.incremental-state.v1"
-        phase = "phase6fj"
+        schema = "campfire.$phase.incremental-state.v1"
+        phase = $phase
         status = $Status
         total_launches = $attempted
         representative_processes = $representative
@@ -75,14 +93,14 @@ function Write-State([string]$Status, [string]$ActiveAttempt, [string]$ActiveSlo
 
 function Update-Report {
     & python $analyzer --root $OutputRoot --contract $contractPath --base-contract $basePath --output $reportPath
-    if ($LASTEXITCODE -ne 0) { throw "Phase 6FJ analyzer failed" }
+    if ($LASTEXITCODE -ne 0) { throw "$phase analyzer failed" }
 }
 
 function Assert-Production([string]$Boundary) {
     $current = (Get-FileHash -Algorithm SHA256 -LiteralPath $productionApp).Hash
     if ($current -ne $productionBefore) {
         Write-State "absolute_safety_stop" $Boundary "" "absolute_safety_failure" "production_app_hash_changed"
-        throw "Phase 6FJ production app changed"
+        throw "$phase production app changed"
     }
 }
 
@@ -99,7 +117,7 @@ while ($slotIndex -lt $slots.Count -and $attempted -lt [int]$contract.population
     $mode = [string]$conditionSpec.readback_mode
     $caseDir = Join-Path $attemptRoot $label
     $metadata = [ordered]@{
-        schema = "campfire.phase6fj.attempt-metadata.v1"
+        schema = "campfire.$phase.attempt-metadata.v1"
         attempt_id = $attemptId
         attempt_sequence = $attempted
         slot_id = $slot.slot_id
@@ -119,7 +137,7 @@ while ($slotIndex -lt $slots.Count -and $attempted -lt [int]$contract.population
         "-Scenario", $base.scenario, "-OutputDir", $caseDir,
         "-OffsetM", "$($base.point_offset_m)", "-SupportRadiusM", "$($base.support_radius_m)",
         "-Filtering", "true", "-Collision", "true", "-Policy", $base.point_policy,
-        "-ReportPhase", "phase6fj", "-GeometryVariant", $base.geometry_variant,
+        "-ReportPhase", $phase, "-GeometryVariant", $base.geometry_variant,
         "-FuelScale", "1", "-TemperatureScale", "1", "-SmokeScale", "1",
         "-SampleFrames", ($base.sample_frames -join ','), "-ReadbackChannels", "none",
         "-ReadbackMode", $mode, "-ReadbackFrames", "$($base.readback_frame)", "-ReferenceDisposal", "natural",
@@ -158,7 +176,7 @@ while ($slotIndex -lt $slots.Count -and $attempted -lt [int]$contract.population
     $previousExitUtc = [DateTime]::UtcNow.ToString("o")
     try { Update-Report } catch {
         Write-State "absolute_safety_stop" $attemptId $slot.slot_id "absolute_safety_failure" "analyzer_failure:$($_.Exception.Message)"
-        Write-Error "Phase 6FJ analyzer failed after $attemptId"
+        Write-Error "$phase analyzer failed after $attemptId"
         exit 2
     }
     Assert-Production $attemptId
@@ -166,7 +184,7 @@ while ($slotIndex -lt $slots.Count -and $attempted -lt [int]$contract.population
     $case = @($report.attempts | Where-Object { $_.attempt_id -eq $attemptId })[0]
     if ($null -eq $case) {
         Write-State "absolute_safety_stop" $attemptId $slot.slot_id "absolute_safety_failure" "attempt_report_missing;guard_exit=$guardExit"
-        Write-Error "Phase 6FJ attempt report missing"
+        Write-Error "$phase attempt report missing"
         exit 2
     }
     $classification = [string]$case.classification
@@ -181,7 +199,7 @@ while ($slotIndex -lt $slots.Count -and $attempted -lt [int]$contract.population
         Write-State "running" $attemptId $slot.slot_id $classification "preserved_startup_prerequisite;guard_exit=$guardExit"
         if ($prerequisite -gt [int]$contract.population.startup_prerequisite_replacement_budget) {
             Write-State "prerequisite_population_incomplete" $attemptId $slot.slot_id $classification "startup_replacement_budget_exhausted"
-            Write-Error "Phase 6FJ exhausted startup replacement budget"
+            Write-Error "$phase exhausted startup replacement budget"
             exit 2
         }
         continue
@@ -193,7 +211,7 @@ while ($slotIndex -lt $slots.Count -and $attempted -lt [int]$contract.population
     }
     $reasons = @($case.operation_failures) + @($case.native_lifecycle_failures) + @($case.absolute_safety_failures)
     Write-State $status $attemptId $slot.slot_id $classification ($reasons -join ',')
-    Write-Error "Phase 6FJ captured nonreplaceable $classification at $attemptId; later slots were not started"
+    Write-Error "$phase captured nonreplaceable $classification at $attemptId; later slots were not started"
     exit 2
 }
 
@@ -201,14 +219,14 @@ Update-Report
 Assert-Production "complete"
 if ($slotIndex -ne $slots.Count) {
     Write-State "prerequisite_population_incomplete" "complete" "" "startup_replacement_budget_or_launch_limit_exhausted"
-    Write-Error "Phase 6FJ did not complete nine representative slots"
+    Write-Error "$phase did not complete nine representative slots"
     exit 2
 }
 $final = Get-Content -Raw -Encoding UTF8 $reportPath | ConvertFrom-Json
 if (-not $final.qualified) {
     Write-State "operation_safe_stop" "complete" "" "final_qualification_report_failed"
-    Write-Error "Phase 6FJ final qualification report failed"
+    Write-Error "$phase final qualification report failed"
     exit 2
 }
 Write-State "qualified" "complete" "complete" "representative_pass" ""
-Write-Host "Phase 6FJ completed nine balanced representative processes; repeated readback remains excluded"
+Write-Host "$phase completed nine balanced representative processes; repeated readback remains excluded"

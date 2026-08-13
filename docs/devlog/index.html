@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6fj">最新記録</a>
+        <a href="#phase-6fk">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fj">Phase 6FJの結果を読む</a>
+        <a class="button primary" href="#phase-6fk">Phase 6FKの契約を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FJ · pointer evidence safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6FK · pointer-complete contract frozen</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Population</span><strong>10 launches · formal qualification 0</strong></div>
+        <div><span>Population</span><strong>fresh 9-process run pending</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
@@ -49,6 +49,18 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-6fk" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FK pointer-complete qualification entry"><span class="phase-number compact">6FK</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">contract frozen · runtime pending</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FK · pointer-complete single-readback qualification</p><h2>buffer pointerを必須証拠にし、<br>新しい9 processを事前凍結。</h2><p>Phase 6FJの10 launchとpointer欠落safe stopを変更せず、新しい空rootで<code>ABC / BCA / CAB</code>を最初から実行する契約を固定しました。Aはreadbackなし、Bはpublic readback 1回、Cはreadback 1回と<code>np.asarray(fuel)</code> 1回です。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Pointer evidence</p><h3>positive・equal・public</h3><p>source／convertedの<code>__array_interface__.data[0]</code>をraw markerと最終reportへ保存します。正のbuilt-in integerで一致することに加え、Python identity、shared memory、shape／dtype／strides／size／nbytes、weak residual 0をすべて要求します。</p></section><section class="note"><p class="note-label">Fail closed</p><h3>最初のC欠落で停止</h3><p>pointer欠落、0、負値、型不正、不一致は置換不能なoperation failureです。startup前提だけ最大2件を同一slotへ置換でき、総launchは11以下。14／16 GiB上限とnormal lifecycleを維持します。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Pre-runtime boundary</p><h3>Phase 6FJ evidenceは正式母集団へ流用しない。</h3><p>契約SHA-256は<code>3BEC199C...E5CF84</code>。pointer fixtureはsame-object、copy、欠落、0、負値、型不正、identity／shares-memoryのみの不十分な証拠を検査します。production、Point、Flow、CollisionProxy、V3、latest demoは変更しません。内部検証のため動画も不要です。</p><p><a href="../design/phase6fk_pointer_complete_single_readback.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>9</span><p><strong>Representative</strong><small>target population</small></p></div><div role="listitem"><span>2</span><p><strong>Startup replacement</strong><small>maximum</small></p></div><div role="listitem"><span>+</span><p><strong>Data pointers</strong><small>positive and equal</small></p></div><div role="listitem"><span>!</span><p><strong>Missing pointer</strong><small>nonreplaceable</small></p></div><div role="listitem"><span>0</span><p><strong>Runtime</strong><small>not yet started</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Current boundary</p><h3>fixture合格後、新rootで正式run。</h3><p>正式9 processが全件合格した場合だけ単回readback／fuel alias lifetimeをqualifiedとします。反復readbackは次Phase候補のまま自動開始しません。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6fj" class="section entry-section phase-six">

@@ -1,5 +1,11 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FK pointer-complete single-readback qualification contract
+
+Phase 6FJのsafe stopは凍結し、既存10 launchを再分類・正式母集団へ再利用しない。新Phase 6FKはpublic `__array_interface__.data[0]`によるsource／converted pointerを必須証拠とする。pointerは正のbuilt-in integerで一致し、Python identity一致、`numpy.shares_memory()` true、shape／dtype／strides／size／nbytes一致、weak residual 0を同時に要求する。identityまたはshared-memoryだけでは合格しない。欠落、0、負値、型不正、不一致は置換不能なoperation failureで、最初のC failure後に後続slotを開始しない。
+
+正式順序は新しい空rootで`ABC / BCA / CAB`、代表A/B/C各3本の計9 process。置換できるのはoperation前のstartup prerequisiteだけで最大2件、総launch最大11。Kit 14 GiB、tree 16 GiB、runner／diagnostic 512 MiB、system floor 8 GiB、180秒stage close、bounded CDB、normal OS exit、exact cleanupを維持する。`np.asarray()`隣接Private Bytesは8 MiB以内を要求し、波形slopeはwarning telemetryのままとする。契約SHA-256は`3BEC199CC4590276575E5C6A2A7742630AFC913164FA053A41ADDE54FDE5CF84`。反復readback、他channel、field保存、production変更、動画は対象外。詳細は`docs/design/phase6fk_pointer_complete_single_readback.md`。
+
 # Phase 6FJ balanced single-readback qualification contract
 
 Phase 6FG〜6FIの履歴を凍結し、Phase 6FGのthree-layer A/B/C operation判定とPhase 6FIのstartup前提専用replacementを合成する新contractを事前定義した。順序は`ABC / BCA / CAB`、代表9 process、startup前提failure専用replacement最大2、総launch最大11。置換は同一balanced slotへ一意attemptで行い、operation／native lifecycle／absolute safety／cleanup／diagnostic failureは置換せず即時停止する。

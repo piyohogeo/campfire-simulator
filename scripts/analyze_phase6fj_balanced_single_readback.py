@@ -1,4 +1,4 @@
-"""Aggregate Phase 6FJ balanced single-readback attempts with bounded replacements."""
+"""Aggregate balanced single-readback attempts with bounded startup replacements."""
 
 from __future__ import annotations
 
@@ -11,9 +11,11 @@ from pathlib import Path
 try:
     from scripts.analyze_phase6fg_paired_readback import LABELS, _case
     from scripts.analyze_phase6fh_lifecycle_qualification import jsonl, load, marker_map
+    from scripts.phase6fk_pointer_evidence import pointer_evidence_from_boundary
 except ModuleNotFoundError:
     from analyze_phase6fg_paired_readback import LABELS, _case
     from analyze_phase6fh_lifecycle_qualification import jsonl, load, marker_map
+    from phase6fk_pointer_evidence import pointer_evidence_from_boundary
 
 
 def _common(attempt_root: Path, metadata: dict, overlay: dict, base: dict) -> dict:
@@ -98,16 +100,16 @@ def _common(attempt_root: Path, metadata: dict, overlay: dict, base: dict) -> di
             if not operation_case.get("condition_gate_pass"):
                 operation.extend(operation_case.get("condition_gate_failures") or ["condition_gate_failed"])
             if condition == "C_fuel_alias":
-                observable = ((operation_case.get("boundary") or {}).get("observable_copy_contract") or {})
-                source_pointer = observable.get("source_data_pointer")
-                converted_pointer = observable.get("converted_data_pointer")
-                pointer_complete = bool(
-                    isinstance(source_pointer, int) and source_pointer > 0
-                    and isinstance(converted_pointer, int) and converted_pointer > 0
-                    and observable.get("same_data_pointer") is True
-                )
-                if not pointer_complete:
-                    operation.append("c_buffer_pointer_evidence_missing_or_inconsistent")
+                pointer = pointer_evidence_from_boundary(operation_case.get("boundary") or {})
+                operation.extend(f"c_pointer:{failure}" for failure in pointer["failures"])
+                maximum_delta = ((overlay.get("pointer_complete_contract") or {}).get(
+                    "maximum_absolute_numpy_asarray_private_delta_bytes"
+                ))
+                delta = (operation_case.get("memory_deltas_bytes") or {}).get("fuel_conversion_immediate")
+                if type(maximum_delta) is int and (
+                    type(delta) is not int or abs(delta) > maximum_delta
+                ):
+                    operation.append("c_numpy_asarray_adjacent_private_delta")
         except Exception as exc:  # fail closed and preserve the analyzer boundary
             operation.append(f"operation_analyzer:{type(exc).__name__}:{exc}")
 
@@ -203,19 +205,7 @@ def main() -> None:
     weak = [(case.get("boundary") or {}).get("weak_reference_alive_after_scope_count") for case in c_cases]
     pointer_evidence = []
     for case in c_cases:
-        observable = ((case.get("boundary") or {}).get("observable_copy_contract") or {})
-        source_pointer = observable.get("source_data_pointer")
-        converted_pointer = observable.get("converted_data_pointer")
-        pointer_evidence.append({
-            "source_data_pointer": source_pointer,
-            "converted_data_pointer": converted_pointer,
-            "same_data_pointer": observable.get("same_data_pointer"),
-            "complete": bool(
-                isinstance(source_pointer, int) and source_pointer > 0
-                and isinstance(converted_pointer, int) and converted_pointer > 0
-                and observable.get("same_data_pointer") is True
-            ),
-        })
+        pointer_evidence.append(pointer_evidence_from_boundary(case.get("boundary") or {}))
     c_pointer_contract_complete = len(pointer_evidence) == 3 and all(item["complete"] for item in pointer_evidence)
     c_consistent = bool(
         len(c_cases) == 3
@@ -260,8 +250,8 @@ def main() -> None:
     margins = [case.get("minimum_kit_ceiling_margin_bytes") for case in operation_cases]
     warnings = [case.get("waveform_telemetry", {}).get("warning_count", 0) for case in operation_cases]
     report = {
-        "schema": "campfire.phase6fj.balanced-single-readback-report.v1",
-        "phase": "phase6fj",
+        "schema": f"campfire.{overlay['phase']}.balanced-single-readback-report.v1",
+        "phase": overlay["phase"],
         "contract_sha256": hashlib.sha256(args.contract.read_bytes()).hexdigest().upper(),
         "base_operation_contract_sha256": hashlib.sha256(args.base_contract.read_bytes()).hexdigest().upper(),
         "history_frozen": overlay["history_frozen"],
@@ -277,7 +267,10 @@ def main() -> None:
                 attempts[first_nonreplaceable_index]["attempt_id"] if first_nonreplaceable_index is not None else None
             ),
             "attempts_after_required_stop": [item["attempt_id"] for item in attempts_after_required_stop],
-            "reason": "The runtime analyzer did not yet require C buffer-pointer evidence; later attempts are retained only as partial diagnostic evidence.",
+            "reason": (
+                "Later attempts are invalid if a nonreplaceable failure occurred; "
+                "Phase 6FJ historical artifacts retain their original post-runtime audit."
+            ),
         },
         "operation_summary": {
             "readback_immediate_bytes": _distribution(readback_increments),

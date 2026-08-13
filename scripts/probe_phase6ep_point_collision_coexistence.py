@@ -270,9 +270,8 @@ def _bounded_object_metadata(value):
     # establish that two wrappers address the same buffer.  Non-array channel
     # wrappers may not expose this interface, so absence remains explicit.
     try:
-        array_interface = value.__array_interface__
-        data = array_interface.get("data")
-        metadata["data_pointer"] = int(data[0]) if data and data[0] is not None else None
+        data = value.__array_interface__.get("data")
+        metadata["data_pointer"] = int(data[0]) if data and type(data[0]) is int and data[0] > 0 else None
     except Exception:
         metadata["data_pointer"] = None
     return metadata
