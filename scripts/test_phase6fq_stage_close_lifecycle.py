@@ -32,6 +32,7 @@ class Phase6FqStageCloseLifecycleContract(unittest.TestCase):
         self.assertEqual(fixture["pixel_buffer_bytes"], 0)
         self.assertEqual(self.contract["safety"]["kit_private_limit_bytes"], 14 * 1024**3)
         self.assertEqual(self.contract["safety"]["unique_tree_private_limit_bytes"], 16 * 1024**3)
+        self.assertNotIn('"-ReadbackFrames", ""', self.matrix_runner)
 
     def test_capture_preparation_is_bounded_and_does_not_call_capture(self):
         self.assertIn('capture_preparation_mode == "provider_alias"', self.probe)

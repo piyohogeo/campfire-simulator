@@ -66,7 +66,7 @@ function Invoke-LifecycleCase([string]$AttemptRoot, [object]$Condition, [int]$Ru
         "-Filtering", "true", "-Collision", "true", "-Policy", $contract.physical_fixture.point_policy,
         "-ReportPhase", "phase6fq", "-GeometryVariant", $contract.physical_fixture.geometry_variant,
         "-FuelScale", "1", "-TemperatureScale", "1", "-SmokeScale", "1",
-        "-SampleFrames", "60,96", "-OperationFrames", "96", "-ReadbackFrames", "",
+        "-SampleFrames", "60,96", "-OperationFrames", "96",
         "-ReadbackChannels", "none", "-ReadbackMode", "none", "-ReferenceDisposal", "del",
         "-SynchronousMemoryMarkers", "true", "-PythonMemoryTelemetry", "true",
         "-SpatialCollectorsEnabled", $collectors, "-SpatialColliderIndices", "2",
