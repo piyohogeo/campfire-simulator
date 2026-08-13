@@ -141,6 +141,9 @@
   },
   "regression": {
     "release_build": "pass",
+    "focused_phase6e": "221/221",
+    "focused_phase6f": "50/50",
+    "focused_total": "271/271",
     "phase0_rtx": "pass",
     "phase3": {
       "status": "pass",
@@ -153,6 +156,15 @@
       "peak_fuel_input": 1.0
     },
     "standard_suite": "78/78 in 320.5 seconds",
-    "static_devlog_inspection": "pending"
+    "static_devlog_inspection": {
+      "status": "pass",
+      "json_files": 214,
+      "svg_files": 177,
+      "zip_files": 2,
+      "local_references": 780,
+      "missing_references": 0,
+      "duplicate_ids": 0,
+      "utf8_replacement_characters": 0
+    }
   }
 }

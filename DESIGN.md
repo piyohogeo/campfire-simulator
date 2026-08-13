@@ -6,6 +6,10 @@ Phase 6FD／6FEは凍結し、6FEの`9.292 MiB/s > 8 MiB/s`を遡及合格・緩
 
 実行順はreadbackなしcontrol 3 run、C0 acquire/discard 3 run、C1 fuel alias 3 run。各groupが完全合格した場合だけ次へ進み、retryしない。繰り返しreadback、field保存、他channel、production統合、resource上限変更は対象外。契約SHA-256は`0D69ACADBEC942103081E8892D35866D13E4254FA4A1E15B77CEC3FD27E0612C`。詳細は`docs/design/phase6ff_memory_boundedness.md`。
 
+正式control run01は97 sample／47.966秒、代表startup、stage close 2.347秒、normal exitだった。Kit peak 13.537 GiB（上限余裕474.570 MiB）、最大transient 673.191 MiB、high-water回収626.703 MiB／0.528秒、terminal残差+46.488 MiB、projected drift 3.209%だった。一方、後半8秒rolling slopeが`17.028／49.266／40.604 MiB/s`と3 window連続で8 MiB/sを超え、凍結上限2連続に不合格。final window slope 0.488 MiB/sでも契約を変更せずsafe stopし、control run02/03とC0/C1は未開始。単発alias lifetimeと反復readbackは未qualifiedである。
+
+Release build、Phase 0 RTX、Phase 3、focused Phase 6E/6F 271/271、標準suite 78/78は合格。production SHA-256は不変で、fatal／dump／upload／CDB／cleanup residualは0だった。
+
 # Phase 6FE lag-aware occupancy memory response
 
 Phase 6FDの`active_drop_private_increase_fraction=0.809524 > 0.75`は凍結し、遡及合格にしない。Phase 6FEは約0.5秒cadenceの4 sample（最大3秒）を有限lag windowとし、16 block以上のdropをimmediate reclaim、delayed reclaim、active rebound overlap、bounded cache retention、post-drop continued growthへ分類する。event層に加えて、8 MiB/s slope、5% projected drift、normalized drift、high-water recovery／plateau、14 GiB Kit、16 GiB tree、stage close、normal exitのglobal boundednessを独立必須gateとして維持する。詳細は`docs/design/phase6fe_lagged_memory_response.md`。

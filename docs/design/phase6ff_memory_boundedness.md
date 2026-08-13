@@ -40,3 +40,13 @@ Before Kit runtime, the contract must accept startup-to-plateau, brief >8 MiB/s 
 ## Runtime progression
 
 The order is fixed: control run01–03, C0 run01–03, then C1 run01–03. Every condition is a separate process. A condition or three-run group failure stops the population without retry; later groups do not start. A successful Phase 6FF claim is limited to one representative-startup readback and one fuel same-object alias lifetime. Repeated readback remains a future phase even after full success.
+
+## Formal runtime safe stop
+
+The new root executed control run01 only. Startup was representative and the process collected 97 aligned samples over 47.966 seconds, completed stage close in 2.347 seconds, reached `shutdown_complete`, and exited normally. Fatal, dump, automatic upload, CDB invocation, and cleanup residual counts were zero.
+
+Absolute and recovery evidence remained bounded: Kit peak was 13.537 GiB with 474.570 MiB remaining to the 14 GiB limit; tree peak was 13.690 GiB; maximum transient growth was 673.191 MiB; high-water recovery was 626.703 MiB after 0.528 seconds; terminal residual was +46.488 MiB; projected and normalized projected drift were 3.209% and 0.779%.
+
+The predeclared persistence predicate failed. The 8-second rolling slopes were `-2.496, -0.091, +21.774, +53.823, -48.703, -16.901, +3.603, +17.028, +49.266, +40.604 MiB/s`. Three late windows exceeded the diagnostic 8 MiB/s level consecutively, above the frozen maximum of two. Although the final equal-window slope was only +0.488 MiB/s and high-water recovery was material, Phase 6FF does not change the contract after runtime. Control runs 02/03 and every C0/C1 run were not started. Control reproducibility, one-readback lifetime, and repeated readback therefore remain unqualified.
+
+Regression remained green: Release build, Phase 0 RTX, Phase 3 authority/mass-balance/Flow input, focused Phase 6E/6F contracts 271/271, and the standard suite 78/78 in 320.5 seconds. Phase 3 retained zero dry/wet mass-balance error, active blocks final/peak 271/335, and peak fuel 1.0. Production SHA-256 remained `94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`; no Kit, CDB, or helper process remained.

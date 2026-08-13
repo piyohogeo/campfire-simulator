@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6fe">最新記録</a>
+        <a href="#phase-6ff">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,16 +27,16 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fe">Phase 6FEの結果を読む</a>
+        <a class="button primary" href="#phase-6ff">Phase 6FFの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FE · lag-aware memory safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6FF · multi-window memory safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Lifecycle</span><strong>C0 normal exit · C1 not started · residual 0</strong></div>
+        <div><span>Lifecycle</span><strong>control run01 normal exit · later runs not started</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
@@ -49,6 +49,18 @@
         <h2 id="about-title">成果だけでなく、根拠を残す。</h2>
       </div>
       <p>各エントリは「目標」「実装」「目で見える結果」「自動検証」「残った問題」「次に試すこと」を同じ順序で記録します。将来、物理モデルや描画を変更したときに、何を守るべきかを振り返れるログにします。</p>
+    </section>
+
+    <section id="phase-6ff" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FF multi-window memory boundedness entry"><span class="phase-number compact">6FF</span><p><time datetime="2026-08-13">2026.08.13</time></p><span class="pill current">synthetic pass · control persistence safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FF · multi-window memory boundedness</p><h2>回復量だけでは通さない。<br>後半3 windowの増加で停止。</h2><p>Phase 6FEを遡及合格にせず、絶対安全、有限transient、複数windowの持続性、readbackなしcontrolとの差分を分離する48秒契約を事前凍結しました。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Historical audit</p><h3>24秒は新母集団に不使用</h3><p>Phase 6FD／6FEの49 sampleをread-only監査。6FE C0は全体9.292 MiB/sでも最終window -148.904 MiB/s、high-water回収666.449 MiBでしたが、新契約の42秒／80 sample未満なので遡及評価しません。</p></section><section class="note"><p class="note-label">Synthetic</p><h3>bounded 6 accept · failure 6 reject</h3><p>短期8 MiB/s超過、cache、active-following、shader生成、遅延回収を受理し、単調・後半継続・階段・per-block増加・ceiling・shutdown不完了を拒否しました。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Fail-closed control</p><h3>絶対上限と回復は合格、late rolling persistenceは不合格。</h3><p>control run01は97 sample／47.966秒、代表startup、stage close 2.347秒、normal exit。Kit peak 13.537 GiB、14 GiBまで474.570 MiB、最大transient 673.191 MiB、high-water回収626.703 MiB／0.528秒、terminal残差+46.488 MiBでした。</p><p>一方、late 8秒rolling slopeが<code>17.028／49.266／40.604 MiB/s</code>と3 window連続で8 MiB/sを超え、凍結上限2連続に不合格。final windowは0.488 MiB/sでも閾値を変更せず、control run02/03とC0/C1は開始していません。</p><p>Release build、Phase 0 RTX、Phase 3、focused 271/271、標準suite 78/78は合格。fatal、dump、upload、CDB、残留processは0、production SHA-256は不変です。内部診断だけなので最新デモ参照は変更していません。</p><p><a href="assets/phase6/memory_boundedness_safe_stop.json">machine report</a> · <a href="../design/phase6ff_memory_boundedness.md">design note</a></p></div><div class="check-list" role="list"><div role="listitem"><span>✓</span><p><strong>Synthetic</strong><small>calibrated</small></p></div><div role="listitem"><span>✓</span><p><strong>Absolute safety</strong><small>within limits</small></p></div><div role="listitem"><span>!</span><p><strong>Late persistence</strong><small>3 &gt; 2 windows</small></p></div><div role="listitem"><span>—</span><p><strong>C0 / C1</strong><small>not started</small></p></div><div role="listitem"><span>0</span><p><strong>Residual</strong><small>none</small></p></div><div role="listitem"><span>—</span><p><strong>Production</strong><small>unchanged</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Next boundary</p><h3>controlの自然変動をまだqualifiedできない。</h3><p>次の着手には、契約を事後変更せず、このlate 3-window増加が継続成長か有限cycleかを判別する新しい事前凍結案が必要です。単発fuel alias lifetimeと反復readbackは引き続き未qualifiedです。</p></section>
+        </div>
+      </article>
     </section>
 
     <section id="phase-6fe" class="section entry-section phase-six">
