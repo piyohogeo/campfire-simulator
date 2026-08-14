@@ -1,5 +1,9 @@
 # Phase 6FO S93 / S100 Point supply comparison
 
+## 2026-08-14 Phase 6GA restart safe stop
+
+The explicitly approved fresh comparison was frozen as Phase 6GA with a balanced S93/S100/S100-OFF population and the qualified Phase 6FZ 16/17 GiB, import, pre-close commit, release-after-close, CDB, and exact-cleanup boundaries. Its first evidence-only preflight did not create Kit: the contract's geometry label `corrected` did not match the shared case runner's existing runtime token `phase6er_corrected`, so PowerShell parameter binding failed. This nonreplaceable operation failure stopped all nine formal slots and prevented numeric/video evidence. Phase 6GA is frozen, Phase 6FO remains historical, and neither is reclassified. A new contract/root with an exact parameter-binding fixture is required before comparison can resume; the physical conditions and thresholds remain unchanged.
+
 ## 2026-08-14 restart boundary after Phase 6FZ
 
 Phase 6FZ qualified the monitored Kit 16 GiB and unique-tree 17 GiB ceilings

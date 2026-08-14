@@ -55,6 +55,17 @@ class Phase6GaContract(unittest.TestCase):
         self.assertIn('"phase6ga"', text)
         self.assertIn("cleanup_markers.jsonl", text)
 
+    def test_published_safe_stop_is_not_a_physical_result(self):
+        report = json.loads((ROOT.parent / "docs/devlog/assets/phase6/supply_comparison_phase6ga_safe_stop.json").read_text(encoding="utf-8"))
+        self.assertEqual(report["status"], "harness_operation_safe_stop")
+        self.assertEqual(report["formal_launches"], 0)
+        self.assertEqual(report["readback_count"], 0)
+        self.assertFalse(report["production_changed"])
+        devlog = (ROOT.parent / "docs/devlog/index.html").read_text(encoding="utf-8")
+        self.assertIn('id="phase-6ga"', devlog)
+        self.assertIn("supply_comparison_phase6ga_safe_stop.json", devlog)
+        self.assertIn("latest_demo.json", devlog)
+
 
 if __name__ == "__main__":
     unittest.main()

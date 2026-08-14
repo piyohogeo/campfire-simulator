@@ -1,0 +1,59 @@
+{
+  "schema": "campfire.phase6ga.devlog-summary.v1",
+  "phase": "phase6ga",
+  "status": "harness_operation_safe_stop",
+  "contract_sha256": "F0733DFA6A68207289892FB12EBE4191AC5D869EE0CF5D82D00CABD186B5AD42",
+  "artifact_root": "artifacts/phase6ga-supply-comparison-1",
+  "preflight_launches": 1,
+  "formal_launches": 0,
+  "formal_population_required": 9,
+  "failure_boundary": "PowerShell parameter binding before Kit process creation",
+  "failure": {
+    "type": "ParameterArgumentValidationError",
+    "parameter": "GeometryVariant",
+    "provided": "corrected",
+    "accepted_runtime_tokens": ["legacy_phase6ep", "phase6er_corrected"]
+  },
+  "kit_observed": false,
+  "readback_count": 0,
+  "capture_count": 0,
+  "resource_peaks_bytes": {
+    "runner": 495616,
+    "diagnostic": 16195584,
+    "kit": 0,
+    "unique_tree": 19505152
+  },
+  "cleanup": {
+    "phase6fw_qualified": true,
+    "final_attempt_owned_residual": 0,
+    "unresolved_unknown": 0,
+    "remaining_processes": 0
+  },
+  "fatal": 0,
+  "dump": 0,
+  "automatic_upload": 0,
+  "cdb_invocations": 0,
+  "production_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "production_changed": false,
+  "verification": {
+    "release_build": "pass",
+    "phase0_rtx": "pass",
+    "phase3": "pass",
+    "phase3_mass_balance_error_kg": 0.0,
+    "phase3_active_blocks_final": 238,
+    "phase3_active_blocks_peak": 320,
+    "focused_phase6f": "212/212",
+    "standard_suite_processes": "8/8",
+    "standard_suite_tests": "78/78",
+    "standard_suite_seconds": 327.4,
+    "devlog_refs": 473,
+    "devlog_ids": 283,
+    "devlog_json": 235,
+    "devlog_svg": 177,
+    "devlog_zip": 2
+  },
+  "phase6fo_reclassified": false,
+  "phase6fz_reclassified": false,
+  "video_created": false,
+  "next_boundary": "independent harness-only runtime geometry-token correction and exact parameter-binding fixture"
+}
