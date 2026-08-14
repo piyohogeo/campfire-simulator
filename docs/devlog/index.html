@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6gy">最新記録</a>
+        <a href="#phase-6gz">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6gy">Phase 6GYの結果を読む</a>
+        <a class="button primary" href="#phase-6gz">Phase 6GZの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6GY · user-requested safe boundary</strong></div>
+        <div><span>現在地</span><strong>Phase 6GZ · lifecycle safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,16 @@
   </header>
 
   <main>
+    <section id="phase-6gz" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6GZ boundary ladder safe stop"><span class="phase-number compact">6GZ</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6GZ · post-readback boundary ladder</p><h2>The operation prefix completed;<br>natural OS exit did not.</h2><p>The Control exited normally. The Candidate completed seven-handle schema work, the velocity pipeline, temperature entry, ordered release, stage close, and <code>shutdown_complete</code>, then failed to exit naturally. No temperature conversion or later prefix was launched.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Boundary</p><h3>Operation pass, lifecycle failure.</h3><p>The last completed operation marker was <code>phase6gz_operation_complete</code>. The first unfinished boundary was natural OS exit after <code>shutdown_complete</code>. The prior launch-23 access violation is excluded from mechanism inference because it was user-intervention-contaminated.</p></section><section class="note"><p class="note-label">Safety</p><h3>16/17 GiB respected; residual zero.</h3><p>Candidate Kit/tree peaks were 15,278,473,216 / 15,430,324,224 bytes. Stage close took 7.4500576 seconds. Bounded CDB was partial, detach completed, and process/NVDB residuals were zero.</p></section></div>
+          <section class="note next"><p class="note-label">Continuation</p><h3>Temperature volume remains unstarted.</h3><p>The frozen first-anomaly rule blocked every later ladder condition. Formal S93/S100/OFF, other channels, video, and production remain stopped pending explicit approval.</p><p><a href="assets/phase6/phase6gz_boundary_ladder_safe_stop.json">machine report</a> · <a href="../design/phase6gz_boundary_ladder_safe_stop.md">design note</a> · <a href="assets/phase6/phase6gy_launch23_user_intervention_addendum.json">6GY addendum</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>internal stability evidence; no new video</small></span></button></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6gy" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6GY user-requested safe boundary"><span class="phase-number compact">6GY</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe boundary</span></aside>
@@ -5369,7 +5379,7 @@
         <p class="section-kicker">Roadmap</p>
         <h2>小さく燃やして、確かめながら進む。</h2>
         <p>Phase 6GNでmodule／callableを分離したexact-wrapper smokeは5/5合格し、Phase 6GMのimport不具合は解消した。しかし正式attempt01 S93はframe 180の7-handle readback直後、spatial result保存前にnative access violation <code>0xC0000005</code>でsafe stopした。accepted 0/9、replacement 0で後続は未起動、exact cleanup residualは0である。Phase 6GNを凍結し、次はこのpost-readback native operation境界だけを別承認Phaseで隔離する。S93/S100 pair、flux、deep velocity、動画、Point policy、production統合は未到達である。</p>
-        <p><strong>Current continuation:</strong> Phase 6GY stopped at the requested safe boundary after launch 23. Control A had 10/10 representative normal exits; Candidate B had 11 OS-exit timeouts and one <code>0xC0000005</code>, all after <code>phase6gl_readback_after</code>. Exact process and attempt-local file cleanup left residual zero. Because the population was intentionally truncated and B terminal outcomes were mixed, the result remains <code>inconclusive due to harness or safety stop</code>. No remaining slot starts without new explicit approval.</p>
+        <p><strong>Current continuation:</strong> Phase 6GZ passed its Control and completed the Candidate temperature-front operation, including schema, velocity sampling/collector, temperature entry, and release. Stage close and <code>shutdown_complete</code> completed, but Kit did not exit naturally; bounded diagnostics detached and exact cleanup left residual zero. The first-anomaly rule stopped all later prefixes. Phase 6GY launch 23 is explicitly user-intervention-contaminated; mechanism evaluation uses the 31 unattended Candidate timeouts. Temperature volume, formal comparison, other channels, video, and production remain blocked pending approval.</p>
         <ol class="roadmap">
           <li class="done"><span>0</span><div><strong>環境成立確認</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>1</span><div><strong>Flow単体検証</strong><small>完了 · 2026.08.04</small></div></li>

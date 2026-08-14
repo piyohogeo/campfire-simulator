@@ -1,0 +1,65 @@
+{
+  "schema": "campfire.phase6gz.boundary-ladder-safe-stop.v1",
+  "contract_sha256": "13931843A1E906D456CE84D446C3484F1FD2F1033132D62E0BA1141395251349",
+  "historical_population": {
+    "primary_unintervened_candidate_timeouts": 31,
+    "phase6gy_launch23": "user-intervention-contaminated-boundary-reference-only"
+  },
+  "offline_fixture": {"passed": true, "cases": 42, "kit_started": false},
+  "launches": 2,
+  "maximum_launches": 8,
+  "retries": 0,
+  "replacements": 0,
+  "runs": [
+    {
+      "name": "control_r2",
+      "classification": "normal_exit",
+      "operation_result": "pass",
+      "lifecycle_result": "normal_exit",
+      "stage_close_seconds": 15.4847969,
+      "kit_peak_bytes": 14966697984,
+      "tree_peak_bytes": 15130947584,
+      "residual_process_count": 0
+    },
+    {
+      "name": "candidate_temperature_front",
+      "classification": "os_exit_timeout",
+      "operation_result": "pass",
+      "lifecycle_result": "unknown_shutdown_failure",
+      "last_completed_operation_boundary": "phase6gz_operation_complete",
+      "last_lifecycle_marker": "shutdown_complete",
+      "first_unfinished_boundary": "natural_os_exit_after_shutdown_complete",
+      "temperature_volume_conversion_calls": 0,
+      "schema_array_metadata_calls": 7,
+      "schema_buffer_to_volume_calls": 6,
+      "velocity_pipeline_completed": true,
+      "temperature_entry_completed": true,
+      "weak_reference_residual": 0,
+      "stage_close_seconds": 7.4500576,
+      "kit_peak_bytes": 15278473216,
+      "tree_peak_bytes": 15430324224,
+      "kit_limit_margin_bytes": 1901395968,
+      "tree_limit_margin_bytes": 2823286784,
+      "residual_process_count": 0
+    }
+  ],
+  "diagnostic": {
+    "invoked": true,
+    "identity_verified": true,
+    "all_thread_stack_complete": false,
+    "native_frames_observed": true,
+    "stack_pass": "partial-no-progress-timeout-20s",
+    "module_pass_complete": true,
+    "explicit_detach_complete": true,
+    "known_ngx_signature": false,
+    "full_dump_created": false
+  },
+  "later_ladder_conditions_started": false,
+  "formal_population_started": false,
+  "other_channels_started": false,
+  "video_generated": false,
+  "production_changed": false,
+  "temporary_nvdb_residual_count": 0,
+  "final_process_residual_count": 0,
+  "next_state": "await explicit approval; temperature volume boundary remains unstarted"
+}

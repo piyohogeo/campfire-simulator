@@ -6,6 +6,11 @@
 - Added the Phase 6GZ fail-closed post-readback boundary ladder, read-only
   GX/GY audit, durable fine-grained markers, exact temporary-file allowlist,
   and no-Kit contract fixture. No formal population or production path changed.
+- Safely stopped Phase 6GZ after Control normal exit and Candidate
+  temperature-front operation pass because Kit did not exit after durable
+  `shutdown_complete`. The Candidate proved schema and velocity completion and
+  reached temperature entry without converting it; stage close completed,
+  exact cleanup left residual zero, and no later ladder condition launched.
 
 - Stopped Phase 6GY at the user-requested safe boundary after the already
   running condition completed. No launch 24 was started; the terminal root has

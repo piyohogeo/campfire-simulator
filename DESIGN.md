@@ -19,6 +19,17 @@ There are no retries or replacements; the first non-normal result stops all
 later conditions. Formal comparison, other channels, video, and production are
 excluded. Detailed contract: `docs/design/phase6gz_post_readback_boundary_ladder.md`.
 
+## Phase 6GZ result
+
+The 42-case no-Kit fixture and historical audit passed. Control R2 exited
+normally. Candidate temperature-front completed schema processing, velocity
+save/sample/collector, temperature entry, ordered release, stage close, and
+`shutdown_complete`, but Kit did not exit naturally. It is operation pass plus
+lifecycle failure. CDB was bounded and partial, explicit detach and exact
+cleanup completed, and residual was zero. Per the frozen first-anomaly stop,
+temperature volume and every later condition were not launched. Details:
+`docs/design/phase6gz_boundary_ladder_safe_stop.md`.
+
 # Phase 6GY launch 23 intervention addendum
 
 This addendum does not edit the frozen Phase 6GY report. Launch 23's raw
