@@ -65,7 +65,6 @@ class Phase6FvMemoryCeilingQualification(unittest.TestCase):
             "phase6fu_resource_guard_sha256": "phase6fu_resource_guard.py",
             "phase6fu_process_identity_sha256": "phase6fu_process_identity.py",
             "frozen_phase6eg_resource_guard_sha256": "phase6eg_resource_guard.py",
-            "kit_shutdown_policy_sha256": "kit_shutdown_policy.ps1",
             "shared_case_runner_sha256": "run_phase6fo_supply_case.ps1",
             "shared_probe_sha256": "probe_phase6fo_supply_comparison.py",
         }
@@ -74,6 +73,16 @@ class Phase6FvMemoryCeilingQualification(unittest.TestCase):
                 self.contract["runtime_hashes"][key],
                 hashlib.sha256((SCRIPTS / name).read_bytes()).hexdigest().upper(),
             )
+        # Phase 6FV is frozen evidence. Later diagnostic phases may harden the
+        # shared shutdown policy without rewriting the historical contract.
+        self.assertEqual(
+            self.contract["runtime_hashes"]["kit_shutdown_policy_sha256"],
+            "07D52B2BEB45B17D16AE768068C56E7537F02948C349231BE15843578B58216D",
+        )
+        self.assertNotEqual(
+            self.contract["runtime_hashes"]["kit_shutdown_policy_sha256"],
+            hashlib.sha256((SCRIPTS / "kit_shutdown_policy.ps1").read_bytes()).hexdigest().upper(),
+        )
 
     def test_exact_cleanup_evidence_is_a_formal_gate(self):
         for token in (

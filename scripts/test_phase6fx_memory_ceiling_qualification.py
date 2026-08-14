@@ -51,7 +51,6 @@ class Phase6FxMemoryCeilingQualification(unittest.TestCase):
             "phase6fu_resource_guard_sha256": "phase6fu_resource_guard.py",
             "phase6fu_process_identity_sha256": "phase6fu_process_identity.py",
             "frozen_phase6eg_resource_guard_sha256": "phase6eg_resource_guard.py",
-            "kit_shutdown_policy_sha256": "kit_shutdown_policy.ps1",
             "shared_case_runner_sha256": "run_phase6fo_supply_case.ps1",
             "shared_probe_sha256": "probe_phase6fo_supply_comparison.py",
             "qualification_runner_sha256": "run_phase6fv_memory_ceiling_qualification.ps1",
@@ -61,6 +60,17 @@ class Phase6FxMemoryCeilingQualification(unittest.TestCase):
             with self.subTest(key=key):
                 actual = hashlib.sha256((ROOT / "scripts" / name).read_bytes()).hexdigest().upper()
                 self.assertEqual(contract["runtime_hashes"][key], actual)
+        # Preserve the policy hash actually used by the frozen Phase 6FX run;
+        # Phase 6FZ changes the shared diagnostic implementation only.
+        historical_policy = contract["runtime_hashes"]["kit_shutdown_policy_sha256"]
+        current_policy = hashlib.sha256(
+            (ROOT / "scripts" / "kit_shutdown_policy.ps1").read_bytes()
+        ).hexdigest().upper()
+        self.assertEqual(
+            historical_policy,
+            "07D52B2BEB45B17D16AE768068C56E7537F02948C349231BE15843578B58216D",
+        )
+        self.assertNotEqual(historical_policy, current_policy)
 
     def test_phase6fw_gate_accepts_complete_reuse_and_rejects_unknown(self) -> None:
         for index, expected in ((7, True), (8, False)):
