@@ -117,13 +117,21 @@ def analyze_attempt(attempt_root: Path, contract: dict, preflight=False):
         row["classification"] = "representative_pass" if not row["failures"] else "operation_failure"
     evidence = _read(case_dir / "runner_evidence.json") or {}
     audit = evidence.get("kit_import_audit") or {}
-    if contract.get("phase") == "phase6gl":
+    if contract.get("phase") in {"phase6gl", "phase6gm"}:
         resolved = {Path(str(item.get("resolved_file") or "")).resolve() for item in audit.get("imports", [])}
+        required_imports = (
+            {
+                (Path(__file__).resolve().parent / "probe_phase6gl_supply_comparison.py").resolve(),
+                (Path(__file__).resolve().parent / "phase6gm_flow_export_state.py").resolve(),
+            }
+            if contract.get("phase") == "phase6gm"
+            else {(Path(__file__).resolve().parent / "probe_phase6gc_shared_supply_comparison.py").resolve()}
+        )
         import_ok = bool(
             audit.get("status") == "pass"
             and Path(str(audit.get("wrapper_file") or "")).resolve()
-            == (Path(__file__).resolve().parent / "probe_phase6gl_supply_comparison.py").resolve()
-            and (Path(__file__).resolve().parent / "probe_phase6gc_shared_supply_comparison.py").resolve() in resolved
+            == (Path(__file__).resolve().parent / ("probe_phase6gm_supply_comparison.py" if contract.get("phase") == "phase6gm" else "probe_phase6gl_supply_comparison.py")).resolve()
+            and required_imports.issubset(resolved)
         )
     else:
         import_ok = bool(
@@ -132,7 +140,7 @@ def analyze_attempt(attempt_root: Path, contract: dict, preflight=False):
             == (Path(__file__).resolve().parent / "probe_phase6fo_supply_comparison.py").resolve()
         )
     schema_gate = {"pass": True, "boundaries": [], "failures": []}
-    if contract.get("phase") == "phase6gl":
+    if contract.get("phase") in {"phase6gl", "phase6gm"}:
         raw = _read(case_dir / "raw.json") or {}
         for sample in raw.get("samples", []):
             boundary = sample.get("readback_boundary")
@@ -205,7 +213,7 @@ def _paired(sequence: int, members: dict, contract: dict):
 def build(root: Path, contract_path: Path, offline_path: Path):
     contract = _read(contract_path)
     phase = (contract or {}).get("phase")
-    if phase not in {"phase6ga", "phase6gb", "phase6gc", "phase6gl"}: raise ValueError("invalid guarded supply contract")
+    if phase not in {"phase6ga", "phase6gb", "phase6gc", "phase6gl", "phase6gm"}: raise ValueError("invalid guarded supply contract")
     preflight = [analyze_attempt(path.parent, contract, True) for path in sorted(root.glob("channel-preflight/*/attempt_metadata.json"))]
     attempts = [analyze_attempt(path.parent, contract, False) for path in sorted(root.glob("formal/*/attempt_metadata.json"))]
     pairs = []
@@ -230,7 +238,7 @@ def build(root: Path, contract_path: Path, offline_path: Path):
             cross["relative_ranges"][name] = relative
             if relative > limit: cross["failures"].append(name)
         cross["pass"] = not cross["failures"]
-    inherited_preflight = phase == "phase6gl" and contract.get("public_channel_schema", {}).get("qualification") == "phase6gk_preflight_qualified"
+    inherited_preflight = phase in {"phase6gl", "phase6gm"} and contract.get("public_channel_schema", {}).get("qualification") == "phase6gk_preflight_qualified"
     preflight_ok = inherited_preflight or bool(preflight and preflight[-1]["classification"] == "representative_pass")
     qualified = bool(preflight_ok and len(representative) == 9 and len(pairs) == 3 and all(row["pass"] for row in pairs) and cross["pass"])
     peaks = {role: [int((row.get("resource") or {}).get("peaks", {}).get(role) or 0) for row in representative] for role in ("kit", "tree", "runner", "diagnostic")}

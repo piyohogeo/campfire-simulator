@@ -1,5 +1,17 @@
 # Changelog
 
+- Froze the Phase 6GM diagnostic-only export authoring contract before runtime.
+  A single Phase 6GK-derived immutable descriptor now drives both the formal
+  stage wrapper and the saved/reloaded-USD offline fixture: divergence is
+  explicitly enabled, RGBA/RGB are explicitly disabled, and all original five
+  public channels remain enabled. Phase 6GL stays a safe stop and production
+  stage construction is unchanged.
+- Added fail-closed offline export fixtures for S93/S100/OFF plus missing,
+  wrong-Prim, wrong-type, duplicate, and inherited-only authoring. The fresh
+  balanced population remains gated on this fixture and retains the Phase 6GL
+  physics, thresholds, resource/lifecycle limits, and startup-only replacement
+  policy.
+
 - Froze Phase 6GL as a nonreplaceable channel-operation safe stop after its
   first fresh S93 process. Representative startup and exact float32 payload
   validation passed, but the formal wrapper omitted the divergence export

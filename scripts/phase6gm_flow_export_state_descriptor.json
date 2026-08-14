@@ -1,0 +1,32 @@
+{
+  "schema": "campfire.phase6gm.flow-export-state-descriptor.v1",
+  "phase": "phase6gm",
+  "derived_from": {
+    "phase": "phase6gk",
+    "qualification_record": "docs/devlog/assets/phase6/phase6gk_public_channel_preflight_qualified.json",
+    "schema_id": "flow110.0.0-kit110.2-public-readback-rgba7-v1"
+  },
+  "prim": {
+    "path": "/World/Flow/Simulate/nanoVdbExport",
+    "type_name": "FlowSparseNanoVdbExportParams"
+  },
+  "attributes": [
+    {"name": "enabled", "usd_type": "bool", "value": true},
+    {"name": "temperatureEnabled", "usd_type": "bool", "value": true},
+    {"name": "fuelEnabled", "usd_type": "bool", "value": true},
+    {"name": "burnEnabled", "usd_type": "bool", "value": true},
+    {"name": "smokeEnabled", "usd_type": "bool", "value": true},
+    {"name": "velocityEnabled", "usd_type": "bool", "value": true},
+    {"name": "divergenceEnabled", "usd_type": "bool", "value": true},
+    {"name": "rgbaEnabled", "usd_type": "bool", "value": false},
+    {"name": "rgbEnabled", "usd_type": "bool", "value": false},
+    {"name": "statisticsEnabled", "usd_type": "bool", "value": true},
+    {"name": "readbackEnabled", "usd_type": "bool", "value": true}
+  ],
+  "authoring": {
+    "root_layer_opinion_required": true,
+    "inherited_only_value_allowed": false,
+    "unknown_or_duplicate_attribute_allowed": false,
+    "production_stage_builder_changed": false
+  }
+}

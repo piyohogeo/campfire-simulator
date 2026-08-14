@@ -3848,3 +3848,23 @@ were zero. The nonzero process exit is retained and is not a normal accepted
 sample. A future Phase must explicitly align the divergence export state with
 the qualified schema in a new contract/root; Phase 6GL is not retried or
 reclassified.
+
+# Phase 6GM export-aligned formal comparison (frozen before runtime)
+
+Phase 6GL remains a frozen channel-operation safe stop. Phase 6GM uses a fresh
+contract/root and no prior process sample. The diagnostic-only immutable export
+descriptor `scripts/phase6gm_flow_export_state_descriptor.json` is derived from
+the Phase 6GK-qualified seven-handle schema and explicitly authors temperature,
+fuel, burn, smoke, velocity, and divergence ON; RGBA and RGB OFF. Its semantic
+digest is
+`53CDE38FD5B1A5F48AB2E7B896F6EF391DDA4D5F6621B21FDB1B435F34BDA8CE`.
+The runtime formal stage and pre-Kit saved/reloaded-USD fixture use the same
+helper. Production stage construction is untouched.
+
+The offline fixture must pass S93/S100/OFF root-layer path/type/value checks,
+cross-condition export and corrected-geometry equality, expected payload and
+Collision-only differences, plus missing/wrong-Prim/wrong-type/duplicate/
+inherited-only negatives before Kit starts. The formal nine-process population,
+frames, numerical gates, replacement budget, 16/17 GiB limits, lifecycle order,
+CDB, and cleanup remain identical to Phase 6GL. Numerical 9/9 qualification is
+required before any comparison video; production integration remains excluded.
