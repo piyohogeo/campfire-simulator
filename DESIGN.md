@@ -11,6 +11,21 @@ entry pointをartifactへ確定する。app-ready Kit上のpositive／missing／
 17 GiB tree、release-after-close、Phase 6FU/6FW、3軸分類、pre-close commit、限定replacement
 は変更しない。詳細は`docs/design/phase6fz_import_and_memory_qualification.md`。
 
+実測はapp-ready import 3/3、CDB progress fixture 7/7、正式M0/M1/M2×3の9/9が
+memory-validかつnormal OS exit、replacement／timeout／CDB発動／residual 0だった。Kit peakは
+`14,478,200,832..14,957,187,072 bytes`、tree最大`15,120,756,736 bytes`。旧14 GiBは
+crossing 0でも最小余白`75,198,464 bytes`しかないため異常上限として廃止し、事前固定した
+512 MiB余白を満たすKit 16 GiB（余白`2,222,682,112`）とtree 17 GiB（余白
+`3,132,854,272`）をqualifiedとする。Phase 6FOは別root・別承認で再開可能だが未開始。
+
+Phase 6FZ最終回帰はRelease build、Phase 0 RTX、Phase 3、focused Phase 6F
+`212/212`、標準suite 8 process・`78/78`（331.9秒）、devlog静的検査に合格した。
+Phase 3はdry/wet mass-balance error 0、wood-owned Flow input、active blocks
+final/peak 262/316、peak fuel 1.0。production app SHA-256
+`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`とlatest
+demo manifest SHA-256 `1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285`
+は不変で、Kit/CDB/GPU helper残留は0だった。
+
 # Phase 6FY three-axis memory qualification contract
 
 Phase 6FT／6FV／6FXはsafe stopのまま凍結し、過去sampleを新母集団へ

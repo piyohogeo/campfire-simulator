@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6fy">最新記録</a>
+        <a href="#phase-6fz">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,22 +27,34 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fy">Phase 6FYの結果を読む</a>
+        <a class="button primary" href="#phase-6fz">Phase 6FZの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FY · operation harness safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6FZ · memory ceiling qualified</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
-        <div><span>Qualification</span><strong>16 / 17 GiB · unqualified</strong></div>
+        <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
       </div>
     </div>
   </header>
 
   <main>
+    <section id="phase-6fz" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FZ import and memory ceiling qualification"><span class="phase-number compact">6FZ</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">9 / 9 · qualified</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FZ · deterministic import and memory qualification</p><h2>共有probeを確実に読み込み、<br>9条件の通常高水位を確定。</h2><p>Phase 6FYのimport safe stopは履歴として保持し、実行中wrapperの絶対pathから共有probeを解決するapp-ready smokeを追加しました。CDBは進捗連動timeoutへ変更し、すべてのpreflight合格後、新rootでM0/M1/M2を3回ずつ実行しました。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Preflight</p><h3>import 3/3 · CDB 7/7</h3><p>positive、module不在、wrong-pathを実Kit <code>--exec</code>で確認し、解決先と<code>sys.path</code>を保存しました。CDBは20秒無進捗、stack/module/detach 80/30/10秒、partial保存、明示detach、残留0をfixtureで確認しました。</p></section><section class="note"><p class="note-label">Formal population</p><h3>9 memory-valid · 9 normal exits</h3><p>replacement、stage-close timeout、CDB発動、fatal、dump、upload、owned residualはすべて0。active blocksはframe 60/96で688/948、M2 frame 179で1,322でした。stage closeは2.356～10.096秒です。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Qualified boundary</p><h3>Kit 16 GiB／tree 17 GiBを採用可能。</h3><p>Kit peakは14,478,200,832～14,957,187,072 bytes、tree最大は15,120,756,736 bytesでした。16 GiBまで2,222,682,112 bytes、17 GiBまで3,132,854,272 bytesの余白があります。旧14 GiBはcrossing 0でも余白75,198,464 bytesしかなく、異常検出上限としては厳しすぎるため退役します。</p><p>Release build、Phase 0 RTX、Phase 3（mass balance 0、Flow blocks final/peak 262/316）、focused Phase 6F <code>212/212</code>、標準suite <code>78/78</code>、日誌検査に合格しました。production appとlatest demoのSHA-256は不変、最終残留processは0です。</p><p><a href="assets/phase6/three_axis_memory_phase6fz_qualification.json">machine summary</a> · <a href="../design/phase6fz_import_and_memory_qualification.md">design note</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>既存の最新デモ</strong><small>内部診断のため新規動画なし</small></span></button></div><div class="check-list" role="list"><div role="listitem"><span>9/9</span><p><strong>Memory valid</strong><small>normal OS exit</small></p></div><div role="listitem"><span>0</span><p><strong>Timeout</strong><small>CDB invocation also zero</small></p></div><div role="listitem"><span>2.07</span><p><strong>Kit headroom</strong><small>GiB to 16 GiB</small></p></div><div role="listitem"><span>0</span><p><strong>Residual</strong><small>exact cleanup</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Pending roadmap</p><h3>Phase 6FOは別承認・新rootで再開可能。</h3><p>低頻度native stage-close問題を解決済みとは扱いません。次はqualifiedした16/17 GiB、release-after-close、progress-aware CDB、exact cleanupを維持し、過去artifactを流用せずS93/S100比較を最初から開始できます。このPhaseではPhase 6FO、動画、P4、production変更は開始していません。</p></section>
+        </div>
+      </article>
+    </section>
+
     <section id="phase-6fy" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6FY three-axis memory operation safe stop"><span class="phase-number compact">6FY</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">0 valid · operation safe stop</span></aside>
@@ -5105,7 +5117,7 @@
       <div class="shell">
         <p class="section-kicker">Roadmap</p>
         <h2>小さく燃やして、確かめながら進む。</h2>
-        <p>Phase 6FVはPhase 6FU guardで3 processを起動し、全Kitが正常終了した後、attempt03のconhost PIDがWmiPrvSEへ再利用されたことを検出して契約どおり停止。誤停止・attempt残留・unknownは0だが、9/9未完了のため16/17 GiBは未qualified、Phase 6FOはblocked。次はPID再利用をnon-residual lifecycle outcomeとして分離できるかの独立契約判断。</p>
+        <p>Phase 6FZはapp-ready import 3/3、CDB progress fixture 7/7、正式memory population 9/9を完了。Kit 16 GiB／tree 17 GiBをqualifiedし、旧14 GiBは通常高水位に近すぎる上限として退役した。Phase 6FOはqualified contractを使う別承認・新rootで再開可能だが、まだ開始していない。</p>
         <ol class="roadmap">
           <li class="done"><span>0</span><div><strong>環境成立確認</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>1</span><div><strong>Flow単体検証</strong><small>完了 · 2026.08.04</small></div></li>
@@ -5113,7 +5125,7 @@
           <li class="done"><span>3</span><div><strong>木材熱モデル</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>4</span><div><strong>配置と通気</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>5</span><div><strong>崩壊</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · diagnostic/cleanup qualified、memory population再承認待ち</small></div></li>
+          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · 16/17 GiB qualified、Phase 6FO再開は別承認待ち</small></div></li>
         </ol>
       </div>
     </section>

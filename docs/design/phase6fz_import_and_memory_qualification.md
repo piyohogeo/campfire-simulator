@@ -74,3 +74,51 @@ Phase 6FZ does not start Phase 6FO. Only a completed population may determine
 whether 16/17 GiB is qualified and whether a separately approved fresh Phase 6FO
 root may be started.
 
+## Measured result
+
+The app-ready smoke passed 3/3 in 16.03--16.47 seconds in the formal root. The
+positive import resolved the exact shared probe; both missing and wrong-path
+cases failed in the intended boundary. No Kit process remained. The seven CDB
+fixtures passed: real all-thread stack and module evidence were complete, the
+injected detach timeout was detected, partial evidence survived, and no CDB child
+remained. Short fixture bounds completed in 1.38--2.29 seconds; the production
+contract remains the predeclared 20-second no-progress and 120-second aggregate
+absolute bound.
+
+All nine balanced M0/M1/M2 processes were memory-valid normal OS exits. There
+were zero replacements, lifecycle timeouts, CDB calls, fatal events, dumps,
+uploads, owned residuals, or unresolved identities. Frame 60/96 active blocks
+were identically 688/948; every M2 reached 1,322 at frame 179. Stage close was
+2.356--10.096 seconds (median 4.053 seconds).
+
+Kit peaks were 14,478,200,832--14,957,187,072 bytes (median
+14,878,089,216; range 478,986,240). The maximum unique tree was
+15,120,756,736 bytes. The 14 GiB threshold was not crossed, but its minimum
+normal margin was only 75,198,464 bytes, below the predeclared 256 MiB retirement
+margin, so it is too close to normal high-water. The 16 GiB Kit candidate retained
+2,222,682,112 bytes and the 17 GiB tree candidate retained 3,132,854,272 bytes;
+both satisfy the predeclared 512 MiB margin and are qualified for the next
+monitored diagnostic Phase.
+
+After attempt09 and its analyzer report were committed, the outer PowerShell hit
+`Argument types do not match` while enumerating an empty generic replacement
+queue. This post-population handoff did not invalidate any process. A bounded
+offline finalizer verified the frozen contract, exactly nine normal attempts,
+zero replacements, unchanged production hash, and the already-qualified report;
+it launched zero Kit processes and changed only the final state to `qualified`.
+
+The low-frequency native stage-close risk is not declared solved. Phase 6FO is
+now eligible for a separately approved fresh-root monitored restart using this
+16/17 GiB contract, release-after-close, progress-aware CDB, and exact cleanup;
+it was not started in Phase 6FZ.
+
+Final regression passed the Release build, Phase 0 RTX, Phase 3, 212/212
+focused Phase 6F contracts, the standard eight-process 78/78 suite in 331.9
+seconds, and static devlog validation (471 references, 282 IDs, 234 JSON, 177
+SVG, and two ZIP files). Phase 3 retained zero dry/wet mass-balance error,
+wood-owned Flow input, active blocks final/peak 262/316, and peak fuel 1.0. The
+production app SHA-256 remained
+`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`,
+the latest-demo manifest SHA-256 remained
+`1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285`,
+and final Kit/CDB/GPU-helper residual count was zero.

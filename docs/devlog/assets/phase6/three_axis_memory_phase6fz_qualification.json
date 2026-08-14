@@ -1,0 +1,114 @@
+{
+  "schema": "campfire.phase6fz.published-qualification.v1",
+  "phase": "phase6fz",
+  "status": "qualified",
+  "date": "2026-08-14",
+  "contract_sha256": "593308FB9612EF5058EE8454B2A6B847228FC7E35ED5116490108E061202BBBC",
+  "frozen_history": {
+    "phase6fy_reclassified": false,
+    "phase6fy_artifact_reused": false,
+    "phase6fo_started": false
+  },
+  "import_smoke": {
+    "passed": true,
+    "cases": 3,
+    "resolved_file": "scripts/probe_phase6fo_supply_comparison.py",
+    "durations_seconds": [16.1189361, 16.0308139, 16.4717581],
+    "residual_processes": 0
+  },
+  "cdb_progress_fixtures": {
+    "passed": true,
+    "cases": 7,
+    "no_progress_timeout_seconds": 20,
+    "stack_absolute_timeout_seconds": 80,
+    "module_absolute_timeout_seconds": 30,
+    "detach_absolute_timeout_seconds": 10,
+    "fixture_no_progress_observed_seconds": [1.3843193, 1.5707136, 1.7090305],
+    "fixture_absolute_observed_seconds": 2.2944204,
+    "actual_stack_evidence": "complete",
+    "actual_module_evidence": "complete",
+    "injected_detach_failure_detected": true,
+    "residual_cdb_processes": 0
+  },
+  "population": {
+    "basic_processes": 9,
+    "replacement_processes": 0,
+    "memory_valid": 9,
+    "normal_os_exit": 9,
+    "stage_close_timeout": 0,
+    "cdb_invocations": 0,
+    "fatal": 0,
+    "dump": 0,
+    "automatic_upload": 0,
+    "attempt_owned_residual": 0,
+    "unresolved_identity": 0
+  },
+  "runs": [
+    {"attempt":"attempt01","condition":"M0_baseline","kit_peak_bytes":14957187072,"tree_peak_bytes":15120756736,"runner_peak_bytes":108634112,"diagnostic_peak_bytes":16887808,"active_blocks":{"60":688,"96":948},"stage_close_seconds":10.0959658},
+    {"attempt":"attempt02","condition":"M1_phase6fo_equivalent","kit_peak_bytes":14596108288,"tree_peak_bytes":14763679744,"runner_peak_bytes":110477312,"diagnostic_peak_bytes":17096704,"active_blocks":{"60":688,"96":948},"stage_close_seconds":2.3555655},
+    {"attempt":"attempt03","condition":"M2_pre_readback_frame","kit_peak_bytes":14497943552,"tree_peak_bytes":14661357568,"runner_peak_bytes":123322368,"diagnostic_peak_bytes":16891904,"active_blocks":{"60":688,"96":948,"179":1322},"stage_close_seconds":4.0531552},
+    {"attempt":"attempt04","condition":"M1_phase6fo_equivalent","kit_peak_bytes":14907940864,"tree_peak_bytes":15071248384,"runner_peak_bytes":109756416,"diagnostic_peak_bytes":16846848,"active_blocks":{"60":688,"96":948},"stage_close_seconds":5.9472605},
+    {"attempt":"attempt05","condition":"M2_pre_readback_frame","kit_peak_bytes":14681112576,"tree_peak_bytes":14844366848,"runner_peak_bytes":113950720,"diagnostic_peak_bytes":16879616,"active_blocks":{"60":688,"96":948,"179":1322},"stage_close_seconds":4.3938608},
+    {"attempt":"attempt06","condition":"M0_baseline","kit_peak_bytes":14945599488,"tree_peak_bytes":15109181440,"runner_peak_bytes":110641152,"diagnostic_peak_bytes":16887808,"active_blocks":{"60":688,"96":948},"stage_close_seconds":3.613522},
+    {"attempt":"attempt07","condition":"M2_pre_readback_frame","kit_peak_bytes":14478200832,"tree_peak_bytes":14641967104,"runner_peak_bytes":113819648,"diagnostic_peak_bytes":16908288,"active_blocks":{"60":688,"96":948,"179":1322},"stage_close_seconds":6.4151141},
+    {"attempt":"attempt08","condition":"M0_baseline","kit_peak_bytes":14878089216,"tree_peak_bytes":15041425408,"runner_peak_bytes":115728384,"diagnostic_peak_bytes":17096704,"active_blocks":{"60":688,"96":948},"stage_close_seconds":3.9738333},
+    {"attempt":"attempt09","condition":"M1_phase6fo_equivalent","kit_peak_bytes":14882050048,"tree_peak_bytes":15045332992,"runner_peak_bytes":110026752,"diagnostic_peak_bytes":16900096,"active_blocks":{"60":688,"96":948},"stage_close_seconds":2.905322}
+  ],
+  "memory_distribution": {
+    "kit_peak_minimum_bytes": 14478200832,
+    "kit_peak_median_bytes": 14878089216,
+    "kit_peak_maximum_bytes": 14957187072,
+    "kit_peak_range_bytes": 478986240,
+    "tree_peak_maximum_bytes": 15120756736,
+    "runner_peak_maximum_bytes": 123322368,
+    "diagnostic_peak_maximum_bytes": 17096704,
+    "rtx_3090_dedicated_memory_maximum_mib": 7147,
+    "rtx_2070_dedicated_memory_maximum_mib": 457,
+    "available_physical_minimum_bytes": 82105663488,
+    "commit_headroom_minimum_bytes": 101496401920,
+    "stage_close_seconds": {"minimum":2.3555655,"median":4.0531552,"maximum":10.0959658}
+  },
+  "ceiling_decision": {
+    "legacy_14_gib_threshold_bytes": 15032385536,
+    "legacy_crossings": 0,
+    "legacy_minimum_margin_bytes": 75198464,
+    "legacy_14_gib_retired_as_too_close": true,
+    "kit_16_gib_limit_bytes": 17179869184,
+    "kit_16_gib_headroom_bytes": 2222682112,
+    "kit_16_gib_qualified": true,
+    "tree_17_gib_limit_bytes": 18253611008,
+    "tree_17_gib_headroom_bytes": 3132854272,
+    "tree_17_gib_qualified": true
+  },
+  "post_population_handoff": {
+    "measurement_or_classification_lost": false,
+    "original_error": "Argument types do not match while enumerating an empty generic replacement queue",
+    "kit_processes_rerun": 0,
+    "bounded_finalizer_used": true,
+    "final_state": "qualified"
+  },
+  "production": {
+    "changed": false,
+    "app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "defaults_changed": false,
+    "latest_demo_changed": false,
+    "new_video": false
+  },
+  "regression": {
+    "release_build": "pass",
+    "phase0_rtx": "pass",
+    "phase3": {"status":"pass", "dry_mass_balance_error_kg":0.0, "wet_mass_balance_error_kg":0.0, "flow_input_owner":"wood thermal model", "active_blocks_final":262, "active_blocks_peak":316, "peak_fuel_input":1.0},
+    "phase6f_focused": {"passed":212, "total":212},
+    "standard_suite": {"processes_passed":8, "tests_passed":78, "elapsed_seconds":331.9},
+    "devlog_validation": {"status":"pass", "references":471, "ids":282, "json":234, "svg":177, "zip":2},
+    "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "latest_demo_manifest_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285",
+    "residual_kit_cdb_gpu_helper_count": 0
+  },
+  "decision": {
+    "memory_ceiling_qualified": true,
+    "low_frequency_lifecycle_issue_resolved": false,
+    "phase6fo_restart_ready_with_monitored_fresh_root": true,
+    "phase6fo_started": false
+  }
+}

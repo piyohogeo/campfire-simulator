@@ -1,5 +1,15 @@
 # Phase 6FO S93 / S100 Point supply comparison
 
+## 2026-08-14 restart boundary after Phase 6FZ
+
+Phase 6FZ qualified the monitored Kit 16 GiB and unique-tree 17 GiB ceilings
+with 9/9 memory-valid normal exits, release-after-close, progress-aware CDB, and
+exact cleanup. Phase 6FO may therefore be restarted only by a separate explicit
+approval, from a new empty artifact root, using those unchanged guards and the
+frozen S93/S100 physical contract. No Phase 6FY or earlier 6FO sample may be
+reused. Phase 6FZ did not itself start this comparison, capture video, adopt a
+Point policy, or change production.
+
 Contract correction: the first artifact root stopped before channel readback and before every formal comparison process. Its representative Flow field reached 688 active blocks at frame 60, but the startup source gate compared float32 sums with an accidentally absolute `1e-6` tolerance: fuel differed from the authored decimal by about `1.60e-5` and smoke by about `2.40e-6`. The analyzer also searched `attempt*` although the runner durably wrote `channel_attempt*`. That root remains a frozen harness safe stop and contributes no formal evidence. Contract v2 separates a `1e-4` absolute startup serialization tolerance from the unchanged `1e-6` relative physical source gate, fixes the artifact route, and fails explicitly if exactly one preflight report cannot be found. Geometry, source values, comparison thresholds, readback count, and safety ceilings are unchanged.
 
 Runtime result: the fresh v2 root passed the corrected startup source gate and formed a representative field (688 active blocks at frame 60, 948 at the last complete frame 96). Before the planned frame-180 channel readback, the unchanged 14 GiB hard gate stopped Kit. The guard observed 15,127,232,512 bytes (90.453 MiB over the limit); the highest synchronous marker was 15,130,648,576 bytes. No public readback or formal S93/S100 process ran. The guard removed the exact observed process tree; fatal, dump, automatic upload, and residual counts were zero. This is an absolute resource safe stop, not a channel, collision, scalar, transport, or policy result. The ceiling was not raised, comparison video was not created, no adoption candidate was selected, and roadmap P4 is not ready.
