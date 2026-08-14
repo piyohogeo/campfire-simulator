@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6gh">最新記録</a>
+        <a href="#phase-6gi">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6gh">Phase 6GHの結果を読む</a>
+        <a class="button primary" href="#phase-6gi">Phase 6GIの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6GH · handle 6 = RGBA candidate</strong></div>
+        <div><span>現在地</span><strong>Phase 6GI · S93 preflight safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,17 @@
   </header>
 
   <main>
+    <section id="phase-6gi" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6GI S93 channel preflight safe stop"><span class="phase-number compact">6GI</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">1 launch · safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6GI · normal-resource public preflight</p><h2>The seven-handle schema passed;<br><code>empty</code> alias判定で停止。</h2><p>通常16/17 GiB、代表startup、frame 180のpublic readback 1回でS93を検証しました。semantic mapping前のraw schemaは合格しましたが、凍結済み実装がdisabled RGBAのempty arrayにも共有領域を要求したためfail-closedになりました。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Verified evidence</p><h3>6本のlive channelはpointer／release gate合格。</h3><p>Temperature、fuel、burn、smoke、velocity、enabled divergenceは期待metadata、positive pointer、same-object shared alias、slot逐次clear後のweak-reference residual 0を満たしました。startupはframe 1からrepresentativeで、readback時active blocksは1,329でした。</p></section><section class="note caution"><p class="note-label">Fail-closed boundary</p><h3>0 byteには重なる要素がない。</h3><p>Disabled RGBAはsame Python object、0 element／0 byte、copy 0、release後residual 0でした。<code>numpy.shares_memory(empty, empty)</code>は重なる要素がないためfalseです。全handleにtrueを求めた実装が<code>alias_contract_mismatch</code>を発生させ、非置換規則によりretryしませんでした。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Resource and lifecycle</p><h3>通常上限とexact cleanupは維持。</h3><p>Kit/tree peakは15,099,490,304 / 15,263,600,640 bytes、余白は2,080,378,880 / 2,990,010,368 bytesでした。stage closeは62.417672秒、<code>shutdown_complete</code>はdurableです。operation errorのためexit 1でaccepted normal sampleではありません。CDB/fatal/dump/upload/residualは0でした。</p><p><a href="assets/phase6/phase6gi_s93_channel_preflight_safe_stop.json">machine summary</a> · <a href="../design/phase6gi_s93_channel_preflight.md">design note</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>internal schema preflight; no new video</small></span></button></div><div class="check-list" role="list"><div role="listitem"><span>20/20</span><p><strong>Schema fixtures</strong><small>pre-Kit</small></p></div><div role="listitem"><span>7/7</span><p><strong>Raw schema</strong><small>exact order</small></p></div><div role="listitem"><span>6/6</span><p><strong>Live pointers</strong><small>shared aliases</small></p></div><div role="listitem"><span>0</span><p><strong>Residual</strong><small>exact cleanup</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Pending roadmap</p><h3>safe stopを凍結し、empty-array alias意味論を別契約へ。</h3><p>Phase 6GIをretry・再分類しません。candidate schemaはformal preflight未qualifiedです。same-object／zero-byte／no-copyをdisabled handleのalias契約として扱うには、新しい明示承認、runtime前contract、空artifact rootが必要です。S93/S100/OFF、flux、deep velocity、動画、Point採用、production、既定値、V3、P4、dynamic geometryは未開始です。</p><p>Release build、Phase 0 RTX、Phase 3、focused Phase 6F 212/212＋Phase 6G 46/46、standard 78/78、devlog validationが合格しました。production/latest-demo hashは不変で、最終Kit/CDB/GPU-helper residualは0です。</p></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6gh" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6GH color slot identification"><span class="phase-number compact">6GH</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">C0/C1/C2 · 3/3 normal</span></aside>
@@ -5185,7 +5196,7 @@
       <div class="shell">
         <p class="section-kicker">Roadmap</p>
         <h2>小さく燃やして、確かめながら進む。</h2>
-        <p>Phase 6FZは16/17 GiB resource境界をqualifiedした。Phase 6GDはdivergenceをhandle 5へ確定し、Phase 6GGはsmall-field startup safe stopとして凍結した。Phase 6GHは別rootのstartup-gated C0/C1/C2を置換なし3/3 normal exitで完了し、handle 6をRGBA export slotへ一意に対応付け、candidate schema fixture 12/12を通過した。次は通常16/17 GiB契約でのS93 channel preflightに別承認が必要であり、Phase 6FO、S93/S100比較、動画、Point採用、production統合は未開始を維持する。</p>
+        <p>Phase 6FZは16/17 GiB resource境界をqualifiedした。Phase 6GHはhandle 6をRGBA export slotへ対応付けたcandidate identificationとして凍結した。Phase 6GIは通常16/17 GiBでraw 7-handle schemaと6本のlive-channel pointer/release evidenceを確認したが、empty RGBAへの過剰なshares-memory predicateでnonreplaceable operation safe stopとなった。candidate schemaはformal preflight未qualifiedのまま。次はempty same-object zero-byte alias semanticsをruntime前に別契約へ固定する明示承認が必要であり、Phase 6FO、S93/S100比較、動画、Point採用、production統合は未開始を維持する。</p>
         <ol class="roadmap">
           <li class="done"><span>0</span><div><strong>環境成立確認</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>1</span><div><strong>Flow単体検証</strong><small>完了 · 2026.08.04</small></div></li>

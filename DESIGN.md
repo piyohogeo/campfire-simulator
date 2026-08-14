@@ -1,5 +1,38 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6GI S93 public-channel preflight safe stop
+
+Phase 6GH remains frozen as candidate identification. Phase 6GI froze a fresh
+normal-resource preflight contract (SHA-256
+`5A6A943B84CA0A2D987BEA22585F287026529AB7A2600050898599DA1A467784`),
+passed its 20/20 schema and 12/12 startup-policy fixtures, and launched one new
+S93 process. Startup was representative from frame 1 and the frame-180 readback
+returned the exact seven-handle raw schema. The six required nonempty channels
+had positive pointers, same-object/shared-buffer aliases, expected metadata,
+and zero weak-reference residual after ordered slot clearing.
+
+The preflight nevertheless stopped as a nonreplaceable operation failure. The
+disabled RGBA handle was the same zero-byte Python array before release, but
+`numpy.shares_memory(empty, empty)` returned false; the Phase 6GI implementation
+had incorrectly required true even for an empty array. Raw schema validation,
+resource limits, stage close, shutdown, and exact cleanup succeeded, but exit 1
+means this is not an accepted normal sample. No replacement or second launch
+was allowed. Kit/tree peaks were 15,099,490,304 / 15,263,600,640 bytes, stage
+close was 62.417672 seconds, and fatal/dump/upload/CDB/residual counts were zero.
+
+Phase 6GI is frozen as a safe stop and the candidate schema is not yet formal
+preflight-qualified. Formal S93/S100/OFF, flux, deep velocity, video, Point
+adoption, production, defaults, V3, P4, and dynamic geometry remain unstarted.
+A separately approved Phase must predefine the zero-length alias semantics and
+use a new root. See `docs/design/phase6gi_s93_channel_preflight.md`.
+
+Final regression passed the Release build, Phase 0 RTX, Phase 3 zero dry/wet
+mass balance with wood-owned Flow input (active blocks final/peak 303/323),
+focused Phase 6F 212/212, focused Phase 6G 46/46, and standard 78/78. Devlog
+validation passed 484 references, 289 IDs, 241 JSON, 177 SVG, and two ZIPs.
+Production and latest-demo hashes remained unchanged and final Kit/CDB/GPU
+helper residual count was zero.
+
 # Phase 6GH startup-gated color-slot identification
 
 Phase 6GG remains a frozen startup safe stop and contributes no sample to this

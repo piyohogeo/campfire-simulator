@@ -1,5 +1,25 @@
 # Changelog
 
+- Froze Phase 6GI as a nonreplaceable S93 channel-preflight safe stop. Its
+  pre-runtime schema fixtures passed 20/20 and startup policy fixtures passed
+  12/12; attempt 01 had representative startup, exact Point/source identity,
+  and a raw seven-handle schema pass at frame 180.
+- Confirmed all six required nonempty channels had positive pointers, expected
+  public metadata, same-object/shared-buffer aliases, ordered list-slot
+  clearing, and zero weak-reference residual. Disabled RGBA was an empty
+  same-object array with zero bytes and zero residual, for which NumPy
+  `shares_memory` returned false. The implementation's all-handle true check
+  caused `alias_contract_mismatch`; no replacement or retry was permitted.
+- Kept normal 16/17 GiB limits and production unchanged. Kit/tree peaks were
+  15,099,490,304 / 15,263,600,640 bytes; stage close and shutdown completed,
+  exact cleanup found zero residual, and CDB/fatal/dump/upload were absent.
+  Formal S93/S100/OFF, flux, deep velocity, and video remain unstarted.
+- Reconfirmed the safe stop with Release build, Phase 0 RTX, Phase 3 zero
+  dry/wet mass balance and wood-owned Flow input, focused Phase 6F 212/212 plus
+  Phase 6G 46/46, and the standard eight-process 78/78 suite in 348.6 seconds.
+  Devlog validation passed 484 references, 289 IDs, 241 JSON, 177 SVG, and two
+  ZIPs; production/latest-demo hashes were unchanged and final residuals zero.
+
 - Completed the fresh Phase 6GH startup-gated C0/C1/C2 color-slot population
   without reusing or reclassifying Phase 6GG. All three attempts were
   representative from frame 1, used the identical 1,344/1,440 Point payload and

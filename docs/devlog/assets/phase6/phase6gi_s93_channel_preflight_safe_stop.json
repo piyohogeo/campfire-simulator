@@ -1,0 +1,38 @@
+{
+  "schema": "campfire.phase6gi.s93-channel-preflight-safe-stop.v1",
+  "phase": "phase6gi",
+  "status": "safe_stop",
+  "contract_sha256": "5A6A943B84CA0A2D987BEA22585F287026529AB7A2600050898599DA1A467784",
+  "candidate_schema_id": "flow110.0.0-kit110.2-public-readback-rgba7-v1",
+  "fixtures": {"schema": "20/20", "startup_replacement": "12/12"},
+  "attempts": 1,
+  "replacements": 0,
+  "startup": {"classification": "representative_ingestion", "first_representative_frame": 1, "frame_180_active_blocks": 1329},
+  "raw_schema_pass": true,
+  "preflight_pass": false,
+  "failure": "empty handle[6] was the same Python object and had zero logical bytes, but numpy.shares_memory(empty, empty) returned false; the frozen implementation incorrectly required true for every handle",
+  "required_nonempty_channels": {"count": 6, "positive_pointers": 6, "same_object_aliases": 6, "shared_buffers": 6, "weak_reference_residuals": 0},
+  "rgba": {"empty": true, "logical_bytes": 0, "same_object": true, "shares_memory": false, "weak_reference_residual": false},
+  "resource": {"kit_peak_bytes": 15099490304, "kit_margin_bytes": 2080378880, "tree_peak_bytes": 15263600640, "tree_margin_bytes": 2990010368},
+  "lifecycle": {"stage_close_complete": true, "stage_close_seconds": 62.417672, "shutdown_complete": true, "exit_code": 1, "cdb_invoked": false, "exact_cleanup": true, "residual": 0},
+  "regression": {
+    "release_build": "pass",
+    "phase0_rtx": "pass",
+    "phase3": "pass",
+    "phase3_mass_balance_error_kg": {"dry": 0.0, "wet": 0.0},
+    "phase3_flow": {"input_owner": "wood thermal model", "active_blocks_final": 303, "active_blocks_peak": 323, "peak_fuel_input": 1.0},
+    "focused_phase6f": "212/212",
+    "focused_phase6g": "46/46",
+    "standard_suite": {"processes": 8, "tests": "78/78", "seconds": 348.6},
+    "devlog": {"status": "pass", "references": 484, "ids": 289, "json": 241, "svg": 177, "zip": 2}
+  },
+  "production": {
+    "changed": false,
+    "app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "latest_demo_manifest_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285",
+    "latest_demo_video_sha256": "DC14693EB07116C145344675BD830A0D2B0179FB08DCB3B83EEFEFFA3970E90F"
+  },
+  "formal_s93_s100_population_started": false,
+  "production_changed": false,
+  "next_step_requires_explicit_approval": true
+}

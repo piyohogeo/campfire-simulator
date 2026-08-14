@@ -1,5 +1,15 @@
 # Phase 6FO S93 / S100 Point supply comparison
 
+## 2026-08-14 Phase 6GI S93 channel-preflight safe stop
+
+The fresh normal-16/17-GiB S93 preflight passed its raw seven-handle schema and
+ordered release evidence, but the frozen implementation rejected empty RGBA's
+same-object zero-byte alias because `numpy.shares_memory` is false for an empty
+array. This was a nonreplaceable operation failure; no second attempt or formal
+S93/S100/OFF process started. The candidate schema remains unqualified for the
+formal comparison. A later explicitly approved contract must define empty-array
+alias semantics before runtime and use a new artifact root.
+
 ## 2026-08-14 Phase 6GH handle 6 candidate identification
 
 Phase 6GG remains frozen and supplied no sample. A new startup-gated C0/C1/C2
