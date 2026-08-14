@@ -1,0 +1,108 @@
+{
+  "schema": "campfire.phase6gw.repetition-contract.v1",
+  "phase": "phase6gw",
+  "declared_before_runtime": true,
+  "purpose": "Fresh bounded A/B observation after Phase 6GV pre-Kit output-root safe stop.",
+  "history": {
+    "phase6gu_status": "marker_reserved_key_safe_stop",
+    "phase6gv_status": "pre_kit_output_root_harness_safe_stop",
+    "phase6gv_reclassified": false,
+    "phase6gv_samples_reused": false,
+    "prior_runtime_samples_reused": false
+  },
+  "harness_corrections_only": {
+    "child_case_root": "must be absent until run_phase6fo_supply_case.ps1 creates it",
+    "pre_kit_stderr": "bounded final 4096 characters participate in explicit harness classification",
+    "physical_or_operation_boundary_changed": false
+  },
+  "conditions": {
+    "A": {
+      "name": "control_phase6gs",
+      "probe": "scripts/probe_phase6gs_volume_metadata.py",
+      "sample_frames": [60, 120, 180, 240],
+      "readback_frames": [180],
+      "readback_calls": 1,
+      "volume_conversion_calls": 1,
+      "bounded_public_metadata": true,
+      "temporary_nanovdb_save": false,
+      "sampling": false,
+      "near_mesh_collector": false,
+      "directional_flux": false
+    },
+    "B": {
+      "name": "candidate_phase6gn_exact",
+      "probe": "scripts/probe_phase6gn_supply_comparison.py",
+      "sample_frames": [60, 120, 180, 360, 540, 600],
+      "readback_frames": [180, 360, 540],
+      "readback_calls": 3,
+      "channel_order": ["velocity", "temperature", "smoke", "fuel"],
+      "temporary_nanovdb_metadata_path": true,
+      "sampling": true,
+      "near_mesh_collector": true,
+      "directional_flux": true
+    }
+  },
+  "candidate_difference_from_phase6gn": {
+    "intended": [
+      "sample_perf_counter_ns replaces the helper-reserved perf_counter_ns startup payload key",
+      "the outer population is fixed ABBA rather than the prior nine-condition comparison",
+      "compact classification and repeated-signature artifact bounding are added"
+    ],
+    "physical_and_post_readback_order_unchanged": true
+  },
+  "population": {
+    "fixed_order_pattern": ["A", "B", "B", "A"],
+    "pattern_repetitions": 12,
+    "maximum_launches": 48,
+    "maximum_elapsed_seconds": 21600,
+    "maximum_concurrent_kit": 1,
+    "automatic_retry": false,
+    "replacement": false,
+    "early_stop": {
+      "classification": "python_or_harness_failure",
+      "same_signature_and_boundary_consecutive_count": 5
+    }
+  },
+  "classification_values": [
+    "normal_exit", "startup_prerequisite_not_met", "python_or_harness_failure",
+    "operation_failure", "windows_native_exception", "stage_close_timeout",
+    "os_exit_timeout", "resource_limit", "cleanup_failure", "unknown_failure"
+  ],
+  "safety": {
+    "kit_private_limit_bytes": 17179869184,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "available_physical_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "inner_timeout_seconds": 900,
+    "outer_timeout_seconds": 1020,
+    "minimum_free_disk_bytes": 21474836480,
+    "stop_population_on": ["resource_limit", "cleanup_failure", "disk_pressure"]
+  },
+  "artifact_policy": {
+    "aggregate_jsonl": "aggregate.jsonl",
+    "heartbeat": "heartbeat.json",
+    "sequence": "fixed_sequence.json",
+    "compact_summary_name": "run_summary.json",
+    "full_artifact_first_per_failure_signature": true,
+    "later_same_signature_keeps_bounded_summary_and_references": true,
+    "maximum_compact_json_bytes": 262144
+  },
+  "statistics": {
+    "confidence": 0.95,
+    "failure_interval": "Wilson score",
+    "zero_failure_upper_bound": "rule of three"
+  },
+  "conclusions_allowed": [
+    "deterministic-like reproduction",
+    "stochastic or state-dependent reproduction observed",
+    "no failure observed within this population",
+    "inconclusive due to harness or safety stop"
+  ],
+  "out_of_scope": [
+    "typed NanoVDB metadata", "other-channel boundary development", "new sampling development",
+    "formal S93/S100/OFF comparison", "production changes", "default changes", "V3", "P4"
+  ]
+}

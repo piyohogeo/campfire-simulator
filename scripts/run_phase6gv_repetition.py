@@ -105,7 +105,8 @@ def marker_digest(path: Path) -> dict:
     }
 
 
-def classify(guard: dict | None, runner: dict | None, raw: dict | None, markers: dict, guard_exit: int) -> tuple[str, str]:
+def classify(guard: dict | None, runner: dict | None, raw: dict | None, markers: dict, guard_exit: int,
+             stderr_text: str = "") -> tuple[str, str]:
     if guard:
         stop = str(guard.get("stop_reason") or "").lower()
         if any(token in stop for token in ("private", "memory", "commit", "resource", "disk")):
@@ -114,6 +115,11 @@ def classify(guard: dict | None, runner: dict | None, raw: dict | None, markers:
         if cleanup and not cleanup.get("all_observed_absent", False):
             return "cleanup_failure", "observed_process_cleanup_not_absent"
     exit_code = (runner or {}).get("process_exit_code")
+    bounded_error = (stderr_text or "")[-4096:]
+    if not runner and any(token in bounded_error.lower() for token in
+                          ("refuses output reuse", "parameterbinding", "cannot bind parameter", "traceback", "importerror", "typeerror")):
+        boundary = "pre_kit_output_root_reuse" if "refuses output reuse" in bounded_error.lower() else "pre_kit_harness"
+        return "python_or_harness_failure", boundary
     if exit_code in (3221225477, -1073741819):
         return "windows_native_exception", f"0x{int(exit_code) & 0xffffffff:08X}:{markers.get('last_operation_marker')}"
     shutdown = (runner or {}).get("shutdown_monitor") or {}
@@ -138,7 +144,6 @@ def classify(guard: dict | None, runner: dict | None, raw: dict | None, markers:
 def command_for(condition: str, root: Path, attempt_id: str, contract: dict) -> tuple[list[str], dict]:
     case = root / "case"
     logs = root / "runner-logs"
-    case.mkdir(parents=True)
     logs.mkdir(parents=True)
     is_a = condition == "A"
     phase = "phase6gs" if is_a else "phase6gn"
@@ -193,7 +198,8 @@ def run_one(condition: str, sequence: int, output: Path, contract: dict) -> dict
     root.mkdir(parents=True)
     command, meta = command_for(condition, root, attempt_id, contract)
     atomic_json(root / "attempt.json", {"schema": "campfire.phase6gv.attempt.v1", "sequence": sequence,
-        "condition": condition, "attempt_id": attempt_id, "start_utc": utc_now(), "command": command})
+        "phase": contract.get("phase", "phase6gv"), "condition": condition, "attempt_id": attempt_id,
+        "start_utc": utc_now(), "command": command})
     started_utc, started = utc_now(), time.monotonic()
     committer = None
     guard = subprocess.Popen(command, cwd=REPO)
@@ -219,13 +225,16 @@ def run_one(condition: str, sequence: int, output: Path, contract: dict) -> dict
     raw = read_json(meta["case"] / "raw.json")
     operation = read_json(meta["case"] / "post_readback_isolation.json") if meta["is_a"] else None
     markers = marker_digest(meta["case"] / "resource_markers.jsonl")
-    classification, signature = classify(guard_report, runner, raw, markers, guard_exit)
+    stderr_path = meta["logs"] / "stderr.log"
+    stderr_text = stderr_path.read_text(encoding="utf-8", errors="replace")[-4096:] if stderr_path.exists() else ""
+    classification, signature = classify(guard_report, runner, raw, markers, guard_exit, stderr_text)
     peaks = (guard_report or {}).get("peaks") or {}
     cleanup = (guard_report or {}).get("observed_process_cleanup") or {}
     temporary = list(root.rglob("*.nvdb"))
     counts = markers.get("counts", {})
     summary = {
         "schema": "campfire.phase6gv.run-summary.v1", "sequence": sequence, "condition": condition,
+        "phase": contract.get("phase", "phase6gv"),
         "attempt_id": attempt_id, "start_utc": started_utc, "end_utc": utc_now(), "elapsed_seconds": elapsed,
         "classification": classification, "failure_signature": signature,
         "representative": classification != "startup_prerequisite_not_met",
@@ -267,7 +276,7 @@ def percentile(values: list[float], q: float) -> float | None:
     return values[lo] if lo == hi else values[lo]*(hi-pos)+values[hi]*(pos-lo)
 
 
-def aggregate(rows: list[dict], started: float, stop_reason: str) -> dict:
+def aggregate(rows: list[dict], started: float, stop_reason: str, phase: str = "phase6gv") -> dict:
     conditions = {}
     for condition in ("A", "B"):
         selected = [row for row in rows if row["condition"] == condition]
@@ -300,7 +309,7 @@ def aggregate(rows: list[dict], started: float, stop_reason: str) -> dict:
         conclusion = "no failure observed within this population"
     else:
         conclusion = "inconclusive due to harness or safety stop"
-    return {"schema":"campfire.phase6gv.aggregate-report.v1", "generated_utc":utc_now(),
+    return {"schema":"campfire.phase6gv.aggregate-report.v1", "phase":phase, "generated_utc":utc_now(),
             "elapsed_seconds":time.monotonic()-started, "stop_reason":stop_reason,
             "total_launches":len(rows), "conditions":conditions, "conclusion":conclusion}
 
@@ -362,8 +371,10 @@ def main() -> int:
         atomic_json(output / "heartbeat.json", {"schema":"campfire.phase6gv.heartbeat.v1", "status":"terminal",
                     "stop_reason":"no_kit_fixture_failure", "updated_utc":utc_now()})
         raise SystemExit("Phase 6GV no-Kit fixture failed; Kit was not launched")
+    runner_fixture_env = dict(os.environ)
+    runner_fixture_env["PHASE6GV_RUNNER_FIXTURE_CONTRACT"] = str(contract_path)
     runner_fixture = subprocess.run([sys.executable, str(SCRIPT_DIR / "test_phase6gv_repetition_runner.py")],
-                                    cwd=REPO, capture_output=True, text=True, timeout=120)
+                                    cwd=REPO, env=runner_fixture_env, capture_output=True, text=True, timeout=120)
     (preflight / "runner_fixture.stdout.log").write_text(runner_fixture.stdout[-65536:], encoding="utf-8")
     (preflight / "runner_fixture.stderr.log").write_text(runner_fixture.stderr[-65536:], encoding="utf-8")
     try:
@@ -376,7 +387,7 @@ def main() -> int:
         raise SystemExit("Phase 6GV runner fixture failed; Kit was not launched")
     sequence = [item for _ in range(contract["population"]["pattern_repetitions"]) for item in contract["population"]["fixed_order_pattern"]]
     atomic_json(output / "fixed_sequence.json", {"schema":"campfire.phase6gv.fixed-sequence.v1", "generated_before_runtime":True,
-        "order":sequence, "maximum_launches":len(sequence)})
+        "phase":contract.get("phase", "phase6gv"), "order":sequence, "maximum_launches":len(sequence)})
     aggregate_path = output / "aggregate.jsonl"
     rows, started = [], time.monotonic()
     first_failure_signature: dict[tuple[str, str], int] = {}
@@ -404,7 +415,7 @@ def main() -> int:
         with aggregate_path.open("a", encoding="utf-8", newline="\n") as stream:
             stream.write(json.dumps(row, separators=(",",":"), allow_nan=False)+"\n"); stream.flush(); os.fsync(stream.fileno())
         rows.append(row)
-        report = aggregate(rows, started, "running")
+        report = aggregate(rows, started, "running", contract.get("phase", "phase6gv"))
         atomic_json(output / "heartbeat.json", {"schema":"campfire.phase6gv.heartbeat.v1", "status":"running",
             "last_sequence":index, "last_condition":condition, "last_classification":row["classification"],
             "elapsed_seconds":row["elapsed_from_population_start_seconds"], "updated_utc":utc_now(),
@@ -416,7 +427,7 @@ def main() -> int:
             tail = rows[-needed:]
             if all(x["classification"] == "python_or_harness_failure" for x in tail) and len({x["failure_signature"] for x in tail}) == 1:
                 stop_reason = "five_consecutive_deterministic_harness_failures"; break
-    final = aggregate(rows, started, stop_reason)
+    final = aggregate(rows, started, stop_reason, contract.get("phase", "phase6gv"))
     atomic_json(output / "aggregate_report.json", final)
     atomic_json(output / "heartbeat.json", {"schema":"campfire.phase6gv.heartbeat.v1", "status":"terminal",
         "stop_reason":stop_reason, "launches":len(rows), "elapsed_seconds":final["elapsed_seconds"], "updated_utc":utc_now()})

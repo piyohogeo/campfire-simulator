@@ -3,19 +3,30 @@
 from __future__ import annotations
 
 import json
+import os
+import tempfile
 from pathlib import Path
 
 import run_phase6gv_repetition as runner
 
 
 def main() -> int:
-    contract = json.loads((Path(__file__).with_name("phase6gv_repetition_contract.json")).read_text(encoding="utf-8"))
+    contract_path = Path(os.environ.get("PHASE6GV_RUNNER_FIXTURE_CONTRACT",
+                                        Path(__file__).with_name("phase6gv_repetition_contract.json")))
+    contract = json.loads(contract_path.read_text(encoding="utf-8"))
     cases = []
     def check(name, passed, observed=None): cases.append({"name":name,"passed":bool(passed),"observed":observed})
     order = [x for _ in range(contract["population"]["pattern_repetitions"])
              for x in contract["population"]["fixed_order_pattern"]]
     check("fixed_abba_48", len(order) == 48 and order[:8] == list("ABBAABBA"), order[:8])
     check("balanced_24_each", order.count("A") == order.count("B") == 24, {"A":order.count("A"),"B":order.count("B")})
+    with tempfile.TemporaryDirectory(prefix="phase6gw-command-") as raw:
+        attempt = Path(raw) / "attempt"
+        attempt.mkdir()
+        command, metadata = runner.command_for("A", attempt, "fixture_A", contract)
+        check("parent_leaves_child_case_absent", not metadata["case"].exists(), str(metadata["case"]))
+        check("parent_owns_only_runner_logs", metadata["logs"].is_dir(), str(metadata["logs"]))
+        check("actual_command_targets_absent_case", str(metadata["case"]) in command, command[-20:])
     normal_runner = {"process_exit_code":0,"outcome":{"lifecycle_status":"normal_exit","normal_exit_sample_accepted":True}}
     normal_guard = {"observed_process_cleanup":{"all_observed_absent":True}}
     value = runner.classify(normal_guard, normal_runner, {}, {}, 0)[0]
@@ -36,9 +47,11 @@ def main() -> int:
     check("python_or_harness_failure", value == "python_or_harness_failure", value)
     value = runner.classify(normal_guard, {"process_exit_code":1}, {"status":"failed"}, {"last_operation_marker":"conversion_before"}, 1)[0]
     check("operation_failure", value == "operation_failure", value)
+    value = runner.classify(normal_guard, None, None, {}, 1, "Phase 6EP refuses output reuse: x")
+    check("pre_kit_output_reuse_is_harness", value == ("python_or_harness_failure", "pre_kit_output_root_reuse"), value)
     check("wilson_bounded", runner.wilson(1, 10)[0] < .1 < runner.wilson(1,10)[1], runner.wilson(1,10))
     check("rule_of_three_contract", contract["statistics"]["zero_failure_upper_bound"] == "rule of three")
-    report = {"schema":"campfire.phase6gv.runner-fixture.v1","passed":all(x["passed"] for x in cases),
+    report = {"schema":f"campfire.{contract['phase']}.runner-fixture.v1","passed":all(x["passed"] for x in cases),
               "case_count":len(cases),"kit_started":False,"cases":cases}
     print(json.dumps(report, separators=(",",":")))
     if not report["passed"]: raise SystemExit([x["name"] for x in cases if not x["passed"]])
