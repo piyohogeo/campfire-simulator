@@ -1,5 +1,22 @@
 # Changelog
 
+- Froze Phase 6GG after its fresh C0 baseline remained at 24 active blocks for
+  all 120 startup samples. Telemetry, identity, Point payload SHA, and source
+  sums were valid, but the frozen `small_field_ingestion` gate prohibited the
+  first public readback; C1/C2 were not started and handle 6 remains unknown.
+- Preserved the successful release-after-close and exact-cleanup evidence for
+  that functional safe stop. Kit/tree peaks were 11,609,899,008 /
+  11,773,349,888 bytes, no resource floor/ceiling fired, CDB was not needed,
+  and fatal/dump/upload/residual counts were zero. The deliberate probe failure
+  exited 1 and is not a normal accepted schema sample.
+- Kept the 20/21 GiB ceilings diagnostic-only and the formal 16/17 GiB limits,
+  Phase 6GD history, production, defaults, and latest demo unchanged. Candidate
+  schema fixtures and the S93/S100/OFF population remain unstarted.
+- Reconfirmed the boundary with Release build, Phase 0 RTX, Phase 3 zero
+  dry/wet mass-balance error, focused Phase 6F 212/212 and Phase 6G 32/32,
+  standard 78/78, and devlog validation. Production/latest-demo hashes were
+  unchanged and final Kit/CDB/GPU-helper residual counts were zero.
+
 - Declared the independent Phase 6GE color-export-slot diagnostic without
   retrying or reclassifying Phase 6GD. Only C0 baseline, C1 RGBA-only, and C2
   RGB-only receive temporary 20 GiB Kit / 21 GiB tree ceilings and 32 GiB

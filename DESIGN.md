@@ -24,6 +24,17 @@ cleanup、residual 0を満たしたが、外側`Start-Process`の`ExitCode`がnu
 fileへ直接redirectした外部commandの`$LASTEXITCODE`を使うPhase 6GG契約と
 新rootへ分離する。
 
+Phase 6GG passed its exit-propagation fixture, but fresh C0 stopped at the
+existing startup-liveness gate before readback: all 120 samples remained at 24
+active blocks and were classified `small_field_ingestion`. Telemetry, the exact
+1,344/1,440 Point payload, canonical payload SHA, and float32 source sums were
+valid, but functional pass was not established. C1/C2 were therefore not
+started. Release-after-close, `shutdown_complete`, and exact cleanup completed;
+Kit/tree peaks were 11,609,899,008 / 11,773,349,888 bytes and CDB, fatal, dump,
+upload, and residual counts were zero. Handle 6 and the candidate schema remain
+unknown. The 20/21 GiB limits remain diagnostic-only and normal 16/17 GiB
+limits remain unchanged. See `docs/design/phase6ge_color_slot_diagnostic.md`.
+
 # Phase 6GD public NanoVDB channel schema discovery
 
 Phase 6GC remains frozen at its seven-handle pre-indexing safe stop. Phase 6GD

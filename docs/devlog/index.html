@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6gd">最新記録</a>
+        <a href="#phase-6gg">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6gd">Phase 6GDの結果を読む</a>
+        <a class="button primary" href="#phase-6gg">Phase 6GGの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6GD · unknown handle safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6GG · startup safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,17 @@
   </header>
 
   <main>
+    <section id="phase-6gg" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6GG color slot startup safe stop"><span class="phase-number compact">6GG</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">C0 startup · safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6GG · diagnostic-only color slot</p><h2>The resource headroom was safe;<br>representative Flow startup was not.</h2><p>The exit-code propagation fixture passed and a fresh C0 baseline started. Its 120 startup samples all remained at 24 active blocks, so the frozen <code>small_field_ingestion</code> gate rejected the process before public readback.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Verified input</p><h3>Fresh telemetry and exact Point payload</h3><p>Timeline telemetry advanced, the emitter was enabled, 1,344/1,440 Points and the canonical payload SHA matched, and fuel/temperature/smoke float32 source sums had zero difference. The result is not stale telemetry or a payload identity failure.</p></section><section class="note caution"><p class="note-label">Fail-closed boundary</p><h3>C1 and C2 were not launched.</h3><p>No public readback occurred and no seven-handle metadata was committed. The next-condition contract required functional pass plus a normal accepted exit, so RGBA-only and RGB-only controls were correctly blocked. <code>handle[6]</code> remains unknown.</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Resource and lifecycle</p><h3>No diagnostic ceiling or cleanup failure occurred.</h3><p>Kit/tree peaks were 11,609,899,008 / 11,773,349,888 bytes, leaving 9,864,937,472 / 10,775,228,416 bytes below the temporary 20/21 GiB limits. Release-after-close and <code>shutdown_complete</code> completed; exact cleanup found zero residual. The deliberate functional error exited 1, so this is not a normal accepted schema sample. CDB, fatal, dump, and upload counts were zero.</p><p><a href="assets/phase6/phase6gg_color_slot_safe_stop.json">machine summary</a> · <a href="../design/phase6ge_color_slot_diagnostic.md">design note</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>internal schema diagnosis; no new video</small></span></button></div><div class="check-list" role="list"><div role="listitem"><span>1/3</span><p><strong>Started</strong><small>C0 only</small></p></div><div role="listitem"><span>24</span><p><strong>Active blocks</strong><small>120/120 samples</small></p></div><div role="listitem"><span>0</span><p><strong>Readbacks</strong><small>startup gate</small></p></div><div role="listitem"><span>0</span><p><strong>Residual</strong><small>exact cleanup</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Pending roadmap</p><h3>Handle 6 is still unidentified.</h3><p>Freeze Phase 6GG; do not retry or reclassify its C0. A future separately approved run must first obtain a representative startup and then collect the planned C0/C1/C2 metadata. Candidate schema fixtures, S93 channel preflight, formal S93/S100/OFF comparison, and video remain blocked. The ordinary 16/17 GiB contract is unchanged; 20/21 GiB remains diagnostic-only.</p><p>Release build, Phase 0 RTX, Phase 3, focused Phase 6F 212/212 plus Phase 6G 32/32, standard 78/78 and devlog validation passed. Production/latest-demo hashes are unchanged and final residuals are zero.</p></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6gd" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6GD public channel schema discovery"><span class="phase-number compact">6GD</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">mapping partial · safe stop</span></aside>
@@ -5163,7 +5174,7 @@
       <div class="shell">
         <p class="section-kicker">Roadmap</p>
         <h2>小さく燃やして、確かめながら進む。</h2>
-        <p>Phase 6FZは16/17 GiB resource境界をqualifiedした。Phase 6GDはdivergenceをhandle 5へ確定したが、RGBA controlがreadback前にKit上限へ到達したため、handle 6はunknownのままである。Phase 6FO、S93/S100比較、動画、Point採用、production統合はblockedを維持する。</p>
+        <p>Phase 6FZは16/17 GiB resource境界をqualifiedした。Phase 6GDはdivergenceをhandle 5へ確定した。診断専用20/21 GiB契約のPhase 6GGはresource余裕を確認したが、C0がreadback前のsmall-field startup gateで停止したため、C1/C2は未実行でhandle 6はunknownのままである。Phase 6FO、S93/S100比較、動画、Point採用、production統合はblockedを維持する。</p>
         <ol class="roadmap">
           <li class="done"><span>0</span><div><strong>環境成立確認</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>1</span><div><strong>Flow単体検証</strong><small>完了 · 2026.08.04</small></div></li>

@@ -68,3 +68,32 @@ PowerShell `Start-Process` object exposed a null `ExitCode` after completion.
 C1/C2 were not started. Phase 6GG freezes that root and launches a new complete
 population; it changes only exit-code propagation to the external command's
 deterministic `$LASTEXITCODE` while retaining direct stdout/stderr files.
+
+## Phase 6GG startup safe stop
+
+The direct `$LASTEXITCODE` fixture passed, but the fresh Phase 6GG C0 process
+failed the already-frozen representative-startup prerequisite before any public
+readback. All 120 fresh samples reported 24 active blocks. Timeline telemetry
+was fresh, the emitter was enabled, the exact 1,344/1,440 Point payload and its
+canonical SHA matched, and all float32 source sums matched exactly; nevertheless
+the classification was `small_field_ingestion`, so readback was not permitted.
+
+This is functional/startup evidence, not handle metadata and not a resource
+failure. The process completed release-after-close and `shutdown_complete`, was
+observed exiting during the normal grace interval, and exact cleanup found no
+residual. Its deliberate probe error produced exit code 1, so the frozen
+three-axis outcome is not a normal accepted sample. Kit/tree peaks were
+11,609,899,008 / 11,773,349,888 bytes, leaving 9,864,937,472 /
+10,775,228,416 bytes below the temporary 20/21 GiB diagnostic limits. CDB was
+not invoked; fatal, dump, upload, and residual counts were zero.
+
+The next-condition contract therefore stopped the population. C1 RGBA-only and
+C2 RGB-only were not started, `handle[6]` remains unknown, no candidate schema
+or schema fixture exists, and formal channel preflight remains blocked. This
+root is frozen and must not be retried or reclassified. The ordinary 16/17 GiB
+contract remains unchanged; the 20/21 GiB limits remain diagnostic-only.
+
+Release build, Phase 0 RTX, Phase 3 with zero dry/wet mass-balance error,
+focused Phase 6F 212/212, focused Phase 6G 32/32, standard 78/78, and devlog
+validation passed. The production app and latest-demo manifest hashes remained
+unchanged, and final Kit/CDB/GPU-helper residual counts were zero.

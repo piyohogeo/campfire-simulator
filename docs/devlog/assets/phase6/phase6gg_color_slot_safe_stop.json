@@ -1,0 +1,192 @@
+{
+  "schema": "campfire.phase6gg.color-slot-safe-stop-summary.v1",
+  "generated_at_utc": "2026-08-14T04:28:56.794600+00:00",
+  "phase": "phase6gg",
+  "status": "safe_stop",
+  "history": {
+    "phase6gd_frozen": true,
+    "phase6ge_pre_kit_safe_stop_frozen": true,
+    "phase6gf_outer_exit_propagation_safe_stop_frozen": true,
+    "phase6gg_root_reused": false
+  },
+  "contract": {
+    "schema": "campfire.phase6gg.color-slot-diagnostic-contract.v1",
+    "sha256": "15E043ACBD164E2D2FA0D65E771BFA239355A2D475AAA912D44044BAFF4DD731",
+    "diagnostic_only": true,
+    "normal_formal_kit_tree_limits_unchanged_bytes": [
+      17179869184,
+      18253611008
+    ]
+  },
+  "population": {
+    "planned": [
+      "C0",
+      "C1",
+      "C2"
+    ],
+    "started": [
+      "C0"
+    ],
+    "completed_functionally": [],
+    "not_started": [
+      "C1",
+      "C2"
+    ],
+    "formal_s93_s100_population_started": false
+  },
+  "active_condition": {
+    "name": "C0",
+    "export_enable_state": {
+      "rgba": false,
+      "rgb": false
+    },
+    "failure_boundary": "startup_liveness_gate_before_public_readback",
+    "probe_status": "error",
+    "error": "RuntimeError: startup liveness rejected before readback: small_field_ingestion",
+    "startup": {
+      "classification": "small_field_ingestion",
+      "readback_permitted": false,
+      "gate_frame": 120,
+      "sample_count": 120,
+      "minimum_active_blocks": 24,
+      "maximum_active_blocks": 24,
+      "first_representative_frame": null,
+      "source_ok": true,
+      "telemetry_fresh": true,
+      "identity_and_exact_source_pass": true,
+      "canonical_payload_sha256": "DF5AF9FA764B4B2D74FCD67DEF30ADE4C24DC267E351FA017746E89907B2E920"
+    },
+    "readback_call_count": 0,
+    "bounded_handle_metadata_committed": false,
+    "process_exit_code": 1,
+    "last_lifecycle_marker": "shutdown_complete",
+    "physical_process_exit_observed": true,
+    "contract_outcome": {
+      "schema": "campfire.kit-shutdown-outcome.v1",
+      "input_valid": true,
+      "functional_status": "fail",
+      "lifecycle_status": "unknown_shutdown_failure",
+      "performance_sample_accepted": false,
+      "normal_exit_sample_accepted": false,
+      "application_shutdown_marker": null,
+      "shutdown_complete_reached": false,
+      "os_process_normal_exit": false,
+      "known_signature_name": null,
+      "reasons": [
+        "completion:probe_complete",
+        "completion:results_saved",
+        "process:nonzero_exit"
+      ]
+    }
+  },
+  "resource": {
+    "duration_seconds": 75.603844165802,
+    "sample_count": 212,
+    "peaks_bytes": {
+      "runner": 96346112,
+      "kit": 11609899008,
+      "diagnostic": 16846848,
+      "child": 62459904,
+      "tree": 11773349888
+    },
+    "limits_bytes": {
+      "runner_private_bytes": 536870912,
+      "kit_private_bytes": 21474836480,
+      "diagnostic_private_bytes": 536870912,
+      "tree_private_bytes": 22548578304,
+      "available_memory_floor_bytes": 34359738368,
+      "commit_headroom_floor_bytes": 34359738368,
+      "timeout_seconds": 1020.0
+    },
+    "minimum_available_physical_bytes": 84986712064,
+    "minimum_commit_headroom_bytes": 104522067968,
+    "kit_margin_to_20_gib_bytes": 9864937472,
+    "tree_margin_to_21_gib_bytes": 10775228416,
+    "large_output_buffered_in_parent": false,
+    "resource_limit_triggered": false
+  },
+  "lifecycle_and_cleanup": {
+    "stage_close_complete": true,
+    "shutdown_complete_marker": true,
+    "cdb_invoked": false,
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "residual_process": false,
+    "exact_cleanup": {
+      "observed_identity_count": 39,
+      "all_matching_absent": true,
+      "all_observed_absent": true,
+      "matching_remaining": [],
+      "final_unknown": []
+    }
+  },
+  "mapping_result": {
+    "handle_6": "unknown",
+    "rgba_and_rgb_slot_relationship": "unavailable",
+    "reason": "C0 failed the frozen representative-startup prerequisite before readback; C1 and C2 were not permitted to start.",
+    "candidate_schema_created": false,
+    "offline_schema_fixture_started": false,
+    "formal_channel_preflight_started": false
+  },
+  "production": {
+    "changed": false,
+    "sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "defaults_changed": false,
+    "latest_demo_changed": false
+  },
+  "verification": {
+    "release_build": "pass",
+    "phase0_rtx": {
+      "status": "pass",
+      "summary_status": "ok"
+    },
+    "phase3": {
+      "status": "pass",
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "flow_input_owner": "wood thermal model",
+      "active_blocks_peak": 384,
+      "peak_fuel_input": 1.0
+    },
+    "focused_phase6f": {
+      "passed": 212,
+      "total": 212
+    },
+    "focused_phase6g": {
+      "passed": 32,
+      "total": 32
+    },
+    "standard_suite": {
+      "processes_passed": 8,
+      "processes_total": 8,
+      "tests_passed": 78,
+      "tests_total": 78,
+      "automatic_upload": false
+    },
+    "devlog_validation": {
+      "status": "pass",
+      "references": 481,
+      "ids": 287,
+      "json": 239,
+      "svg": 177,
+      "zip": 2
+    },
+    "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "latest_demo_manifest_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285",
+    "final_residual_counts": {
+      "kit": 0,
+      "cdb": 0,
+      "nvidia_smi": 0,
+      "nvngx_update": 0
+    }
+  },
+  "source_artifacts": {
+    "root": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6gg-color-slot-diagnostic-1",
+    "raw_sha256": "C6B2C0F7E5FF50BA79CAF88E1EEE80D308142EC89C90461B4BF4B138E791CFE6",
+    "runner_evidence_sha256": "CE72B2B53B0EB4FE0B40C1EE38006AE4E7C5316F537EF14B9CF70EC05D34D794",
+    "shutdown_outcome_sha256": "E95DCD08E775A7AA80BAB86BAE3A55124C8D6131B4ED730BBA76B5BE87F3ECB2",
+    "guard_sha256": "7AFC6740D4FE5E352A41D5A584DFC95041978AAC9CCB70CCCF40F5E2C81E68BC"
+  }
+}

@@ -1,5 +1,14 @@
 # Phase 6FO S93 / S100 Point supply comparison
 
+## 2026-08-14 Phase 6GG color-slot startup safe stop
+
+Phase 6GG reached only C0 and stopped at the frozen startup-liveness gate:
+120/120 samples stayed at 24 active blocks despite fresh telemetry and an exact
+payload/source contract. No public readback occurred and C1/C2 did not start.
+Consequently handle 6, the candidate schema, S93 channel preflight, and the
+formal S93/S100/OFF comparison remain blocked. The diagnostic-only 20/21 GiB
+ceilings do not modify the ordinary 16/17 GiB contract.
+
 ## 2026-08-14 Phase 6GE diagnostic-only color-slot contract
 
 Phase 6GE may use temporary 20/21 GiB Kit/tree ceilings only for three fresh
