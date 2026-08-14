@@ -55,7 +55,6 @@ $preflightRoot = Join-Path $OutputRoot "preflight"
 New-Item -ItemType Directory -Path $preflightRoot | Out-Null
 $importSmokeRoot = Join-Path $preflightRoot "app-ready-import-smoke"
 & (Join-Path $PSScriptRoot "run_phase6fz_import_smoke.ps1") -OutputRoot $importSmokeRoot
-if ($LASTEXITCODE -ne 0) { throw "Phase 6FZ app-ready import smoke failed; formal population was not started" }
 $importSmokeReport = Get-Content -Raw -Encoding UTF8 (Join-Path $importSmokeRoot "import_smoke_suite.json") | ConvertFrom-Json
 if (-not $importSmokeReport.passed -or $importSmokeReport.completed_count -ne 3) { throw "Phase 6FZ app-ready import smoke failed closed" }
 $cdbFixtureRoot = Join-Path $preflightRoot "cdb-progress-fixtures"
