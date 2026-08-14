@@ -1,0 +1,82 @@
+{
+  "schema": "campfire.phase6gq.temperature-volume-contract.v1",
+  "phase": "phase6gq",
+  "declared_before_runtime": true,
+  "history": {
+    "phase6gn_reclassified": false,
+    "phase6go_reclassified": false,
+    "phase6gp_reclassified": false,
+    "prior_artifact_reused": false,
+    "phase6gp_status": "metadata_r1_qualified"
+  },
+  "scope": {
+    "operation": "one public readback and exactly one public slot-0 temperature buffer_to_volume call",
+    "later_operations_authorized": false
+  },
+  "selected_slot": 0,
+  "selected_channel": "temperature",
+  "mapping_source": {
+    "schema_id": "flow110.0.0-kit110.2-public-readback-rgba7-v1",
+    "path": "scripts/phase6gh_public_channel_schema_candidate.json",
+    "required_state": "nonempty"
+  },
+  "fixture": {
+    "scenario": "production_four",
+    "geometry_concept": "corrected",
+    "geometry_runtime_token": "phase6er_corrected",
+    "condition": "S93_support_clear",
+    "policy": "allow_self_center",
+    "collision_enabled": true,
+    "points_active": 1344,
+    "points_total": 1440,
+    "readback_frame": 180,
+    "flow_version": "110.0.0",
+    "kit_version": "110.2",
+    "exports": {"temperature": true, "fuel": true, "burn": true, "smoke": true, "velocity": true, "divergence": true, "rgba": false, "rgb": false}
+  },
+  "allowed": [
+    "one public readback", "bounded seven-slot count and type", "bounded slot-0 source metadata",
+    "release slots 1 through 6", "one slot-0 buffer_to_volume", "returned Python type name",
+    "release converted volume then slot 0", "normal lifecycle"
+  ],
+  "forbidden": [
+    "element traversal", "volume metadata", "bounding box", "active voxel count", "grid class",
+    "numpy.asarray", "material copy", "temporary NVDB", "schema content validation", "sampling",
+    "near-Mesh collector", "flux", "image", "video", "other channel conversion",
+    "second readback", "second conversion", "R3 or later", "formal nine-process population"
+  ],
+  "markers": [
+    "phase6gq_readback_before", "phase6gq_readback_after", "phase6gq_handle_count_type_after",
+    "phase6gq_slot0_selected_after", "phase6gq_nonselected_release_before", "phase6gq_nonselected_release_after",
+    "phase6gq_volume_conversion_before", "phase6gq_volume_conversion_after", "phase6gq_volume_return_type_after",
+    "phase6gq_volume_release_before", "phase6gq_volume_release_after",
+    "phase6gq_slot0_release_before", "phase6gq_slot0_release_after",
+    "timeline_stopped", "stage_close_request_before", "stage_close_complete", "shutdown_complete"
+  ],
+  "population": {"independent_processes": 1, "automatic_retry": false, "replacement_budget": 0, "maximum_launches": 1},
+  "result_axes": {
+    "operation": "conversion return plus converted/source release",
+    "lifecycle": "stage close, shutdown_complete, natural OS exit",
+    "qualification": "both operation pass and lifecycle normal_exit are required"
+  },
+  "artifact_bounds": {"maximum_operation_json_bytes": 131072, "field_body_allowed": false, "image_or_video_allowed": false},
+  "safety": {
+    "kit_private_limit_bytes": 17179869184,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "inner_absolute_timeout_seconds": 900,
+    "outer_condition_timeout_seconds": 1020,
+    "resource_sampling_seconds": 0.25,
+    "gpu_sampling_ms": 1000,
+    "shutdown_order": "release_after_close"
+  },
+  "lifecycle": {
+    "low_level_diagnostic_allowed": false,
+    "timeout_action": "preserve bounded artifacts, exact identity cleanup, require residual zero"
+  },
+  "out_of_scope": ["volume content", "volume metadata", "other channels", "repeated readback", "formal comparison", "production", "defaults", "V3", "P4"]
+}
