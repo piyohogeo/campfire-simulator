@@ -1,5 +1,19 @@
 # Changelog
 
+- Froze Phase 6GX after the six-hour boundary with 46 fixed ABBA launches.
+  Control A produced 22 representative normal exits; Candidate B produced 20
+  representative timeouts, all immediately after its first seven-handle
+  readback at `phase6gl_readback_after`. Three B launches were startup failures,
+  and one nonrepresentative A startup failure also timed out at stage close.
+- The exact startup producer/consumer fixture passed 6/6 and prior Phase 6FC
+  regression passed 8/8. Maximum Kit/tree peaks were 15,557,652,480 /
+  15,720,927,232 bytes; resource/process-cleanup failures and process residuals
+  were zero.
+- Kept the result formally inconclusive because each representative B timeout
+  left one 41-byte attempt-local partial NVDB and the outer runner did not
+  enforce temporary-file residual zero before continuing. Phase 6GX is not
+  retried, reclassified, or reused as a qualified population.
+
 - Froze Phase 6GW as a startup-classifier harness safe stop. Its 17/17 no-Kit
   runner fixtures corrected Phase 6GV case-root ownership and the fixed ABBA
   population launched all 48 Kit processes without replacement.

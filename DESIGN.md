@@ -1,5 +1,33 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6GX repetition evidence safe stop
+
+Phase 6GW remains frozen. Phase 6GX qualified the exact current startup record
+through the Phase 6FC classifier (6/6), preserved legacy artifacts, passed the
+17/17 runner fixtures, and froze SHA-256
+`B1149507CB731A2929FFD4B93DB8453617A8F5CDA7BDCD4B0D9C1BEB63E9DF01`.
+The bounded population stopped at the six-hour boundary after 46 fixed ABBA
+launches (23 A, 23 B), with no retry or replacement.
+
+The physical observation is strong but remains partial. Control A had 22
+representative normal exits; one nonrepresentative 24-block startup failure
+also timed out during stage close. Candidate B had 20 representative processes,
+all of which reached one seven-handle readback and then timed out with last
+durable operation marker `phase6gl_readback_after` and lifecycle marker
+`timeline_playing`; three additional B launches were startup-prerequisite
+failures. No representative B process exited normally. The first B failure was
+1,042.703 seconds after population start.
+
+However, each B timeout left one 41-byte partial
+`p3_f0180_temperature.nvdb` in its own attempt artifact. Process residual was
+zero, no resource limit or process cleanup failure occurred, but the runner did
+not enforce temporary-file residual zero before continuing. Phase 6GX is
+therefore frozen as `inconclusive due to harness or safety stop`, not as a
+qualified deterministic reproduction. The 20/20 same-boundary B result remains
+versioned partial evidence. A future independent Phase must record and delete
+only allowlisted attempt-local NVDB paths, reject unknown paths, and verify zero
+file residual before the next launch.
+
 # Phase 6GW startup-classifier safe stop
 
 Phase 6GV remains a pre-Kit harness safe stop. Phase 6GW corrected case-root

@@ -1,0 +1,35 @@
+{
+  "schema": "campfire.phase6gx.authoritative-safe-stop.v1",
+  "status": "temporary_file_cleanup_contract_safe_stop",
+  "contract_sha256": "B1149507CB731A2929FFD4B93DB8453617A8F5CDA7BDCD4B0D9C1BEB63E9DF01",
+  "elapsed_seconds": 22223.812,
+  "stop_reason": "maximum_elapsed_seconds",
+  "launches": 46,
+  "A": {
+    "all_launches": 23,
+    "representative_runs": 22,
+    "normal_exits": 22,
+    "startup_failure_then_stage_close_timeout": 1
+  },
+  "B": {
+    "all_launches": 23,
+    "representative_runs": 20,
+    "normal_exits": 0,
+    "same_boundary_timeouts": 20,
+    "startup_prerequisite_not_met": 3,
+    "last_operation_marker": "phase6gl_readback_after",
+    "last_lifecycle_marker": "timeline_playing",
+    "time_to_first_failure_seconds": 1042.703,
+    "wilson_95_failure_interval": [0.8388748419471806, 1.0]
+  },
+  "maximum_kit_private_bytes": 15557652480,
+  "maximum_tree_private_bytes": 15720927232,
+  "resource_limit_count": 0,
+  "process_cleanup_failure_count": 0,
+  "process_residual_count": 0,
+  "partial_nvdb_files_remaining": 20,
+  "partial_nvdb_bytes_each": 41,
+  "authoritative_conclusion": "inconclusive due to harness or safety stop",
+  "qualified_population": false,
+  "artifact_reuse_allowed": false
+}
