@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6gk">最新記録</a>
+        <a href="#phase-6gl">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6gk">Phase 6GKの結果を読む</a>
+        <a class="button primary" href="#phase-6gl">Phase 6GLの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6GK · channel preflight qualified</strong></div>
+        <div><span>現在地</span><strong>Phase 6GL · channel-operation safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,17 @@
   </header>
 
   <main>
+    <section id="phase-6gl" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6GL formal supply comparison safe stop"><span class="phase-number compact">6GL</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">1/9 launch · safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6GL · formal S93/S100/OFF</p><h2>The schema gate stopped before physics;<br>the population did not continue.</h2><p>The fresh S93 process passed representative startup and exact float32 payload validation. At the first frame-180 readback, raw schema validation rejected an empty required divergence slot before semantic indexing or spatial collection.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Confirmed cause</p><h3>Formal stage authoring did not match the qualified schema stage.</h3><p>Phase 6GK explicitly enabled divergence export. The Phase 6GL wrapper reused the Phase 6GC stage builder without authoring that switch; the generated USD contains no <code>divergenceEnabled</code> attribute. The resulting grid-count/name/class/type failures are harness evidence, not a collision result.</p></section><section class="note caution"><p class="note-label">Fail-closed population</p><h3>No replacement, pair gate, or video.</h3><p>Channel failure is nonreplaceable in the frozen contract. Attempt02 and later conditions were not launched. S93/S100 transport, deep velocity, visible penetration, and S100 adoption remain unevaluated.</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Resource and lifecycle</p><h3>Stage close completed; the operation correctly exited nonzero.</h3><p>Kit/tree peaks were 15,135,453,184 / 15,298,633,728 bytes, leaving 2,044,416,000 / 2,954,977,280 bytes below 16/17 GiB. Stage close took 139.028518 seconds, <code>shutdown_complete</code> was durable, CDB was not needed, and exact cleanup left zero residual.</p><p><a href="assets/phase6/phase6gl_supply_comparison_safe_stop.json">machine summary</a> · <a href="../design/phase6gl_formal_supply_comparison.md">design note</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>numeric gate not reached; no new video</small></span></button></div><div class="check-list" role="list"><div role="listitem"><span>1/9</span><p><strong>Launched</strong><small>accepted 0</small></p></div><div role="listitem"><span>688</span><p><strong>Frame 60</strong><small>representative</small></p></div><div role="listitem"><span>1</span><p><strong>Readback</strong><small>raw schema stop</small></p></div><div role="listitem"><span>0</span><p><strong>Residual</strong><small>exact cleanup</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Pending roadmap</p><h3>Freeze Phase 6GL; align divergence authoring in a new Phase.</h3><p>Phase 6GL is not retried or reclassified. A new contract/root must make the formal stage export state match the Phase 6GK-qualified schema before another population starts. Production, defaults, Point policy, V3, P4, PhysX sharing, dynamic transform, geometry, 20-log performance, and fire lighting remain unchanged.</p><p>Release build, Phase 0 RTX, Phase 3, focused Phase 6G 61/61, standard 78/78, and devlog validation passed. The broad legacy Phase 6 discovery retained two unrelated obsolete-policy expectations (503/505). Production/latest-demo hashes are unchanged.</p></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6gk" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6GK bounded artifact interface preflight"><span class="phase-number compact">6GK</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">1 launch · qualified</span></aside>
@@ -5218,7 +5229,7 @@
       <div class="shell">
         <p class="section-kicker">Roadmap</p>
         <h2>小さく燃やして、確かめながら進む。</h2>
-        <p>Phase 6FZは16/17 GiB resource境界をqualifiedした。Phase 6GHはhandle 6をRGBA export slotへ対応付けたcandidate identificationとして凍結した。Phase 6GIは通常16/17 GiBでraw 7-handle schemaと6本のlive-channel pointer/release evidenceを確認したが、empty RGBAへの過剰なshares-memory predicateでnonreplaceable operation safe stopとなった。candidate schemaはformal preflight未qualifiedのまま。次はempty same-object zero-byte alias semanticsをruntime前に別契約へ固定する明示承認が必要であり、Phase 6FO、S93/S100比較、動画、Point採用、production統合は未開始を維持する。</p>
+        <p>Phase 6GKで7-handle public schemaはpreflight-qualifiedになった。Phase 6GLは新しい正式S93/S100/OFF母集団を開始したが、attempt01のformal stageが6GKと同じdivergence export stateをauthoringしなかったため、frame 180のraw schema gateでnonreplaceable safe stopとなった。物理比較、方向付きflux、deep velocity、動画、S100採用、Point policy、production統合は未到達である。次はPhase 6GLを凍結し、新しいcontract/rootでformal stageのexport stateをqualified schemaへ一致させる。</p>
         <ol class="roadmap">
           <li class="done"><span>0</span><div><strong>環境成立確認</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>1</span><div><strong>Flow単体検証</strong><small>完了 · 2026.08.04</small></div></li>
@@ -5226,7 +5237,7 @@
           <li class="done"><span>3</span><div><strong>木材熱モデル</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>4</span><div><strong>配置と通気</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>5</span><div><strong>崩壊</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · public schemaはunknown handle 6でblocked</small></div></li>
+          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · formal divergence authoring mismatchでsafe stop</small></div></li>
         </ol>
       </div>
     </section>

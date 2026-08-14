@@ -3822,3 +3822,29 @@ Numerical qualification is required before comparison video creation. Even a
 numeric and visual pass can identify only a production *candidate*; this Phase
 does not change production code, defaults, Point policy, V3, P4, PhysX sharing,
 dynamic transforms, geometry, 20-log performance, or fire lighting.
+# Phase 6GL formal supply comparison safe stop
+
+The frozen Phase 6GL population started from a fresh artifact root and stopped
+after its first S93 process. No sample from Phase 6FO or 6GA--6GK was reused.
+Startup was representative from frame 1, the Point payload-native validation
+matched exactly, and the corrected geometry retained 1,344/1,440 Points with no
+other-log center inside. At the first scheduled readback (frame 180), raw schema
+validation failed before semantic indexing or spatial collection.
+
+The confirmed harness mismatch is that the Phase 6GK qualification stage
+explicitly authored `divergenceEnabled = true`, while the Phase 6GL wrapper
+reused the Phase 6GC stage builder without authoring that export switch. The
+generated Phase 6GL USD contains temperature, fuel, burn, smoke, velocity, and
+statistics enables but no divergence enable. Consequently the required
+divergence slot was empty and raw validation reported required-empty, grid
+count/name/class, and value-type mismatches. This is a channel-operation safe
+stop, not a Flow collision or S93/S100 numeric result. The frozen contract makes
+channel failures nonreplaceable, so no attempt 2 and no video were started.
+
+Release-after-close nevertheless completed: stage close took 139.028518 s,
+`shutdown_complete` was durable, exact cleanup confirmed every observed
+attempt identity absent, and residual/fatal/dump/upload/device-lost/TDR counts
+were zero. The nonzero process exit is retained and is not a normal accepted
+sample. A future Phase must explicitly align the divergence export state with
+the qualified schema in a new contract/root; Phase 6GL is not retried or
+reclassified.

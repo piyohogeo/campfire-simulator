@@ -1,0 +1,103 @@
+{
+  "schema": "campfire.phase6gl.supply-comparison-safe-stop.v1",
+  "phase": "phase6gl",
+  "status": "safe_stop",
+  "contract_sha256": "21BC3156D77CCB758514EB58D8B8BE7B83DE43B05705DDA934DEE3014A7ACF9C",
+  "history": {
+    "phase6fo_through_phase6gk_reclassified": false,
+    "prior_formal_population_reused": false,
+    "phase6gl_retried": false
+  },
+  "population": {
+    "planned_accepted": 9,
+    "launched": 1,
+    "accepted": 0,
+    "startup_replacements": 0,
+    "last_condition": "sequence01_position01_S93",
+    "later_conditions_started": false
+  },
+  "startup": {
+    "classification": "representative_ingestion",
+    "first_representative_frame": 1,
+    "frame_60_active_blocks": 688,
+    "frame_120_active_blocks": 1118,
+    "payload_native_validation": "pass",
+    "canonical_payload_sha256": "DF5AF9FA764B4B2D74FCD67DEF30ADE4C24DC267E351FA017746E89907B2E920",
+    "active_points": 1344,
+    "total_points": 1440,
+    "other_log_point_centers_inside": 0,
+    "active_other_support_intersections": 0
+  },
+  "failure": {
+    "axis": "channel_schema_operation",
+    "boundary": "frame_180_raw_schema_validation_before_semantic_mapping",
+    "error": "Phase 6GL raw schema validation failed",
+    "reasons": ["grid_class_mismatch", "grid_count_mismatch", "grid_name_mismatch", "required_handle_empty", "value_type_mismatch"],
+    "confirmed_cause": "Phase 6GK explicitly enabled divergence export; the Phase 6GL wrapper reused the Phase 6GC stage builder and did not author divergenceEnabled.",
+    "generated_usd_divergence_attribute_present": false,
+    "public_readback_calls": 1,
+    "spatial_collection_started": false,
+    "numeric_gate_reached": false,
+    "collision_result_available": false
+  },
+  "resource": {
+    "kit_peak_bytes": 15135453184,
+    "kit_limit_bytes": 17179869184,
+    "kit_margin_bytes": 2044416000,
+    "tree_peak_bytes": 15298633728,
+    "tree_limit_bytes": 18253611008,
+    "tree_margin_bytes": 2954977280,
+    "runner_peak_bytes": 96018432,
+    "diagnostic_peak_bytes": 16871424,
+    "minimum_available_physical_bytes": 82642329600,
+    "minimum_commit_headroom_bytes": 102247837696
+  },
+  "lifecycle": {
+    "stage_close_seconds": 139.0285178,
+    "stage_close_timeout_seconds": 180,
+    "stage_close_complete": true,
+    "shutdown_complete": true,
+    "process_exit_code": 1,
+    "normal_exit_sample_accepted": false,
+    "cdb_invoked": false,
+    "fatal": 0,
+    "dump": 0,
+    "automatic_upload": 0,
+    "device_lost": 0,
+    "tdr": 0,
+    "exact_cleanup": true,
+    "attempt_tree_residual": 0
+  },
+  "regression": {
+    "release_build": "pass",
+    "phase0_rtx": "pass",
+    "phase3": {
+      "status": "pass",
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "flow_input_owner": "wood thermal model",
+      "active_blocks_final": 278,
+      "active_blocks_peak": 359,
+      "peak_fuel_input": 1.0
+    },
+    "focused_phase6g": "61/61",
+    "all_phase6_discovery": {
+      "result": "503/505",
+      "preexisting_unrelated_failures": [
+        "Phase 6EB test expects obsolete diagnosticSucceeded branch",
+        "Phase 6EJ test expects obsolete 90-second diagnostic timeout while implementation is 240 seconds"
+      ]
+    },
+    "standard_suite": "78/78 across 8 processes",
+    "devlog_validation": {"references": 490, "ids": 292, "json": 244, "svg": 177, "zip": 2},
+    "production_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "latest_demo_manifest_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285"
+  },
+  "decision": {
+    "s93_s100_off_numeric_comparison": "not_available",
+    "comparison_video_created": false,
+    "s100_adoption_candidate": false,
+    "production_changed": false,
+    "next_requirement": "new independently frozen Phase/root aligning divergence export state with the Phase 6GK-qualified schema"
+  }
+}

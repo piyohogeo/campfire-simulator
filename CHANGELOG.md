@@ -1,5 +1,15 @@
 # Changelog
 
+- Froze Phase 6GL as a nonreplaceable channel-operation safe stop after its
+  first fresh S93 process. Representative startup and exact float32 payload
+  validation passed, but the formal wrapper omitted the divergence export
+  authoring used by Phase 6GK, so frame-180 raw schema validation rejected the
+  empty required slot before semantic indexing or spatial metrics. No retry,
+  paired comparison, video, or production change was made.
+- Preserved the complete lifecycle evidence: release-after-close completed in
+  139.028518 seconds, Kit/tree peaks stayed within 16/17 GiB, CDB was not
+  invoked, and exact cleanup left zero attempt-tree residual.
+
 - Froze the Phase 6GK bounded-artifact interface contract before runtime while
   preserving Phase 6GJ as an artifact safe stop. New runtime output uses only
   `field_body_json_npz_or_openvdb_written`; legacy input is accepted only at an
