@@ -1,5 +1,14 @@
 # Phase 6FO S93 / S100 Point supply comparison
 
+## 2026-08-14 Phase 6GE diagnostic-only color-slot contract
+
+Phase 6GE may use temporary 20/21 GiB Kit/tree ceilings only for three fresh
+metadata-only S93 processes that distinguish baseline, RGBA-only, and RGB-only
+export. Physical/commit floors rise to 32 GiB while runner/diagnostic remain
+512 MiB. This does not alter Phase 6FZ or the formal Phase 6FO 16/17 GiB
+contract. Even if a candidate seven-handle schema is produced, formal S93
+preflight and the S93/S100/OFF population require a later explicit approval.
+
 ## 2026-08-14 Phase 6GD public-channel schema safe stop
 
 Phase 6GD preserved the Phase 6GC result and enumerated all seven Python

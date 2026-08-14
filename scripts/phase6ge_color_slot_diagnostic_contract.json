@@ -1,0 +1,90 @@
+{
+  "schema": "campfire.phase6ge.color-slot-diagnostic-contract.v1",
+  "phase": "phase6ge",
+  "declared_before_runtime": true,
+  "history": {
+    "phase6gd_reclassified": false,
+    "phase6gd_retried": false,
+    "phase6gd_artifact_reused_as_formal_evidence": false
+  },
+  "base_discovery_contract": {
+    "path": "scripts/phase6gd_channel_schema_discovery_contract.json",
+    "sha256": "FFD0D34F35A645B433334900F745C91D861BCAD5FE15703279409E64480A55A2"
+  },
+  "base_control_contract": {
+    "path": "scripts/phase6gd_channel_schema_control_contract.json",
+    "sha256": "563E2ED31BCE9FA1A4C0D97162E04BBD97F618E959D42C808006B36CCF372F91"
+  },
+  "scope": "Identify public readback handle 6 using three fresh S93 metadata-only processes; the elevated resource budget is temporary and diagnostic-only.",
+  "controls": {
+    "order": ["C0", "C1", "C2"],
+    "runtime_mode": {"C0": "baseline", "C1": "rgba", "C2": "rgb"},
+    "export_state": {
+      "C0": {"rgbaEnabled": false, "rgbEnabled": false},
+      "C1": {"rgbaEnabled": true, "rgbEnabled": false},
+      "C2": {"rgbaEnabled": false, "rgbEnabled": true}
+    },
+    "one_process_per_condition": true,
+    "fresh_stage_and_flow_per_condition": true,
+    "switching_inside_process_allowed": false,
+    "readback_frame": 180,
+    "sentinel_frames": [60, 120],
+    "stop_after_first_metadata": true
+  },
+  "diagnostic_resource_limits": {
+    "temporary_only": true,
+    "kit_private_limit_bytes": 21474836480,
+    "unique_tree_private_limit_bytes": 22548578304,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "physical_memory_floor_bytes": 34359738368,
+    "commit_headroom_floor_bytes": 34359738368,
+    "may_replace_phase6fz_or_formal_limits": false,
+    "may_be_raised_after_runtime": false
+  },
+  "metadata": {
+    "expected_handle_count": 7,
+    "labels": ["handle[0]", "handle[1]", "handle[2]", "handle[3]", "handle[4]", "handle[5]", "handle[6]"],
+    "sequential_processing_and_release": true,
+    "full_field_json_allowed": false,
+    "full_field_npz_allowed": false,
+    "numpy_asarray_allowed": false,
+    "maximum_handles": 16,
+    "per_handle_temporary_file_limit_bytes": 268435456,
+    "total_temporary_file_limit_bytes": 536870912
+  },
+  "mapping_gate": {
+    "require_unique_changed_index": true,
+    "require_other_indices_metadata_unchanged": true,
+    "require_one_to_one_enable_correspondence": true,
+    "require_identical_payload_geometry_point_and_source_hashes": true,
+    "ambiguous_or_multiple_difference": "safe_stop_unknown",
+    "value_range_or_appearance_is_evidence": false
+  },
+  "next_condition_gate": {
+    "functional_status": "pass",
+    "lifecycle_status": "normal_exit",
+    "normal_exit_sample_accepted": true,
+    "process_exit_code": 0,
+    "exact_cleanup_required": true,
+    "residual_process_count": 0,
+    "replacement_allowed": false,
+    "retry_allowed": false
+  },
+  "candidate_schema": {
+    "allowed_only_if_mapping_unambiguous": true,
+    "kit_version": "110.2.0+feature.342835.698af100.gl",
+    "flow_version": "110.0.0",
+    "legacy_six_schema_implicitly_compatible": false,
+    "future_or_unknown_schema": "fail_closed"
+  },
+  "prohibited_followup": [
+    "formal S93 channel preflight",
+    "formal S93/S100/OFF population",
+    "directional flux or deep velocity",
+    "comparison capture or video",
+    "production Point integration",
+    "production defaults or resource-limit changes"
+  ],
+  "production_changed": false
+}

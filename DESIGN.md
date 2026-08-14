@@ -1,5 +1,17 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6GE public color-export slot diagnostic
+
+Phase 6GDの履歴と16 GiB resource safe stopを凍結したまま、handle 6識別
+だけにKit 20 GiB／unique tree 21 GiB、runner/diagnostic各512 MiB、
+physical/commit floor各32 GiBを許可する診断専用contractを事前固定した。
+通常のPhase 6FZ／正式比較16/17 GiB契約は不変である。C0 baseline、C1
+RGBA-only、C2 RGB-onlyをfresh processで順番に実行し、frame 180の最初の
+readbackを7つの未命名handleとして逐次metadata化・解放する。次条件には
+functional pass、normal exit、accepted sample、exit 0、exact cleanup、
+residual 0を全て要求する。詳細は
+`docs/design/phase6ge_color_slot_diagnostic.md`。
+
 # Phase 6GD public NanoVDB channel schema discovery
 
 Phase 6GC remains frozen at its seven-handle pre-indexing safe stop. Phase 6GD

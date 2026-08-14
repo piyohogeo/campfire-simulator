@@ -1,5 +1,14 @@
 # Changelog
 
+- Declared the independent Phase 6GE color-export-slot diagnostic without
+  retrying or reclassifying Phase 6GD. Only C0 baseline, C1 RGBA-only, and C2
+  RGB-only receive temporary 20 GiB Kit / 21 GiB tree ceilings and 32 GiB
+  physical/commit floors; the qualified formal 16/17 GiB contract is unchanged.
+- Reused the bounded sequential metadata probe and release-after-close path,
+  removed only the unnecessary post-metadata observation for this diagnostic,
+  and added an eight-case fail-closed next-condition fixture covering all
+  functional, lifecycle, OS-exit, cleanup, and residual axes.
+
 - Added the Phase 6GD bounded seven-handle metadata baseline and a separately
   frozen, one-variable divergence/RGBA/RGB control contract. The baseline does
   not assign semantic names and the S93/S100/OFF population remains stopped.

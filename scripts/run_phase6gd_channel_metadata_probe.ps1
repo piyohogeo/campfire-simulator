@@ -2,7 +2,9 @@ param(
     [Parameter(Mandatory = $true)][string]$OutputRoot,
     [string]$DiscoveryContractPath = "",
     [ValidateSet("baseline", "divergence", "rgba", "rgb")][string]$Control = "baseline",
-    [string]$ControlContractPath = ""
+    [string]$ControlContractPath = "",
+    [string]$DiagnosticResourceContractPath = "",
+    [ValidateSet("phase6gd", "phase6ge")][string]$ReportPhase = "phase6gd"
 )
 
 $ErrorActionPreference = "Stop"
@@ -45,6 +47,57 @@ if (((Get-Content -Encoding UTF8 $baseHashPath | Select-Object -First 1) -split 
 }
 $base = Get-Content -Raw -Encoding UTF8 $baseContractPath | ConvertFrom-Json
 
+$diagnosticResourceContract = $null
+$diagnosticResourceContractHash = $null
+$limits = $base.safety
+$sampleFrames = "60,120,180,240"
+$stabilityObservationStartFrame = 240
+$stabilityObservationExtraSeconds = 5
+if (-not [string]::IsNullOrWhiteSpace($DiagnosticResourceContractPath)) {
+    $diagnosticResourceContractPath = [IO.Path]::GetFullPath($DiagnosticResourceContractPath)
+    $diagnosticHashPath = [IO.Path]::ChangeExtension($diagnosticResourceContractPath, ".sha256")
+    $expectedDiagnosticHash = ((Get-Content -Encoding UTF8 $diagnosticHashPath | Select-Object -First 1) -split '\s+')[0].ToUpperInvariant()
+    $diagnosticResourceContractHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $diagnosticResourceContractPath).Hash
+    if ($diagnosticResourceContractHash -ne $expectedDiagnosticHash) { throw "Phase 6GE diagnostic resource contract hash mismatch" }
+    $diagnosticResourceContract = Get-Content -Raw -Encoding UTF8 $diagnosticResourceContractPath | ConvertFrom-Json
+    if ($ReportPhase -ne "phase6ge" -or
+        $diagnosticResourceContract.schema -ne "campfire.phase6ge.color-slot-diagnostic-contract.v1" -or
+        -not $diagnosticResourceContract.diagnostic_resource_limits.temporary_only -or
+        $diagnosticResourceContract.diagnostic_resource_limits.may_replace_phase6fz_or_formal_limits) {
+        throw "Phase 6GE diagnostic resource contract scope is invalid"
+    }
+    $resource = $diagnosticResourceContract.diagnostic_resource_limits
+    $expectedResources = @{
+        kit_private_limit_bytes = 21474836480
+        unique_tree_private_limit_bytes = 22548578304
+        runner_private_limit_bytes = 536870912
+        diagnostic_private_limit_bytes = 536870912
+        physical_memory_floor_bytes = 34359738368
+        commit_headroom_floor_bytes = 34359738368
+    }
+    foreach ($name in $expectedResources.Keys) {
+        if ([int64]$resource.$name -ne [int64]$expectedResources[$name]) {
+            throw "Phase 6GE diagnostic resource value mismatch: $name"
+        }
+    }
+    $limits = [pscustomobject]@{
+        runner_private_limit_bytes = [int64]$resource.runner_private_limit_bytes
+        diagnostic_private_limit_bytes = [int64]$resource.diagnostic_private_limit_bytes
+        kit_private_limit_bytes = [int64]$resource.kit_private_limit_bytes
+        unique_tree_private_limit_bytes = [int64]$resource.unique_tree_private_limit_bytes
+        physical_memory_floor_bytes = [int64]$resource.physical_memory_floor_bytes
+        commit_headroom_floor_bytes = [int64]$resource.commit_headroom_floor_bytes
+        outer_condition_timeout_seconds = [int]$base.safety.outer_condition_timeout_seconds
+        resource_sampling_seconds = [double]$base.safety.resource_sampling_seconds
+        gpu_sampling_ms = [int]$base.safety.gpu_sampling_ms
+        stage_close_timeout_seconds = [int]$base.safety.stage_close_timeout_seconds
+        inner_absolute_timeout_seconds = [int]$base.safety.inner_absolute_timeout_seconds
+    }
+    $sampleFrames = "60,120,180"
+    $stabilityObservationStartFrame = 180
+    $stabilityObservationExtraSeconds = 0
+}
+
 New-Item -ItemType Directory -Path $OutputRoot | Out-Null
 Copy-Item -LiteralPath $discoveryContractPath -Destination (Join-Path $OutputRoot "frozen_discovery_contract.json")
 Copy-Item -LiteralPath $discoveryHashPath -Destination (Join-Path $OutputRoot "frozen_discovery_contract.sha256")
@@ -53,6 +106,10 @@ Copy-Item -LiteralPath $baseHashPath -Destination (Join-Path $OutputRoot "frozen
 if ($null -ne $controlContract) {
     Copy-Item -LiteralPath $controlContractPath -Destination (Join-Path $OutputRoot "frozen_control_contract.json")
     Copy-Item -LiteralPath $controlHashPath -Destination (Join-Path $OutputRoot "frozen_control_contract.sha256")
+}
+if ($null -ne $diagnosticResourceContract) {
+    Copy-Item -LiteralPath $diagnosticResourceContractPath -Destination (Join-Path $OutputRoot "frozen_diagnostic_resource_contract.json")
+    Copy-Item -LiteralPath ([IO.Path]::ChangeExtension($diagnosticResourceContractPath, ".sha256")) -Destination (Join-Path $OutputRoot "frozen_diagnostic_resource_contract.sha256")
 }
 
 $productionApp = Join-Path $repo "_build\windows-x86_64\release\apps\campfire.simulator.kit"
@@ -64,7 +121,7 @@ $logs = Join-Path $attemptRoot "runner-logs"
 New-Item -ItemType Directory -Path $logs -Force | Out-Null
 $attemptMetadata = [ordered]@{
     schema = "campfire.phase6gd.attempt-metadata.v1"
-    phase = "phase6gd"
+    phase = $ReportPhase
     attempt_id = $attemptId
     condition = "S93"
     discovery_only = $true
@@ -97,17 +154,17 @@ $arguments = @(
     "-Scenario", $base.fixture.scenario, "-OutputDir", $caseDir,
     "-OffsetM", "$($base.fixture.point_offset_m)", "-SupportRadiusM", "$($base.fixture.support_radius_assumption_m)",
     "-Filtering", "true", "-Collision", "true", "-Policy", $base.conditions.S93.policy,
-    "-ReportPhase", "phase6gd", "-GeometryVariant", $base.fixture.geometry.runtime_token,
+    "-ReportPhase", $ReportPhase, "-GeometryVariant", $base.fixture.geometry.runtime_token,
     "-ExpectedGeometryConcept", $base.fixture.geometry.concept, "-ProbePath", $probe,
     "-FuelScale", "1", "-TemperatureScale", "1", "-SmokeScale", "1",
-    "-SampleFrames", "60,120,180,240", "-OperationFrames", "180", "-ReadbackFrames", "180",
+    "-SampleFrames", $sampleFrames, "-OperationFrames", "180", "-ReadbackFrames", "180",
     "-ReadbackChannels", "temperature", "-ReadbackMode", "p3_spatial_release",
     "-ReferenceDisposal", "del", "-SynchronousMemoryMarkers", "true", "-PythonMemoryTelemetry", "true",
     "-SpatialCollectorsEnabled", "true", "-SpatialColliderIndices", "2", "-SpatialAllChannels",
     "-RunIndex", "0", "-LifecycleCalibration", "-RendererDrainUpdates", "8",
     "-LifecycleReferenceReleaseOrder", "after_stage_close",
-    "-StageCloseTimeoutSeconds", "$($base.safety.stage_close_timeout_seconds)",
-    "-StabilityObservationStartFrame", "240", "-StabilityObservationExtraSeconds", "5",
+    "-StageCloseTimeoutSeconds", "$($limits.stage_close_timeout_seconds)",
+    "-StabilityObservationStartFrame", "$stabilityObservationStartFrame", "-StabilityObservationExtraSeconds", "$stabilityObservationExtraSeconds",
     "-StabilityActiveBlockSampleSeconds", "0.5", "-FlowLivenessAudit", "true",
     "-StartupProbe", "true", "-StartupProbeLabel", $attemptId,
     "-StartupFlowAcquirePosition", "before_updates", "-StartupPreTimelineUpdateCount", "12",
@@ -117,13 +174,12 @@ $arguments = @(
     "-StartupSourceSumTolerance", "$($base.channel_preflight.startup_source_sum_absolute_tolerance)",
     "-StartupSourceContractMode", $base.source_contract.mode,
     "-ChannelSchemaControl", $Control,
-    "-AbsoluteTimeoutSeconds", "$($base.safety.inner_absolute_timeout_seconds)",
+    "-AbsoluteTimeoutSeconds", "$($limits.inner_absolute_timeout_seconds)",
     "-ImportAuditPath", (Join-Path $caseDir "kit_import_audit.json"),
     "-MeasurementCommitAck", (Join-Path $caseDir "memory-measurement\measurement_commit.ack"),
     "-MeasurementCommitFailure", (Join-Path $caseDir "memory-measurement\measurement_commit.failed"),
     "-MeasurementCommitTimeoutSeconds", "$($base.artifact_commit.probe_wait_timeout_seconds)"
 )
-$limits = $base.safety
 $guardArgs = @(
     $guard, "--trace", (Join-Path $logs "S93_support_clear.resource.jsonl"),
     "--summary", (Join-Path $logs "S93_support_clear.guard.json"),
@@ -179,12 +235,15 @@ if ((Get-FileHash -Algorithm SHA256 -LiteralPath $productionApp).Hash -ne $produ
 $rawPath = Join-Path $caseDir "raw.json"
 $metadataPath = Join-Path $caseDir "channel-schema-metadata\bounded_handle_metadata.json"
 $runnerEvidencePath = Join-Path $caseDir "runner_evidence.json"
-if (-not (Test-Path -LiteralPath $rawPath) -or -not (Test-Path -LiteralPath $metadataPath) -or -not (Test-Path -LiteralPath $runnerEvidencePath)) {
+$guardEvidencePath = Join-Path $logs "S93_support_clear.guard.json"
+if (-not (Test-Path -LiteralPath $rawPath) -or -not (Test-Path -LiteralPath $metadataPath) -or
+    -not (Test-Path -LiteralPath $runnerEvidencePath) -or -not (Test-Path -LiteralPath $guardEvidencePath)) {
     throw "Phase 6GD bounded metadata artifacts are incomplete"
 }
 $raw = Get-Content -Raw -Encoding UTF8 $rawPath | ConvertFrom-Json
 $metadata = Get-Content -Raw -Encoding UTF8 $metadataPath | ConvertFrom-Json
 $runnerEvidence = Get-Content -Raw -Encoding UTF8 $runnerEvidencePath | ConvertFrom-Json
+$guardEvidence = Get-Content -Raw -Encoding UTF8 $guardEvidencePath | ConvertFrom-Json
 if ($raw.status -ne "ok" -or $raw.lifecycle_marker -ne "shutdown_complete") {
     throw "Phase 6GD metadata probe did not complete lifecycle"
 }
@@ -193,6 +252,11 @@ if ($runnerEvidence.outcome.functional_status -ne "pass" -or
     -not $runnerEvidence.outcome.normal_exit_sample_accepted -or
     $null -eq $runnerEvidence.process_exit_code -or [int]$runnerEvidence.process_exit_code -ne 0) {
     throw "Phase 6GD metadata process failed the frozen functional/lifecycle/OS-exit axes"
+}
+if ($guardEvidence.status -ne "ok" -or [int]$guardEvidence.exit_code -ne 0 -or
+    -not $guardEvidence.observed_process_cleanup.all_observed_absent -or
+    $runnerEvidence.shutdown_monitor.residual_process) {
+    throw "Phase 6GD metadata process failed the frozen diagnostic/cleanup axes"
 }
 if ($metadata.formal_channel_names_assigned -or $metadata.full_field_json_or_npz_written) {
     throw "Phase 6GD discovery probe violated bounded scope"
@@ -203,19 +267,22 @@ if ($metadata.returned_handle_count -lt 1 -or $metadata.returned_handle_count -g
 
 $summary = [ordered]@{
     schema = "campfire.phase6gd.channel-schema-discovery-summary.v1"
-    phase = "phase6gd"
+    phase = $ReportPhase
     status = "metadata_complete_mapping_pending"
     discovery_contract_sha256 = $actualDiscoveryHash
     base_contract_sha256 = $actualBaseHash
     returned_handle_count = [int]$metadata.returned_handle_count
     channel_schema_control = $Control
     control_contract_sha256 = $controlContractHash
+    diagnostic_resource_contract_sha256 = $diagnosticResourceContractHash
     metadata_path = $metadataPath
     metadata_sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $metadataPath).Hash
     lifecycle_marker = [string]$raw.lifecycle_marker
     functional_status = [string]$runnerEvidence.outcome.functional_status
     lifecycle_status = [string]$runnerEvidence.outcome.lifecycle_status
     os_process_normal_exit = [bool]$runnerEvidence.outcome.os_process_normal_exit
+    exact_cleanup = [bool]$guardEvidence.observed_process_cleanup.all_observed_absent
+    residual_process = [bool]$runnerEvidence.shutdown_monitor.residual_process
     production_sha256 = $productionBefore
     formal_population_started = $false
     timestamp_utc = [DateTime]::UtcNow.ToString("o")
