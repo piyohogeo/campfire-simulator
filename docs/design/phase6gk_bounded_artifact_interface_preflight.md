@@ -68,3 +68,39 @@ exit-code propagation, and the frozen Phase 6GJ raw-artifact round trip (SHA-256
 The Phase 6GJ artifact was read only. Runtime preflight remains gated on the
 state-aware alias/schema fixture and startup replacement fixture as well.
 
+## Runtime result
+
+All pre-Kit gates passed: state-aware schema/alias 22/22, bounded artifact
+interface 10/10, and startup replacement 12/12. One fresh process was launched;
+it was representative from frame 1, needed no replacement, and reported active
+blocks 688/1,118/1,329 at frames 60/120/180. The single frame-180 public
+readback returned the exact seven-handle order. Handles 0--5 were nonempty
+same-object aliases with required shared memory and schema metadata. Disabled
+RGBA was the same zero-element, zero-byte object, created no copy, and correctly
+did not require shared-memory overlap. Ordered release left zero weak-reference
+or ownership-container residual.
+
+Both runtime bounded artifacts use only the canonical property with value
+false. The shared runner recorded normalization mode `canonical_only`, no
+compatibility conversion, and explicit interface pass. There were zero
+`np.asarray` calls, material copies, or JSON/NPZ/OpenVDB field-body writes.
+The versioned schema
+`flow110.0.0-kit110.2-public-readback-rgba7-v1` is therefore formally
+public-channel-preflight-qualified for this fixed S93 condition.
+
+Kit/tree peaks were 15,106,207,744 / 15,271,022,592 bytes, leaving
+2,073,661,440 / 2,982,588,416 bytes below 16/17 GiB. Runner/diagnostic peaks
+were 129,908,736 / 16,207,872 bytes. Minimum physical and commit headroom were
+83,184,029,696 / 102,789,419,008 bytes. Stage close took 3.052436 seconds;
+functional pass, lifecycle `normal_exit`, OS exit 0, `shutdown_complete`, exact
+cleanup, and residual zero all held. CDB was not invoked and fatal, dump,
+upload, device-lost, and TDR counts were zero.
+
+Release build, Phase 0 RTX, Phase 3 with zero dry/wet mass-balance error and
+wood-owned Flow input (active blocks final/peak 239/353), focused Phase 6F
+212/212, focused Phase 6G 58/58, and standard 78/78 passed. Production and
+latest-demo hashes are unchanged. Devlog validation passed 488 references, 291
+unique IDs, 243 JSON files, 177 SVG files, and two ZIP files. Formal
+S93/S100/OFF, flux, deep velocity, video, production, defaults, Point
+placement, V3, P4, and dynamic geometry were not started. Resuming them
+requires a separate explicit authorization and a new artifact root.

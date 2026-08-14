@@ -7,8 +7,15 @@
   nonboolean, or true values fail closed.
 - Passed the shared-runner end-to-end interface fixture 10/10, including the
   frozen Phase 6GJ raw-artifact round trip and child-to-parent exit-code
-  propagation. One fresh S93 preflight remains gated; formal S93/S100/OFF and
-  production are still unstarted.
+  propagation. The fresh S93 preflight then passed in one launch with no
+  replacement: representative startup, exact seven-handle schema, six
+  nonempty shared aliases, valid empty RGBA alias, canonical-only interface,
+  normal exit, exact cleanup, and zero residual.
+- Formally marked schema
+  `flow110.0.0-kit110.2-public-readback-rgba7-v1` public-channel-preflight-
+  qualified for the fixed S93 condition. Kit/tree peaks were
+  15,106,207,744 / 15,271,022,592 bytes and stage close took 3.052436 seconds.
+  Formal S93/S100/OFF, flux, video, and production remain unstarted.
 
 - Froze the Phase 6GJ empty-RGBA alias contract before runtime. Nonempty
   handles retain same-object plus shared-memory requirements; a disabled empty

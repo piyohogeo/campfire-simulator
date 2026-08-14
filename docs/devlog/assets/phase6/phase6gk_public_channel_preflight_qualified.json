@@ -1,0 +1,72 @@
+{
+  "schema": "campfire.phase6gk.public-channel-preflight-qualified.v1",
+  "phase": "phase6gk",
+  "status": "qualified",
+  "contract_sha256": "849D5F778073977EF105DC2A1D63BADA96E56BC06A76820D1F17F458BF12E42E",
+  "public_channel_schema": {
+    "schema_id": "flow110.0.0-kit110.2-public-readback-rgba7-v1",
+    "candidate_definition_sha256": "06BAF639E07E7585CB6ED79FFBA6229EA118F450A34BAD1F3EC1228EA59DD8B9",
+    "qualification": "formal_public_channel_preflight",
+    "flow_version": "110.0.0",
+    "kit_version": "110.2.0+feature.342835.698af100.gl",
+    "volume_version": "0.5.2",
+    "api": "omni.flowusd._flowusd.IFlowUsd.get_latest_nanovdb_readback",
+    "exact_order": ["temperature", "fuel", "burn", "smoke", "velocity", "divergence", "rgba"],
+    "handles": [
+      {"index": 0, "channel": "temperature", "state": "nonempty", "dtype": "uint32", "elements": 11910336, "logical_bytes": 47641344, "grid_class": 2, "value_type": "1", "same_object": true, "shares_memory": true, "weak_residual": false},
+      {"index": 1, "channel": "fuel", "state": "nonempty", "dtype": "uint32", "elements": 11910336, "logical_bytes": 47641344, "grid_class": 2, "value_type": "1", "same_object": true, "shares_memory": true, "weak_residual": false},
+      {"index": 2, "channel": "burn", "state": "nonempty", "dtype": "uint32", "elements": 11910336, "logical_bytes": 47641344, "grid_class": 2, "value_type": "1", "same_object": true, "shares_memory": true, "weak_residual": false},
+      {"index": 3, "channel": "smoke", "state": "nonempty", "dtype": "uint32", "elements": 11910336, "logical_bytes": 47641344, "grid_class": 2, "value_type": "1", "same_object": true, "shares_memory": true, "weak_residual": false},
+      {"index": 4, "channel": "velocity", "state": "nonempty", "dtype": "uint32", "elements": 5415112, "logical_bytes": 21660448, "grid_class": 0, "value_type": "6", "same_object": true, "shares_memory": true, "weak_residual": false},
+      {"index": 5, "channel": "divergence", "state": "nonempty", "dtype": "uint32", "elements": 2072416, "logical_bytes": 8289664, "grid_class": 2, "value_type": "1", "same_object": true, "shares_memory": true, "weak_residual": false},
+      {"index": 6, "channel": "rgba", "state": "empty", "dtype": "uint32", "elements": 0, "logical_bytes": 0, "grid_class": null, "value_type": null, "same_object": true, "shares_memory": false, "shares_memory_required": false, "material_copy": false, "weak_residual": false}
+    ]
+  },
+  "bounded_artifact_interface": {
+    "canonical_property": "field_body_json_npz_or_openvdb_written",
+    "legacy_property": "full_field_json_or_npz_written",
+    "runtime_emitted_canonical_only": true,
+    "runtime_normalization_mode": "canonical_only",
+    "compatibility_normalization_applied": false,
+    "normalized_value": false,
+    "fixture": "10/10",
+    "phase6gj_raw_round_trip_sha256": "6CFA176358215331B42A15057CAD27DC095E4B22B39940F8436EF70B1257D3DB"
+  },
+  "preflight": {
+    "launches": 1, "replacements": 0, "accepted": 1,
+    "startup": "representative_ingestion", "first_representative_frame": 1,
+    "active_blocks": {"frame_60": 688, "frame_120": 1118, "frame_180": 1329},
+    "public_readback_calls": 1, "returned_handles": 7,
+    "numpy_asarray_calls": 0, "material_copies": 0, "field_body_writes": 0,
+    "weak_reference_residual": 0, "ownership_container_residual": 0
+  },
+  "lifecycle": {
+    "functional_status": "pass", "lifecycle_status": "normal_exit", "process_exit_code": 0,
+    "stage_close_seconds": 3.052436, "shutdown_complete": true, "cdb_invoked": false,
+    "fatal": 0, "dump": 0, "automatic_upload": 0, "device_lost": 0, "tdr": 0,
+    "exact_cleanup": true, "residual_process": 0
+  },
+  "resource": {
+    "kit_peak_bytes": 15106207744, "kit_limit_bytes": 17179869184, "kit_margin_bytes": 2073661440,
+    "tree_peak_bytes": 15271022592, "tree_limit_bytes": 18253611008, "tree_margin_bytes": 2982588416,
+    "runner_peak_bytes": 129908736, "diagnostic_peak_bytes": 16207872,
+    "minimum_available_physical_bytes": 83184029696, "minimum_commit_headroom_bytes": 102789419008
+  },
+  "authorization": {
+    "formal_s93_s100_off_population_started": false,
+    "spatial_flux_or_deep_velocity_started": false,
+    "video_created": false, "production_changed": false,
+    "next_step_requires_explicit_approval": true
+  },
+  "regression": {
+    "release_build": "pass", "phase0_rtx": "pass",
+    "phase3": {"status": "pass", "dry_mass_balance_error_kg": 0.0, "wet_mass_balance_error_kg": 0.0, "flow_input_owner": "wood thermal model", "active_blocks_final": 239, "active_blocks_peak": 353, "peak_fuel_input": 1.0},
+    "focused_phase6f": "212/212", "focused_phase6g": "58/58",
+    "standard_suite": "78/78 across 8 processes", "standard_suite_seconds": 309.3,
+    "devlog_validation": {"references": 488, "ids": 291, "json": 243, "svg": 177, "zip": 2},
+    "production_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "latest_demo_manifest_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285",
+    "latest_demo_video_sha256": "DC14693EB07116C145344675BD830A0D2B0179FB08DCB3B83EEFEFFA3970E90F",
+    "final_kit_cdb_gpu_helper_residual": 0
+  }
+}
