@@ -1,5 +1,12 @@
 # Changelog
 
+- Froze the Phase 6GY launch 23 user-intervention addendum without changing its
+  raw artifact or frozen report. Mechanism inference now explicitly uses the 31
+  unattended Candidate timeouts; launch 23 remains boundary-reference-only.
+- Added the Phase 6GZ fail-closed post-readback boundary ladder, read-only
+  GX/GY audit, durable fine-grained markers, exact temporary-file allowlist,
+  and no-Kit contract fixture. No formal population or production path changed.
+
 - Stopped Phase 6GY at the user-requested safe boundary after the already
   running condition completed. No launch 24 was started; the terminal root has
   23 fixed-order launches and an explicit `user_requested_safe_boundary`

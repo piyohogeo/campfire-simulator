@@ -1,5 +1,31 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6GZ post-readback boundary ladder (frozen before runtime)
+
+Phase 6GX and Phase 6GY remain frozen. Phase 6GY launch 23 is retained as
+user-intervention-contaminated raw evidence because a Kit hang dialog may have
+been answered and the Codex stop control was used before its 762.015542-second
+termination. It is not a naturally observed second Candidate outcome. The
+mechanism population is the 31 unattended Candidate timeouts (6GX 20, 6GY 11).
+
+The read-only audit proves a 47,641,541-byte temperature NanoVDB became durable
+after the seven-handle return. The code order implies schema preflight and the
+preceding velocity pipeline completed, but existing evidence does not resolve
+temperature typed read versus sampling/collector. Phase 6GZ therefore fixes a
+fresh-process prefix ladder: Control, temperature-front, volume, bounded volume
+metadata, save, typed read, sampling, collector. It preserves Candidate order,
+16/17 GiB limits, release-after-close, progress-aware CDB, and exact cleanup.
+There are no retries or replacements; the first non-normal result stops all
+later conditions. Formal comparison, other channels, video, and production are
+excluded. Detailed contract: `docs/design/phase6gz_post_readback_boundary_ladder.md`.
+
+# Phase 6GY launch 23 intervention addendum
+
+This addendum does not edit the frozen Phase 6GY report. Launch 23's raw
+`0xC0000005`, temporary file, and saved stack remain available only as boundary
+references. The source hashes and contamination statement are recorded in
+`docs/design/phase6gy_launch23_user_intervention_addendum.md`.
+
 # Phase 6GY user-requested safe boundary
 
 Phase 6GX remains frozen. Phase 6GY froze SHA-256

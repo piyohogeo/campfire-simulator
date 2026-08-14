@@ -1,0 +1,25 @@
+{
+  "schema": "campfire.phase6gy.user-intervention-addendum.v1",
+  "frozen_report_modified": false,
+  "launch": 23,
+  "condition": "B",
+  "raw_evidence_preserved": true,
+  "raw_elapsed_seconds": 762.015542,
+  "normal_unattended_candidate_timeout_seconds": "approximately 929 to 930",
+  "possible_kit_hang_dialog_interaction": true,
+  "codex_stop_control_used": true,
+  "mechanism_inference_classification": "user-intervention-contaminated",
+  "natural_access_violation_outcome_claim_allowed": false,
+  "boundary_reference_allowed": true,
+  "primary_unintervened_population": {
+    "phase6gx_candidate_timeouts": 20,
+    "phase6gy_candidate_timeouts": 11,
+    "total": 31
+  },
+  "frozen_sha256": {
+    "artifacts/phase6gy-repetition-1/aggregate_report.json": "A7E39CCDBBC74B29C00DC1B3FD866C9FC738EFB4CB9BC49F3E30EF85C9330B2A",
+    "artifacts/phase6gy-repetition-1/aggregate.jsonl": "297CCF80A9745DD35516BDF3B12A0056D5798205D00196E3D3F45E5F504B738D",
+    "docs/design/phase6gy_user_requested_boundary.md": "152B2EC9B3095D3AD31228E916E21DDB49029EEC3C4EBF0E99E250E1D6F07490",
+    "docs/devlog/assets/phase6/phase6gy_user_requested_boundary.json": "98B5922D695FBBBFAF7B026E036DA3B32740F10F3D3C1917D34C76A94B3589C5"
+  }
+}

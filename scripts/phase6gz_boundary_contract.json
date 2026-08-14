@@ -1,0 +1,96 @@
+{
+  "schema": "campfire.phase6gz.boundary-ladder-contract.v1",
+  "phase": "phase6gz",
+  "frozen_before_runtime": true,
+  "historical_artifacts_read_only": [
+    "artifacts/phase6gx-repetition-1",
+    "artifacts/phase6gy-repetition-1"
+  ],
+  "historical_evidence_policy": {
+    "primary_unintervened_candidate_timeouts": {
+      "phase6gx": 20,
+      "phase6gy": 11,
+      "total": 31
+    },
+    "phase6gy_launch23": {
+      "classification_for_mechanism_inference": "user-intervention-contaminated",
+      "recorded_elapsed_seconds": 762.015542,
+      "normal_candidate_timeout_seconds": "approximately 929 to 930",
+      "possible_hang_dialog_interaction": true,
+      "codex_stop_button_used": true,
+      "raw_evidence_preserved": true,
+      "natural_second_outcome_claim_allowed": false,
+      "boundary_reference_only": true
+    },
+    "frozen_phase6gx_phase6gy_reports_modified": false
+  },
+  "physical_condition": {
+    "scenario": "production_four",
+    "geometry_variant": "phase6er_corrected",
+    "geometry_concept": "corrected",
+    "policy": "allow_self_center",
+    "collision": true,
+    "offset_m": -0.0125,
+    "support_radius_m": 0.05,
+    "active_points": 1344,
+    "total_points": 1440,
+    "frame": 180,
+    "readback_calls": 1,
+    "channel_order": ["temperature", "fuel", "burn", "smoke", "velocity", "divergence", "rgba"],
+    "requested_processing_order": ["velocity", "temperature", "smoke", "fuel"],
+    "export_state": {
+      "temperature": true,
+      "fuel": true,
+      "burn": true,
+      "smoke": true,
+      "velocity": true,
+      "divergence": true,
+      "rgba": false,
+      "rgb": false
+    }
+  },
+  "ladder": [
+    {"name": "control_r2", "kind": "control", "mode": "R2", "level": -1},
+    {"name": "candidate_temperature_front", "kind": "candidate", "mode": "R0", "level": 0},
+    {"name": "candidate_temperature_volume", "kind": "candidate", "mode": "R1", "level": 1},
+    {"name": "candidate_temperature_volume_metadata", "kind": "candidate", "mode": "R2", "level": 2},
+    {"name": "candidate_temperature_save", "kind": "candidate", "mode": "R3", "level": 3},
+    {"name": "candidate_temperature_typed_read", "kind": "candidate", "mode": "R4", "level": 4},
+    {"name": "candidate_temperature_sampling", "kind": "candidate", "mode": "R5", "level": 5},
+    {"name": "candidate_temperature_collector", "kind": "candidate", "mode": "R6", "level": 6}
+  ],
+  "execution": {
+    "independent_process_per_condition": true,
+    "maximum_launches": 8,
+    "retries": 0,
+    "replacements": 0,
+    "stop_after_first_non_normal_result": true,
+    "no_automatic_followup": true,
+    "same_process_kit_count": 1,
+    "stage_close_timeout_seconds": 180,
+    "absolute_condition_timeout_seconds": 1020
+  },
+  "safety": {
+    "kit_private_limit_bytes": 17179869184,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "available_physical_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "temporary_file_allowlist": [
+      "handle_0.nvdb", "handle_1.nvdb", "handle_2.nvdb", "handle_3.nvdb",
+      "handle_4.nvdb", "handle_5.nvdb", "handle_6.nvdb",
+      "p3_f0180_velocity.nvdb", "p3_f0180_temperature.nvdb"
+    ],
+    "unknown_temporary_file_policy": "do_not_delete_and_fail_cleanup",
+    "crash_upload": false,
+    "release_order": "after_stage_close",
+    "cdb_contract": "phase6fr_progress_aware_stack_first",
+    "exact_cleanup": "phase6fu_with_phase6fw_pid_reuse_policy"
+  },
+  "prohibitions": [
+    "production_change", "default_change", "point_policy_change", "v3", "p4",
+    "formal_s93_s100_off", "video", "other_channel_extension", "forced_gc",
+    "retry", "replacement", "six_hour_population"
+  ]
+}
