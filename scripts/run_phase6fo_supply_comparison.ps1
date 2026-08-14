@@ -78,7 +78,10 @@ if($isGuardedPhase) {
         $bounded = Get-Content -Raw -Encoding UTF8 (Join-Path $preflightRoot "bounded-artifact-fixtures\summary.json") | ConvertFrom-Json
         if (-not $bounded.all_pass -or $bounded.total -ne 10) { throw "Phase 6GL bounded artifact fixture failed" }
     }
-    if ($phase -in @("phase6gm", "phase6gn")) {
+    $requiresQualifiedExportState = $false
+    if ($phase -eq "phase6gm") { $requiresQualifiedExportState = $true }
+    elseif ($phase -eq "phase6gn") { $requiresQualifiedExportState = $true }
+    if ($requiresQualifiedExportState) {
         $descriptorPath = Join-Path $PSScriptRoot "phase6gm_flow_export_state_descriptor.json"
         if ((Get-FileHash -Algorithm SHA256 -LiteralPath $descriptorPath).Hash -ne [string]$contract.flow_export_state.descriptor_file_sha256) { throw "Phase 6GM export descriptor file hash mismatch" }
         & (Join-Path $PSScriptRoot "run_phase6gm_export_state_fixtures.ps1") -OutputRoot (Join-Path $preflightRoot "offline-export-state-fixtures")

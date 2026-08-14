@@ -1,5 +1,20 @@
 # Changelog
 
+- Froze Phase 6GN as a nonreplaceable native operation/lifecycle safe stop.
+  Every inherited pre-Kit gate and the exact-wrapper smoke passed, proving the
+  Phase 6GM module-as-callable import defect fixed. Fresh attempt01 S93 reached
+  representative frame 180 and returned the qualified seven public handles,
+  then Kit exited with access violation `0xC0000005` before spatial results or
+  pre-close evidence could be committed. No retry or later slot was started.
+- Preserved fatal 1, bounded dump 1, automatic upload 0, and the low-confidence
+  `omni.kit.app.plugin!carbOnPluginQuickShutdown` crash frames. CDB was not
+  invoked because the process exited rather than entering the stage-close
+  timeout path. Exact cleanup left zero residual.
+- Kit/tree peaks were 15,326,326,784 / 15,478,104,064 bytes, inside 16/17 GiB.
+  Release build, Phase 0 RTX, Phase 3, focused Phase 6G 71/71, and standard
+  suite 78/78 passed. No numeric pair result, video, candidate, or production
+  change was produced.
+
 - Froze Phase 6GN before runtime as a type-aware exact-wrapper import and fresh
   S93/S100/OFF comparison Phase. Phase 6GM remains a 0/9 import safe stop; its
   900-second Kit residual and partial CDB evidence are not reclassified or

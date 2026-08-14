@@ -3920,3 +3920,25 @@ S93/S100/OFF population. Phase 6GM evidence is never reused. Production,
 defaults, Point policy, V3, P4, PhysX sharing, dynamic transform, geometry,
 20-log performance, fire lighting, and video before numeric qualification remain
 out of scope.
+
+# Phase 6GN exact-wrapper comparison safe stop
+
+Phase 6GNのexact-wrapper smokeはstandalone／formal rootとも5/5合格し、
+`shared`はmoduleとして正しいpath・型・使用属性を満たした。wrapper patchと
+Phase 6GK-derived export descriptorも一致したため、Phase 6GMのimport不具合は
+この新Phaseの境界では解消した。
+
+正式attempt01 S93はframe 180でactive blocks 1,329、1,344/1,440 Point、
+payload-native source一致、public handle 7件まで確認した。しかし最後のdurable
+marker `phase6gl_readback_after`の後、spatial resultやpre-close artifactを保存する
+前にKitがaccess violation `0xC0000005`で終了した。fatal 1、bounded dump 1、
+automatic upload 0である。crash reporterの低信頼frameは
+`omni.kit.app.plugin!carbOnPluginQuickShutdown`境界を示すが、根本原因やownerを
+確定する証拠ではない。
+
+Kit/tree peakは`15,326,326,784 / 15,478,104,064 bytes`で16/17 GiB内、exact
+cleanupは観測37 identityの消滅とresidual 0を確認した。processはstage close前に
+crashしておりCDB timeout経路は未発動である。このfailureは置換不可なのでlaunch
+1、accepted 0/9、replacement 0で停止し、後続、pair、flux、deep/boundary、動画、
+candidate選択、production変更を開始しない。Phase 6GNは凍結し、再開にはnative
+access violationを隔離する別承認Phase、新contract、新rootが必要である。

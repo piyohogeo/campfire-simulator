@@ -64,3 +64,33 @@ Import and every non-startup failure are nonreplaceable.
 Comparison video remains forbidden until numeric 9/9 qualification. Even then,
 this Phase may report only an S93 or S100 candidate; production integration and
 default changes remain out of scope.
+
+## Runtime result: safe stop
+
+All inherited pre-Kit gates and the exact-wrapper app-ready smoke passed. The
+standalone and formal-root exact smokes each completed 5/5, including the exact
+wrapper import, module/path/type contract, patch wiring, immutable descriptor,
+three negative cases, exit code 29 propagation, and zero residual. The formal
+attempt01 therefore started with the import defect fixed.
+
+The first fresh S93 process reached representative frame 180 with 1,329 active
+blocks, an exact 1,344/1,440 payload, and the expected payload-native source
+sums. Public readback returned seven handles. The last durable marker is
+`phase6gl_readback_after`; no spatial result or pre-close measurement artifact
+was committed after it. Kit subsequently exited with Windows access violation
+`0xC0000005`. The crash reporter recorded one fatal and one bounded dump, with
+no automatic upload. Its low-confidence backtrace is in
+`omni.kit.app.plugin.dll!carbOnPluginQuickShutdown`, then `ucrtbase!recalloc`;
+this does not establish the originating owner or operation.
+
+The failure occurred before timeline stop or stage close, so it is not a
+release-after-close result and the stage-close CDB path was not invoked. Kit and
+tree peaks were 15,326,326,784 and 15,478,104,064 bytes, inside the 16/17 GiB
+limits. Exact identity cleanup confirmed all 37 observed attempt identities
+absent and final residual zero.
+
+This is a nonreplaceable native operation/lifecycle safe stop: launched 1,
+accepted 0/9, replacements 0. No later condition, paired metric, directional
+flux, deep/boundary result, comparison video, candidate selection, or production
+change was started. A future Phase requires separate approval and a new root to
+isolate the frame-180 post-readback access violation; Phase 6GN is not retried.

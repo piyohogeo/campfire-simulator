@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6gm">最新記録</a>
+        <a href="#phase-6gn">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6gm">Phase 6GMの結果を読む</a>
+        <a class="button primary" href="#phase-6gn">Phase 6GNの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6GM · app-ready import safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6GN · native operation safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,17 @@
   </header>
 
   <main>
+    <section id="phase-6gn" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6GN exact-wrapper formal comparison safe stop"><span class="phase-number compact">6GN</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">1/9 launch · safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6GN · exact-wrapper S93/S100/OFF</p><h2>The import boundary is qualified;<br>the first spatial run crashed after readback.</h2><p>The type-aware wrapper validates <code>shared</code> as an exact module and validates only consumed functions as callable. Every inherited preflight passed, then fresh attempt01 reached the first seven-handle readback before a native access violation stopped the population.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Import evidence</p><h3>Exact wrapper smoke passed 5/5.</h3><p>Positive import and patch wiring, wrong path, legacy shared-as-callable, missing attribute, and exact exit-code propagation all behaved as frozen. The formal process audit also passed the module type/path/attribute contract and immutable export descriptor.</p></section><section class="note caution"><p class="note-label">Active safe stop</p><h3>Access violation after frame-180 readback.</h3><p>S93 reached 1,329 active blocks with the exact 1,344/1,440 payload and returned seven handles. After <code>phase6gl_readback_after</code>, Kit exited <code>0xC0000005</code> before spatial results or pre-close commit. Fatal 1 and bounded dump 1 are retained; automatic upload was zero.</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Resource and cleanup</p><h3>Limits held; exact cleanup removed every attempt identity.</h3><p>Kit/tree peaks were 15,326,326,784 / 15,478,104,064 bytes, leaving 1,853,542,400 / 2,775,506,944 bytes below 16/17 GiB. The crash preceded stage close, so CDB was not invoked. Exact cleanup confirmed 37 observed identities absent and residual zero.</p><p><a href="assets/phase6/phase6gn_exact_wrapper_safe_stop.json">machine summary</a> · <a href="../design/phase6gn_exact_wrapper_supply_comparison.md">design note</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>numeric gate not reached; no new video</small></span></button></div><div class="check-list" role="list"><div role="listitem"><span>5/5</span><p><strong>Exact smoke</strong><small>type-aware</small></p></div><div role="listitem"><span>1/9</span><p><strong>Launched</strong><small>accepted 0</small></p></div><div role="listitem"><span>0xC0000005</span><p><strong>Exit</strong><small>native crash</small></p></div><div role="listitem"><span>0</span><p><strong>Residual</strong><small>exact cleanup</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Pending roadmap</p><h3>Freeze Phase 6GN; isolate the post-readback native crash separately.</h3><p>Phase 6GN is not retried or reclassified. No S93/S100 pair, flux, deep/boundary metric, video, candidate, Point policy, or production change exists. Any further work requires a separately approved contract and root focused on the frame-180 post-readback operation boundary; thresholds and production remain unchanged.</p><p>Release build, Phase 0 RTX, Phase 3, focused Phase 6G 71/71, and standard suite 78/78 passed. Production and latest demo remain unchanged.</p></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6gm" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6GM export-aligned formal comparison safe stop"><span class="phase-number compact">6GM</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">1/9 launch · safe stop</span></aside>
@@ -5240,7 +5251,7 @@
       <div class="shell">
         <p class="section-kicker">Roadmap</p>
         <h2>小さく燃やして、確かめながら進む。</h2>
-        <p>Phase 6GMはPhase 6GK-derivedの共通export descriptorと保存・再読込USD fixtureにより、S93／S100／OFFのdivergence ON・RGBA/RGB OFFを一致させた。しかし正式attempt01は、module object <code>shared</code>をcallable required entry pointとして検証したexact-wrapper import契約の誤りでstage authoring前にsafe stopした。acceptedは0/9で、物理比較、方向付きflux、deep velocity、動画、S100採用、Point policy、production統合は未到達である。次はPhase 6GMを凍結し、別承認の新contract/rootでwrapper import宣言とexact-wrapper app-ready smokeだけを修正してprocess 1から再開する。</p>
+        <p>Phase 6GNでmodule／callableを分離したexact-wrapper smokeは5/5合格し、Phase 6GMのimport不具合は解消した。しかし正式attempt01 S93はframe 180の7-handle readback直後、spatial result保存前にnative access violation <code>0xC0000005</code>でsafe stopした。accepted 0/9、replacement 0で後続は未起動、exact cleanup residualは0である。Phase 6GNを凍結し、次はこのpost-readback native operation境界だけを別承認Phaseで隔離する。S93/S100 pair、flux、deep velocity、動画、Point policy、production統合は未到達である。</p>
         <ol class="roadmap">
           <li class="done"><span>0</span><div><strong>環境成立確認</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>1</span><div><strong>Flow単体検証</strong><small>完了 · 2026.08.04</small></div></li>
@@ -5248,7 +5259,7 @@
           <li class="done"><span>3</span><div><strong>木材熱モデル</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>4</span><div><strong>配置と通気</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>5</span><div><strong>崩壊</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · exact-wrapper import contractでsafe stop</small></div></li>
+          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · post-readback native crashでsafe stop</small></div></li>
         </ol>
       </div>
     </section>

@@ -1,0 +1,143 @@
+{
+  "schema": "campfire.phase6gn.exact-wrapper-supply-comparison-safe-stop.v1",
+  "phase": "phase6gn",
+  "status": "native_operation_safe_stop",
+  "timestamp_utc": "2026-08-14T08:17:26.9964345Z",
+  "contract": {
+    "path": "scripts/phase6gn_supply_comparison_contract.json",
+    "sha256": "44D3CFBFB1104E8398DB8D822DF2E4CDEB414AF3A967857F9EED72039616347D",
+    "declared_before_runtime": true,
+    "phase6gm_reclassified": false,
+    "phase6gm_samples_reused": false
+  },
+  "import_fix": {
+    "cause": "Phase 6GM declared module object shared as a callable required entry point",
+    "resolution": "validate shared as types.ModuleType with an exact absolute path and validate consumed callable/module attributes separately",
+    "shared_module_callable_required": false,
+    "required_callable_count": 8,
+    "required_module_attributes": ["Usd", "point_core"],
+    "wrapper_patch_target": "shared._build_stage",
+    "wrapper_patch_verified": true,
+    "descriptor_digest": "53CDE38FD5B1A5F48AB2E7B896F6EF391DDA4D5F6621B21FDB1B435F34BDA8CE"
+  },
+  "preflight": {
+    "all_passed": true,
+    "payload_native_source": "16/16",
+    "geometry_parameter_binding": "4/4",
+    "channel_schema": "pass",
+    "canonical_bounded_artifact": "10/10",
+    "saved_reloaded_usd_export_state": "pass",
+    "generic_app_ready_import": "3/3",
+    "exact_wrapper_app_ready_smoke": "5/5",
+    "exact_wrapper_marker_order": ["import_started", "import_complete", "wrapper_wiring_complete", "smoke_complete"],
+    "exact_exit_code_propagation": 29,
+    "progress_aware_cdb": "7/7",
+    "formal_slots_consumed_by_smoke": 0,
+    "residual_processes": 0
+  },
+  "formal_population": {
+    "required_accepted_processes": 9,
+    "maximum_launches": 11,
+    "launched": 1,
+    "accepted": 0,
+    "replacement_count": 0,
+    "active_attempt": "attempt01",
+    "active_slot": "sequence01_position01_S93",
+    "condition": "S93",
+    "later_conditions_started": false,
+    "numeric_qualified": false,
+    "video_generated": false
+  },
+  "confirmed_operation_evidence": {
+    "exact_wrapper_import": "pass",
+    "module_contract": "pass",
+    "wrapper_wiring": "pass",
+    "representative_startup_marker_present": true,
+    "frame": 180,
+    "active_blocks": 1329,
+    "active_points": 1344,
+    "total_points": 1440,
+    "payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389",
+    "source_sums_float32_native": {
+      "fuel": 1075.2000160217285,
+      "temperature": 2688.0,
+      "smoke": 107.51999759674072
+    },
+    "readback_calls_started": 1,
+    "returned_handle_count": 7,
+    "last_durable_marker": "phase6gl_readback_after",
+    "readback_before_private_bytes": 14540771328,
+    "readback_after_private_bytes": 14893940736,
+    "readback_immediate_delta_bytes": 353169408,
+    "spatial_result_committed": false,
+    "directional_flux_available": false,
+    "deep_boundary_metrics_available": false
+  },
+  "failure": {
+    "classification": "nonreplaceable_native_operation_and_lifecycle_failure",
+    "process_exit_code_decimal": 3221225477,
+    "process_exit_code_hex": "0xC0000005",
+    "access_violation": true,
+    "fatal_count": 1,
+    "dump_inventory_count": 1,
+    "automatic_upload_attempt_count": 0,
+    "shutdown_complete": false,
+    "stage_close_started": false,
+    "normal_os_exit": false,
+    "cdb_invoked": false,
+    "cdb_reason": "process crashed and exited; stage-close timeout path was not entered",
+    "crash_backtrace": [
+      "omni.kit.app.plugin.dll!carbOnPluginQuickShutdown+0x4c02",
+      "omni.kit.app.plugin.dll!carbOnPluginQuickShutdown+0x5d78",
+      "omni.kit.app.plugin.dll!carbOnPluginQuickShutdown+0x4176",
+      "ucrtbase.dll!recalloc+0xa3"
+    ],
+    "backtrace_confidence": "low-confidence frames reported by crash reporter",
+    "root_cause_confirmed": false,
+    "retry_performed": false
+  },
+  "resources": {
+    "kit_peak_private_bytes": 15326326784,
+    "kit_limit_bytes": 17179869184,
+    "kit_margin_bytes": 1853542400,
+    "unique_tree_peak_private_bytes": 15478104064,
+    "unique_tree_limit_bytes": 18253611008,
+    "unique_tree_margin_bytes": 2775506944,
+    "runner_peak_private_bytes": 95948800,
+    "diagnostic_peak_private_bytes": 16953344,
+    "minimum_available_physical_bytes": 81916375040,
+    "minimum_commit_headroom_bytes": 101546754048,
+    "resource_limit_failure": false
+  },
+  "cleanup": {
+    "exact_identity_cleanup_qualified": true,
+    "observed_attempt_identity_count": 37,
+    "final_attempt_owned_residual": 0,
+    "kit_residual": 0,
+    "cdb_residual": 0,
+    "gpu_helper_residual": 0
+  },
+  "gpu": {
+    "active_gpu": "NVIDIA GeForce RTX 3090",
+    "cuda_device_ordinal": 0,
+    "rtx_device_mask": "0x1",
+    "physx_device_ordinal": 0
+  },
+  "regression": {
+    "release_build": "pass",
+    "phase0_rtx": "pass",
+    "phase3_authority_mass_balance_flow_input": "pass",
+    "focused_phase6g": "71/71 pass",
+    "standard_suite": "78/78 pass",
+    "devlog_static": "pass (refs=494 ids=294 json=246 svg=177 zip=2)",
+    "production_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "production_changed": false,
+    "latest_demo_changed": false
+  },
+  "decision": {
+    "phase6gn_qualified": false,
+    "s93_or_s100_candidate_available": false,
+    "production_change_allowed": false,
+    "next_step": "freeze Phase 6GN; investigate the frame-180 post-readback native access violation in a separately approved Phase before restarting a fresh population"
+  }
+}
