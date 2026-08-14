@@ -23,8 +23,15 @@ function Invoke-GuardCase([string]$Name, [string]$Mode, [int]$DurationMs, [int]$
     ) -StdoutPath $stdout -StderrPath $stderr -TimeoutSeconds $AbsoluteSeconds -NoProgressTimeoutSeconds $NoProgressSeconds -ProgressPaths @($artifact) -PrivateBytesLimit 128MB -MaximumStdoutBytes 1MB -MaximumStderrBytes 1MB
     $childPid = if ($Mode -eq "descendant" -and (Test-Path $artifact)) { [int]([IO.File]::ReadAllText($artifact)) } else { 0 }
     $childAbsent = $childPid -eq 0 -or $null -eq (Get-Process -Id $childPid -ErrorAction SilentlyContinue)
-    $pass = $guard.process_absent -and $childAbsent -and $guard.timeout_reason -eq $ExpectedReason
-    if ([string]::IsNullOrWhiteSpace($ExpectedReason)) { $pass = $pass -and -not $guard.timed_out -and $guard.exit_code -eq 0 -and $guard.progress_change_count -gt 0 }
+    if ([string]::IsNullOrWhiteSpace($ExpectedReason)) {
+        $pass = $guard.process_absent -and $childAbsent -and -not $guard.timed_out -and $guard.exit_code -eq 0 -and $guard.progress_change_count -gt 0
+    } else {
+        $pass = $guard.process_absent -and $childAbsent -and $guard.timeout_reason -eq $ExpectedReason
+    }
+    if ($Mode -eq "partial") {
+        $pass = $pass -and (Test-Path -LiteralPath $artifact -PathType Leaf) -and
+            ([IO.File]::ReadAllText($artifact).Contains("ntdll!fixture_wait+0x1"))
+    }
     return [ordered]@{ name=$Name; status=if($pass){"pass"}else{"fail"}; expected_timeout_reason=$ExpectedReason; guard=$guard; descendant_pid=$childPid; descendant_absent=$childAbsent }
 }
 
