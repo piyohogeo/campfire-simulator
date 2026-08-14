@@ -4,7 +4,7 @@ param(
     [ValidateSet("baseline", "divergence", "rgba", "rgb")][string]$Control = "baseline",
     [string]$ControlContractPath = "",
     [string]$DiagnosticResourceContractPath = "",
-    [ValidateSet("phase6gd", "phase6ge", "phase6gf")][string]$ReportPhase = "phase6gd"
+    [ValidateSet("phase6gd", "phase6ge", "phase6gf", "phase6gg")][string]$ReportPhase = "phase6gd"
 )
 
 $ErrorActionPreference = "Stop"
@@ -61,7 +61,7 @@ if (-not [string]::IsNullOrWhiteSpace($DiagnosticResourceContractPath)) {
     if ($diagnosticResourceContractHash -ne $expectedDiagnosticHash) { throw "Phase 6GE diagnostic resource contract hash mismatch" }
     $diagnosticResourceContract = Get-Content -Raw -Encoding UTF8 $diagnosticResourceContractPath | ConvertFrom-Json
     $expectedDiagnosticSchema = "campfire.$ReportPhase.color-slot-diagnostic-contract.v1"
-    if ($ReportPhase -notin @("phase6ge", "phase6gf") -or
+    if ($ReportPhase -notin @("phase6ge", "phase6gf", "phase6gg") -or
         $diagnosticResourceContract.schema -ne $expectedDiagnosticSchema -or
         $diagnosticResourceContract.phase -ne $ReportPhase -or
         -not $diagnosticResourceContract.diagnostic_resource_limits.temporary_only -or

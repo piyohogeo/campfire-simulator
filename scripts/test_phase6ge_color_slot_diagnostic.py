@@ -38,12 +38,28 @@ class Phase6GeColorSlotDiagnostic(unittest.TestCase):
         self.assertFalse(contract["history"]["phase6ge_prekit_safe_stop_reclassified"])
         self.assertFalse(contract["history"]["phase6ge_artifact_reused"])
 
+    def test_phase6gg_contract_freezes_postprocess_safe_stop(self):
+        path = SCRIPTS / "phase6gg_color_slot_diagnostic_contract.json"
+        expected = (SCRIPTS / "phase6gg_color_slot_diagnostic_contract.sha256").read_text().split()[0]
+        self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest().upper(), expected)
+        contract = json.loads(path.read_text(encoding="utf-8"))
+        self.assertFalse(contract["history"]["phase6gf_postprocess_safe_stop_reclassified"])
+        self.assertFalse(contract["history"]["prior_artifact_reused"])
+
     def test_real_case_runner_accepts_corrected_phase_token(self):
         case_runner = (SCRIPTS / "run_phase6fo_supply_case.ps1").read_text(encoding="utf-8")
         fixture = (SCRIPTS / "run_phase6gf_parameter_binding_fixture.ps1").read_text(encoding="utf-8")
         self.assertIn('"phase6ge", "phase6gf"', case_runner)
         self.assertIn("-ReportPhase phase6gf", fixture)
         self.assertIn("-ValidateArgumentsOnly", fixture)
+
+    def test_phase6gg_exit_fixture_covers_zero_and_nonzero(self):
+        fixture = (SCRIPTS / "run_phase6gg_exit_propagation_fixture.ps1").read_text(encoding="utf-8")
+        self.assertIn('"exit 0"', fixture)
+        self.assertIn('"exit 7"', fixture)
+        self.assertIn('$exit0 = $LASTEXITCODE', fixture)
+        self.assertIn('$exit7 = $LASTEXITCODE', fixture)
+        self.assertIn("-ReportPhase phase6gg", fixture)
 
     def test_next_condition_fixture_matrix(self):
         report = fixtures()
@@ -73,7 +89,8 @@ class Phase6GeColorSlotDiagnostic(unittest.TestCase):
     def test_orchestrator_is_sequential_and_stops_on_failure(self):
         body = (SCRIPTS / "run_phase6ge_color_slot_diagnostic.ps1").read_text(encoding="utf-8")
         self.assertIn('foreach ($condition in @($contract.controls.order))', body)
-        self.assertIn('if ($process.ExitCode -ne 0)', body)
+        self.assertIn('$childExitCode = $LASTEXITCODE', body)
+        self.assertIn('if ($childExitCode -ne 0)', body)
         self.assertIn('if ($LASTEXITCODE -ne 0)', body)
         self.assertIn('formal_s93_s100_population_started = $false', body)
 

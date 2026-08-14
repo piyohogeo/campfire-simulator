@@ -60,3 +60,11 @@ token and exercising the real case runner with `-ValidateArgumentsOnly` before
 Kit. It uses a new contract and empty runtime root; no Phase 6GE artifact is
 reused and all diagnostic, physical, mapping, and next-condition gates remain
 identical.
+
+Phase 6GF C0 then completed all child-process gates: seven-handle metadata was
+durable, Kit exited normally with code zero, exact cleanup passed, and residual
+was zero. The outer orchestrator nevertheless recorded a safe stop because its
+PowerShell `Start-Process` object exposed a null `ExitCode` after completion.
+C1/C2 were not started. Phase 6GG freezes that root and launches a new complete
+population; it changes only exit-code propagation to the external command's
+deterministic `$LASTEXITCODE` while retaining direct stdout/stderr files.

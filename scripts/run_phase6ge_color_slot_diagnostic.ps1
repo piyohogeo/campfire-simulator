@@ -18,7 +18,7 @@ $actualHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $contractPath).Hash
 if ($actualHash -ne $expectedHash) { throw "Phase 6GE contract hash mismatch" }
 $contract = Get-Content -Raw -Encoding UTF8 $contractPath | ConvertFrom-Json
 $phase = [string]$contract.phase
-if ($phase -notin @("phase6ge", "phase6gf") -or $contract.schema -ne "campfire.$phase.color-slot-diagnostic-contract.v1") {
+if ($phase -notin @("phase6ge", "phase6gf", "phase6gg") -or $contract.schema -ne "campfire.$phase.color-slot-diagnostic-contract.v1") {
     throw "Phase 6GE/6GF contract schema mismatch"
 }
 
@@ -58,21 +58,20 @@ foreach ($condition in @($contract.controls.order)) {
         "-DiagnosticResourceContractPath", $contractPath, "-ReportPhase", $phase
     )
     if ($mode -ne "baseline") { $arguments += @("-ControlContractPath", $controlContract) }
-    $process = Start-Process -FilePath $powershell -ArgumentList $arguments -PassThru -WindowStyle Hidden `
-        -RedirectStandardOutput $stdout -RedirectStandardError $stderr
-    $process.WaitForExit()
+    & $powershell @arguments 1> $stdout 2> $stderr
+    $childExitCode = $LASTEXITCODE
     $entry = [ordered]@{
         condition = $condition
         control = $mode
-        child_exit_code = $process.ExitCode
+        child_exit_code = $childExitCode
         artifact_root = $conditionRoot
         started = $true
         next_condition_allowed = $false
     }
     $plan.results += $entry
     Save-Plan
-    if ($process.ExitCode -ne 0) {
-        $plan.safe_stop = [ordered]@{ condition = $condition; reason = "child_runner_failed"; exit_code = $process.ExitCode }
+    if ($childExitCode -ne 0) {
+        $plan.safe_stop = [ordered]@{ condition = $condition; reason = "child_runner_failed"; exit_code = $childExitCode }
         Save-Plan
         throw "Phase 6GE stopped at $condition because the child runner failed"
     }

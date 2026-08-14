@@ -18,6 +18,12 @@ residual 0を全て要求する。詳細は
 とreal command-line no-Kit fixtureだけを追加したPhase 6GF contract／空root
 へ分離する。
 
+Phase 6GF C0子processは7-handle metadata、normal exit、exit 0、exact
+cleanup、residual 0を満たしたが、外側`Start-Process`の`ExitCode`がnullと
+評価されpopulationはC1前にsafe stopした。rootは凍結し、stdout/stderrを
+fileへ直接redirectした外部commandの`$LASTEXITCODE`を使うPhase 6GG契約と
+新rootへ分離する。
+
 # Phase 6GD public NanoVDB channel schema discovery
 
 Phase 6GC remains frozen at its seven-handle pre-indexing safe stop. Phase 6GD

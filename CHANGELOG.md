@@ -13,6 +13,11 @@
   cleanup succeeded, and C1/C2 were not launched. Phase 6GF adds only the
   explicit token plus a real no-Kit command-line fixture and starts from a new
   contract/root without reusing or reclassifying Phase 6GE.
+- Froze Phase 6GF after its C0 child completed metadata, normal exit, exact
+  cleanup, and residual zero but the outer PowerShell process wrapper observed
+  a null `Process.ExitCode` and stopped before C1. Phase 6GG uses direct external
+  invocation with file redirection and `$LASTEXITCODE`; its new population does
+  not reuse the valid-but-incomplete Phase 6GF child artifact.
 
 - Added the Phase 6GD bounded seven-handle metadata baseline and a separately
   frozen, one-variable divergence/RGBA/RGB control contract. The baseline does
