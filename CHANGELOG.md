@@ -1,5 +1,15 @@
 # Changelog
 
+- Froze the Phase 6GK bounded-artifact interface contract before runtime while
+  preserving Phase 6GJ as an artifact safe stop. New runtime output uses only
+  `field_body_json_npz_or_openvdb_written`; legacy input is accepted only at an
+  explicit, reported normalization boundary, and missing, conflicting, null,
+  nonboolean, or true values fail closed.
+- Passed the shared-runner end-to-end interface fixture 10/10, including the
+  frozen Phase 6GJ raw-artifact round trip and child-to-parent exit-code
+  propagation. One fresh S93 preflight remains gated; formal S93/S100/OFF and
+  production are still unstarted.
+
 - Froze the Phase 6GJ empty-RGBA alias contract before runtime. Nonempty
   handles retain same-object plus shared-memory requirements; a disabled empty
   RGBA handle instead requires same-object, zero bytes, no copy, ordered weakref

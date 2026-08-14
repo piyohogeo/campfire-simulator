@@ -1,5 +1,18 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6GK bounded artifact interface preflight
+
+Phase 6GJ remains frozen as a nonreplaceable artifact safe stop. Phase 6GK
+freezes canonical property `field_body_json_npz_or_openvdb_written` and an
+explicit legacy normalization boundary before runtime. Missing, null,
+nonboolean, conflicting dual values, or a true write flag fail closed without
+relying on a PowerShell property-not-found exception. The actual shared-runner
+fixture passed 10/10, including a read-only Phase 6GJ raw-artifact round trip
+and child exit-code propagation. One fresh S93 public-channel preflight is
+authorized only after all pre-Kit fixtures pass; formal comparison and
+production remain blocked. See
+`docs/design/phase6gk_bounded_artifact_interface_preflight.md`.
+
 # Phase 6GJ empty RGBA alias preflight safe stop
 
 Phase 6GI remains frozen as a nonreplaceable safe stop. Phase 6GJ freezes a

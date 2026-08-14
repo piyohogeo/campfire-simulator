@@ -1,5 +1,16 @@
 # Phase 6FO S93 / S100 Point supply comparison
 
+## 2026-08-14 Phase 6GK bounded artifact interface preflight pending
+
+Phase 6GJ remains frozen and is not reclassified. Phase 6GK isolates the
+producer/consumer property-name mismatch, freezes
+`field_body_json_npz_or_openvdb_written` as canonical, and admits the legacy
+name only through an explicit recorded normalization boundary. Its shared
+runner fixture passed 10/10 before Kit. The roadmap remains blocked on one
+fresh S93 preflight with the unchanged seven-handle state-aware alias and
+16/17 GiB lifecycle contracts. The formal S93/S100/OFF comparison must not
+start without a later explicit authorization after that preflight result.
+
 ## 2026-08-14 Phase 6GJ empty-RGBA alias preflight safe stop
 
 Phase 6GI remains frozen. Phase 6GJ's new state-aware alias fixture passed

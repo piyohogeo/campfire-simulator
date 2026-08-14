@@ -4,10 +4,12 @@ param(
     [ValidateSet("baseline", "divergence", "rgba", "rgb")][string]$Control = "baseline",
     [string]$ControlContractPath = "",
     [string]$DiagnosticResourceContractPath = "",
-    [ValidateSet("phase6gd", "phase6ge", "phase6gf", "phase6gg", "phase6gh", "phase6gi", "phase6gj")][string]$ReportPhase = "phase6gd",
+    [ValidateSet("phase6gd", "phase6ge", "phase6gf", "phase6gg", "phase6gh", "phase6gi", "phase6gj", "phase6gk")][string]$ReportPhase = "phase6gd",
     [string]$ProbePath = "",
     [ValidateSet("true", "false")][string]$RequireDiscoveryUnmapped = "true",
     [ValidateSet("true", "false")][string]$SpatialCollectorsEnabled = "true",
+    [string]$BoundedArtifactFixtureInput = "",
+    [string]$BoundedArtifactFixtureReport = "",
     [switch]$ShortPreflight
 )
 
@@ -17,6 +19,34 @@ Set-StrictMode -Version 3.0
 $repo = Split-Path -Parent $PSScriptRoot
 $OutputRoot = [IO.Path]::GetFullPath($OutputRoot)
 if (Test-Path -LiteralPath $OutputRoot) { throw "Phase 6GD refuses artifact root reuse: $OutputRoot" }
+
+if (-not [string]::IsNullOrWhiteSpace($BoundedArtifactFixtureInput)) {
+    if ($ReportPhase -ne "phase6gk") { throw "Phase 6GK bounded artifact fixture requires ReportPhase phase6gk" }
+    $fixtureInput = [IO.Path]::GetFullPath($BoundedArtifactFixtureInput)
+    if (-not (Test-Path -LiteralPath $fixtureInput)) { throw "Phase 6GK bounded artifact fixture input is missing" }
+    New-Item -ItemType Directory -Path $OutputRoot | Out-Null
+    $normalizer = Join-Path $PSScriptRoot "phase6gk_bounded_artifact_interface.py"
+    $normalized = Join-Path $OutputRoot "normalized_bounded_artifact.json"
+    $normalizationReport = Join-Path $OutputRoot "bounded_artifact_interface_report.json"
+    & python $normalizer --input $fixtureInput --normalized-output $normalized --report $normalizationReport
+    $normalizerExitCode = $LASTEXITCODE
+    $wrapperReportPath = if ([string]::IsNullOrWhiteSpace($BoundedArtifactFixtureReport)) {
+        Join-Path $OutputRoot "shared_runner_fixture_report.json"
+    } else { [IO.Path]::GetFullPath($BoundedArtifactFixtureReport) }
+    $wrapperReport = [ordered]@{
+        schema = "campfire.phase6gk.shared-runner-bounded-artifact-fixture.v1"
+        phase = "phase6gk"
+        input = $fixtureInput
+        normalizer_exit_code = $normalizerExitCode
+        normalized_artifact_present = Test-Path -LiteralPath $normalized
+        normalization_report = $normalizationReport
+        exit_code_propagated = $true
+        timestamp_utc = [DateTime]::UtcNow.ToString("o")
+    }
+    [IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($wrapperReportPath)) | Out-Null
+    [IO.File]::WriteAllText($wrapperReportPath, ($wrapperReport | ConvertTo-Json -Depth 8) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
+    exit $normalizerExitCode
+}
 
 $discoveryContractPath = if ([string]::IsNullOrWhiteSpace($DiscoveryContractPath)) {
     Join-Path $PSScriptRoot "phase6gd_channel_schema_discovery_contract.json"
@@ -169,6 +199,14 @@ if ($ReportPhase -eq "phase6gj") {
         $runtimeManifest[$name] = (Get-FileHash -Algorithm SHA256 -LiteralPath $path).Hash
     }
 }
+if ($ReportPhase -eq "phase6gk") {
+    foreach ($name in @("phase6gj_empty_rgba_alias_policy.py", "phase6gk_bounded_artifact_interface.py",
+                         "phase6gk_bounded_artifact_interface_contract.json",
+                         "phase6gh_public_channel_schema_candidate.json")) {
+        $path = Join-Path $PSScriptRoot $name
+        $runtimeManifest[$name] = (Get-FileHash -Algorithm SHA256 -LiteralPath $path).Hash
+    }
+}
 [IO.File]::WriteAllText((Join-Path $OutputRoot "runtime_hashes.json"), ($runtimeManifest | ConvertTo-Json -Depth 4) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
 
 $caseRunner = Join-Path $PSScriptRoot "run_phase6fo_supply_case.ps1"
@@ -270,6 +308,34 @@ if (-not (Test-Path -LiteralPath $rawPath) -or -not (Test-Path -LiteralPath $met
 }
 $raw = Get-Content -Raw -Encoding UTF8 $rawPath | ConvertFrom-Json
 $metadata = Get-Content -Raw -Encoding UTF8 $metadataPath | ConvertFrom-Json
+$boundedArtifactInterfaceReport = $null
+if ($ReportPhase -eq "phase6gk") {
+    $normalizer = Join-Path $PSScriptRoot "phase6gk_bounded_artifact_interface.py"
+    $normalizedMetadataPath = Join-Path $caseDir "channel-schema-metadata\normalized_bounded_handle_metadata.json"
+    $interfaceReportPath = Join-Path $caseDir "channel-schema-metadata\bounded_artifact_interface_report.json"
+    & python $normalizer --input $metadataPath --normalized-output $normalizedMetadataPath --report $interfaceReportPath
+    $normalizerExitCode = $LASTEXITCODE
+    if (-not (Test-Path -LiteralPath $interfaceReportPath)) {
+        throw "Phase 6GK bounded artifact normalization report is missing"
+    }
+    $boundedArtifactInterfaceReport = Get-Content -Raw -Encoding UTF8 $interfaceReportPath | ConvertFrom-Json
+    $marker = [ordered]@{
+        schema = "campfire.phase6gk.bounded-artifact-interface-marker.v1"
+        phase = "phase6gk"
+        marker = "bounded_artifact_interface_normalized"
+        status = [string]$boundedArtifactInterfaceReport.status
+        normalization_mode = [string]$boundedArtifactInterfaceReport.normalization_mode
+        compatibility_normalization_applied = [bool]$boundedArtifactInterfaceReport.compatibility_normalization_applied
+        report_path = $interfaceReportPath
+        timestamp_utc = [DateTime]::UtcNow.ToString("o")
+    }
+    [IO.File]::WriteAllText((Join-Path $caseDir "bounded_artifact_interface_marker.json"), ($marker | ConvertTo-Json -Depth 8) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
+    if ($normalizerExitCode -ne 0 -or -not $boundedArtifactInterfaceReport.pass -or
+        -not (Test-Path -LiteralPath $normalizedMetadataPath)) {
+        throw "Phase 6GK bounded artifact interface validation failed"
+    }
+    $metadata = Get-Content -Raw -Encoding UTF8 $normalizedMetadataPath | ConvertFrom-Json
+}
 $runnerEvidence = Get-Content -Raw -Encoding UTF8 $runnerEvidencePath | ConvertFrom-Json
 $guardEvidence = Get-Content -Raw -Encoding UTF8 $guardEvidencePath | ConvertFrom-Json
 if ($raw.status -ne "ok" -or $raw.lifecycle_marker -ne "shutdown_complete") {
@@ -289,7 +355,16 @@ if ($guardEvidence.status -ne "ok" -or [int]$guardEvidence.exit_code -ne 0 -or
 if ($RequireDiscoveryUnmapped -eq "true" -and $metadata.formal_channel_names_assigned) {
     throw "Phase 6GD discovery probe unexpectedly assigned formal channel names"
 }
-if ($metadata.full_field_json_or_npz_written) {
+if ($ReportPhase -eq "phase6gk") {
+    $canonicalName = "field_body_json_npz_or_openvdb_written"
+    $canonicalProperty = $metadata.PSObject.Properties[$canonicalName]
+    if ($null -eq $canonicalProperty -or $canonicalProperty.Value -isnot [bool]) {
+        throw "Phase 6GK normalized bounded artifact lacks a boolean canonical field-output property"
+    }
+    if ([bool]$canonicalProperty.Value) {
+        throw "Phase 6GK probe violated bounded field-body output scope"
+    }
+} elseif ($metadata.full_field_json_or_npz_written) {
     throw "Phase 6GD discovery probe violated bounded field-output scope"
 }
 if ($metadata.returned_handle_count -lt 1 -or $metadata.returned_handle_count -gt $discovery.readback.maximum_handle_count) {
@@ -316,6 +391,7 @@ $summary = [ordered]@{
     residual_process = [bool]$runnerEvidence.shutdown_monitor.residual_process
     production_sha256 = $productionBefore
     formal_population_started = $false
+    bounded_artifact_interface = $boundedArtifactInterfaceReport
     timestamp_utc = [DateTime]::UtcNow.ToString("o")
 }
 [IO.File]::WriteAllText((Join-Path $OutputRoot "discovery_summary.json"), ($summary | ConvertTo-Json -Depth 8) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
