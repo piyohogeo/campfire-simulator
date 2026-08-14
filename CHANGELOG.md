@@ -1425,3 +1425,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Froze the Phase 6GO diagnostic-only R0-R7 post-readback isolation ladder,
   preserving Phase 6GN and retaining its physical, schema, lifecycle, and
   16/17 GiB safety boundaries without restarting the formal population.
+- Ran only Phase 6GO R0 after scope was narrowed. The single public readback,
+  seven-handle type/count observation, and ordered release completed without
+  weak-reference residual; stage close and `shutdown_complete` were durable,
+  but normal OS exit was not confirmed. Exact cleanup left residual zero, so
+  R1 and every volume/sampling stage remained unstarted.

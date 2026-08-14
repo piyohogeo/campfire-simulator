@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6gn">最新記録</a>
+        <a href="#phase-6go">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6gn">Phase 6GNの結果を読む</a>
+        <a class="button primary" href="#phase-6go">Phase 6GOの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6GN · native operation safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6GO · R0 lifecycle safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,17 @@
   </header>
 
   <main>
+    <section id="phase-6go" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6GO R0 lifecycle safe stop"><span class="phase-number compact">6GO</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">R0 only · safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6GO · bounded public readback</p><h2>The smallest readback operation completed;<br>normal OS exit did not.</h2><p>One fresh S93 process called the public readback once, recorded only a seven-element list and ordinary Python type names, then cleared every handle slot without conversion, sampling, field files, images, or video.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Operation boundary</p><h3>Readback and ordered release completed.</h3><p>All seven entries were <code>numpy.ndarray</code>. The final operation marker was <code>phase6go_release_sequence_after</code> and weak-reference residual was zero.</p></section><section class="note caution"><p class="note-label">Lifecycle safe stop</p><h3>R1 was correctly blocked.</h3><p>Stage close completed in about 12.33 seconds and <code>shutdown_complete</code> was durable, but Kit did not confirm normal OS exit. Exact cleanup removed all observed attempt identities. No retry or metadata-only R1 was started.</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Resource and scope</p><h3>16/17 GiB limits held; no production change.</h3><p>Kit/tree peaks were 15,440,482,304 / 15,552,897,024 bytes, leaving 1,739,376,880 / 2,700,713,984 bytes. Fatal, dump, upload, and final residual counts were zero.</p><p><a href="assets/phase6/phase6go_r0_lifecycle_safe_stop.json">machine summary</a> · <a href="../design/phase6go_post_readback_isolation.md">design note</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>internal stability check; no new video</small></span></button></div><div class="check-list" role="list"><div role="listitem"><span>1</span><p><strong>Readback</strong><small>public API</small></p></div><div role="listitem"><span>7</span><p><strong>Handles</strong><small>unused/released</small></p></div><div role="listitem"><span>0</span><p><strong>R1</strong><small>not started</small></p></div><div role="listitem"><span>0</span><p><strong>Residual</strong><small>exact cleanup</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Pending roadmap</p><h3>Stop at R0; require new approval for metadata-only R1.</h3><p>Phase 6GN remains frozen and its nine-process population is not restarted. Existing crash material is preservation-only under the narrowed scope. The next smallest test is one R1 process using bounded public shape/count/byte metadata only; volume conversion and later operations remain out of scope.</p></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6gn" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6GN exact-wrapper formal comparison safe stop"><span class="phase-number compact">6GN</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">1/9 launch · safe stop</span></aside>

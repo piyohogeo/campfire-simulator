@@ -26,3 +26,31 @@ cannot identify the crashing API without agreement from the operation markers.
 The machine contract is
 `scripts/phase6go_post_readback_isolation_contract.json`; its SHA-256 is pinned
 in the adjacent `.sha256` file before runtime.
+
+## R0 result and narrowed stop
+
+R0 alone was launched in the fresh root
+`artifacts/phase6go-post-readback-isolation-1`. The public call returned a
+`builtins.list` of seven `numpy.ndarray` objects. No handle metadata, volume
+conversion, sampling, collector, field file, image, or video operation ran.
+Ordered slot clearing left zero weak-reference residual. The operation marker
+ended at `phase6go_release_sequence_after`.
+
+Timeline stop, renderer drain, `close_stage_async()`, USD detach, post-close
+updates, and `shutdown_complete` all became durable; stage close took about
+12.33 seconds. Kit nevertheless did not produce a normal OS exit within the
+existing lifecycle contract. The run is therefore a lifecycle safe stop, not
+an R0 qualification. Exact cleanup confirmed all 45 observed attempt identities absent,
+and no crash dump, fatal, or automatic upload was produced. R1 was not started.
+The later R2-R7 ladder is no longer authorized by the narrowed scope and needs
+separate approval.
+
+The pre-existing shutdown helper produced low-level diagnostic files before
+the scope was narrowed. They are retained but are not interpreted here. No
+additional debugger, dump, attachment, disassembly, or memory inspection is
+part of this result.
+
+Release build, Phase 0 RTX, Phase 3, the focused Phase 6GO/6GN/6GL tests, the
+standard suite, and the devlog static check passed. The production app and
+latest-demo hashes remained unchanged. No Kit, CDB, or GPU inventory helper
+remained after verification.

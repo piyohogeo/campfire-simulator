@@ -1,0 +1,45 @@
+{
+  "schema": "campfire.phase6go.r0-lifecycle-safe-stop.v1",
+  "status": "safe_stop",
+  "phase6gn_reclassified": false,
+  "formal_nine_process_population_started": false,
+  "artifact_root": "artifacts/phase6go-post-readback-isolation-1",
+  "contract_sha256": "72333D3FD87A18AF7FF11C3EB28E617C30C9D621FF12E85282A597C38F4A83CC",
+  "started_changes": {"contract_and_harness_commit": "f4f76d1", "production_changed": false, "defaults_changed": false},
+  "execution": {
+    "R0_started": true, "R0_operation_completed": true, "R0_normal_os_exit": false,
+    "R1_started": false, "R2_through_R7_started": false, "readback_calls": 1,
+    "returned_type": "builtins.list", "returned_handle_count": 7,
+    "element_types": ["numpy.ndarray", "numpy.ndarray", "numpy.ndarray", "numpy.ndarray", "numpy.ndarray", "numpy.ndarray", "numpy.ndarray"],
+    "handle_contents_used": false, "volume_conversion_calls": 0, "sampling_calls": 0,
+    "collector_calls": 0, "weak_reference_residual": 0,
+    "last_operation_marker": "phase6go_release_sequence_after",
+    "last_lifecycle_marker": "shutdown_complete", "stage_close_seconds": 12.329242
+  },
+  "resource": {
+    "kit_peak_bytes": 15440482304, "kit_limit_bytes": 17179869184, "kit_margin_bytes": 1739376880,
+    "tree_peak_bytes": 15552897024, "tree_limit_bytes": 18253611008, "tree_margin_bytes": 2700713984,
+    "runner_peak_bytes": 130162688, "diagnostic_peak_bytes": 122949632,
+    "minimum_available_physical_bytes": 80833634304, "minimum_commit_headroom_bytes": 100465717248
+  },
+  "safety": {
+    "fatal_count": 0, "dump_count": 0, "automatic_upload_count": 0,
+    "cleanup_observed_identity_count": 45, "cleanup_all_observed_absent": true,
+    "residual_process_count": 0, "existing_shutdown_diagnostic_artifacts_interpreted": false,
+    "new_dump_analysis_performed_under_narrowed_scope": false
+  },
+  "verification": {
+    "release_build": "pass",
+    "phase0_rtx": "pass",
+    "phase3": "pass",
+    "focused_phase6go": "18/18 pass",
+    "focused_phase6gn": "5/5 pass",
+    "focused_phase6gl": "3/3 pass",
+    "standard_suite": "pass",
+    "devlog_static_check": "pass",
+    "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "latest_demo_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285",
+    "kit_cdb_gpu_helper_residual": 0
+  },
+  "next_safe_operation": "A new explicit approval is required before one metadata-only R1 process; volume conversion remains out of scope."
+}

@@ -3950,3 +3950,9 @@ frame 180、qualified 7-channel schema/export、16/17 GiB、release-after-close�
 retry/replacementおよび正式9-process再開を行わない。詳細は
 `docs/design/phase6go_post_readback_isolation.md`とSHA固定済みmachine contractを
 権威記録とする。
+
+R0はpublic readback 1回、list count/type、順次参照解放まで正常で、operation
+markerは`phase6go_release_sequence_after`まで到達した。stage closeと
+`shutdown_complete`も完了したが正常OS exitを確認できずlifecycle safe stopとした。
+exact cleanup後のresidualは0、R1およびR2以降は未起動である。新しい限定指示に
+従い、既存dumpは保存だけとし低レベル解析を継続しない。
