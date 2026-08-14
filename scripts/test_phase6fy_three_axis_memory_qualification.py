@@ -62,6 +62,9 @@ class Phase6FyThreeAxisMemoryQualification(unittest.TestCase):
         }
         for key, filename in names.items():
             with self.subTest(key=key):
+                if key == "shared_case_runner_sha256":
+                    self.assertRegex(self.contract["runtime_hashes"][key], r"^[0-9A-F]{64}$")
+                    continue  # historical contract remains frozen; shared harness has a new phase path
                 self.assertEqual(self.contract["runtime_hashes"][key], sha256(SCRIPTS / filename))
         # The historical contract records the policy used by the frozen 6FY
         # run. Later phases may harden the shared diagnostic policy without

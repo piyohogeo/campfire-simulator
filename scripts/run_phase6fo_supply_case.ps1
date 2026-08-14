@@ -6,7 +6,7 @@ param(
     [ValidateSet("true", "false")][string]$Filtering = "true",
     [ValidateSet("true", "false")][string]$Collision = "true",
     [ValidateSet("strict_all", "allow_self_support", "allow_self_center", "allow_other_support")][string]$Policy = "strict_all",
-    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev", "phase6ew", "phase6ex", "phase6ey", "phase6ez", "phase6fa", "phase6fb", "phase6fc", "phase6fd", "phase6fe", "phase6ff", "phase6fg", "phase6fh", "phase6fi", "phase6fj", "phase6fk", "phase6fn", "phase6fo", "phase6fp", "phase6fq", "phase6fr", "phase6fs", "phase6ft", "phase6fv")][string]$ReportPhase = "phase6ep",
+    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev", "phase6ew", "phase6ex", "phase6ey", "phase6ez", "phase6fa", "phase6fb", "phase6fc", "phase6fd", "phase6fe", "phase6ff", "phase6fg", "phase6fh", "phase6fi", "phase6fj", "phase6fk", "phase6fn", "phase6fo", "phase6fp", "phase6fq", "phase6fr", "phase6fs", "phase6ft", "phase6fv", "phase6ga")][string]$ReportPhase = "phase6ep",
     [string]$SampleFrames = "60,120,180,200",
     [string]$ReadbackChannels = "temperature,fuel,burn,smoke,velocity",
     [ValidateSet("legacy", "none", "acquire_discard", "acquire_discard_release", "fuel_convert", "fuel_convert_release", "fuel_scalar", "fuel_jsonl", "fuel_spatial", "p3_spatial_release")][string]$ReadbackMode = "legacy",
@@ -51,7 +51,12 @@ param(
     [double]$StartupExpectedSmokeSum = 0.0,
     [double]$StartupSourceSumTolerance = 0.000001,
     [string]$PreviousProcessExitUtc = "",
-    [int]$AbsoluteTimeoutSeconds = 330
+    [int]$AbsoluteTimeoutSeconds = 330,
+    [string]$ProbePath = "",
+    [string]$ImportAuditPath = "",
+    [string]$MeasurementCommitAck = "",
+    [string]$MeasurementCommitFailure = "",
+    [double]$MeasurementCommitTimeoutSeconds = 60.0
 )
 
 $ErrorActionPreference = "Stop"
@@ -75,7 +80,7 @@ $runnerMarkerPath = Join-Path $output "runner_lifecycle_markers.jsonl"
 $productionApp = Join-Path $release "apps\campfire.simulator.kit"
 $productionHashBefore = (Get-FileHash -Algorithm SHA256 -LiteralPath $productionApp).Hash
 $app = Join-Path $release "kit\apps\omni.app.editor.base.kit"
-$probe = Join-Path $PSScriptRoot "probe_phase6fo_supply_comparison.py"
+$probe = if ([string]::IsNullOrWhiteSpace($ProbePath)) { Join-Path $PSScriptRoot "probe_phase6fo_supply_comparison.py" } else { [IO.Path]::GetFullPath($ProbePath) }
 $filterValue = $Filtering
 $collisionValue = $Collision
 $captureValue = $Capture.IsPresent.ToString().ToLowerInvariant()
@@ -146,6 +151,10 @@ $arguments = @(
     "--/phase6ep/startupExpectedTemperatureSum=$StartupExpectedTemperatureSum",
     "--/phase6ep/startupExpectedSmokeSum=$StartupExpectedSmokeSum",
     "--/phase6ep/startupSourceSumTolerance=$StartupSourceSumTolerance",
+    "--/phase6fz/importAuditPath=$ImportAuditPath",
+    "--/phase6fz/measurementCommitAck=$MeasurementCommitAck",
+    "--/phase6fz/measurementCommitFailure=$MeasurementCommitFailure",
+    "--/phase6fz/measurementCommitTimeoutSeconds=$MeasurementCommitTimeoutSeconds",
     "--ext-folder", (Join-Path $PSScriptRoot "phasev3tg_extension"),
     "--enable", "omni.campfire.phasev3tg_shutdown",
     "--/phasev3tg/markers=$extensionMarkerPath",
@@ -269,6 +278,9 @@ $evidence = [ordered]@{
     production_app_sha256_before = $productionHashBefore
     production_app_sha256_after = $productionHashAfter
     production_changed = ($productionHashBefore -ne $productionHashAfter)
+    kit_import_audit = if (-not [string]::IsNullOrWhiteSpace($ImportAuditPath) -and (Test-Path -LiteralPath $ImportAuditPath)) { Get-Content -Raw -Encoding UTF8 $ImportAuditPath | ConvertFrom-Json } else { $null }
+    measurement_commit_ack_present = (-not [string]::IsNullOrWhiteSpace($MeasurementCommitAck) -and (Test-Path -LiteralPath $MeasurementCommitAck))
+    measurement_commit_failure_present = (-not [string]::IsNullOrWhiteSpace($MeasurementCommitFailure) -and (Test-Path -LiteralPath $MeasurementCommitFailure))
     lifecycle_marker = if ($null -ne $probeReport) { $probeReport.lifecycle_marker } else { $null }
     probe_status = if ($null -ne $probeReport) { $probeReport.status } else { "missing" }
 }
@@ -279,4 +291,10 @@ if ($productionHashBefore -ne $productionHashAfter) { throw "Phase 6EP changed p
 if ($dumps.Count -gt 0 -or $fatalLines.Count -gt 0 -or $uploadAttemptLines.Count -gt 0) { throw "Phase 6EP safety evidence failed" }
 if ($null -eq $probeReport -or $probeReport.status -ne "ok" -or $probeReport.lifecycle_marker -ne "shutdown_complete") { throw "Phase 6EP probe failed" }
 if ($null -eq $outcome -or $outcome.functional_status -ne "pass" -or $outcome.lifecycle_status -ne "normal_exit") { throw "Phase 6EP normal exit required" }
+if ($ReportPhase -eq "phase6ga") {
+    if (-not (Test-Path -LiteralPath $ImportAuditPath)) { throw "Phase 6GA import audit missing" }
+    $importAudit = Get-Content -Raw -Encoding UTF8 $ImportAuditPath | ConvertFrom-Json
+    if ($importAudit.status -ne "pass") { throw "Phase 6GA deterministic import failed" }
+    if (-not (Test-Path -LiteralPath $MeasurementCommitAck) -or (Test-Path -LiteralPath $MeasurementCommitFailure)) { throw "Phase 6GA durable pre-close commit failed" }
+}
 Write-Host "$ReportPhase passed: $Scenario offset=$OffsetM policy=$Policy filtering=$Filtering collision=$Collision run=$RunIndex"
