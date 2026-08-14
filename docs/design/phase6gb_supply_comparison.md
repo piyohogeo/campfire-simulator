@@ -74,3 +74,40 @@ comparison media. The media is explanatory, not a substitute for numeric
 evidence. Clearly visible penetration rejects S100 as a production candidate.
 Phase 6GB does not integrate production, change defaults, start P4, or qualify
 dynamic/deformed geometry.
+
+## Frozen runtime safe stop
+
+The no-Kit parameter-binding fixture passed 4/4 and started no Kit process.
+App-ready import, progress-aware CDB, and offline geometry preflights also
+passed. The evidence-only S93 channel preflight then formed a representative
+Flow field (269 active blocks at frame 1 and 688 at frame 60), with the expected
+1,344 active Points, stable identities, and fresh telemetry. It stopped before
+the first readback because float32 accumulation produced fuel sum
+`1075.2000160217285`; the frozen absolute startup tolerance of `1e-5` around
+`1075.2` was exceeded by `1.6021728515625e-5`.
+
+This is a new pre-readback harness/gate boundary, not evidence about collision,
+directional transport, memory exhaustion, GPU selection, or stage-close hang.
+The threshold was not changed after observing the result. The case completed
+release-after-close and wrote `shutdown_complete`, but the deliberate probe
+exception yielded OS exit code 1; therefore lifecycle classification is not a
+normal-exit sample. Exact cleanup qualified with residual zero. Kit/tree peaks
+were 13,461,442,560/13,613,182,976 bytes, leaving 3,718,426,624 and
+4,640,428,032 bytes to the 16/17 GiB stops. CDB, fatal, dump, upload, device
+loss, and TDR counts were zero.
+
+No formal slot, replacement, public readback, scalar/flux evaluation, or visual
+capture ran. S100 is not evaluated and is not an adoption candidate. Phase 6GB
+is frozen at this safe stop; a future restart requires a new contract/root and
+an explicitly predeclared source-sum comparison semantics suitable for the
+already-frozen float32 Point payload. Phase 6GA and Phase 6GB must not be
+reclassified.
+
+Release build, Phase 0 RTX, and Phase 3 passed after the stop. Phase 3 retained
+zero dry/wet mass-balance error, wood-owned Flow input, active blocks 246/348
+final/peak, and peak fuel 1.0. Focused Phase 6F tests passed 212/212 and the new
+Phase 6GB tests passed 6/6. The standard suite passed eight processes and 78/78
+tests in 297.2 seconds; devlog validation passed 475 references, 284 unique IDs,
+236 JSON, 177 SVG, and 2 ZIP assets. Production app and latest-demo SHA-256
+remain `94162F82...ADF02A` and `1C6FB249...E6285`; final Kit/CDB/GPU-helper
+residual count is zero.

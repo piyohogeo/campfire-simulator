@@ -9,6 +9,15 @@ four-case no-Kit command-line fixture before the unchanged S93/S100/OFF
 population. The SHA-pinned contract preserves all Phase 6GA physics and Phase
 6FZ safety thresholds. See `docs/design/phase6gb_supply_comparison.md`.
 
+Runtime confirmed the geometry correction: the no-Kit fixture passed 4/4 and
+the S93 channel preflight launched with `phase6er_corrected`. The representative
+field reached 269/688 active blocks at frames 1/60, but the frozen absolute
+startup sum gate rejected float32 fuel `1075.2000160217285` versus expected
+`1075.2` at tolerance `1e-5`. Readback, all nine formal slots, replacement, and
+video remained zero. Release-after-close and exact cleanup completed, while the
+deliberate probe error made OS exit 1; Phase 6GB is a frozen pre-readback safe
+stop, not a physical comparison result.
+
 # Phase 6FZ deterministic import and memory qualification contract
 
 Phase 6FYの20 fixture合格とattempt01 import safe stopはcommit `aa02635`の履歴として

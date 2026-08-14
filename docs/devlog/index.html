@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6fz">最新記録</a>
+        <a href="#phase-6gb">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fz">Phase 6FZの結果を読む</a>
+        <a class="button primary" href="#phase-6gb">Phase 6GBの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FZ · memory ceiling qualified</strong></div>
+        <div><span>現在地</span><strong>Phase 6GB · pre-readback safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,18 @@
   </header>
 
   <main>
+    <section id="phase-6gb" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6GB supply comparison pre-readback safe stop"><span class="phase-number compact">6GB</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">0 / 9 · pre-readback safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6GB · explicit geometry binding</p><h2>geometry tokenは修正、<br>float32 source-sum gateで安全停止。</h2><p><code>corrected</code>と<code>phase6er_corrected</code>を別fieldに固定し、実PowerShell command lineのno-Kit fixtureを追加しました。fixture 4/4、app-ready import、CDB、offline geometryは合格しましたが、S93 channel preflightは最初のreadback前に凍結済みsource-sum gateを満たさず停止しました。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Binding boundary</p><h3><code>corrected → phase6er_corrected</code>を確認。</h3><p>positive、direct concept、unknown token、legacy misrouteを実runnerのparameter bindingまで通しました。拒否3件をfail closedで記録し、新しいKit PIDは0。正式preflightでは期待runtime tokenでKitが起動しました。</p></section><section class="note"><p class="note-label">Active safe stop</p><h3>fuel差 <code>1.60217e-5</code>、許容 <code>1e-5</code>。</h3><p>1,344 Pointsとidentityは正しく、active blocksはframe 1/60で269/688でした。fuel実測<code>1075.2000160217285</code>が絶対許容を超えたためreadbackを許可せず、閾値変更・retry・replacement・formal slotを開始していません。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Frozen outcome</p><h3>物理比較は未成立。cleanupは完全。</h3><p>release-after-close、stage close、<code>shutdown_complete</code>は完了しましたが、意図的probe errorによりOS exit 1でnormal sampleではありません。Kit/tree peakは13,461,442,560／13,613,182,976 bytes、CDB・fatal・dump・upload・残留は0。RTX 3090、CUDA 0、RTX mask <code>0x1</code>、PhysX device 0を確認しました。</p><p><a href="assets/phase6/supply_comparison_phase6gb_safe_stop.json">machine summary</a> · <a href="../design/phase6gb_supply_comparison.md">design note</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>既存の最新デモ</strong><small>数値gate未到達のため新規動画なし</small></span></button></div><div class="check-list" role="list"><div role="listitem"><span>4/4</span><p><strong>Binding</strong><small>no-Kit fixture</small></p></div><div role="listitem"><span>0/9</span><p><strong>Formal</strong><small>not launched</small></p></div><div role="listitem"><span>0</span><p><strong>Readback</strong><small>gate stopped</small></p></div><div role="listitem"><span>0</span><p><strong>Residual</strong><small>exact cleanup</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Pending roadmap</p><h3>新contractでfloat32 source-sum意味論を事前固定。</h3><p>Phase 6GBは再試行・再分類しません。次に進むには、Point payloadを変えず、float32 accumulationを明示的に扱う比較方法をruntime前に凍結した独立Phaseと空rootが必要です。S100採用、比較動画、production、P4は引き続き未着手です。</p></section>
+        </div>
+      </article>
+    </section>
+
     <section id="phase-6ga" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6GA S93 S100 comparison harness safe stop"><span class="phase-number compact">6GA</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">0 / 9 · pre-Kit safe stop</span></aside>

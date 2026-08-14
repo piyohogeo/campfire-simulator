@@ -1,0 +1,67 @@
+{
+  "schema": "campfire.phase6gb.supply-comparison-safe-stop.v1",
+  "phase": "phase6gb",
+  "status": "channel_preflight_safe_stop",
+  "history": {"phase6ga_reclassified": false, "prior_population_reused": false},
+  "contract_sha256": "4C512A10B44096C93C59429E7F2A34C8D86EB977E08962D25CF594E78659F428",
+  "implementation_commit": "687631d",
+  "parameter_binding_fixture": {
+    "passed": true,
+    "cases_passed": 4,
+    "cases_total": 4,
+    "kit_processes_started": 0,
+    "mapping": {"concept": "corrected", "runtime_token": "phase6er_corrected"}
+  },
+  "population": {"channel_preflight_launches": 1, "formal_launches": 0, "formal_representative": 0, "replacements": 0, "readbacks": 0, "captures": 0},
+  "active_condition": "channel_attempt01/S93_support_clear",
+  "safe_stop": {
+    "classification": "operation_or_safety_failure",
+    "reason": "startup source-sum gate rejected the float32 fuel accumulation before readback",
+    "expected_fuel_sum": 1075.2,
+    "observed_fuel_sum": 1075.2000160217285,
+    "absolute_difference": 0.000016021728515625,
+    "frozen_absolute_tolerance": 0.00001,
+    "temperature_sum": 2688.0,
+    "smoke_sum": 107.51999759674072,
+    "startup_classification": "representative_ingestion",
+    "active_blocks_frame_1": 269,
+    "active_blocks_frame_60": 688,
+    "readback_permitted": false,
+    "process_exit_code": 1
+  },
+  "resource": {
+    "kit_peak_bytes": 13461442560,
+    "tree_peak_bytes": 13613182976,
+    "runner_peak_bytes": 96329728,
+    "diagnostic_peak_bytes": 16883712,
+    "kit_headroom_to_16_gib_bytes": 3718426624,
+    "tree_headroom_to_17_gib_bytes": 4640428032,
+    "minimum_available_physical_bytes": 83639418880,
+    "minimum_commit_headroom_bytes": 103030939648
+  },
+  "lifecycle": {
+    "stage_close_complete": true,
+    "shutdown_complete_marker": true,
+    "normal_os_exit": false,
+    "cdb_invocations": 0,
+    "fatal": 0,
+    "dump": 0,
+    "automatic_upload_attempt": 0,
+    "residual_processes": 0,
+    "exact_cleanup_qualified": true
+  },
+  "gpu": {"active_gpu": "NVIDIA GeForce RTX 3090", "cuda_device_ordinal": 0, "rtx_device_mask": "0x1", "physx_device_ordinal": 0},
+  "comparison": {"numeric_qualified": false, "s93_s100_off_results_available": false, "video_generated": false, "visible_penetration_evaluated": false, "s100_candidate": false},
+  "validation": {
+    "release_build": "pass",
+    "phase0_rtx": "pass",
+    "phase3": {"pass": true, "dry_mass_balance_error_kg": 0.0, "wet_mass_balance_error_kg": 0.0, "active_blocks_final": 246, "active_blocks_peak": 348, "peak_fuel_input": 1.0},
+    "focused_phase6f": "212/212",
+    "focused_phase6gb": "6/6",
+    "standard_suite": "8 processes; 78/78",
+    "devlog": "475 refs; 284 unique ids; 236 JSON; 177 SVG; 2 ZIP"
+  },
+  "production_changed": false,
+  "production_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "latest_demo_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285"
+}

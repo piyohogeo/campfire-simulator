@@ -1,5 +1,21 @@
 # Phase 6FO S93 / S100 Point supply comparison
 
+## 2026-08-14 Phase 6GB explicit-binding restart safe stop
+
+Phase 6GB corrected only the harness token boundary: design concept `corrected`
+was explicitly mapped to runtime token `phase6er_corrected`, and the real
+PowerShell case runner passed one positive plus three fail-closed negative
+no-Kit fixtures. The fresh S93 channel preflight then formed representative
+Flow (269/688 active blocks at frames 1/60) but rejected float32 fuel sum
+`1075.2000160217285` against expected `1075.2` and the frozen absolute `1e-5`
+tolerance. No readback, formal slot, replacement, scalar/flux comparison, or
+video ran. The threshold was not changed after the result. Stage close and
+exact cleanup completed; the deliberate probe error produced OS exit 1, with
+CDB/fatal/dump/upload/residual all zero. Phase 6GB is frozen and a future
+restart requires a new contract/root with source-sum comparison semantics
+declared before runtime. S100 and Point Emitter–CollisionProxy adoption remain
+unevaluated.
+
 ## 2026-08-14 Phase 6GA restart safe stop
 
 The explicitly approved fresh comparison was frozen as Phase 6GA with a balanced S93/S100/S100-OFF population and the qualified Phase 6FZ 16/17 GiB, import, pre-close commit, release-after-close, CDB, and exact-cleanup boundaries. Its first evidence-only preflight did not create Kit: the contract's geometry label `corrected` did not match the shared case runner's existing runtime token `phase6er_corrected`, so PowerShell parameter binding failed. This nonreplaceable operation failure stopped all nine formal slots and prevented numeric/video evidence. Phase 6GA is frozen, Phase 6FO remains historical, and neither is reclassified. A new contract/root with an exact parameter-binding fixture is required before comparison can resume; the physical conditions and thresholds remain unchanged.
