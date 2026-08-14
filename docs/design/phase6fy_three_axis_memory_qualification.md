@@ -103,3 +103,51 @@ only be reported ready when there are at most two post-measurement timeouts, no
 condition times out twice, each timeout has bounded diagnostic evidence, all
 replacement limits are respected, and every cleanup/identity gate passes.
 Phase 6FY itself never starts Phase 6FO.
+
+## Runtime safe stop
+
+The frozen contract SHA-256 was
+`2FF8A1A6FC8BB5C453E4DEC5A29A148CB17EE17FC02A5A9892BD12D3919D997C`.
+All twenty pre-runtime fixtures passed.  The fresh formal root was
+`artifacts/phase6fy-three-axis-memory-1`, but its first basic slot
+(`attempt01`, M0) failed before the physical probe entered its operation.
+
+The confirmed boundary is the Kit `--exec` import at app-ready.  Kit logged
+`ModuleNotFoundError: No module named 'probe_phase6fo_supply_comparison'` at
+line 17 of `probe_phase6fy_three_axis_memory.py`.  Only the extension-startup
+marker exists; `process_entry`, startup, fixed-frame, active-block,
+`measurement_complete`, pre-close commit, and stage-close markers do not.
+The external committer consequently ended with
+`parent_stopped_before_measurement_commit`.  This is a Phase 6FY harness/module
+search-path defect, not evidence of Flow operation, memory boundedness, or a
+stage-close failure.
+
+The outer 540-second absolute guard then initiated the bounded shutdown
+diagnostic.  Its stack-first CDB child attached and wrote partial native frames
+but timed out before the completion token; the module pass completed and
+explicit detach/exact cleanup succeeded.  The diagnostic class is
+`diagnostic_partial_stack_timeout`, not known NGX.  Phase 6FW classified 45
+attempt identities absent, zero owned residual, zero unknown identity, and
+zero mismatch stop.  Fatal, dump, upload, device-lost, and TDR counts were
+zero.
+
+Although the full resource trace observed a Kit peak of 9,535,336,448 bytes
+and a unique-tree peak of 9,765,523,456 bytes, the pre-close artifact was never
+committed and none of the operation gates passed.  The sample is therefore
+`memory_invalid_operation_failure` and is excluded from the formal memory
+distribution.  The population is 0 memory-valid / 1 memory-invalid; attempts
+02 onward were not launched and no replacement was permitted.  Neither the
+old 14 GiB decision nor the 16/17 GiB candidates can be qualified from this
+root.
+
+Phase 6FT, 6FV, and 6FX remain frozen.  Phase 6FO remains blocked.  A future
+attempt must use a new phase/contract/root, explicitly make the shared probe
+importable under Kit `--exec`, and add an app-ready import smoke fixture before
+launching a formal population.  Phase 6FY is not retried or reclassified.
+
+Post-stop verification passed the Release build in 7.20 seconds, Phase 0 RTX,
+Phase 3 with zero dry/wet mass-balance error and wood-owned Flow input,
+32/32 focused Phase 6F contracts, and the standard eight-process 78/78 suite
+in 328.4 seconds.  Devlog validation found 821 references, 281 unique IDs, 233
+JSON, 177 SVG, and 2 ZIP files with no missing reference or duplicate ID.
+Production app SHA-256 and the latest-demo manifest remain unchanged.

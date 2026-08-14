@@ -1,0 +1,114 @@
+{
+  "schema": "campfire.phase6fy.devlog-summary.v1",
+  "phase": "phase6fy",
+  "status": "operation_harness_safe_stop",
+  "date": "2026-08-14",
+  "contract": {
+    "schema": "campfire.phase6fy.three-axis-memory-qualification-contract.v1",
+    "sha256": "2FF8A1A6FC8BB5C453E4DEC5A29A148CB17EE17FC02A5A9892BD12D3919D997C",
+    "artifact_root": "artifacts/phase6fy-three-axis-memory-1",
+    "planned_basic_processes": 9,
+    "maximum_replacements": 2,
+    "readback_calls": 0,
+    "capture_calls": 0
+  },
+  "fixture_gate": {
+    "passed": 20,
+    "total": 20,
+    "report_sha256": "4A52DF1375BC925F3F646493AD8D82952A6C809D4330B34367739AE4C82F5F1E"
+  },
+  "population": {
+    "launched": 1,
+    "basic_launched": 1,
+    "replacement_launched": 0,
+    "memory_valid": 0,
+    "memory_invalid": 1,
+    "normal_os_exit": 0,
+    "stage_close_timeout": 0,
+    "unlaunched_after_safe_stop": 8,
+    "classification": "memory_invalid_operation_failure"
+  },
+  "confirmed_boundary": {
+    "last_marker": "extension_on_startup",
+    "kit_state": "app ready; executing Phase 6FY wrapper",
+    "exception": "ModuleNotFoundError: No module named 'probe_phase6fo_supply_comparison'",
+    "location": "scripts/probe_phase6fy_three_axis_memory.py:17",
+    "missing_markers": [
+      "process_entry",
+      "startup_liveness_complete",
+      "fixed_frame_reached",
+      "measurement_complete",
+      "stage_close_request_before"
+    ],
+    "preclose_commit": false,
+    "committer_status": "parent_stopped_before_measurement_commit",
+    "interpretation": "harness/module-search-path failure before physical operation; not Flow, memory-boundedness, or stage-close evidence"
+  },
+  "informational_resource_trace_excluded_from_formal_distribution": {
+    "samples": 2132,
+    "kit_peak_bytes": 9535336448,
+    "tree_peak_bytes": 9765523456,
+    "runner_peak_bytes": 94756864,
+    "diagnostic_peak_bytes": 114647040,
+    "physical_minimum_bytes": 85265059840,
+    "commit_headroom_minimum_bytes": 104683638784
+  },
+  "diagnostic_cleanup": {
+    "classification": "diagnostic_partial_stack_timeout",
+    "cdb_attach_observed": true,
+    "all_thread_stack_completion_observed": false,
+    "modules_observed": true,
+    "detach_safe": true,
+    "exact_cleanup_complete": true,
+    "phase6fw_qualified": true,
+    "attempt_identity_absent": 45,
+    "attempt_owned_residual": 0,
+    "unresolved_unknown": 0,
+    "mismatch_stop": 0,
+    "known_ngx_signature": false,
+    "fatal": 0,
+    "dump": 0,
+    "automatic_upload": 0
+  },
+  "decision": {
+    "phase6ft_reclassified": false,
+    "phase6fv_reclassified": false,
+    "phase6fx_reclassified": false,
+    "phase6fy_retried": false,
+    "kit_16_gib_qualified": false,
+    "tree_17_gib_qualified": false,
+    "phase6fo_restart_ready": false,
+    "production_changed": false,
+    "new_video_created": false,
+    "latest_demo_changed": false,
+    "minimum_next_evidence": "new phase/contract/root with a Kit --exec import smoke fixture and an explicit shared-probe module search path"
+  },
+  "regression": {
+    "release_build": "pass (7.20 s)",
+    "phase0_rtx": "pass",
+    "phase3": {
+      "status": "pass",
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "flow_input_owner": "wood thermal model",
+      "active_blocks_final": 258,
+      "active_blocks_peak": 403,
+      "peak_fuel_input": 1.0
+    },
+    "focused_phase6f": "32/32 pass",
+    "standard_suite": "8 processes, 78/78 pass (328.4 s)",
+    "devlog_validation": {
+      "status": "pass",
+      "references": 821,
+      "ids": 281,
+      "json": 233,
+      "svg": 177,
+      "zip": 2,
+      "duplicate_ids": 0,
+      "missing_references": 0
+    }
+  },
+  "raw_report_sha256": "6C8468C1B18DF62A3706148D3EAAD69E8CC3483C34E0949AA619A074F1F4715E",
+  "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "latest_demo_manifest_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285"
+}

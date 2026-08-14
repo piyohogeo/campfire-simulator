@@ -12,6 +12,15 @@ tree 17 GiB上限をruntime前に固定した。詳細は
 `docs/design/phase6fy_three_axis_memory_qualification.md`。Phase 6FO、
 S93/S100、production、既定値、動画、P4は開始・変更しない。
 
+正式root `artifacts/phase6fy-three-axis-memory-1` は20/20 fixture合格後、attempt01
+M0のapp-ready直後に `probe_phase6fy_three_axis_memory.py` が共有probeをimportできず
+`ModuleNotFoundError` で停止した。operation／measurement markerとpre-close commitは0件で、
+分類は `memory_invalid_operation_failure`、正式memory sampleは0件である。外側timeout後の
+bounded CDBはpartial stack timeout、module取得・detach・Phase 6FU/6FW exact cleanupは完了し、
+owned residual／unknown／fatal／dump／uploadは0だった。後続・replacementは開始せず、16/17 GiBと
+Phase 6FOは未qualifiedのままとする。次回は新Phase／新contract／新rootでKit `--exec` のimport
+smokeをruntime前gateへ追加する必要がある。Phase 6FYは再試行・遡及再分類しない。
+
 # Phase 6FX memory-ceiling qualification contract
 
 Phase 6FT/6FV remain frozen safe stops and their runtime artifacts are not part

@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6fx">最新記録</a>
+        <a href="#phase-6fy">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6fx">Phase 6FXの結果を読む</a>
+        <a class="button primary" href="#phase-6fy">Phase 6FYの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6FX · 5 / 9 lifecycle safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6FY · operation harness safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>16 / 17 GiB · unqualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,18 @@
   </header>
 
   <main>
+    <section id="phase-6fy" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6FY three-axis memory operation safe stop"><span class="phase-number compact">6FY</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">0 valid · operation safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6FY · three-axis memory qualification</p><h2>計測前のimport境界で停止。<br>メモリ試料には採用しない。</h2><p>memory validity、lifecycle、bounded diagnosticを分離した新契約と20 fixtureを固定しました。正式rootの最初のM0はKit app-readyまで進みましたが、同期wrapperが共有probeをimportできず、物理操作へ入る前に停止しました。Phase 6FT・6FV・6FXの履歴は変更していません。</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Confirmed boundary</p><h3>ModuleNotFoundError · app-ready</h3><p><code>probe_phase6fy_three_axis_memory.py:17</code>で<code>probe_phase6fo_supply_comparison</code>がmodule search pathにありませんでした。extension startup以外のoperation、startup、active-block、measurement、stage-close markerは0件です。約9.54 GBのKit peakは参考telemetryに留め、正式分布から除外しました。</p></section><section class="note"><p class="note-label">Bounded cleanup</p><h3>partial CDB · exact cleanup complete</h3><p>外側timeout後のCDBはattachしてpartial native frameを保存しましたが、stack completion token前にtimeoutしました。module取得、detach、Phase 6FU/6FW exact cleanupは完了し、owned residual、unknown identity、fatal、dump、automatic uploadはいずれも0でした。known NGXではありません。</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Fail-closed outcome</p><h3>0 memory-valid / 1 invalid。後続とreplacementは未起動。</h3><p>contract SHA-256は<code>2FF8A1A6...D997C</code>、fixtureは20/20合格です。attempt01は<code>memory_invalid_operation_failure</code>で、attempt02以降は開始していません。16 GiB Kit、17 GiB tree、Phase 6FO restartは未qualifiedのままです。</p><p><a href="assets/phase6/three_axis_memory_phase6fy_safe_stop.json">machine summary</a> · <a href="../design/phase6fy_three_axis_memory_qualification.md">design note</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>既存の最新デモ</strong><small>内部診断のため新規動画なし</small></span></button></div><div class="check-list" role="list"><div role="listitem"><span>20/20</span><p><strong>Fixtures</strong><small>pre-runtime</small></p></div><div role="listitem"><span>0</span><p><strong>Valid samples</strong><small>formal distribution</small></p></div><div role="listitem"><span>0</span><p><strong>Residual</strong><small>exact cleanup</small></p></div><div role="listitem"><span>—</span><p><strong>16 / 17 GiB</strong><small>unqualified</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Pending roadmap</p><h3>Phase 6FOはblocked。次回は新契約でimport smokeを先に行う。</h3><p>同じPhase 6FY populationは再試行しません。最小の次段階は、Kit <code>--exec</code>で共有probeのmodule search pathを明示し、app-ready import smokeをruntime前gateに追加した新Phaseです。production、S93/S100、readback、capture、動画、P4は変更・開始していません。</p></section>
+        </div>
+      </article>
+    </section>
+
     <section id="phase-6fx" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6FX memory ceiling lifecycle safe stop"><span class="phase-number compact">6FX</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">5 / 9 · lifecycle safe stop</span></aside>

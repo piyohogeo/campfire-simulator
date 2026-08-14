@@ -182,6 +182,27 @@ class Phase6FyThreeAxisMemoryQualification(unittest.TestCase):
         self.assertIn("--/phase6ep/capture=false", case)
         self.assertNotIn("run_phase6fo_supply_comparison.ps1", runner)
 
+    def test_published_safe_stop_excludes_the_pre_operation_sample(self):
+        published = json.loads(
+            (
+                ROOT
+                / "docs"
+                / "devlog"
+                / "assets"
+                / "phase6"
+                / "three_axis_memory_phase6fy_safe_stop.json"
+            ).read_text(encoding="utf-8")
+        )
+        self.assertEqual(published["status"], "operation_harness_safe_stop")
+        self.assertEqual(published["population"]["memory_valid"], 0)
+        self.assertEqual(published["population"]["memory_invalid"], 1)
+        self.assertFalse(published["confirmed_boundary"]["preclose_commit"])
+        self.assertIn("ModuleNotFoundError", published["confirmed_boundary"]["exception"])
+        self.assertFalse(published["decision"]["phase6fo_restart_ready"])
+        devlog = (ROOT / "docs" / "devlog" / "index.html").read_text(encoding="utf-8")
+        self.assertIn('id="phase-6fy"', devlog)
+        self.assertIn("three_axis_memory_phase6fy_safe_stop.json", devlog)
+
 
 if __name__ == "__main__":
     unittest.main()
