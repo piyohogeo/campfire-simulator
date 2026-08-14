@@ -1,0 +1,137 @@
+{
+  "schema": "campfire.phase6gt.temporary-nvdb-safe-stop.v1",
+  "phase": "6GT",
+  "status": "harness_failure_safe_stop",
+  "artifact_root": "artifacts/phase6gt-temporary-nvdb-1",
+  "contract_sha256": "0C2B2832F9AEE4F8B4D3853B7086F31742DB392AB120B2D2C13153417AB1AF01",
+  "history": {
+    "phase6gn_through_phase6gs_reclassified": false,
+    "prior_runtime_sample_reused": false
+  },
+  "fixtures": {
+    "python_no_kit": {"passed": true, "cases": 23},
+    "powershell_end_to_end": {"passed": true, "cases": 5},
+    "kit_started": false
+  },
+  "runtime": {
+    "launches": 1,
+    "retries": 0,
+    "replacements": 0,
+    "frame": 180,
+    "active_blocks": 1329,
+    "operation_result": "temporary_nvdb_save_boundary_failure",
+    "lifecycle_result": "failure",
+    "process_exit_code": 1,
+    "shutdown_complete_marker": true,
+    "stage_close_seconds": 2.369910,
+    "cleanup_residual_processes": 0
+  },
+  "source": {
+    "slot": 0,
+    "channel": "temperature",
+    "python_type": "numpy.ndarray",
+    "shape": [11910336],
+    "dtype": "uint32",
+    "size": 11910336,
+    "nbytes": 47641344,
+    "empty": false
+  },
+  "volume": {
+    "conversion_calls": 1,
+    "python_type": "omni.volume._volume.GridData",
+    "grid_count": 1,
+    "grid_type": 1,
+    "short_grid_name": "Flow",
+    "grid_class": 2,
+    "index_bounding_box": [[-96, -96, -16], [127, 111, 639]],
+    "world_bounding_box": [[-2.4000000953674316, -2.4000000953674316, -0.4000000059604645], [2.4000000953674316, 2.4000000953674316, 15.600000381469727]],
+    "accessor_calls": {
+      "get_num_grids": 1,
+      "get_grid_type": 1,
+      "get_short_grid_name": 1,
+      "get_grid_class": 1,
+      "get_index_bounding_box": 1,
+      "get_world_bounding_box": 1
+    },
+    "last_successful_accessor": "get_world_bounding_box"
+  },
+  "failure": {
+    "error_type": "TypeError",
+    "error": "_append_resource_marker() got multiple values for argument 'path'",
+    "last_normal_operation_marker": "phase6gt_bounded_metadata_complete",
+    "last_marker": "phase6gt_operation_failure",
+    "save_volume_parameters_constructed": false,
+    "save_volume_calls": 0,
+    "save_volume_return": null,
+    "file_poll_started": false,
+    "file_size_bytes": null,
+    "volume_release_marker_reached": false,
+    "source_release_marker_reached": false
+  },
+  "temporary_file": {
+    "existed_before_save": false,
+    "created": false,
+    "content_read_calls": 0,
+    "hash_calls": 0,
+    "reload_calls": 0,
+    "parent_cleanup_found_file": false,
+    "remaining_files": 0
+  },
+  "resources": {
+    "peaks_bytes": {
+      "kit": 14911668224,
+      "unique_tree": 15075356672,
+      "runner": 95997952,
+      "diagnostic": 16846848
+    },
+    "minimum_margin_bytes": {
+      "kit": 2268200960,
+      "unique_tree": 3178254336
+    },
+    "available_physical_minimum_bytes": 79560007680,
+    "commit_headroom_minimum_bytes": 99194159104
+  },
+  "safety": {
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_count": 0,
+    "cdb_invocations": 0,
+    "residual_processes": 0
+  },
+  "scope": {
+    "nanovdb_reload_started": false,
+    "typed_metadata_started": false,
+    "other_channel_started": false,
+    "sampling_started": false,
+    "formal_nine_process_population_started": false,
+    "production_changed": false,
+    "latest_demo_changed": false
+  },
+  "hashes": {
+    "production_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "production_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "latest_demo_before": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285",
+    "latest_demo_after": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285"
+  },
+  "verification": {
+    "release_build": "passed",
+    "phase0_rtx": "passed",
+    "phase3": {
+      "passed": true,
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "flow_input_owner": "wood thermal model",
+      "active_blocks_final": 312,
+      "active_blocks_peak": 350
+    },
+    "focused": {
+      "phase6gt_python": "23/23",
+      "phase6gt_parent_end_to_end": "5/5",
+      "phase6gs": "14/14",
+      "phase6gr": "26/26",
+      "phase6gq": "19/19"
+    },
+    "standard_suite": "8/8 processes; 78 tests",
+    "devlog_static_check": "passed"
+  }
+}

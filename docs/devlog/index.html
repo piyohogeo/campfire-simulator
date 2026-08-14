@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6gs">最新記録</a>
+        <a href="#phase-6gt">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6gs">Phase 6GSの結果を読む</a>
+        <a class="button primary" href="#phase-6gt">Phase 6GTの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6GS · bounded volume metadata qualified</strong></div>
+        <div><span>現在地</span><strong>Phase 6GT · temporary NanoVDB harness safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,17 @@
   </header>
 
   <main>
+    <section id="phase-6gt" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6GT temporary NanoVDB save safe stop"><span class="phase-number compact">6GT</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6GT · one temporary file boundary</p><h2>Public metadata passed again;<br>the save call was not reached.</h2><p>The fresh S93 process completed the Phase 6GS readback, conversion, and six accessors. The next resource marker rejected a duplicate <code>path</code> argument before save-parameter construction.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Operation</p><h3>This is harness evidence, not a save API failure.</h3><p><code>save_volume()</code> count was zero. No NanoVDB file was created, opened, read, hashed, reloaded, or retained. The last normal operation marker was <code>phase6gt_bounded_metadata_complete</code>.</p></section><section class="note"><p class="note-label">Lifecycle</p><h3>Shutdown completed but exit was nonzero.</h3><p>Stage close took 2.369910 seconds and <code>shutdown_complete</code> was durable. The probe exception produced exit code 1, so lifecycle qualification failed; exact cleanup left zero process and zero temporary file.</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Safety envelope</p><h3>The one-process fail-closed boundary held.</h3><p>Kit/tree peaks were 14,911,668,224 / 15,075,356,672 bytes, leaving 2,268,200,960 / 3,178,254,336 bytes. Fatal, dump, upload, CDB, and residual counts were zero.</p><p><a href="assets/phase6/phase6gt_temporary_nvdb_safe_stop.json">machine report</a> · <a href="../design/phase6gt_temporary_nvdb_safe_stop.md">design note</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>internal harness safe stop; no new video</small></span></button></div><div class="check-list" role="list"><div role="listitem"><span>6</span><p><strong>Accessors</strong><small>each returned</small></p></div><div role="listitem"><span>0</span><p><strong>Save calls</strong><small>not reached</small></p></div><div role="listitem"><span>0</span><p><strong>NVDB files</strong><small>none retained</small></p></div><div role="listitem"><span>0</span><p><strong>Residual</strong><small>cleanup complete</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Continuation roadmap</p><h3>Fix the marker-key boundary in a separate Phase.</h3><p>Phase 6GT is not retried or reclassified. A future contract must fixture an unambiguous temporary-file marker key at the actual helper boundary before another one-process save test. Typed metadata, reload, other channels, sampling, collectors, flux, and the formal population remain blocked.</p><p>Release build, Phase 0 RTX, Phase 3, focused fixtures, standard 8/8-process suite (78 tests), and devlog validation passed. Production/latest-demo hashes are unchanged.</p></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6gs" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6GS bounded volume metadata qualification"><span class="phase-number compact">6GS</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">qualified</span></aside>
@@ -5307,7 +5318,7 @@
         <p class="section-kicker">Roadmap</p>
         <h2>小さく燃やして、確かめながら進む。</h2>
         <p>Phase 6GNでmodule／callableを分離したexact-wrapper smokeは5/5合格し、Phase 6GMのimport不具合は解消した。しかし正式attempt01 S93はframe 180の7-handle readback直後、spatial result保存前にnative access violation <code>0xC0000005</code>でsafe stopした。accepted 0/9、replacement 0で後続は未起動、exact cleanup residualは0である。Phase 6GNを凍結し、次はこのpost-readback native operation境界だけを別承認Phaseで隔離する。S93/S100 pair、flux、deep velocity、動画、Point policy、production統合は未到達である。</p>
-        <p><strong>Current continuation:</strong> Phase 6GS fixed and fixture-qualified both Phase 6GR harness boundaries, then qualified one fresh temperature conversion plus the six bounded public volume accessors with natural exit and residual zero. Temporary NVDB, typed metadata, other channels, sampling, collectors, flux, repeated readback/conversion, and the formal population remain blocked behind a new explicit approval.</p>
+        <p><strong>Current continuation:</strong> Phase 6GT repeated the qualified readback, conversion, and six public accessors, but stopped before <code>save_volume()</code> because its temporary-path marker collided with the resource helper's positional <code>path</code> argument. No NanoVDB was created or read. A new harness-only contract/root is required before another save-only process; typed metadata and all later operations remain blocked.</p>
         <ol class="roadmap">
           <li class="done"><span>0</span><div><strong>環境成立確認</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>1</span><div><strong>Flow単体検証</strong><small>完了 · 2026.08.04</small></div></li>

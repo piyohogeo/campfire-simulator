@@ -1,5 +1,21 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6GT temporary NanoVDB save safe stop
+
+Phase 6GS remains qualified and frozen. Phase 6GT passed its no-Kit fixtures
+(23/23 Python, 5/5 parent end-to-end), then launched one fresh S93 process. The
+readback, temperature conversion, and six public metadata accessors completed,
+but the next durable marker supplied payload key `path`, conflicting with the
+resource-marker helper's positional `path` argument. The resulting TypeError
+occurred before `SaveVolumeParameters` construction or `save_volume()`.
+
+No NanoVDB was created or read, the exact temporary-file cleanup found zero
+file, stage close completed in 2.369910 seconds, and residual count was zero.
+Kit/tree peaks were 14,911,668,224 / 15,075,356,672 bytes. Phase 6GT is a
+harness-failure safe stop, not save API evidence; typed reload and all later
+operations remain blocked. See
+`docs/design/phase6gt_temporary_nvdb_safe_stop.md`.
+
 # Phase 6GS bounded public volume-metadata qualification
 
 Phase 6GR remains frozen as a harness-failure safe stop. Phase 6GS fixed the

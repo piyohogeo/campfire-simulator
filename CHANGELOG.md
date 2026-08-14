@@ -1,5 +1,15 @@
 # Changelog
 
+- Froze Phase 6GT as a temporary-NanoVDB harness safe stop. Its no-Kit Python
+  and parent cleanup fixtures passed 23/23 and 5/5, and one fresh S93 process
+  repeated the qualified readback, conversion, and six bounded accessors.
+- The path-confirmation marker collided with the resource-marker helper's
+  positional `path` argument. Kit exited 1 before `SaveVolumeParameters` or
+  `save_volume()`; no NanoVDB was created, read, hashed, reloaded, or retained.
+- Stage close completed in 2.369910 seconds, exact process/file cleanup left
+  zero residual, and production/latest demo remained unchanged. Phase 6GT is
+  not qualified and typed metadata plus later operations remain blocked.
+
 - Qualified the Phase 6GS single temperature public volume-metadata boundary
   without reclassifying or reusing Phase 6GR. Canonical marker payload and
   optional-property normalization fixtures passed 14/14 and 13/13 before Kit.
