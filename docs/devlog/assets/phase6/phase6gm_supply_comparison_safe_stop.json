@@ -1,0 +1,110 @@
+{
+  "schema": "campfire.phase6gm.supply-comparison-safe-stop.v1",
+  "phase": "phase6gm",
+  "status": "safe_stop",
+  "timestamp_utc": "2026-08-14T07:24:35.4235877Z",
+  "history": {
+    "phase6gl_reclassified": false,
+    "prior_samples_reused": false,
+    "artifact_root": "artifacts/phase6gm-supply-comparison-1"
+  },
+  "contract": {
+    "sha256": "D1DFA1B592955A2EFC3BA88A79D34C37E9040DE6CE859CE068A0DA0369CF7D54",
+    "export_descriptor_file_sha256": "E760846F5080A3DCC522D24DAA1589093DDFE852B605737916C68505CB9FDBE0",
+    "export_descriptor_semantic_sha256": "53CDE38FD5B1A5F48AB2E7B896F6EF391DDA4D5F6621B21FDB1B435F34BDA8CE",
+    "qualified_public_channel_schema": "flow110.0.0-kit110.2-public-readback-rgba7-v1"
+  },
+  "preflight": {
+    "payload_source_contract": "16/16 pass",
+    "geometry_parameter_binding": "4/4 pass",
+    "public_channel_schema_fixture": "pass",
+    "bounded_artifact_interface_fixture": "pass",
+    "offline_saved_reloaded_usd_export_fixture": "pass",
+    "offline_fixture_kit_process_launched": false,
+    "app_ready_import_smoke": "3/3 pass",
+    "cdb_progress_fixture": "7/7 pass",
+    "export_state": {
+      "temperature": true,
+      "fuel": true,
+      "burn": true,
+      "smoke": true,
+      "velocity": true,
+      "divergence": true,
+      "rgba": false,
+      "rgb": false
+    }
+  },
+  "population": {
+    "required_accepted_processes": 9,
+    "formal_launches": 1,
+    "accepted_processes": 0,
+    "completed_slots": 0,
+    "replacement_count": 0,
+    "active_attempt": "attempt01",
+    "active_slot": "sequence01_position01_S93",
+    "numeric_qualified": false,
+    "video_generated": false
+  },
+  "failure": {
+    "boundary": "Kit app-ready --exec wrapper import before stage authoring",
+    "classification": "nonreplaceable_harness_operation_failure",
+    "exception": "ImportError",
+    "message": "required entry points missing: ['shared']",
+    "confirmed_cause": "probe_phase6gm_supply_comparison required the imported shared module object through a loader contract that accepts callable entry points only",
+    "flow_started": false,
+    "stage_authored": false,
+    "readback_count": 0,
+    "numeric_metrics_available": false,
+    "automatic_retry": false
+  },
+  "resource": {
+    "runner_peak_private_bytes": 95526912,
+    "kit_peak_private_bytes": 9797578752,
+    "diagnostic_peak_private_bytes": 115171328,
+    "unique_tree_peak_private_bytes": 10024439808,
+    "kit_limit_bytes": 17179869184,
+    "tree_limit_bytes": 18253611008,
+    "kit_margin_bytes": 7382290432,
+    "tree_margin_bytes": 8229171200,
+    "minimum_available_physical_bytes": 85054844928,
+    "minimum_commit_headroom_bytes": 104671105024,
+    "resource_gate_pass": true
+  },
+  "lifecycle": {
+    "normal_os_exit": false,
+    "classification": "unknown_shutdown_failure_after_import_failure",
+    "absolute_timeout_seconds": 900,
+    "last_durable_marker": "os_process_exit_observed",
+    "cdb_invoked": true,
+    "cdb_stack": "partial_native_frames_no_complete_all_thread_stack_no_progress_timeout",
+    "cdb_modules": "complete",
+    "cdb_detach": "complete",
+    "known_ngx_signature": false,
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_attempt_count": 0,
+    "device_lost_count": 0,
+    "tdr_count": 0,
+    "exact_cleanup_pass": true,
+    "residual_process_count": 0
+  },
+  "integrity": {
+    "production_app_sha256_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "production_app_sha256_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "production_changed": false,
+    "latest_demo_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285",
+    "latest_demo_changed": false
+  },
+  "verification": {
+    "release_build": "pass",
+    "phase0_rtx": "pass",
+    "phase3": "pass",
+    "phase3_dry_mass_balance_error_kg": 0.0,
+    "phase3_wet_mass_balance_error_kg": 0.0,
+    "phase3_flow_input_owner": "wood thermal model",
+    "focused_phase6g": "66/66 pass",
+    "standard_suite": "78/78 pass across 8 processes",
+    "devlog_static_validation": "pass: refs 492, ids 293, json 245, svg 177, zip 2"
+  },
+  "next_boundary": "Freeze Phase 6GM. In a separately approved Phase and fresh root, correct the wrapper import-entrypoint declaration, add a Phase6GM app-ready wrapper smoke that exercises the exact wrapper, and only then restart the population from process 1."
+}

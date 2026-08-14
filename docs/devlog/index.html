@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6gl">最新記録</a>
+        <a href="#phase-6gm">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6gl">Phase 6GLの結果を読む</a>
+        <a class="button primary" href="#phase-6gm">Phase 6GMの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6GL · channel-operation safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6GM · app-ready import safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,17 @@
   </header>
 
   <main>
+    <section id="phase-6gm" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6GM export-aligned formal comparison safe stop"><span class="phase-number compact">6GM</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">1/9 launch · safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6GM · export-aligned S93/S100/OFF</p><h2>The saved USD export state passed;<br>the exact wrapper import did not.</h2><p>The new immutable diagnostic descriptor made S93, S100, and OFF explicitly match the Phase 6GK seven-channel export state. The fresh population nevertheless stopped before stage authoring in the first S93 process.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Pre-Kit evidence</p><h3>Export authoring is aligned and fail closed.</h3><p>Source 16/16, parameter binding 4/4, schema and bounded-artifact fixtures, app-ready smoke 3/3, CDB progress 7/7, and the saved/reloaded USD fixture all passed. Every condition authored divergence ON and RGBA/RGB OFF through one shared descriptor; no Kit process was used by the USD fixture.</p></section><section class="note caution"><p class="note-label">Active safe stop</p><h3>A module object was declared as a callable entry point.</h3><p>The Phase 6GM wrapper required <code>shared</code> through a loader contract that validates callable entry points. Because <code>shared</code> is a module object, Kit raised <code>ImportError: required entry points missing: ['shared']</code> before stage construction. This is a harness import failure, not Flow, Collision, schema, or numeric evidence.</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Bounded diagnosis</p><h3>No retry; exact cleanup completed.</h3><p>The formal population remains 0/9 accepted with no replacement, readback, pair gate, or video. Kit did not exit normally after the import failure and reached the 900-second outer timeout. Stack-first CDB preserved partial native frames; the module pass and explicit detach completed, the known NGX signature did not match, and exact cleanup left zero residual.</p><p>Kit/tree peaks were 9,797,578,752 / 10,024,439,808 bytes, leaving 7,382,290,432 / 8,229,171,200 bytes below the 16/17 GiB limits. Fatal, dump, upload, device-lost, and TDR counts were zero.</p><p><a href="assets/phase6/phase6gm_supply_comparison_safe_stop.json">machine summary</a> · <a href="../design/phase6gm_formal_supply_comparison.md">design note</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>numeric gate not reached; no new video</small></span></button></div><div class="check-list" role="list"><div role="listitem"><span>0/9</span><p><strong>Accepted</strong><small>launch 1</small></p></div><div role="listitem"><span>0</span><p><strong>Readbacks</strong><small>pre-stage stop</small></p></div><div role="listitem"><span>partial</span><p><strong>CDB stack</strong><small>detach complete</small></p></div><div role="listitem"><span>0</span><p><strong>Residual</strong><small>exact cleanup</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Pending roadmap</p><h3>Freeze Phase 6GM; correct the exact-wrapper import contract in a new Phase.</h3><p>Phase 6GM is not retried or reclassified. A separately approved contract and fresh root must remove the module object from callable entry-point validation and add an app-ready smoke for the exact Phase 6GM wrapper before restarting at process 1. Production, defaults, Point policy, V3, P4, PhysX sharing, dynamic transform, geometry, 20-log performance, and fire lighting remain unchanged.</p><p>Release build, Phase 0 RTX, Phase 3 zero dry/wet mass balance with wood-owned Flow input, focused Phase 6G 66/66, standard suite 78/78, and devlog validation passed. Production/latest-demo hashes remain unchanged.</p></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6gl" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6GL formal supply comparison safe stop"><span class="phase-number compact">6GL</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">1/9 launch · safe stop</span></aside>
@@ -5229,7 +5240,7 @@
       <div class="shell">
         <p class="section-kicker">Roadmap</p>
         <h2>小さく燃やして、確かめながら進む。</h2>
-        <p>Phase 6GKで7-handle public schemaはpreflight-qualifiedになった。Phase 6GLは新しい正式S93/S100/OFF母集団を開始したが、attempt01のformal stageが6GKと同じdivergence export stateをauthoringしなかったため、frame 180のraw schema gateでnonreplaceable safe stopとなった。物理比較、方向付きflux、deep velocity、動画、S100採用、Point policy、production統合は未到達である。次はPhase 6GLを凍結し、新しいcontract/rootでformal stageのexport stateをqualified schemaへ一致させる。</p>
+        <p>Phase 6GMはPhase 6GK-derivedの共通export descriptorと保存・再読込USD fixtureにより、S93／S100／OFFのdivergence ON・RGBA/RGB OFFを一致させた。しかし正式attempt01は、module object <code>shared</code>をcallable required entry pointとして検証したexact-wrapper import契約の誤りでstage authoring前にsafe stopした。acceptedは0/9で、物理比較、方向付きflux、deep velocity、動画、S100採用、Point policy、production統合は未到達である。次はPhase 6GMを凍結し、別承認の新contract/rootでwrapper import宣言とexact-wrapper app-ready smokeだけを修正してprocess 1から再開する。</p>
         <ol class="roadmap">
           <li class="done"><span>0</span><div><strong>環境成立確認</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>1</span><div><strong>Flow単体検証</strong><small>完了 · 2026.08.04</small></div></li>
@@ -5237,7 +5248,7 @@
           <li class="done"><span>3</span><div><strong>木材熱モデル</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>4</span><div><strong>配置と通気</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>5</span><div><strong>崩壊</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · formal divergence authoring mismatchでsafe stop</small></div></li>
+          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · exact-wrapper import contractでsafe stop</small></div></li>
         </ol>
       </div>
     </section>

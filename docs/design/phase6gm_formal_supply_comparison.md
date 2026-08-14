@@ -55,3 +55,39 @@ pre-close commit, progress-aware stack-first CDB, exact attempt-tree cleanup,
 and PID-reuse classification are inherited unchanged. Any non-startup failure
 stops the population without retry. Video is authorized only after numerical
 9/9 qualification, and production integration remains out of scope.
+
+## Runtime result: frozen safe stop
+
+All pre-Kit gates passed. The source fixture passed 16/16, parameter binding
+passed 4/4, the qualified schema and bounded-artifact fixtures passed, and the
+saved/reloaded USD fixture confirmed the identical explicit export state for
+S93, S100, and OFF without launching Kit. The common descriptor therefore
+removed the Phase 6GL divergence-authoring mismatch as designed.
+
+The fresh population then stopped in attempt01, sequence01 position01 S93,
+before stage construction. Kit reached its app-ready `--exec` environment, but
+`probe_phase6gm_supply_comparison.py` asked the exact-module loader to validate
+both `_qualified_spatial_boundary` and `shared` as callable entry points.
+`shared` is intentionally a module object, not a callable, so the loader raised
+`ImportError: required entry points missing: ['shared']`. This is a confirmed
+diagnostic-harness import-contract defect. It is not Flow, export authoring,
+CollisionProxy, readback, resource, or numerical comparison evidence.
+
+The failure is nonreplaceable. No attempt02, readback, directional metric,
+pair gate, or video was started; the formal result remains 0/9 accepted. Kit
+did not exit normally after the import failure and was caught at the bounded
+outer timeout. Stack-first CDB preserved partial native frames, completed the
+independent module pass and explicit detach, and did not match the accepted NGX
+five-token signature. Exact identity cleanup left zero residual. Kit/tree peaks
+were 9,797,578,752 / 10,024,439,808 bytes, with all resource gates satisfied;
+fatal, dump, automatic upload, device-lost, and TDR counts were zero.
+
+Phase 6GM is frozen and is not retried or reclassified. A future separately
+approved Phase must correct only the wrapper import declaration, prove the
+exact Phase 6GM wrapper in an app-ready smoke, use a new contract/root, and
+restart at process 1. Production and the Phase 6GK schema remain unchanged.
+
+Post-stop verification passed: Release build, Phase 0 RTX, Phase 3 with zero
+dry/wet mass-balance error and wood-owned Flow input, focused Phase 6G 66/66,
+standard suite 78/78 across eight processes, and devlog static validation.
+Production and latest-demo SHA-256 values remained unchanged.

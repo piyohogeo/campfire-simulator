@@ -3868,3 +3868,31 @@ inherited-only negatives before Kit starts. The formal nine-process population,
 frames, numerical gates, replacement budget, 16/17 GiB limits, lifecycle order,
 CDB, and cleanup remain identical to Phase 6GL. Numerical 9/9 qualification is
 required before any comparison video; production integration remains excluded.
+
+# Phase 6GM export-aligned comparison safe stop
+
+Phase 6GMのpre-Kit gateはすべて合格した。float32 source 16/16、geometry
+binding 4/4、schema／bounded artifact、app-ready import smoke 3/3、CDB
+progress 7/7に加え、S93／S100／OFFの保存・再読込USDは共通descriptor
+digest `53CDE38F...A8CE`と一致し、divergence ON、RGBA／RGB OFFを明示した。
+したがってPhase 6GLのexport authoring乖離は診断stage境界で解消された。
+
+しかし正式attempt01 S93はstage authoring前のKit `--exec` importで停止した。
+Phase 6GM wrapperがexact-module loaderへcallable `_qualified_spatial_boundary`
+とmodule object `shared`を同じrequired-entrypoint集合として渡したため、
+`ImportError: required entry points missing: ['shared']`となった。これは
+確認済みharness import-contract不具合で、Flow／Collision／readback／数値の
+結果ではない。nonreplaceable operation failureのためlaunch 1、accepted
+0/9、replacement 0で後続を開始していない。
+
+import failure後のKit normal OS exitは成立せず、900秒outer timeoutで
+stack-first CDBを起動した。all-thread stackはno-progress timeoutのpartial
+evidenceだがnative frameを保存し、module passとexplicit detachは完了、既知
+NGX signatureは不一致だった。exact cleanup residualは0、Kit/tree peakは
+`9,797,578,752 / 10,024,439,808 bytes`で安全上限内、fatal／dump／upload／
+device-lost／TDRは0である。Phase 6GMは凍結し、別承認の新Phaseでwrapper
+import宣言とexact-wrapper app-ready smokeを直した後、新rootのprocess 1から
+再開する。production、既定値、schema、Point policy、動画は変更しない。
+Release build、Phase 0 RTX、Phase 3（dry／wet mass balance error 0、Flow input
+ownerはwood thermal model）、focused Phase 6G 66/66、標準suite 78/78、
+devlog静的検査は合格し、production／latest-demo SHA-256は不変である。

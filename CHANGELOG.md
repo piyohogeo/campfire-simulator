@@ -1,5 +1,19 @@
 # Changelog
 
+- Froze Phase 6GM as a nonreplaceable app-ready import safe stop. All pre-Kit
+  gates passed, including the saved/reloaded S93/S100/OFF USD export-state
+  fixture, but formal attempt01 rejected the diagnostic wrapper before stage
+  authoring because a module object (`shared`) was incorrectly declared as a
+  callable required entry point. No readback, numeric comparison, replacement,
+  or video was started; the accepted population remains 0/9.
+- Preserved the bounded timeout evidence: CDB recorded partial native frames,
+  completed its module pass and explicit detach, did not match the known NGX
+  signature, and exact cleanup left zero residual. Kit/tree resource gates,
+  production SHA, defaults, and latest demo remained unchanged.
+- Revalidated Release build, Phase 0 RTX, Phase 3 zero dry/wet mass balance
+  with wood-owned Flow input, focused Phase 6G 66/66, standard suite 78/78,
+  and the devlog static checks after recording the stop.
+
 - Froze the Phase 6GM diagnostic-only export authoring contract before runtime.
   A single Phase 6GK-derived immutable descriptor now drives both the formal
   stage wrapper and the saved/reloaded-USD offline fixture: divergence is
