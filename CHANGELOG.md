@@ -1,5 +1,8 @@
 # Changelog
 
+- Froze Phase 6GB as a harness-only correction to the Phase 6GA pre-Kit safe stop. The contract now stores design concept `corrected` separately from runtime token `phase6er_corrected`, rejects unknown/direct/legacy misrouting, and preserves every physical, readback, memory, lifecycle, and numeric comparison setting.
+- Added a bounded four-case parameter-binding fixture that invokes the real PowerShell case runner without Kit and records its final argument vector. Formal S93/S100/OFF execution remains gated on this fixture plus the existing Phase 6FZ app-ready import, CDB progress, offline geometry, and cleanup preflights.
+
 - Froze the production-neutral Phase 6GA S93/S100/S100-OFF comparison contract with Phase 6FZ's qualified 16/17 GiB ceilings, release-after-close, deterministic shared-probe import, durable pre-close commit, progress-aware CDB, and Phase 6FU/6FW exact cleanup.
 - Safely stopped its first evidence-only preflight before Kit creation: the conceptual geometry value `corrected` did not satisfy the shared runner's existing `phase6er_corrected` runtime token. The nonreplaceable parameter-binding failure prevented all nine formal processes, readbacks, scalar/flux results, and video; no old Phase 6FO/6FZ evidence was reused or reclassified.
 - Confirmed zero Kit/CDB/residual process, zero fatal/dump/upload, exact identity cleanup, and unchanged production/default/latest-demo hashes. A separately frozen harness-only token correction and exact parameter-binding fixture are required before comparison restarts.

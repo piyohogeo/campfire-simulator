@@ -1,4 +1,4 @@
-"""Analyze the Phase 6GA S93/S100/OFF population without changing Phase 6FO."""
+"""Analyze Phase 6GA/6GB S93/S100/OFF populations without changing Phase 6FO."""
 
 from __future__ import annotations
 
@@ -162,7 +162,8 @@ def _paired(sequence: int, members: dict, contract: dict):
 
 def build(root: Path, contract_path: Path, offline_path: Path):
     contract = _read(contract_path)
-    if not contract or contract.get("phase") != "phase6ga": raise ValueError("invalid Phase 6GA contract")
+    phase = (contract or {}).get("phase")
+    if phase not in {"phase6ga", "phase6gb"}: raise ValueError("invalid Phase 6GA/6GB contract")
     preflight = [analyze_attempt(path.parent, contract, True) for path in sorted(root.glob("channel-preflight/*/attempt_metadata.json"))]
     attempts = [analyze_attempt(path.parent, contract, False) for path in sorted(root.glob("formal/*/attempt_metadata.json"))]
     pairs = []
@@ -183,7 +184,7 @@ def build(root: Path, contract_path: Path, offline_path: Path):
         cross["pass"] = not cross["failures"]
     qualified = bool(preflight and preflight[-1]["classification"] == "representative_pass" and len(representative) == 9 and len(pairs) == 3 and all(row["pass"] for row in pairs) and cross["pass"])
     peaks = {role: [int((row.get("resource") or {}).get("peaks", {}).get(role) or 0) for row in representative] for role in ("kit", "tree", "runner", "diagnostic")}
-    return {"schema": "campfire.phase6ga.supply-comparison-report.v1", "phase": "phase6ga",
+    return {"schema": f"campfire.{phase}.supply-comparison-report.v1", "phase": phase,
             "status": "qualified_numeric" if qualified else "in_progress_or_safe_stop",
             "contract_sha256": _sha(contract_path), "offline_sha256": _sha(offline_path),
             "phase6fo_reclassified": False, "phase6fz_reclassified": False, "prior_population_reused": False,

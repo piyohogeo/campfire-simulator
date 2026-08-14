@@ -6,7 +6,7 @@ param(
     [ValidateSet("true", "false")][string]$Filtering = "true",
     [ValidateSet("true", "false")][string]$Collision = "true",
     [ValidateSet("strict_all", "allow_self_support", "allow_self_center", "allow_other_support")][string]$Policy = "strict_all",
-    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev", "phase6ew", "phase6ex", "phase6ey", "phase6ez", "phase6fa", "phase6fb", "phase6fc", "phase6fd", "phase6fe", "phase6ff", "phase6fg", "phase6fh", "phase6fi", "phase6fj", "phase6fk", "phase6fn", "phase6fo", "phase6fp", "phase6fq", "phase6fr", "phase6fs", "phase6ft", "phase6fv", "phase6ga")][string]$ReportPhase = "phase6ep",
+    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev", "phase6ew", "phase6ex", "phase6ey", "phase6ez", "phase6fa", "phase6fb", "phase6fc", "phase6fd", "phase6fe", "phase6ff", "phase6fg", "phase6fh", "phase6fi", "phase6fj", "phase6fk", "phase6fn", "phase6fo", "phase6fp", "phase6fq", "phase6fr", "phase6fs", "phase6ft", "phase6fv", "phase6ga", "phase6gb")][string]$ReportPhase = "phase6ep",
     [string]$SampleFrames = "60,120,180,200",
     [string]$ReadbackChannels = "temperature,fuel,burn,smoke,velocity",
     [ValidateSet("legacy", "none", "acquire_discard", "acquire_discard_release", "fuel_convert", "fuel_convert_release", "fuel_scalar", "fuel_jsonl", "fuel_spatial", "p3_spatial_release")][string]$ReadbackMode = "legacy",
@@ -56,7 +56,10 @@ param(
     [string]$ImportAuditPath = "",
     [string]$MeasurementCommitAck = "",
     [string]$MeasurementCommitFailure = "",
-    [double]$MeasurementCommitTimeoutSeconds = 60.0
+    [double]$MeasurementCommitTimeoutSeconds = 60.0,
+    [string]$ExpectedGeometryConcept = "",
+    [switch]$ValidateArgumentsOnly,
+    [string]$ArgumentAuditPath = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -170,6 +173,48 @@ $arguments = @(
     "--enable", "omni.physx.stageupdate",
     "--exec", $probe
 ) + @(Get-CampfireIsolatedKitCrashSafetyArgs -DumpDir $dumpDir)
+
+if (-not [string]::IsNullOrWhiteSpace($ExpectedGeometryConcept)) {
+    if ($ExpectedGeometryConcept -ne "corrected") {
+        throw "Unsupported geometry concept: $ExpectedGeometryConcept"
+    }
+    if ($GeometryVariant -ne "phase6er_corrected") {
+        throw "Geometry concept '$ExpectedGeometryConcept' must map to runtime token 'phase6er_corrected'; received '$GeometryVariant'."
+    }
+}
+
+if ($ValidateArgumentsOnly.IsPresent) {
+    if ([string]::IsNullOrWhiteSpace($ArgumentAuditPath)) {
+        throw "-ArgumentAuditPath is required with -ValidateArgumentsOnly."
+    }
+    $argumentAudit = [ordered]@{
+        schema = "campfire.phase6gb.parameter-binding-audit.v1"
+        timestamp_utc = [DateTime]::UtcNow.ToString("o")
+        kit_started = $false
+        runner_path = [IO.Path]::GetFullPath($PSCommandPath)
+        kit_path = [IO.Path]::GetFullPath($kit)
+        app_path = [IO.Path]::GetFullPath($app)
+        probe_path = [IO.Path]::GetFullPath($probe)
+        geometry_concept = $ExpectedGeometryConcept
+        geometry_runtime_token = $GeometryVariant
+        report_phase = $ReportPhase
+        argument_count = $arguments.Count
+        arguments = @($arguments)
+        final_command_line = (@($kit) + @($arguments)) -join " "
+    }
+    $auditFullPath = [IO.Path]::GetFullPath($ArgumentAuditPath)
+    $auditParent = Split-Path -Parent $auditFullPath
+    if (-not (Test-Path -LiteralPath $auditParent)) { New-Item -ItemType Directory -Path $auditParent | Out-Null }
+    $auditText = $argumentAudit | ConvertTo-Json -Depth 8
+    if ([Text.Encoding]::UTF8.GetByteCount($auditText) -gt 1048576) {
+        throw "Parameter-binding audit exceeded the 1 MiB bound."
+    }
+    $auditPartial = "$auditFullPath.partial"
+    [IO.File]::WriteAllText($auditPartial, $auditText + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
+    Move-Item -LiteralPath $auditPartial -Destination $auditFullPath
+    Write-Host "Phase 6GB argument validation completed without starting Kit: $auditFullPath"
+    return
+}
 
 $registryBefore = Get-CampfireCrashRegistrySnapshot
 $process = Start-Process -FilePath $kit -ArgumentList $arguments -PassThru -WindowStyle Hidden

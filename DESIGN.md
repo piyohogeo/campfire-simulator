@@ -1,5 +1,14 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6GB explicit geometry binding and supply comparison contract
+
+Phase 6GA remains the frozen `corrected` versus `phase6er_corrected` pre-Kit
+parameter-binding safe stop. Phase 6GB separates the design concept from the
+runtime token, rejects unknown and legacy misrouting before Kit, and requires a
+four-case no-Kit command-line fixture before the unchanged S93/S100/OFF
+population. The SHA-pinned contract preserves all Phase 6GA physics and Phase
+6FZ safety thresholds. See `docs/design/phase6gb_supply_comparison.md`.
+
 # Phase 6FZ deterministic import and memory qualification contract
 
 Phase 6FYの20 fixture合格とattempt01 import safe stopはcommit `aa02635`の履歴として

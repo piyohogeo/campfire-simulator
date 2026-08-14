@@ -15,7 +15,22 @@ $actualHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $contractPath).Hash
 if ($actualHash -ne $expectedHash) { throw "Phase 6FO contract hash mismatch" }
 $contract = Get-Content -Raw -Encoding UTF8 $contractPath | ConvertFrom-Json
 $phase = if ($contract.phase) { [string]$contract.phase } else { "phase6fo" }
-if ($phase -notin @("phase6fo", "phase6ga")) { throw "Unsupported supply comparison phase: $phase" }
+if ($phase -notin @("phase6fo", "phase6ga", "phase6gb")) { throw "Unsupported supply comparison phase: $phase" }
+$isGuardedPhase = $phase -in @("phase6ga", "phase6gb")
+$geometryConcept = ""
+$geometryRuntimeToken = ""
+if ($phase -eq "phase6gb") {
+    $geometryConcept = [string]$contract.fixture.geometry.concept
+    $geometryRuntimeToken = [string]$contract.fixture.geometry.runtime_token
+    if ($geometryConcept -ne "corrected" -or $geometryRuntimeToken -ne "phase6er_corrected") {
+        throw "Phase 6GB corrected geometry mapping is invalid."
+    }
+    if ($geometryRuntimeToken -eq [string]$contract.fixture.geometry.legacy_runtime_token) {
+        throw "Phase 6GB corrected geometry was misrouted to legacy_phase6ep."
+    }
+} else {
+    $geometryRuntimeToken = [string]$contract.fixture.geometry_variant
+}
 $phase6fnReport = Join-Path $repo "artifacts\phase6fn-routed-settled-1\settled_three_iteration_report.json"
 if (-not (Test-Path -LiteralPath $phase6fnReport)) { throw "Phase 6FO requires frozen Phase 6FN report" }
 $phase6fn = Get-Content -Raw -Encoding UTF8 $phase6fnReport | ConvertFrom-Json
@@ -26,13 +41,18 @@ Copy-Item -LiteralPath $contractPath -Destination (Join-Path $OutputRoot "frozen
 Copy-Item -LiteralPath $hashPath -Destination (Join-Path $OutputRoot "frozen_contract.sha256")
 Copy-Item -LiteralPath $phase6fnReport -Destination (Join-Path $OutputRoot "frozen_phase6fn_report.json")
 $runtimeManifest = [ordered]@{}
-foreach ($name in @("run_phase6fo_supply_case.ps1","probe_phase6fo_supply_comparison.py","probe_phase6ga_supply_comparison.py","phase6fu_resource_guard.py","phase6fu_process_identity.py","phase6fw_pid_reuse_policy.py","phase6fz_preclose_committer.py","phase6fz_import_contract.py","kit_shutdown_policy.ps1")) {
+foreach ($name in @("run_phase6fo_supply_case.ps1","run_phase6gb_parameter_binding_fixtures.ps1","probe_phase6fo_supply_comparison.py","probe_phase6ga_supply_comparison.py","probe_phase6gb_supply_comparison.py","phase6fu_resource_guard.py","phase6fu_process_identity.py","phase6fw_pid_reuse_policy.py","phase6fz_preclose_committer.py","phase6fz_import_contract.py","kit_shutdown_policy.ps1")) {
     $path = Join-Path $PSScriptRoot $name
     if (Test-Path -LiteralPath $path) { $runtimeManifest[$name] = (Get-FileHash -Algorithm SHA256 -LiteralPath $path).Hash }
 }
 [IO.File]::WriteAllText((Join-Path $OutputRoot "runtime_hashes.json"), ($runtimeManifest | ConvertTo-Json -Depth 4) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
-if($phase -eq "phase6ga") {
+if($isGuardedPhase) {
     $preflightRoot = Join-Path $OutputRoot "safety-preflight"
+    if ($phase -eq "phase6gb") {
+        & (Join-Path $PSScriptRoot "run_phase6gb_parameter_binding_fixtures.ps1") -OutputRoot (Join-Path $preflightRoot "parameter-binding-fixtures") -ContractPath $contractPath -ProbePath (Join-Path $PSScriptRoot "probe_phase6gb_supply_comparison.py")
+        $binding = Get-Content -Raw -Encoding UTF8 (Join-Path $preflightRoot "parameter-binding-fixtures\parameter_binding_fixture_report.json") | ConvertFrom-Json
+        if (-not $binding.passed -or -not $binding.no_kit_launch -or $binding.results.Count -ne 4) { throw "Phase 6GB parameter-binding fixture failed" }
+    }
     & (Join-Path $PSScriptRoot "run_phase6fz_import_smoke.ps1") -OutputRoot (Join-Path $preflightRoot "app-ready-import-smoke")
     $smoke = Get-Content -Raw -Encoding UTF8 (Join-Path $preflightRoot "app-ready-import-smoke\import_smoke_suite.json") | ConvertFrom-Json
     if(-not $smoke.passed -or $smoke.completed_count -ne 3){throw "Phase 6GA app-ready import smoke failed"}
@@ -49,10 +69,10 @@ if ($LASTEXITCODE -ne 0) { throw "Phase 6FO offline preparation failed" }
 $offline = Get-Content -Raw -Encoding UTF8 $offlinePath | ConvertFrom-Json
 if (-not $offline.all_pass) { throw "Phase 6FO offline gate failed" }
 
-$guard = Join-Path $PSScriptRoot $(if($phase -eq "phase6ga"){"phase6fu_resource_guard.py"}else{"phase6eg_resource_guard.py"})
+$guard = Join-Path $PSScriptRoot $(if($isGuardedPhase){"phase6fu_resource_guard.py"}else{"phase6eg_resource_guard.py"})
 $caseRunner = Join-Path $PSScriptRoot "run_phase6fo_supply_case.ps1"
-$analyzer = Join-Path $PSScriptRoot $(if($phase -eq "phase6ga"){"analyze_phase6ga_supply_comparison.py"}else{"analyze_phase6fo_supply_comparison.py"})
-$probe = Join-Path $PSScriptRoot $(if($phase -eq "phase6ga"){"probe_phase6ga_supply_comparison.py"}else{"probe_phase6fo_supply_comparison.py"})
+$analyzer = Join-Path $PSScriptRoot $(if($isGuardedPhase){"analyze_phase6ga_supply_comparison.py"}else{"analyze_phase6fo_supply_comparison.py"})
+$probe = Join-Path $PSScriptRoot $(if($phase -eq "phase6gb"){"probe_phase6gb_supply_comparison.py"}elseif($phase -eq "phase6ga"){"probe_phase6ga_supply_comparison.py"}else{"probe_phase6fo_supply_comparison.py"})
 $committer = Join-Path $PSScriptRoot "phase6fz_preclose_committer.py"
 $powershell = (Get-Command powershell.exe).Source
 $productionApp = Join-Path $repo "_build\windows-x86_64\release\apps\campfire.simulator.kit"
@@ -103,7 +123,7 @@ function Invoke-GuardedCase([string]$AttemptRoot, [string]$AttemptId, [string]$C
         "-Scenario", $contract.fixture.scenario, "-OutputDir", $caseDir,
         "-OffsetM", "$($contract.fixture.point_offset_m)", "-SupportRadiusM", "$($contract.fixture.support_radius_assumption_m)",
         "-Filtering", "true", "-Collision", $(if($spec.collision_enabled -eq $false){"false"}else{"true"}), "-Policy", $spec.policy,
-        "-ReportPhase", $phase, "-GeometryVariant", $contract.fixture.geometry_variant,
+        "-ReportPhase", $phase, "-GeometryVariant", $geometryRuntimeToken,
         "-ProbePath", $probe,
         "-FuelScale", "1", "-TemperatureScale", "1", "-SmokeScale", "1",
         "-SampleFrames", $sampleFrames, "-OperationFrames", $operationFrames, "-ReadbackFrames", $readbackFrames,
@@ -121,7 +141,8 @@ function Invoke-GuardedCase([string]$AttemptRoot, [string]$AttemptId, [string]$C
         "-StartupExpectedSmokeSum", "$($source.smoke)", "-StartupSourceSumTolerance", "$($contract.channel_preflight.startup_source_sum_absolute_tolerance)",
         "-AbsoluteTimeoutSeconds", "$($contract.safety.inner_absolute_timeout_seconds)"
     )
-    if($phase -eq "phase6ga") {
+    if($phase -eq "phase6gb") { $arguments += @("-ExpectedGeometryConcept", $geometryConcept) }
+    if($isGuardedPhase) {
         $arguments += @(
             "-ImportAuditPath", (Join-Path $caseDir "kit_import_audit.json"),
             "-MeasurementCommitAck", (Join-Path $caseDir "memory-measurement\measurement_commit.ack"),
@@ -142,7 +163,7 @@ function Invoke-GuardedCase([string]$AttemptRoot, [string]$AttemptId, [string]$C
         "--lifecycle-path", (Join-Path $caseDir "raw.json"), "--diagnostic-marker-path", (Join-Path $caseDir "resource_markers.jsonl"),
         "--", $powershell
     ) + $arguments
-    if($phase -eq "phase6ga") {
+    if($isGuardedPhase) {
         $separator = [Array]::IndexOf($guardArgs, "--")
         $prefix = @($guardArgs[0..($separator-1)]) + @(
             "--attempt-id", $AttemptId,
