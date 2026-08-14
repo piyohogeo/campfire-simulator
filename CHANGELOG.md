@@ -1,5 +1,19 @@
 # Changelog
 
+- Stopped Phase 6GY at the user-requested safe boundary after the already
+  running condition completed. No launch 24 was started; the terminal root has
+  23 fixed-order launches and an explicit `user_requested_safe_boundary`
+  heartbeat.
+- Control A recorded 10/10 representative normal exits plus one separate
+  startup-prerequisite failure. Candidate B recorded 11 OS-exit timeouts and
+  one `0xC0000005`, all 12 after the same last operation marker
+  `phase6gl_readback_after`; the intentionally truncated population remains
+  `inconclusive due to harness or safety stop`.
+- Exact cleanup removed the one 47,641,541-byte allowlisted launch-23 temporary
+  NVDB and left process/file residuals zero. Kit/tree maxima remained below
+  16/17 GiB. No production, default, Point, V3, P4, typed-metadata, other-channel,
+  or formal-comparison work started.
+
 - Froze Phase 6GX after the six-hour boundary with 46 fixed ABBA launches.
   Control A produced 22 representative normal exits; Candidate B produced 20
   representative timeouts, all immediately after its first seven-handle

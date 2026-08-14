@@ -1,0 +1,75 @@
+{
+  "schema": "campfire.phase6gy.user-requested-boundary.v1",
+  "phase": "phase6gy",
+  "contract_sha256": "2F97017708DF3C01277E7BF669827ADDD363798906859EACF35FAFBF368723E5",
+  "artifact_root": "artifacts/phase6gy-repetition-1",
+  "stop_reason": "user_requested_safe_boundary",
+  "population_truncated_by_user_request": true,
+  "total_launches": 23,
+  "next_launch_started": false,
+  "conditions": {
+    "A": {
+      "launches": 11,
+      "representative_runs": 10,
+      "normal_exits": 10,
+      "classifications": {"normal_exit": 10, "startup_prerequisite_not_met": 1},
+      "observed_representative_failure_rate": 0.0,
+      "wilson_95": [0.0, 0.2775327998628892],
+      "rule_of_three_upper": 0.3,
+      "kit_peak_bytes": {"median": 15092314112.0, "p95": 15160406835.2, "maximum": 15168745472},
+      "tree_peak_bytes": {"median": 15256137728.0, "p95": 15324099993.6, "maximum": 15332499456},
+      "stage_close_seconds": {"median": 3.68023625, "p95": 50.237781324999915, "maximum": 86.405704}
+    },
+    "B": {
+      "launches": 12,
+      "representative_runs": 12,
+      "normal_exits": 0,
+      "classifications": {"os_exit_timeout": 11, "windows_native_exception": 1},
+      "observed_failure_rate": 1.0,
+      "wilson_95": [0.7575059933447592, 1.0],
+      "rule_of_three_upper": null,
+      "last_operation_marker": "phase6gl_readback_after",
+      "same_operation_marker_count": 12,
+      "kit_peak_bytes": {"median": 15439081472.0, "p95": 15585074585.6, "maximum": 15608578048},
+      "tree_peak_bytes": {"median": 15602720768.0, "p95": 15748780441.6, "maximum": 15772295168},
+      "stage_close_seconds": {"median": null, "p95": null, "maximum": null}
+    }
+  },
+  "last_attempt": {
+    "attempt_id": "launch23_B",
+    "classification": "windows_native_exception",
+    "process_exit_code": 3221225477,
+    "failure_signature": "0xC0000005:phase6gl_readback_after",
+    "calls": {"readback": 1, "conversion": 0, "metadata": 0, "save": 0, "sampling": 0},
+    "kit_peak_bytes": 15359971328,
+    "tree_peak_bytes": 15512023040,
+    "temporary_file": {"path": "case/p3_f0180_temperature.nvdb", "bytes": 47641541, "deleted": true},
+    "residual_process_count": 0,
+    "temporary_file_residual_count": 0
+  },
+  "safety": {
+    "kit_limit_bytes": 17179869184,
+    "tree_limit_bytes": 18253611008,
+    "minimum_kit_margin_bytes": 1571291136,
+    "minimum_tree_margin_bytes": 2481315840,
+    "resource_limit_events": 0,
+    "cleanup_failures": 0,
+    "final_process_residual_count": 0,
+    "final_nvdb_residual_count": 0
+  },
+  "conclusion": "inconclusive due to harness or safety stop",
+  "verification": {
+    "release_build": "passed_8.31_seconds",
+    "runner_fixture": "20/20",
+    "startup_timestamp_fixture": "6/6",
+    "finalizer_idempotence": true,
+    "devlog_validation": "refs=516 ids=305 json=257 svg=177 zip=2",
+    "phase0_rtx_after_stop": "not_run_due_to_user_requested_no_new_launch",
+    "phase3_after_stop": "not_run_due_to_user_requested_no_new_launch",
+    "standard_suite_after_stop": "not_run_due_to_user_requested_no_new_launch",
+    "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "latest_demo_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285"
+  },
+  "production_changed": false,
+  "formal_comparison_started": false
+}

@@ -1,5 +1,26 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6GY user-requested safe boundary
+
+Phase 6GX remains frozen. Phase 6GY froze SHA-256
+`2F97017708DF3C01277E7BF669827ADDD363798906859EACF35FAFBF368723E5`
+and qualified exact attempt-local temporary-file cleanup before runtime. At the
+user-requested boundary, the already-running launch 23 B completed before the
+outer runner was stopped; no launch 24 was started. The terminal population has
+23 launches: A supplied 10/10 representative normal exits plus one separate
+startup prerequisite failure, while B supplied 0/12 normal exits. Eleven B
+runs timed out after `phase6gl_readback_after`; launch 23 instead exited with
+`0xC0000005` after the same last operation marker. Exact cleanup left process
+and NanoVDB residuals at zero.
+
+The truncated population is frozen as
+`inconclusive due to harness or safety stop`, not as a deterministic
+qualification. Kit/tree maxima remained below 16/17 GiB with at least
+1,571,291,136 / 2,481,315,840 bytes of margin. Production, defaults, Point
+placement, V3, P4, typed metadata, other channels, and the formal comparison
+remain unchanged or unstarted. See
+`docs/design/phase6gy_user_requested_boundary.md`.
+
 # Phase 6GX repetition evidence safe stop
 
 Phase 6GW remains frozen. Phase 6GX qualified the exact current startup record
