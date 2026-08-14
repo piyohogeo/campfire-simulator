@@ -30,3 +30,20 @@ reference evidence and exposes six named outputs: temperature, fuel, burn,
 smoke, velocity, and divergence. It does not explain the Python binding's seven
 returned objects, so its six-output order must not be mechanically extended.
 
+The first completed baseline artifact is
+`artifacts/phase6gd-channel-schema-discovery-2`. It returned seven objects. The
+first four were nonempty scalar-like public volume buffers, the fifth was a
+nonempty vector-like public volume buffer, and the final two were empty. All
+seven supported weak references and none remained alive after sequential
+release. Public metadata exposed the grid name `Flow`, but no semantic channel
+name, so this evidence does not yet distinguish the two empty slots. The Kit
+process exited normally and exact cleanup found no residual process.
+
+A separate control contract,
+`campfire.phase6gd.public-channel-schema-control-contract.v1`, freezes three
+one-variable probes in the order divergence, RGBA, RGB. Each probe changes only
+the corresponding public `FlowSparseNanoVdbExportParams` enable attribute on
+the completed offline stage. A control may identify an index only when its
+schema change is unique and repeatable relative to the frozen baseline. An
+ambiguous result remains a safe stop; value range and visual appearance remain
+inadmissible mapping evidence.

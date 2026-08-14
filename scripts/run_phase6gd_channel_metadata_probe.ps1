@@ -1,6 +1,8 @@
 param(
     [Parameter(Mandatory = $true)][string]$OutputRoot,
-    [string]$DiscoveryContractPath = ""
+    [string]$DiscoveryContractPath = "",
+    [ValidateSet("baseline", "divergence", "rgba", "rgb")][string]$Control = "baseline",
+    [string]$ControlContractPath = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -19,6 +21,20 @@ $actualDiscoveryHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $discoveryCo
 if ($actualDiscoveryHash -ne $expectedDiscoveryHash) { throw "Phase 6GD discovery contract hash mismatch" }
 $discovery = Get-Content -Raw -Encoding UTF8 $discoveryContractPath | ConvertFrom-Json
 
+$controlContract = $null
+$controlContractHash = $null
+if ($Control -ne "baseline") {
+    $controlContractPath = if ([string]::IsNullOrWhiteSpace($ControlContractPath)) {
+        Join-Path $PSScriptRoot "phase6gd_channel_schema_control_contract.json"
+    } else { [IO.Path]::GetFullPath($ControlContractPath) }
+    $controlHashPath = [IO.Path]::ChangeExtension($controlContractPath, ".sha256")
+    $expectedControlHash = ((Get-Content -Encoding UTF8 $controlHashPath | Select-Object -First 1) -split '\s+')[0].ToUpperInvariant()
+    $controlContractHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $controlContractPath).Hash
+    if ($controlContractHash -ne $expectedControlHash) { throw "Phase 6GD control contract hash mismatch" }
+    $controlContract = Get-Content -Raw -Encoding UTF8 $controlContractPath | ConvertFrom-Json
+    if ($Control -notin @($controlContract.controls.order)) { throw "Phase 6GD control is not frozen by the control contract" }
+}
+
 $baseContractPath = Join-Path $repo ([string]$discovery.base_physics_contract.path)
 $baseHashPath = [IO.Path]::ChangeExtension($baseContractPath, ".sha256")
 $expectedBaseHash = [string]$discovery.base_physics_contract.sha256
@@ -34,14 +50,17 @@ Copy-Item -LiteralPath $discoveryContractPath -Destination (Join-Path $OutputRoo
 Copy-Item -LiteralPath $discoveryHashPath -Destination (Join-Path $OutputRoot "frozen_discovery_contract.sha256")
 Copy-Item -LiteralPath $baseContractPath -Destination (Join-Path $OutputRoot "frozen_phase6gc_contract.json")
 Copy-Item -LiteralPath $baseHashPath -Destination (Join-Path $OutputRoot "frozen_phase6gc_contract.sha256")
+if ($null -ne $controlContract) {
+    Copy-Item -LiteralPath $controlContractPath -Destination (Join-Path $OutputRoot "frozen_control_contract.json")
+    Copy-Item -LiteralPath $controlHashPath -Destination (Join-Path $OutputRoot "frozen_control_contract.sha256")
+}
 
 $productionApp = Join-Path $repo "_build\windows-x86_64\release\apps\campfire.simulator.kit"
 $productionBefore = (Get-FileHash -Algorithm SHA256 -LiteralPath $productionApp).Hash
-$attemptId = "metadata_attempt01"
+$attemptId = "metadata_$Control`_attempt01"
 $attemptRoot = Join-Path $OutputRoot $attemptId
 $caseDir = Join-Path $attemptRoot "S93_support_clear"
 $logs = Join-Path $attemptRoot "runner-logs"
-New-Item -ItemType Directory -Path $caseDir -Force | Out-Null
 New-Item -ItemType Directory -Path $logs -Force | Out-Null
 $attemptMetadata = [ordered]@{
     schema = "campfire.phase6gd.attempt-metadata.v1"
@@ -50,6 +69,7 @@ $attemptMetadata = [ordered]@{
     condition = "S93"
     discovery_only = $true
     formal_population = $false
+    channel_schema_control = $Control
     timestamp_utc = [DateTime]::UtcNow.ToString("o")
 }
 [IO.File]::WriteAllText((Join-Path $attemptRoot "attempt_metadata.json"), ($attemptMetadata | ConvertTo-Json -Depth 6) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
@@ -96,6 +116,7 @@ $arguments = @(
     "-StartupExpectedSmokeSum", "$($source.smoke)",
     "-StartupSourceSumTolerance", "$($base.channel_preflight.startup_source_sum_absolute_tolerance)",
     "-StartupSourceContractMode", $base.source_contract.mode,
+    "-ChannelSchemaControl", $Control,
     "-AbsoluteTimeoutSeconds", "$($base.safety.inner_absolute_timeout_seconds)",
     "-ImportAuditPath", (Join-Path $caseDir "kit_import_audit.json"),
     "-MeasurementCommitAck", (Join-Path $caseDir "memory-measurement\measurement_commit.ack"),
@@ -179,6 +200,8 @@ $summary = [ordered]@{
     discovery_contract_sha256 = $actualDiscoveryHash
     base_contract_sha256 = $actualBaseHash
     returned_handle_count = [int]$metadata.returned_handle_count
+    channel_schema_control = $Control
+    control_contract_sha256 = $controlContractHash
     metadata_path = $metadataPath
     metadata_sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $metadataPath).Hash
     lifecycle_marker = [string]$raw.lifecycle_marker

@@ -1,0 +1,37 @@
+{
+  "schema": "campfire.phase6gd.public-channel-schema-control-contract.v1",
+  "phase": "phase6gd",
+  "declared_before_runtime": true,
+  "baseline_discovery": {
+    "contract_sha256": "FFD0D34F35A645B433334900F745C91D861BCAD5FE15703279409E64480A55A2",
+    "artifact_root": "artifacts/phase6gd-channel-schema-discovery-2",
+    "returned_handle_count": 7,
+    "nonempty_indices": [0, 1, 2, 3, 4],
+    "empty_indices": [5, 6],
+    "formal_mapping_complete": false
+  },
+  "controls": {
+    "order": ["divergence", "rgba", "rgb"],
+    "one_process_per_control": true,
+    "common_fixture": "Phase 6GC S93 corrected four-log fixture at frame 180",
+    "single_changed_attribute": {
+      "divergence": "FlowSparseNanoVdbExportParams.divergenceEnabled=true",
+      "rgba": "FlowSparseNanoVdbExportParams.rgbaEnabled=true",
+      "rgb": "FlowSparseNanoVdbExportParams.rgbEnabled=true"
+    },
+    "all_other_export_attributes_unchanged": true,
+    "value_ranges_are_mapping_evidence": false
+  },
+  "mapping_gate": {
+    "require_exactly_one_schema_difference_for_each_identifying_control": true,
+    "require_same_handle_count": 7,
+    "unknown_or_ambiguous_result": "safe_stop_before_operational_schema",
+    "formal_population_allowed": false
+  },
+  "bounds": {
+    "maximum_handles": 16,
+    "per_handle_temporary_file_limit_bytes": 268435456,
+    "total_temporary_file_limit_bytes": 536870912
+  },
+  "production_changed": false
+}

@@ -31,6 +31,7 @@ from phase6fz_import_contract import load_exact_module
 SHARED_PATH = (SCRIPT_DIR / "probe_phase6gc_shared_supply_comparison.py").resolve()
 settings = carb.settings.get_settings()
 audit_path = Path(settings.get_as_string("/phase6fz/importAuditPath")).resolve()
+CONTROL_MODE = settings.get_as_string("/phase6gd/channelSchemaControl") or "baseline"
 
 PER_HANDLE_FILE_LIMIT = 256 * 1024 * 1024
 TOTAL_FILE_LIMIT = 512 * 1024 * 1024
@@ -322,6 +323,7 @@ def _bounded_schema_boundary(flow, volume, arguments, frame, output, collectors,
     del handles
     result = {
         "mode": "bounded_public_channel_schema_discovery",
+        "control_mode": CONTROL_MODE,
         "returned_handle_count": len(rows),
         "handle_order": [row["label"] for row in rows],
         "handles": rows,
@@ -351,6 +353,40 @@ def _bounded_schema_boundary(flow, volume, arguments, frame, output, collectors,
 
 
 shared._p3_spatial_boundary = _bounded_schema_boundary
+
+_original_build_stage = shared._build_stage
+
+
+def _build_controlled_stage(arguments):
+    """Author exactly one public export switch before the stage is connected."""
+    stage_path, point_summary, plan = _original_build_stage(arguments)
+    if CONTROL_MODE == "baseline":
+        return stage_path, point_summary, plan
+    attribute_by_control = {
+        "divergence": "divergenceEnabled",
+        "rgba": "rgbaEnabled",
+        "rgb": "rgbEnabled",
+    }
+    attribute = attribute_by_control.get(CONTROL_MODE)
+    if attribute is None:
+        raise RuntimeError(f"unsupported Phase 6GD channel-schema control {CONTROL_MODE!r}")
+    stage = shared.Usd.Stage.Open(str(stage_path))
+    if stage is None:
+        raise RuntimeError("failed to reopen the offline Phase 6GD control stage")
+    export = stage.GetPrimAtPath(shared.point_core.SIMULATE_PATH.AppendChild("nanoVdbExport"))
+    shared.point_core._set(export, attribute, True)
+    if not stage.GetRootLayer().Save():
+        raise RuntimeError("failed to save the Phase 6GD controlled export stage")
+    point_summary["channel_schema_control"] = {
+        "mode": CONTROL_MODE,
+        "changed_attribute": attribute,
+        "value": True,
+        "other_export_attributes_unchanged": True,
+    }
+    return stage_path, point_summary, plan
+
+
+shared._build_stage = _build_controlled_stage
 
 _original_append = shared._append_resource_marker
 

@@ -1,5 +1,9 @@
 # Changelog
 
+- Added the Phase 6GD bounded seven-handle metadata baseline and a separately
+  frozen, one-variable divergence/RGBA/RGB control contract. The baseline does
+  not assign semantic names and the S93/S100/OFF population remains stopped.
+
 - Froze Phase 6GD as a public-readback-schema-only discovery. Phase 6GC remains a seven-handle pre-indexing safe stop; one fresh S93 process may label handles only by index and collect bounded public array, volume, NanoVDB, API, and version metadata without assigning channel semantics.
 - Added 256 MiB per-handle and 512 MiB total temporary NanoVDB bounds, sequential handle release, unavailable-field reporting, metadata hashes, and direct reuse of the Phase 6GC stage/source plus Phase 6FZ/6FU/6FW release-after-close safety path. The bundled six-output Flow 110.0.0 OGN definition is recorded as evidence but is not extended by inference.
 

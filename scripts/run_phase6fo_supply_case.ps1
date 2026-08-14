@@ -59,6 +59,7 @@ param(
     [string]$MeasurementCommitFailure = "",
     [double]$MeasurementCommitTimeoutSeconds = 60.0,
     [string]$ExpectedGeometryConcept = "",
+    [ValidateSet("baseline", "divergence", "rgba", "rgb")][string]$ChannelSchemaControl = "baseline",
     [switch]$ValidateArgumentsOnly,
     [string]$ArgumentAuditPath = ""
 )
@@ -156,6 +157,7 @@ $arguments = @(
     "--/phase6ep/startupExpectedSmokeSum=$StartupExpectedSmokeSum",
     "--/phase6ep/startupSourceSumTolerance=$StartupSourceSumTolerance",
     "--/phase6ep/startupSourceContractMode=$StartupSourceContractMode",
+    "--/phase6gd/channelSchemaControl=$ChannelSchemaControl",
     "--/phase6fz/importAuditPath=$ImportAuditPath",
     "--/phase6fz/measurementCommitAck=$MeasurementCommitAck",
     "--/phase6fz/measurementCommitFailure=$MeasurementCommitFailure",

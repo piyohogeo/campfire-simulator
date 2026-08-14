@@ -9,6 +9,13 @@ SCRIPTS = ROOT / "scripts"
 
 
 class Phase6GdChannelSchemaDiscovery(unittest.TestCase):
+    def test_control_contract_hash(self):
+        path = SCRIPTS / "phase6gd_channel_schema_control_contract.json"
+        sidecar = (SCRIPTS / "phase6gd_channel_schema_control_contract.sha256").read_text(
+            encoding="utf-8"
+        ).split()[0]
+        self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest().upper(), sidecar)
+
     def test_discovery_contract_hash_and_frozen_base(self):
         path = SCRIPTS / "phase6gd_channel_schema_discovery_contract.json"
         contract = json.loads(path.read_text(encoding="utf-8"))
@@ -43,6 +50,17 @@ class Phase6GdChannelSchemaDiscovery(unittest.TestCase):
         self.assertIn('"-LifecycleReferenceReleaseOrder", "after_stage_close"', body)
         self.assertIn('"-StartupSourceContractMode", $base.source_contract.mode', body)
         self.assertIn("Phase 6GD refuses artifact root reuse", body)
+        self.assertNotIn("New-Item -ItemType Directory -Path $caseDir", body)
+
+    def test_control_probe_changes_one_public_export_attribute(self):
+        probe = (SCRIPTS / "probe_phase6gd_channel_metadata.py").read_text(encoding="utf-8")
+        self.assertIn('"divergence": "divergenceEnabled"', probe)
+        self.assertIn('"rgba": "rgbaEnabled"', probe)
+        self.assertIn('"rgb": "rgbEnabled"', probe)
+        self.assertIn('"other_export_attributes_unchanged": True', probe)
+        runner = (SCRIPTS / "run_phase6gd_channel_metadata_probe.ps1").read_text(encoding="utf-8")
+        self.assertIn('ValidateSet("baseline", "divergence", "rgba", "rgb")', runner)
+        self.assertIn('"-ChannelSchemaControl", $Control', runner)
 
 
 if __name__ == "__main__":
