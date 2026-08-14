@@ -1438,3 +1438,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   public `buffer_to_volume()` call returned `omni.volume._volume.GridData`, the
   converted object and source were released with zero weak residual, and Kit
   exited naturally. No volume metadata, other channel, or later operation ran.
+- Added and froze the Phase 6GR bounded public volume-metadata contract, then
+  stopped its only fresh process before conversion when the diagnostic marker
+  received a duplicate `channel` keyword. Readback and bounded source metadata
+  completed, all six accessors remained at zero calls, stage close completed,
+  and exact cleanup left no residual process. Phase 6GR is not qualified.

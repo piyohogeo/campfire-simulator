@@ -3989,3 +3989,23 @@ Kit/tree peakは14,914,543,616／15,078,756,352 bytesで16/17 GiB以内、残留
 あるため、`operation=pass`／`lifecycle=normal_exit`としてslot 0 temperature
 conversion boundaryをqualifiedとする。volume metadata、他channel、sampling、
 反復、正式9条件、production、既定値、V3、P4は未開始である。
+
+# Phase 6GR bounded public volume-metadata safe stop
+
+Phase 6GN～6GQを凍結し、slot 0 temperatureの変換後に指定6 public accessorだけを
+各1回読むcontractをSHA-256
+`829E79FB293070B56C73E4733AEDE68AA3366A26F2EA6281A6ECEC7A3CE01DA7`で
+runtime前に固定した。新rootの単一processはframe 180、active blocks 1,329で
+public readback 1回と7-slot返却、slot 0 source metadata保存まで完了した。
+
+しかしslot選択markerへ`channel`を明示値とsource dictの両方から渡したためPython
+`TypeError`となり、`buffer_to_volume()`は0回、全metadata accessorも0回のまま
+safe stopした。これは診断harness failureでありvolume APIの失敗証拠ではない。
+stage closeは2.311588秒で完了し`shutdown_complete`へ到達したが、Kitはexceptionに
+よりexit code 1であり、operation／lifecycleともqualifiedではない。Kit/tree peakは
+15,006,769,152／15,171,534,848 bytes、cleanup residualは0だった。親summary後にも
+欠落optional propertyのStrictMode参照が発生し、incremental stateは`running`のまま
+残ったが、既存証拠を再分類しない。詳細は
+`docs/design/phase6gr_volume_metadata_safe_stop.md`。temporary NVDB、他channel、sampling、
+collector、flux、正式9条件はblockedであり、新Phaseのharness-only修正とfixtureに
+別承認を要する。

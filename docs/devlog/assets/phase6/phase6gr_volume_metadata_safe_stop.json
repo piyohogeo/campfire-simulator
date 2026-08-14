@@ -1,0 +1,129 @@
+{
+  "schema": "campfire.phase6gr.volume-metadata-safe-stop.v1",
+  "status": "safe_stop",
+  "qualified": false,
+  "artifact_root": "artifacts/phase6gr-volume-metadata-1",
+  "contract_sha256": "829E79FB293070B56C73E4733AEDE68AA3366A26F2EA6281A6ECEC7A3CE01DA7",
+  "history": {
+    "phase6gn_reclassified": false,
+    "phase6go_reclassified": false,
+    "phase6gp_reclassified": false,
+    "phase6gq_reclassified": false,
+    "prior_runtime_sample_reused": false
+  },
+  "population": {
+    "launches": 1,
+    "retries": 0,
+    "replacements": 0,
+    "later_operations_started": false,
+    "formal_nine_process_population_started": false
+  },
+  "mapping": {
+    "schema_id": "flow110.0.0-kit110.2-public-readback-rgba7-v1",
+    "slot": 0,
+    "channel": "temperature",
+    "qualified_offline": true,
+    "inferred_again": false
+  },
+  "operation": {
+    "result": "metadata_accessor_failure",
+    "classification": "diagnostic_harness_marker_argument_collision",
+    "public_readback_calls": 1,
+    "returned_handle_count": 7,
+    "volume_conversion_calls": 0,
+    "volume_python_type": null,
+    "source": {
+      "slot": 0,
+      "channel": "temperature",
+      "python_type": "numpy.ndarray",
+      "ndim": 1,
+      "shape": [11910336],
+      "dtype": "uint32",
+      "size": 11910336,
+      "nbytes": 47641344,
+      "empty": false
+    },
+    "accessor_calls": {
+      "get_num_grids": 0,
+      "get_grid_type": 0,
+      "get_short_grid_name": 0,
+      "get_grid_class": 0,
+      "get_index_bounding_box": 0,
+      "get_world_bounding_box": 0
+    },
+    "grid_count": null,
+    "index0": null,
+    "last_successful_accessor": null,
+    "last_operation_marker": "phase6gr_operation_failure",
+    "first_failure_boundary": "after readback and bounded source metadata; before slot-selection marker completion and before buffer_to_volume",
+    "error_type": "TypeError",
+    "error": "marker received duplicate channel keyword argument",
+    "bounded_metadata_complete": false,
+    "planned_volume_release_completed": false,
+    "planned_source_release_completed": false,
+    "weak_reference_residual": "unavailable_not_measured",
+    "numpy_asarray_calls": 0,
+    "save_volume_calls": 0,
+    "field_body_files_written": 0,
+    "sampling_calls": 0,
+    "collector_calls": 0,
+    "flux_calls": 0
+  },
+  "lifecycle": {
+    "result": "failure",
+    "timeline_stopped": true,
+    "stage_close_complete": true,
+    "stage_close_seconds": 2.311588,
+    "shutdown_marker": "shutdown_complete",
+    "natural_os_exit": false,
+    "process_exit_code": 1,
+    "low_level_diagnostic_allowed": false,
+    "low_level_diagnostic_invoked": false
+  },
+  "parent_reporting": {
+    "summary_written_before_failure": true,
+    "failure": "PowerShell StrictMode property access for absent last_successful_accessor",
+    "incremental_state_final_status": "running",
+    "evidence_reclassified": false
+  },
+  "resource": {
+    "pass": true,
+    "kit_peak_bytes": 15006769152,
+    "kit_limit_bytes": 17179869184,
+    "kit_margin_bytes": 2173100032,
+    "tree_peak_bytes": 15171534848,
+    "tree_limit_bytes": 18253611008,
+    "tree_margin_bytes": 3082076160,
+    "runner_peak_bytes": 97734656,
+    "diagnostic_peak_bytes": 16850944,
+    "minimum_available_physical_bytes": 81381916672,
+    "minimum_commit_headroom_bytes": 101013999616
+  },
+  "safety": {
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_count": 0,
+    "cleanup_all_observed_absent": true,
+    "residual_process_count": 0
+  },
+  "production": {
+    "changed": false,
+    "app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "latest_demo_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285"
+  },
+  "verification": {
+    "release_build": "passed_before_runtime",
+    "phase6gr_focused": "26_of_26_passed_before_runtime",
+    "phase6gq_focused": "19_of_19_passed",
+    "phase6gp_focused": "19_of_19_passed",
+    "phase6go_focused": "18_of_18_passed",
+    "phase6gn_focused": "5_of_5_passed",
+    "phase6gl_focused": "3_of_3_passed",
+    "phase0_rtx": "passed_exit_0",
+    "phase3": "passed_exit_0",
+    "standard_suite": "passed_8_of_8_processes",
+    "devlog_static": "passed",
+    "post_run_residual_process_count": 0
+  },
+  "next_boundary": "A separately approved harness-only Phase must fix and fixture the marker and parent-report normalization before any fresh bounded metadata run; NVDB and other channels remain blocked."
+}
