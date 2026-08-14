@@ -1,0 +1,138 @@
+{
+  "schema": "campfire.phase6gs.volume-metadata-qualification.v1",
+  "phase": "6GS",
+  "status": "qualified_no_later_operation_started",
+  "artifact_root": "artifacts/phase6gs-volume-metadata-1",
+  "contract_sha256": "DCCE22B554ED778644CDDBBF03F9F3F0E5EAEFE18C28E381F0AF22142169E930",
+  "history": {
+    "phase6gr_status_preserved": "harness_failure_safe_stop",
+    "phase6gr_reclassified": false,
+    "phase6gr_runtime_sample_reused": false
+  },
+  "fixtures": {
+    "child": {"passed": true, "cases": 14},
+    "end_to_end": {"passed": true, "cases": 13, "kit_started": false},
+    "duplicate_same_channel": "canonicalized_once",
+    "conflicting_channel": "fail_closed",
+    "optional_string": "value",
+    "optional_explicit_null": null,
+    "optional_missing": null,
+    "optional_empty_or_whitespace": null,
+    "optional_invalid_type": "fail_closed",
+    "safe_stop_incremental_state_terminal": true,
+    "raw_evidence_survives_parent_failure": true
+  },
+  "runtime": {
+    "launches": 1,
+    "retries": 0,
+    "replacements": 0,
+    "frame": 180,
+    "active_blocks": 1329,
+    "operation_result": "pass",
+    "lifecycle_result": "normal_exit",
+    "process_exit_code": 0,
+    "shutdown_complete": true,
+    "stage_close_seconds": 5.732096,
+    "cleanup_residual_processes": 0
+  },
+  "source": {
+    "slot": 0,
+    "channel": "temperature",
+    "python_type": "numpy.ndarray",
+    "ndim": 1,
+    "shape": [11910336],
+    "dtype": "uint32",
+    "size": 11910336,
+    "nbytes": 47641344,
+    "empty": false
+  },
+  "volume": {
+    "conversion_calls": 1,
+    "python_type": "omni.volume._volume.GridData",
+    "grid_count": 1,
+    "index0": {
+      "grid_type": 1,
+      "short_grid_name": "Flow",
+      "grid_class": 2,
+      "index_bounding_box": [[-96, -96, -16], [127, 111, 639]],
+      "world_bounding_box": [[-2.4000000953674316, -2.4000000953674316, -0.4000000059604645], [2.4000000953674316, 2.4000000953674316, 15.600000381469727]]
+    },
+    "accessor_calls": {
+      "get_num_grids": 1,
+      "get_grid_type": 1,
+      "get_short_grid_name": 1,
+      "get_grid_class": 1,
+      "get_index_bounding_box": 1,
+      "get_world_bounding_box": 1
+    },
+    "last_successful_accessor": "get_world_bounding_box",
+    "volume_weak_reference_alive_after_release": false,
+    "source_weak_reference_alive_after_release": false,
+    "weak_reference_residual_count": 0
+  },
+  "forbidden_operation_counts": {
+    "save_volume": 0,
+    "numpy_asarray": 0,
+    "sampling": 0,
+    "collector": 0,
+    "flux": 0,
+    "field_body_files": 0
+  },
+  "resources": {
+    "peaks_bytes": {
+      "kit": 14877048832,
+      "unique_tree": 15041200128,
+      "runner": 128081920,
+      "diagnostic": 16887808
+    },
+    "limits_bytes": {
+      "kit": 17179869184,
+      "unique_tree": 18253611008,
+      "runner": 536870912,
+      "diagnostic": 536870912
+    },
+    "minimum_margin_bytes": {
+      "kit": 2302820352,
+      "unique_tree": 3212410880
+    },
+    "available_physical_minimum_bytes": 80354549760,
+    "commit_headroom_minimum_bytes": 99988570112
+  },
+  "scope": {
+    "temporary_nvdb_started": false,
+    "other_channel_started": false,
+    "sampling_started": false,
+    "formal_nine_process_population_started": false,
+    "production_changed": false,
+    "latest_demo_changed": false
+  },
+  "hashes": {
+    "production_before": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "production_after": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "latest_demo_before": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285",
+    "latest_demo_after": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285"
+  },
+  "verification": {
+    "release_build": "passed",
+    "phase0_rtx": "passed",
+    "phase3": {
+      "passed": true,
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "active_blocks_final": 278,
+      "active_blocks_peak": 301
+    },
+    "focused": {
+      "phase6gs_child": "14/14",
+      "phase6gs_end_to_end": "13/13",
+      "phase6gr": "26/26",
+      "phase6gq": "19/19",
+      "phase6gp": "19/19",
+      "phase6go": "18/18",
+      "phase6gn": "5/5",
+      "phase6gl": "3/3"
+    },
+    "standard_suite": "8/8 processes; 78 tests",
+    "devlog_static_check": "passed"
+  }
+}

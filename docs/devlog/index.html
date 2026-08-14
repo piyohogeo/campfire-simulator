@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6gr">最新記録</a>
+        <a href="#phase-6gs">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6gr">Phase 6GRの結果を読む</a>
+        <a class="button primary" href="#phase-6gs">Phase 6GSの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6GR · metadata harness safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6GS · bounded volume metadata qualified</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,17 @@
   </header>
 
   <main>
+    <section id="phase-6gs" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6GS bounded volume metadata qualification"><span class="phase-number compact">6GS</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">qualified</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6GS · bounded public metadata</p><h2>The harness boundaries are fixed;<br>all six public accessors returned.</h2><p>No-Kit child and end-to-end fixtures passed before one fresh corrected-four S93 process. Phase 6GR stays frozen and none of its runtime evidence was reused.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Operation</p><h3>One conversion, six bounded accessors.</h3><p>Slot-0 temperature converted to <code>GridData</code>. Grid count/type/name/class were <code>1 / 1 / Flow / 2</code>; both bounded boxes were durably committed. Every accessor count was one and weak residual was zero.</p></section><section class="note"><p class="note-label">Lifecycle</p><h3>Normal exit independently passed.</h3><p>Stage close completed in 5.732096 seconds, <code>shutdown_complete</code> was durable, Kit exited naturally with code 0, and exact cleanup found no residual process.</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Safety envelope</p><h3>Qualified within unchanged 16/17 GiB limits.</h3><p>Kit/tree peaks were 14,877,048,832 / 15,041,200,128 bytes, leaving 2,302,820,352 / 3,212,410,880 bytes. No NVDB, another channel, sampling, collector, flux, image, video, or formal population started.</p><p><a href="assets/phase6/phase6gs_volume_metadata_qualification.json">machine report</a> · <a href="../design/phase6gs_volume_metadata_qualification.md">design note</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>internal metadata qualification; no new video</small></span></button></div><div class="check-list" role="list"><div role="listitem"><span>6</span><p><strong>Accessors</strong><small>each exactly once</small></p></div><div role="listitem"><span>0</span><p><strong>Weak residual</strong><small>released</small></p></div><div role="listitem"><span>0</span><p><strong>Exit code</strong><small>natural exit</small></p></div><div role="listitem"><span>0</span><p><strong>Later stages</strong><small>not started</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Continuation roadmap</p><h3>Temporary NVDB remains a separate boundary.</h3><p>Phase 6GS qualifies only one temperature conversion and its bounded public metadata. Temporary NVDB, typed metadata, another channel, volume values, sampling, collectors, flux, repeated operations, and the formal population require a new approval, contract, and root.</p><p>Release build, Phase 0 RTX, Phase 3, focused fixtures, standard 8/8-process suite (78 tests), and devlog validation passed. Production and latest-demo hashes are unchanged.</p></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6gr" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6GR bounded volume metadata safe stop"><span class="phase-number compact">6GR</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">safe stop</span></aside>
@@ -5296,7 +5307,7 @@
         <p class="section-kicker">Roadmap</p>
         <h2>小さく燃やして、確かめながら進む。</h2>
         <p>Phase 6GNでmodule／callableを分離したexact-wrapper smokeは5/5合格し、Phase 6GMのimport不具合は解消した。しかし正式attempt01 S93はframe 180の7-handle readback直後、spatial result保存前にnative access violation <code>0xC0000005</code>でsafe stopした。accepted 0/9、replacement 0で後続は未起動、exact cleanup residualは0である。Phase 6GNを凍結し、次はこのpost-readback native operation境界だけを別承認Phaseで隔離する。S93/S100 pair、flux、deep velocity、動画、Point policy、production統合は未到達である。</p>
-        <p><strong>Current continuation:</strong> Phase 6GR stopped before conversion on a diagnostic marker argument collision; no public volume accessor ran. A new harness-only Phase must fix and fixture both reporting boundaries before another fresh bounded metadata process. NVDB, other channels, repeated readback, and the formal population remain blocked.</p>
+        <p><strong>Current continuation:</strong> Phase 6GS fixed and fixture-qualified both Phase 6GR harness boundaries, then qualified one fresh temperature conversion plus the six bounded public volume accessors with natural exit and residual zero. Temporary NVDB, typed metadata, other channels, sampling, collectors, flux, repeated readback/conversion, and the formal population remain blocked behind a new explicit approval.</p>
         <ol class="roadmap">
           <li class="done"><span>0</span><div><strong>環境成立確認</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>1</span><div><strong>Flow単体検証</strong><small>完了 · 2026.08.04</small></div></li>

@@ -1,5 +1,23 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6GS bounded public volume-metadata qualification
+
+Phase 6GR remains frozen as a harness-failure safe stop. Phase 6GS fixed the
+duplicate marker payload through one canonical dictionary and normalized the
+optional PowerShell report properties before condition reporting. The no-Kit
+child and end-to-end fixtures passed 14/14 and 13/13. A fresh one-process S93
+run then completed one temperature conversion and all six predeclared public
+volume accessors exactly once. Grid count/type/name/class were `1/1/Flow/2`,
+the index box was `[[-96,-96,-16],[127,111,639]]`, and the world box was
+approximately `[[-2.4,-2.4,-0.4],[2.4,2.4,15.6]]`.
+
+Operation and lifecycle both passed: weak residual was zero, stage close took
+5.732096 seconds, Kit exited naturally with code 0, and exact cleanup left no
+process. Kit/tree peaks were 14,877,048,832 / 15,041,200,128 bytes. Temporary
+NVDB, another channel, values, sampling, collectors, flux, repeated operations,
+and the formal population remain blocked. See
+`docs/design/phase6gs_volume_metadata_qualification.md`.
+
 # Phase 6GK bounded artifact interface preflight
 
 Phase 6GJ remains frozen as a nonreplaceable artifact safe stop. Phase 6GK

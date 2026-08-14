@@ -1,5 +1,16 @@
 # Changelog
 
+- Qualified the Phase 6GS single temperature public volume-metadata boundary
+  without reclassifying or reusing Phase 6GR. Canonical marker payload and
+  optional-property normalization fixtures passed 14/14 and 13/13 before Kit.
+- One fresh S93 process completed one readback, one `GridData` conversion, and
+  the six frozen public accessors exactly once. Weak residual was zero, stage
+  close took 5.732096 seconds, Kit exited 0, and exact cleanup left no process.
+  Kit/tree peaks were 14,877,048,832 / 15,041,200,128 bytes.
+- Temporary NVDB, another channel, sampling, collectors, flux, and the formal
+  S93/S100/OFF population were not started. Production, defaults, and latest
+  demo remain unchanged.
+
 - Froze Phase 6GN as a nonreplaceable native operation/lifecycle safe stop.
   Every inherited pre-Kit gate and the exact-wrapper smoke passed, proving the
   Phase 6GM module-as-callable import defect fixed. Fresh attempt01 S93 reached
