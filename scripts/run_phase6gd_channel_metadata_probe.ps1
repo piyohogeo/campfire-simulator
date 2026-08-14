@@ -4,7 +4,11 @@ param(
     [ValidateSet("baseline", "divergence", "rgba", "rgb")][string]$Control = "baseline",
     [string]$ControlContractPath = "",
     [string]$DiagnosticResourceContractPath = "",
-    [ValidateSet("phase6gd", "phase6ge", "phase6gf", "phase6gg", "phase6gh")][string]$ReportPhase = "phase6gd"
+    [ValidateSet("phase6gd", "phase6ge", "phase6gf", "phase6gg", "phase6gh", "phase6gi")][string]$ReportPhase = "phase6gd",
+    [string]$ProbePath = "",
+    [ValidateSet("true", "false")][string]$RequireDiscoveryUnmapped = "true",
+    [ValidateSet("true", "false")][string]$SpatialCollectorsEnabled = "true",
+    [switch]$ShortPreflight
 )
 
 $ErrorActionPreference = "Stop"
@@ -53,6 +57,11 @@ $limits = $base.safety
 $sampleFrames = "60,120,180,240"
 $stabilityObservationStartFrame = 240
 $stabilityObservationExtraSeconds = 5
+if ($ShortPreflight.IsPresent) {
+    $sampleFrames = "60,120,180"
+    $stabilityObservationStartFrame = 180
+    $stabilityObservationExtraSeconds = 0
+}
 if (-not [string]::IsNullOrWhiteSpace($DiagnosticResourceContractPath)) {
     $diagnosticResourceContractPath = [IO.Path]::GetFullPath($DiagnosticResourceContractPath)
     $diagnosticHashPath = [IO.Path]::ChangeExtension($diagnosticResourceContractPath, ".sha256")
@@ -133,9 +142,12 @@ $attemptMetadata = [ordered]@{
 }
 [IO.File]::WriteAllText((Join-Path $attemptRoot "attempt_metadata.json"), ($attemptMetadata | ConvertTo-Json -Depth 6) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
 
+$probe = if ([string]::IsNullOrWhiteSpace($ProbePath)) {
+    Join-Path $PSScriptRoot "probe_phase6gd_channel_metadata.py"
+} else { [IO.Path]::GetFullPath($ProbePath) }
 $runtimeManifest = [ordered]@{}
 foreach ($name in @(
-    "run_phase6fo_supply_case.ps1", "probe_phase6gd_channel_metadata.py",
+    "run_phase6fo_supply_case.ps1", ([IO.Path]::GetFileName($probe)),
     "probe_phase6gc_shared_supply_comparison.py", "phase6gc_payload_native_source.py",
     "phase6fu_resource_guard.py", "phase6fu_process_identity.py", "phase6fw_pid_reuse_policy.py",
     "phase6fz_preclose_committer.py", "phase6fz_import_contract.py", "kit_shutdown_policy.ps1"
@@ -143,10 +155,16 @@ foreach ($name in @(
     $path = Join-Path $PSScriptRoot $name
     $runtimeManifest[$name] = (Get-FileHash -Algorithm SHA256 -LiteralPath $path).Hash
 }
+if ($ReportPhase -eq "phase6gi") {
+    foreach ($name in @("phase6gi_channel_preflight_policy.py", "phase6gi_s93_channel_preflight_contract.json",
+                         "phase6gh_public_channel_schema_candidate.json")) {
+        $path = Join-Path $PSScriptRoot $name
+        $runtimeManifest[$name] = (Get-FileHash -Algorithm SHA256 -LiteralPath $path).Hash
+    }
+}
 [IO.File]::WriteAllText((Join-Path $OutputRoot "runtime_hashes.json"), ($runtimeManifest | ConvertTo-Json -Depth 4) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
 
 $caseRunner = Join-Path $PSScriptRoot "run_phase6fo_supply_case.ps1"
-$probe = Join-Path $PSScriptRoot "probe_phase6gd_channel_metadata.py"
 $guard = Join-Path $PSScriptRoot "phase6fu_resource_guard.py"
 $committer = Join-Path $PSScriptRoot "phase6fz_preclose_committer.py"
 $powershell = (Get-Command powershell.exe).Source
@@ -162,7 +180,7 @@ $arguments = @(
     "-SampleFrames", $sampleFrames, "-OperationFrames", "180", "-ReadbackFrames", "180",
     "-ReadbackChannels", "temperature", "-ReadbackMode", "p3_spatial_release",
     "-ReferenceDisposal", "del", "-SynchronousMemoryMarkers", "true", "-PythonMemoryTelemetry", "true",
-    "-SpatialCollectorsEnabled", "true", "-SpatialColliderIndices", "2", "-SpatialAllChannels",
+    "-SpatialCollectorsEnabled", $SpatialCollectorsEnabled, "-SpatialColliderIndices", "2",
     "-RunIndex", "0", "-LifecycleCalibration", "-RendererDrainUpdates", "8",
     "-LifecycleReferenceReleaseOrder", "after_stage_close",
     "-StageCloseTimeoutSeconds", "$($limits.stage_close_timeout_seconds)",
@@ -182,6 +200,7 @@ $arguments = @(
     "-MeasurementCommitFailure", (Join-Path $caseDir "memory-measurement\measurement_commit.failed"),
     "-MeasurementCommitTimeoutSeconds", "$($base.artifact_commit.probe_wait_timeout_seconds)"
 )
+if ($SpatialCollectorsEnabled -eq "true") { $arguments += "-SpatialAllChannels" }
 $guardArgs = @(
     $guard, "--trace", (Join-Path $logs "S93_support_clear.resource.jsonl"),
     "--summary", (Join-Path $logs "S93_support_clear.guard.json"),
@@ -260,8 +279,11 @@ if ($guardEvidence.status -ne "ok" -or [int]$guardEvidence.exit_code -ne 0 -or
     $runnerEvidence.shutdown_monitor.residual_process) {
     throw "Phase 6GD metadata process failed the frozen diagnostic/cleanup axes"
 }
-if ($metadata.formal_channel_names_assigned -or $metadata.full_field_json_or_npz_written) {
-    throw "Phase 6GD discovery probe violated bounded scope"
+if ($RequireDiscoveryUnmapped -eq "true" -and $metadata.formal_channel_names_assigned) {
+    throw "Phase 6GD discovery probe unexpectedly assigned formal channel names"
+}
+if ($metadata.full_field_json_or_npz_written) {
+    throw "Phase 6GD discovery probe violated bounded field-output scope"
 }
 if ($metadata.returned_handle_count -lt 1 -or $metadata.returned_handle_count -gt $discovery.readback.maximum_handle_count) {
     throw "Phase 6GD returned handle count is outside the frozen discovery bound"

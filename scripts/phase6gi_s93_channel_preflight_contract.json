@@ -1,0 +1,78 @@
+{
+  "schema": "campfire.phase6gi.s93-public-channel-preflight-contract.v1",
+  "phase": "phase6gi",
+  "declared_before_runtime": true,
+  "history": {"phase6gh_candidate_reclassified": false, "phase6gh_artifacts_reused_as_population": false, "formal_s93_s100_population_started": false},
+  "scope": "One fresh S93 public-channel schema and ordered alias-lifetime preflight under the normal Phase 6FZ 16/17 GiB resource contract.",
+  "candidate_schema": {
+    "path": "scripts/phase6gh_public_channel_schema_candidate.json",
+    "sha256": "06BAF639E07E7585CB6ED79FFBA6229EA118F450A34BAD1F3EC1228EA59DD8B9",
+    "schema_id": "flow110.0.0-kit110.2-public-readback-rgba7-v1",
+    "phase6gh_status_remains": "candidate_identified_not_formally_preflighted"
+  },
+  "versions": {
+    "flow": "110.0.0",
+    "kit": "110.2.0+feature.342835.698af100.gl",
+    "volume": "0.5.2",
+    "api": "omni.flowusd._flowusd.IFlowUsd.get_latest_nanovdb_readback"
+  },
+  "condition": {
+    "label": "S93_support_clear", "scenario": "production_four", "geometry_concept": "corrected",
+    "geometry_runtime_token": "phase6er_corrected", "policy": "allow_self_center", "collision_enabled": true,
+    "points_total": 1440, "points_active": 1344, "payload_revision": 1,
+    "payload_contract": "payload_native_float32_v1", "point_offset_m": -0.0125,
+    "support_radius_assumption_m": 0.05, "sample_frames": [60, 120, 180], "readback_frame": 180,
+    "public_readback_calls": 1, "export_enable_state": {"divergence": true, "rgba": false, "rgb": false}
+  },
+  "startup_population": {
+    "representative_active_blocks": 128, "startup_prerequisite_replacement_budget": 2,
+    "maximum_total_launches": 3, "only_replaceable_classification": "startup_prerequisite_failure",
+    "all_attempts_retained": true, "automatic_retry": false
+  },
+  "schema_gate": {
+    "expected_handle_count": 7,
+    "exact_order": ["temperature", "fuel", "burn", "smoke", "velocity", "divergence", "rgba"],
+    "required_dtype": "uint32", "required_grid_short_name": "Flow",
+    "handles": [
+      {"index": 0, "channel": "temperature", "grid_class": 2, "value_type": "1", "required_state": "nonempty"},
+      {"index": 1, "channel": "fuel", "grid_class": 2, "value_type": "1", "required_state": "nonempty"},
+      {"index": 2, "channel": "burn", "grid_class": 2, "value_type": "1", "required_state": "nonempty"},
+      {"index": 3, "channel": "smoke", "grid_class": 2, "value_type": "1", "required_state": "nonempty"},
+      {"index": 4, "channel": "velocity", "grid_class": 0, "value_type": "6", "required_state": "nonempty"},
+      {"index": 5, "channel": "divergence", "grid_class": 2, "value_type": "1", "required_state": "nonempty"},
+      {"index": 6, "channel": "rgba", "grid_class": null, "value_type": null, "required_state": "empty"}
+    ],
+    "unknown_legacy_or_future_schema": "fail_closed",
+    "semantic_mapping_must_follow_raw_schema_validation": true,
+    "automatic_reorder_or_correction": false
+  },
+  "ordered_release_gate": {
+    "required_positive_pointer_channels": ["temperature", "fuel", "burn", "smoke", "velocity", "divergence"],
+    "numpy_asarray_calls": 0, "material_copies": 0, "field_body_json_npz_or_openvdb_writes": 0,
+    "temporary_nanovdb_metadata_files_retained": 0,
+    "release_order": "persist bounded metadata; clear local alias; clear returned-list slot; verify weak reference; continue",
+    "weak_reference_alive_after_slot_clear": 0, "ownership_container_residual": 0,
+    "python_reference_and_internal_extension_reference_are_distinguished": true,
+    "internal_extension_reference_count_publicly_observable": false
+  },
+  "safety": {
+    "kit_private_limit_bytes": 17179869184, "unique_tree_private_limit_bytes": 18253611008,
+    "runner_private_limit_bytes": 536870912, "diagnostic_private_limit_bytes": 536870912,
+    "physical_memory_floor_bytes": 8589934592, "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180, "inner_absolute_timeout_seconds": 900,
+    "outer_condition_timeout_seconds": 1020, "resource_sampling_seconds": 0.25, "gpu_sampling_ms": 1000,
+    "shutdown_order": "release_after_close",
+    "diagnostic": "Phase 6FZ progress-aware stack-first CDB with Phase 6FU exact cleanup and Phase 6FW PID-reuse policy"
+  },
+  "hard_gate": {
+    "schema_fixture_must_pass_before_kit": true, "readback_count_exact": 1,
+    "durable_preclose_commit_required": true, "functional_pass_required": true,
+    "normal_os_exit_required": true, "exact_cleanup_required": true, "fatal_dump_upload_residual_allowed": 0,
+    "nonreplaceable": ["operation_failure", "schema_failure", "resource_failure", "readback_failure", "pointer_failure", "lifecycle_failure", "cleanup_failure", "artifact_failure"]
+  },
+  "authorization_boundary": {
+    "formal_s93_channel_preflight_allowed": true, "formal_s93_s100_off_population_allowed": false,
+    "directional_flux_or_deep_velocity_allowed": false, "image_or_video_allowed": false,
+    "production_or_default_change_allowed": false, "next_step_requires_explicit_approval": true
+  }
+}
