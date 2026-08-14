@@ -1,5 +1,25 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6GV repetition-runner safe stop
+
+Phase 6GU remains frozen. Phase 6GV fixed the startup marker-owned key by
+renaming the sampled timestamp to `sample_perf_counter_ns`, centralized the
+temporary filename, and passed 21/21 complete-payload marker fixtures plus
+13/13 repetition-runner fixtures. Contract SHA-256
+`F1EEBD86CC21BD6B9C9873A75B924D0CA5E87BEC8F463E7D08C2FCC64FC204B9`
+froze ABBA x12, 48 launches, and six hours before runtime.
+
+The formal population is nevertheless invalid and is frozen as a harness safe
+stop. The repetition runner created each child `case` directory before invoking
+the existing case runner; the case runner correctly rejected every launch at
+its no-reuse boundary. Kit launch count, representative Flow run count, and
+readback count were all zero. The compact classifier then mislabeled these
+pre-Kit failures as `os_exit_timeout`; that aggregate conclusion is explicitly
+not physical or lifecycle evidence. All 48 launch records remain preserved,
+with residual process count zero. A new Phase must fixture output-directory
+ownership and bounded stderr-aware pre-Kit classification before any new
+population. Phase 6GV artifacts are not reused or reclassified.
+
 # Phase 6GU resource-marker safe stop
 
 Phase 6GT remains frozen. Phase 6GU moved the actual resource-marker helper to

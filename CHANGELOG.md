@@ -1,5 +1,17 @@
 # Changelog
 
+- Froze Phase 6GV as a repetition-runner harness safe stop. Marker payload
+  fixtures passed 21/21 and classification/order fixtures passed 13/13, but
+  the runner pre-created the child case directory and the existing no-reuse
+  guard rejected all 48 fixed ABBA slots before Kit launch.
+- No Flow, readback, conversion, metadata, sampling, collector, flux, or native
+  lifecycle sample was produced. The generated `os_exit_timeout` aggregate is
+  invalid because its classifier did not consume the bounded pre-Kit stderr;
+  the valid conclusion is `inconclusive due to harness or safety stop`.
+- Preserved every attempt, confirmed zero residual process, and did not retry or
+  reuse the root. A separate Phase must fixture case-directory ownership and
+  pre-Kit failure classification before the six-hour population can restart.
+
 - Froze Phase 6GU as a resource-marker harness safe stop without changing or
   reusing Phase 6GT. The actual helper fixture passed 20/20 and its parent E2E
   passed 5/5; `path` now fails before Kit and valid rows persist only

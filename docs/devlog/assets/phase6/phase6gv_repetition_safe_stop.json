@@ -1,0 +1,16 @@
+{
+  "schema": "campfire.phase6gv.authoritative-safe-stop.v1",
+  "status": "harness_safe_stop",
+  "contract_sha256": "F1EEBD86CC21BD6B9C9873A75B924D0CA5E87BEC8F463E7D08C2FCC64FC204B9",
+  "fixed_launch_records": 48,
+  "kit_launches": 0,
+  "representative_flow_runs": 0,
+  "readback_calls": 0,
+  "direct_cause": "outer runner pre-created the child case output directory",
+  "case_runner_result": "refused output reuse before Kit launch",
+  "generated_classification_is_authoritative": false,
+  "generated_classification": "os_exit_timeout",
+  "authoritative_conclusion": "inconclusive due to harness or safety stop",
+  "residual_processes": 0,
+  "artifact_reuse_allowed": false
+}

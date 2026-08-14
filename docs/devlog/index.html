@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6gt">最新記録</a>
+        <a href="#phase-6gv">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6gt">Phase 6GTの結果を読む</a>
+        <a class="button primary" href="#phase-6gv">Phase 6GVの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6GT · temporary NanoVDB harness safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6GV · repetition runner harness safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,16 @@
   </header>
 
   <main>
+    <section id="phase-6gv" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6GV repetition runner safe stop"><span class="phase-number compact">6GV</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6GV · bounded repetition runner</p><h2>The marker contract is fixed;<br>the outer runner violated case-root ownership.</h2><p>The no-Kit marker fixtures passed 21/21 and the fixed ABBA/statistics fixtures passed 13/13. All 48 frozen slots then stopped before Kit because the outer runner created the child case directory that the established case runner requires to be absent.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Operation</p><h3>Zero representative Flow runs.</h3><p>Kit launches, readbacks, conversions, metadata calls, saves, sampling, collectors, and flux calls were all zero. The generated timeout classification is rejected because bounded pre-Kit stderr was not part of classification.</p></section><section class="note"><p class="note-label">Safety</p><h3>The frozen root is not retried.</h3><p>Every attempt record is retained, no prior artifact was reused, and residual process count was zero. The authoritative result is <code>inconclusive due to harness or safety stop</code>.</p></section></div>
+          <section class="note next"><p class="note-label">Continuation roadmap</p><h3>Fixture output ownership before another population.</h3><p>A new independent Phase must leave the child case root absent and classify the exact no-reuse stderr as a harness failure before launching Kit. Physics, A/B operations, order, limits, production, defaults, V3, and P4 remain unchanged.</p><p><a href="assets/phase6/phase6gv_repetition_safe_stop.json">machine report</a> · <a href="../design/phase6gv_repetition_safe_stop.md">design note</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>internal harness safe stop; no new video</small></span></button></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6gu" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6GU resource marker safe stop"><span class="phase-number compact">6GU</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">safe stop</span></aside>
@@ -5329,7 +5339,7 @@
         <p class="section-kicker">Roadmap</p>
         <h2>小さく燃やして、確かめながら進む。</h2>
         <p>Phase 6GNでmodule／callableを分離したexact-wrapper smokeは5/5合格し、Phase 6GMのimport不具合は解消した。しかし正式attempt01 S93はframe 180の7-handle readback直後、spatial result保存前にnative access violation <code>0xC0000005</code>でsafe stopした。accepted 0/9、replacement 0で後続は未起動、exact cleanup residualは0である。Phase 6GNを凍結し、次はこのpost-readback native operation境界だけを別承認Phaseで隔離する。S93/S100 pair、flux、deep velocity、動画、Point policy、production統合は未到達である。</p>
-        <p><strong>Current continuation:</strong> Phase 6GU fixed and fixture-qualified the original <code>path</code> collision, but its sole process stopped before readback when startup telemetry supplied the automatic reserved key <code>perf_counter_ns</code>. No NanoVDB was created or read. A new harness-only contract/root must resolve that telemetry name and the exact temporary filename before another save-only process; typed metadata and all later operations remain blocked.</p>
+        <p><strong>Current continuation:</strong> Phase 6GV fixed the reserved startup timestamp and froze a bounded ABBA population, but its outer runner created the child case directory before the established case runner and all slots stopped before Kit. The root remains a harness safe stop with zero representative Flow samples. A new independent contract must fixture case-root ownership and bounded pre-Kit classification before the repetition population can restart.</p>
         <ol class="roadmap">
           <li class="done"><span>0</span><div><strong>環境成立確認</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>1</span><div><strong>Flow単体検証</strong><small>完了 · 2026.08.04</small></div></li>
