@@ -1,5 +1,16 @@
 # Changelog
 
+- Froze Phase 6GW as a startup-classifier harness safe stop. Its 17/17 no-Kit
+  runner fixtures corrected Phase 6GV case-root ownership and the fixed ABBA
+  population launched all 48 Kit processes without replacement.
+- A/B each produced 23 identical startup operation failures and one error-path
+  stage-close timeout. The producer emitted `sample_perf_counter_ns`, but the
+  Phase 6FC startup classifier still required the legacy key and raised at
+  frame 60; readback and every post-readback operation count remained zero.
+- Resource and cleanup stops were zero, final residual count was zero, and
+  maximum Kit/tree peaks were 13,910,691,840 / 14,063,038,464 bytes. The Phase
+  6GN reproduction question remains inconclusive; no Phase 6GW sample is reused.
+
 - Froze Phase 6GV as a repetition-runner harness safe stop. Marker payload
   fixtures passed 21/21 and classification/order fixtures passed 13/13, but
   the runner pre-created the child case directory and the existing no-reuse

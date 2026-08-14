@@ -1,5 +1,25 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6GW startup-classifier safe stop
+
+Phase 6GV remains a pre-Kit harness safe stop. Phase 6GW corrected case-root
+ownership and bounded stderr classification, passed 17/17 no-Kit runner
+fixtures, and froze contract SHA-256
+`98FCE6089B28C74316207397966E995F29B41496731A999D515E7D285CA8A253`.
+The fixed ABBA population launched all 48 independent Kit processes in
+4,689.64 seconds, without retry or replacement.
+
+No launch reached a readback. The marker producer wrote the new
+`sample_perf_counter_ns`, while the existing Phase 6FC startup classifier still
+required `perf_counter_ns`; all representative processes therefore raised the
+same startup `KeyError` at frame 60. A and B each recorded 23 operation
+failures at this boundary plus one stage-close timeout during error shutdown.
+No resource or cleanup stop occurred, all residual counts were zero, and the
+largest Kit/tree peaks were 13,910,691,840 / 14,063,038,464 bytes. These are
+harness and shutdown observations, not Phase 6GN reproduction evidence. The
+authoritative conclusion is `inconclusive due to harness or safety stop`.
+Phase 6GW artifacts remain frozen and are not inputs to a future population.
+
 # Phase 6GV repetition-runner safe stop
 
 Phase 6GU remains frozen. Phase 6GV fixed the startup marker-owned key by
