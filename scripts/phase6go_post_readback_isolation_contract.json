@@ -1,0 +1,115 @@
+{
+  "schema": "campfire.phase6go.post-readback-isolation-contract.v1",
+  "phase": "phase6go",
+  "declared_before_runtime": true,
+  "history": {
+    "phase6gn_reclassified": false,
+    "phase6gn_status_remains": "native_operation_safe_stop",
+    "phase6gn_samples_reused": false,
+    "formal_nine_process_population_authorized": false
+  },
+  "scope": "One-condition-per-process isolation of the fixed S93 frame-180 post-readback operation boundary.",
+  "fixture": {
+    "scenario": "production_four",
+    "geometry_concept": "corrected",
+    "geometry_runtime_token": "phase6er_corrected",
+    "condition": "S93_support_clear",
+    "policy": "allow_self_center",
+    "collision_enabled": true,
+    "points_active": 1344,
+    "points_total": 1440,
+    "point_offset_m": -0.0125,
+    "support_radius_assumption_m": 0.05,
+    "payload_revision": 1,
+    "readback_frame": 180,
+    "sample_frames": [60, 120, 180, 240]
+  },
+  "flow": {
+    "version": "110.0.0",
+    "kit_version": "110.2",
+    "exports": {
+      "temperature": true,
+      "fuel": true,
+      "burn": true,
+      "smoke": true,
+      "velocity": true,
+      "divergence": true,
+      "rgba": false,
+      "rgb": false
+    },
+    "schema_id": "flow110.0.0-kit110.2-public-readback-rgba7-v1",
+    "exact_order": ["temperature", "fuel", "burn", "smoke", "velocity", "divergence", "rgba"]
+  },
+  "ladder": [
+    {"id": "R0", "mode": "R0", "channel": "temperature", "operation": "readback then sequential release without handle use"},
+    {"id": "R1", "mode": "R1", "channel": "temperature", "operation": "bounded object metadata, identity, pointer and weak reference only"},
+    {"id": "R2_temperature", "mode": "R2", "channel": "temperature", "operation": "one buffer_to_volume plus public volume metadata"},
+    {"id": "R2_fuel", "mode": "R2", "channel": "fuel", "operation": "one buffer_to_volume plus public volume metadata"},
+    {"id": "R2_burn", "mode": "R2", "channel": "burn", "operation": "one buffer_to_volume plus public volume metadata"},
+    {"id": "R2_smoke", "mode": "R2", "channel": "smoke", "operation": "one buffer_to_volume plus public volume metadata"},
+    {"id": "R2_velocity", "mode": "R2", "channel": "velocity", "operation": "one buffer_to_volume plus public volume metadata"},
+    {"id": "R2_divergence", "mode": "R2", "channel": "divergence", "operation": "one buffer_to_volume plus public volume metadata"},
+    {"id": "R3_temperature", "mode": "R3", "channel": "temperature", "operation": "R2 plus bounded temporary NVDB save and delete"},
+    {"id": "R4_temperature", "mode": "R4", "channel": "temperature", "operation": "R3 plus selected raw schema validation"},
+    {"id": "R5_temperature", "mode": "R5", "channel": "temperature", "operation": "one-channel save_and_sample without spatial collector"},
+    {"id": "R6_temperature", "mode": "R6", "channel": "temperature", "operation": "R5 plus near-Mesh collector"},
+    {"id": "R7_temperature_velocity", "mode": "R7", "channel": "temperature", "operation": "bounded temperature and velocity neighborhoods plus directional transport proxy"}
+  ],
+  "population": {
+    "independent_process_per_condition": true,
+    "automatic_retry": false,
+    "replacement_budget": 0,
+    "stop_after_first_failure": true,
+    "maximum_launches": 13
+  },
+  "marker_contract": {
+    "flush_and_fsync": true,
+    "required_boundaries": [
+      "readback_call", "returned_handle_count_and_type", "bounded_object_metadata",
+      "identity_pointer_weakref", "buffer_to_volume", "volume_metadata",
+      "temporary_nvdb_save", "raw_schema_validation", "save_and_sample",
+      "near_mesh_collector", "directional_flux", "ordered_release"
+    ],
+    "missing_or_reversed": "fail_closed"
+  },
+  "artifact_bounds": {
+    "maximum_json_bytes": 1048576,
+    "maximum_temporary_nvdb_bytes": 268435456,
+    "stdout_or_stderr_full_field_allowed": false,
+    "full_field_numpy_material_copy_allowed": false,
+    "forced_gc_allowed": false,
+    "maximum_new_crash_dump_count": 1
+  },
+  "safety": {
+    "kit_private_limit_bytes": 17179869184,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "inner_absolute_timeout_seconds": 900,
+    "outer_condition_timeout_seconds": 1020,
+    "resource_sampling_seconds": 0.25,
+    "gpu_sampling_ms": 1000,
+    "shutdown_order": "release_after_close",
+    "failure_policy": "no retry; stop before every later condition",
+    "cleanup": "Phase 6FU exact identity cleanup with Phase 6FW PID reuse policy",
+    "diagnostic": "progress-aware stack-first CDB; no automatic upload"
+  },
+  "dump_preservation": {
+    "source": "artifacts/phase6gn-supply-comparison-1/formal/attempt01/S93_support_clear/sensitive-crash-dumps",
+    "analysis": "bounded local-symbol CDB only; original files remain immutable",
+    "cause_claim_from_quick_shutdown_stack_allowed": false
+  },
+  "gpu": {
+    "active_gpu": "NVIDIA GeForce RTX 3090",
+    "cuda_device_ordinal": 0,
+    "rtx_device_mask": "0x1",
+    "physx_device_ordinal": 0
+  },
+  "out_of_scope": [
+    "formal S93/S100/OFF nine-process population", "production integration", "default changes",
+    "Point policy adoption", "V3", "P4", "video", "resource limit changes"
+  ]
+}

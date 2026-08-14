@@ -3942,3 +3942,11 @@ crashしておりCDB timeout経路は未発動である。このfailureは置換
 1、accepted 0/9、replacement 0で停止し、後続、pair、flux、deep/boundary、動画、
 candidate選択、production変更を開始しない。Phase 6GNは凍結し、再開にはnative
 access violationを隔離する別承認Phase、新contract、新rootが必要である。
+# Phase 6GO post-readback isolation contract (frozen before runtime)
+
+Phase 6GNの`0xC0000005` safe stopは変更しない。新しいPhase 6GOはS93、
+frame 180、qualified 7-channel schema/export、16/17 GiB、release-after-closeを
+固定し、R0～R7を各1 independent processで実行する。最初の失敗で後続を止め、
+retry/replacementおよび正式9-process再開を行わない。詳細は
+`docs/design/phase6go_post_readback_isolation.md`とSHA固定済みmachine contractを
+権威記録とする。

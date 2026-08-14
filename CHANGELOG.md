@@ -1422,3 +1422,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   runtime. It connects the Phase 6GK-qualified seven-handle public schema to the
   existing authored-Mesh spatial collector, preserves all Phase 6GC physical
   gates and 16/17 GiB safety limits, and does not alter production behavior.
+- Froze the Phase 6GO diagnostic-only R0-R7 post-readback isolation ladder,
+  preserving Phase 6GN and retaining its physical, schema, lifecycle, and
+  16/17 GiB safety boundaries without restarting the formal population.

@@ -6,7 +6,7 @@ param(
     [ValidateSet("true", "false")][string]$Filtering = "true",
     [ValidateSet("true", "false")][string]$Collision = "true",
     [ValidateSet("strict_all", "allow_self_support", "allow_self_center", "allow_other_support")][string]$Policy = "strict_all",
-    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev", "phase6ew", "phase6ex", "phase6ey", "phase6ez", "phase6fa", "phase6fb", "phase6fc", "phase6fd", "phase6fe", "phase6ff", "phase6fg", "phase6fh", "phase6fi", "phase6fj", "phase6fk", "phase6fn", "phase6fo", "phase6fp", "phase6fq", "phase6fr", "phase6fs", "phase6ft", "phase6fv", "phase6ga", "phase6gb", "phase6gc", "phase6gd", "phase6ge", "phase6gf", "phase6gg", "phase6gh", "phase6gi", "phase6gj", "phase6gk", "phase6gl", "phase6gm", "phase6gn")][string]$ReportPhase = "phase6ep",
+    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev", "phase6ew", "phase6ex", "phase6ey", "phase6ez", "phase6fa", "phase6fb", "phase6fc", "phase6fd", "phase6fe", "phase6ff", "phase6fg", "phase6fh", "phase6fi", "phase6fj", "phase6fk", "phase6fn", "phase6fo", "phase6fp", "phase6fq", "phase6fr", "phase6fs", "phase6ft", "phase6fv", "phase6ga", "phase6gb", "phase6gc", "phase6gd", "phase6ge", "phase6gf", "phase6gg", "phase6gh", "phase6gi", "phase6gj", "phase6gk", "phase6gl", "phase6gm", "phase6gn", "phase6go")][string]$ReportPhase = "phase6ep",
     [string]$SampleFrames = "60,120,180,200",
     [string]$ReadbackChannels = "temperature,fuel,burn,smoke,velocity",
     [ValidateSet("legacy", "none", "acquire_discard", "acquire_discard_release", "fuel_convert", "fuel_convert_release", "fuel_scalar", "fuel_jsonl", "fuel_spatial", "p3_spatial_release")][string]$ReadbackMode = "legacy",
@@ -60,6 +60,9 @@ param(
     [double]$MeasurementCommitTimeoutSeconds = 60.0,
     [string]$ExpectedGeometryConcept = "",
     [ValidateSet("baseline", "divergence", "rgba", "rgb")][string]$ChannelSchemaControl = "baseline",
+    [ValidateSet("R0", "R1", "R2", "R3", "R4", "R5", "R6", "R7")][string]$PostReadbackIsolationMode = "R0",
+    [ValidateSet("temperature", "fuel", "burn", "smoke", "velocity", "divergence")][string]$PostReadbackIsolationChannel = "temperature",
+    [string]$PostReadbackIsolationReportPath = "",
     [switch]$ValidateArgumentsOnly,
     [string]$ArgumentAuditPath = ""
 )
@@ -158,6 +161,9 @@ $arguments = @(
     "--/phase6ep/startupSourceSumTolerance=$StartupSourceSumTolerance",
     "--/phase6ep/startupSourceContractMode=$StartupSourceContractMode",
     "--/phase6gd/channelSchemaControl=$ChannelSchemaControl",
+    "--/phase6go/isolationMode=$PostReadbackIsolationMode",
+    "--/phase6go/isolationChannel=$PostReadbackIsolationChannel",
+    "--/phase6go/isolationReportPath=$PostReadbackIsolationReportPath",
     "--/phase6fz/importAuditPath=$ImportAuditPath",
     "--/phase6fz/measurementCommitAck=$MeasurementCommitAck",
     "--/phase6fz/measurementCommitFailure=$MeasurementCommitFailure",
