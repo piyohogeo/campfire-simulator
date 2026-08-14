@@ -1,5 +1,18 @@
 # Changelog
 
+- Froze Phase 6GN before runtime as a type-aware exact-wrapper import and fresh
+  S93/S100/OFF comparison Phase. Phase 6GM remains a 0/9 import safe stop; its
+  900-second Kit residual and partial CDB evidence are not reclassified or
+  reused.
+- Separated module validation from callable entry-point validation. The exact
+  wrapper now validates `shared` as `types.ModuleType` at the expected absolute
+  path, validates only the attributes it actually consumes, and records patch
+  wiring plus the immutable export descriptor digest in bounded audit JSON.
+- Added a real Kit app-ready exact-wrapper smoke with durable import/wiring
+  markers, wrong-path, legacy shared-as-callable, missing-attribute, and exact
+  exit-code propagation fixtures. Formal slots remain blocked until this and
+  every inherited pre-Kit gate pass.
+
 - Froze Phase 6GM as a nonreplaceable app-ready import safe stop. All pre-Kit
   gates passed, including the saved/reloaded S93/S100/OFF USD export-state
   fixture, but formal attempt01 rejected the diagnostic wrapper before stage

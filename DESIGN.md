@@ -3896,3 +3896,27 @@ import宣言とexact-wrapper app-ready smokeを直した後、新rootのprocess 
 Release build、Phase 0 RTX、Phase 3（dry／wet mass balance error 0、Flow input
 ownerはwood thermal model）、focused Phase 6G 66/66、標準suite 78/78、
 devlog静的検査は合格し、production／latest-demo SHA-256は不変である。
+
+# Phase 6GN exact-wrapper import contract (frozen before runtime)
+
+Phase 6GM remains a nonreplaceable 0/9 import safe stop. Phase 6GN uses a new
+contract and empty artifact root and changes only the diagnostic wrapper import
+boundary. The generic exact loader continues to validate callable entry points;
+`shared` is no longer declared through that interface. It is validated
+separately as `types.ModuleType`, with its exact absolute file path and the
+actual callable/module attributes consumed by the wrapper. The Phase 6GN
+wrapper also verifies its `_build_stage` patch target, original function, and
+the frozen Phase 6GK-derived export descriptor digest.
+
+Before formal process 1, a real Kit app-ready smoke must import the exact wrapper
+and complete `import_started`, `import_complete`, `wrapper_wiring_complete`, and
+`smoke_complete` without stage, timeline, Flow, readback, or formal-slot work.
+Wrong path, the old shared-as-callable declaration, missing attributes, and
+exit-code propagation are explicit fixtures. All inherited source, geometry,
+schema, bounded-artifact, USD export, import, and CDB fixtures remain required.
+
+Only a fully passing preflight authorizes the unchanged fresh balanced 9-process
+S93/S100/OFF population. Phase 6GM evidence is never reused. Production,
+defaults, Point policy, V3, P4, PhysX sharing, dynamic transform, geometry,
+20-log performance, fire lighting, and video before numeric qualification remain
+out of scope.

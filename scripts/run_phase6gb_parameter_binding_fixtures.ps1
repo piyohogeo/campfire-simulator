@@ -11,7 +11,7 @@ if (Test-Path -LiteralPath $OutputRoot) { throw "Phase 6GB parameter fixture ref
 New-Item -ItemType Directory -Path $OutputRoot | Out-Null
 $contract = Get-Content -Raw -Encoding UTF8 ([IO.Path]::GetFullPath($ContractPath)) | ConvertFrom-Json
 $phase = if ($contract.phase) { [string]$contract.phase } else { "phase6gb" }
-if ($phase -notin @("phase6gb", "phase6gc", "phase6gl", "phase6gm")) { throw "Unsupported geometry-binding fixture phase: $phase" }
+if ($phase -notin @("phase6gb", "phase6gc", "phase6gl", "phase6gm", "phase6gn")) { throw "Unsupported geometry-binding fixture phase: $phase" }
 $mapping = $contract.fixture.geometry
 if ($mapping.concept -ne "corrected" -or $mapping.runtime_token -ne "phase6er_corrected") {
     throw "Phase 6GB contract geometry mapping is not the frozen corrected mapping."
@@ -47,7 +47,7 @@ $baseArguments = @(
     "-StartupLivenessGate", "true", "-StartupExpectedFuelSum", "$($source.fuel)",
     "-StartupExpectedTemperatureSum", "$($source.temperature)", "-StartupExpectedSmokeSum", "$($source.smoke)",
     "-StartupSourceSumTolerance", "$($contract.channel_preflight.startup_source_sum_absolute_tolerance)",
-    "-StartupSourceContractMode", $(if($phase -in @("phase6gc", "phase6gl", "phase6gm")){[string]$contract.source_contract.mode}else{"decimal_legacy"}),
+    "-StartupSourceContractMode", $(if($phase -in @("phase6gc", "phase6gl", "phase6gm", "phase6gn")){[string]$contract.source_contract.mode}else{"decimal_legacy"}),
     "-AbsoluteTimeoutSeconds", "$($contract.safety.inner_absolute_timeout_seconds)",
     "-ValidateArgumentsOnly"
 )
