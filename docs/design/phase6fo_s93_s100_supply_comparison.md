@@ -1,5 +1,25 @@
 # Phase 6FO S93 / S100 Point supply comparison
 
+## 2026-08-14 Phase 6GH handle 6 candidate identification
+
+Phase 6GG remains frozen and supplied no sample. A new startup-gated C0/C1/C2
+population completed in three independent processes with zero replacement.
+All three passed the frozen representative threshold from frame 1, retained the
+same S93 payload/source identity, performed exactly one bounded metadata
+readback, and exited normally with exact cleanup.
+
+Only the RGBA control changed a returned handle: handle 6 moved from empty to a
+179,184,672-byte grid-class-0/value-type-17 buffer while handles 0--5 remained
+metadata-identical. The RGB control changed no returned handle. The candidate
+schema `flow110.0.0-kit110.2-public-readback-rgba7-v1` therefore maps handle 6
+to RGBA and passed 12/12 offline schema fixtures. RGB did not share handle 6 or
+expose a separate returned slot under this fixed diagnostic condition.
+
+This is schema identification only. S93 channel preflight, formal S93/S100/OFF,
+directional flux, deep velocity, video, and adoption remain unstarted and need
+a separate approval/root. The temporary 20/21 GiB diagnostic contract does not
+change the ordinary 16/17 GiB formal limits.
+
 ## 2026-08-14 Phase 6GG color-slot startup safe stop
 
 Phase 6GG reached only C0 and stopped at the frozen startup-liveness gate:

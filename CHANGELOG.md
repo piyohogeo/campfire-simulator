@@ -1,5 +1,27 @@
 # Changelog
 
+- Completed the fresh Phase 6GH startup-gated C0/C1/C2 color-slot population
+  without reusing or reclassifying Phase 6GG. All three attempts were
+  representative from frame 1, used the identical 1,344/1,440 Point payload and
+  float32 source sums, completed one bounded metadata readback, exited normally,
+  and required zero of the two startup-only replacement slots.
+- Identified `handle[6]` as the RGBA export slot by one-variable evidence:
+  `rgbaEnabled` alone changed index 6 from empty to 179,184,672 bytes with grid
+  class 0/value type 17, while indices 0--5 remained identical. `rgbEnabled`
+  changed no returned index, so RGB did not share handle 6 or expose another
+  slot in this seven-handle result. No value or visual inference was used.
+- Added candidate schema
+  `flow110.0.0-kit110.2-public-readback-rgba7-v1` and passed its 12/12
+  fail-closed offline fixtures. The candidate is not a formal channel preflight:
+  S93/S100/OFF, flux, deep velocity, video, and production remain unstarted.
+  Diagnostic 20/21 GiB limits stay isolated and ordinary 16/17 GiB limits are
+  unchanged.
+- Reconfirmed Phase 6GH with Release build, Phase 0 RTX, Phase 3 zero dry/wet
+  mass-balance error and wood-owned Flow input, focused Phase 6F 212/212 plus
+  Phase 6G 42/42, and the standard eight-process 78/78 suite. Devlog validation
+  passed 482 references, 288 IDs, 240 JSON, 177 SVG, and two ZIP artifacts;
+  production/latest-demo hashes were unchanged and final residuals were zero.
+
 - Froze Phase 6GG after its fresh C0 baseline remained at 24 active blocks for
   all 120 startup samples. Telemetry, identity, Point payload SHA, and source
   sums were valid, but the frozen `small_field_ingestion` gate prohibited the

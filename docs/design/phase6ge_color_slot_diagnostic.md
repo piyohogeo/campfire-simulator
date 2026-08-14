@@ -1,5 +1,77 @@
 # Phase 6GE public color-export slot diagnostic
 
+## Phase 6GH result: startup-gated identification
+
+Phase 6GG remains frozen at its C0 small-field safe stop and is not reused or
+reclassified. The independent Phase 6GH contract adds a short representative
+startup gate to every C0/C1/C2 process. The gate requires at least 128 active
+blocks, fresh timeline/update telemetry, an enabled Emitter, exact 1,344/1,440
+Point identity, and exact float32 source sums before the single metadata
+readback. An all-24 120-frame startup may consume one of only two predeclared
+population-wide replacement slots; no operation, resource, lifecycle, cleanup,
+identity, or post-readback failure is replaceable. Offline replacement-policy
+fixtures passed 12/12 before Kit was launched.
+
+The fresh root `artifacts/phase6gh-color-slot-diagnostic-1` completed C0, C1,
+and C2 in three launches with no replacement. Each process was representative
+at frame 1 with 269 active blocks, reached 1,124 blocks during the 120-frame
+startup gate, retained payload SHA-256
+`0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389`,
+and recorded fuel/temperature/smoke source sums
+`1075.2000160217285 / 2688.0 / 107.51999759674072`. All three completed one
+frame-180 bounded metadata readback, release-after-close, normal OS exit, exact
+cleanup, and residual zero. CDB was not invoked.
+Stage-close times were 2.673884 / 14.961279 / 4.014062 seconds for C0/C1/C2;
+the explicit ownership container retained four observable referents at close,
+then reached zero slots after release. Three of four weak referents remained
+alive through external Kit/USD ownership at the immediate in-process check, so
+they are not described as Python leaks; direct Flow/provider/emitter references
+were absent by `shutdown_complete`, OS exit was normal, and exact process
+cleanup found no residual.
+
+C0 (RGBA OFF/RGB OFF) left handle 6 empty. C1 changed only
+`rgbaEnabled`; only handle 6 changed, becoming a 179,184,672-byte `uint32`
+public buffer containing one `Flow` grid with grid class 0, value type 17,
+index bounds `[-96,-96,-16]..[127,111,639]`, and world bounds approximately
+`[-2.4,-2.4,-0.4]..[2.4,2.4,15.6]`. Its metadata SHA-256 changed from
+`4A57F039...` to `9609E73B...`; handles 0--5 remained metadata-identical. C2
+changed only `rgbEnabled` and all seven metadata hashes remained identical to
+C0. Thus handle 6 is the RGBA export slot under Flow 110.0.0 / Kit 110.2. RGB
+does not share this slot and no separate returned RGB slot was observed. This
+conclusion uses only one-variable metadata change, not values or appearance.
+
+The versioned candidate schema is
+`flow110.0.0-kit110.2-public-readback-rgba7-v1`, SHA-256
+`06BAF639E07E7585CB6ED79FFBA6229EA118F450A34BAD1F3EC1228EA59DD8B9`.
+It records the existing temperature/fuel/burn/smoke/velocity/divergence order
+and the newly identified RGBA slot. Its 12/12 offline fixtures accept RGBA
+enabled/disabled forms and reject missing/added/reordered/duplicate handles,
+class or value-type mismatch, unknown handles/versions, required empty fields,
+and the legacy six-handle schema. Unknown future schemas are never corrected.
+
+Kit peaks for C0/C1/C2 were 14,977,552,384 / 17,744,617,472 /
+17,760,870,400 bytes, leaving 6,497,284,096 / 3,730,219,008 /
+3,713,966,080 bytes below the diagnostic 20 GiB ceiling. Tree peaks were
+15,141,261,312 / 17,907,589,120 / 17,924,362,240 bytes, leaving
+7,407,316,992 / 4,640,989,184 / 4,624,216,064 bytes below 21 GiB. Runner and
+diagnostic children stayed below 512 MiB and physical/commit minima stayed
+above 32 GiB. These ceilings remain diagnostic-only; the normal/formal 16/17
+GiB contract is unchanged.
+
+This Phase stops at schema identification. The candidate has not passed a fresh
+S93 channel preflight, and the formal S93/S100/OFF comparison, directional
+flux, deep velocity, image/video work, Point adoption, production integration,
+defaults, V3, P4, and dynamic geometry were not started. The next gate requires
+explicit approval for a new preflight/root under the normal 16/17 GiB limits.
+
+Final regression passed the Release build (8.59 seconds), Phase 0 RTX, Phase 3,
+focused Phase 6F 212/212 and Phase 6G 42/42, and the standard eight-process
+78/78 suite (339.6 seconds). Phase 3 retained zero dry/wet mass-balance error,
+wood-owned Flow input, active blocks final/peak 263/346, and peak fuel 1.0.
+Devlog validation reported 482 references, 288 unique IDs, 240 JSON, 177 SVG,
+and two ZIP files. Production and latest-demo hashes remained unchanged; no
+Kit, CDB, nvidia-smi, or NGX helper process remained.
+
 Phase 6GD remains frozen: its divergence operation established direct evidence
 for `handle[5]`, its final lifecycle outcome remains
 `unknown_shutdown_failure`, and its RGBA control remains a pre-readback 16 GiB

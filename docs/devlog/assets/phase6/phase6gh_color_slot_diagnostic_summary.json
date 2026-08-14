@@ -1,0 +1,2679 @@
+{
+  "candidate_schema": {
+    "fixture_all_pass": true,
+    "fixture_passed": 12,
+    "fixture_path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6gh-color-slot-diagnostic-1\\channel_schema_fixtures.json",
+    "fixture_total": 12,
+    "formal_preflight_qualified": false,
+    "path": "C:\\Users\\junic\\src\\campfire-simulator\\scripts\\phase6gh_public_channel_schema_candidate.json",
+    "schema_id": "flow110.0.0-kit110.2-public-readback-rgba7-v1",
+    "sha256": "06BAF639E07E7585CB6ED79FFBA6229EA118F450A34BAD1F3EC1228EA59DD8B9"
+  },
+  "comparison": {
+    "basis": "Only rgbaEnabled changed handle[6]; rgbEnabled changed no handle; indices 0..5 remained metadata-identical.",
+    "changed_indices_from_c0": {
+      "C1": [
+        6
+      ],
+      "C2": []
+    },
+    "handle6_identification": "rgba",
+    "payload_sha256_equal": true,
+    "rgb_returned_slot_observed": false,
+    "rgba_and_rgb_same_returned_slot": false,
+    "source_sums_equal": true,
+    "value_or_visual_inference_used": false
+  },
+  "contract_sha256": "9EEA40A2A3E6A4CBE3E0B5DA08CFEDE422F41C6CE6253CB157E909A6936DFEF8",
+  "diagnostic_resource_contract_20_21_gib_only": true,
+  "generated_at_utc": "2026-08-14T05:02:07.949417+00:00",
+  "history": {
+    "formal_s93_s100_started": false,
+    "phase6gg_reclassified": false,
+    "phase6gg_reused": false
+  },
+  "next_gate": "Explicit approval for a fresh S93 channel preflight under the normal 16/17 GiB contract; no formal S93/S100 comparison has started.",
+  "normal_resource_contract_16_17_gib_unchanged": true,
+  "phase": "phase6gh",
+  "population": {
+    "accepted_conditions": [
+      "C0",
+      "C1",
+      "C2"
+    ],
+    "attempts": [
+      {
+        "axes": {
+          "automatic_upload_attempt_count": 0,
+          "cdb_invoked": false,
+          "dump_count": 0,
+          "exact_cleanup": true,
+          "external_weak_referents_alive_after_release": 3,
+          "fatal_count": 0,
+          "flow_reference_present_at_shutdown_complete": false,
+          "functional": "pass",
+          "lifecycle": "normal_exit",
+          "normal_exit_sample_accepted": true,
+          "normal_os_exit": true,
+          "ownership_container_count_after_release": 0,
+          "process_exit_code": 0,
+          "python_owned_slots_clear": true,
+          "references_retained_at_stage_close": 4,
+          "residual_zero": true,
+          "shutdown_complete": true,
+          "stage_close_seconds": 2.6738836,
+          "weak_reference_supported_count": 4
+        },
+        "classification": "accepted_normal_sample",
+        "condition": "C0",
+        "condition_attempt": 1,
+        "control": "baseline",
+        "launch_index": 1,
+        "metadata": {
+          "api": {
+            "api_name": "omni.flowusd._flowusd.IFlowUsd.get_latest_nanovdb_readback",
+            "doc": "get_latest_nanovdb_readback(self: omni.flowusd._flowusd.IFlowUsd) -> list",
+            "flow_extension": {
+              "enabled_id": "omni.flowusd-110.0.0",
+              "version": "110.0.0"
+            },
+            "kit_build": "110.2.0+feature.342835.698af100.gl",
+            "nanovdb_python_version": "unavailable",
+            "python_callable_type": "builtins.method",
+            "signature": "unavailable: ValueError: no signature found for builtin <built-in method get_latest_nanovdb_readback of PyCapsule object at 0x0000021CBCA6BAB0>",
+            "volume_extension": {
+              "enabled_id": "omni.volume-0.5.2",
+              "version": "0.5.2"
+            }
+          },
+          "file_sha256": "840525DC8E0D30A0F3415D641D8C8FA7714D74AA2769AE5FCCD0CB5B41805C08",
+          "forced_gc": false,
+          "full_field_written": false,
+          "handles": [
+            {
+              "bounding_box": {
+                "index": [
+                  [
+                    -96,
+                    -96,
+                    -16
+                  ],
+                  [
+                    127,
+                    111,
+                    639
+                  ]
+                ],
+                "world": [
+                  [
+                    -2.4000000953674316,
+                    -2.4000000953674316,
+                    -0.4000000059604645
+                  ],
+                  [
+                    2.4000000953674316,
+                    2.4000000953674316,
+                    15.600000381469727
+                  ]
+                ]
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": false,
+              "grid_class": 2,
+              "grid_count": 1,
+              "grid_short_name": "Flow",
+              "index": 0,
+              "logical_bytes": 47641344,
+              "metadata_sha256": "FE27D6BB3A7176DB261937E5CDFFB59426E464FF5B92767B38146F601FA4B0AC",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                11910336
+              ],
+              "strides": [
+                4
+              ],
+              "value_type": "1",
+              "weak_reference_supported": true
+            },
+            {
+              "bounding_box": {
+                "index": [
+                  [
+                    -96,
+                    -96,
+                    -16
+                  ],
+                  [
+                    127,
+                    111,
+                    639
+                  ]
+                ],
+                "world": [
+                  [
+                    -2.4000000953674316,
+                    -2.4000000953674316,
+                    -0.4000000059604645
+                  ],
+                  [
+                    2.4000000953674316,
+                    2.4000000953674316,
+                    15.600000381469727
+                  ]
+                ]
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": false,
+              "grid_class": 2,
+              "grid_count": 1,
+              "grid_short_name": "Flow",
+              "index": 1,
+              "logical_bytes": 47641344,
+              "metadata_sha256": "B53401BDE66640775F876232C84BC4B04A7F87DB6A372626EA42D3272B7FC78C",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                11910336
+              ],
+              "strides": [
+                4
+              ],
+              "value_type": "1",
+              "weak_reference_supported": true
+            },
+            {
+              "bounding_box": {
+                "index": [
+                  [
+                    -96,
+                    -96,
+                    -16
+                  ],
+                  [
+                    127,
+                    111,
+                    639
+                  ]
+                ],
+                "world": [
+                  [
+                    -2.4000000953674316,
+                    -2.4000000953674316,
+                    -0.4000000059604645
+                  ],
+                  [
+                    2.4000000953674316,
+                    2.4000000953674316,
+                    15.600000381469727
+                  ]
+                ]
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": false,
+              "grid_class": 2,
+              "grid_count": 1,
+              "grid_short_name": "Flow",
+              "index": 2,
+              "logical_bytes": 47641344,
+              "metadata_sha256": "1593D169C3005777BC5FDDD30C3CA9E57BD63DD322B51EEABA08CEF50B29BAF2",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                11910336
+              ],
+              "strides": [
+                4
+              ],
+              "value_type": "1",
+              "weak_reference_supported": true
+            },
+            {
+              "bounding_box": {
+                "index": [
+                  [
+                    -96,
+                    -96,
+                    -16
+                  ],
+                  [
+                    127,
+                    111,
+                    639
+                  ]
+                ],
+                "world": [
+                  [
+                    -2.4000000953674316,
+                    -2.4000000953674316,
+                    -0.4000000059604645
+                  ],
+                  [
+                    2.4000000953674316,
+                    2.4000000953674316,
+                    15.600000381469727
+                  ]
+                ]
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": false,
+              "grid_class": 2,
+              "grid_count": 1,
+              "grid_short_name": "Flow",
+              "index": 3,
+              "logical_bytes": 47641344,
+              "metadata_sha256": "FAC9FE63E8928C313670ABCDB557CD711B750ADA1A11F503809BEFDEF84B41D9",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                11910336
+              ],
+              "strides": [
+                4
+              ],
+              "value_type": "1",
+              "weak_reference_supported": true
+            },
+            {
+              "bounding_box": {
+                "index": [
+                  [
+                    -48,
+                    -48,
+                    -8
+                  ],
+                  [
+                    63,
+                    55,
+                    319
+                  ]
+                ],
+                "world": [
+                  [
+                    -2.4000000953674316,
+                    -2.4000000953674316,
+                    -0.4000000059604645
+                  ],
+                  [
+                    2.4000000953674316,
+                    2.4000000953674316,
+                    15.600000381469727
+                  ]
+                ]
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": false,
+              "grid_class": 0,
+              "grid_count": 1,
+              "grid_short_name": "Flow",
+              "index": 4,
+              "logical_bytes": 21660448,
+              "metadata_sha256": "680EF76A462FF6A5A53483111599A8B29E344A9C200DA8538EB7443A5946C2D1",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                5415112
+              ],
+              "strides": [
+                4
+              ],
+              "value_type": "6",
+              "weak_reference_supported": true
+            },
+            {
+              "bounding_box": {
+                "index": "unavailable",
+                "world": "unavailable"
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": true,
+              "grid_class": "unavailable",
+              "grid_count": 0,
+              "grid_short_name": "unavailable",
+              "index": 5,
+              "logical_bytes": 0,
+              "metadata_sha256": "8D14130699D6EE02EEFD5275DE6DB738BF72F1E1C8D6AC46400EDE8137EC5E5D",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                0
+              ],
+              "strides": [
+                0
+              ],
+              "value_type": "unavailable",
+              "weak_reference_supported": true
+            },
+            {
+              "bounding_box": {
+                "index": "unavailable",
+                "world": "unavailable"
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": true,
+              "grid_class": "unavailable",
+              "grid_count": 0,
+              "grid_short_name": "unavailable",
+              "index": 6,
+              "logical_bytes": 0,
+              "metadata_sha256": "4A57F0393F20AC96314770E00FF9DDEBA1020C20549D715BD6DEFA4AAE24209F",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                0
+              ],
+              "strides": [
+                0
+              ],
+              "value_type": "unavailable",
+              "weak_reference_supported": true
+            }
+          ],
+          "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6gh-color-slot-diagnostic-1\\C0-attempt01-baseline\\metadata_baseline_attempt01\\S93_support_clear\\channel-schema-metadata\\bounded_handle_metadata.json",
+          "private_api_used": false,
+          "returned_handle_count": 7
+        },
+        "production_changed": false,
+        "replacement_eligible": false,
+        "replacement_scheduled": false,
+        "resources": {
+          "kit_margin_bytes": 6497284096,
+          "limits_bytes": {
+            "available_memory_floor_bytes": 34359738368,
+            "commit_headroom_floor_bytes": 34359738368,
+            "diagnostic_private_bytes": 536870912,
+            "kit_private_bytes": 21474836480,
+            "runner_private_bytes": 536870912,
+            "timeout_seconds": 1020.0,
+            "tree_private_bytes": 22548578304
+          },
+          "machine_minima_bytes": {
+            "available_physical_bytes": 82399674368,
+            "estimated_commit_headroom_bytes": 101935030272
+          },
+          "peaks_bytes": {
+            "child": 62013440,
+            "diagnostic": 16875520,
+            "kit": 14977552384,
+            "runner": 130199552,
+            "tree": 15141261312
+          },
+          "tree_margin_bytes": 7407316992
+        },
+        "startup": {
+          "active_points": 1344,
+          "classification": "representative_ingestion",
+          "emitter_enabled": true,
+          "first_24_frame": null,
+          "first_above_24_frame": 1,
+          "first_representative_frame": 1,
+          "history": [
+            {
+              "active_blocks": 269,
+              "frame": 1
+            },
+            {
+              "active_blocks": 269,
+              "frame": 2
+            },
+            {
+              "active_blocks": 274,
+              "frame": 3
+            },
+            {
+              "active_blocks": 279,
+              "frame": 4
+            },
+            {
+              "active_blocks": 293,
+              "frame": 5
+            },
+            {
+              "active_blocks": 316,
+              "frame": 6
+            },
+            {
+              "active_blocks": 340,
+              "frame": 7
+            },
+            {
+              "active_blocks": 346,
+              "frame": 8
+            },
+            {
+              "active_blocks": 356,
+              "frame": 9
+            },
+            {
+              "active_blocks": 359,
+              "frame": 10
+            },
+            {
+              "active_blocks": 361,
+              "frame": 11
+            },
+            {
+              "active_blocks": 370,
+              "frame": 12
+            },
+            {
+              "active_blocks": 380,
+              "frame": 13
+            },
+            {
+              "active_blocks": 386,
+              "frame": 14
+            },
+            {
+              "active_blocks": 398,
+              "frame": 15
+            },
+            {
+              "active_blocks": 392,
+              "frame": 16
+            },
+            {
+              "active_blocks": 394,
+              "frame": 17
+            },
+            {
+              "active_blocks": 402,
+              "frame": 18
+            },
+            {
+              "active_blocks": 415,
+              "frame": 19
+            },
+            {
+              "active_blocks": 424,
+              "frame": 20
+            },
+            {
+              "active_blocks": 440,
+              "frame": 21
+            },
+            {
+              "active_blocks": 446,
+              "frame": 22
+            },
+            {
+              "active_blocks": 459,
+              "frame": 23
+            },
+            {
+              "active_blocks": 460,
+              "frame": 24
+            },
+            {
+              "active_blocks": 464,
+              "frame": 25
+            },
+            {
+              "active_blocks": 476,
+              "frame": 26
+            },
+            {
+              "active_blocks": 487,
+              "frame": 27
+            },
+            {
+              "active_blocks": 496,
+              "frame": 28
+            },
+            {
+              "active_blocks": 505,
+              "frame": 29
+            },
+            {
+              "active_blocks": 505,
+              "frame": 30
+            },
+            {
+              "active_blocks": 517,
+              "frame": 31
+            },
+            {
+              "active_blocks": 530,
+              "frame": 32
+            },
+            {
+              "active_blocks": 541,
+              "frame": 33
+            },
+            {
+              "active_blocks": 551,
+              "frame": 34
+            },
+            {
+              "active_blocks": 559,
+              "frame": 35
+            },
+            {
+              "active_blocks": 568,
+              "frame": 36
+            },
+            {
+              "active_blocks": 566,
+              "frame": 37
+            },
+            {
+              "active_blocks": 572,
+              "frame": 38
+            },
+            {
+              "active_blocks": 586,
+              "frame": 39
+            },
+            {
+              "active_blocks": 586,
+              "frame": 40
+            },
+            {
+              "active_blocks": 585,
+              "frame": 41
+            },
+            {
+              "active_blocks": 601,
+              "frame": 42
+            },
+            {
+              "active_blocks": 603,
+              "frame": 43
+            },
+            {
+              "active_blocks": 594,
+              "frame": 44
+            },
+            {
+              "active_blocks": 593,
+              "frame": 45
+            },
+            {
+              "active_blocks": 608,
+              "frame": 46
+            },
+            {
+              "active_blocks": 606,
+              "frame": 47
+            },
+            {
+              "active_blocks": 611,
+              "frame": 48
+            },
+            {
+              "active_blocks": 604,
+              "frame": 49
+            },
+            {
+              "active_blocks": 610,
+              "frame": 50
+            },
+            {
+              "active_blocks": 623,
+              "frame": 51
+            },
+            {
+              "active_blocks": 626,
+              "frame": 52
+            },
+            {
+              "active_blocks": 633,
+              "frame": 53
+            },
+            {
+              "active_blocks": 634,
+              "frame": 54
+            },
+            {
+              "active_blocks": 644,
+              "frame": 55
+            },
+            {
+              "active_blocks": 658,
+              "frame": 56
+            },
+            {
+              "active_blocks": 666,
+              "frame": 57
+            },
+            {
+              "active_blocks": 670,
+              "frame": 58
+            },
+            {
+              "active_blocks": 678,
+              "frame": 59
+            },
+            {
+              "active_blocks": 688,
+              "frame": 60
+            },
+            {
+              "active_blocks": 705,
+              "frame": 61
+            },
+            {
+              "active_blocks": 707,
+              "frame": 62
+            },
+            {
+              "active_blocks": 713,
+              "frame": 63
+            },
+            {
+              "active_blocks": 726,
+              "frame": 64
+            },
+            {
+              "active_blocks": 737,
+              "frame": 65
+            },
+            {
+              "active_blocks": 748,
+              "frame": 66
+            },
+            {
+              "active_blocks": 747,
+              "frame": 67
+            },
+            {
+              "active_blocks": 754,
+              "frame": 68
+            },
+            {
+              "active_blocks": 749,
+              "frame": 69
+            },
+            {
+              "active_blocks": 755,
+              "frame": 70
+            },
+            {
+              "active_blocks": 761,
+              "frame": 71
+            },
+            {
+              "active_blocks": 775,
+              "frame": 72
+            },
+            {
+              "active_blocks": 786,
+              "frame": 73
+            },
+            {
+              "active_blocks": 790,
+              "frame": 74
+            },
+            {
+              "active_blocks": 800,
+              "frame": 75
+            },
+            {
+              "active_blocks": 808,
+              "frame": 76
+            },
+            {
+              "active_blocks": 824,
+              "frame": 77
+            },
+            {
+              "active_blocks": 827,
+              "frame": 78
+            },
+            {
+              "active_blocks": 833,
+              "frame": 79
+            },
+            {
+              "active_blocks": 852,
+              "frame": 80
+            },
+            {
+              "active_blocks": 855,
+              "frame": 81
+            },
+            {
+              "active_blocks": 853,
+              "frame": 82
+            },
+            {
+              "active_blocks": 861,
+              "frame": 83
+            },
+            {
+              "active_blocks": 873,
+              "frame": 84
+            },
+            {
+              "active_blocks": 878,
+              "frame": 85
+            },
+            {
+              "active_blocks": 868,
+              "frame": 86
+            },
+            {
+              "active_blocks": 875,
+              "frame": 87
+            },
+            {
+              "active_blocks": 876,
+              "frame": 88
+            },
+            {
+              "active_blocks": 885,
+              "frame": 89
+            },
+            {
+              "active_blocks": 894,
+              "frame": 90
+            },
+            {
+              "active_blocks": 897,
+              "frame": 91
+            },
+            {
+              "active_blocks": 904,
+              "frame": 92
+            },
+            {
+              "active_blocks": 916,
+              "frame": 93
+            },
+            {
+              "active_blocks": 916,
+              "frame": 94
+            },
+            {
+              "active_blocks": 931,
+              "frame": 95
+            },
+            {
+              "active_blocks": 948,
+              "frame": 96
+            },
+            {
+              "active_blocks": 952,
+              "frame": 97
+            },
+            {
+              "active_blocks": 961,
+              "frame": 98
+            },
+            {
+              "active_blocks": 975,
+              "frame": 99
+            },
+            {
+              "active_blocks": 991,
+              "frame": 100
+            },
+            {
+              "active_blocks": 1013,
+              "frame": 101
+            },
+            {
+              "active_blocks": 1027,
+              "frame": 102
+            },
+            {
+              "active_blocks": 1031,
+              "frame": 103
+            },
+            {
+              "active_blocks": 1038,
+              "frame": 104
+            },
+            {
+              "active_blocks": 1043,
+              "frame": 105
+            },
+            {
+              "active_blocks": 1049,
+              "frame": 106
+            },
+            {
+              "active_blocks": 1063,
+              "frame": 107
+            },
+            {
+              "active_blocks": 1066,
+              "frame": 108
+            },
+            {
+              "active_blocks": 1074,
+              "frame": 109
+            },
+            {
+              "active_blocks": 1088,
+              "frame": 110
+            },
+            {
+              "active_blocks": 1090,
+              "frame": 111
+            },
+            {
+              "active_blocks": 1088,
+              "frame": 112
+            },
+            {
+              "active_blocks": 1094,
+              "frame": 113
+            },
+            {
+              "active_blocks": 1090,
+              "frame": 114
+            },
+            {
+              "active_blocks": 1099,
+              "frame": 115
+            },
+            {
+              "active_blocks": 1110,
+              "frame": 116
+            },
+            {
+              "active_blocks": 1120,
+              "frame": 117
+            },
+            {
+              "active_blocks": 1124,
+              "frame": 118
+            },
+            {
+              "active_blocks": 1124,
+              "frame": 119
+            },
+            {
+              "active_blocks": 1118,
+              "frame": 120
+            }
+          ],
+          "identity_and_source_pass": true,
+          "maximum_active_blocks": 1124,
+          "minimum_active_blocks": 269,
+          "payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389",
+          "sample_count": 120,
+          "source_sums": {
+            "fuel": 1075.2000160217285,
+            "smoke": 107.51999759674072,
+            "temperature": 2688.0
+          },
+          "timeline_fresh": true,
+          "total_points": 1440
+        }
+      },
+      {
+        "axes": {
+          "automatic_upload_attempt_count": 0,
+          "cdb_invoked": false,
+          "dump_count": 0,
+          "exact_cleanup": true,
+          "external_weak_referents_alive_after_release": 3,
+          "fatal_count": 0,
+          "flow_reference_present_at_shutdown_complete": false,
+          "functional": "pass",
+          "lifecycle": "normal_exit",
+          "normal_exit_sample_accepted": true,
+          "normal_os_exit": true,
+          "ownership_container_count_after_release": 0,
+          "process_exit_code": 0,
+          "python_owned_slots_clear": true,
+          "references_retained_at_stage_close": 4,
+          "residual_zero": true,
+          "shutdown_complete": true,
+          "stage_close_seconds": 14.961279,
+          "weak_reference_supported_count": 4
+        },
+        "classification": "accepted_normal_sample",
+        "condition": "C1",
+        "condition_attempt": 1,
+        "control": "rgba",
+        "launch_index": 2,
+        "metadata": {
+          "api": {
+            "api_name": "omni.flowusd._flowusd.IFlowUsd.get_latest_nanovdb_readback",
+            "doc": "get_latest_nanovdb_readback(self: omni.flowusd._flowusd.IFlowUsd) -> list",
+            "flow_extension": {
+              "enabled_id": "omni.flowusd-110.0.0",
+              "version": "110.0.0"
+            },
+            "kit_build": "110.2.0+feature.342835.698af100.gl",
+            "nanovdb_python_version": "unavailable",
+            "python_callable_type": "builtins.method",
+            "signature": "unavailable: ValueError: no signature found for builtin <built-in method get_latest_nanovdb_readback of PyCapsule object at 0x0000024F320F75D0>",
+            "volume_extension": {
+              "enabled_id": "omni.volume-0.5.2",
+              "version": "0.5.2"
+            }
+          },
+          "file_sha256": "A7E66072F9E4CAE6FBB3FA308D19927A042F74710E9E2FFAAEAD38EF3572553C",
+          "forced_gc": false,
+          "full_field_written": false,
+          "handles": [
+            {
+              "bounding_box": {
+                "index": [
+                  [
+                    -96,
+                    -96,
+                    -16
+                  ],
+                  [
+                    127,
+                    111,
+                    639
+                  ]
+                ],
+                "world": [
+                  [
+                    -2.4000000953674316,
+                    -2.4000000953674316,
+                    -0.4000000059604645
+                  ],
+                  [
+                    2.4000000953674316,
+                    2.4000000953674316,
+                    15.600000381469727
+                  ]
+                ]
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": false,
+              "grid_class": 2,
+              "grid_count": 1,
+              "grid_short_name": "Flow",
+              "index": 0,
+              "logical_bytes": 47641344,
+              "metadata_sha256": "FE27D6BB3A7176DB261937E5CDFFB59426E464FF5B92767B38146F601FA4B0AC",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                11910336
+              ],
+              "strides": [
+                4
+              ],
+              "value_type": "1",
+              "weak_reference_supported": true
+            },
+            {
+              "bounding_box": {
+                "index": [
+                  [
+                    -96,
+                    -96,
+                    -16
+                  ],
+                  [
+                    127,
+                    111,
+                    639
+                  ]
+                ],
+                "world": [
+                  [
+                    -2.4000000953674316,
+                    -2.4000000953674316,
+                    -0.4000000059604645
+                  ],
+                  [
+                    2.4000000953674316,
+                    2.4000000953674316,
+                    15.600000381469727
+                  ]
+                ]
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": false,
+              "grid_class": 2,
+              "grid_count": 1,
+              "grid_short_name": "Flow",
+              "index": 1,
+              "logical_bytes": 47641344,
+              "metadata_sha256": "B53401BDE66640775F876232C84BC4B04A7F87DB6A372626EA42D3272B7FC78C",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                11910336
+              ],
+              "strides": [
+                4
+              ],
+              "value_type": "1",
+              "weak_reference_supported": true
+            },
+            {
+              "bounding_box": {
+                "index": [
+                  [
+                    -96,
+                    -96,
+                    -16
+                  ],
+                  [
+                    127,
+                    111,
+                    639
+                  ]
+                ],
+                "world": [
+                  [
+                    -2.4000000953674316,
+                    -2.4000000953674316,
+                    -0.4000000059604645
+                  ],
+                  [
+                    2.4000000953674316,
+                    2.4000000953674316,
+                    15.600000381469727
+                  ]
+                ]
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": false,
+              "grid_class": 2,
+              "grid_count": 1,
+              "grid_short_name": "Flow",
+              "index": 2,
+              "logical_bytes": 47641344,
+              "metadata_sha256": "1593D169C3005777BC5FDDD30C3CA9E57BD63DD322B51EEABA08CEF50B29BAF2",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                11910336
+              ],
+              "strides": [
+                4
+              ],
+              "value_type": "1",
+              "weak_reference_supported": true
+            },
+            {
+              "bounding_box": {
+                "index": [
+                  [
+                    -96,
+                    -96,
+                    -16
+                  ],
+                  [
+                    127,
+                    111,
+                    639
+                  ]
+                ],
+                "world": [
+                  [
+                    -2.4000000953674316,
+                    -2.4000000953674316,
+                    -0.4000000059604645
+                  ],
+                  [
+                    2.4000000953674316,
+                    2.4000000953674316,
+                    15.600000381469727
+                  ]
+                ]
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": false,
+              "grid_class": 2,
+              "grid_count": 1,
+              "grid_short_name": "Flow",
+              "index": 3,
+              "logical_bytes": 47641344,
+              "metadata_sha256": "FAC9FE63E8928C313670ABCDB557CD711B750ADA1A11F503809BEFDEF84B41D9",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                11910336
+              ],
+              "strides": [
+                4
+              ],
+              "value_type": "1",
+              "weak_reference_supported": true
+            },
+            {
+              "bounding_box": {
+                "index": [
+                  [
+                    -48,
+                    -48,
+                    -8
+                  ],
+                  [
+                    63,
+                    55,
+                    319
+                  ]
+                ],
+                "world": [
+                  [
+                    -2.4000000953674316,
+                    -2.4000000953674316,
+                    -0.4000000059604645
+                  ],
+                  [
+                    2.4000000953674316,
+                    2.4000000953674316,
+                    15.600000381469727
+                  ]
+                ]
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": false,
+              "grid_class": 0,
+              "grid_count": 1,
+              "grid_short_name": "Flow",
+              "index": 4,
+              "logical_bytes": 21660448,
+              "metadata_sha256": "680EF76A462FF6A5A53483111599A8B29E344A9C200DA8538EB7443A5946C2D1",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                5415112
+              ],
+              "strides": [
+                4
+              ],
+              "value_type": "6",
+              "weak_reference_supported": true
+            },
+            {
+              "bounding_box": {
+                "index": "unavailable",
+                "world": "unavailable"
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": true,
+              "grid_class": "unavailable",
+              "grid_count": 0,
+              "grid_short_name": "unavailable",
+              "index": 5,
+              "logical_bytes": 0,
+              "metadata_sha256": "8D14130699D6EE02EEFD5275DE6DB738BF72F1E1C8D6AC46400EDE8137EC5E5D",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                0
+              ],
+              "strides": [
+                0
+              ],
+              "value_type": "unavailable",
+              "weak_reference_supported": true
+            },
+            {
+              "bounding_box": {
+                "index": [
+                  [
+                    -96,
+                    -96,
+                    -16
+                  ],
+                  [
+                    127,
+                    111,
+                    639
+                  ]
+                ],
+                "world": [
+                  [
+                    -2.4000000953674316,
+                    -2.4000000953674316,
+                    -0.4000000059604645
+                  ],
+                  [
+                    2.4000000953674316,
+                    2.4000000953674316,
+                    15.600000381469727
+                  ]
+                ]
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": false,
+              "grid_class": 0,
+              "grid_count": 1,
+              "grid_short_name": "Flow",
+              "index": 6,
+              "logical_bytes": 179184672,
+              "metadata_sha256": "9609E73B175CAAACC3B603A40D111F525679311673BDE83711F0442AF377FCB9",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                44796168
+              ],
+              "strides": [
+                4
+              ],
+              "value_type": "17",
+              "weak_reference_supported": true
+            }
+          ],
+          "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6gh-color-slot-diagnostic-1\\C1-attempt01-rgba\\metadata_rgba_attempt01\\S93_support_clear\\channel-schema-metadata\\bounded_handle_metadata.json",
+          "private_api_used": false,
+          "returned_handle_count": 7
+        },
+        "production_changed": false,
+        "replacement_eligible": false,
+        "replacement_scheduled": false,
+        "resources": {
+          "kit_margin_bytes": 3730219008,
+          "limits_bytes": {
+            "available_memory_floor_bytes": 34359738368,
+            "commit_headroom_floor_bytes": 34359738368,
+            "diagnostic_private_bytes": 536870912,
+            "kit_private_bytes": 21474836480,
+            "runner_private_bytes": 536870912,
+            "timeout_seconds": 1020.0,
+            "tree_private_bytes": 22548578304
+          },
+          "machine_minima_bytes": {
+            "available_physical_bytes": 80020561920,
+            "estimated_commit_headroom_bytes": 99555917824
+          },
+          "peaks_bytes": {
+            "child": 63582208,
+            "diagnostic": 16916480,
+            "kit": 17744617472,
+            "runner": 130977792,
+            "tree": 17907589120
+          },
+          "tree_margin_bytes": 4640989184
+        },
+        "startup": {
+          "active_points": 1344,
+          "classification": "representative_ingestion",
+          "emitter_enabled": true,
+          "first_24_frame": null,
+          "first_above_24_frame": 1,
+          "first_representative_frame": 1,
+          "history": [
+            {
+              "active_blocks": 269,
+              "frame": 1
+            },
+            {
+              "active_blocks": 269,
+              "frame": 2
+            },
+            {
+              "active_blocks": 274,
+              "frame": 3
+            },
+            {
+              "active_blocks": 279,
+              "frame": 4
+            },
+            {
+              "active_blocks": 293,
+              "frame": 5
+            },
+            {
+              "active_blocks": 316,
+              "frame": 6
+            },
+            {
+              "active_blocks": 340,
+              "frame": 7
+            },
+            {
+              "active_blocks": 346,
+              "frame": 8
+            },
+            {
+              "active_blocks": 356,
+              "frame": 9
+            },
+            {
+              "active_blocks": 359,
+              "frame": 10
+            },
+            {
+              "active_blocks": 361,
+              "frame": 11
+            },
+            {
+              "active_blocks": 370,
+              "frame": 12
+            },
+            {
+              "active_blocks": 380,
+              "frame": 13
+            },
+            {
+              "active_blocks": 386,
+              "frame": 14
+            },
+            {
+              "active_blocks": 398,
+              "frame": 15
+            },
+            {
+              "active_blocks": 392,
+              "frame": 16
+            },
+            {
+              "active_blocks": 394,
+              "frame": 17
+            },
+            {
+              "active_blocks": 402,
+              "frame": 18
+            },
+            {
+              "active_blocks": 415,
+              "frame": 19
+            },
+            {
+              "active_blocks": 424,
+              "frame": 20
+            },
+            {
+              "active_blocks": 440,
+              "frame": 21
+            },
+            {
+              "active_blocks": 446,
+              "frame": 22
+            },
+            {
+              "active_blocks": 459,
+              "frame": 23
+            },
+            {
+              "active_blocks": 460,
+              "frame": 24
+            },
+            {
+              "active_blocks": 464,
+              "frame": 25
+            },
+            {
+              "active_blocks": 476,
+              "frame": 26
+            },
+            {
+              "active_blocks": 487,
+              "frame": 27
+            },
+            {
+              "active_blocks": 496,
+              "frame": 28
+            },
+            {
+              "active_blocks": 505,
+              "frame": 29
+            },
+            {
+              "active_blocks": 505,
+              "frame": 30
+            },
+            {
+              "active_blocks": 517,
+              "frame": 31
+            },
+            {
+              "active_blocks": 530,
+              "frame": 32
+            },
+            {
+              "active_blocks": 541,
+              "frame": 33
+            },
+            {
+              "active_blocks": 551,
+              "frame": 34
+            },
+            {
+              "active_blocks": 559,
+              "frame": 35
+            },
+            {
+              "active_blocks": 568,
+              "frame": 36
+            },
+            {
+              "active_blocks": 566,
+              "frame": 37
+            },
+            {
+              "active_blocks": 572,
+              "frame": 38
+            },
+            {
+              "active_blocks": 586,
+              "frame": 39
+            },
+            {
+              "active_blocks": 586,
+              "frame": 40
+            },
+            {
+              "active_blocks": 585,
+              "frame": 41
+            },
+            {
+              "active_blocks": 601,
+              "frame": 42
+            },
+            {
+              "active_blocks": 603,
+              "frame": 43
+            },
+            {
+              "active_blocks": 594,
+              "frame": 44
+            },
+            {
+              "active_blocks": 593,
+              "frame": 45
+            },
+            {
+              "active_blocks": 608,
+              "frame": 46
+            },
+            {
+              "active_blocks": 606,
+              "frame": 47
+            },
+            {
+              "active_blocks": 611,
+              "frame": 48
+            },
+            {
+              "active_blocks": 604,
+              "frame": 49
+            },
+            {
+              "active_blocks": 610,
+              "frame": 50
+            },
+            {
+              "active_blocks": 623,
+              "frame": 51
+            },
+            {
+              "active_blocks": 626,
+              "frame": 52
+            },
+            {
+              "active_blocks": 633,
+              "frame": 53
+            },
+            {
+              "active_blocks": 634,
+              "frame": 54
+            },
+            {
+              "active_blocks": 644,
+              "frame": 55
+            },
+            {
+              "active_blocks": 658,
+              "frame": 56
+            },
+            {
+              "active_blocks": 666,
+              "frame": 57
+            },
+            {
+              "active_blocks": 670,
+              "frame": 58
+            },
+            {
+              "active_blocks": 678,
+              "frame": 59
+            },
+            {
+              "active_blocks": 688,
+              "frame": 60
+            },
+            {
+              "active_blocks": 705,
+              "frame": 61
+            },
+            {
+              "active_blocks": 707,
+              "frame": 62
+            },
+            {
+              "active_blocks": 713,
+              "frame": 63
+            },
+            {
+              "active_blocks": 726,
+              "frame": 64
+            },
+            {
+              "active_blocks": 737,
+              "frame": 65
+            },
+            {
+              "active_blocks": 748,
+              "frame": 66
+            },
+            {
+              "active_blocks": 747,
+              "frame": 67
+            },
+            {
+              "active_blocks": 754,
+              "frame": 68
+            },
+            {
+              "active_blocks": 749,
+              "frame": 69
+            },
+            {
+              "active_blocks": 755,
+              "frame": 70
+            },
+            {
+              "active_blocks": 761,
+              "frame": 71
+            },
+            {
+              "active_blocks": 775,
+              "frame": 72
+            },
+            {
+              "active_blocks": 786,
+              "frame": 73
+            },
+            {
+              "active_blocks": 790,
+              "frame": 74
+            },
+            {
+              "active_blocks": 800,
+              "frame": 75
+            },
+            {
+              "active_blocks": 808,
+              "frame": 76
+            },
+            {
+              "active_blocks": 824,
+              "frame": 77
+            },
+            {
+              "active_blocks": 827,
+              "frame": 78
+            },
+            {
+              "active_blocks": 833,
+              "frame": 79
+            },
+            {
+              "active_blocks": 852,
+              "frame": 80
+            },
+            {
+              "active_blocks": 855,
+              "frame": 81
+            },
+            {
+              "active_blocks": 853,
+              "frame": 82
+            },
+            {
+              "active_blocks": 861,
+              "frame": 83
+            },
+            {
+              "active_blocks": 873,
+              "frame": 84
+            },
+            {
+              "active_blocks": 878,
+              "frame": 85
+            },
+            {
+              "active_blocks": 868,
+              "frame": 86
+            },
+            {
+              "active_blocks": 875,
+              "frame": 87
+            },
+            {
+              "active_blocks": 876,
+              "frame": 88
+            },
+            {
+              "active_blocks": 885,
+              "frame": 89
+            },
+            {
+              "active_blocks": 894,
+              "frame": 90
+            },
+            {
+              "active_blocks": 897,
+              "frame": 91
+            },
+            {
+              "active_blocks": 904,
+              "frame": 92
+            },
+            {
+              "active_blocks": 916,
+              "frame": 93
+            },
+            {
+              "active_blocks": 916,
+              "frame": 94
+            },
+            {
+              "active_blocks": 931,
+              "frame": 95
+            },
+            {
+              "active_blocks": 948,
+              "frame": 96
+            },
+            {
+              "active_blocks": 952,
+              "frame": 97
+            },
+            {
+              "active_blocks": 961,
+              "frame": 98
+            },
+            {
+              "active_blocks": 975,
+              "frame": 99
+            },
+            {
+              "active_blocks": 991,
+              "frame": 100
+            },
+            {
+              "active_blocks": 1013,
+              "frame": 101
+            },
+            {
+              "active_blocks": 1027,
+              "frame": 102
+            },
+            {
+              "active_blocks": 1031,
+              "frame": 103
+            },
+            {
+              "active_blocks": 1038,
+              "frame": 104
+            },
+            {
+              "active_blocks": 1043,
+              "frame": 105
+            },
+            {
+              "active_blocks": 1049,
+              "frame": 106
+            },
+            {
+              "active_blocks": 1063,
+              "frame": 107
+            },
+            {
+              "active_blocks": 1066,
+              "frame": 108
+            },
+            {
+              "active_blocks": 1074,
+              "frame": 109
+            },
+            {
+              "active_blocks": 1088,
+              "frame": 110
+            },
+            {
+              "active_blocks": 1090,
+              "frame": 111
+            },
+            {
+              "active_blocks": 1088,
+              "frame": 112
+            },
+            {
+              "active_blocks": 1094,
+              "frame": 113
+            },
+            {
+              "active_blocks": 1090,
+              "frame": 114
+            },
+            {
+              "active_blocks": 1099,
+              "frame": 115
+            },
+            {
+              "active_blocks": 1110,
+              "frame": 116
+            },
+            {
+              "active_blocks": 1120,
+              "frame": 117
+            },
+            {
+              "active_blocks": 1124,
+              "frame": 118
+            },
+            {
+              "active_blocks": 1124,
+              "frame": 119
+            },
+            {
+              "active_blocks": 1118,
+              "frame": 120
+            }
+          ],
+          "identity_and_source_pass": true,
+          "maximum_active_blocks": 1124,
+          "minimum_active_blocks": 269,
+          "payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389",
+          "sample_count": 120,
+          "source_sums": {
+            "fuel": 1075.2000160217285,
+            "smoke": 107.51999759674072,
+            "temperature": 2688.0
+          },
+          "timeline_fresh": true,
+          "total_points": 1440
+        }
+      },
+      {
+        "axes": {
+          "automatic_upload_attempt_count": 0,
+          "cdb_invoked": false,
+          "dump_count": 0,
+          "exact_cleanup": true,
+          "external_weak_referents_alive_after_release": 3,
+          "fatal_count": 0,
+          "flow_reference_present_at_shutdown_complete": false,
+          "functional": "pass",
+          "lifecycle": "normal_exit",
+          "normal_exit_sample_accepted": true,
+          "normal_os_exit": true,
+          "ownership_container_count_after_release": 0,
+          "process_exit_code": 0,
+          "python_owned_slots_clear": true,
+          "references_retained_at_stage_close": 4,
+          "residual_zero": true,
+          "shutdown_complete": true,
+          "stage_close_seconds": 4.0140619,
+          "weak_reference_supported_count": 4
+        },
+        "classification": "accepted_normal_sample",
+        "condition": "C2",
+        "condition_attempt": 1,
+        "control": "rgb",
+        "launch_index": 3,
+        "metadata": {
+          "api": {
+            "api_name": "omni.flowusd._flowusd.IFlowUsd.get_latest_nanovdb_readback",
+            "doc": "get_latest_nanovdb_readback(self: omni.flowusd._flowusd.IFlowUsd) -> list",
+            "flow_extension": {
+              "enabled_id": "omni.flowusd-110.0.0",
+              "version": "110.0.0"
+            },
+            "kit_build": "110.2.0+feature.342835.698af100.gl",
+            "nanovdb_python_version": "unavailable",
+            "python_callable_type": "builtins.method",
+            "signature": "unavailable: ValueError: no signature found for builtin <built-in method get_latest_nanovdb_readback of PyCapsule object at 0x0000020132F27C30>",
+            "volume_extension": {
+              "enabled_id": "omni.volume-0.5.2",
+              "version": "0.5.2"
+            }
+          },
+          "file_sha256": "E456490D69842FAEE140CF7BC5AF4311E5FC81802FF903AB51D47064DFB5FF4E",
+          "forced_gc": false,
+          "full_field_written": false,
+          "handles": [
+            {
+              "bounding_box": {
+                "index": [
+                  [
+                    -96,
+                    -96,
+                    -16
+                  ],
+                  [
+                    127,
+                    111,
+                    639
+                  ]
+                ],
+                "world": [
+                  [
+                    -2.4000000953674316,
+                    -2.4000000953674316,
+                    -0.4000000059604645
+                  ],
+                  [
+                    2.4000000953674316,
+                    2.4000000953674316,
+                    15.600000381469727
+                  ]
+                ]
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": false,
+              "grid_class": 2,
+              "grid_count": 1,
+              "grid_short_name": "Flow",
+              "index": 0,
+              "logical_bytes": 47641344,
+              "metadata_sha256": "FE27D6BB3A7176DB261937E5CDFFB59426E464FF5B92767B38146F601FA4B0AC",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                11910336
+              ],
+              "strides": [
+                4
+              ],
+              "value_type": "1",
+              "weak_reference_supported": true
+            },
+            {
+              "bounding_box": {
+                "index": [
+                  [
+                    -96,
+                    -96,
+                    -16
+                  ],
+                  [
+                    127,
+                    111,
+                    639
+                  ]
+                ],
+                "world": [
+                  [
+                    -2.4000000953674316,
+                    -2.4000000953674316,
+                    -0.4000000059604645
+                  ],
+                  [
+                    2.4000000953674316,
+                    2.4000000953674316,
+                    15.600000381469727
+                  ]
+                ]
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": false,
+              "grid_class": 2,
+              "grid_count": 1,
+              "grid_short_name": "Flow",
+              "index": 1,
+              "logical_bytes": 47641344,
+              "metadata_sha256": "B53401BDE66640775F876232C84BC4B04A7F87DB6A372626EA42D3272B7FC78C",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                11910336
+              ],
+              "strides": [
+                4
+              ],
+              "value_type": "1",
+              "weak_reference_supported": true
+            },
+            {
+              "bounding_box": {
+                "index": [
+                  [
+                    -96,
+                    -96,
+                    -16
+                  ],
+                  [
+                    127,
+                    111,
+                    639
+                  ]
+                ],
+                "world": [
+                  [
+                    -2.4000000953674316,
+                    -2.4000000953674316,
+                    -0.4000000059604645
+                  ],
+                  [
+                    2.4000000953674316,
+                    2.4000000953674316,
+                    15.600000381469727
+                  ]
+                ]
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": false,
+              "grid_class": 2,
+              "grid_count": 1,
+              "grid_short_name": "Flow",
+              "index": 2,
+              "logical_bytes": 47641344,
+              "metadata_sha256": "1593D169C3005777BC5FDDD30C3CA9E57BD63DD322B51EEABA08CEF50B29BAF2",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                11910336
+              ],
+              "strides": [
+                4
+              ],
+              "value_type": "1",
+              "weak_reference_supported": true
+            },
+            {
+              "bounding_box": {
+                "index": [
+                  [
+                    -96,
+                    -96,
+                    -16
+                  ],
+                  [
+                    127,
+                    111,
+                    639
+                  ]
+                ],
+                "world": [
+                  [
+                    -2.4000000953674316,
+                    -2.4000000953674316,
+                    -0.4000000059604645
+                  ],
+                  [
+                    2.4000000953674316,
+                    2.4000000953674316,
+                    15.600000381469727
+                  ]
+                ]
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": false,
+              "grid_class": 2,
+              "grid_count": 1,
+              "grid_short_name": "Flow",
+              "index": 3,
+              "logical_bytes": 47641344,
+              "metadata_sha256": "FAC9FE63E8928C313670ABCDB557CD711B750ADA1A11F503809BEFDEF84B41D9",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                11910336
+              ],
+              "strides": [
+                4
+              ],
+              "value_type": "1",
+              "weak_reference_supported": true
+            },
+            {
+              "bounding_box": {
+                "index": [
+                  [
+                    -48,
+                    -48,
+                    -8
+                  ],
+                  [
+                    63,
+                    55,
+                    319
+                  ]
+                ],
+                "world": [
+                  [
+                    -2.4000000953674316,
+                    -2.4000000953674316,
+                    -0.4000000059604645
+                  ],
+                  [
+                    2.4000000953674316,
+                    2.4000000953674316,
+                    15.600000381469727
+                  ]
+                ]
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": false,
+              "grid_class": 0,
+              "grid_count": 1,
+              "grid_short_name": "Flow",
+              "index": 4,
+              "logical_bytes": 21660448,
+              "metadata_sha256": "680EF76A462FF6A5A53483111599A8B29E344A9C200DA8538EB7443A5946C2D1",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                5415112
+              ],
+              "strides": [
+                4
+              ],
+              "value_type": "6",
+              "weak_reference_supported": true
+            },
+            {
+              "bounding_box": {
+                "index": "unavailable",
+                "world": "unavailable"
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": true,
+              "grid_class": "unavailable",
+              "grid_count": 0,
+              "grid_short_name": "unavailable",
+              "index": 5,
+              "logical_bytes": 0,
+              "metadata_sha256": "8D14130699D6EE02EEFD5275DE6DB738BF72F1E1C8D6AC46400EDE8137EC5E5D",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                0
+              ],
+              "strides": [
+                0
+              ],
+              "value_type": "unavailable",
+              "weak_reference_supported": true
+            },
+            {
+              "bounding_box": {
+                "index": "unavailable",
+                "world": "unavailable"
+              },
+              "channel_metadata": "unavailable",
+              "dtype": "uint32",
+              "empty": true,
+              "grid_class": "unavailable",
+              "grid_count": 0,
+              "grid_short_name": "unavailable",
+              "index": 6,
+              "logical_bytes": 0,
+              "metadata_sha256": "4A57F0393F20AC96314770E00FF9DDEBA1020C20549D715BD6DEFA4AAE24209F",
+              "public_data_pointer_available": true,
+              "python_type": "numpy.ndarray",
+              "shape": [
+                0
+              ],
+              "strides": [
+                0
+              ],
+              "value_type": "unavailable",
+              "weak_reference_supported": true
+            }
+          ],
+          "path": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6gh-color-slot-diagnostic-1\\C2-attempt01-rgb\\metadata_rgb_attempt01\\S93_support_clear\\channel-schema-metadata\\bounded_handle_metadata.json",
+          "private_api_used": false,
+          "returned_handle_count": 7
+        },
+        "production_changed": false,
+        "replacement_eligible": false,
+        "replacement_scheduled": false,
+        "resources": {
+          "kit_margin_bytes": 3713966080,
+          "limits_bytes": {
+            "available_memory_floor_bytes": 34359738368,
+            "commit_headroom_floor_bytes": 34359738368,
+            "diagnostic_private_bytes": 536870912,
+            "kit_private_bytes": 21474836480,
+            "runner_private_bytes": 536870912,
+            "timeout_seconds": 1020.0,
+            "tree_private_bytes": 22548578304
+          },
+          "machine_minima_bytes": {
+            "available_physical_bytes": 79971274752,
+            "estimated_commit_headroom_bytes": 99506630656
+          },
+          "peaks_bytes": {
+            "child": 62545920,
+            "diagnostic": 16973824,
+            "kit": 17760870400,
+            "runner": 118579200,
+            "tree": 17924362240
+          },
+          "tree_margin_bytes": 4624216064
+        },
+        "startup": {
+          "active_points": 1344,
+          "classification": "representative_ingestion",
+          "emitter_enabled": true,
+          "first_24_frame": null,
+          "first_above_24_frame": 1,
+          "first_representative_frame": 1,
+          "history": [
+            {
+              "active_blocks": 269,
+              "frame": 1
+            },
+            {
+              "active_blocks": 269,
+              "frame": 2
+            },
+            {
+              "active_blocks": 274,
+              "frame": 3
+            },
+            {
+              "active_blocks": 279,
+              "frame": 4
+            },
+            {
+              "active_blocks": 293,
+              "frame": 5
+            },
+            {
+              "active_blocks": 316,
+              "frame": 6
+            },
+            {
+              "active_blocks": 340,
+              "frame": 7
+            },
+            {
+              "active_blocks": 346,
+              "frame": 8
+            },
+            {
+              "active_blocks": 356,
+              "frame": 9
+            },
+            {
+              "active_blocks": 359,
+              "frame": 10
+            },
+            {
+              "active_blocks": 361,
+              "frame": 11
+            },
+            {
+              "active_blocks": 370,
+              "frame": 12
+            },
+            {
+              "active_blocks": 380,
+              "frame": 13
+            },
+            {
+              "active_blocks": 386,
+              "frame": 14
+            },
+            {
+              "active_blocks": 398,
+              "frame": 15
+            },
+            {
+              "active_blocks": 392,
+              "frame": 16
+            },
+            {
+              "active_blocks": 394,
+              "frame": 17
+            },
+            {
+              "active_blocks": 402,
+              "frame": 18
+            },
+            {
+              "active_blocks": 415,
+              "frame": 19
+            },
+            {
+              "active_blocks": 424,
+              "frame": 20
+            },
+            {
+              "active_blocks": 440,
+              "frame": 21
+            },
+            {
+              "active_blocks": 446,
+              "frame": 22
+            },
+            {
+              "active_blocks": 459,
+              "frame": 23
+            },
+            {
+              "active_blocks": 460,
+              "frame": 24
+            },
+            {
+              "active_blocks": 464,
+              "frame": 25
+            },
+            {
+              "active_blocks": 476,
+              "frame": 26
+            },
+            {
+              "active_blocks": 487,
+              "frame": 27
+            },
+            {
+              "active_blocks": 496,
+              "frame": 28
+            },
+            {
+              "active_blocks": 505,
+              "frame": 29
+            },
+            {
+              "active_blocks": 505,
+              "frame": 30
+            },
+            {
+              "active_blocks": 517,
+              "frame": 31
+            },
+            {
+              "active_blocks": 530,
+              "frame": 32
+            },
+            {
+              "active_blocks": 541,
+              "frame": 33
+            },
+            {
+              "active_blocks": 551,
+              "frame": 34
+            },
+            {
+              "active_blocks": 559,
+              "frame": 35
+            },
+            {
+              "active_blocks": 568,
+              "frame": 36
+            },
+            {
+              "active_blocks": 566,
+              "frame": 37
+            },
+            {
+              "active_blocks": 572,
+              "frame": 38
+            },
+            {
+              "active_blocks": 586,
+              "frame": 39
+            },
+            {
+              "active_blocks": 586,
+              "frame": 40
+            },
+            {
+              "active_blocks": 585,
+              "frame": 41
+            },
+            {
+              "active_blocks": 601,
+              "frame": 42
+            },
+            {
+              "active_blocks": 603,
+              "frame": 43
+            },
+            {
+              "active_blocks": 594,
+              "frame": 44
+            },
+            {
+              "active_blocks": 593,
+              "frame": 45
+            },
+            {
+              "active_blocks": 608,
+              "frame": 46
+            },
+            {
+              "active_blocks": 606,
+              "frame": 47
+            },
+            {
+              "active_blocks": 611,
+              "frame": 48
+            },
+            {
+              "active_blocks": 604,
+              "frame": 49
+            },
+            {
+              "active_blocks": 610,
+              "frame": 50
+            },
+            {
+              "active_blocks": 623,
+              "frame": 51
+            },
+            {
+              "active_blocks": 626,
+              "frame": 52
+            },
+            {
+              "active_blocks": 633,
+              "frame": 53
+            },
+            {
+              "active_blocks": 634,
+              "frame": 54
+            },
+            {
+              "active_blocks": 644,
+              "frame": 55
+            },
+            {
+              "active_blocks": 658,
+              "frame": 56
+            },
+            {
+              "active_blocks": 666,
+              "frame": 57
+            },
+            {
+              "active_blocks": 670,
+              "frame": 58
+            },
+            {
+              "active_blocks": 678,
+              "frame": 59
+            },
+            {
+              "active_blocks": 688,
+              "frame": 60
+            },
+            {
+              "active_blocks": 705,
+              "frame": 61
+            },
+            {
+              "active_blocks": 707,
+              "frame": 62
+            },
+            {
+              "active_blocks": 713,
+              "frame": 63
+            },
+            {
+              "active_blocks": 726,
+              "frame": 64
+            },
+            {
+              "active_blocks": 737,
+              "frame": 65
+            },
+            {
+              "active_blocks": 748,
+              "frame": 66
+            },
+            {
+              "active_blocks": 747,
+              "frame": 67
+            },
+            {
+              "active_blocks": 754,
+              "frame": 68
+            },
+            {
+              "active_blocks": 749,
+              "frame": 69
+            },
+            {
+              "active_blocks": 755,
+              "frame": 70
+            },
+            {
+              "active_blocks": 761,
+              "frame": 71
+            },
+            {
+              "active_blocks": 775,
+              "frame": 72
+            },
+            {
+              "active_blocks": 786,
+              "frame": 73
+            },
+            {
+              "active_blocks": 790,
+              "frame": 74
+            },
+            {
+              "active_blocks": 800,
+              "frame": 75
+            },
+            {
+              "active_blocks": 808,
+              "frame": 76
+            },
+            {
+              "active_blocks": 824,
+              "frame": 77
+            },
+            {
+              "active_blocks": 827,
+              "frame": 78
+            },
+            {
+              "active_blocks": 833,
+              "frame": 79
+            },
+            {
+              "active_blocks": 852,
+              "frame": 80
+            },
+            {
+              "active_blocks": 855,
+              "frame": 81
+            },
+            {
+              "active_blocks": 853,
+              "frame": 82
+            },
+            {
+              "active_blocks": 861,
+              "frame": 83
+            },
+            {
+              "active_blocks": 873,
+              "frame": 84
+            },
+            {
+              "active_blocks": 878,
+              "frame": 85
+            },
+            {
+              "active_blocks": 868,
+              "frame": 86
+            },
+            {
+              "active_blocks": 875,
+              "frame": 87
+            },
+            {
+              "active_blocks": 876,
+              "frame": 88
+            },
+            {
+              "active_blocks": 885,
+              "frame": 89
+            },
+            {
+              "active_blocks": 894,
+              "frame": 90
+            },
+            {
+              "active_blocks": 897,
+              "frame": 91
+            },
+            {
+              "active_blocks": 904,
+              "frame": 92
+            },
+            {
+              "active_blocks": 916,
+              "frame": 93
+            },
+            {
+              "active_blocks": 916,
+              "frame": 94
+            },
+            {
+              "active_blocks": 931,
+              "frame": 95
+            },
+            {
+              "active_blocks": 948,
+              "frame": 96
+            },
+            {
+              "active_blocks": 952,
+              "frame": 97
+            },
+            {
+              "active_blocks": 961,
+              "frame": 98
+            },
+            {
+              "active_blocks": 975,
+              "frame": 99
+            },
+            {
+              "active_blocks": 991,
+              "frame": 100
+            },
+            {
+              "active_blocks": 1013,
+              "frame": 101
+            },
+            {
+              "active_blocks": 1027,
+              "frame": 102
+            },
+            {
+              "active_blocks": 1031,
+              "frame": 103
+            },
+            {
+              "active_blocks": 1038,
+              "frame": 104
+            },
+            {
+              "active_blocks": 1043,
+              "frame": 105
+            },
+            {
+              "active_blocks": 1049,
+              "frame": 106
+            },
+            {
+              "active_blocks": 1063,
+              "frame": 107
+            },
+            {
+              "active_blocks": 1066,
+              "frame": 108
+            },
+            {
+              "active_blocks": 1074,
+              "frame": 109
+            },
+            {
+              "active_blocks": 1088,
+              "frame": 110
+            },
+            {
+              "active_blocks": 1090,
+              "frame": 111
+            },
+            {
+              "active_blocks": 1088,
+              "frame": 112
+            },
+            {
+              "active_blocks": 1094,
+              "frame": 113
+            },
+            {
+              "active_blocks": 1090,
+              "frame": 114
+            },
+            {
+              "active_blocks": 1099,
+              "frame": 115
+            },
+            {
+              "active_blocks": 1110,
+              "frame": 116
+            },
+            {
+              "active_blocks": 1120,
+              "frame": 117
+            },
+            {
+              "active_blocks": 1124,
+              "frame": 118
+            },
+            {
+              "active_blocks": 1124,
+              "frame": 119
+            },
+            {
+              "active_blocks": 1118,
+              "frame": 120
+            }
+          ],
+          "identity_and_source_pass": true,
+          "maximum_active_blocks": 1124,
+          "minimum_active_blocks": 269,
+          "payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389",
+          "sample_count": 120,
+          "source_sums": {
+            "fuel": 1075.2000160217285,
+            "smoke": 107.51999759674072,
+            "temperature": 2688.0
+          },
+          "timeline_fresh": true,
+          "total_points": 1440
+        }
+      }
+    ],
+    "replacement_budget": 2,
+    "replacements_used": 0,
+    "total_launches": 3
+  },
+  "production_changed": false,
+  "schema": "campfire.phase6gh.color-slot-diagnostic-summary.v1",
+  "status": "qualified_handle6_rgba_candidate"
+}

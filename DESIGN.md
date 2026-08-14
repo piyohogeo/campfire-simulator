@@ -1,5 +1,49 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6GH startup-gated color-slot identification
+
+Phase 6GG remains a frozen startup safe stop and contributes no sample to this
+Phase. Phase 6GH freezes a new population contract (SHA-256
+`9EEA40A2A3E6A4CBE3E0B5DA08CFEDE422F41C6CE6253CB157E909A6936DFEF8`)
+that permits at most two population-wide replacements, and only when all 120
+fresh startup samples are exactly 24 active blocks with valid source, identity,
+lifecycle, and cleanup evidence and no readback. Every operation, resource,
+lifecycle, or cleanup failure remains nonreplaceable.
+
+The fresh C0/C1/C2 population needed no replacement. All three processes were
+representative from frame 1 (269 active blocks; 1,124 maximum during the frozen
+startup gate), used the same 1,344/1,440 Point payload and exact float32 source
+sums, performed one bounded frame-180 metadata readback, and exited normally
+with exact cleanup. C1 alone enabled `rgbaEnabled` and changed only handle 6:
+empty became a 179,184,672-byte public volume buffer with grid class 0 and
+value type 17. C2 enabled `rgbEnabled` and changed no returned handle. Therefore
+the candidate Flow 110.0.0 / Kit 110.2 schema identifies handle 6 as the RGBA
+export slot; RGB neither shares that slot nor exposes a separate slot in the
+seven returned handles under this fixed diagnostic condition. No value-range or
+visual inference was used.
+
+The candidate schema ID is
+`flow110.0.0-kit110.2-public-readback-rgba7-v1`, SHA-256
+`06BAF639E07E7585CB6ED79FFBA6229EA118F450A34BAD1F3EC1228EA59DD8B9`.
+Its 12/12 offline fixtures accept only the exact seven-handle versioned schema
+and reject missing, added, reordered, duplicate, mistyped, legacy-six, unknown,
+and future-version inputs. This is a candidate identification, not an S93
+channel-preflight qualification. Formal S93/S100/OFF, flux, deep velocity,
+video, production integration, defaults, and latest demo remain unstarted and
+unchanged. Diagnostic-only 20/21 GiB limits remain isolated; normal 16/17 GiB
+limits are unchanged. See `docs/design/phase6ge_color_slot_diagnostic.md`.
+
+Final regression passed the Release build, Phase 0 RTX, Phase 3, focused Phase
+6F 212/212 and Phase 6G 42/42, and the standard eight-process 78/78 suite in
+339.6 seconds. Phase 3 retained zero dry/wet mass-balance error, wood-owned Flow
+input, active blocks final/peak 263/346, and peak fuel 1.0. Devlog validation
+passed 482 references, 288 unique IDs, 240 JSON, 177 SVG, and two ZIP files.
+Production app SHA-256 remained
+`94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A`;
+latest-demo SHA-256 remained
+`1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285`;
+final Kit/CDB/GPU-helper residual count was zero.
+
 # Phase 6GE public color-export slot diagnostic
 
 Phase 6GDの履歴と16 GiB resource safe stopを凍結したまま、handle 6識別

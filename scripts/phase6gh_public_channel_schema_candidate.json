@@ -1,0 +1,52 @@
+{
+  "schema": "campfire.phase6gh.public-channel-schema-candidate.v1",
+  "schema_id": "flow110.0.0-kit110.2-public-readback-rgba7-v1",
+  "status": "candidate_identified_not_formally_preflighted",
+  "versions": {
+    "flow": "110.0.0",
+    "kit": "110.2.0+feature.342835.698af100.gl",
+    "volume": "0.5.2"
+  },
+  "api": "omni.flowusd._flowusd.IFlowUsd.get_latest_nanovdb_readback",
+  "expected_handle_count": 7,
+  "exact_order": [
+    "temperature",
+    "fuel",
+    "burn",
+    "smoke",
+    "velocity",
+    "divergence",
+    "rgba"
+  ],
+  "handles": [
+    {"index": 0, "channel": "temperature", "grid_class": 2, "value_type": "1", "state": "nonempty"},
+    {"index": 1, "channel": "fuel", "grid_class": 2, "value_type": "1", "state": "nonempty"},
+    {"index": 2, "channel": "burn", "grid_class": 2, "value_type": "1", "state": "nonempty"},
+    {"index": 3, "channel": "smoke", "grid_class": 2, "value_type": "1", "state": "nonempty"},
+    {"index": 4, "channel": "velocity", "grid_class": 0, "value_type": "6", "state": "nonempty"},
+    {"index": 5, "channel": "divergence", "grid_class": 2, "value_type": "1", "state": "enabled_nonempty_or_disabled_empty"},
+    {"index": 6, "channel": "rgba", "grid_class": 0, "value_type": "17", "state": "enabled_nonempty_or_disabled_empty"}
+  ],
+  "identification_evidence": {
+    "phase6gd": "A one-variable divergenceEnabled control changed only handle[5].",
+    "phase6gh": "A one-variable rgbaEnabled control changed only handle[6] from empty to grid class 0/value type 17; rgbEnabled changed no returned handle.",
+    "value_range_or_visual_inference_used": false
+  },
+  "rgb_observation": {
+    "rgb_enabled_changed_returned_indices": [],
+    "shares_handle_6_with_rgba": false,
+    "separate_returned_rgb_slot_observed": false,
+    "claim_scope": "Flow 110.0.0 / Kit 110.2, fixed Phase 6GH S93 diagnostic condition"
+  },
+  "compatibility": {
+    "legacy_six_handle_schema_accepted": false,
+    "unknown_count_order_version_or_type": "fail_closed",
+    "future_schema_auto_corrected": false
+  },
+  "authorization_boundary": {
+    "formal_s93_s100_population_started": false,
+    "channel_preflight_qualified": false,
+    "production_integration_allowed": false,
+    "normal_resource_limits_changed": false
+  }
+}
