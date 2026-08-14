@@ -1,0 +1,126 @@
+{
+  "schema": "campfire.phase6gh.color-slot-diagnostic-contract.v1",
+  "phase": "phase6gh",
+  "declared_before_runtime": true,
+  "history": {
+    "phase6gd_reclassified": false,
+    "phase6ge_reclassified": false,
+    "phase6gf_reclassified": false,
+    "phase6gg_reclassified": false,
+    "phase6gg_artifact_reused": false,
+    "safe_commit": "cd56d70",
+    "phase6gg_status": "startup_safe_stop"
+  },
+  "scope": "Identify public NanoVDB handle 6 using three fresh S93 processes with a bounded startup-only replacement population.",
+  "controls": {
+    "order": ["C0", "C1", "C2"],
+    "runtime_mode": {"C0": "baseline", "C1": "rgba", "C2": "rgb"},
+    "export_state": {
+      "C0": {"rgbaEnabled": false, "rgbEnabled": false},
+      "C1": {"rgbaEnabled": true, "rgbEnabled": false},
+      "C2": {"rgbaEnabled": false, "rgbEnabled": true}
+    },
+    "one_process_per_attempt": true,
+    "fresh_stage_and_flow_per_attempt": true,
+    "switching_inside_process_allowed": false,
+    "readback_frame": 180,
+    "sentinel_frames": [60, 120],
+    "stop_after_first_metadata": true
+  },
+  "startup": {
+    "probe_frames_inclusive": [1, 120],
+    "classification_frame": 60,
+    "final_frame": 120,
+    "representative_active_blocks": 128,
+    "replaceable_exact_active_blocks": 24,
+    "expected_point_revision": 1,
+    "expected_total_point_count": 1440,
+    "expected_active_point_count": 1344,
+    "expected_payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389",
+    "expected_canonical_payload_sha256": "DF5AF9FA764B4B2D74FCD67DEF30ADE4C24DC267E351FA017746E89907B2E920",
+    "expected_source_sums": {
+      "fuel": 1075.2000160217285,
+      "temperature": 2688.0,
+      "smoke": 107.51999759674072
+    },
+    "flow_acquire_position": "before_updates",
+    "stopped_update_count": 12,
+    "extra_update_before_play_count": 0,
+    "readback_only_after_representative_startup": true,
+    "preserve_full_startup_history": true
+  },
+  "population": {
+    "required_accepted_conditions": ["C0", "C1", "C2"],
+    "startup_prerequisite_replacement_budget": 2,
+    "maximum_total_launches": 5,
+    "replacement_schedule": "repeat_the_active_condition_immediately_then_resume_C0_C1_C2_order",
+    "replaceable_classification": "startup_prerequisite_failure",
+    "replaceable_only_when_all_120_samples_equal_24": true,
+    "failed_attempts_preserved": true,
+    "post_hoc_sample_selection": false,
+    "nonreplaceable": [
+      "operation_failure",
+      "resource_failure",
+      "lifecycle_failure",
+      "cleanup_failure",
+      "fatal_or_dump_or_upload",
+      "artifact_or_identity_failure"
+    ],
+    "stop_when_budget_exhausted": true
+  },
+  "diagnostic_resource_limits": {
+    "temporary_only": true,
+    "kit_private_limit_bytes": 21474836480,
+    "unique_tree_private_limit_bytes": 22548578304,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "physical_memory_floor_bytes": 34359738368,
+    "commit_headroom_floor_bytes": 34359738368,
+    "may_replace_phase6fz_or_formal_limits": false,
+    "may_be_raised_after_runtime": false
+  },
+  "metadata": {
+    "expected_handle_count": 7,
+    "labels": ["handle[0]", "handle[1]", "handle[2]", "handle[3]", "handle[4]", "handle[5]", "handle[6]"],
+    "sequential_processing_and_release": true,
+    "full_field_json_allowed": false,
+    "full_field_npz_allowed": false,
+    "numpy_asarray_allowed": false,
+    "maximum_handles": 16,
+    "per_handle_temporary_file_limit_bytes": 268435456,
+    "total_temporary_file_limit_bytes": 536870912
+  },
+  "mapping_gate": {
+    "rgba_candidate": "C0_to_C1_changes_only_handle_6",
+    "rgb_candidate": "C0_to_C2_changes_only_handle_6",
+    "setting_dependent_color_slot_candidate": "both_controls_change_only_handle_6_with_control_dependent_type_or_class",
+    "require_other_indices_metadata_unchanged": true,
+    "require_identical_payload_geometry_point_and_source_hashes": true,
+    "ambiguous_or_multiple_difference": "safe_stop_unknown",
+    "value_range_or_appearance_is_evidence": false
+  },
+  "next_condition_gate": {
+    "functional_status": "pass",
+    "lifecycle_status": "normal_exit",
+    "normal_exit_sample_accepted": true,
+    "process_exit_code": 0,
+    "exact_cleanup_required": true,
+    "residual_process_count": 0
+  },
+  "candidate_schema": {
+    "allowed_only_if_mapping_unambiguous": true,
+    "kit_version": "110.2.0+feature.342835.698af100.gl",
+    "flow_version": "110.0.0",
+    "legacy_six_schema_implicitly_compatible": false,
+    "future_or_unknown_schema": "fail_closed"
+  },
+  "prohibited_followup": [
+    "formal S93 channel preflight",
+    "formal S93/S100/OFF population",
+    "directional flux or deep velocity",
+    "comparison capture or video",
+    "production Point integration",
+    "production defaults or resource-limit changes"
+  ],
+  "production_changed": false
+}
