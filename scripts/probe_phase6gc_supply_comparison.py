@@ -18,7 +18,7 @@ if str(SCRIPT_DIR) not in sys.path:
 
 from phase6fz_import_contract import load_exact_module
 
-SHARED_PATH = (SCRIPT_DIR / "probe_phase6fo_supply_comparison.py").resolve()
+SHARED_PATH = (SCRIPT_DIR / "probe_phase6gc_shared_supply_comparison.py").resolve()
 settings = carb.settings.get_settings()
 audit_path = Path(settings.get_as_string("/phase6fz/importAuditPath")).resolve()
 

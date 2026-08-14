@@ -1,0 +1,57 @@
+{
+  "schema": "campfire.phase6gc.safe-stop-summary.v1",
+  "phase": "phase6gc",
+  "status": "channel_preflight_safe_stop",
+  "contract_sha256": "97286431C5CB1EDA224CB97D11DA7D512844E039401D363DC4DE7B5AF96D1770",
+  "history": {"phase6gb_reclassified": false, "prior_population_reused": false, "same_root_retried": false},
+  "preflight": {
+    "source_contract_fixtures": {"passed": 16, "total": 16, "kit_launched": false},
+    "geometry_binding_fixtures": {"passed": 4, "total": 4, "kit_launched": false},
+    "app_ready_import": {"passed": 3, "total": 3},
+    "cdb_progress": {"passed": 7, "total": 7},
+    "offline_geometry_passed": true
+  },
+  "payload_native_source": {
+    "semantics": "sum(float64(float32(source_i))) in payload order with float64 accumulator",
+    "primary_absolute_budget": 0.0,
+    "alternate_order_budget_derivation": "element_count * maximum_float32_ulp",
+    "s93": {"points": 1344, "canonical_payload_sha256": "DF5AF9FA764B4B2D74FCD67DEF30ADE4C24DC267E351FA017746E89907B2E920", "fuel": 1075.2000160217285, "temperature": 2688.0, "smoke": 107.51999759674072, "expected_observed_difference": 0.0},
+    "s100_offline": {"points": 1440, "fuel": 1152.0000171661377, "temperature": 2880.0, "smoke": 115.19999742507935}
+  },
+  "channel_preflight": {
+    "attempts": 1,
+    "formal_processes": 0,
+    "replacements": 0,
+    "active_blocks": {"frame_1": 269, "frame_60": 688, "frame_120_maximum": 1124, "frame_180": 1329},
+    "startup_source_contract_passed": true,
+    "public_readback_calls": 1,
+    "completed_channel_boundaries": 0,
+    "error": "RuntimeError: Phase 6FO expected 6 public channels, got 7",
+    "last_operation_marker": "p3_readback_call_after",
+    "returned_channel_count": 7
+  },
+  "numeric_and_visual": {"formal_runs": {"S93": 0, "S100": 0, "OFF": 0}, "directional_flux_available": false, "deep_velocity_available": false, "numeric_qualified": false, "video_generated": false, "visible_penetration_assessed": false, "s100_candidate": false},
+  "resource": {
+    "kit_peak_bytes": 14817234944,
+    "tree_peak_bytes": 14980284416,
+    "runner_peak_bytes": 95965184,
+    "diagnostic_peak_bytes": 16453632,
+    "kit_margin_to_16_gib_bytes": 2362634240,
+    "tree_margin_to_17_gib_bytes": 3273326592,
+    "minimum_available_physical_bytes": 82529505280,
+    "minimum_commit_headroom_bytes": 101907419136
+  },
+  "lifecycle": {"stage_close_seconds": 15.6564391, "shutdown_complete": true, "os_exit_code": 1, "normal_exit": false, "cdb_invocations": 0, "fatal_count": 0, "dump_count": 0, "automatic_upload_attempt_count": 0, "residual_process_count": 0, "exact_cleanup_complete": true},
+  "gpu": {"active_gpu": "NVIDIA GeForce RTX 3090", "cuda_device_ordinal": 0, "rtx_device_mask": "0x1", "physx_device_ordinal": 0},
+  "production": {"changed": false, "app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A", "latest_demo_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285"},
+  "verification": {
+    "release_build": "pass",
+    "phase0_rtx": "pass",
+    "phase3": {"pass": true, "mass_balance_error_kg": 0.0, "active_blocks_final": 277, "active_blocks_peak": 381, "peak_fuel_input": 1.0},
+    "focused_phase6f": {"passed": 212, "total": 212},
+    "focused_phase6g": {"passed": 16, "total": 16},
+    "standard_suite": {"processes_passed": 8, "processes_total": 8, "tests_passed": 78, "tests_total": 78},
+    "devlog_static": {"passed": true, "refs": 477, "ids": 285, "json": 237, "svg": 177, "zip": 2},
+    "final_residual_processes": {"kit": 0, "cdb": 0, "nvidia_smi": 0, "nvngx_update": 0}
+  }
+}

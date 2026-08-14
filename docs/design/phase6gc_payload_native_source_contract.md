@@ -44,3 +44,30 @@ Only after this suite, the Phase 6GB geometry-binding fixture, app-ready import,
 progress-aware CDB and offline geometry gates pass may a fresh channel preflight
 and nine-process population begin. Any later failure remains fail-closed under
 the frozen Phase 6FZ safety contract.
+
+## Runtime result
+
+The frozen contract and all pre-Kit gates passed: source cases 16/16, geometry
+binding 4/4, app-ready import 3/3, CDB progress 7/7, and offline geometry. The
+fresh S93 preflight formed representative Flow (269/688 active blocks at frames
+1/60 and 1,329 at frame 180). Expected and live canonical payload SHA-256 were
+both `DF5AF9FA764B4B2D74FCD67DEF30ADE4C24DC267E351FA017746E89907B2E920`;
+fuel, temperature and smoke differences were exactly zero.
+
+The one public readback returned seven handles while the frozen public-channel
+order contains six entries. Marker `p3_readback_call_after` durably recorded
+the count, then the probe failed closed before handle indexing, conversion,
+NPZ, spatial metrics or directional flux. This is a new public-readback schema
+boundary, not a source-sum failure, and is not fixed or retried in Phase 6GC.
+
+Formal S93/S100/OFF, replacement and video remained zero. Stage close completed
+in 15.6564391 seconds and `shutdown_complete` was durable; the deliberate probe
+error yielded OS exit 1. Kit/tree peaks were 14,817,234,944/14,980,284,416 bytes.
+CDB/fatal/dump/upload/residual were zero and exact cleanup completed. S100 is
+still unevaluated and is not an adoption candidate.
+
+Regression passed Release build, Phase 0 RTX, Phase 3 with zero mass-balance
+error and wood-owned Flow input (active blocks final/peak 277/381), focused
+Phase 6F 212/212, focused Phase 6G 16/16, the standard eight-process 78/78
+suite, and static devlog validation. Production and latest-demo hashes remained
+unchanged; final Kit/CDB/nvidia-smi/nvngx-update residuals were zero.

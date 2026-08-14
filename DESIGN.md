@@ -13,6 +13,14 @@ geometry/import/CDB/offline gates precede a fresh root. Physical and safety
 contracts are unchanged. See
 `docs/design/phase6gc_payload_native_source_contract.md`.
 
+Runtime confirmed the correction: fixtures passed 16/16 and the S93
+expected/live float32 payload hash and three sums matched exactly. The fresh
+preflight then safely stopped after one public readback returned 7 handles while
+the frozen channel schema expected 6. No handle was indexed or converted and
+formal S93/S100/OFF remained 0/9. Stage close and exact cleanup completed with
+zero residual/fatal/dump/upload. This readback-schema boundary belongs to a
+future independent Phase; Phase 6GC is not retried or qualified.
+
 # Phase 6GB explicit geometry binding and supply comparison contract
 
 Phase 6GA remains the frozen `corrected` versus `phase6er_corrected` pre-Kit

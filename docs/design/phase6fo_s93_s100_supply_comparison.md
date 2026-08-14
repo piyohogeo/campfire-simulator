@@ -1,5 +1,16 @@
 # Phase 6FO S93 / S100 Point supply comparison
 
+## 2026-08-14 Phase 6GC payload-native runtime safe stop
+
+The payload-native source contract passed at runtime. S93 expected/live hashes
+matched and fuel was exactly `1075.2000160217285` under the frozen float64
+accumulator. The first public readback at frame 180 returned seven handles while
+the frozen channel order declared six. The probe stopped at
+`p3_readback_call_after` without indexing or conversion. Formal population,
+directional transport and video stayed at zero. Phase 6GC is frozen; a future
+independent Phase must identify the seventh handle using bounded public metadata
+and freeze a versioned channel mapping before S93/S100 can restart.
+
 ## 2026-08-14 Phase 6GC payload-native restart contract
 
 Phase 6GB remains frozen. The next fresh root uses the actual ordered float32

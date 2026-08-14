@@ -41,7 +41,7 @@ Copy-Item -LiteralPath $contractPath -Destination (Join-Path $OutputRoot "frozen
 Copy-Item -LiteralPath $hashPath -Destination (Join-Path $OutputRoot "frozen_contract.sha256")
 Copy-Item -LiteralPath $phase6fnReport -Destination (Join-Path $OutputRoot "frozen_phase6fn_report.json")
 $runtimeManifest = [ordered]@{}
-foreach ($name in @("run_phase6fo_supply_case.ps1","run_phase6gb_parameter_binding_fixtures.ps1","run_phase6gc_source_contract_fixtures.py","phase6gc_payload_native_source.py","probe_phase6fo_supply_comparison.py","probe_phase6ga_supply_comparison.py","probe_phase6gb_supply_comparison.py","probe_phase6gc_supply_comparison.py","phase6fu_resource_guard.py","phase6fu_process_identity.py","phase6fw_pid_reuse_policy.py","phase6fz_preclose_committer.py","phase6fz_import_contract.py","kit_shutdown_policy.ps1")) {
+foreach ($name in @("run_phase6fo_supply_case.ps1","run_phase6gb_parameter_binding_fixtures.ps1","run_phase6gc_source_contract_fixtures.py","phase6gc_payload_native_source.py","probe_phase6fo_supply_comparison.py","probe_phase6ga_supply_comparison.py","probe_phase6gb_supply_comparison.py","probe_phase6gc_supply_comparison.py","probe_phase6gc_shared_supply_comparison.py","phase6fu_resource_guard.py","phase6fu_process_identity.py","phase6fw_pid_reuse_policy.py","phase6fz_preclose_committer.py","phase6fz_import_contract.py","kit_shutdown_policy.ps1")) {
     $path = Join-Path $PSScriptRoot $name
     if (Test-Path -LiteralPath $path) { $runtimeManifest[$name] = (Get-FileHash -Algorithm SHA256 -LiteralPath $path).Hash }
 }
