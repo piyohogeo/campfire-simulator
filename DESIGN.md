@@ -3797,3 +3797,28 @@ Phase 0完了後、結果を本書へ反映してからPhase 1を依頼する。
 - The first evidence-only channel preflight stopped before Kit creation because `GeometryVariant=corrected` is not a valid shared-runner runtime token; the runner accepts `phase6er_corrected`. This is a nonreplaceable harness operation failure. Formal launches, readbacks, captures, scalar/flux comparison, CDB, and video are all zero.
 - Exact cleanup qualified with residual zero. Production app/defaults/Point payload/Flow/V3/latest demo are unchanged. Phase 6GA is not a physical result and is not retried or reclassified.
 - Pending work: an independent harness-only correction must freeze the exact runtime geometry token and prove the full parameter set with a no-Kit binding fixture before a fresh-root population may be approved. S93/S100 adoption, Point Emitter–CollisionProxy continuation, production integration, and P4 remain blocked.
+# Phase 6GL formal S93/S100/OFF comparison (frozen before runtime)
+
+Phase 6GK remains a qualified one-readback public-channel preflight and is not
+reused as a formal sample. Phase 6GL starts a fresh nine-process population in
+the frozen balanced order `S93/S100/OFF`, `S100/OFF/S93`, `OFF/S93/S100`.
+Only startup-prerequisite failure is replaceable, with a population-wide budget
+of two and eleven launches maximum. All operation, schema, pointer, artifact,
+resource, native lifecycle, identity, and cleanup failures stop the population.
+
+The frozen contract is
+`scripts/phase6gl_supply_comparison_contract.json` with SHA-256
+`21BC3156D77CCB758514EB58D8B8BE7B83DE43B05705DDA934DEE3014A7ACF9C`.
+It inherits Phase 6GC geometry, Point payload, sampling frames, transport proxy,
+and numerical thresholds without reinterpretation. Each of the three public
+readbacks must first match the Phase 6GK-qualified schema
+`flow110.0.0-kit110.2-public-readback-rgba7-v1`; semantic indexing happens only
+after raw schema validation. The four required direct buffers are then passed
+to the existing authored-Mesh collector. The other handles are still validated
+and released. Runtime artifacts emit only the canonical
+`field_body_json_npz_or_openvdb_written` property.
+
+Numerical qualification is required before comparison video creation. Even a
+numeric and visual pass can identify only a production *candidate*; this Phase
+does not change production code, defaults, Point policy, V3, P4, PhysX sharing,
+dynamic transforms, geometry, 20-log performance, or fire lighting.

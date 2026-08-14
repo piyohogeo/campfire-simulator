@@ -1354,3 +1354,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Passed the Phase 6FZ app-ready import smoke 3/3, progress-aware CDB fixtures 7/7, and the balanced M0/M1/M2 population 9/9 with normal OS exits, zero replacements/timeouts/CDB invocations/fatal/dump/upload/residual, and unchanged production.
 - Qualified the 16 GiB Kit and 17 GiB unique-tree ceilings with 2,222,682,112 and 3,132,854,272 bytes of observed headroom. Retired 14 GiB as too close to normal high-water because its minimum margin was only 75,198,464 bytes.
 - Finalized the already committed 9/9 population offline after a post-population empty-queue PowerShell handoff error; no Kit process was rerun. Phase 6FO remains unstarted and requires a separate fresh-root approval.
+- Froze the Phase 6GL fresh balanced S93/S100/OFF comparison contract before
+  runtime. It connects the Phase 6GK-qualified seven-handle public schema to the
+  existing authored-Mesh spatial collector, preserves all Phase 6GC physical
+  gates and 16/17 GiB safety limits, and does not alter production behavior.

@@ -1,0 +1,113 @@
+{
+  "schema": "campfire.phase6gl.supply-comparison-contract.v1",
+  "phase": "phase6gl",
+  "declared_before_runtime": true,
+  "history": {
+    "phase6fo_through_phase6gk_reclassified": false,
+    "prior_formal_population_reused": false,
+    "phase6gk_preflight_reused_as_formal_sample": false
+  },
+  "scope": "Fresh balanced S93/S100/OFF population using the frozen Phase 6GC physics and the Phase 6GK-qualified public seven-handle schema and bounded artifact interface.",
+  "fixture": {
+    "scenario": "production_four",
+    "geometry": {"concept": "corrected", "runtime_token": "phase6er_corrected", "legacy_runtime_token": "legacy_phase6ep", "mapping": "explicit_fail_closed"},
+    "point_offset_m": -0.0125,
+    "support_radius_assumption_m": 0.05,
+    "support_radius_basis": "engineering assumption equal to one velocity voxel; not a public Flow support-radius result",
+    "points_total": 1440,
+    "points_per_log": 360,
+    "mesh_topology": {"vertices": 26, "faces": 36, "indices": 120},
+    "velocity_voxel_size_m": 0.05,
+    "flow_occupancy_mask_public_api_available": false
+  },
+  "parameter_binding_fixture": {"kit_launch_allowed": false, "maximum_report_bytes": 1048576,
+    "required_cases": ["positive_corrected_mapping", "negative_direct_concept_token", "negative_unknown_runtime_token", "negative_legacy_misroute"]},
+  "source_contract": {
+    "schema": "campfire.phase6gc.payload-native-source.v1", "mode": "payload_native_float32_v1",
+    "primary_sum_semantics": "sum(float64(float32(source_i))) in payload order with float64 accumulator",
+    "primary_sum_absolute_tolerance": 0.0, "decimal_source_times_count_is_qualification_evidence": false,
+    "canonical_payload_fields": ["payload_identity", "revision", "points", "fuel", "temperature", "smoke"],
+    "required_array_contract": ["shape", "dtype", "strides", "c_contiguous", "finite", "sha256"],
+    "runtime_bit_pattern_or_hash_match_required": true,
+    "alternate_accumulation_allowed_only_with_identical_payload_hash": true,
+    "alternate_accumulation_budget": "element_count * maximum_float32_ulp, computed before runtime and independent of observed difference",
+    "fixture_case_count": 16, "fixture_must_pass_before_kit": true
+  },
+  "public_channel_schema": {
+    "qualification": "phase6gk_preflight_qualified",
+    "qualification_record": "docs/devlog/assets/phase6/phase6gk_public_channel_preflight_qualified.json",
+    "schema_id": "flow110.0.0-kit110.2-public-readback-rgba7-v1",
+    "candidate_definition": "scripts/phase6gh_public_channel_schema_candidate.json",
+    "candidate_definition_sha256": "06BAF639E07E7585CB6ED79FFBA6229EA118F450A34BAD1F3EC1228EA59DD8B9",
+    "expected_handle_count": 7,
+    "exact_order": ["temperature", "fuel", "burn", "smoke", "velocity", "divergence", "rgba"],
+    "mismatch_policy": "fail_closed_before_semantic_use",
+    "canonical_artifact_property": "field_body_json_npz_or_openvdb_written",
+    "runtime_legacy_property_allowed": false
+  },
+  "conditions": {
+    "S93": {"label": "S93_support_clear", "policy": "allow_self_center", "collision_enabled": true,
+      "expected_active_points": 1344, "expected_other_center_inside": 0, "expected_active_other_support_intersections": 0,
+      "expected_source_sums": {"fuel": 1075.2, "temperature": 2688.0, "smoke": 107.52}},
+    "S100": {"label": "S100_center_clear", "policy": "allow_other_support", "collision_enabled": true,
+      "expected_active_points": 1440, "expected_other_center_inside": 0, "expected_active_other_support_intersections": 96,
+      "expected_source_sums": {"fuel": 1152.0, "temperature": 2880.0, "smoke": 115.2}},
+    "OFF": {"label": "S100_collision_off_control", "policy": "allow_other_support", "collision_enabled": false,
+      "expected_active_points": 1440, "expected_other_center_inside": 0, "expected_active_other_support_intersections": 96,
+      "expected_source_sums": {"fuel": 1152.0, "temperature": 2880.0, "smoke": 115.2}}
+  },
+  "channel_preflight": {"condition": "S93", "readback_frame": 180, "representative_collider_indices": [2],
+    "required_dtype": "uint32", "startup_source_sum_absolute_tolerance": 0.00001,
+    "startup_source_sum_tolerance_role": "legacy telemetry only; payload-native validation is authoritative", "formal_sample_reuse": false},
+  "sample_frames": [60, 120, 180, 360, 540, 600],
+  "readback_frames": [180, 360, 540],
+  "spatial": {
+    "required_channels": ["velocity", "temperature", "smoke", "fuel"], "all_collider_indices": [0, 1, 2, 3],
+    "primary_geometry": "authored closed low-detail Mesh",
+    "deep_definition": "mesh signed distance less than negative one channel-specific voxel",
+    "boundary_definition": "inside Mesh and within one channel-specific voxel of surface",
+    "temperature_comparison": "max(raw-ambient_baseline_1,0)",
+    "directional_transport_proxy": "max(dot(velocity,outward_normal),0)*scalar*voxel_face_area",
+    "faces": ["inlet_bottom", "opposite_top", "side_positive", "side_negative", "end_positive", "end_negative"]
+  },
+  "hard_gates": {
+    "source_sum_relative_tolerance": 0.000001,
+    "maximum_collision_on_deep_velocity_m_s": 0.0001,
+    "minimum_collision_off_deep_velocity_m_s": 0.1,
+    "maximum_s100_to_off_deep_velocity_ratio": 0.01,
+    "minimum_s100_to_s93_weighted_supply_ratio": 1.07,
+    "maximum_s100_to_s93_deep_scalar_excess_ratio": 1.25,
+    "maximum_s100_to_s93_opposite_transport_ratio": 1.25,
+    "maximum_s100_to_s93_deep_velocity_ratio_with_floor": 1.25,
+    "velocity_ratio_floor_m_s": 0.000001,
+    "maximum_run_relative_range": 0.35,
+    "visible_direct_penetration_allowed": false,
+    "other_log_point_centers_inside_required": 0,
+    "collider_volume_intersection_allowed": false
+  },
+  "materiality": {"zero_denominator_floor": 0.000001, "tiny_nonzero_scalar_is_not_alone_a_failure": true,
+    "visual_and_directional_deep_evidence_required": true},
+  "formal_population": {
+    "balanced_order": [["S93", "S100", "OFF"], ["S100", "OFF", "S93"], ["OFF", "S93", "S100"]],
+    "required_representative_processes": 9, "startup_prerequisite_replacement_budget": 2,
+    "maximum_formal_launches": 11, "automatic_retry": false
+  },
+  "artifact_commit": {"probe_wait_timeout_seconds": 90, "helper_timeout_seconds": 960,
+    "helper_private_limit_bytes": 536870912, "required_before_stage_close": true},
+  "safety": {
+    "kit_private_limit_bytes": 17179869184, "unique_tree_private_limit_bytes": 18253611008,
+    "runner_private_limit_bytes": 536870912, "diagnostic_private_limit_bytes": 536870912,
+    "physical_memory_floor_bytes": 8589934592, "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180, "inner_absolute_timeout_seconds": 900,
+    "outer_condition_timeout_seconds": 1020, "resource_sampling_seconds": 0.25, "gpu_sampling_ms": 1000,
+    "shutdown_order": "release_after_close",
+    "diagnostic": "Phase 6FZ progress-aware stack-first CDB with Phase 6FU exact cleanup and Phase 6FW PID-reuse policy",
+    "nonreplaceable": ["operation_failure", "channel_failure", "pointer_failure", "resource_limit", "native_lifecycle_failure", "artifact_not_committed", "identity_unknown", "cleanup_failure"]
+  },
+  "gpu_contract": {"active_gpu": "NVIDIA GeForce RTX 3090", "cuda_device_ordinal": 0,
+    "rtx_device_mask": "0x1", "physx_device_ordinal": 0, "secondary_rtx_2070_incidental_usage_is_failure": false},
+  "visual": {"allowed_after_numeric_qualification_only": true, "conditions": ["S93", "S100", "OFF"],
+    "same_camera_timeline_rtx_flow": true, "side_by_side_required": true,
+    "numeric_evidence_remains_authoritative": true, "visible_direct_penetration_rejects_candidate": true},
+  "out_of_scope": ["production integration", "default changes", "Point policy adoption", "V3", "P4", "PhysX sharing", "dynamic transform", "deformation", "20-log performance", "fire lighting"]
+}
