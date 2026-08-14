@@ -1,0 +1,87 @@
+{
+  "schema": "campfire.phase6gr.volume-metadata-contract.v1",
+  "phase": "phase6gr",
+  "declared_before_runtime": true,
+  "history": {
+    "phase6gn_reclassified": false,
+    "phase6go_reclassified": false,
+    "phase6gp_reclassified": false,
+    "phase6gq_reclassified": false,
+    "prior_runtime_sample_reused": false,
+    "phase6gq_status": "temperature_volume_conversion_qualified"
+  },
+  "scope": {
+    "operation": "one public readback, one slot-0 temperature conversion, and six ordered public volume metadata accessors",
+    "later_operations_authorized": false
+  },
+  "selected_slot": 0,
+  "selected_channel": "temperature",
+  "mapping_source": {
+    "schema_id": "flow110.0.0-kit110.2-public-readback-rgba7-v1",
+    "candidate_path": "scripts/phase6gh_public_channel_schema_candidate.json",
+    "qualification_path": "docs/devlog/assets/phase6/phase6gk_public_channel_preflight_qualified.json",
+    "required_state": "nonempty"
+  },
+  "volume_metadata": {
+    "maximum_grid_count": 4,
+    "selected_grid_index": 0,
+    "accessors_in_exact_order": [
+      "get_num_grids",
+      "get_grid_type",
+      "get_short_grid_name",
+      "get_grid_class",
+      "get_index_bounding_box",
+      "get_world_bounding_box"
+    ],
+    "calls_per_accessor": 1,
+    "read_indices_other_than_zero": false,
+    "maximum_sequence_items": 16,
+    "maximum_text_characters": 512
+  },
+  "fixture": {
+    "scenario": "production_four",
+    "geometry_concept": "corrected",
+    "geometry_runtime_token": "phase6er_corrected",
+    "condition": "S93_support_clear",
+    "policy": "allow_self_center",
+    "collision_enabled": true,
+    "points_active": 1344,
+    "points_total": 1440,
+    "readback_frame": 180,
+    "flow_version": "110.0.0",
+    "kit_version": "110.2",
+    "exports": {"temperature": true, "fuel": true, "burn": true, "smoke": true, "velocity": true, "divergence": true, "rgba": false, "rgb": false}
+  },
+  "forbidden": [
+    "probe_phase6gd_channel_metadata._volume_metadata", "save_volume", "temporary NanoVDB",
+    "typed NanoVDB metadata", "volume value traversal", "active voxel traversal", "numpy.asarray",
+    "material copy", "sampling", "near-Mesh collector", "flux", "other channel conversion",
+    "second readback", "second conversion", "image", "video", "formal nine-process population"
+  ],
+  "population": {"independent_processes": 1, "automatic_retry": false, "replacement_budget": 0, "maximum_launches": 1},
+  "result_axes": {
+    "operation": "all accessors return, bounded artifact completes, and volume/source release completes",
+    "lifecycle": "stage close, shutdown_complete, and natural zero OS exit",
+    "qualification": "both operation pass and lifecycle normal_exit are required"
+  },
+  "artifact_bounds": {"maximum_operation_json_bytes": 131072, "field_body_allowed": false, "image_or_video_allowed": false},
+  "safety": {
+    "kit_private_limit_bytes": 17179869184,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "inner_absolute_timeout_seconds": 900,
+    "outer_condition_timeout_seconds": 1020,
+    "resource_sampling_seconds": 0.25,
+    "gpu_sampling_ms": 1000,
+    "shutdown_order": "release_after_close"
+  },
+  "lifecycle": {
+    "low_level_diagnostic_allowed": false,
+    "timeout_action": "preserve bounded artifacts, exact identity cleanup, require residual zero"
+  },
+  "out_of_scope": ["temporary NVDB", "typed metadata", "other channels", "sampling", "collector", "flux", "formal comparison", "production", "defaults", "V3", "P4"]
+}
