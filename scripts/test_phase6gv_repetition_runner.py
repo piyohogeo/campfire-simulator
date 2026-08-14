@@ -27,6 +27,18 @@ def main() -> int:
         check("parent_leaves_child_case_absent", not metadata["case"].exists(), str(metadata["case"]))
         check("parent_owns_only_runner_logs", metadata["logs"].is_dir(), str(metadata["logs"]))
         check("actual_command_targets_absent_case", str(metadata["case"]) in command, command[-20:])
+        allowed = attempt / "case" / "p3_f0180_temperature.nvdb"
+        allowed.parent.mkdir()
+        allowed.write_bytes(b"partial")
+        neighbor = allowed.parent / "neighbor.txt"
+        neighbor.write_text("keep", encoding="utf-8")
+        cleanup = runner.cleanup_attempt_temporary_files(attempt)
+        check("allowlisted_temporary_deleted", cleanup["pass"] and not allowed.exists(), cleanup)
+        check("neighbor_preserved", neighbor.exists(), str(neighbor))
+        unknown = allowed.parent / "unexpected.nvdb"
+        unknown.write_bytes(b"x")
+        cleanup = runner.cleanup_attempt_temporary_files(attempt)
+        check("unknown_temporary_fail_closed", not cleanup["pass"] and unknown.exists(), cleanup)
     normal_runner = {"process_exit_code":0,"outcome":{"lifecycle_status":"normal_exit","normal_exit_sample_accepted":True}}
     normal_guard = {"observed_process_cleanup":{"all_observed_absent":True}}
     value = runner.classify(normal_guard, normal_runner, {}, {}, 0)[0]

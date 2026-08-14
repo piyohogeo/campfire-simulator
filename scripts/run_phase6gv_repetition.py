@@ -11,6 +11,7 @@ import shutil
 import subprocess
 import sys
 import time
+import re
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
@@ -103,6 +104,42 @@ def marker_digest(path: Path) -> dict:
         "active_blocks": {"minimum": min(active) if active else None, "maximum": max(active) if active else None},
         "stage_close_seconds": close_seconds,
     }
+
+
+ALLOWED_TEMPORARY_NVDB = re.compile(
+    r"^(?:handle_[0-6]|p3_f(?:0180|0360|0540)_(?:velocity|temperature|smoke|fuel))\.nvdb$"
+)
+
+
+def cleanup_attempt_temporary_files(run_root: Path) -> dict:
+    """Record and delete only contract-named NVDB files inside one attempt."""
+    run_root = run_root.resolve()
+    rows = []
+    failures = []
+    for candidate in sorted(run_root.rglob("*.nvdb")):
+        resolved = candidate.resolve()
+        if run_root not in resolved.parents:
+            failures.append({"path": str(resolved), "reason": "outside_attempt_root"})
+            continue
+        allowed = bool(ALLOWED_TEMPORARY_NVDB.fullmatch(resolved.name))
+        row = {"relative_path": str(resolved.relative_to(run_root)),
+               "bytes": resolved.stat().st_size, "allowlisted": allowed, "deleted": False}
+        if not allowed:
+            failures.append({"path": row["relative_path"], "reason": "unknown_temporary_filename"})
+        else:
+            try:
+                resolved.unlink()
+                row["deleted"] = not resolved.exists()
+                if not row["deleted"]:
+                    failures.append({"path": row["relative_path"], "reason": "delete_not_confirmed"})
+            except OSError as exc:
+                failures.append({"path": row["relative_path"], "reason": f"delete_error:{type(exc).__name__}"})
+        rows.append(row)
+    remaining = [str(path.resolve().relative_to(run_root)) for path in run_root.rglob("*.nvdb")]
+    if remaining:
+        failures.append({"paths": remaining, "reason": "temporary_residual_nonzero"})
+    return {"observed": rows, "failures": failures, "residual_count": len(remaining),
+            "pass": not failures and not remaining}
 
 
 def classify(guard: dict | None, runner: dict | None, raw: dict | None, markers: dict, guard_exit: int,
@@ -230,7 +267,10 @@ def run_one(condition: str, sequence: int, output: Path, contract: dict) -> dict
     classification, signature = classify(guard_report, runner, raw, markers, guard_exit, stderr_text)
     peaks = (guard_report or {}).get("peaks") or {}
     cleanup = (guard_report or {}).get("observed_process_cleanup") or {}
-    temporary = list(root.rglob("*.nvdb"))
+    temporary_cleanup = cleanup_attempt_temporary_files(root)
+    if not temporary_cleanup["pass"]:
+        classification = "cleanup_failure"
+        signature = "temporary_file_cleanup_failure"
     counts = markers.get("counts", {})
     summary = {
         "schema": "campfire.phase6gv.run-summary.v1", "sequence": sequence, "condition": condition,
@@ -247,7 +287,8 @@ def run_one(condition: str, sequence: int, output: Path, contract: dict) -> dict
                   "metadata": sum(v for k,v in counts.items() if "metadata" in k and k.endswith("before")),
                   "save": sum(v for k,v in counts.items() if "save_volume_before" in k),
                   "sampling": sum(v for k,v in counts.items() if "sampling_before" in k)},
-        "temporary_files_remaining": len(temporary),
+        "temporary_file_cleanup": temporary_cleanup,
+        "temporary_files_remaining": temporary_cleanup["residual_count"],
         "residual_process_count": 0 if cleanup.get("all_observed_absent") else None,
         "guard_exit_code": guard_exit, "guard_stop_reason": (guard_report or {}).get("stop_reason"),
         "operation_status": (operation or {}).get("operation_result") if operation else (raw or {}).get("status"),
@@ -412,6 +453,9 @@ def main() -> int:
             stop_reason = "disk_pressure"; break
         residual = existing_campfire_kit()
         if residual:
+            stop_reason = "cleanup_failure"; break
+        prior_temporary = list((output / "runs").rglob("*.nvdb")) if (output / "runs").exists() else []
+        if prior_temporary:
             stop_reason = "cleanup_failure"; break
         row = run_one(condition, index, output, contract)
         row["elapsed_from_population_start_seconds"] = time.monotonic()-started
