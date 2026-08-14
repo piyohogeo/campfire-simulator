@@ -49,7 +49,6 @@ class Phase6FyThreeAxisMemoryQualification(unittest.TestCase):
             "phase6fu_resource_guard_sha256": "phase6fu_resource_guard.py",
             "phase6fu_process_identity_sha256": "phase6fu_process_identity.py",
             "frozen_phase6eg_resource_guard_sha256": "phase6eg_resource_guard.py",
-            "kit_shutdown_policy_sha256": "kit_shutdown_policy.ps1",
             "shared_case_runner_sha256": "run_phase6fo_supply_case.ps1",
             "shared_probe_sha256": "probe_phase6fo_supply_comparison.py",
             "phase6fw_policy_sha256": "phase6fw_pid_reuse_policy.py",
@@ -64,6 +63,17 @@ class Phase6FyThreeAxisMemoryQualification(unittest.TestCase):
         for key, filename in names.items():
             with self.subTest(key=key):
                 self.assertEqual(self.contract["runtime_hashes"][key], sha256(SCRIPTS / filename))
+        # The historical contract records the policy used by the frozen 6FY
+        # run. Later phases may harden the shared diagnostic policy without
+        # rewriting that historical hash or reclassifying the old artifact.
+        self.assertEqual(
+            self.contract["runtime_hashes"]["kit_shutdown_policy_sha256"],
+            "07D52B2BEB45B17D16AE768068C56E7537F02948C349231BE15843578B58216D",
+        )
+        self.assertNotEqual(
+            self.contract["runtime_hashes"]["kit_shutdown_policy_sha256"],
+            sha256(SCRIPTS / "kit_shutdown_policy.ps1"),
+        )
 
     def test_three_axes_and_replacement_limits_are_explicit(self):
         self.assertIn("memory_valid_lifecycle_normal", self.contract["classification"]["attempt_classes"])
