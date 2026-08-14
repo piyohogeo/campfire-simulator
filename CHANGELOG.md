@@ -1,5 +1,11 @@
 # Changelog
 
+- Froze the Phase 6GJ empty-RGBA alias contract before runtime. Nonempty
+  handles retain same-object plus shared-memory requirements; a disabled empty
+  RGBA handle instead requires same-object, zero bytes, no copy, ordered weakref
+  cleanup, and no `shares_memory(empty, empty)` assertion. Phase 6GI remains a
+  safe stop and no formal comparison or production path is authorized.
+
 - Froze Phase 6GI as a nonreplaceable S93 channel-preflight safe stop. Its
   pre-runtime schema fixtures passed 20/20 and startup policy fixtures passed
   12/12; attempt 01 had representative startup, exact Point/source identity,

@@ -1,5 +1,17 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6GJ empty RGBA alias preflight contract
+
+Phase 6GI remains frozen as a nonreplaceable safe stop. Phase 6GJ freezes a
+new contract with state-aware alias semantics: nonempty handles require
+same-object and `numpy.shares_memory == true`; the disabled zero-byte RGBA
+handle requires same-object, zero elements/bytes, no copy, and no weak-reference
+residual but does not require a sharing predicate that is undefined for empty
+storage. Its offline alias/schema fixture must pass before one fresh S93
+preflight under unchanged 16/17 GiB and lifecycle safety boundaries. Formal
+S93/S100/OFF and production remain blocked. See
+`docs/design/phase6gj_empty_rgba_alias_preflight.md`.
+
 # Phase 6GI S93 public-channel preflight safe stop
 
 Phase 6GH remains frozen as candidate identification. Phase 6GI froze a fresh

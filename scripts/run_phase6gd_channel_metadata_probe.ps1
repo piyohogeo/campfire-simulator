@@ -4,7 +4,7 @@ param(
     [ValidateSet("baseline", "divergence", "rgba", "rgb")][string]$Control = "baseline",
     [string]$ControlContractPath = "",
     [string]$DiagnosticResourceContractPath = "",
-    [ValidateSet("phase6gd", "phase6ge", "phase6gf", "phase6gg", "phase6gh", "phase6gi")][string]$ReportPhase = "phase6gd",
+    [ValidateSet("phase6gd", "phase6ge", "phase6gf", "phase6gg", "phase6gh", "phase6gi", "phase6gj")][string]$ReportPhase = "phase6gd",
     [string]$ProbePath = "",
     [ValidateSet("true", "false")][string]$RequireDiscoveryUnmapped = "true",
     [ValidateSet("true", "false")][string]$SpatialCollectorsEnabled = "true",
@@ -157,6 +157,13 @@ foreach ($name in @(
 }
 if ($ReportPhase -eq "phase6gi") {
     foreach ($name in @("phase6gi_channel_preflight_policy.py", "phase6gi_s93_channel_preflight_contract.json",
+                         "phase6gh_public_channel_schema_candidate.json")) {
+        $path = Join-Path $PSScriptRoot $name
+        $runtimeManifest[$name] = (Get-FileHash -Algorithm SHA256 -LiteralPath $path).Hash
+    }
+}
+if ($ReportPhase -eq "phase6gj") {
+    foreach ($name in @("phase6gj_empty_rgba_alias_policy.py", "phase6gj_empty_rgba_alias_contract.json",
                          "phase6gh_public_channel_schema_candidate.json")) {
         $path = Join-Path $PSScriptRoot $name
         $runtimeManifest[$name] = (Get-FileHash -Algorithm SHA256 -LiteralPath $path).Hash
