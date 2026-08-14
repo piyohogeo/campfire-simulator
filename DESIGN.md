@@ -1,6 +1,6 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
-# Phase 6GJ empty RGBA alias preflight contract
+# Phase 6GJ empty RGBA alias preflight safe stop
 
 Phase 6GI remains frozen as a nonreplaceable safe stop. Phase 6GJ freezes a
 new contract with state-aware alias semantics: nonempty handles require
@@ -9,8 +9,16 @@ handle requires same-object, zero elements/bytes, no copy, and no weak-reference
 residual but does not require a sharing predicate that is undefined for empty
 storage. Its offline alias/schema fixture must pass before one fresh S93
 preflight under unchanged 16/17 GiB and lifecycle safety boundaries. Formal
-S93/S100/OFF and production remain blocked. See
+S93/S100/OFF and production remain blocked. The 22/22 fixture and runtime alias
+operation passed, but the shared child wrapper required a differently named
+bounded-output property after Kit's normal exit. It exited 1, so the parent
+correctly safe-stopped with a nonreplaceable `artifact_failure`; the candidate
+schema is not formally preflight-qualified. No retry occurred. See
 `docs/design/phase6gj_empty_rgba_alias_preflight.md`.
+
+The final Release build, Phase 0 RTX, Phase 3, focused Phase 6F 212/212 and
+Phase 6G 53/53, standard 78/78, and devlog validation passed. Production and
+latest-demo hashes remain unchanged and final residual process count is zero.
 
 # Phase 6GI S93 public-channel preflight safe stop
 

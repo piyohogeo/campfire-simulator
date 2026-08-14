@@ -1,5 +1,19 @@
 # Phase 6FO S93 / S100 Point supply comparison
 
+## 2026-08-14 Phase 6GJ empty-RGBA alias preflight safe stop
+
+Phase 6GI remains frozen. Phase 6GJ's new state-aware alias fixture passed
+22/22 and its fresh S93 Kit process passed the exact seven-handle raw schema,
+six nonempty shared aliases, the zero-byte disabled RGBA alias, ordered weakref
+release, resources, stage close, and normal Kit exit. The reused child wrapper
+then failed strict post-run artifact validation because it requested
+`full_field_json_or_npz_written` while the bounded report used
+`field_body_json_npz_or_openvdb_written`. The parent classified this as a
+nonreplaceable artifact failure; there was no retry. The schema is therefore
+not formally preflight-qualified, Phase 6FO remains blocked, and a future new
+Phase/root must freeze the bounded-output property interface before another
+preflight.
+
 ## 2026-08-14 Phase 6GI S93 channel-preflight safe stop
 
 The fresh normal-16/17-GiB S93 preflight passed its raw seven-handle schema and

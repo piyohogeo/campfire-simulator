@@ -5,6 +5,19 @@
   RGBA handle instead requires same-object, zero bytes, no copy, ordered weakref
   cleanup, and no `shares_memory(empty, empty)` assertion. Phase 6GI remains a
   safe stop and no formal comparison or production path is authorized.
+- Passed the new alias/schema fixtures 22/22 and the startup replacement
+  fixture 12/12. The fresh runtime process had representative startup, exact
+  seven-handle schema, six nonempty shared aliases, a valid empty RGBA alias,
+  zero weakref residual, normal Kit exit, and exact cleanup.
+- Froze Phase 6GJ as an artifact safe stop because the reused child wrapper
+  expected `full_field_json_or_npz_written` while the bounded observation used
+  `field_body_json_npz_or_openvdb_written`. Strict post-run validation exited 1;
+  no retry/replacement/reclassification was performed and formal comparison
+  remains blocked.
+- Reconfirmed the safe stop with Release build, Phase 0 RTX, Phase 3 zero
+  dry/wet mass balance and wood-owned Flow input, focused Phase 6F 212/212 plus
+  Phase 6G 53/53, standard 78/78, and devlog validation. Production/latest-demo
+  hashes remained unchanged and final residuals were zero.
 
 - Froze Phase 6GI as a nonreplaceable S93 channel-preflight safe stop. Its
   pre-runtime schema fixtures passed 20/20 and startup policy fixtures passed

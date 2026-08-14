@@ -1,0 +1,65 @@
+{
+  "schema": "campfire.phase6gj.empty-rgba-alias-safe-stop.v1",
+  "phase": "phase6gj",
+  "status": "safe_stop",
+  "contract_sha256": "67CC3F86DF177815F04D05097E49AE4D2D5FA4D88343E80B5980BDD0F167AC69",
+  "candidate_schema_id": "flow110.0.0-kit110.2-public-readback-rgba7-v1",
+  "candidate_schema_sha256": "06BAF639E07E7585CB6ED79FFBA6229EA118F450A34BAD1F3EC1228EA59DD8B9",
+  "history": {"phase6gi_reclassified": false, "phase6gi_runtime_reused": false},
+  "fixtures": {"alias_and_schema": "22/22", "raw_artifact_end_to_end": "1/1", "startup_replacement": "12/12"},
+  "population": {"launches": 1, "replacements": 0, "accepted": 0, "formal_s93_s100_population_started": false},
+  "startup": {"classification": "representative_ingestion", "first_representative_frame": 1, "frame_180_active_blocks": 1329, "payload_and_source_exact": true},
+  "readback_operation": {
+    "calls": 1, "returned_handles": 7, "raw_schema_pass": true,
+    "state_aware_alias_validation_pass": true, "weak_reference_alive_after_release": 0,
+    "ownership_container_residual": 0, "numpy_asarray_calls": 0, "material_copies": 0,
+    "field_body_writes": 0,
+    "handles": [
+      {"index": 0, "channel": "temperature", "elements": 11910336, "logical_bytes": 47641344, "grid_class": 2, "value_type": "1", "same_object": true, "shares_memory": true, "shares_memory_required": true, "weak_residual": false},
+      {"index": 1, "channel": "fuel", "elements": 11910336, "logical_bytes": 47641344, "grid_class": 2, "value_type": "1", "same_object": true, "shares_memory": true, "shares_memory_required": true, "weak_residual": false},
+      {"index": 2, "channel": "burn", "elements": 11910336, "logical_bytes": 47641344, "grid_class": 2, "value_type": "1", "same_object": true, "shares_memory": true, "shares_memory_required": true, "weak_residual": false},
+      {"index": 3, "channel": "smoke", "elements": 11910336, "logical_bytes": 47641344, "grid_class": 2, "value_type": "1", "same_object": true, "shares_memory": true, "shares_memory_required": true, "weak_residual": false},
+      {"index": 4, "channel": "velocity", "elements": 5415112, "logical_bytes": 21660448, "grid_class": 0, "value_type": "6", "same_object": true, "shares_memory": true, "shares_memory_required": true, "weak_residual": false},
+      {"index": 5, "channel": "divergence", "elements": 2072416, "logical_bytes": 8289664, "grid_class": 2, "value_type": "1", "same_object": true, "shares_memory": true, "shares_memory_required": true, "weak_residual": false},
+      {"index": 6, "channel": "rgba", "elements": 0, "logical_bytes": 0, "grid_class": null, "value_type": null, "same_object": true, "shares_memory": false, "shares_memory_required": false, "weak_residual": false}
+    ]
+  },
+  "safe_stop": {
+    "classification": "artifact_failure", "reason": "accepted_exit_or_artifact_mismatch",
+    "direct_cause": "The shared child runner required bounded_handle_metadata.full_field_json_or_npz_written, but Phase 6GJ publishes field_body_json_npz_or_openvdb_written.",
+    "replacement_eligible": false, "automatic_retry": false,
+    "candidate_schema_formally_preflight_qualified": false
+  },
+  "operation_lifecycle_evidence": {
+    "kit_process_exit_code": 0, "kit_functional_status": "pass", "kit_lifecycle_status": "normal_exit",
+    "kit_normal_exit_sample_accepted": true, "shared_child_runner_exit_code": 1,
+    "stage_close_seconds": 3.167604, "shutdown_complete": true, "cdb_invoked": false,
+    "fatal": 0, "dump": 0, "automatic_upload": 0, "exact_cleanup": true, "residual_process": 0
+  },
+  "resource": {
+    "kit_peak_bytes": 15293259776, "kit_limit_bytes": 17179869184, "kit_margin_bytes": 1886609408,
+    "tree_peak_bytes": 15457742848, "tree_limit_bytes": 18253611008, "tree_margin_bytes": 2795868160,
+    "runner_peak_bytes": 119894016, "diagnostic_peak_bytes": 16936960,
+    "minimum_available_physical_bytes": 82576072704, "minimum_commit_headroom_bytes": 102222098432,
+    "resource_stop": false
+  },
+  "authorization": {
+    "formal_s93_s100_population_started": false, "directional_flux_or_deep_velocity_started": false,
+    "video_created": false, "production_changed": false,
+    "next_step_requires_new_phase_contract_and_explicit_approval": true
+  },
+  "regression": {
+    "release_build": "pass",
+    "phase0_rtx": "pass",
+    "phase3": {"status": "pass", "dry_mass_balance_error_kg": 0.0, "wet_mass_balance_error_kg": 0.0, "flow_input_owner": "wood thermal model", "active_blocks_final": 303, "active_blocks_peak": 332, "peak_fuel_input": 1.0},
+    "focused_phase6f": "212/212",
+    "focused_phase6g": "53/53",
+    "standard_suite": "78/78 across 8 processes",
+    "standard_suite_seconds": 312.9,
+    "devlog_validation": {"references": 486, "ids": 290, "json": 242, "svg": 177, "zip": 2},
+    "production_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "latest_demo_manifest_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285",
+    "latest_demo_video_sha256": "DC14693EB07116C145344675BD830A0D2B0179FB08DCB3B83EEFEFFA3970E90F",
+    "final_kit_cdb_gpu_helper_residual": 0
+  }
+}
