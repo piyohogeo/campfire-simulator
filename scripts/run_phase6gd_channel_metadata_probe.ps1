@@ -178,13 +178,21 @@ if ((Get-FileHash -Algorithm SHA256 -LiteralPath $productionApp).Hash -ne $produ
 }
 $rawPath = Join-Path $caseDir "raw.json"
 $metadataPath = Join-Path $caseDir "channel-schema-metadata\bounded_handle_metadata.json"
-if (-not (Test-Path -LiteralPath $rawPath) -or -not (Test-Path -LiteralPath $metadataPath)) {
+$runnerEvidencePath = Join-Path $caseDir "runner_evidence.json"
+if (-not (Test-Path -LiteralPath $rawPath) -or -not (Test-Path -LiteralPath $metadataPath) -or -not (Test-Path -LiteralPath $runnerEvidencePath)) {
     throw "Phase 6GD bounded metadata artifacts are incomplete"
 }
 $raw = Get-Content -Raw -Encoding UTF8 $rawPath | ConvertFrom-Json
 $metadata = Get-Content -Raw -Encoding UTF8 $metadataPath | ConvertFrom-Json
+$runnerEvidence = Get-Content -Raw -Encoding UTF8 $runnerEvidencePath | ConvertFrom-Json
 if ($raw.status -ne "ok" -or $raw.lifecycle_marker -ne "shutdown_complete") {
     throw "Phase 6GD metadata probe did not complete lifecycle"
+}
+if ($runnerEvidence.outcome.functional_status -ne "pass" -or
+    $runnerEvidence.outcome.lifecycle_status -ne "normal_exit" -or
+    -not $runnerEvidence.outcome.normal_exit_sample_accepted -or
+    $null -eq $runnerEvidence.process_exit_code -or [int]$runnerEvidence.process_exit_code -ne 0) {
+    throw "Phase 6GD metadata process failed the frozen functional/lifecycle/OS-exit axes"
 }
 if ($metadata.formal_channel_names_assigned -or $metadata.full_field_json_or_npz_written) {
     throw "Phase 6GD discovery probe violated bounded scope"
@@ -205,6 +213,9 @@ $summary = [ordered]@{
     metadata_path = $metadataPath
     metadata_sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $metadataPath).Hash
     lifecycle_marker = [string]$raw.lifecycle_marker
+    functional_status = [string]$runnerEvidence.outcome.functional_status
+    lifecycle_status = [string]$runnerEvidence.outcome.lifecycle_status
+    os_process_normal_exit = [bool]$runnerEvidence.outcome.os_process_normal_exit
     production_sha256 = $productionBefore
     formal_population_started = $false
     timestamp_utc = [DateTime]::UtcNow.ToString("o")

@@ -61,6 +61,17 @@ class Phase6GdChannelSchemaDiscovery(unittest.TestCase):
         runner = (SCRIPTS / "run_phase6gd_channel_metadata_probe.ps1").read_text(encoding="utf-8")
         self.assertIn('ValidateSet("baseline", "divergence", "rgba", "rgb")', runner)
         self.assertIn('"-ChannelSchemaControl", $Control', runner)
+        self.assertIn('$runnerEvidence.outcome.lifecycle_status -ne "normal_exit"', runner)
+        self.assertIn('$null -eq $runnerEvidence.process_exit_code', runner)
+        self.assertIn("functional/lifecycle/OS-exit axes", runner)
+
+    def test_safe_stop_summary_is_fail_closed(self):
+        body = (SCRIPTS / "summarize_phase6gd_channel_schema.py").read_text(encoding="utf-8")
+        self.assertIn('"status": "safe_stop_unknown_seventh_handle"', body)
+        self.assertIn('"handle[6]": "unknown"', body)
+        self.assertIn('"operational_schema_id": "unavailable"', body)
+        self.assertIn('"formal_population_started": False', body)
+        self.assertIn('"readback_called": False', body)
 
 
 if __name__ == "__main__":
