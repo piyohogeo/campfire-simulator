@@ -1,6 +1,13 @@
 param(
     [Parameter(Mandatory = $true)][string]$OutputRoot,
-    [string]$ContractPath = ""
+    [string]$ContractPath = "",
+    [string]$PhaseSlug = "phase6gt",
+    [string]$ReportPhase = "phase6gt",
+    [string]$FixtureScript = "test_phase6gt_temporary_nvdb.py",
+    [string]$FixtureReportEnvironmentVariable = "PHASE6GT_FIXTURE_REPORT",
+    [int]$ExpectedFixtureCount = 23,
+    [string]$EndToEndFixtureScript = "test_phase6gt_temporary_nvdb_e2e.ps1",
+    [int]$ExpectedEndToEndFixtureCount = 5
 )
 
 $ErrorActionPreference = "Stop"
@@ -23,22 +30,22 @@ Copy-Item -LiteralPath $hashPath -Destination (Join-Path $OutputRoot "frozen_con
 $preflight = Join-Path $OutputRoot "offline-preflight"
 New-Item -ItemType Directory -Path $preflight | Out-Null
 $fixtureReport = Join-Path $preflight "result.json"
-$env:PHASE6GT_FIXTURE_REPORT = $fixtureReport
+Set-Item -Path "Env:$FixtureReportEnvironmentVariable" -Value $fixtureReport
 try {
-    & python (Join-Path $PSScriptRoot "test_phase6gt_temporary_nvdb.py") *> (Join-Path $preflight "fixture.log")
+    & python (Join-Path $PSScriptRoot $FixtureScript) *> (Join-Path $preflight "fixture.log")
     if ($LASTEXITCODE -ne 0) { throw "Phase 6GT no-Kit fixture failed before Kit launch" }
 } finally {
-    Remove-Item Env:PHASE6GT_FIXTURE_REPORT -ErrorAction SilentlyContinue
+    Remove-Item -Path "Env:$FixtureReportEnvironmentVariable" -ErrorAction SilentlyContinue
 }
 $fixture = Get-Content -Raw -Encoding UTF8 $fixtureReport | ConvertFrom-Json
-if (-not $fixture.passed -or $fixture.case_count -ne 23 -or $fixture.kit_started) {
+if (-not $fixture.passed -or $fixture.case_count -ne $ExpectedFixtureCount -or $fixture.kit_started) {
     throw "Phase 6GT fixture contract mismatch"
 }
 $e2eRoot = Join-Path $preflight "parent-e2e"
-& powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot "test_phase6gt_temporary_nvdb_e2e.ps1") -OutputDir $e2eRoot *> (Join-Path $preflight "parent_e2e.log")
+& powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot $EndToEndFixtureScript) -OutputDir $e2eRoot *> (Join-Path $preflight "parent_e2e.log")
 if ($LASTEXITCODE -ne 0) { throw "Phase 6GT parent end-to-end fixture failed before Kit launch" }
 $e2e = Get-Content -Raw -Encoding UTF8 (Join-Path $e2eRoot "result.json") | ConvertFrom-Json
-if (-not $e2e.passed -or $e2e.case_count -ne 5 -or $e2e.kit_started) { throw "Phase 6GT parent E2E fixture contract mismatch" }
+if (-not $e2e.passed -or $e2e.case_count -ne $ExpectedEndToEndFixtureCount -or $e2e.kit_started) { throw "Phase 6GT parent E2E fixture contract mismatch" }
 
 $production = Join-Path $repo "_build\windows-x86_64\release\apps\campfire.simulator.kit"
 $latestDemo = Join-Path $repo "docs\devlog\assets\latest_demo.json"
@@ -50,7 +57,7 @@ $logs = Join-Path $attemptRoot "runner-logs"
 New-Item -ItemType Directory -Path $logs | Out-Null
 $statePath = Join-Path $OutputRoot "incremental_state.json"
 $state = [ordered]@{
-    schema="campfire.phase6gt.incremental-state.v1";status="running";terminal=$false;
+    schema="campfire.$PhaseSlug.incremental-state.v1";status="running";terminal=$false;
     active_condition="temperature_temporary_nvdb_once";launches=1;maximum_launches=1;
     prior_phases_reclassified=$false;prior_runtime_sample_reused=$false;formal_population_started=$false;
     contract_sha256=$actualHash;timestamp_utc=[DateTime]::UtcNow.ToString("o")
@@ -64,7 +71,7 @@ $powershell = (Get-Command powershell.exe).Source
 $arguments = @(
     "-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-File",$caseRunner,
     "-Scenario","production_four","-OutputDir",$caseRoot,"-OffsetM","-0.0125","-SupportRadiusM","0.05",
-    "-Filtering","true","-Collision","true","-Policy","allow_self_center","-ReportPhase","phase6gt",
+    "-Filtering","true","-Collision","true","-Policy","allow_self_center","-ReportPhase",$ReportPhase,
     "-GeometryVariant","phase6er_corrected","-ExpectedGeometryConcept","corrected","-ProbePath",$probe,
     "-SampleFrames","60,120,180,240","-OperationFrames","180","-ReadbackFrames","180",
     "-ReadbackChannels","velocity,temperature,smoke,fuel","-ReadbackMode","p3_spatial_release",
@@ -167,7 +174,7 @@ $qualified = $operationComplete -and $lifecycleNormal -and $cleanupAbsent -and $
 $operationResult = if($operationComplete -and $lifecycleNormal){"pass"}elseif($operationComplete){"partial_operation_evidence"}else{"temporary_nvdb_save_boundary_failure"}
 $lifecycleResult = if($lifecycleNormal){"normal_exit"}else{"failure"}
 $summary = [ordered]@{
-    schema="campfire.phase6gt.temporary-nvdb-summary.v1";qualified=[bool]$qualified;
+    schema="campfire.$PhaseSlug.temporary-nvdb-summary.v1";qualified=[bool]$qualified;
     status=if($qualified){"qualified_no_later_operation_started"}else{"safe_stop"};contract_sha256=$actualHash;
     launches=1;retries=0;replacements=0;later_operations_started=$false;formal_nine_process_population_started=$false;
     prior_runtime_sample_reused=$false;operation_result=$operationResult;lifecycle_result=$lifecycleResult;operation=$operation;
@@ -181,7 +188,7 @@ $summary = [ordered]@{
     production_sha256_before=$productionBefore;production_sha256_after=(Get-FileHash -Algorithm SHA256 -LiteralPath $production).Hash;
     latest_demo_sha256_before=$demoBefore;latest_demo_sha256_after=(Get-FileHash -Algorithm SHA256 -LiteralPath $latestDemo).Hash
 }
-[IO.File]::WriteAllText((Join-Path $OutputRoot "phase6gt_summary.json"),($summary|ConvertTo-Json -Depth 16)+[Environment]::NewLine,[Text.UTF8Encoding]::new($false))
+[IO.File]::WriteAllText((Join-Path $OutputRoot ($PhaseSlug + "_summary.json")),($summary|ConvertTo-Json -Depth 16)+[Environment]::NewLine,[Text.UTF8Encoding]::new($false))
 $state.last_operation_marker = $lastOperationMarker
 Write-Phase6gsTerminalState -Path $statePath -State $state -Status $(if($qualified){"qualified_no_later_operation_started"}else{"safe_stop"}) -OperationResult $operationResult -LifecycleResult $lifecycleResult -LastSuccessfulAccessor $lastSuccessfulAccessor
 if ($normalizationStatus -ne "pass") { throw "Phase 6GT reporting normalization safe stop: $normalizationError" }

@@ -38,6 +38,7 @@ from phase6eu_process_memory import process_memory_snapshot
 from phase6fc_startup_contract import classify_startup
 from phase6gc_payload_native_source import build_contract as build_payload_source_contract
 from phase6gc_payload_native_source import validate_contract as validate_payload_source_contract
+from phase6gu_resource_marker import _append_resource_marker
 from probe_phase6dt_flow_collision_reference import CHANNELS, SAMPLE_FRAMES, _capture, _save_and_sample
 
 
@@ -326,27 +327,6 @@ def _python_memory_snapshot():
         return {"available": False}
     current, peak = tracemalloc.get_traced_memory()
     return {"available": True, "current_bytes": int(current), "peak_bytes": int(peak)}
-
-
-def _append_resource_marker(path, marker, synchronous_memory=False, **values):
-    if path is None:
-        return
-    path.parent.mkdir(parents=True, exist_ok=True)
-    payload = {
-        "schema": "campfire.phase6et.resource-marker.v1",
-        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-        "perf_counter_ns": time.perf_counter_ns(),
-        "pid": os.getpid(),
-        "marker": marker,
-        **values,
-    }
-    if synchronous_memory:
-        payload["process_memory"] = process_memory_snapshot()
-        payload["python_memory"] = _python_memory_snapshot()
-    with path.open("a", encoding="utf-8", newline="\n") as stream:
-        stream.write(json.dumps(payload, ensure_ascii=False, separators=(",", ":"), allow_nan=False) + "\n")
-        stream.flush()
-        os.fsync(stream.fileno())
 
 
 def _lifecycle_state(timeline, context, flow, volume, emitter, collectors):

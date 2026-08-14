@@ -29,6 +29,7 @@ from phase6gt_temporary_nvdb_contract import (
     require_absent,
     require_save_return,
 )
+from phase6gu_resource_marker import canonical_marker_payload
 
 BASE_PATH = (SCRIPT_DIR / "probe_phase6gn_supply_comparison.py").resolve()
 SCHEMA_PATH = (SCRIPT_DIR / "phase6gh_public_channel_schema_candidate.json").resolve()
@@ -107,12 +108,19 @@ def _phase6gt_boundary(flow, volume_provider, arguments, frame, output, collecto
 
     def marker(name: str, **payload) -> None:
         active_blocks = int(flow.get_active_block_count())
+        fixed_payload = {
+            "frame": int(frame),
+            "active_blocks": active_blocks,
+            "phase": "phase6gu",
+            "isolation_mode": "temperature_temporary_nvdb_once",
+        }
+        canonical_payload = canonical_marker_payload(
+            shared._append_resource_marker, fixed_payload, payload
+        )
         shared._append_resource_marker(
             arguments["resource_marker_path"], name,
             synchronous_memory=arguments["synchronous_memory_markers"],
-            frame=int(frame), active_blocks=active_blocks,
-            phase="phase6gt", isolation_mode="temperature_temporary_nvdb_once",
-            **payload,
+            **canonical_payload,
         )
         checkpoint(name, frame=int(frame), active_blocks=active_blocks, **payload)
 
@@ -202,7 +210,11 @@ def _phase6gt_boundary(flow, volume_provider, arguments, frame, output, collecto
 
         require_absent(TEMPORARY_PATH)
         report["temporary_file"]["exists_before_save"] = False
-        marker("phase6gt_temporary_path_confirmed", path=str(TEMPORARY_PATH), exists=False)
+        marker(
+            "phase6gt_temporary_path_confirmed",
+            temporary_file_path=str(TEMPORARY_PATH),
+            exists=False,
+        )
 
         parameters = shared.omni.volume.SaveVolumeParameters()
         parameters.flags = shared.omni.volume.kNanoVDBCodecNone
@@ -230,7 +242,10 @@ def _phase6gt_boundary(flow, volume_provider, arguments, frame, output, collecto
             within_limit=True,
         )
 
-        marker("phase6gt_temporary_file_delete_before", path=str(TEMPORARY_PATH))
+        marker(
+            "phase6gt_temporary_file_delete_before",
+            temporary_file_path=str(TEMPORARY_PATH),
+        )
         deletion = delete_exact_temporary(TEMPORARY_PATH, REPORT_PATH.parent)
         report["temporary_file"].update(deletion)
         marker(
