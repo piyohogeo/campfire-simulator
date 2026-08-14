@@ -1,5 +1,19 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6GU resource-marker safe stop
+
+Phase 6GT remains frozen. Phase 6GU moved the actual resource-marker helper to
+a No-Kit-safe boundary, reserved its signature and automatically generated
+keys, persisted only `temporary_file_path`, and passed 20/20 actual-helper plus
+5/5 parent E2E fixtures before one new process. The process then failed closed
+before readback when existing startup telemetry supplied its own reserved
+`perf_counter_ns`. No save API was called and no NanoVDB existed. Stage close
+completed in 5.920864 seconds, `shutdown_complete` was durable, exit was 1,
+and exact cleanup left zero process/file residual. Kit/tree peaks were
+12,493,996,032 / 12,658,114,560 bytes. Phase 6GU is a harness safe stop;
+typed metadata and later work remain blocked. See
+`docs/design/phase6gu_temporary_nvdb_marker_contract.md`.
+
 # Phase 6GT temporary NanoVDB save safe stop
 
 Phase 6GS remains qualified and frozen. Phase 6GT passed its no-Kit fixtures

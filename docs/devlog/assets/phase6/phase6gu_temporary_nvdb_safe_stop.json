@@ -1,0 +1,81 @@
+{
+  "schema": "campfire.phase6gu.temporary-nvdb-safe-stop.v1",
+  "phase": "6GU",
+  "status": "safe_stop",
+  "contract_sha256": "2BA943427299FCEA854A30D7E17BA359931ACC7779D6FB3B9312E1D0F96027A7",
+  "history": {
+    "phase6gt_reclassified": false,
+    "phase6gt_runtime_reused": false
+  },
+  "preflight": {
+    "actual_helper_fixture": {"passed": true, "cases": 20},
+    "parent_end_to_end_fixture": {"passed": true, "cases": 5},
+    "phase6gs_fixture": {"passed": true, "cases": 14},
+    "phase6gt_fixture": {"passed": true, "cases": 23},
+    "release_build": "passed"
+  },
+  "population": {"launches": 1, "retries": 0, "replacements": 0},
+  "operation": {
+    "result": "failure",
+    "first_failure": "reserved marker payload key collision: perf_counter_ns",
+    "readback_calls": 0,
+    "volume_conversion_calls": 0,
+    "metadata_accessor_calls": 0,
+    "save_volume_calls": 0,
+    "save_volume_return": null,
+    "temporary_file_created": false,
+    "temporary_file_size_bytes": null,
+    "content_read_calls": 0,
+    "hash_calls": 0,
+    "reload_calls": 0,
+    "temporary_file_residual_count": 0
+  },
+  "lifecycle": {
+    "result": "failure",
+    "stage_close_seconds": 5.920864,
+    "shutdown_complete": true,
+    "process_exit_code": 1,
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_count": 0,
+    "cdb_invocations": 0,
+    "residual_process_count": 0
+  },
+  "resources": {
+    "kit_peak_bytes": 12493996032,
+    "tree_peak_bytes": 12658114560,
+    "runner_peak_bytes": 97693696,
+    "diagnostic_peak_bytes": 16871424,
+    "kit_limit_bytes": 17179869184,
+    "tree_limit_bytes": 18253611008,
+    "kit_margin_bytes": 4685873152,
+    "tree_margin_bytes": 5595496448,
+    "minimum_available_physical_bytes": 82453872640,
+    "minimum_commit_headroom_bytes": 102078386177
+  },
+  "regression": {
+    "release_build": "passed",
+    "phase0_rtx": "passed",
+    "phase3": {
+      "passed": true,
+      "dry_mass_balance_error_kg": 0.0,
+      "wet_mass_balance_error_kg": 0.0,
+      "flow_input_owner": "wood thermal model",
+      "active_blocks_final": 273,
+      "active_blocks_peak": 313,
+      "peak_fuel_input": 1.0
+    },
+    "focused_phase6g": {"passed": true, "tests": 71},
+    "phase6gu_python_fixture": {"passed": true, "cases": 20},
+    "phase6gu_parent_e2e": {"passed": true, "cases": 5},
+    "standard_suite": {"passed": true, "processes": 8, "tests": 78},
+    "devlog": {"passed": true, "references": 508, "ids": 301, "json": 253, "svg": 177, "zip": 2}
+  },
+  "unchanged": {
+    "production_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "latest_demo_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285",
+    "production_changed": false,
+    "formal_nine_process_population_started": false
+  },
+  "next_gate": "new contract must disambiguate automatic perf-counter telemetry and align the exact temporary filename before another save-only process"
+}

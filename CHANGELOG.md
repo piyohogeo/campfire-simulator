@@ -1,5 +1,18 @@
 # Changelog
 
+- Froze Phase 6GU as a resource-marker harness safe stop without changing or
+  reusing Phase 6GT. The actual helper fixture passed 20/20 and its parent E2E
+  passed 5/5; `path` now fails before Kit and valid rows persist only
+  `temporary_file_path`.
+- The sole fresh process stopped before readback because existing startup
+  telemetry carried the newly reserved automatic key `perf_counter_ns`.
+  Readback, conversion, accessor, and save counts were zero; no NanoVDB was
+  created, read, hashed, reloaded, or retained.
+- Stage close completed in 5.920864 seconds and `shutdown_complete` was
+  durable, but exit 1 makes lifecycle a failure. Kit/tree peaks were
+  12,493,996,032 / 12,658,114,560 bytes and exact cleanup left zero residual.
+  Typed metadata and later operations remain blocked.
+
 - Froze Phase 6GT as a temporary-NanoVDB harness safe stop. Its no-Kit Python
   and parent cleanup fixtures passed 23/23 and 5/5, and one fresh S93 process
   repeated the qualified readback, conversion, and six bounded accessors.

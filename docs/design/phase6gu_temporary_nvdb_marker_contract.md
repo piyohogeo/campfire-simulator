@@ -42,3 +42,38 @@ qualified only if save return, nonempty bounded file, deletion, ordered
 reference release, stage close, and natural zero OS exit all pass. No file
 content, hash, reload, typed metadata, other channel, sampling, collector,
 flux, image, video, or formal comparison is authorized.
+
+## Runtime result: safe stop
+
+The pre-runtime gates passed (actual-helper Python 20/20, parent E2E 5/5,
+Phase 6GS regression 14/14, Phase 6GT regression 23/23, and Release build).
+Exactly one new process was launched. It stopped before readback because the
+startup telemetry row intentionally carried its own `perf_counter_ns`, which
+the newly generalized helper correctly classified as an automatically owned
+reserved key. The durable raw error was
+`ValueError: reserved marker payload key collision: perf_counter_ns`.
+
+This is a newly exposed harness-contract mismatch, not save API evidence.
+Readback, conversion, all six accessors, `SaveVolumeParameters`, and
+`save_volume()` had zero calls in this process. No NanoVDB file was created,
+read, hashed, reloaded, or retained. The new contract also names a
+`phase6gu_...nvdb` file while the inherited probe still resolves its legacy
+`phase6gt_...nvdb` filename; because saving was not reached this caused no file
+operation, but it must be resolved before any future save attempt.
+
+Stage close completed in 5.920864 seconds and the final durable marker was
+`shutdown_complete`. Kit exited 1 because of the probe exception, so operation
+and lifecycle both fail. Exact identity cleanup left zero Kit/CDB residual and
+zero temporary file. Kit/tree peaks were 12,493,996,032 / 12,658,114,560
+bytes, leaving 4,685,873,152 / 5,595,496,448 bytes below the frozen limits.
+There was no retry, replacement, CDB, dump, automatic upload, later operation,
+or formal population. Phase 6GU is frozen as a safe stop; typed metadata and
+all later work remain blocked pending a separately approved contract/root.
+
+Final regression passed the Release build, Phase 0 RTX, Phase 3 with zero
+dry/wet mass-balance error, wood-owned Flow input, active blocks final/peak
+273/313, focused Phase 6G 71/71, the Phase 6GU fixtures 20/20 and 5/5, and the
+standard 8/8-process suite with 78 tests. Devlog validation passed 508
+references, 301 IDs, 253 JSON files, 177 SVG files, and two ZIP files.
+Production and latest-demo hashes remained unchanged; final Kit/CDB and
+temporary-NanoVDB residual counts were zero.
