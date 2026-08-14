@@ -1,0 +1,106 @@
+{
+  "schema": "campfire.phase6gt.temporary-nvdb-contract.v1",
+  "phase": "phase6gt",
+  "declared_before_runtime": true,
+  "history": {
+    "phase6gn_through_phase6gs_reclassified": false,
+    "phase6gs_status": "bounded_public_volume_metadata_qualified",
+    "prior_runtime_sample_reused": false
+  },
+  "scope": {
+    "operation": "one slot-0 temperature save_volume call, bounded file existence/size observation, and exact deletion",
+    "later_operations_authorized": false
+  },
+  "selected_slot": 0,
+  "selected_channel": "temperature",
+  "mapping_source": {
+    "schema_id": "flow110.0.0-kit110.2-public-readback-rgba7-v1",
+    "qualification_path": "docs/devlog/assets/phase6/phase6gk_public_channel_preflight_qualified.json",
+    "phase6gs_result_path": "docs/devlog/assets/phase6/phase6gs_volume_metadata_qualification.json"
+  },
+  "fixture": {
+    "scenario": "production_four",
+    "geometry_concept": "corrected",
+    "geometry_runtime_token": "phase6er_corrected",
+    "condition": "S93_support_clear",
+    "policy": "allow_self_center",
+    "collision_enabled": true,
+    "points_active": 1344,
+    "points_total": 1440,
+    "readback_frame": 180,
+    "flow_version": "110.0.0",
+    "kit_version": "110.2",
+    "exports": {"temperature": true, "fuel": true, "burn": true, "smoke": true, "velocity": true, "divergence": true, "rgba": false, "rgb": false}
+  },
+  "volume_metadata": {
+    "inherit_phase6gs_order": true,
+    "maximum_grid_count": 4,
+    "selected_grid_index": 0,
+    "calls_per_accessor": 1,
+    "accessors_in_exact_order": [
+      "get_num_grids",
+      "get_grid_type",
+      "get_short_grid_name",
+      "get_grid_class",
+      "get_index_bounding_box",
+      "get_world_bounding_box"
+    ]
+  },
+  "temporary_file": {
+    "filename": "phase6gt_slot0_temperature_once.nvdb",
+    "location": "current process artifact directory only",
+    "must_be_absent_before_save": true,
+    "save_volume_calls": 1,
+    "codec": "kNanoVDBCodecNone",
+    "poll_timeout_seconds": 10.0,
+    "poll_interval_seconds": 0.05,
+    "minimum_file_bytes": 1,
+    "maximum_file_bytes": 268435456,
+    "delete_exact_created_file": true,
+    "must_be_absent_after_delete": true,
+    "content_reads": 0,
+    "hash_calls": 0,
+    "reload_calls": 0
+  },
+  "forbidden": [
+    "Get-Content NanoVDB", "ReadAllBytes", "memory map", "file hash", "NanoVDB reload",
+    "typed NanoVDB metadata", "volume value traversal", "voxel traversal", "numpy.asarray",
+    "material copy", "second save_volume", "other channel", "sampling", "near-Mesh collector",
+    "flux", "image", "video", "formal nine-process population"
+  ],
+  "population": {
+    "independent_processes": 1,
+    "automatic_retry": false,
+    "replacement_budget": 0,
+    "maximum_launches": 1
+  },
+  "result_axes": {
+    "operation": "save returns true, one nonempty file within 256 MiB appears within 10 seconds, exact deletion and reference release complete",
+    "lifecycle": "stage close, shutdown_complete, and natural zero OS exit",
+    "qualification": "both operation pass and lifecycle normal_exit are required"
+  },
+  "artifact_bounds": {
+    "maximum_operation_json_bytes": 131072,
+    "persistent_field_body_allowed": false,
+    "temporary_single_nvdb_allowed": true,
+    "temporary_nvdb_retained": false
+  },
+  "safety": {
+    "kit_private_limit_bytes": 17179869184,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "inner_absolute_timeout_seconds": 900,
+    "outer_condition_timeout_seconds": 1020,
+    "resource_sampling_seconds": 0.25,
+    "gpu_sampling_ms": 1000,
+    "shutdown_order": "release_after_close"
+  },
+  "out_of_scope": [
+    "NanoVDB content", "NanoVDB reload", "typed metadata", "other channels", "sampling",
+    "collector", "flux", "formal comparison", "production", "defaults", "V3", "P4"
+  ]
+}
