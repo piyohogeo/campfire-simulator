@@ -1,5 +1,16 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FZ deterministic import and memory qualification contract
+
+Phase 6FYの20 fixture合格とattempt01 import safe stopはcommit `aa02635`の履歴として
+凍結し、正式sampleへ再利用しない。次の独立Phase 6FZは、Kit `--exec`が実行中probeの
+絶対ディレクトリから共有probeをfile-spec importし、解決済み`__file__`、`sys.path`、
+entry pointをartifactへ確定する。app-ready Kit上のpositive／missing／wrong-path smoke、
+およびCDBの20秒無進捗・80/30/10秒pass別絶対timeout（総計120秒）fixtureが全合格した
+場合だけ、新rootで凍結済みM0/M1/M2×3の9 processをprocess 1から開始する。16 GiB Kit、
+17 GiB tree、release-after-close、Phase 6FU/6FW、3軸分類、pre-close commit、限定replacement
+は変更しない。詳細は`docs/design/phase6fz_import_and_memory_qualification.md`。
+
 # Phase 6FY three-axis memory qualification contract
 
 Phase 6FT／6FV／6FXはsafe stopのまま凍結し、過去sampleを新母集団へ

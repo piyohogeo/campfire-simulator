@@ -213,25 +213,46 @@ function Invoke-Phase6EaGuardedHelper {
         [Parameter(Mandatory = $true)][int]$TimeoutSeconds,
         [Parameter(Mandatory = $true)][long]$PrivateBytesLimit,
         [long]$MaximumStdoutBytes = 0,
-        [long]$MaximumStderrBytes = 0
+        [long]$MaximumStderrBytes = 0,
+        [ValidateRange(0, 3600)][int]$NoProgressTimeoutSeconds = 0,
+        [string[]]$ProgressPaths = @()
     )
     $started = Get-Date
     $peak = 0L
     $timedOut = $false
     $memoryExceeded = $false
     $outputBytesExceeded = $false
+    $noProgressTimedOut = $false
+    $absoluteTimedOut = $false
+    $progressChangeCount = 0
+    $lastProgress = $started
+    $lastProgressSignature = $null
     $stdoutBytes = 0L
     $stderrBytes = 0L
     $stdoutBytesBeforeTruncate = 0L
     $stderrBytesBeforeTruncate = 0L
     $process = $null
     $nativeProcessHandle = [IntPtr]::Zero
+    $allProgressPaths = @($StdoutPath, $StderrPath) + @($ProgressPaths)
+    $getProgressSignature = {
+        $parts = foreach ($candidate in $allProgressPaths) {
+            $full = [IO.Path]::GetFullPath($candidate)
+            if (Test-Path -LiteralPath $full -PathType Leaf) {
+                $item = Get-Item -LiteralPath $full
+                "$full|$($item.Length)|$($item.LastWriteTimeUtc.Ticks)"
+            } else {
+                "$full|missing"
+            }
+        }
+        return ($parts -join "`n")
+    }
     try {
         $process = Start-Process -FilePath $FilePath -ArgumentList $ArgumentList -PassThru -WindowStyle Hidden -RedirectStandardOutput $StdoutPath -RedirectStandardError $StderrPath
         # Access Handle while the process is alive so the Process object retains a
         # query handle. On this Windows build, reading Handle only after exit can
         # return null and make ExitCode appear unavailable.
         $nativeProcessHandle = $process.Handle
+        $lastProgressSignature = & $getProgressSignature
         while (-not $process.HasExited) {
             $process.Refresh()
             $peak = [math]::Max($peak, $process.PrivateMemorySize64)
@@ -243,7 +264,23 @@ function Invoke-Phase6EaGuardedHelper {
                 $outputBytesExceeded = $true
                 break
             }
-            if (((Get-Date) - $started).TotalSeconds -ge $TimeoutSeconds) { $timedOut = $true; break }
+            $now = Get-Date
+            $progressSignature = & $getProgressSignature
+            if ($progressSignature -ne $lastProgressSignature) {
+                $lastProgressSignature = $progressSignature
+                $lastProgress = $now
+                $progressChangeCount += 1
+            }
+            if ($NoProgressTimeoutSeconds -gt 0 -and ($now - $lastProgress).TotalSeconds -ge $NoProgressTimeoutSeconds) {
+                $timedOut = $true
+                $noProgressTimedOut = $true
+                break
+            }
+            if (($now - $started).TotalSeconds -ge $TimeoutSeconds) {
+                $timedOut = $true
+                $absoluteTimedOut = $true
+                break
+            }
             Start-Sleep -Milliseconds 100
         }
         if ($timedOut -or $memoryExceeded -or $outputBytesExceeded) {
@@ -292,6 +329,13 @@ function Invoke-Phase6EaGuardedHelper {
             exit_code = $exitCode
             exit_code_error = $exitCodeError
             timed_out = $timedOut
+            timeout_reason = if ($noProgressTimedOut) { "no_progress" } elseif ($absoluteTimedOut) { "absolute" } else { $null }
+            no_progress_timed_out = $noProgressTimedOut
+            absolute_timed_out = $absoluteTimedOut
+            no_progress_timeout_seconds = $NoProgressTimeoutSeconds
+            progress_change_count = $progressChangeCount
+            last_progress_utc = $lastProgress.ToUniversalTime().ToString("o")
+            progress_paths = @($allProgressPaths | ForEach-Object { [IO.Path]::GetFullPath($_) })
             private_bytes_exceeded = $memoryExceeded
             output_bytes_exceeded = $outputBytesExceeded
             private_bytes_limit = $PrivateBytesLimit

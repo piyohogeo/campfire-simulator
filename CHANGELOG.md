@@ -1191,3 +1191,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Passed all 20 pre-runtime fixtures, then safely stopped the fresh population at attempt01 M0. Kit reached app-ready but the synchronization wrapper could not import `probe_phase6fo_supply_comparison`; no operation or measurement marker was written and the committer never acknowledged a pre-close artifact.
 - Classified the attempt as `memory_invalid_operation_failure`, admitted zero formal memory samples, launched no later slot or replacement, and kept 16/17 GiB and Phase 6FO unqualified. Bounded CDB produced partial stack evidence, modules, detach, exact cleanup, and zero residual/fatal/dump/upload; the shared-probe import path must be corrected under a new contract rather than retrying this frozen result.
 - Reconfirmed the safe stop with Release build, Phase 0 RTX, Phase 3 zero dry/wet mass-balance error and wood-owned Flow input, 32/32 focused contracts, the standard eight-process 78/78 suite, and static devlog validation. Production SHA-256 and the latest demo remain unchanged.
+# Phase 6FZ
+
+- Froze a deterministic, process-local Kit `--exec` import contract for the shared Phase 6FO probe, with app-ready positive/missing/wrong-path smoke gates before the unchanged nine-process population.
+- Replaced fixed CDB pass cutoffs with bounded progress-aware monitoring: 20-second no-progress, 80/30/10-second stack/module/detach absolute bounds, preserved partial evidence, explicit detach, and exact child cleanup.
+- Kept the Phase 6FY safe stop, production app, S93/S100 physics, readback count zero, release-after-close, and 16/17 GiB candidate ceilings unchanged.

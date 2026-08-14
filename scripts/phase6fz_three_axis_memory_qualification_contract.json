@@ -1,0 +1,299 @@
+{
+  "schema": "campfire.phase6fz.three-axis-memory-qualification-contract.v1",
+  "phase": "phase6fz",
+  "declared_before_runtime": true,
+  "purpose": "Repair the deterministic Kit --exec import boundary, qualify progress-aware bounded CDB diagnostics, then run the unchanged three-axis nine-process memory population from a fresh root.",
+  "frozen_history": {
+    "phase6ft_reclassified": false,
+    "phase6fv_reclassified": false,
+    "phase6fx_reclassified": false,
+    "past_sample_reused": false,
+    "phase6fx_result_commit": "48d4709",
+    "phase6fy_result_commit": "aa02635",
+    "phase6fy_reclassified": false,
+    "phase6fy_artifact_reused": false,
+    "phase6fo_restarted": false
+  },
+  "runtime_hashes": {
+    "phase6fu_resource_guard_sha256": "79C7C5B5E21E644EA344795FCE5D5D9AFD13C566E4F9A4E3B19E50CDFE02AC23",
+    "phase6fu_process_identity_sha256": "ECD95E4BB578FF886C5761F06C00B52E96CC83FAC0E76B671654A2B843BA89C4",
+    "frozen_phase6eg_resource_guard_sha256": "A16FA82606A4265093E88816540A0E293205AADC9A15FA11B7CA09C6B32CC45E",
+    "kit_shutdown_policy_sha256": "0D27C72A4B4DC46E5C708FAD2946D30DEB85B75EA8AE90DBACB9A1781DB4C224",
+    "shared_case_runner_sha256": "3BBCD95997132A41AFAD49A00F2ECEFACF12B5002D84AF913A490522359BA096",
+    "shared_probe_sha256": "1FC443EFA81D10A5ECDAB1635AEE5E66E75F63A456D4C7C2A86A966B3FCBE47E",
+    "phase6fw_policy_sha256": "625837617F7240F74E49A875B0895ACD06D0134FFA9ED13342C71E0F401E0DBA",
+    "three_axis_policy_sha256": "9959400199150DD3178584426D372FE31B60E894C6940EEC44339FAE24DBE8C2",
+    "preclose_committer_sha256": "4D7BA0E5F50570D4040A40971862DBB8AD13BF06A1B0DE45C60CE09C1BD8F334",
+    "analyzer_sha256": "F3EE38367EBA368CCBBF6715D1319CF659A813461EAA722C037765B8AC7C44CE",
+    "qualification_runner_sha256": "594C58D41636D82F1FED19B6A6958C9AC54658BD5E83567D1B4E0E13AE236929",
+    "synchronized_probe_sha256": "EE9394F2F3A22B869C8E3BB20BA2736913E03CFEBB1EB8CB2BDF7F17301700F9",
+    "phase6fz_case_runner_sha256": "E9F083E0CCD4F68D122329AA8F1B5359B1B088D21CD1E4231F1E1A411228B6D3",
+    "fixture_runner_sha256": "98AA77BA65CD7B5B2FC9FD2D2FAC06083B32B35D788C667C8E2275F37E63DBAB",
+    "import_contract_sha256": "B0E3EEE60FD5BABBD85FD426CEB84275CDBF2443F507FB08C81DC0F5AF5E0E98",
+    "import_smoke_probe_sha256": "8EA9BC7A855A4779594615F4358A42586EA200876DBA4F2AB19747EB69B2B37C",
+    "import_smoke_runner_sha256": "D0432D95C785615DA2CB618B69667A3BCBF0C2DB1F789E1CD26BB86F456EE5FB",
+    "cdb_progress_fixture_sha256": "C384BAF1881C623B14A6592331466ED661F24B09212DF91CB0D9A314C54223D7",
+    "cdb_progress_helper_sha256": "7C2E24E528C55FABCE4B9A4D5AC4E196BBE75DCC8FCCD4796B290D545182EAF6",
+    "phase6ea_common_sha256": "0EF0F7BB4D1DEDDD66FE449DB0A362C3F9AD60EAE1D23E6A78EE00EB54C3F97E"
+  },
+  "import_preflight": {
+    "module_path_source": "absolute sibling path derived from the executing probe file",
+    "working_directory_dependency": false,
+    "parent_pythonpath_dependency": false,
+    "production_python_path_changed": false,
+    "app_ready_kit_exec_required": true,
+    "resolved_file_must_equal": "scripts/probe_phase6fo_supply_comparison.py",
+    "required_entrypoints": ["_run", "_append_resource_marker"],
+    "fixture_cases": ["app_ready_success", "module_missing", "wrong_path"],
+    "all_cases_required_before_formal_population": true
+  },
+  "physical_fixture": {
+    "scenario": "production_four",
+    "geometry_variant": "phase6er_corrected",
+    "point_policy": "allow_self_center",
+    "point_offset_m": -0.0125,
+    "support_radius_m": 0.05,
+    "active_points": 1344,
+    "total_points": 1440,
+    "revision": 1,
+    "payload_sha256": "0D3B074B7BE3E482E8702A126A11619D87F587C4848C80D4A3162A11B876C389",
+    "expected_source_sums": {
+      "fuel": 1075.2000160217285,
+      "temperature": 2688.0,
+      "smoke": 107.51999759674072
+    },
+    "source_sum_absolute_tolerance": 0.0001,
+    "readback_calls": 0,
+    "capture_calls": 0,
+    "video_generated": false
+  },
+  "startup": {
+    "flow_acquire_position": "before_updates",
+    "stopped_update_count": 12,
+    "extra_update_before_play_count": 0,
+    "representative_active_block_minimum_at_frame_60": 128,
+    "startup_replacement_budget": 0,
+    "startup_failure_is_memory_invalid_operation_failure": true
+  },
+  "conditions": [
+    {
+      "id": "M0_baseline",
+      "allocation_level": 0,
+      "spatial_collectors_enabled": false,
+      "sample_frames": [60, 96],
+      "terminal_frame": 96,
+      "description": "Phase 6FN-equivalent S93 baseline without readback"
+    },
+    {
+      "id": "M1_phase6fo_equivalent",
+      "allocation_level": 7,
+      "spatial_collectors_enabled": true,
+      "sample_frames": [60, 96],
+      "terminal_frame": 96,
+      "description": "Phase 6FO-equivalent S93 diagnostic state without readback"
+    },
+    {
+      "id": "M2_pre_readback_frame",
+      "allocation_level": 7,
+      "spatial_collectors_enabled": true,
+      "sample_frames": [60, 96, 179],
+      "terminal_frame": 179,
+      "planned_phase6fo_first_readback_frame": 180,
+      "description": "Phase 6FO-equivalent state immediately before the first planned readback"
+    }
+  ],
+  "population": {
+    "runs_per_condition": 3,
+    "required_basic_processes": 9,
+    "required_representative_processes": 9,
+    "minimum_memory_valid_per_condition": 3,
+    "minimum_memory_valid_total": 9,
+    "maximum_timeout_replacements": 2,
+    "maximum_total_launches": 11,
+    "basic_orders": [
+      ["M0_baseline", "M1_phase6fo_equivalent", "M2_pre_readback_frame"],
+      ["M1_phase6fo_equivalent", "M2_pre_readback_frame", "M0_baseline"],
+      ["M2_pre_readback_frame", "M0_baseline", "M1_phase6fo_equivalent"]
+    ],
+    "orders": [
+      ["M0_baseline", "M1_phase6fo_equivalent", "M2_pre_readback_frame"],
+      ["M1_phase6fo_equivalent", "M2_pre_readback_frame", "M0_baseline"],
+      ["M2_pre_readback_frame", "M0_baseline", "M1_phase6fo_equivalent"]
+    ],
+    "replacement_only_for": "memory_valid_lifecycle_timeout",
+    "original_timeout_artifact_remains_formal": true,
+    "replacement_never_overwrites_original": true,
+    "second_timeout_same_condition_stops_population": true,
+    "resource_operation_artifact_identity_cleanup_failures_are_not_replaceable": true
+  },
+  "classification": {
+    "attempt_classes": [
+      "memory_valid_lifecycle_normal",
+      "memory_valid_lifecycle_timeout",
+      "memory_invalid_operation_failure",
+      "memory_invalid_resource_failure",
+      "memory_invalid_diagnostic_cleanup_failure",
+      "memory_invalid_identity_failure",
+      "memory_invalid_lifecycle_failure"
+    ],
+    "timeout_is_never_normal_exit": true,
+    "timeout_stage_close_is_right_censored_at_seconds": 180,
+    "timeout_memory_peak_included_in_formal_distribution": true,
+    "diagnostic_degradation_does_not_invalidate_memory_if_bounded_and_cleaned": true
+  },
+  "artifact_commit": {
+    "helper": "phase6fz_preclose_committer.py",
+    "trigger_marker": "measurement_complete",
+    "required_before_marker": "stage_close_request_before",
+    "streaming_copy": true,
+    "atomic_json": true,
+    "flush_and_fsync": true,
+    "required_files": [
+      "measurement_raw_snapshot.json",
+      "measurement_resource_snapshot.jsonl",
+      "measurement_markers_snapshot.jsonl",
+      "attempt_metadata_snapshot.json",
+      "contract_snapshot.json",
+      "memory_measurement_commit.json",
+      "measurement_commit_markers.jsonl",
+      "committer_summary.json"
+    ],
+    "helper_private_limit_bytes": 134217728,
+    "helper_timeout_seconds": 600
+  },
+  "lifecycle": {
+    "reference_release_order": "after_stage_close",
+    "renderer_drain_updates": 8,
+    "post_close_renderer_updates": 4,
+    "explicit_ownership_container_required": true,
+    "stack_first_cdb_reused": true,
+    "production_shutdown_order_changed": false
+  },
+  "identity_cleanup": {
+    "adapter": "phase6fu_resource_guard.py",
+    "final_policy": "phase6fw_pid_reuse_policy.py",
+    "absence_confirmation_sources": ["psutil", "win32"],
+    "cleanup_suppression_deadline_seconds": 90,
+    "attempt_owned_residual_required": 0,
+    "unresolved_unknown_required": 0,
+    "mismatch_stop_required": 0
+  },
+  "diagnostic": {
+    "timeout_contract": {
+      "progress_is_output_or_artifact_size_or_mtime_change": true,
+      "process_liveness_alone_is_progress": false,
+      "no_progress_timeout_seconds": 20,
+      "stack_absolute_timeout_seconds": 80,
+      "module_absolute_timeout_seconds": 30,
+      "detach_absolute_timeout_seconds": 10,
+      "overall_absolute_timeout_seconds": 120,
+      "stack_evidence": ["complete", "partial", "none"],
+      "partial_artifact_is_preserved": true,
+      "timeout_is_never_success": true
+    },
+    "order": [
+      "identity_reverification",
+      "cleanup_suppression",
+      "stack_first_cdb",
+      "module_pass",
+      "explicit_detach",
+      "full_or_partial_artifact_commit",
+      "exact_cleanup",
+      "dual_source_absence",
+      "phase6fw_classification"
+    ],
+    "classifications": [
+      "diagnostic_complete",
+      "diagnostic_partial_stack_timeout",
+      "diagnostic_partial_module_timeout",
+      "diagnostic_attach_unavailable",
+      "diagnostic_detach_failure"
+    ],
+    "safe_partial_requires_artifact_child_absent_and_detach_or_proven_no_attach": true,
+    "detach_failure_is_population_stopping": true,
+    "known_ngx_requires_all_existing_stack_tokens": true,
+    "full_dump_created": false,
+    "automatic_upload_enabled": false
+  },
+  "recording": {
+    "resource_sample_seconds": 0.2,
+    "gpu_sample_ms": 1000,
+    "minimum_preclose_resource_samples": 20,
+    "streamed_jsonl": true,
+    "kit_and_unique_tree_separate": true,
+    "gpu_shared_memory": "record only if existing bounded telemetry exposes it; never estimate",
+    "public_field_shape_and_logical_bytes": "unavailable without readback and never inferred"
+  },
+  "safety": {
+    "legacy_kit_evaluation_threshold_bytes": 15032385536,
+    "legacy_threshold_is_kill_condition": false,
+    "kit_absolute_stop_bytes": 17179869184,
+    "unique_tree_absolute_stop_bytes": 18253611008,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "inner_absolute_timeout_seconds": 540,
+    "outer_condition_timeout_seconds": 780,
+    "minimum_candidate_headroom_bytes": 536870912,
+    "candidate_peak_maximum_bytes": 16642998272
+  },
+  "boundedness": {
+    "slope_alone_is_gate": false,
+    "persistent_unexplained_accumulation": {
+      "sample_count": 10,
+      "minimum_total_rise_bytes": 536870912,
+      "maximum_drop_between_adjacent_samples_bytes": 0,
+      "requires_no_active_block_growth_between_physics_markers": true,
+      "classification": "memory_invalid_resource_failure"
+    },
+    "all_other_waveform_metrics": "telemetry and warnings only"
+  },
+  "decision": {
+    "legacy_retire_crossings": 2,
+    "legacy_retire_margin_bytes": 268435456,
+    "legacy_small_margin_bytes": 268435456,
+    "maximum_timeouts_for_monitored_restart": 2,
+    "candidate_16_gib_requires_all_memory_valid_maximum_at_or_below_bytes": 16642998272,
+    "candidate_16_gib_requires_headroom_bytes": 536870912,
+    "stage_close_timeout_does_not_directly_fail_memory_ceiling": true,
+    "lifecycle_issue_remains_unresolved_even_if_memory_qualifies": true,
+    "phase6fo_execution_authorized": false
+  },
+  "fixture_cases": [
+    "memory_complete_normal_close",
+    "memory_complete_stage_close_timeout",
+    "timeout_before_memory_complete",
+    "resource_ceiling_then_timeout",
+    "timeout_before_artifact_commit",
+    "stack_complete_cleanup_success",
+    "attach_unavailable_partial_cleanup_success",
+    "cdb_timeout_child_residual",
+    "detach_failure",
+    "exact_cleanup_failure",
+    "identity_unknown",
+    "protected_pid_reuse",
+    "attempt_owned_residual",
+    "replacement_after_timeout",
+    "second_timeout_same_condition",
+    "replacement_slot_limit_exceeded",
+    "negative_exclude_timeout_from_distribution",
+    "negative_replacement_overwrites_original",
+    "negative_replace_resource_failure",
+    "timeout_peak_is_population_maximum"
+  ],
+  "excluded": [
+    "Phase 6FY reclassification or artifact reuse",
+    "Phase 6FX reclassification",
+    "past sample reuse",
+    "NanoVDB readback",
+    "Phase 6FO execution",
+    "S93 versus S100 comparison",
+    "production change",
+    "production shutdown-order change",
+    "video capture",
+    "latest demo change",
+    "P4 integration"
+  ]
+}

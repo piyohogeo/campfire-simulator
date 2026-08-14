@@ -6,7 +6,7 @@ param(
     [Parameter(Mandatory = $true)][string]$LifecyclePath,
     [Parameter(Mandatory = $true)][string]$LogPath,
     [Parameter(Mandatory = $true)][string]$MarkerPath,
-    [int]$DebuggerTimeoutSeconds = 45,
+    [int]$DebuggerTimeoutSeconds = 120,
     [ValidateRange(0, 60000)][int]$FixtureDelayMilliseconds = 0,
     [ValidateRange(0, 60000)][int]$FixtureCdbSleepMilliseconds = 0
 )
