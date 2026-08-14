@@ -1,0 +1,85 @@
+{
+  "schema": "campfire.phase6gp.metadata-r1-qualification.v1",
+  "status": "qualified",
+  "artifact_root": "artifacts/phase6gp-metadata-r1-1",
+  "contract_sha256": "8019F720DF4E32B797EAF546BE39B7AEE91247CEBBD5E55558BC9CA76C735111",
+  "history": {
+    "phase6gn_reclassified": false,
+    "phase6go_r0_reclassified": false,
+    "prior_artifact_reused": false
+  },
+  "population": {
+    "launches": 1,
+    "accepted": 1,
+    "R2_started": false,
+    "formal_nine_process_population_started": false
+  },
+  "operation": {
+    "result": "pass",
+    "public_readback_calls": 1,
+    "last_marker": "phase6gp_reference_release_after",
+    "weak_reference_residual": 0,
+    "numpy_asarray_calls": 0,
+    "volume_conversion_calls": 0,
+    "field_body_files_written": 0,
+    "sampling_calls": 0,
+    "collector_calls": 0,
+    "flux_calls": 0,
+    "slots": [
+      {"slot": 0, "python_type": "numpy.ndarray", "ndim": 1, "shape": [11910336], "dtype": "uint32", "size": 11910336, "nbytes": 47641344, "empty": false},
+      {"slot": 1, "python_type": "numpy.ndarray", "ndim": 1, "shape": [11910336], "dtype": "uint32", "size": 11910336, "nbytes": 47641344, "empty": false},
+      {"slot": 2, "python_type": "numpy.ndarray", "ndim": 1, "shape": [11910336], "dtype": "uint32", "size": 11910336, "nbytes": 47641344, "empty": false},
+      {"slot": 3, "python_type": "numpy.ndarray", "ndim": 1, "shape": [11910336], "dtype": "uint32", "size": 11910336, "nbytes": 47641344, "empty": false},
+      {"slot": 4, "python_type": "numpy.ndarray", "ndim": 1, "shape": [5415112], "dtype": "uint32", "size": 5415112, "nbytes": 21660448, "empty": false},
+      {"slot": 5, "python_type": "numpy.ndarray", "ndim": 1, "shape": [2072416], "dtype": "uint32", "size": 2072416, "nbytes": 8289664, "empty": false},
+      {"slot": 6, "python_type": "numpy.ndarray", "ndim": 1, "shape": [0], "dtype": "uint32", "size": 0, "nbytes": 0, "empty": true}
+    ]
+  },
+  "lifecycle": {
+    "result": "normal_exit",
+    "stage_close_seconds": 125.816074,
+    "shutdown_marker": "shutdown_complete",
+    "natural_os_exit": true,
+    "process_exit_code": 0,
+    "outer_runner_termination": false,
+    "low_level_diagnostic_allowed": false,
+    "low_level_diagnostic_invoked": false
+  },
+  "resource": {
+    "kit_peak_bytes": 14940184576,
+    "kit_limit_bytes": 17179869184,
+    "kit_margin_bytes": 2239684608,
+    "tree_peak_bytes": 15103287296,
+    "tree_limit_bytes": 18253611008,
+    "tree_margin_bytes": 3150323712,
+    "runner_peak_bytes": 128835584,
+    "diagnostic_peak_bytes": 17145856,
+    "minimum_available_physical_bytes": 81336418304,
+    "minimum_commit_headroom_bytes": 100968501248
+  },
+  "safety": {
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_count": 0,
+    "cleanup_all_observed_absent": true,
+    "residual_process_count": 0
+  },
+  "production": {
+    "changed": false,
+    "app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "latest_demo_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285"
+  },
+  "verification": {
+    "release_build": "pass",
+    "phase0_rtx": "pass",
+    "phase3": "pass",
+    "focused_phase6gp": "19/19 pass",
+    "focused_phase6go": "18/18 pass",
+    "focused_phase6gn": "5/5 pass",
+    "focused_phase6gl": "3/3 pass",
+    "standard_suite": "pass",
+    "devlog_static_check": "pass",
+    "kit_cdb_gpu_helper_residual": 0
+  },
+  "next_boundary": "A separately approved one-channel volume-conversion process; no automatic R2 or formal population."
+}

@@ -3956,3 +3956,19 @@ markerは`phase6go_release_sequence_after`まで到達した。stage closeと
 `shutdown_complete`も完了したが正常OS exitを確認できずlifecycle safe stopとした。
 exact cleanup後のresidualは0、R1およびR2以降は未起動である。新しい限定指示に
 従い、既存dumpは保存だけとし低レベル解析を継続しない。
+
+# Phase 6GP metadata-only R1 qualification
+
+Phase 6GNとPhase 6GO R0の判定は凍結したまま、新しいrootでR1を1 processだけ
+実行した。operationとlifecycleを別軸にし、slot、Python型、ndim、shape、dtype、
+size、nbytes、empty以外のfield内容を読まない契約をSHA-256
+`8019F720DF4E32B797EAF546BE39B7AEE91247CEBBD5E55558BC9CA76C735111`で
+runtime前に固定した。
+
+7 slotのmetadataと順次解放は完了し、最終operation markerは
+`phase6gp_reference_release_after`、weak residualは0だった。stage closeは
+125.816074秒、`shutdown_complete`後にKitはexit code 0で自然終了したため、
+`operation=pass`／`lifecycle=normal_exit`としてmetadata boundaryをqualifiedとする。
+Kit/tree peakは14,940,184,576／15,103,287,296 bytesで16/17 GiB以内、cleanup
+residualは0である。R2、正式9条件、production、既定値、V3、P4は未開始であり、
+volume変換には別承認・新contract・新rootを要する。
