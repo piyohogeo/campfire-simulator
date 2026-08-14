@@ -1,5 +1,16 @@
 # Phase 6FO S93 / S100 Point supply comparison
 
+## 2026-08-14 Phase 6GC payload-native restart contract
+
+Phase 6GB remains frozen. The next fresh root uses the actual ordered float32
+Point source arrays as its expectation. Expected and live sums are both computed
+by widening each element to float64 and using a float64 accumulator; decimal
+`source * count` is telemetry only. Exact Point/revision, array contracts and
+canonical ordered payload SHA-256 fail closed before readback. A different
+accumulation order is allowed only with identical hashes and the precomputed
+`count * maximum float32 ULP` budget. Sixteen no-Kit cases must pass before the
+unchanged geometry/import/CDB/offline gates and formal comparison.
+
 ## 2026-08-14 Phase 6GB explicit-binding restart safe stop
 
 Phase 6GB corrected only the harness token boundary: design concept `corrected`

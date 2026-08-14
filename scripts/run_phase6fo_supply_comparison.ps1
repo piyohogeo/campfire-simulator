@@ -15,11 +15,11 @@ $actualHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $contractPath).Hash
 if ($actualHash -ne $expectedHash) { throw "Phase 6FO contract hash mismatch" }
 $contract = Get-Content -Raw -Encoding UTF8 $contractPath | ConvertFrom-Json
 $phase = if ($contract.phase) { [string]$contract.phase } else { "phase6fo" }
-if ($phase -notin @("phase6fo", "phase6ga", "phase6gb")) { throw "Unsupported supply comparison phase: $phase" }
-$isGuardedPhase = $phase -in @("phase6ga", "phase6gb")
+if ($phase -notin @("phase6fo", "phase6ga", "phase6gb", "phase6gc")) { throw "Unsupported supply comparison phase: $phase" }
+$isGuardedPhase = $phase -in @("phase6ga", "phase6gb", "phase6gc")
 $geometryConcept = ""
 $geometryRuntimeToken = ""
-if ($phase -eq "phase6gb") {
+if ($phase -in @("phase6gb", "phase6gc")) {
     $geometryConcept = [string]$contract.fixture.geometry.concept
     $geometryRuntimeToken = [string]$contract.fixture.geometry.runtime_token
     if ($geometryConcept -ne "corrected" -or $geometryRuntimeToken -ne "phase6er_corrected") {
@@ -41,14 +41,20 @@ Copy-Item -LiteralPath $contractPath -Destination (Join-Path $OutputRoot "frozen
 Copy-Item -LiteralPath $hashPath -Destination (Join-Path $OutputRoot "frozen_contract.sha256")
 Copy-Item -LiteralPath $phase6fnReport -Destination (Join-Path $OutputRoot "frozen_phase6fn_report.json")
 $runtimeManifest = [ordered]@{}
-foreach ($name in @("run_phase6fo_supply_case.ps1","run_phase6gb_parameter_binding_fixtures.ps1","probe_phase6fo_supply_comparison.py","probe_phase6ga_supply_comparison.py","probe_phase6gb_supply_comparison.py","phase6fu_resource_guard.py","phase6fu_process_identity.py","phase6fw_pid_reuse_policy.py","phase6fz_preclose_committer.py","phase6fz_import_contract.py","kit_shutdown_policy.ps1")) {
+foreach ($name in @("run_phase6fo_supply_case.ps1","run_phase6gb_parameter_binding_fixtures.ps1","run_phase6gc_source_contract_fixtures.py","phase6gc_payload_native_source.py","probe_phase6fo_supply_comparison.py","probe_phase6ga_supply_comparison.py","probe_phase6gb_supply_comparison.py","probe_phase6gc_supply_comparison.py","phase6fu_resource_guard.py","phase6fu_process_identity.py","phase6fw_pid_reuse_policy.py","phase6fz_preclose_committer.py","phase6fz_import_contract.py","kit_shutdown_policy.ps1")) {
     $path = Join-Path $PSScriptRoot $name
     if (Test-Path -LiteralPath $path) { $runtimeManifest[$name] = (Get-FileHash -Algorithm SHA256 -LiteralPath $path).Hash }
 }
 [IO.File]::WriteAllText((Join-Path $OutputRoot "runtime_hashes.json"), ($runtimeManifest | ConvertTo-Json -Depth 4) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
 if($isGuardedPhase) {
     $preflightRoot = Join-Path $OutputRoot "safety-preflight"
-    if ($phase -eq "phase6gb") {
+    if ($phase -eq "phase6gc") {
+        & python (Join-Path $PSScriptRoot "run_phase6gc_source_contract_fixtures.py") --output (Join-Path $preflightRoot "source-contract-fixtures")
+        if ($LASTEXITCODE -ne 0) { throw "Phase 6GC source-contract fixture failed" }
+        $sourceFixture = Get-Content -Raw -Encoding UTF8 (Join-Path $preflightRoot "source-contract-fixtures\source_contract_fixture_report.json") | ConvertFrom-Json
+        if (-not $sourceFixture.passed -or $sourceFixture.case_count -ne 16) { throw "Phase 6GC source-contract fixture did not pass 16/16" }
+    }
+    if ($phase -in @("phase6gb", "phase6gc")) {
         & (Join-Path $PSScriptRoot "run_phase6gb_parameter_binding_fixtures.ps1") -OutputRoot (Join-Path $preflightRoot "parameter-binding-fixtures") -ContractPath $contractPath -ProbePath (Join-Path $PSScriptRoot "probe_phase6gb_supply_comparison.py")
         $binding = Get-Content -Raw -Encoding UTF8 (Join-Path $preflightRoot "parameter-binding-fixtures\parameter_binding_fixture_report.json") | ConvertFrom-Json
         if (-not $binding.passed -or -not $binding.no_kit_launch -or $binding.results.Count -ne 4) { throw "Phase 6GB parameter-binding fixture failed" }
@@ -72,7 +78,7 @@ if (-not $offline.all_pass) { throw "Phase 6FO offline gate failed" }
 $guard = Join-Path $PSScriptRoot $(if($isGuardedPhase){"phase6fu_resource_guard.py"}else{"phase6eg_resource_guard.py"})
 $caseRunner = Join-Path $PSScriptRoot "run_phase6fo_supply_case.ps1"
 $analyzer = Join-Path $PSScriptRoot $(if($isGuardedPhase){"analyze_phase6ga_supply_comparison.py"}else{"analyze_phase6fo_supply_comparison.py"})
-$probe = Join-Path $PSScriptRoot $(if($phase -eq "phase6gb"){"probe_phase6gb_supply_comparison.py"}elseif($phase -eq "phase6ga"){"probe_phase6ga_supply_comparison.py"}else{"probe_phase6fo_supply_comparison.py"})
+$probe = Join-Path $PSScriptRoot $(if($phase -eq "phase6gc"){"probe_phase6gc_supply_comparison.py"}elseif($phase -eq "phase6gb"){"probe_phase6gb_supply_comparison.py"}elseif($phase -eq "phase6ga"){"probe_phase6ga_supply_comparison.py"}else{"probe_phase6fo_supply_comparison.py"})
 $committer = Join-Path $PSScriptRoot "phase6fz_preclose_committer.py"
 $powershell = (Get-Command powershell.exe).Source
 $productionApp = Join-Path $repo "_build\windows-x86_64\release\apps\campfire.simulator.kit"
@@ -139,9 +145,10 @@ function Invoke-GuardedCase([string]$AttemptRoot, [string]$AttemptId, [string]$C
         "-StartupExtraUpdateBeforePlayCount", "0", "-StartupLivenessGate", "true",
         "-StartupExpectedFuelSum", "$($source.fuel)", "-StartupExpectedTemperatureSum", "$($source.temperature)",
         "-StartupExpectedSmokeSum", "$($source.smoke)", "-StartupSourceSumTolerance", "$($contract.channel_preflight.startup_source_sum_absolute_tolerance)",
+        "-StartupSourceContractMode", $(if($phase -eq "phase6gc"){[string]$contract.source_contract.mode}else{"decimal_legacy"}),
         "-AbsoluteTimeoutSeconds", "$($contract.safety.inner_absolute_timeout_seconds)"
     )
-    if($phase -eq "phase6gb") { $arguments += @("-ExpectedGeometryConcept", $geometryConcept) }
+    if($phase -in @("phase6gb", "phase6gc")) { $arguments += @("-ExpectedGeometryConcept", $geometryConcept) }
     if($isGuardedPhase) {
         $arguments += @(
             "-ImportAuditPath", (Join-Path $caseDir "kit_import_audit.json"),

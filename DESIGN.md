@@ -1,5 +1,18 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6GC payload-native source contract
+
+Phase 6GB remains frozen at its exact decimal-source safe stop. Phase 6GC
+replaces only that harness boundary: expected and observed values are the exact
+ordered float32 payload arrays summed after float64 expansion. Point/revision,
+shape/dtype/stride, finite state, array hashes and a canonical ordered payload
+hash are mandatory. Decimal source times count is telemetry only. Alternate
+accumulation order can use only the pre-runtime `count * max float32 ULP` bound
+and only with identical payload hashes. Sixteen no-Kit fixtures and all prior
+geometry/import/CDB/offline gates precede a fresh root. Physical and safety
+contracts are unchanged. See
+`docs/design/phase6gc_payload_native_source_contract.md`.
+
 # Phase 6GB explicit geometry binding and supply comparison contract
 
 Phase 6GA remains the frozen `corrected` versus `phase6er_corrected` pre-Kit

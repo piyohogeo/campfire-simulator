@@ -6,7 +6,7 @@ param(
     [ValidateSet("true", "false")][string]$Filtering = "true",
     [ValidateSet("true", "false")][string]$Collision = "true",
     [ValidateSet("strict_all", "allow_self_support", "allow_self_center", "allow_other_support")][string]$Policy = "strict_all",
-    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev", "phase6ew", "phase6ex", "phase6ey", "phase6ez", "phase6fa", "phase6fb", "phase6fc", "phase6fd", "phase6fe", "phase6ff", "phase6fg", "phase6fh", "phase6fi", "phase6fj", "phase6fk", "phase6fn", "phase6fo", "phase6fp", "phase6fq", "phase6fr", "phase6fs", "phase6ft", "phase6fv", "phase6ga", "phase6gb")][string]$ReportPhase = "phase6ep",
+    [ValidateSet("phase6ep", "phase6eq", "phase6er", "phase6es", "phase6et", "phase6eu", "phase6ev", "phase6ew", "phase6ex", "phase6ey", "phase6ez", "phase6fa", "phase6fb", "phase6fc", "phase6fd", "phase6fe", "phase6ff", "phase6fg", "phase6fh", "phase6fi", "phase6fj", "phase6fk", "phase6fn", "phase6fo", "phase6fp", "phase6fq", "phase6fr", "phase6fs", "phase6ft", "phase6fv", "phase6ga", "phase6gb", "phase6gc")][string]$ReportPhase = "phase6ep",
     [string]$SampleFrames = "60,120,180,200",
     [string]$ReadbackChannels = "temperature,fuel,burn,smoke,velocity",
     [ValidateSet("legacy", "none", "acquire_discard", "acquire_discard_release", "fuel_convert", "fuel_convert_release", "fuel_scalar", "fuel_jsonl", "fuel_spatial", "p3_spatial_release")][string]$ReadbackMode = "legacy",
@@ -50,6 +50,7 @@ param(
     [double]$StartupExpectedTemperatureSum = 0.0,
     [double]$StartupExpectedSmokeSum = 0.0,
     [double]$StartupSourceSumTolerance = 0.000001,
+    [ValidateSet("decimal_legacy", "payload_native_float32_v1")][string]$StartupSourceContractMode = "decimal_legacy",
     [string]$PreviousProcessExitUtc = "",
     [int]$AbsoluteTimeoutSeconds = 330,
     [string]$ProbePath = "",
@@ -154,6 +155,7 @@ $arguments = @(
     "--/phase6ep/startupExpectedTemperatureSum=$StartupExpectedTemperatureSum",
     "--/phase6ep/startupExpectedSmokeSum=$StartupExpectedSmokeSum",
     "--/phase6ep/startupSourceSumTolerance=$StartupSourceSumTolerance",
+    "--/phase6ep/startupSourceContractMode=$StartupSourceContractMode",
     "--/phase6fz/importAuditPath=$ImportAuditPath",
     "--/phase6fz/measurementCommitAck=$MeasurementCommitAck",
     "--/phase6fz/measurementCommitFailure=$MeasurementCommitFailure",
@@ -336,7 +338,7 @@ if ($productionHashBefore -ne $productionHashAfter) { throw "Phase 6EP changed p
 if ($dumps.Count -gt 0 -or $fatalLines.Count -gt 0 -or $uploadAttemptLines.Count -gt 0) { throw "Phase 6EP safety evidence failed" }
 if ($null -eq $probeReport -or $probeReport.status -ne "ok" -or $probeReport.lifecycle_marker -ne "shutdown_complete") { throw "Phase 6EP probe failed" }
 if ($null -eq $outcome -or $outcome.functional_status -ne "pass" -or $outcome.lifecycle_status -ne "normal_exit") { throw "Phase 6EP normal exit required" }
-if ($ReportPhase -eq "phase6ga") {
+if ($ReportPhase -in @("phase6ga", "phase6gb", "phase6gc")) {
     if (-not (Test-Path -LiteralPath $ImportAuditPath)) { throw "Phase 6GA import audit missing" }
     $importAudit = Get-Content -Raw -Encoding UTF8 $ImportAuditPath | ConvertFrom-Json
     if ($importAudit.status -ne "pass") { throw "Phase 6GA deterministic import failed" }

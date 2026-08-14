@@ -36,6 +36,8 @@ from phase6er_point_collision_geometry import corrected_plan_payload
 from phase6ee_velocity_distribution import SpatialNeighborhoodCollector
 from phase6eu_process_memory import process_memory_snapshot
 from phase6fc_startup_contract import classify_startup
+from phase6gc_payload_native_source import build_contract as build_payload_source_contract
+from phase6gc_payload_native_source import validate_contract as validate_payload_source_contract
 from probe_phase6dt_flow_collision_reference import CHANNELS, SAMPLE_FRAMES, _capture, _save_and_sample
 
 
@@ -254,10 +256,13 @@ def _settings():
         "startup_source_sum_tolerance": max(
             0.0, float(settings.get_as_float("/phase6ep/startupSourceSumTolerance")) or 1.0e-6
         ),
+        "startup_source_contract_mode": (
+            settings.get_as_string("/phase6ep/startupSourceContractMode") or "decimal_legacy"
+        ),
     }
 
 
-def _startup_identity_and_source_gate(history, source, arguments):
+def _startup_identity_and_source_gate(history, source, arguments, expected_payload_source=None):
     """Return the bounded pre-readback identity/source evidence for Phase 6FD."""
     if not history:
         return {"pass": False, "failures": ["history_missing"]}
@@ -275,24 +280,40 @@ def _startup_identity_and_source_gate(history, source, arguments):
         failures.append("readiness")
     if not all(bool(row.get("emitter_enabled")) for row in history):
         failures.append("emitter_disabled")
-    if int(source.get("revision", -1)) != 1:
-        failures.append("point_revision")
-    if int(source.get("total_point_count", 0)) != 1440:
-        failures.append("total_point_count")
-    if int(source.get("active_point_count", 0)) != 1344:
-        failures.append("active_point_count")
-    sums = source.get("source_sums") or {}
-    tolerance = float(arguments["startup_source_sum_tolerance"])
-    for key, expected_key in (
-        ("fuel", "startup_expected_fuel_sum"),
-        ("temperature", "startup_expected_temperature_sum"),
-        ("smoke", "startup_expected_smoke_sum"),
-    ):
-        expected = float(arguments[expected_key])
-        actual = float(sums.get(key, float("nan")))
-        if not np.isfinite(actual) or abs(actual - expected) > tolerance:
-            failures.append(f"{key}_sum")
-    return {"pass": not failures, "failures": failures, "identity_reference": {key: first.get(key) for key in identity_keys}}
+    payload_native = None
+    if arguments["startup_source_contract_mode"] == "payload_native_float32_v1":
+        if not expected_payload_source:
+            failures.append("expected_payload_source_missing")
+        else:
+            payload_native = validate_payload_source_contract(
+                expected_payload_source, source.get("payload_native_source_contract") or {}
+            )
+            failures.extend(payload_native["failures"])
+    else:
+        if int(source.get("revision", -1)) != 1:
+            failures.append("point_revision")
+        if int(source.get("total_point_count", 0)) != 1440:
+            failures.append("total_point_count")
+        if int(source.get("active_point_count", 0)) != 1344:
+            failures.append("active_point_count")
+        sums = source.get("source_sums") or {}
+        tolerance = float(arguments["startup_source_sum_tolerance"])
+        for key, expected_key in (
+            ("fuel", "startup_expected_fuel_sum"),
+            ("temperature", "startup_expected_temperature_sum"),
+            ("smoke", "startup_expected_smoke_sum"),
+        ):
+            expected = float(arguments[expected_key])
+            actual = float(sums.get(key, float("nan")))
+            if not np.isfinite(actual) or abs(actual - expected) > tolerance:
+                failures.append(f"{key}_sum")
+    return {
+        "pass": not failures,
+        "failures": list(dict.fromkeys(failures)),
+        "identity_reference": {key: first.get(key) for key in identity_keys},
+        "source_contract_mode": arguments["startup_source_contract_mode"],
+        "payload_native_validation": payload_native,
+    }
 
 
 def _write(path, payload):
@@ -520,10 +541,14 @@ def _build_stage(arguments):
         stage, (tuple(Gf.Vec3f(*(float(component) for component in value)) for value in plan["positions"]),)
     )
     emitter = stage.GetPrimAtPath(handles[0]["path"])
-    active = plan["active"].astype(np.float32)
-    point_core._set(emitter, "pointFuels", Vt.FloatArray((active * 0.8 * arguments["fuel_scale"]).tolist()))
-    point_core._set(emitter, "pointTemperatures", Vt.FloatArray((active * 2.0 * arguments["temperature_scale"]).tolist()))
-    point_core._set(emitter, "pointSmokes", Vt.FloatArray((active * 0.08 * arguments["smoke_scale"]).tolist()))
+    positions_float32 = np.ascontiguousarray(plan["positions"], dtype=np.float32)
+    active = np.ascontiguousarray(plan["active"], dtype=np.float32)
+    fuel_values = np.ascontiguousarray(active * np.float32(0.8 * arguments["fuel_scale"]), dtype=np.float32)
+    temperature_values = np.ascontiguousarray(active * np.float32(2.0 * arguments["temperature_scale"]), dtype=np.float32)
+    smoke_values = np.ascontiguousarray(active * np.float32(0.08 * arguments["smoke_scale"]), dtype=np.float32)
+    point_core._set(emitter, "pointFuels", Vt.FloatArray(fuel_values.tolist()))
+    point_core._set(emitter, "pointTemperatures", Vt.FloatArray(temperature_values.tolist()))
+    point_core._set(emitter, "pointSmokes", Vt.FloatArray(smoke_values.tolist()))
     publication_ms = (time.perf_counter_ns() - publication_started) / 1_000_000.0
     revision = emitter.GetAttribute("campfire:residentRevision")
     revision.Set(1)
@@ -572,6 +597,15 @@ def _build_stage(arguments):
         "payload_bytes": payload_path.stat().st_size,
         "colliders": collision_records,
     })
+    payload_identity = f"{arguments['geometry_variant']}:{arguments['scenario']}:{arguments['policy']}:revision-1"
+    summary["payload_native_source_contract"] = build_payload_source_contract(
+        points=positions_float32,
+        fuel=fuel_values,
+        temperature=temperature_values,
+        smoke=smoke_values,
+        revision=1,
+        payload_identity=payload_identity,
+    )
     return path, summary, plan
 
 
@@ -603,7 +637,7 @@ def _array_contract(value, dtype):
     }
 
 
-def _live_point_emitter_contract(stage, emitter):
+def _live_point_emitter_contract(stage, emitter, payload_identity="runtime-point-emitter"):
     relationship = emitter.GetRelationship("pointsPrim")
     targets = [str(path) for path in relationship.GetTargets()]
     if len(targets) != 1:
@@ -619,6 +653,14 @@ def _live_point_emitter_contract(stage, emitter):
     fuel_values = np.asarray(fuels, dtype=np.float32)
     temperature_values = np.asarray(temperatures, dtype=np.float32)
     smoke_values = np.asarray(smokes, dtype=np.float32)
+    payload_native = build_payload_source_contract(
+        points=np.asarray(points, dtype=np.float32),
+        fuel=fuel_values,
+        temperature=temperature_values,
+        smoke=smoke_values,
+        revision=int(revision),
+        payload_identity=payload_identity,
+    )
     return {
         "stage_python_identity": int(id(stage)),
         "emitter_path": str(emitter.GetPath()),
@@ -643,6 +685,7 @@ def _live_point_emitter_contract(stage, emitter):
             "temperature": _array_contract(temperatures, np.float32),
             "smoke": _array_contract(smokes, np.float32),
         },
+        "payload_native_source_contract": payload_native,
         "identity_scope_note": "Python identities describe the live wrappers returned in this process, not a provider-owned native allocation.",
     }
 
@@ -1194,7 +1237,10 @@ async def _run():
         mark("usd_context_connection_complete", kit_update_number=int(app.get_update_number()))
         emitter = stage.GetPrimAtPath("/World/Flow/EmitterPoint")
         if arguments["startup_probe"]:
-            report["startup_live_point_emitter_contract"] = _live_point_emitter_contract(stage, emitter)
+            report["startup_live_point_emitter_contract"] = _live_point_emitter_contract(
+                stage, emitter,
+                point_summary["payload_native_source_contract"]["payload_identity"],
+            )
             mark(
                 "startup_live_point_emitter_contract_complete",
                 kit_update_number=int(app.get_update_number()),
@@ -1429,21 +1475,27 @@ async def _run():
                     startup_history.append(sample)
                     mark("startup_frame_sample", **sample)
                     if arguments["startup_liveness_gate"] and frame in (60, 120):
+                        payload_expected = point_summary.get("payload_native_source_contract") or {}
+                        payload_expected_sums = payload_expected.get("source_sums_float64_accumulator") or {}
+                        native_source_mode = arguments["startup_source_contract_mode"] == "payload_native_float32_v1"
                         thresholds = {
                             "classification_frame": 60,
                             "final_frame": frame,
                             "representative_active_blocks": 128,
                             "small_field_minimum_blocks": 20,
                             "small_field_maximum_blocks": 32,
-                            "expected_point_revision": 1,
-                            "expected_total_point_count": 1440,
-                            "expected_active_point_count": 1344,
-                            "minimum_fuel_sum": arguments["startup_expected_fuel_sum"] - arguments["startup_source_sum_tolerance"],
-                            "minimum_temperature_sum": arguments["startup_expected_temperature_sum"] - arguments["startup_source_sum_tolerance"],
-                            "minimum_smoke_sum": arguments["startup_expected_smoke_sum"] - arguments["startup_source_sum_tolerance"],
+                            "expected_point_revision": int(payload_expected.get("revision", 1)) if native_source_mode else 1,
+                            "expected_total_point_count": int(payload_expected.get("total_point_count", 1440)) if native_source_mode else 1440,
+                            "expected_active_point_count": int(payload_expected.get("active_point_count", 1344)) if native_source_mode else 1344,
+                            "minimum_fuel_sum": float(payload_expected_sums.get("fuel", 0.0)) if native_source_mode else arguments["startup_expected_fuel_sum"] - arguments["startup_source_sum_tolerance"],
+                            "minimum_temperature_sum": float(payload_expected_sums.get("temperature", 0.0)) if native_source_mode else arguments["startup_expected_temperature_sum"] - arguments["startup_source_sum_tolerance"],
+                            "minimum_smoke_sum": float(payload_expected_sums.get("smoke", 0.0)) if native_source_mode else arguments["startup_expected_smoke_sum"] - arguments["startup_source_sum_tolerance"],
                         }
                         classification = classify_startup(startup_history, startup_contract, thresholds)
-                        identity_source = _startup_identity_and_source_gate(startup_history, startup_contract, arguments)
+                        identity_source = _startup_identity_and_source_gate(
+                            startup_history, startup_contract, arguments,
+                            point_summary.get("payload_native_source_contract"),
+                        )
                         evidence = {
                             **classification,
                             "identity_and_exact_source": identity_source,
@@ -1702,9 +1754,12 @@ async def _run():
                 reference() is not None for reference in allocation_state["weak_references"]
             )
         report["source_sums"] = {
-            "fuel": float(sum(emitter.GetAttribute("pointFuels").Get())),
-            "temperature": float(sum(emitter.GetAttribute("pointTemperatures").Get())),
-            "smoke": float(sum(emitter.GetAttribute("pointSmokes").Get())),
+            name: float(np.sum(np.asarray(emitter.GetAttribute(attribute).Get(), dtype=np.float32).astype(np.float64), dtype=np.float64))
+            for name, attribute in (
+                ("fuel", "pointFuels"),
+                ("temperature", "pointTemperatures"),
+                ("smoke", "pointSmokes"),
+            )
         }
         report["revision"] = int(emitter.GetAttribute("campfire:residentRevision").Get())
         if arguments["startup_probe"]:

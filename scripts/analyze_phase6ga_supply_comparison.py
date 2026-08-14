@@ -163,7 +163,7 @@ def _paired(sequence: int, members: dict, contract: dict):
 def build(root: Path, contract_path: Path, offline_path: Path):
     contract = _read(contract_path)
     phase = (contract or {}).get("phase")
-    if phase not in {"phase6ga", "phase6gb"}: raise ValueError("invalid Phase 6GA/6GB contract")
+    if phase not in {"phase6ga", "phase6gb", "phase6gc"}: raise ValueError("invalid Phase 6GA/6GB/6GC contract")
     preflight = [analyze_attempt(path.parent, contract, True) for path in sorted(root.glob("channel-preflight/*/attempt_metadata.json"))]
     attempts = [analyze_attempt(path.parent, contract, False) for path in sorted(root.glob("formal/*/attempt_metadata.json"))]
     pairs = []

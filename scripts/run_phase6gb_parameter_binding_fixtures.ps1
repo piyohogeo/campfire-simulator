@@ -10,6 +10,8 @@ $OutputRoot = [IO.Path]::GetFullPath($OutputRoot)
 if (Test-Path -LiteralPath $OutputRoot) { throw "Phase 6GB parameter fixture refuses output reuse: $OutputRoot" }
 New-Item -ItemType Directory -Path $OutputRoot | Out-Null
 $contract = Get-Content -Raw -Encoding UTF8 ([IO.Path]::GetFullPath($ContractPath)) | ConvertFrom-Json
+$phase = if ($contract.phase) { [string]$contract.phase } else { "phase6gb" }
+if ($phase -notin @("phase6gb", "phase6gc")) { throw "Unsupported geometry-binding fixture phase: $phase" }
 $mapping = $contract.fixture.geometry
 if ($mapping.concept -ne "corrected" -or $mapping.runtime_token -ne "phase6er_corrected") {
     throw "Phase 6GB contract geometry mapping is not the frozen corrected mapping."
@@ -28,7 +30,7 @@ $baseArguments = @(
     "-OffsetM", "$($contract.fixture.point_offset_m)",
     "-SupportRadiusM", "$($contract.fixture.support_radius_assumption_m)",
     "-Filtering", "true", "-Collision", "true", "-Policy", $positive.policy,
-    "-ReportPhase", "phase6gb", "-GeometryVariant", $mapping.runtime_token,
+    "-ReportPhase", $phase, "-GeometryVariant", $mapping.runtime_token,
     "-ExpectedGeometryConcept", $mapping.concept,
     "-ProbePath", ([IO.Path]::GetFullPath($ProbePath)),
     "-SampleFrames", ($contract.sample_frames -join ','),
@@ -45,6 +47,7 @@ $baseArguments = @(
     "-StartupLivenessGate", "true", "-StartupExpectedFuelSum", "$($source.fuel)",
     "-StartupExpectedTemperatureSum", "$($source.temperature)", "-StartupExpectedSmokeSum", "$($source.smoke)",
     "-StartupSourceSumTolerance", "$($contract.channel_preflight.startup_source_sum_absolute_tolerance)",
+    "-StartupSourceContractMode", $(if($phase -eq "phase6gc"){[string]$contract.source_contract.mode}else{"decimal_legacy"}),
     "-AbsoluteTimeoutSeconds", "$($contract.safety.inner_absolute_timeout_seconds)",
     "-ValidateArgumentsOnly"
 )
@@ -105,8 +108,8 @@ $results = @(
     Invoke-BindingCase "negative_legacy_misroute" "legacy_phase6ep" $false
 )
 $report = [ordered]@{
-    schema = "campfire.phase6gb.parameter-binding-fixture-report.v1"
-    phase = "phase6gb"
+    schema = "campfire.$phase.parameter-binding-fixture-report.v1"
+    phase = $phase
     timestamp_utc = [DateTime]::UtcNow.ToString("o")
     contract_path = [IO.Path]::GetFullPath($ContractPath)
     contract_sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $ContractPath).Hash
