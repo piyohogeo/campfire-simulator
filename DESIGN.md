@@ -1,5 +1,17 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6GD public NanoVDB channel schema discovery
+
+Phase 6GC remains frozen at its seven-handle pre-indexing safe stop. Phase 6GD
+uses one fresh S93 process to enumerate `handle[0]` through `handle[n-1]` and
+record only bounded public metadata. It does not assign semantic names, convert
+whole fields, or start the formal comparison. The discovery contract fixes a
+256 MiB per-handle and 512 MiB total temporary-file limit and preserves every
+Phase 6GC physical and Phase 6FZ/6FU/6FW safety boundary. Flow 110.0.0's bundled
+OGN definition names six outputs but does not explain the seventh Python object,
+so it is reference evidence rather than an inferred mapping. See
+`docs/design/phase6gd_public_channel_schema.md`.
+
 # Phase 6GC payload-native source contract
 
 Phase 6GB remains frozen at its exact decimal-source safe stop. Phase 6GC

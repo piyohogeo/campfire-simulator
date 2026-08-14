@@ -1,0 +1,190 @@
+param(
+    [Parameter(Mandatory = $true)][string]$OutputRoot,
+    [string]$DiscoveryContractPath = ""
+)
+
+$ErrorActionPreference = "Stop"
+Set-StrictMode -Version 3.0
+
+$repo = Split-Path -Parent $PSScriptRoot
+$OutputRoot = [IO.Path]::GetFullPath($OutputRoot)
+if (Test-Path -LiteralPath $OutputRoot) { throw "Phase 6GD refuses artifact root reuse: $OutputRoot" }
+
+$discoveryContractPath = if ([string]::IsNullOrWhiteSpace($DiscoveryContractPath)) {
+    Join-Path $PSScriptRoot "phase6gd_channel_schema_discovery_contract.json"
+} else { [IO.Path]::GetFullPath($DiscoveryContractPath) }
+$discoveryHashPath = [IO.Path]::ChangeExtension($discoveryContractPath, ".sha256")
+$expectedDiscoveryHash = ((Get-Content -Encoding UTF8 $discoveryHashPath | Select-Object -First 1) -split '\s+')[0].ToUpperInvariant()
+$actualDiscoveryHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $discoveryContractPath).Hash
+if ($actualDiscoveryHash -ne $expectedDiscoveryHash) { throw "Phase 6GD discovery contract hash mismatch" }
+$discovery = Get-Content -Raw -Encoding UTF8 $discoveryContractPath | ConvertFrom-Json
+
+$baseContractPath = Join-Path $repo ([string]$discovery.base_physics_contract.path)
+$baseHashPath = [IO.Path]::ChangeExtension($baseContractPath, ".sha256")
+$expectedBaseHash = [string]$discovery.base_physics_contract.sha256
+$actualBaseHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $baseContractPath).Hash
+if ($actualBaseHash -ne $expectedBaseHash) { throw "Phase 6GD frozen Phase 6GC base contract changed" }
+if (((Get-Content -Encoding UTF8 $baseHashPath | Select-Object -First 1) -split '\s+')[0].ToUpperInvariant() -ne $actualBaseHash) {
+    throw "Phase 6GD frozen Phase 6GC sidecar mismatch"
+}
+$base = Get-Content -Raw -Encoding UTF8 $baseContractPath | ConvertFrom-Json
+
+New-Item -ItemType Directory -Path $OutputRoot | Out-Null
+Copy-Item -LiteralPath $discoveryContractPath -Destination (Join-Path $OutputRoot "frozen_discovery_contract.json")
+Copy-Item -LiteralPath $discoveryHashPath -Destination (Join-Path $OutputRoot "frozen_discovery_contract.sha256")
+Copy-Item -LiteralPath $baseContractPath -Destination (Join-Path $OutputRoot "frozen_phase6gc_contract.json")
+Copy-Item -LiteralPath $baseHashPath -Destination (Join-Path $OutputRoot "frozen_phase6gc_contract.sha256")
+
+$productionApp = Join-Path $repo "_build\windows-x86_64\release\apps\campfire.simulator.kit"
+$productionBefore = (Get-FileHash -Algorithm SHA256 -LiteralPath $productionApp).Hash
+$attemptId = "metadata_attempt01"
+$attemptRoot = Join-Path $OutputRoot $attemptId
+$caseDir = Join-Path $attemptRoot "S93_support_clear"
+$logs = Join-Path $attemptRoot "runner-logs"
+New-Item -ItemType Directory -Path $caseDir -Force | Out-Null
+New-Item -ItemType Directory -Path $logs -Force | Out-Null
+$attemptMetadata = [ordered]@{
+    schema = "campfire.phase6gd.attempt-metadata.v1"
+    phase = "phase6gd"
+    attempt_id = $attemptId
+    condition = "S93"
+    discovery_only = $true
+    formal_population = $false
+    timestamp_utc = [DateTime]::UtcNow.ToString("o")
+}
+[IO.File]::WriteAllText((Join-Path $attemptRoot "attempt_metadata.json"), ($attemptMetadata | ConvertTo-Json -Depth 6) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
+
+$runtimeManifest = [ordered]@{}
+foreach ($name in @(
+    "run_phase6fo_supply_case.ps1", "probe_phase6gd_channel_metadata.py",
+    "probe_phase6gc_shared_supply_comparison.py", "phase6gc_payload_native_source.py",
+    "phase6fu_resource_guard.py", "phase6fu_process_identity.py", "phase6fw_pid_reuse_policy.py",
+    "phase6fz_preclose_committer.py", "phase6fz_import_contract.py", "kit_shutdown_policy.ps1"
+)) {
+    $path = Join-Path $PSScriptRoot $name
+    $runtimeManifest[$name] = (Get-FileHash -Algorithm SHA256 -LiteralPath $path).Hash
+}
+[IO.File]::WriteAllText((Join-Path $OutputRoot "runtime_hashes.json"), ($runtimeManifest | ConvertTo-Json -Depth 4) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
+
+$caseRunner = Join-Path $PSScriptRoot "run_phase6fo_supply_case.ps1"
+$probe = Join-Path $PSScriptRoot "probe_phase6gd_channel_metadata.py"
+$guard = Join-Path $PSScriptRoot "phase6fu_resource_guard.py"
+$committer = Join-Path $PSScriptRoot "phase6fz_preclose_committer.py"
+$powershell = (Get-Command powershell.exe).Source
+$source = $base.conditions.S93.expected_source_sums
+$arguments = @(
+    "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", $caseRunner,
+    "-Scenario", $base.fixture.scenario, "-OutputDir", $caseDir,
+    "-OffsetM", "$($base.fixture.point_offset_m)", "-SupportRadiusM", "$($base.fixture.support_radius_assumption_m)",
+    "-Filtering", "true", "-Collision", "true", "-Policy", $base.conditions.S93.policy,
+    "-ReportPhase", "phase6gd", "-GeometryVariant", $base.fixture.geometry.runtime_token,
+    "-ExpectedGeometryConcept", $base.fixture.geometry.concept, "-ProbePath", $probe,
+    "-FuelScale", "1", "-TemperatureScale", "1", "-SmokeScale", "1",
+    "-SampleFrames", "60,120,180,240", "-OperationFrames", "180", "-ReadbackFrames", "180",
+    "-ReadbackChannels", "temperature", "-ReadbackMode", "p3_spatial_release",
+    "-ReferenceDisposal", "del", "-SynchronousMemoryMarkers", "true", "-PythonMemoryTelemetry", "true",
+    "-SpatialCollectorsEnabled", "true", "-SpatialColliderIndices", "2", "-SpatialAllChannels",
+    "-RunIndex", "0", "-LifecycleCalibration", "-RendererDrainUpdates", "8",
+    "-LifecycleReferenceReleaseOrder", "after_stage_close",
+    "-StageCloseTimeoutSeconds", "$($base.safety.stage_close_timeout_seconds)",
+    "-StabilityObservationStartFrame", "240", "-StabilityObservationExtraSeconds", "5",
+    "-StabilityActiveBlockSampleSeconds", "0.5", "-FlowLivenessAudit", "true",
+    "-StartupProbe", "true", "-StartupProbeLabel", $attemptId,
+    "-StartupFlowAcquirePosition", "before_updates", "-StartupPreTimelineUpdateCount", "12",
+    "-StartupExtraUpdateBeforePlayCount", "0", "-StartupLivenessGate", "true",
+    "-StartupExpectedFuelSum", "$($source.fuel)", "-StartupExpectedTemperatureSum", "$($source.temperature)",
+    "-StartupExpectedSmokeSum", "$($source.smoke)",
+    "-StartupSourceSumTolerance", "$($base.channel_preflight.startup_source_sum_absolute_tolerance)",
+    "-StartupSourceContractMode", $base.source_contract.mode,
+    "-AbsoluteTimeoutSeconds", "$($base.safety.inner_absolute_timeout_seconds)",
+    "-ImportAuditPath", (Join-Path $caseDir "kit_import_audit.json"),
+    "-MeasurementCommitAck", (Join-Path $caseDir "memory-measurement\measurement_commit.ack"),
+    "-MeasurementCommitFailure", (Join-Path $caseDir "memory-measurement\measurement_commit.failed"),
+    "-MeasurementCommitTimeoutSeconds", "$($base.artifact_commit.probe_wait_timeout_seconds)"
+)
+$limits = $base.safety
+$guardArgs = @(
+    $guard, "--trace", (Join-Path $logs "S93_support_clear.resource.jsonl"),
+    "--summary", (Join-Path $logs "S93_support_clear.guard.json"),
+    "--stdout", (Join-Path $logs "S93_support_clear.stdout.log"),
+    "--stderr", (Join-Path $logs "S93_support_clear.stderr.log"),
+    "--timeout-seconds", "$($limits.outer_condition_timeout_seconds)",
+    "--sample-seconds", "$($limits.resource_sampling_seconds)",
+    "--runner-private-limit", "$($limits.runner_private_limit_bytes)",
+    "--diagnostic-private-limit", "$($limits.diagnostic_private_limit_bytes)",
+    "--kit-private-limit", "$($limits.kit_private_limit_bytes)",
+    "--tree-private-limit", "$($limits.unique_tree_private_limit_bytes)",
+    "--available-memory-floor", "$($limits.physical_memory_floor_bytes)",
+    "--commit-headroom-floor", "$($limits.commit_headroom_floor_bytes)",
+    "--cpu-telemetry", "--gpu-csv", (Join-Path $logs "S93_support_clear.gpu.csv"),
+    "--gpu-sample-ms", "$($limits.gpu_sampling_ms)",
+    "--lifecycle-path", (Join-Path $caseDir "raw.json"),
+    "--diagnostic-marker-path", (Join-Path $caseDir "resource_markers.jsonl"),
+    "--attempt-id", $attemptId,
+    "--cleanup-suppression-lock", ((Join-Path $caseDir "sensitive-shutdown-diagnostics") + ".ownership.json"),
+    "--cleanup-suppression-deadline-seconds", "150",
+    "--cleanup-marker-path", (Join-Path $logs "cleanup_markers.jsonl"),
+    "--", $powershell
+) + $arguments
+
+$guardProcess = Start-Process -FilePath python -ArgumentList $guardArgs -PassThru -WindowStyle Hidden `
+    -RedirectStandardOutput (Join-Path $logs "guard-launcher.stdout.log") `
+    -RedirectStandardError (Join-Path $logs "guard-launcher.stderr.log")
+$committerArgs = @(
+    $committer, "--raw-path", (Join-Path $caseDir "raw.json"),
+    "--resource-path", (Join-Path $logs "S93_support_clear.resource.jsonl"),
+    "--gpu-path", (Join-Path $logs "S93_support_clear.gpu.csv"),
+    "--marker-path", (Join-Path $caseDir "resource_markers.jsonl"),
+    "--attempt-metadata", (Join-Path $attemptRoot "attempt_metadata.json"),
+    "--contract", $discoveryContractPath,
+    "--output-dir", (Join-Path $caseDir "memory-measurement"),
+    "--stop-file", (Join-Path $attemptRoot "committer.stop"),
+    "--timeout-seconds", "$($base.artifact_commit.helper_timeout_seconds)",
+    "--private-limit-bytes", "$($base.artifact_commit.helper_private_limit_bytes)"
+)
+$committerProcess = Start-Process -FilePath python -ArgumentList $committerArgs -PassThru -WindowStyle Hidden `
+    -RedirectStandardOutput (Join-Path $logs "committer.stdout.log") `
+    -RedirectStandardError (Join-Path $logs "committer.stderr.log")
+$guardProcess.WaitForExit()
+[IO.File]::WriteAllText((Join-Path $attemptRoot "committer.stop"), "guard-exited`n", [Text.UTF8Encoding]::new($false))
+if (-not $committerProcess.WaitForExit(15000)) {
+    Stop-Process -Id $committerProcess.Id -Force -ErrorAction SilentlyContinue
+    throw "Phase 6GD committer did not exit"
+}
+
+if ((Get-FileHash -Algorithm SHA256 -LiteralPath $productionApp).Hash -ne $productionBefore) {
+    throw "Phase 6GD changed production app"
+}
+$rawPath = Join-Path $caseDir "raw.json"
+$metadataPath = Join-Path $caseDir "channel-schema-metadata\bounded_handle_metadata.json"
+if (-not (Test-Path -LiteralPath $rawPath) -or -not (Test-Path -LiteralPath $metadataPath)) {
+    throw "Phase 6GD bounded metadata artifacts are incomplete"
+}
+$raw = Get-Content -Raw -Encoding UTF8 $rawPath | ConvertFrom-Json
+$metadata = Get-Content -Raw -Encoding UTF8 $metadataPath | ConvertFrom-Json
+if ($raw.status -ne "ok" -or $raw.lifecycle_marker -ne "shutdown_complete") {
+    throw "Phase 6GD metadata probe did not complete lifecycle"
+}
+if ($metadata.formal_channel_names_assigned -or $metadata.full_field_json_or_npz_written) {
+    throw "Phase 6GD discovery probe violated bounded scope"
+}
+if ($metadata.returned_handle_count -lt 1 -or $metadata.returned_handle_count -gt $discovery.readback.maximum_handle_count) {
+    throw "Phase 6GD returned handle count is outside the frozen discovery bound"
+}
+
+$summary = [ordered]@{
+    schema = "campfire.phase6gd.channel-schema-discovery-summary.v1"
+    phase = "phase6gd"
+    status = "metadata_complete_mapping_pending"
+    discovery_contract_sha256 = $actualDiscoveryHash
+    base_contract_sha256 = $actualBaseHash
+    returned_handle_count = [int]$metadata.returned_handle_count
+    metadata_path = $metadataPath
+    metadata_sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $metadataPath).Hash
+    lifecycle_marker = [string]$raw.lifecycle_marker
+    production_sha256 = $productionBefore
+    formal_population_started = $false
+    timestamp_utc = [DateTime]::UtcNow.ToString("o")
+}
+[IO.File]::WriteAllText((Join-Path $OutputRoot "discovery_summary.json"), ($summary | ConvertTo-Json -Depth 8) + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
+Write-Host "Phase 6GD bounded channel metadata complete; semantic mapping remains pending."

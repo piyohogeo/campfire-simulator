@@ -1,5 +1,8 @@
 # Changelog
 
+- Froze Phase 6GD as a public-readback-schema-only discovery. Phase 6GC remains a seven-handle pre-indexing safe stop; one fresh S93 process may label handles only by index and collect bounded public array, volume, NanoVDB, API, and version metadata without assigning channel semantics.
+- Added 256 MiB per-handle and 512 MiB total temporary NanoVDB bounds, sequential handle release, unavailable-field reporting, metadata hashes, and direct reuse of the Phase 6GC stage/source plus Phase 6FZ/6FU/6FW release-after-close safety path. The bundled six-output Flow 110.0.0 OGN definition is recorded as evidence but is not extended by inference.
+
 - Froze the Phase 6GC payload-native source contract without reclassifying Phase 6GB. Expected and observed source sums now widen the exact authored float32 elements to float64 and use the same accumulator; ordered Point/source hashes, revision, shape, dtype, stride and finite checks remain fail-closed. Decimal source times count is telemetry only, while alternate accumulation order is bounded by a precomputed count-times-float32-ULP budget and cannot bypass payload hash equality.
 - Added sixteen no-Kit payload-generation/NPZ/validation fixtures and kept all Phase 6GB geometry, physical, readback, lifecycle and resource contract sections unchanged. A fresh formal root is permitted only after these fixtures plus the existing geometry binding, app-ready import, CDB and offline gates pass.
 - Confirmed the Phase 6GC source correction at runtime: the S93 expected/live canonical payload hashes matched, and fuel `1075.2000160217285`, temperature `2688.0`, and smoke `107.51999759674072` all had zero difference under the frozen accumulator semantics.

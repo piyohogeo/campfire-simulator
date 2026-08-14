@@ -1,0 +1,45 @@
+{
+  "schema": "campfire.phase6gd.public-channel-schema-discovery-contract.v1",
+  "phase": "phase6gd",
+  "declared_before_runtime": true,
+  "history": {
+    "phase6gc_reclassified": false,
+    "phase6gc_retried": false,
+    "phase6gc_artifact_reused": false
+  },
+  "base_physics_contract": {
+    "path": "scripts/phase6gc_supply_comparison_contract.json",
+    "sha256": "97286431C5CB1EDA224CB97D11DA7D512844E039401D363DC4DE7B5AF96D1770",
+    "modified": false
+  },
+  "scope": "One S93 public-readback acquisition at frame 180 for bounded handle metadata only; no semantic mapping is assigned by the discovery probe.",
+  "readback": {
+    "api": "omni.flowusd._flowusd.IFlowUsd.get_latest_nanovdb_readback",
+    "frame": 180,
+    "maximum_handle_count": 16,
+    "maximum_grids_per_handle": 4,
+    "per_handle_temporary_file_limit_bytes": 268435456,
+    "total_temporary_file_limit_bytes": 536870912,
+    "maximum_api_doc_bytes": 4096,
+    "full_field_json_allowed": false,
+    "full_field_npz_allowed": false,
+    "semantic_names_assigned_by_probe": false,
+    "unknown_handle_policy": "preserve metadata and stop before formal comparison"
+  },
+  "evidence_priority": [
+    "public grid or channel name metadata",
+    "bundled Flow 110.0.0 public OGN/API definition",
+    "unique grid class and value type",
+    "single-variable controlled channel probe",
+    "vector versus scalar schema"
+  ],
+  "mapping_prohibitions": [
+    "do not append a seventh name to the legacy six-channel order",
+    "do not infer semantics from value range or appearance alone",
+    "do not index a handle before bounded metadata is durable",
+    "do not start formal S93/S100/OFF until a separate versioned schema contract and fixtures pass"
+  ],
+  "required_lifecycle": "Phase 6FZ/6FU/6FW guards and Phase 6FS release-after-close",
+  "resource_limits_inherited_from_base": true,
+  "production_changed": false
+}
