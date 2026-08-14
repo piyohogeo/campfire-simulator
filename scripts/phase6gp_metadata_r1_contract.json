@@ -1,0 +1,98 @@
+{
+  "schema": "campfire.phase6gp.metadata-r1-contract.v1",
+  "phase": "phase6gp",
+  "declared_before_runtime": true,
+  "history": {
+    "phase6gn_reclassified": false,
+    "phase6go_r0_reclassified": false,
+    "phase6gn_or_phase6go_artifact_reused": false,
+    "phase6go_r0_status": "lifecycle_safe_stop"
+  },
+  "scope": {
+    "operation": "one public readback, seven slots of bounded Python metadata, sequential reference release",
+    "r2_or_formal_population_authorized": false
+  },
+  "fixture": {
+    "scenario": "production_four",
+    "geometry_concept": "corrected",
+    "geometry_runtime_token": "phase6er_corrected",
+    "condition": "S93_support_clear",
+    "policy": "allow_self_center",
+    "collision_enabled": true,
+    "points_active": 1344,
+    "points_total": 1440,
+    "readback_frame": 180,
+    "flow_version": "110.0.0",
+    "kit_version": "110.2",
+    "schema_id": "flow110.0.0-kit110.2-public-readback-rgba7-v1",
+    "rgba_enabled": false,
+    "rgb_enabled": false
+  },
+  "metadata": {
+    "fields": ["slot", "python_type", "ndim", "shape", "dtype", "size", "nbytes", "empty"],
+    "element_access": false,
+    "numpy_asarray": false,
+    "material_copy": false,
+    "volume_conversion": false,
+    "field_save": false,
+    "schema_content_validation": false,
+    "sampling": false,
+    "collector": false,
+    "flux": false
+  },
+  "markers": [
+    "phase6gp_readback_before",
+    "phase6gp_readback_after",
+    "phase6gp_handle_count_type_after",
+    "phase6gp_slot_metadata_before",
+    "phase6gp_slot_metadata_after",
+    "phase6gp_metadata_all_after",
+    "phase6gp_reference_release_before",
+    "phase6gp_reference_release_after",
+    "timeline_stopped",
+    "stage_close_request_before",
+    "stage_close_complete",
+    "shutdown_complete"
+  ],
+  "population": {
+    "independent_processes": 1,
+    "automatic_retry": false,
+    "replacement_budget": 0,
+    "maximum_launches": 1
+  },
+  "result_axes": {
+    "operation": "metadata and release markers",
+    "lifecycle": "timeline, stage close, shutdown marker, natural OS exit",
+    "qualification": "both operation pass and lifecycle normal_exit are required"
+  },
+  "artifact_bounds": {
+    "maximum_operation_json_bytes": 131072,
+    "field_body_allowed": false,
+    "image_or_video_allowed": false,
+    "stdout_full_field_allowed": false
+  },
+  "safety": {
+    "kit_private_limit_bytes": 17179869184,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "physical_memory_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "inner_absolute_timeout_seconds": 900,
+    "outer_condition_timeout_seconds": 1020,
+    "resource_sampling_seconds": 0.25,
+    "gpu_sampling_ms": 1000,
+    "shutdown_order": "release_after_close"
+  },
+  "lifecycle": {
+    "known_phase6go_r0_event": "operation completed, stage close and shutdown_complete durable, natural OS exit absent",
+    "cause_investigation_authorized": false,
+    "low_level_diagnostic_allowed": false,
+    "timeout_action": "preserve bounded artifacts, exact identity cleanup, require residual zero"
+  },
+  "out_of_scope": [
+    "R2 or later", "formal S93/S100/OFF population", "dump analysis", "debugger attach",
+    "production changes", "defaults", "Point policy", "V3", "P4", "video"
+  ]
+}

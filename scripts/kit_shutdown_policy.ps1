@@ -636,7 +636,8 @@ function Wait-CampfireKitProcessWithShutdownPolicy {
         [Parameter(Mandatory = $true)][string]$LogPath,
         [Parameter(Mandatory = $true)][string]$DiagnosticDir,
         [int]$ShutdownGraceSeconds = 60,
-        [int]$AbsoluteTimeoutSeconds = 420
+        [int]$AbsoluteTimeoutSeconds = 420,
+        [switch]$SkipLowLevelDiagnostic
     )
     $expected = [IO.Path]::GetFullPath($ExpectedExecutable)
     $expectedStartUtc = $Process.StartTime.ToUniversalTime()
@@ -704,7 +705,15 @@ function Wait-CampfireKitProcessWithShutdownPolicy {
         $live = Test-Phase6EaProcessIdentity -ProcessId $Process.Id -ExpectedExecutable $expected -ExpectedStartTimeUtc $expectedStartUtc
         $identityVerified = $true
         $startTimeVerified = $true
-        $diagnostic = Invoke-CampfireLightweightNgxDiagnostic -ProcessId $Process.Id -ExpectedExecutable $expected -ExpectedStartTimeUtc $expectedStartUtc -OutputDir $DiagnosticDir -LifecyclePath $LifecyclePath -LogPath $LogPath
+        if ($SkipLowLevelDiagnostic.IsPresent) {
+            $diagnostic = [ordered]@{
+                diagnostic_capture_succeeded = $false
+                skipped_by_contract = $true
+                stack_fingerprint = [ordered]@{ name = $CampfireKnownNgxSignature; matched = $false }
+            }
+        } else {
+            $diagnostic = Invoke-CampfireLightweightNgxDiagnostic -ProcessId $Process.Id -ExpectedExecutable $expected -ExpectedStartTimeUtc $expectedStartUtc -OutputDir $DiagnosticDir -LifecyclePath $LifecyclePath -LogPath $LogPath
+        }
     } catch {
         $diagnostic = [ordered]@{ diagnostic_capture_succeeded = $false; error = $_.Exception.Message; stack_fingerprint = [ordered]@{ name = $CampfireKnownNgxSignature; matched = $false } }
     }
