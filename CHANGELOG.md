@@ -1,5 +1,11 @@
 # Changelog
 
+- Added the Phase 6HA single-temperature-volume contract and fail-closed
+  lifecycle-only replacement classifier. One replacement is permitted only
+  when every operation, release, stage-close, resource, and cleanup gate passes
+  and natural OS exit after durable `shutdown_complete` is the sole missing
+  boundary. Phase 6GZ remains frozen and no production path changed.
+
 - Froze the Phase 6GY launch 23 user-intervention addendum without changing its
   raw artifact or frozen report. Mechanism inference now explicitly uses the 31
   unattended Candidate timeouts; launch 23 remains boundary-reference-only.

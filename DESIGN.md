@@ -1,5 +1,18 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6HA temperature volume boundary (frozen before runtime)
+
+Phase 6GZ remains frozen and supplies no runtime sample to Phase 6HA. A fresh
+S93 process may perform exactly one temperature `buffer_to_volume()` after the
+existing schema and velocity pipeline, record only the returned Python type,
+then release the volume and handles without metadata, save, typed read,
+sampling, collector, or flux work. A second process is permitted only when the
+first has complete operation/release/stage-close/`shutdown_complete` evidence,
+passes all resource and cleanup gates, has no Python/native/operation failure,
+and lacks only natural OS exit after `shutdown_complete`. The replacement
+budget is one; all other failures stop immediately. Detailed contract:
+`docs/design/phase6ha_temperature_volume_contract.md`.
+
 # Phase 6GZ post-readback boundary ladder (frozen before runtime)
 
 Phase 6GX and Phase 6GY remain frozen. Phase 6GY launch 23 is retained as
