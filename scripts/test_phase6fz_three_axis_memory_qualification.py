@@ -97,6 +97,13 @@ class Phase6FzThreeAxisQualification(unittest.TestCase):
         self.assertIn("--/phase6ep/readbackChannels=none", case)
         self.assertIn("--/phase6fz/importAuditPath=", case)
 
+    def test_post_population_finalizer_cannot_rerun_kit(self) -> None:
+        finalizer = (SCRIPTS / "finalize_phase6fz_three_axis_memory.py").read_text(encoding="utf-8")
+        self.assertIn('int(prior_state.get("launches", -1)) != 9', finalizer)
+        self.assertIn('"kit_processes_rerun": 0', finalizer)
+        self.assertNotIn("subprocess", finalizer)
+        self.assertNotIn("kit.exe", finalizer)
+
 
 if __name__ == "__main__":
     unittest.main()
