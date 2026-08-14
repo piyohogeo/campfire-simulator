@@ -1,0 +1,889 @@
+{
+  "baseline": {
+    "api": {
+      "api_name": "omni.flowusd._flowusd.IFlowUsd.get_latest_nanovdb_readback",
+      "doc": "get_latest_nanovdb_readback(self: omni.flowusd._flowusd.IFlowUsd) -> list",
+      "flow_extension": {
+        "enabled_id": "omni.flowusd-110.0.0",
+        "version": "110.0.0"
+      },
+      "kit_build": "110.2.0+feature.342835.698af100.gl",
+      "nanovdb_python_version": "unavailable",
+      "python_callable_type": "builtins.method",
+      "signature": "unavailable: ValueError: no signature found for builtin <built-in method get_latest_nanovdb_readback of PyCapsule object at 0x000001F7350A3750>",
+      "volume_extension": {
+        "enabled_id": "omni.volume-0.5.2",
+        "version": "0.5.2"
+      }
+    },
+    "artifact_root": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6gd-channel-schema-discovery-2",
+    "cleanup_residual_zero": true,
+    "functional_status": "pass",
+    "handle_order": [
+      "handle[0]",
+      "handle[1]",
+      "handle[2]",
+      "handle[3]",
+      "handle[4]",
+      "handle[5]",
+      "handle[6]"
+    ],
+    "handles": [
+      {
+        "active_voxel_count": "unavailable",
+        "background_value": "unavailable",
+        "c_contiguous": true,
+        "data_pointer": 4592058302464,
+        "dtype": "uint32",
+        "f_contiguous": true,
+        "grid_class": 2,
+        "grid_count": 1,
+        "grid_name": "unavailable",
+        "grid_type": "1",
+        "index": 0,
+        "index_bounding_box": [
+          [
+            -96,
+            -96,
+            -16
+          ],
+          [
+            127,
+            111,
+            639
+          ]
+        ],
+        "is_numpy_array": true,
+        "label": "handle[0]",
+        "logical_bytes": 47641344,
+        "metadata_keys": "unavailable",
+        "metadata_sha256": "FE27D6BB3A7176DB261937E5CDFFB59426E464FF5B92767B38146F601FA4B0AC",
+        "native_type": "numpy.ndarray",
+        "object_identity": 2161258964112,
+        "public_channel_or_semantic_name": "unavailable",
+        "public_short_grid_name": "Flow",
+        "python_type": "numpy.ndarray",
+        "shape": [
+          11910336
+        ],
+        "strides": [
+          4
+        ],
+        "value_type": "1",
+        "voxel_size": "unavailable",
+        "weak_reference_supported": true,
+        "world_bounding_box": [
+          [
+            -2.4000000953674316,
+            -2.4000000953674316,
+            -0.4000000059604645
+          ],
+          [
+            2.4000000953674316,
+            2.4000000953674316,
+            15.600000381469727
+          ]
+        ],
+        "writable": true
+      },
+      {
+        "active_voxel_count": "unavailable",
+        "background_value": "unavailable",
+        "c_contiguous": true,
+        "data_pointer": 4592125411328,
+        "dtype": "uint32",
+        "f_contiguous": true,
+        "grid_class": 2,
+        "grid_count": 1,
+        "grid_name": "unavailable",
+        "grid_type": "1",
+        "index": 1,
+        "index_bounding_box": [
+          [
+            -96,
+            -96,
+            -16
+          ],
+          [
+            127,
+            111,
+            639
+          ]
+        ],
+        "is_numpy_array": true,
+        "label": "handle[1]",
+        "logical_bytes": 47641344,
+        "metadata_keys": "unavailable",
+        "metadata_sha256": "B53401BDE66640775F876232C84BC4B04A7F87DB6A372626EA42D3272B7FC78C",
+        "native_type": "numpy.ndarray",
+        "object_identity": 2161258963248,
+        "public_channel_or_semantic_name": "unavailable",
+        "public_short_grid_name": "Flow",
+        "python_type": "numpy.ndarray",
+        "shape": [
+          11910336
+        ],
+        "strides": [
+          4
+        ],
+        "value_type": "1",
+        "voxel_size": "unavailable",
+        "weak_reference_supported": true,
+        "world_bounding_box": [
+          [
+            -2.4000000953674316,
+            -2.4000000953674316,
+            -0.4000000059604645
+          ],
+          [
+            2.4000000953674316,
+            2.4000000953674316,
+            15.600000381469727
+          ]
+        ],
+        "writable": true
+      },
+      {
+        "active_voxel_count": "unavailable",
+        "background_value": "unavailable",
+        "c_contiguous": true,
+        "data_pointer": 4592192520192,
+        "dtype": "uint32",
+        "f_contiguous": true,
+        "grid_class": 2,
+        "grid_count": 1,
+        "grid_name": "unavailable",
+        "grid_type": "1",
+        "index": 2,
+        "index_bounding_box": [
+          [
+            -96,
+            -96,
+            -16
+          ],
+          [
+            127,
+            111,
+            639
+          ]
+        ],
+        "is_numpy_array": true,
+        "label": "handle[2]",
+        "logical_bytes": 47641344,
+        "metadata_keys": "unavailable",
+        "metadata_sha256": "1593D169C3005777BC5FDDD30C3CA9E57BD63DD322B51EEABA08CEF50B29BAF2",
+        "native_type": "numpy.ndarray",
+        "object_identity": 2161258964976,
+        "public_channel_or_semantic_name": "unavailable",
+        "public_short_grid_name": "Flow",
+        "python_type": "numpy.ndarray",
+        "shape": [
+          11910336
+        ],
+        "strides": [
+          4
+        ],
+        "value_type": "1",
+        "voxel_size": "unavailable",
+        "weak_reference_supported": true,
+        "world_bounding_box": [
+          [
+            -2.4000000953674316,
+            -2.4000000953674316,
+            -0.4000000059604645
+          ],
+          [
+            2.4000000953674316,
+            2.4000000953674316,
+            15.600000381469727
+          ]
+        ],
+        "writable": true
+      },
+      {
+        "active_voxel_count": "unavailable",
+        "background_value": "unavailable",
+        "c_contiguous": true,
+        "data_pointer": 4592259629056,
+        "dtype": "uint32",
+        "f_contiguous": true,
+        "grid_class": 2,
+        "grid_count": 1,
+        "grid_name": "unavailable",
+        "grid_type": "1",
+        "index": 3,
+        "index_bounding_box": [
+          [
+            -96,
+            -96,
+            -16
+          ],
+          [
+            127,
+            111,
+            639
+          ]
+        ],
+        "is_numpy_array": true,
+        "label": "handle[3]",
+        "logical_bytes": 47641344,
+        "metadata_keys": "unavailable",
+        "metadata_sha256": "FAC9FE63E8928C313670ABCDB557CD711B750ADA1A11F503809BEFDEF84B41D9",
+        "native_type": "numpy.ndarray",
+        "object_identity": 2161258960368,
+        "public_channel_or_semantic_name": "unavailable",
+        "public_short_grid_name": "Flow",
+        "python_type": "numpy.ndarray",
+        "shape": [
+          11910336
+        ],
+        "strides": [
+          4
+        ],
+        "value_type": "1",
+        "voxel_size": "unavailable",
+        "weak_reference_supported": true,
+        "world_bounding_box": [
+          [
+            -2.4000000953674316,
+            -2.4000000953674316,
+            -0.4000000059604645
+          ],
+          [
+            2.4000000953674316,
+            2.4000000953674316,
+            15.600000381469727
+          ]
+        ],
+        "writable": true
+      },
+      {
+        "active_voxel_count": "unavailable",
+        "background_value": "unavailable",
+        "c_contiguous": true,
+        "data_pointer": 4586656038912,
+        "dtype": "uint32",
+        "f_contiguous": true,
+        "grid_class": 0,
+        "grid_count": 1,
+        "grid_name": "unavailable",
+        "grid_type": "6",
+        "index": 4,
+        "index_bounding_box": [
+          [
+            -48,
+            -48,
+            -8
+          ],
+          [
+            63,
+            55,
+            319
+          ]
+        ],
+        "is_numpy_array": true,
+        "label": "handle[4]",
+        "logical_bytes": 21660448,
+        "metadata_keys": "unavailable",
+        "metadata_sha256": "680EF76A462FF6A5A53483111599A8B29E344A9C200DA8538EB7443A5946C2D1",
+        "native_type": "numpy.ndarray",
+        "object_identity": 2161258959984,
+        "public_channel_or_semantic_name": "unavailable",
+        "public_short_grid_name": "Flow",
+        "python_type": "numpy.ndarray",
+        "shape": [
+          5415112
+        ],
+        "strides": [
+          4
+        ],
+        "value_type": "6",
+        "voxel_size": "unavailable",
+        "weak_reference_supported": true,
+        "world_bounding_box": [
+          [
+            -2.4000000953674316,
+            -2.4000000953674316,
+            -0.4000000059604645
+          ],
+          [
+            2.4000000953674316,
+            2.4000000953674316,
+            15.600000381469727
+          ]
+        ],
+        "writable": true
+      },
+      {
+        "active_voxel_count": "unavailable",
+        "background_value": "unavailable",
+        "c_contiguous": true,
+        "data_pointer": 4589784002720,
+        "dtype": "uint32",
+        "f_contiguous": true,
+        "grid_class": "unavailable",
+        "grid_count": 0,
+        "grid_name": "unavailable",
+        "grid_type": "unavailable",
+        "index": 5,
+        "index_bounding_box": "unavailable",
+        "is_numpy_array": true,
+        "label": "handle[5]",
+        "logical_bytes": 0,
+        "metadata_keys": "unavailable",
+        "metadata_sha256": "8D14130699D6EE02EEFD5275DE6DB738BF72F1E1C8D6AC46400EDE8137EC5E5D",
+        "native_type": "numpy.ndarray",
+        "object_identity": 2161258964496,
+        "public_channel_or_semantic_name": "unavailable",
+        "public_short_grid_name": "unavailable",
+        "python_type": "numpy.ndarray",
+        "shape": [
+          0
+        ],
+        "strides": [
+          0
+        ],
+        "value_type": "unavailable",
+        "voxel_size": "unavailable",
+        "weak_reference_supported": true,
+        "world_bounding_box": "unavailable",
+        "writable": true
+      },
+      {
+        "active_voxel_count": "unavailable",
+        "background_value": "unavailable",
+        "c_contiguous": true,
+        "data_pointer": 4591965116688,
+        "dtype": "uint32",
+        "f_contiguous": true,
+        "grid_class": "unavailable",
+        "grid_count": 0,
+        "grid_name": "unavailable",
+        "grid_type": "unavailable",
+        "index": 6,
+        "index_bounding_box": "unavailable",
+        "is_numpy_array": true,
+        "label": "handle[6]",
+        "logical_bytes": 0,
+        "metadata_keys": "unavailable",
+        "metadata_sha256": "4A57F0393F20AC96314770E00FF9DDEBA1020C20549D715BD6DEFA4AAE24209F",
+        "native_type": "numpy.ndarray",
+        "object_identity": 2161258964880,
+        "public_channel_or_semantic_name": "unavailable",
+        "public_short_grid_name": "unavailable",
+        "python_type": "numpy.ndarray",
+        "shape": [
+          0
+        ],
+        "strides": [
+          0
+        ],
+        "value_type": "unavailable",
+        "voxel_size": "unavailable",
+        "weak_reference_supported": true,
+        "world_bounding_box": "unavailable",
+        "writable": true
+      }
+    ],
+    "kit_peak_bytes": 14991355904,
+    "lifecycle_status": "normal_exit",
+    "metadata_sha256": "17627B94AB0AD67D347C900DF49CF09A12E1258D10E136FE537C64DB206C76E2",
+    "normal_exit": true,
+    "process_exit_code": 0,
+    "returned_handle_count": 7,
+    "tree_peak_bytes": 15155642368
+  },
+  "divergence_control": {
+    "artifact_root": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6gd-channel-schema-control-divergence",
+    "cdb": {
+      "all_thread_stack_observed": true,
+      "detach_observed": true,
+      "invoked": true,
+      "loaded_modules_observed": true,
+      "native_frames_observed": true,
+      "process_absent": true,
+      "timed_out": false
+    },
+    "changed_indices_from_baseline": [
+      5
+    ],
+    "cleanup_residual_zero": true,
+    "diagnostic_stack_fingerprint": {
+      "known_chain": "gpu.foundation shutdown -> NGX D3D12 shutdown -> NvTelemetryAPI64 UninitializeTelemetry -> telemetry worker WaitNamedPipeW",
+      "matched": true,
+      "name": "ngx_telemetry_shutdown_wait_v1",
+      "observed_reference_offsets": {
+        "gpu_foundation_plugin": "0x18F4D3 (reference dump; live stack may resolve symbol only)",
+        "ngx_shutdown": "NVSDK_NGX_D3D12_Shutdown1+0x82 (reference dump)",
+        "telemetry_uninitialize": "UninitializeTelemetry+0xAF (reference dump)",
+        "telemetry_worker": "NvTelemetryBridge64.dll+0x134F8 (reference dump)"
+      },
+      "required_tokens": {
+        "gpu_foundation_shutdown": true,
+        "ngx_d3d12_shutdown": true,
+        "telemetry_bridge_stack": true,
+        "telemetry_named_pipe_wait": true,
+        "telemetry_uninitialize": true
+      }
+    },
+    "frozen_classifier_known_signature_matched": false,
+    "functional_status": "fail",
+    "handle_order": [
+      "handle[0]",
+      "handle[1]",
+      "handle[2]",
+      "handle[3]",
+      "handle[4]",
+      "handle[5]",
+      "handle[6]"
+    ],
+    "handles": [
+      {
+        "active_voxel_count": "unavailable",
+        "background_value": "unavailable",
+        "c_contiguous": true,
+        "data_pointer": 5302070083584,
+        "dtype": "uint32",
+        "f_contiguous": true,
+        "grid_class": 2,
+        "grid_count": 1,
+        "grid_name": "unavailable",
+        "grid_type": "1",
+        "index": 0,
+        "index_bounding_box": [
+          [
+            -96,
+            -96,
+            -16
+          ],
+          [
+            127,
+            111,
+            639
+          ]
+        ],
+        "is_numpy_array": true,
+        "label": "handle[0]",
+        "logical_bytes": 47641344,
+        "metadata_keys": "unavailable",
+        "metadata_sha256": "FE27D6BB3A7176DB261937E5CDFFB59426E464FF5B92767B38146F601FA4B0AC",
+        "native_type": "numpy.ndarray",
+        "object_identity": 2199596264080,
+        "public_channel_or_semantic_name": "unavailable",
+        "public_short_grid_name": "Flow",
+        "python_type": "numpy.ndarray",
+        "shape": [
+          11910336
+        ],
+        "strides": [
+          4
+        ],
+        "value_type": "1",
+        "voxel_size": "unavailable",
+        "weak_reference_supported": true,
+        "world_bounding_box": [
+          [
+            -2.4000000953674316,
+            -2.4000000953674316,
+            -0.4000000059604645
+          ],
+          [
+            2.4000000953674316,
+            2.4000000953674316,
+            15.600000381469727
+          ]
+        ],
+        "writable": true
+      },
+      {
+        "active_voxel_count": "unavailable",
+        "background_value": "unavailable",
+        "c_contiguous": true,
+        "data_pointer": 5302137192448,
+        "dtype": "uint32",
+        "f_contiguous": true,
+        "grid_class": 2,
+        "grid_count": 1,
+        "grid_name": "unavailable",
+        "grid_type": "1",
+        "index": 1,
+        "index_bounding_box": [
+          [
+            -96,
+            -96,
+            -16
+          ],
+          [
+            127,
+            111,
+            639
+          ]
+        ],
+        "is_numpy_array": true,
+        "label": "handle[1]",
+        "logical_bytes": 47641344,
+        "metadata_keys": "unavailable",
+        "metadata_sha256": "B53401BDE66640775F876232C84BC4B04A7F87DB6A372626EA42D3272B7FC78C",
+        "native_type": "numpy.ndarray",
+        "object_identity": 2199596267920,
+        "public_channel_or_semantic_name": "unavailable",
+        "public_short_grid_name": "Flow",
+        "python_type": "numpy.ndarray",
+        "shape": [
+          11910336
+        ],
+        "strides": [
+          4
+        ],
+        "value_type": "1",
+        "voxel_size": "unavailable",
+        "weak_reference_supported": true,
+        "world_bounding_box": [
+          [
+            -2.4000000953674316,
+            -2.4000000953674316,
+            -0.4000000059604645
+          ],
+          [
+            2.4000000953674316,
+            2.4000000953674316,
+            15.600000381469727
+          ]
+        ],
+        "writable": true
+      },
+      {
+        "active_voxel_count": "unavailable",
+        "background_value": "unavailable",
+        "c_contiguous": true,
+        "data_pointer": 5302204301312,
+        "dtype": "uint32",
+        "f_contiguous": true,
+        "grid_class": 2,
+        "grid_count": 1,
+        "grid_name": "unavailable",
+        "grid_type": "1",
+        "index": 2,
+        "index_bounding_box": [
+          [
+            -96,
+            -96,
+            -16
+          ],
+          [
+            127,
+            111,
+            639
+          ]
+        ],
+        "is_numpy_array": true,
+        "label": "handle[2]",
+        "logical_bytes": 47641344,
+        "metadata_keys": "unavailable",
+        "metadata_sha256": "1593D169C3005777BC5FDDD30C3CA9E57BD63DD322B51EEABA08CEF50B29BAF2",
+        "native_type": "numpy.ndarray",
+        "object_identity": 2199596267152,
+        "public_channel_or_semantic_name": "unavailable",
+        "public_short_grid_name": "Flow",
+        "python_type": "numpy.ndarray",
+        "shape": [
+          11910336
+        ],
+        "strides": [
+          4
+        ],
+        "value_type": "1",
+        "voxel_size": "unavailable",
+        "weak_reference_supported": true,
+        "world_bounding_box": [
+          [
+            -2.4000000953674316,
+            -2.4000000953674316,
+            -0.4000000059604645
+          ],
+          [
+            2.4000000953674316,
+            2.4000000953674316,
+            15.600000381469727
+          ]
+        ],
+        "writable": true
+      },
+      {
+        "active_voxel_count": "unavailable",
+        "background_value": "unavailable",
+        "c_contiguous": true,
+        "data_pointer": 5302271410176,
+        "dtype": "uint32",
+        "f_contiguous": true,
+        "grid_class": 2,
+        "grid_count": 1,
+        "grid_name": "unavailable",
+        "grid_type": "1",
+        "index": 3,
+        "index_bounding_box": [
+          [
+            -96,
+            -96,
+            -16
+          ],
+          [
+            127,
+            111,
+            639
+          ]
+        ],
+        "is_numpy_array": true,
+        "label": "handle[3]",
+        "logical_bytes": 47641344,
+        "metadata_keys": "unavailable",
+        "metadata_sha256": "FAC9FE63E8928C313670ABCDB557CD711B750ADA1A11F503809BEFDEF84B41D9",
+        "native_type": "numpy.ndarray",
+        "object_identity": 2199596268304,
+        "public_channel_or_semantic_name": "unavailable",
+        "public_short_grid_name": "Flow",
+        "python_type": "numpy.ndarray",
+        "shape": [
+          11910336
+        ],
+        "strides": [
+          4
+        ],
+        "value_type": "1",
+        "voxel_size": "unavailable",
+        "weak_reference_supported": true,
+        "world_bounding_box": [
+          [
+            -2.4000000953674316,
+            -2.4000000953674316,
+            -0.4000000059604645
+          ],
+          [
+            2.4000000953674316,
+            2.4000000953674316,
+            15.600000381469727
+          ]
+        ],
+        "writable": true
+      },
+      {
+        "active_voxel_count": "unavailable",
+        "background_value": "unavailable",
+        "c_contiguous": true,
+        "data_pointer": 5302338519040,
+        "dtype": "uint32",
+        "f_contiguous": true,
+        "grid_class": 0,
+        "grid_count": 1,
+        "grid_name": "unavailable",
+        "grid_type": "6",
+        "index": 4,
+        "index_bounding_box": [
+          [
+            -48,
+            -48,
+            -8
+          ],
+          [
+            63,
+            55,
+            319
+          ]
+        ],
+        "is_numpy_array": true,
+        "label": "handle[4]",
+        "logical_bytes": 21660448,
+        "metadata_keys": "unavailable",
+        "metadata_sha256": "680EF76A462FF6A5A53483111599A8B29E344A9C200DA8538EB7443A5946C2D1",
+        "native_type": "numpy.ndarray",
+        "object_identity": 2199596266000,
+        "public_channel_or_semantic_name": "unavailable",
+        "public_short_grid_name": "Flow",
+        "python_type": "numpy.ndarray",
+        "shape": [
+          5415112
+        ],
+        "strides": [
+          4
+        ],
+        "value_type": "6",
+        "voxel_size": "unavailable",
+        "weak_reference_supported": true,
+        "world_bounding_box": [
+          [
+            -2.4000000953674316,
+            -2.4000000953674316,
+            -0.4000000059604645
+          ],
+          [
+            2.4000000953674316,
+            2.4000000953674316,
+            15.600000381469727
+          ]
+        ],
+        "writable": true
+      },
+      {
+        "active_voxel_count": "unavailable",
+        "background_value": "unavailable",
+        "c_contiguous": true,
+        "data_pointer": 5302372073472,
+        "dtype": "uint32",
+        "f_contiguous": true,
+        "grid_class": 2,
+        "grid_count": 1,
+        "grid_name": "unavailable",
+        "grid_type": "1",
+        "index": 5,
+        "index_bounding_box": [
+          [
+            -48,
+            -48,
+            -8
+          ],
+          [
+            63,
+            55,
+            319
+          ]
+        ],
+        "is_numpy_array": true,
+        "label": "handle[5]",
+        "logical_bytes": 8289664,
+        "metadata_keys": "unavailable",
+        "metadata_sha256": "4C164534E4570B7423606670E436323B4F5CA73D7006DD6937FDB1E75B174C71",
+        "native_type": "numpy.ndarray",
+        "object_identity": 2199596267536,
+        "public_channel_or_semantic_name": "unavailable",
+        "public_short_grid_name": "Flow",
+        "python_type": "numpy.ndarray",
+        "shape": [
+          2072416
+        ],
+        "strides": [
+          4
+        ],
+        "value_type": "1",
+        "voxel_size": "unavailable",
+        "weak_reference_supported": true,
+        "world_bounding_box": [
+          [
+            -2.4000000953674316,
+            -2.4000000953674316,
+            -0.4000000059604645
+          ],
+          [
+            2.4000000953674316,
+            2.4000000953674316,
+            15.600000381469727
+          ]
+        ],
+        "writable": true
+      },
+      {
+        "active_voxel_count": "unavailable",
+        "background_value": "unavailable",
+        "c_contiguous": true,
+        "data_pointer": 5300291852528,
+        "dtype": "uint32",
+        "f_contiguous": true,
+        "grid_class": "unavailable",
+        "grid_count": 0,
+        "grid_name": "unavailable",
+        "grid_type": "unavailable",
+        "index": 6,
+        "index_bounding_box": "unavailable",
+        "is_numpy_array": true,
+        "label": "handle[6]",
+        "logical_bytes": 0,
+        "metadata_keys": "unavailable",
+        "metadata_sha256": "4A57F0393F20AC96314770E00FF9DDEBA1020C20549D715BD6DEFA4AAE24209F",
+        "native_type": "numpy.ndarray",
+        "object_identity": 2199596263312,
+        "public_channel_or_semantic_name": "unavailable",
+        "public_short_grid_name": "unavailable",
+        "python_type": "numpy.ndarray",
+        "shape": [
+          0
+        ],
+        "strides": [
+          0
+        ],
+        "value_type": "unavailable",
+        "voxel_size": "unavailable",
+        "weak_reference_supported": true,
+        "world_bounding_box": "unavailable",
+        "writable": true
+      }
+    ],
+    "identified_mapping": {
+      "channel": "divergence",
+      "index": 5
+    },
+    "kit_peak_bytes": 15737917440,
+    "lifecycle_status": "unknown_shutdown_failure",
+    "metadata_operation_complete": true,
+    "metadata_sha256": "C378B19F826251C1DF667779DFB625778CFBCCC3DFF87768903EFAECF9249D72",
+    "normal_exit": false,
+    "outer_runner_terminated_target": true,
+    "process_exit_code": null,
+    "returned_handle_count": 7,
+    "stage_close_complete": true,
+    "tree_peak_bytes": 15850504192
+  },
+  "generated_at_utc": "2026-08-14T03:54:22.226656+00:00",
+  "harness_correction": {
+    "correction": "Future metadata controls require functional pass, lifecycle normal_exit, accepted normal-exit sample, and process exit code zero.",
+    "defect": "The Phase 6GD parent metadata runner accepted raw shutdown_complete and its guard exit without propagating runner_evidence lifecycle and OS-exit axes.",
+    "effect": "The frozen divergence result remained unknown_shutdown_failure, but the RGBA control was launched before the defect was discovered.",
+    "existing_artifacts_reclassified": false,
+    "kit_conditions_rerun": false
+  },
+  "history": {
+    "channel_preflight_qualified": false,
+    "divergence_lifecycle_reclassified": false,
+    "formal_population_started": false,
+    "phase6gc_reclassified": false,
+    "phase6gc_retried": false,
+    "rgba_retried": false
+  },
+  "mapping": {
+    "confirmed": {
+      "handle[5]": "divergence"
+    },
+    "legacy_order_mechanically_extended": false,
+    "legacy_public_ogn_order": [
+      "temperature",
+      "fuel",
+      "burn",
+      "smoke",
+      "velocity",
+      "divergence"
+    ],
+    "operational_schema_id": "unavailable",
+    "reason": "RGBA control reached the unchanged 16 GiB Kit hard limit before readback; RGB control was not started after the nonreplaceable resource failure.",
+    "seventh_handle_formal_meaning": "unavailable",
+    "unconfirmed": {
+      "handle[6]": "unknown"
+    }
+  },
+  "next_gate": "A new pre-runtime contract must safely identify handle[6] without changing production or exceeding the qualified resource limits; only then may an operational schema fixture and S93 channel preflight start.",
+  "phase": "phase6gd",
+  "production_changed": false,
+  "rgba_control": {
+    "artifact_root": "C:\\Users\\junic\\src\\campfire-simulator\\artifacts\\phase6gd-channel-schema-control-rgba",
+    "bounded_metadata_complete": false,
+    "cleanup_residual_zero": true,
+    "guard_exit_code": 15,
+    "guard_status": "failed",
+    "guard_stop_reason": "kit_private_limit",
+    "kit_limit_bytes": 17179869184,
+    "kit_limit_excess_bytes": 362012672,
+    "kit_peak_bytes": 17541881856,
+    "readback_called": false,
+    "replacement_or_retry": false,
+    "tree_peak_bytes": 17654484992
+  },
+  "schema": "campfire.phase6gd.public-channel-schema-safe-stop-summary.v1",
+  "status": "safe_stop_unknown_seventh_handle"
+}

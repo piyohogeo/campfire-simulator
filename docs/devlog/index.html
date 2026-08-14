@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6gb">最新記録</a>
+        <a href="#phase-6gd">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6gb">Phase 6GBの結果を読む</a>
+        <a class="button primary" href="#phase-6gd">Phase 6GDの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6GB · pre-readback safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6GD · unknown handle safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,17 @@
   </header>
 
   <main>
+    <section id="phase-6gd" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6GD public channel schema discovery"><span class="phase-number compact">6GD</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">mapping partial · safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6GD · bounded public metadata</p><h2>Divergence was identified;<br>the seventh handle remains unknown.</h2><p>The fresh baseline enumerated seven handles without indexing them as named channels. Handles 0–4 were nonempty public volume buffers while 5 and 6 were empty. Public metadata exposed no semantic channel name.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">One-variable evidence</p><h3><code>handle[5] = divergence</code></h3><p>Enabling only <code>divergenceEnabled</code> populated handle 5 with an 8,289,664-byte scalar buffer. Every other handle metadata SHA remained equal to baseline. Metadata and stage close completed, but normal OS exit did not: the frozen final classifier remains <code>unknown_shutdown_failure</code>. CDB stack, modules and detach completed; exact outer cleanup reported zero residual.</p></section><section class="note caution"><p class="note-label">Active safe stop</p><h3>RGBA control crossed Kit 16 GiB before readback.</h3><p>At frame 100, Kit reached 17,541,881,856 bytes, 362,012,672 bytes over the hard limit. The last marker still had a live timeline, 991 active blocks and the exact S93 Point/source contract. A parent-runner outcome-propagation defect had allowed this control to start; it is now fail-closed without rerunning or reclassifying either artifact. The guard stopped only the exact attempt tree; RGB was not launched.</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Decision</p><h3>No operational seven-channel schema was frozen.</h3><p><code>handle[6]</code> remains <code>unknown</code>. Native export evidence contains both RGBA and RGB fields, so assigning either by position would be inference. Schema fixtures, S93 channel preflight, the formal nine processes, flux/deep-velocity results and comparison video remain unstarted.</p><p><a href="assets/phase6/phase6gd_public_channel_schema_summary.json">machine summary</a> · <a href="../design/phase6gd_public_channel_schema.md">design note</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>internal schema diagnosis; no new video</small></span></button></div><div class="check-list" role="list"><div role="listitem"><span>7</span><p><strong>Handles</strong><small>bounded metadata</small></p></div><div role="listitem"><span>5</span><p><strong>Divergence</strong><small>confirmed index</small></p></div><div role="listitem"><span>?</span><p><strong>Handle 6</strong><small>unknown</small></p></div><div role="listitem"><span>0/9</span><p><strong>Formal</strong><small>not launched</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Pending roadmap</p><h3>Identify handle 6 within the qualified resource limits.</h3><p>Do not retry Phase 6GC/6GD or raise the ceiling after this result. A future independent contract must obtain unambiguous public evidence for handle 6 without changing production physics. Only then may the versioned operational schema fixture and S93 channel preflight begin.</p><p>Release build, Phase 0 RTX, Phase 3, focused Phase 6F 212/212 plus Phase 6G 22/22, standard 78/78 and devlog validation passed. Production/latest-demo hashes are unchanged and final residuals are zero.</p></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6gc" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6GC payload-native source contract"><span class="phase-number compact">6GC</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">0 / 9 · schema safe stop</span></aside>
@@ -5152,7 +5163,7 @@
       <div class="shell">
         <p class="section-kicker">Roadmap</p>
         <h2>小さく燃やして、確かめながら進む。</h2>
-        <p>Phase 6FZはapp-ready import 3/3、CDB progress fixture 7/7、正式memory population 9/9を完了。Kit 16 GiB／tree 17 GiBをqualifiedし、旧14 GiBは通常高水位に近すぎる上限として退役した。Phase 6FOはqualified contractを使う別承認・新rootで再開可能だが、まだ開始していない。</p>
+        <p>Phase 6FZは16/17 GiB resource境界をqualifiedした。Phase 6GDはdivergenceをhandle 5へ確定したが、RGBA controlがreadback前にKit上限へ到達したため、handle 6はunknownのままである。Phase 6FO、S93/S100比較、動画、Point採用、production統合はblockedを維持する。</p>
         <ol class="roadmap">
           <li class="done"><span>0</span><div><strong>環境成立確認</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>1</span><div><strong>Flow単体検証</strong><small>完了 · 2026.08.04</small></div></li>
@@ -5160,7 +5171,7 @@
           <li class="done"><span>3</span><div><strong>木材熱モデル</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>4</span><div><strong>配置と通気</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>5</span><div><strong>崩壊</strong><small>完了 · 2026.08.04</small></div></li>
-          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · 16/17 GiB qualified、Phase 6FO再開は別承認待ち</small></div></li>
+          <li class="current"><span>6</span><div><strong>校正と品質</strong><small>進行中 · public schemaはunknown handle 6でblocked</small></div></li>
         </ol>
       </div>
     </section>

@@ -70,6 +70,9 @@ class Phase6GdChannelSchemaDiscovery(unittest.TestCase):
         self.assertIn('"status": "safe_stop_unknown_seventh_handle"', body)
         self.assertIn('"handle[6]": "unknown"', body)
         self.assertIn('"operational_schema_id": "unavailable"', body)
+        self.assertIn('runner_evidence.json', body)
+        self.assertIn('normal_exit_sample_accepted', body)
+        self.assertIn('"harness_correction"', body)
         self.assertIn('"formal_population_started": False', body)
         self.assertIn('"readback_called": False', body)
 

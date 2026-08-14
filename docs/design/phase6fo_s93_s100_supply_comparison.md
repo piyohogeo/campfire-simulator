@@ -1,5 +1,28 @@
 # Phase 6FO S93 / S100 Point supply comparison
 
+## 2026-08-14 Phase 6GD public-channel schema safe stop
+
+Phase 6GD preserved the Phase 6GC result and enumerated all seven Python
+handles without assigning names. The bounded baseline found handles 0--4
+nonempty and handles 5--6 empty. A one-variable divergence export control
+completed metadata and stage close and uniquely populated handle 5, establishing
+that index as divergence. Its Kit process did not exit in the frozen grace and
+the final classifier remains `unknown_shutdown_failure`; CDB stack, module, and
+detach evidence completed and exact outer cleanup left no residual. A parent
+runner propagation defect nevertheless launched the following one-variable RGBA
+control; the runner is now fail-closed on all three outcome axes without rerun
+or reclassification. RGBA crossed the unchanged 16 GiB Kit limit at frame 100,
+before readback, and RGB was not started. Handle 6 therefore remains formally
+unknown. No operational schema
+contract/fixture, S93 channel preflight, formal comparison, transport result,
+or video exists. A future separately frozen method must identify handle 6
+within the qualified resource limits before Phase 6FO can restart.
+
+The safe stop passed the final Release build, Phase 0 RTX, Phase 3 authority
+and zero mass-balance checks, focused Phase 6F 212/212 and Phase 6G 22/22,
+standard 78/78, and devlog validation. Production and latest-demo hashes were
+unchanged and final Kit/CDB/GPU-helper residuals were zero.
+
 ## 2026-08-14 Phase 6GC payload-native runtime safe stop
 
 The payload-native source contract passed at runtime. S93 expected/live hashes

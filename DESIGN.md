@@ -12,6 +12,25 @@ OGN definition names six outputs but does not explain the seventh Python object,
 so it is reference evidence rather than an inferred mapping. See
 `docs/design/phase6gd_public_channel_schema.md`.
 
+Runtime evidence kept the schema fail-closed. Baseline returned seven handles:
+0--4 nonempty, 5--6 empty. Enabling only divergence uniquely populated handle 5
+and completed its metadata operation and stage close, but Kit did not exit
+within the frozen grace period. Bounded CDB obtained all-thread stacks, modules,
+and explicit detach; although its diagnostic fingerprint contained all five NGX
+tokens, the frozen final classifier remained `unknown_shutdown_failure` and is
+not reclassified here. The Phase 6GD parent runner failed to propagate that
+three-axis result and therefore launched the next RGBA control; the runner now
+requires functional pass, lifecycle `normal_exit`, accepted normal-exit sample,
+and exit code zero before any later control. Existing artifacts were not rerun.
+RGBA reached the unchanged 16 GiB Kit limit at frame 100 before readback (peak
+17,541,881,856 bytes); exact cleanup removed the attempt tree and RGB was not
+started. Therefore handle 6 remains unknown,
+no operational schema ID/fixture exists, and S93 preflight/formal 9-process
+comparison/video remain unstarted. Production and Phase 6GC are unchanged.
+Release build, Phase 0 RTX, Phase 3 (zero dry/wet mass-balance error), focused
+Phase 6F 212/212 plus Phase 6G 22/22, standard 78/78 and devlog validation all
+passed; production/latest-demo hashes were unchanged and final residuals zero.
+
 # Phase 6GC payload-native source contract
 
 Phase 6GB remains frozen at its exact decimal-source safe stop. Phase 6GC

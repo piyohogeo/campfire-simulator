@@ -3,6 +3,19 @@
 - Added the Phase 6GD bounded seven-handle metadata baseline and a separately
   frozen, one-variable divergence/RGBA/RGB control contract. The baseline does
   not assign semantic names and the S93/S100/OFF population remains stopped.
+- Confirmed `handle[5]` as divergence with a one-variable control, then safely
+  stopped the RGBA control at the unchanged 16 GiB Kit limit before readback.
+  `handle[6]` remains unknown; RGB, schema fixtures, channel preflight, formal
+  comparison and video were not started, and exact cleanup left no residual.
+- Corrected the Phase 6GD parent runner to propagate the frozen functional,
+  lifecycle, normal-exit acceptance, and process-exit axes. The divergence
+  metadata and stage close completed, but its final classifier remains the
+  original `unknown_shutdown_failure`; bounded CDB stack/module/detach succeeded
+  and existing artifacts were neither rerun nor reclassified.
+- Reconfirmed the safe stop with Release build, Phase 0 RTX, Phase 3 zero
+  dry/wet mass-balance error, focused Phase 6F 212/212 and Phase 6G 22/22,
+  standard 78/78, and devlog validation. Production and latest-demo hashes are
+  unchanged; dump/upload/final residual counts are zero.
 
 - Froze Phase 6GD as a public-readback-schema-only discovery. Phase 6GC remains a seven-handle pre-indexing safe stop; one fresh S93 process may label handles only by index and collect bounded public array, volume, NanoVDB, API, and version metadata without assigning channel semantics.
 - Added 256 MiB per-handle and 512 MiB total temporary NanoVDB bounds, sequential handle release, unavailable-field reporting, metadata hashes, and direct reuse of the Phase 6GC stage/source plus Phase 6FZ/6FU/6FW release-after-close safety path. The bundled six-output Flow 110.0.0 OGN definition is recorded as evidence but is not extended by inference.
