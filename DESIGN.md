@@ -3972,3 +3972,20 @@ runtime前に固定した。
 Kit/tree peakは14,940,184,576／15,103,287,296 bytesで16/17 GiB以内、cleanup
 residualは0である。R2、正式9条件、production、既定値、V3、P4は未開始であり、
 volume変換には別承認・新contract・新rootを要する。
+
+# Phase 6GQ slot-0 temperature volume conversion qualification
+
+Phase 6GN／6GO／6GPを凍結したまま、qualified schemaのslot 0=
+`temperature`をoffline fixtureで確認し、新rootの1 processでpublic
+`buffer_to_volume()`を正確に1回だけ実行した。contract SHA-256は
+`871B86214EBDDE5E4C9C8C64F2CC7BD20635892F4B62D813001CFB1365C92A25`である。
+
+sourceは`numpy.ndarray`、shape `[11910336]`、dtype `uint32`、logical bytes
+47,641,344だった。slot 1～6を先に解放し、変換は復帰して型名
+`omni.volume._volume.GridData`を記録した。volume、slot 0 sourceの順に解放し、
+weak residualは0、最終operation markerは`phase6gq_slot0_release_after`だった。
+stage closeは3.678707秒、`shutdown_complete`後にKitはexit code 0で自然終了した。
+Kit/tree peakは14,914,543,616／15,078,756,352 bytesで16/17 GiB以内、残留0で
+あるため、`operation=pass`／`lifecycle=normal_exit`としてslot 0 temperature
+conversion boundaryをqualifiedとする。volume metadata、他channel、sampling、
+反復、正式9条件、production、既定値、V3、P4は未開始である。

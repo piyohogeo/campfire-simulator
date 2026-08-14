@@ -1,0 +1,102 @@
+{
+  "schema": "campfire.phase6gq.temperature-volume-qualification.v1",
+  "status": "qualified",
+  "artifact_root": "artifacts/phase6gq-temperature-volume-1",
+  "contract_sha256": "871B86214EBDDE5E4C9C8C64F2CC7BD20635892F4B62D813001CFB1365C92A25",
+  "history": {
+    "phase6gn_reclassified": false,
+    "phase6go_reclassified": false,
+    "phase6gp_reclassified": false,
+    "prior_artifact_reused": false
+  },
+  "population": {
+    "launches": 1,
+    "accepted": 1,
+    "later_operations_started": false,
+    "formal_nine_process_population_started": false
+  },
+  "mapping": {
+    "schema_id": "flow110.0.0-kit110.2-public-readback-rgba7-v1",
+    "slot": 0,
+    "channel": "temperature",
+    "state": "nonempty",
+    "inferred_again": false
+  },
+  "operation": {
+    "result": "pass",
+    "public_readback_calls": 1,
+    "volume_conversion_calls": 1,
+    "conversion_returned": true,
+    "volume_return_type": "omni.volume._volume.GridData",
+    "last_marker": "phase6gq_slot0_release_after",
+    "release_order": ["slots_1_through_6", "converted_volume", "slot_0_source", "handle_list"],
+    "volume_weak_reference_alive_after_release": false,
+    "source_weak_reference_alive_after_release": false,
+    "weak_reference_residual": 0,
+    "source": {
+      "slot": 0,
+      "channel": "temperature",
+      "python_type": "numpy.ndarray",
+      "ndim": 1,
+      "shape": [11910336],
+      "dtype": "uint32",
+      "size": 11910336,
+      "nbytes": 47641344,
+      "empty": false
+    },
+    "numpy_asarray_calls": 0,
+    "volume_metadata_calls": 0,
+    "field_body_files_written": 0,
+    "sampling_calls": 0,
+    "collector_calls": 0,
+    "flux_calls": 0
+  },
+  "lifecycle": {
+    "result": "normal_exit",
+    "stage_close_seconds": 3.678707,
+    "shutdown_marker": "shutdown_complete",
+    "natural_os_exit": true,
+    "process_exit_code": 0,
+    "outer_runner_termination": false,
+    "low_level_diagnostic_allowed": false,
+    "low_level_diagnostic_invoked": false
+  },
+  "resource": {
+    "kit_peak_bytes": 14914543616,
+    "kit_limit_bytes": 17179869184,
+    "kit_margin_bytes": 2265325568,
+    "tree_peak_bytes": 15078756352,
+    "tree_limit_bytes": 18253611008,
+    "tree_margin_bytes": 3174854656,
+    "runner_peak_bytes": 134856704,
+    "diagnostic_peak_bytes": 16900096,
+    "minimum_available_physical_bytes": 81176903680,
+    "minimum_commit_headroom_bytes": 100808986624
+  },
+  "safety": {
+    "fatal_count": 0,
+    "dump_count": 0,
+    "automatic_upload_count": 0,
+    "cleanup_all_observed_absent": true,
+    "residual_process_count": 0
+  },
+  "production": {
+    "changed": false,
+    "app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "latest_demo_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285"
+  },
+  "verification": {
+    "release_build": "passed",
+    "phase0_rtx": "passed_exit_0",
+    "phase3": "passed_exit_0",
+    "phase6gq_focused": "19_of_19_passed",
+    "phase6gp_focused": "19_of_19_passed",
+    "phase6go_focused": "18_of_18_passed",
+    "phase6gn_focused": "5_of_5_passed",
+    "phase6gl_focused": "3_of_3_passed",
+    "standard_suite": "passed_8_of_8_processes",
+    "devlog_static": "passed",
+    "residual_process_count_after_verification": 0
+  },
+  "next_boundary": "A separately approved single-process bounded public volume-metadata read; no other channel, sampling, repeat, or formal population."
+}

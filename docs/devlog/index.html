@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6gp">最新記録</a>
+        <a href="#phase-6gq">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6gp">Phase 6GPの結果を読む</a>
+        <a class="button primary" href="#phase-6gq">Phase 6GQの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6GP · metadata-only R1 qualified</strong></div>
+        <div><span>現在地</span><strong>Phase 6GQ · temperature volume boundary qualified</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,17 @@
   </header>
 
   <main>
+    <section id="phase-6gq" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6GQ temperature volume conversion qualification"><span class="phase-number compact">6GQ</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">single conversion qualified</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6GQ · one channel, one conversion</p><h2>Qualified temperature slot 0 converted once;<br>no volume content was inspected.</h2><p>A fresh corrected-four S93 process used the existing seven-channel mapping, released slots 1–6, and called the public volume conversion once for slot 0. Only the returned Python type name was recorded.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Operation</p><h3>The conversion returned and both references released.</h3><p>Source slot 0 was a 47,641,344-byte <code>uint32</code> array. The call returned <code>omni.volume._volume.GridData</code>. Release order was nonselected slots, converted volume, then slot-0 source; weak residual was zero.</p></section><section class="note"><p class="note-label">Lifecycle</p><h3>Normal exit was independently confirmed.</h3><p>The final operation marker was <code>phase6gq_slot0_release_after</code>. Stage close took 3.678707 seconds, <code>shutdown_complete</code> was durable, and Kit exited naturally with code 0.</p></section></div>
+          <section class="verification"><div class="verification-copy"><p class="section-kicker">Safety envelope</p><h3>One conversion passed within 16/17 GiB.</h3><p>Kit/tree peaks were 14,914,543,616 / 15,078,756,352 bytes, leaving 2,265,325,568 / 3,174,854,656 bytes. Fatal, dump, upload, low-level diagnostic, and residual counts were zero.</p><p><a href="assets/phase6/phase6gq_temperature_volume_qualification.json">machine report</a> · <a href="../design/phase6gq_temperature_volume_boundary.md">design note</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>internal conversion check; no new video</small></span></button></div><div class="check-list" role="list"><div role="listitem"><span>1</span><p><strong>Readback</strong><small>public API</small></p></div><div role="listitem"><span>1</span><p><strong>Conversion</strong><small>temperature only</small></p></div><div role="listitem"><span>0</span><p><strong>Weak residual</strong><small>released</small></p></div><div role="listitem"><span>0</span><p><strong>Later stages</strong><small>not started</small></p></div></div></section>
+          <section class="note next"><p class="note-label">Continuation roadmap</p><h3>Bounded volume metadata is the next separate boundary.</h3><p>Phase 6GQ does not qualify volume contents, another channel, repeated conversion, sampling, or the formal population. A new approval, contract, and empty root are required before reading a small predeclared set of public volume metadata.</p></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6gp" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6GP metadata-only R1 qualification"><span class="phase-number compact">6GP</span><p><time datetime="2026-08-14">2026.08.14</time></p><span class="pill current">R1 qualified</span></aside>
@@ -5274,7 +5285,7 @@
         <p class="section-kicker">Roadmap</p>
         <h2>小さく燃やして、確かめながら進む。</h2>
         <p>Phase 6GNでmodule／callableを分離したexact-wrapper smokeは5/5合格し、Phase 6GMのimport不具合は解消した。しかし正式attempt01 S93はframe 180の7-handle readback直後、spatial result保存前にnative access violation <code>0xC0000005</code>でsafe stopした。accepted 0/9、replacement 0で後続は未起動、exact cleanup residualは0である。Phase 6GNを凍結し、次はこのpost-readback native operation境界だけを別承認Phaseで隔離する。S93/S100 pair、flux、deep velocity、動画、Point policy、production統合は未到達である。</p>
-        <p><strong>Current continuation:</strong> Phase 6GP qualified one metadata-only R1 process with a natural OS exit. Volume conversion, repeated readback, and the formal S93/S100/OFF population remain separate approval boundaries.</p>
+        <p><strong>Current continuation:</strong> Phase 6GQ qualified one slot-0 temperature volume conversion with a natural OS exit. Bounded volume metadata, other channels, repeated readback, and the formal S93/S100/OFF population remain separate approval boundaries.</p>
         <ol class="roadmap">
           <li class="done"><span>0</span><div><strong>環境成立確認</strong><small>完了 · 2026.08.04</small></div></li>
           <li class="done"><span>1</span><div><strong>Flow単体検証</strong><small>完了 · 2026.08.04</small></div></li>

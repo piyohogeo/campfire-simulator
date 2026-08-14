@@ -1434,3 +1434,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   S93 process. Seven bounded slot records and ordered release completed with
   zero weak residual; stage close completed in 125.816074 seconds and Kit
   exited naturally with code 0. R2 and the formal population were not started.
+- Qualified the Phase 6GQ single slot-0 temperature conversion boundary. One
+  public `buffer_to_volume()` call returned `omni.volume._volume.GridData`, the
+  converted object and source were released with zero weak residual, and Kit
+  exited naturally. No volume metadata, other channel, or later operation ran.
