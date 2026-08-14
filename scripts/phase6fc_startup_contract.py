@@ -3,6 +3,18 @@
 from __future__ import annotations
 
 
+def _sample_timestamp(row: dict) -> int:
+    """Normalize the current marker-safe sample key and frozen legacy artifacts."""
+    current = row.get("sample_perf_counter_ns")
+    legacy = row.get("perf_counter_ns")
+    if current is not None and legacy is not None and int(current) != int(legacy):
+        raise ValueError("conflicting startup sample timestamp keys")
+    value = current if current is not None else legacy
+    if value is None:
+        raise KeyError("sample_perf_counter_ns")
+    return int(value)
+
+
 def classify_startup(history: list[dict], source: dict, thresholds: dict) -> dict:
     final_frame = int(thresholds["final_frame"])
     classification_frame = int(thresholds["classification_frame"])
@@ -26,7 +38,7 @@ def classify_startup(history: list[dict], source: dict, thresholds: dict) -> dic
         and bool(rows[0].get("timeline_playing"))
         and all(
             int(right["frame"]) == int(left["frame"]) + 1
-            and int(right["perf_counter_ns"]) > int(left["perf_counter_ns"])
+            and _sample_timestamp(right) > _sample_timestamp(left)
             and int(right["kit_update_number"]) > int(left["kit_update_number"])
             and float(right["timeline_time"]) > float(left["timeline_time"])
             and bool(right.get("timeline_playing"))

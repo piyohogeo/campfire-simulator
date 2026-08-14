@@ -385,6 +385,18 @@ def main() -> int:
         atomic_json(output / "heartbeat.json", {"schema":"campfire.phase6gv.heartbeat.v1", "status":"terminal",
                     "stop_reason":"runner_fixture_failure", "updated_utc":utc_now()})
         raise SystemExit("Phase 6GV runner fixture failed; Kit was not launched")
+    startup_fixture = subprocess.run([sys.executable, str(SCRIPT_DIR / "test_phase6gx_startup_timestamp_contract.py")],
+                                     cwd=REPO, capture_output=True, text=True, timeout=120)
+    (preflight / "startup_timestamp_fixture.stdout.log").write_text(startup_fixture.stdout[-65536:], encoding="utf-8")
+    (preflight / "startup_timestamp_fixture.stderr.log").write_text(startup_fixture.stderr[-65536:], encoding="utf-8")
+    try:
+        startup_fixture_value = json.loads(startup_fixture.stdout.strip().splitlines()[-1])
+    except (IndexError, json.JSONDecodeError):
+        startup_fixture_value = None
+    if startup_fixture.returncode != 0 or not startup_fixture_value or not startup_fixture_value.get("passed"):
+        atomic_json(output / "heartbeat.json", {"schema":"campfire.phase6gv.heartbeat.v1", "status":"terminal",
+                    "stop_reason":"startup_timestamp_fixture_failure", "updated_utc":utc_now()})
+        raise SystemExit("Phase 6GX startup timestamp fixture failed; Kit was not launched")
     sequence = [item for _ in range(contract["population"]["pattern_repetitions"]) for item in contract["population"]["fixed_order_pattern"]]
     atomic_json(output / "fixed_sequence.json", {"schema":"campfire.phase6gv.fixed-sequence.v1", "generated_before_runtime":True,
         "phase":contract.get("phase", "phase6gv"), "order":sequence, "maximum_launches":len(sequence)})
