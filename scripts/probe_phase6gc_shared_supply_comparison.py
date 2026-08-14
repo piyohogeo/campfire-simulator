@@ -1422,7 +1422,7 @@ async def _run():
                 current_active = int(flow.get_active_block_count())
                 liveness_sample = {
                     "frame": int(frame),
-                    "perf_counter_ns": int(time.perf_counter_ns()),
+                    "sample_perf_counter_ns": int(time.perf_counter_ns()),
                     "kit_update_number": int(app.get_update_number()),
                     "timeline_playing": bool(timeline.is_playing()),
                     "timeline_time": float(timeline.get_current_time()),
@@ -1774,7 +1774,7 @@ async def _run():
             "telemetry_fresh": bool(
                 report["flow_liveness_history"]
                 and all(
-                    right["perf_counter_ns"] > left["perf_counter_ns"] and right["frame"] > left["frame"]
+                    right["sample_perf_counter_ns"] > left["sample_perf_counter_ns"] and right["frame"] > left["frame"]
                     for left, right in zip(report["flow_liveness_history"], report["flow_liveness_history"][1:])
                 )
             ),

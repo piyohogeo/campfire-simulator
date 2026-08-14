@@ -24,12 +24,12 @@ from phase6gt_temporary_nvdb_contract import (
     POLL_INTERVAL_SECONDS,
     POLL_TIMEOUT_SECONDS,
     delete_exact_temporary,
-    exact_temporary_path,
     poll_nonempty_file,
     require_absent,
     require_save_return,
 )
 from phase6gu_resource_marker import canonical_marker_payload
+from phase6gv_runtime_contract import canonical_temporary_path
 
 BASE_PATH = (SCRIPT_DIR / "probe_phase6gn_supply_comparison.py").resolve()
 SCHEMA_PATH = (SCRIPT_DIR / "phase6gh_public_channel_schema_candidate.json").resolve()
@@ -39,7 +39,7 @@ MAX_GRID_COUNT = 4
 settings = carb.settings.get_settings()
 REPORT_PATH = Path(settings.get_as_string("/phase6go/isolationReportPath")).resolve()
 AUDIT_PATH = Path(settings.get_as_string("/phase6fz/importAuditPath")).resolve()
-TEMPORARY_PATH = exact_temporary_path(REPORT_PATH.parent)
+TEMPORARY_PATH = canonical_temporary_path(REPORT_PATH.parent)
 
 
 def _atomic_json(path: Path, payload: dict) -> None:
