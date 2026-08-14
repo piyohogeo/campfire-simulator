@@ -8,6 +8,11 @@
   removed only the unnecessary post-metadata observation for this diagnostic,
   and added an eight-case fail-closed next-condition fixture covering all
   functional, lifecycle, OS-exit, cleanup, and residual axes.
+- Froze the first Phase 6GE root as a pre-Kit parameter-binding safe stop when
+  the real case runner rejected the new report token. Kit peak was zero, exact
+  cleanup succeeded, and C1/C2 were not launched. Phase 6GF adds only the
+  explicit token plus a real no-Kit command-line fixture and starts from a new
+  contract/root without reusing or reclassifying Phase 6GE.
 
 - Added the Phase 6GD bounded seven-handle metadata baseline and a separately
   frozen, one-variable divergence/RGBA/RGB control contract. The baseline does

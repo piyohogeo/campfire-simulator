@@ -12,6 +12,12 @@ functional pass、normal exit、accepted sample、exit 0、exact cleanup、
 residual 0を全て要求する。詳細は
 `docs/design/phase6ge_color_slot_diagnostic.md`。
 
+最初のPhase 6GE rootはcase runnerの`ReportPhase` ValidateSetがphase6gdまで
+だったためKit起動前に停止した。Kit peak 0、20/21 GiB設定、exact cleanup
+残留0を保存し、C1/C2は未開始である。これを再利用・再分類せず、明示token
+とreal command-line no-Kit fixtureだけを追加したPhase 6GF contract／空root
+へ分離する。
+
 # Phase 6GD public NanoVDB channel schema discovery
 
 Phase 6GC remains frozen at its seven-handle pre-indexing safe stop. Phase 6GD

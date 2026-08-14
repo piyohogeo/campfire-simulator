@@ -46,3 +46,17 @@ candidate schema plus offline count/order/type fixture. It must stop before the
 formal S93 channel preflight, S93/S100/OFF population, directional metrics,
 video, S100 adoption, production integration, defaults, V3, P4, or dynamic
 geometry.
+
+## Phase 6GE pre-Kit safe stop and Phase 6GF correction
+
+The first Phase 6GE root stopped before Kit because the reused case runner's
+`ReportPhase` `ValidateSet` ended at `phase6gd`. Resource telemetry recorded Kit
+peak zero, the intended 20/21 GiB and 32 GiB limits, and exact cleanup with no
+residual. C1 and C2 were not started. This is a parameter-binding harness defect,
+not schema, Flow, resource, or lifecycle evidence, and the root is frozen.
+
+Phase 6GF changes only that boundary by adding the explicit diagnostic report
+token and exercising the real case runner with `-ValidateArgumentsOnly` before
+Kit. It uses a new contract and empty runtime root; no Phase 6GE artifact is
+reused and all diagnostic, physical, mapping, and next-condition gates remain
+identical.

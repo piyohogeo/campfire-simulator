@@ -17,7 +17,10 @@ $expectedHash = ((Get-Content -Encoding UTF8 $hashPath | Select-Object -First 1)
 $actualHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $contractPath).Hash
 if ($actualHash -ne $expectedHash) { throw "Phase 6GE contract hash mismatch" }
 $contract = Get-Content -Raw -Encoding UTF8 $contractPath | ConvertFrom-Json
-if ($contract.schema -ne "campfire.phase6ge.color-slot-diagnostic-contract.v1") { throw "Phase 6GE contract schema mismatch" }
+$phase = [string]$contract.phase
+if ($phase -notin @("phase6ge", "phase6gf") -or $contract.schema -ne "campfire.$phase.color-slot-diagnostic-contract.v1") {
+    throw "Phase 6GE/6GF contract schema mismatch"
+}
 
 $production = Join-Path $repo "_build\windows-x86_64\release\apps\campfire.simulator.kit"
 $productionBefore = (Get-FileHash -Algorithm SHA256 -LiteralPath $production).Hash
@@ -26,8 +29,8 @@ Copy-Item -LiteralPath $contractPath -Destination (Join-Path $OutputRoot "frozen
 Copy-Item -LiteralPath $hashPath -Destination (Join-Path $OutputRoot "frozen_contract.sha256")
 
 $plan = [ordered]@{
-    schema = "campfire.phase6ge.color-slot-diagnostic-plan.v1"
-    phase = "phase6ge"
+    schema = "campfire.$phase.color-slot-diagnostic-plan.v1"
+    phase = $phase
     contract_sha256 = $actualHash
     controls = @($contract.controls.order)
     started_at_utc = [DateTime]::UtcNow.ToString("o")
@@ -52,7 +55,7 @@ foreach ($condition in @($contract.controls.order)) {
     $arguments = @(
         "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", $childRunner,
         "-OutputRoot", $conditionRoot, "-Control", $mode,
-        "-DiagnosticResourceContractPath", $contractPath, "-ReportPhase", "phase6ge"
+        "-DiagnosticResourceContractPath", $contractPath, "-ReportPhase", $phase
     )
     if ($mode -ne "baseline") { $arguments += @("-ControlContractPath", $controlContract) }
     $process = Start-Process -FilePath $powershell -ArgumentList $arguments -PassThru -WindowStyle Hidden `

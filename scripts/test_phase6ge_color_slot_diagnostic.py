@@ -30,6 +30,21 @@ class Phase6GeColorSlotDiagnostic(unittest.TestCase):
         self.assertEqual(base["safety"]["kit_private_limit_bytes"], 16 * 1024**3)
         self.assertEqual(base["safety"]["unique_tree_private_limit_bytes"], 17 * 1024**3)
 
+    def test_phase6gf_contract_freezes_prekit_safe_stop(self):
+        path = SCRIPTS / "phase6gf_color_slot_diagnostic_contract.json"
+        expected = (SCRIPTS / "phase6gf_color_slot_diagnostic_contract.sha256").read_text().split()[0]
+        self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest().upper(), expected)
+        contract = json.loads(path.read_text(encoding="utf-8"))
+        self.assertFalse(contract["history"]["phase6ge_prekit_safe_stop_reclassified"])
+        self.assertFalse(contract["history"]["phase6ge_artifact_reused"])
+
+    def test_real_case_runner_accepts_corrected_phase_token(self):
+        case_runner = (SCRIPTS / "run_phase6fo_supply_case.ps1").read_text(encoding="utf-8")
+        fixture = (SCRIPTS / "run_phase6gf_parameter_binding_fixture.ps1").read_text(encoding="utf-8")
+        self.assertIn('"phase6ge", "phase6gf"', case_runner)
+        self.assertIn("-ReportPhase phase6gf", fixture)
+        self.assertIn("-ValidateArgumentsOnly", fixture)
+
     def test_next_condition_fixture_matrix(self):
         report = fixtures()
         self.assertEqual(report["status"], "pass")

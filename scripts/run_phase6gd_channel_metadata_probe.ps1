@@ -4,7 +4,7 @@ param(
     [ValidateSet("baseline", "divergence", "rgba", "rgb")][string]$Control = "baseline",
     [string]$ControlContractPath = "",
     [string]$DiagnosticResourceContractPath = "",
-    [ValidateSet("phase6gd", "phase6ge")][string]$ReportPhase = "phase6gd"
+    [ValidateSet("phase6gd", "phase6ge", "phase6gf")][string]$ReportPhase = "phase6gd"
 )
 
 $ErrorActionPreference = "Stop"
@@ -60,8 +60,10 @@ if (-not [string]::IsNullOrWhiteSpace($DiagnosticResourceContractPath)) {
     $diagnosticResourceContractHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $diagnosticResourceContractPath).Hash
     if ($diagnosticResourceContractHash -ne $expectedDiagnosticHash) { throw "Phase 6GE diagnostic resource contract hash mismatch" }
     $diagnosticResourceContract = Get-Content -Raw -Encoding UTF8 $diagnosticResourceContractPath | ConvertFrom-Json
-    if ($ReportPhase -ne "phase6ge" -or
-        $diagnosticResourceContract.schema -ne "campfire.phase6ge.color-slot-diagnostic-contract.v1" -or
+    $expectedDiagnosticSchema = "campfire.$ReportPhase.color-slot-diagnostic-contract.v1"
+    if ($ReportPhase -notin @("phase6ge", "phase6gf") -or
+        $diagnosticResourceContract.schema -ne $expectedDiagnosticSchema -or
+        $diagnosticResourceContract.phase -ne $ReportPhase -or
         -not $diagnosticResourceContract.diagnostic_resource_limits.temporary_only -or
         $diagnosticResourceContract.diagnostic_resource_limits.may_replace_phase6fz_or_formal_limits) {
         throw "Phase 6GE diagnostic resource contract scope is invalid"
