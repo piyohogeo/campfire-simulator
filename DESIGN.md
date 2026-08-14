@@ -1,5 +1,17 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6FY three-axis memory qualification contract
+
+Phase 6FT／6FV／6FXはsafe stopのまま凍結し、過去sampleを新母集団へ
+流用しない。Phase 6FYはmemory validity、stage-close lifecycle、bounded
+diagnostic／cleanupを独立判定する。測定完了後だけ発生した既知timeoutは
+`memory_valid_lifecycle_timeout`としてメモリ分布へ残すが、normal exitや
+production lifecycle合格には数えない。契約SHA、20 fixture、pre-close
+streaming／fsync artifact commit、基本9＋最大2 replacement、Kit 16 GiB／
+tree 17 GiB上限をruntime前に固定した。詳細は
+`docs/design/phase6fy_three_axis_memory_qualification.md`。Phase 6FO、
+S93/S100、production、既定値、動画、P4は開始・変更しない。
+
 # Phase 6FX memory-ceiling qualification contract
 
 Phase 6FT/6FV remain frozen safe stops and their runtime artifacts are not part
