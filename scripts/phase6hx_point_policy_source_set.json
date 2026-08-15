@@ -1,0 +1,21 @@
+{
+  "schema": "campfire.phase6hx.point-policy-source-set.v1",
+  "version": 1,
+  "source_root": "source/extensions/campfire.app",
+  "ordered_entries_sha256": "283C59CB4C559D0437BD0CBA7F66FCC02712365C81D2AFEDCAF0E03BFCB4740A",
+  "entries": [
+    {"order": 0, "path": "source/extensions/campfire.app/config/extension.toml", "role": "extension registration, dependencies, and settings boundary", "sha256": "54FD1C30A6BFAC813BFC9BFA0E6EEBA94D40C6D5AF66EFA1E7F1E3DE2B3F23E8"},
+    {"order": 1, "path": "source/extensions/campfire.app/campfire/app/__init__.py", "role": "public production import and export surface", "sha256": "2DBE692F44C54A4E60D145DC6447A3001CD5419C7EF44C5856A62890B4950B1C"},
+    {"order": 2, "path": "source/extensions/campfire.app/campfire/app/extension.py", "role": "production composition and scene lifecycle consumer", "sha256": "054F019BE1D790E29E1D201A5E79ABCB090E2556092BD05E4EAF829B70D2908D"},
+    {"order": 3, "path": "source/extensions/campfire.app/campfire/app/resident_native_backend.py", "role": "authoritative native payload and revision producer", "sha256": "D6938FF11C8E8CE1FCFA5A3A945ADCB623654F452CC59D631BC2C7E865DE9A25"},
+    {"order": 4, "path": "source/extensions/campfire.app/campfire/app/resident_snapshot.py", "role": "published field schema and immutable revision snapshot", "sha256": "C5A2327D700AEBA44B6F51AFD63D2BA79395230C73C6876640F36DC8738CCD8E"},
+    {"order": 5, "path": "source/extensions/campfire.app/campfire/app/resident_snapshot_adapter.py", "role": "ordered USD publication and revision validation", "sha256": "3694B6A80BE7BF03DFC70E1D0DEFC9E6C1E4374CBA7231F7B1491B565C345AD9"},
+    {"order": 6, "path": "source/extensions/campfire.app/campfire/app/resident_application_session.py", "role": "owner-thread publication transaction and retry lifecycle", "sha256": "575A5E53FBD6B7457E8FCBE259DC90FF498845CD291EC46D7904DE38339A3480"},
+    {"order": 7, "path": "source/extensions/campfire.app/campfire/app/resident_point_sidecar.py", "role": "Point payload shape, dtype, identity, ordering, and revision contract", "sha256": "54A6694DB039491C19958269A27A261B739DA6148EF8B5157EC16BBEA5D1C10F"},
+    {"order": 8, "path": "source/extensions/campfire.app/campfire/app/resident_point_scene.py", "role": "default-off settings, layout, Point source, and Flow emitter authoring", "sha256": "F7128C3C3FAFD6FB47741AE79FA35CD4CADF66422A2457CBCE61CF1905F4C8B7"},
+    {"order": 9, "path": "source/extensions/campfire.app/campfire/app/resident_point_application_owner.py", "role": "normal application owner, layout revision, and consumer composition", "sha256": "8624F8811692D702FD9680F096BD4621DEF46823F6651F91B85378704D394B27"},
+    {"order": 10, "path": "source/extensions/campfire.app/campfire/app/resident_point_commands.py", "role": "owner-thread command sequence and stopped-layout ordering", "sha256": "2BB5C19AB36011AE45C1C91E623ABCD2959CCFC6D50A9226F3FC0B9F3352B62A"},
+    {"order": 11, "path": "source/extensions/campfire.app/campfire/app/resident_point_continuity.py", "role": "contiguous per-log Point ordering and alignment evidence", "sha256": "DD34FA8146557D03CAE6CD4E173829E5AB08C5D4F9069EE5BA5EF685FBEF1576"},
+    {"order": 12, "path": "source/extensions/campfire.app/campfire/app/resident_stage_recovery.py", "role": "stage replacement, revision continuity, and recovery ownership", "sha256": "0F1F55F877BA7163F91E765F8BF439F53C629BD670D292F9B168CCFD6F003496"}
+  ]
+}

@@ -100,7 +100,7 @@ def functional_gates(operation: dict, condition: str, policy: dict) -> tuple[dic
     scene = policy["fixed_scene"]
     stage = raw.get("stage_contract") or {}
     gates = {
-        "phase_and_condition": raw.get("phase") == "phase6hw" and raw.get("condition") == condition,
+        "phase_and_condition": raw.get("phase") == policy.get("phase", "phase6hw") and raw.get("condition") == condition,
         "collision_switch": raw.get("collision_enabled") is (condition == "collision_on"),
         "stage_contract": stage.get("passed") is True,
         "topology_and_gap": ((stage.get("gates") or {}).get("topology_26_36_120") is True and (stage.get("gates") or {}).get("gap_at_least_one_velocity_voxel") is True and (stage.get("gates") or {}).get("end_clearance_at_least_16_velocity_voxels") is True),
@@ -145,7 +145,8 @@ def run_condition(root: Path, condition: str, policy: dict, contract_sha: str, s
     attempt = root / condition
     stage = attempt / "stages/candidate.usda"
     paths = paths_for(attempt)
-    attempt_id = f"phase6hw-{condition}-attempt01"
+    phase = policy.get("phase", "phase6hw")
+    attempt_id = f"{phase}-{condition}-attempt01"
     target = build_target(paths, attempt_id, condition, stage, contract_sha)
     target_ok, target_reason = validate_target(target, condition, stage)
     write_json(attempt / "launch_contract.json", {"schema": "campfire.phase6hw.launch.v1", "attempt_id": attempt_id, "condition": condition, "target": target, "validation": [target_ok, target_reason], "cwd": str(ROOT)})
@@ -167,7 +168,7 @@ def run_condition(root: Path, condition: str, policy: dict, contract_sha: str, s
     cleanup = {} if guard is None else guard.get("observed_process_cleanup") or {}
     passed = bool(validation.get("accepted") and canonical.get("accepted") and guard_exit == 0 and case and case.get("status") == "qualified" and all(gates.values()) and roles_ok and cleanup.get("all_observed_absent") is True)
     result = {
-        "schema": "campfire.phase6hw.condition-summary.v1", "condition": condition, "status": "qualified" if passed else "safe_stop", "attempt_id": attempt_id,
+        "schema": f"campfire.{phase}.condition-summary.v1", "condition": condition, "status": "qualified" if passed else "safe_stop", "attempt_id": attempt_id,
         "kit_launch_count": 1, "retry_count": 0, "replacement_count": 0, "canonical_operation_validation": validation,
         "canonical_lifecycle_classification": canonical.get("classification"), "canonical_consumer_reason": canonical.get("reason"),
         "functional_gates": gates, "functional_evidence": raw, "roles_pass": roles_ok, "roles": roles, "role_failures": role_failures,

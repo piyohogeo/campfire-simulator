@@ -119,9 +119,10 @@ def evaluate(root: Path, contract: dict, human_review: str = "pending") -> tuple
     }
     automated = all(gates.values())
     qualified = automated and human_review == "pass"
+    phase = contract.get("phase", "phase6hw")
     report = {
-        "schema": "campfire.phase6hw.temporal-occlusion-evidence.v1",
-        "phase": "phase6hw",
+        "schema": f"campfire.{phase}.temporal-occlusion-evidence.v1",
+        "phase": phase,
         "conditions": {"collision_off": off, "collision_on": on},
         "ratios": ratios,
         "background_absolute_difference": background_difference,
@@ -174,8 +175,9 @@ def _encode(frame_dir: Path, target: Path, frame_count: int, fps: int = 6) -> di
 
 
 def build_media(root: Path, contract: dict, report: dict, arrays: dict, media_dir: Path) -> dict:
+    phase_label = contract.get("phase", "phase6hw").upper()
     if media_dir.exists():
-        raise RuntimeError(f"Phase 6HW media directory reuse refused: {media_dir}")
+        raise RuntimeError(f"{phase_label} media directory reuse refused: {media_dir}")
     media_dir.mkdir(parents=True)
     images = {}
     for condition, prefix in (("collision_off", "off"), ("collision_on", "on")):
@@ -203,9 +205,9 @@ def build_media(root: Path, contract: dict, report: dict, arrays: dict, media_di
         canvas.paste(off.resize(panel, Image.Resampling.LANCZOS), (0, 60))
         canvas.paste(on.resize(panel, Image.Resampling.LANCZOS), (640, 60))
         draw = ImageDraw.Draw(canvas)
-        draw.text((20, 14), "Phase 6HW · end-on single-log Flow-only comparison", fill="white", font=_font(24, True))
+        draw.text((20, 14), f"{phase_label} · end-on single-log Flow-only comparison", fill="white", font=_font(24, True))
         canvas.save(work / f"frame_{index:04d}.png", optimize=True)
-    video = _encode(work, media_dir / "phase6hw_end_on_comparison.mp4", len(frames))
+    video = _encode(work, media_dir / f"{phase_label.lower()}_end_on_comparison.mp4", len(frames))
     return {"images": images, "comparison_video": video, "source_frame_count": len(frames)}
 
 
