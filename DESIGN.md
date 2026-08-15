@@ -1,5 +1,19 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6HC canonical operation evidence and lifecycle isolation (frozen before runtime)
+
+Phase 6HB remains an immutable harness-classification safe stop. Phase 6HC
+defines `post_readback_isolation.json` with schema
+`campfire.phase6hc.operation-report.v1` as the sole canonical operation
+evidence. `resource_markers.jsonl` remains resource/lifecycle telemetry and an
+optional consistency source; absence of a duplicate completion marker does not
+invalidate canonical evidence, while resource-only completion, conflicting
+completion/failure, missing/corrupt/wrong-schema reports, condition/attempt
+identity mismatch, incomplete release, forbidden temperature calls, resource
+failure, and cleanup failure all fail closed. The frozen Phase 6HB A--F audit
+and ordering are retained without sample reuse. Detailed contract:
+`docs/design/phase6hc_canonical_operation_contract.md`.
+
 # Phase 6HB Candidate lifecycle isolation (frozen before runtime)
 
 Phase 6GZ and Phase 6HA remain frozen and provide no runtime sample to Phase

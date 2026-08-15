@@ -1,0 +1,60 @@
+{
+  "schema": "campfire.phase6hc.candidate-lifecycle-contract.v1",
+  "phase": "phase6hc",
+  "base_commit": "e077fe5",
+  "frozen_before_runtime": true,
+  "history": {
+    "phase6hb_frozen": true,
+    "phase6hb_reclassified": false,
+    "phase6hb_artifacts_reused": false
+  },
+  "canonical_operation_evidence": {
+    "path_name": "post_readback_isolation.json",
+    "schema": "campfire.phase6hc.operation-report.v1",
+    "resource_marker_role": "resource_and_lifecycle_telemetry_plus_optional_consistency_check",
+    "resource_marker_absent_complete_policy": "canonical_complete_may_pass",
+    "resource_marker_only_complete_policy": "fail_closed",
+    "canonical_resource_conflict_policy": "fail_closed",
+    "required_identity": ["condition", "attempt_id", "mode"],
+    "legacy_schema_policy": "fail_closed"
+  },
+  "frozen_difference_audit": "Phase 6HB audit retained without runtime sample reuse",
+  "ladder": [
+    {"name": "a_readback_release_control", "mode": "R0", "adds": "none"},
+    {"name": "b_bounded_array_metadata", "mode": "R1", "adds": "bounded_array_metadata"},
+    {"name": "c_non_temperature_schema_prefix", "mode": "R2", "adds": "non_temperature_schema_prefix"},
+    {"name": "d_velocity_sampling_no_collector", "mode": "R3", "adds": "velocity_sampling"},
+    {"name": "e_velocity_sampling_with_collector", "mode": "R4", "adds": "collector_use"},
+    {"name": "f_temperature_alias_only", "mode": "R5", "adds": "temperature_alias"}
+  ],
+  "temperature_prohibitions": {
+    "buffer_to_volume": 0,
+    "metadata": 0,
+    "save": 0,
+    "typed_read": 0,
+    "sampling": 0,
+    "collector": 0
+  },
+  "execution": {
+    "independent_process_per_condition": true,
+    "maximum_launches": 6,
+    "retries": 0,
+    "replacements": 0,
+    "stop_after_first_non_normal": true,
+    "simultaneous_kit": 1,
+    "inner_timeout_seconds": 900,
+    "outer_timeout_seconds": 1020
+  },
+  "safety": {
+    "kit_private_limit_bytes": 17179869184,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "available_physical_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "temporary_file_allowlist": ["handle_1.nvdb", "handle_2.nvdb", "handle_3.nvdb", "handle_4.nvdb", "handle_5.nvdb", "p3_f0180_velocity.nvdb"],
+    "unknown_temporary_file_policy": "do_not_delete_and_fail_cleanup",
+    "exact_cleanup": "phase6fu_with_phase6fw_pid_reuse_policy"
+  }
+}

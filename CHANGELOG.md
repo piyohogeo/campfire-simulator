@@ -1,5 +1,12 @@
 # Changelog
 
+- Added the Phase 6HC canonical operation-evidence boundary. The bounded
+  `post_readback_isolation.json` report now owns operation qualification;
+  resource JSONL is telemetry and optional consistency evidence, never an
+  implicit fallback. Condition/attempt identity, schema, release state,
+  forbidden call counts, resource, cleanup, legacy-only, and contradictory
+  evidence fail closed before the fresh A--F lifecycle ladder can start.
+
 - Froze Phase 6HB as a first-condition harness-classification safe stop. Its A
   process completed one seven-handle readback, release, stage close,
   `shutdown_complete`, natural exit 0, resource gates, and exact cleanup, but
