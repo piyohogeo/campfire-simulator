@@ -1,0 +1,23 @@
+{
+  "schema": "campfire.phase6ho.app-ready-and-proxy-contract.v1",
+  "phase": "phase6ho",
+  "baseline_commit": "8278141",
+  "purpose": "Preserve lexical build-deployment paths through the Phase 6FZ process topology, qualify app-ready extension resolution, and only then measure one default-off FlowCollisionProxy.",
+  "single_variable": "Replace Phase 6HN Path.resolve()-collapsed Packman/source paths with the same lexical _build/windows-x86_64/release deployment paths used by healthy Phase 6FZ launches.",
+  "frozen_history": {"phase6hn_commit": "8278141", "reclassified": false, "artifact_reused": false, "retry": 0, "replacement": 0},
+  "deployment": {
+    "kit": "_build/windows-x86_64/release/kit/kit.exe",
+    "app": "_build/windows-x86_64/release/apps/campfire.simulator.kit",
+    "campfire_extension": "_build/windows-x86_64/release/exts/campfire.app",
+    "anim_extension": "_build/windows-x86_64/release/extscache/omni.anim.curve.core-1.6.0+110.0.0.wx64.r.cp312.u7f4",
+    "path_policy": "absolute lexical spelling; never resolve reparse points before Kit launch",
+    "working_directory": ".",
+    "isolated_user_data": false
+  },
+  "app_ready_gates": ["app_ready marker", "extension manager acquired", "omni.anim.curve.core 1.6.0 enabled at expected path", "campfire.app enabled at expected path", "import campfire succeeds from expected extension", "normal exit 0", "resource pass", "exact cleanup", "residual zero"],
+  "proxy_scope": {"path": "/World/Logs/Log_00/FlowCollisionProxy", "count": 1, "default": "off", "timeline": "stopped", "viewport_updates": 30, "readback_calls": 0, "dynamic_transform": false, "occlusion": false, "physx_sharing": false},
+  "safety": {"runner_private_limit_bytes": 536870912, "kit_private_limit_bytes": 17179869184, "diagnostic_private_limit_bytes": 536870912, "unique_tree_private_limit_bytes": 18253611008, "available_physical_floor_bytes": 8589934592, "commit_headroom_floor_bytes": 8589934592, "stage_close_timeout_seconds": 180, "outer_timeout_seconds": 420, "sample_seconds": 0.25, "simultaneous_kit_processes": 1},
+  "stop_policy": "Fail closed without retry/replacement/root reuse at the first app-ready, path, artifact, operation, resource, lifecycle, identity, cleanup, or residual failure.",
+  "production_changes": false,
+  "out_of_scope": ["Phase 6HN modification", "registry lock deletion or ACL/cache changes", "NanoVDB readback", "Point policy", "wood authority", "V3", "USD publication", "Flow input", "dynamic transforms", "occlusion", "PhysX sharing", "20-log performance", "production integration", "video"]
+}
