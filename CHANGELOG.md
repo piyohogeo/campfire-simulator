@@ -1,5 +1,16 @@
 # Changelog
 
+- Added Phase 6IF while retaining Phase 6IE at `88dcb99` as its original
+  runtime-policy/lifecycle safe stop. Bounded layer/opinion and marker fixtures
+  passed 24/24 and 34/34. One fresh audit-only Kit process proved that the root
+  file stayed unchanged while root/session in-memory opinions and three
+  false-valued Flow defaults were authored; all frozen semantic inputs stayed
+  unchanged. It then failed closed because `/OmniverseKit_Persp` was an
+  eleventh rejected runtime-layer mismatch, so pre-close and operation complete
+  were not claimed. Stage close/shutdown completed, Kit exited 1, and cleanup
+  left residual zero with no fatal, dump, upload, readback, Flow simulation, or
+  OFF/ON comparison. Production and defaults remain unchanged.
+
 - Added Phase 6IE while retaining Phase 6ID at `b761a4a` as its original
   live-stage Prim-set safe stop. The exact bounded runtime-Prim policy passed
   26/26 fixtures plus inherited gates and observed the same 14 runtime paths

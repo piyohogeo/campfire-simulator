@@ -4790,3 +4790,25 @@ bounded dump artifacts were retained, and exact cleanup ended at residual
 zero. Phase 6IE does not qualify the policy or OFF/ON comparison. Production,
 defaults, Point policy, V3, public scene, and latest demo remain unchanged. See
 `docs/design/phase6ie_bounded_runtime_prim_policy_safe_stop.md`.
+
+# Phase 6IF in-memory root/session opinion audit safe stop
+
+Phase 6IE remains frozen at `88dcb99`. Phase 6IF did not relax its runtime-Prim
+policy. A 24/24 producer-to-consumer layer/opinion fixture and 34/34 full marker
+fixture qualified bounded evidence semantics before one fresh Kit launch.
+
+Generated, live-open, and one stopped-update snapshots were committed. The
+root file SHA remained unchanged while its in-memory layer grew from 25/101 to
+39/147 Prim/property specs; the session layer grew from 0/0 to 8/37. All ten
+Phase 6IE targets had root opinions, four also had session opinions, and the
+two authored Flow Prims gained three custom false-valued precision/interop
+properties. Frozen collision, emitter, advection, geometry/transform, camera,
+gap, and common semantic inputs stayed unchanged.
+
+The unchanged policy then found an additional rejected layer mismatch at
+`/OmniverseKit_Persp`. Phase 6IF stopped before pre-close and operation
+complete. Stage close and shutdown completed, Kit exited 1, exact cleanup left
+residual zero, and no fatal/device-loss/dump/upload occurred. The result is
+`safe_stop_audit_operation_incomplete`; it does not qualify the policy or
+OFF/ON. See
+`docs/design/phase6if_in_memory_layer_opinion_audit_safe_stop.md`.
