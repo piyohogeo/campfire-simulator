@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6hv">最新記録</a>
+        <a href="#phase-6hw">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6hv">Phase 6HVの結果を読む</a>
+        <a class="button primary" href="#phase-6hw">Phase 6HWの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6HV · static occlusion visual-gate safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6HW · pre-Kit harness safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,16 @@
   </header>
 
   <main>
+    <section id="phase-6hw" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6HW single-log end-on pre-Kit safe stop"><span class="phase-number compact">6HW</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6HW · end-on single-log diagnostic</p><h2>The visual contract is frozen;<br>the runtime stopped before Kit launch.</h2><p>The diagnostic isolated one axis-aligned log, a source directly below it, an end-on camera, Flow-only captures, and a 13-frame temporal occupancy gate. Atomic-report 15/15 and generated-stage 12/12 fixtures qualified; the generated OFF/ON USD differed only in <code>physicsCollisionEnabled</code>.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Confirmed failure boundary</p><h3>A nonexistent invariant path stopped the parent.</h3><p>Before target construction, the new runner attempted to hash <code>point_emitter.py</code>, which is not present in the repository. Kit launch count is zero. This is not Flow, CollisionProxy, resource, render, or lifecycle evidence.</p></section><section class="note"><p class="note-label">Frozen scope</p><h3>No OFF/ON evidence was created.</h3><p>There are no active-block values, captures, occupancy metrics, human visual result, or video. Phase 6HV remains its original visual-gate safe stop; its images and thresholds were not reused. Residual process count is zero.</p></section></div>
+          <section class="note next"><p class="note-label">Next approval boundary</p><h3>Repair only the canonical Point-policy invariant binding.</h3><p>A future independent Phase must fixture the real invariant source set before using a new empty runtime root. Production, defaults, Point policy, V3, public scene, and latest demo remain unchanged. No automatic retry was made.</p><p><a href="assets/phase6/phase6hw_single_log_end_on_prekit_safe_stop.json">machine report</a> · <a href="../design/phase6hw_single_log_end_on_occlusion_contract.md">design and result</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>no Kit launch and no new visual artifact</small></span></button></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6hv" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6HV static Flow occlusion visual-gate safe stop"><span class="phase-number compact">6HV</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>

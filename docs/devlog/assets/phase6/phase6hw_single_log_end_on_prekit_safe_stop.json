@@ -1,0 +1,40 @@
+{
+  "schema": "campfire.phase6hw.devlog-summary.v1",
+  "phase": "phase6hw",
+  "status": "safe_stop_pre_kit_harness_failure",
+  "date": "2026-08-15",
+  "implementation_commit": "077658a",
+  "contract_sha256": "DA0A650752B397036E92356A8E10A9F1F76C97268043186F48EC655A63F023E4",
+  "no_kit_preflight": {"status": "qualified", "atomic": "15/15", "stage": "12/12"},
+  "kit_launch_count": 0,
+  "off_launch_count": 0,
+  "on_launch_count": 0,
+  "first_failed_boundary": "production_invariant_hash_prelaunch",
+  "missing_path": "source/extensions/campfire.app/campfire/app/point_emitter.py",
+  "occlusion_result": "not_measured",
+  "images": 0,
+  "videos": 0,
+  "residual_process_count": 0,
+  "regression": {
+    "python_compilation": "pass",
+    "focused_tests": "5/5 pass",
+    "release_build": "pass",
+    "standard_suite": "8 processes / 78 tests pass",
+    "devlog_static_validation": "pass (refs=563 ids=326 json=279 svg=177 zip=2)",
+    "phase0_rtx": "not run: no production, USD generation, rendering, or app dependency change",
+    "phase3": "not run: no wood authority or Flow-input change"
+  },
+  "invariant_sha256": {
+    "production_source_app": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "scene": "B6DA1D182DD69A918CEF26CFCD8A3AD4BEBA202E774292B48C4FDBF4A666616C",
+    "wood_authority": "D65F720AD640949A313A627D44B68BA10E28032F6E1FEAFC7A04566F1ACAF260",
+    "v3": "8B7C3CB9081224F29003C82F8E29801CC7A856DE8740AEAC20D4E25796C10FAE",
+    "latest_demo": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285"
+  },
+  "phase6hv_reclassified": false,
+  "production_changed": false,
+  "defaults_changed": false,
+  "point_policy_changed": false,
+  "v3_changed": false,
+  "latest_demo_changed": false
+}

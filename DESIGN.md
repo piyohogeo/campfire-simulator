@@ -278,6 +278,24 @@ production integration, defaults, V3, and latest demo remain unchanged and
 unqualified. Details:
 `docs/design/phase6hv_static_flow_occlusion_contract.md`.
 
+## Phase 6HW single-log end-on occlusion pre-Kit safe stop
+
+Phase 6HV remains frozen at `91f6b06`. Phase 6HW fixed a diagnostic-only,
+axis-aligned 3.6 m single log with the qualified Phase 6HS cross-section, a
+directly-below 0.2 m Sphere source, an end-on camera, a 13-frame temporal
+occupancy window, and numeric plus human visual hard gates before runtime.
+The no-Kit atomic and generated-stage fixtures passed 15/15 and 12/12; OFF and
+ON stages had their expected hashes and differed only in
+`FlowSimulate.physicsCollisionEnabled`.
+
+The formal root then stopped before Kit launch because the new parent
+invariant map named a nonexistent `point_emitter.py` source file. This is a
+pre-Kit harness-path failure. OFF/ON Flow, resource, lifecycle, imagery, and
+occlusion were not measured; launch count and residual process count are both
+zero. No retry, replacement, old image reuse, threshold relaxation, production
+change, or Phase 6HV reclassification occurred. Details:
+`docs/design/phase6hw_single_log_end_on_occlusion_contract.md`.
+
 # Phase 6HF velocity ROI-sampling lifecycle isolation (frozen before runtime)
 
 Phase 6HE remains an immutable lifecycle safe stop. Phase 6HF rebuilds V5 in

@@ -1,5 +1,16 @@
 # Changelog
 
+- Added the Phase 6HW single-log end-on diagnostic contract while retaining
+  Phase 6HV as `safe_stop_visual_gate`. The no-Kit atomic and generated-stage
+  fixtures passed 15/15 and 12/12, but the formal root stopped before Kit
+  launch because the new invariant map referenced a nonexistent
+  `point_emitter.py`. OFF/ON, temporal occupancy, images, and lifecycle were
+  not measured; launch and residual counts are zero. The failed root is
+  frozen, no threshold or old evidence was reused, and production/defaults/
+  Point/V3/latest demo are unchanged.
+  Python compilation, focused tests 5/5, Release build, the standard
+  eight-process/78-test suite, and devlog static validation passed.
+
 - Added Phase 6HV without changing frozen Phase 6HS/6HT/6HU. The no-Kit
   preflight qualified the fixed OFF-then-ON contract, including atomic report
   15/15 and generated-stage 11/11 fixtures. Two fresh processes differed only

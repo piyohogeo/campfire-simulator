@@ -37,3 +37,28 @@ lateral bypass, and upper re-merge without whole-field extinction. Ambiguous
 evidence fails closed. Success stops before production placement, arbitrary or
 dynamic pose, PhysX sharing, Point coexistence, performance, P3/P4, defaults,
 V3, or production integration.
+
+## Result: pre-Kit harness safe stop
+
+The no-Kit preflight qualified the atomic producer path (15/15) and the
+generated-stage contract (12/12), including exact OFF/ON stage hashes and a
+two-line USD diff limited to `physicsCollisionEnabled`. The formal fresh root
+was then created, but the parent runner stopped before target construction or
+Kit launch while hashing production invariants: it referred to the nonexistent
+`source/extensions/campfire.app/campfire/app/point_emitter.py` path.
+
+This is a deterministic pre-Kit harness-path failure, not Flow, collision,
+rendering, resource, or lifecycle evidence. OFF and ON both have launch count
+zero; no active-block samples, captures, occupancy metrics, human visual gate,
+or comparison video exist. The root is frozen and will not be reused. Phase
+6HV remains `safe_stop_visual_gate` without reclassification or image reuse.
+A later separately approved Phase must first bind the Point-policy invariant
+to an existing canonical source set and add that existence check to the
+no-Kit producer-to-runner fixture, then use another empty root.
+
+Post-stop verification passed Python compilation, the five focused Phase 6HW
+tests, Release build, the standard eight-process / 78-test suite, and static
+devlog validation. Phase 0 RTX and Phase 3 were not repeated because no
+production source, USD generation path, renderer/app dependency, wood
+authority, or Flow input changed. A final exact-name process inventory found
+zero Kit/CDB/NGX/telemetry residuals.
