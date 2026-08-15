@@ -1,0 +1,117 @@
+{
+  "schema": "campfire.phase6hp.junction-aware-app-ready-safe-stop.v1",
+  "phase": "phase6hp",
+  "status": "safe_stop_pre_proxy_guard_classification_conflict",
+  "baseline_commit": "de224b3",
+  "implementation_commit": "1b322f2",
+  "contract_sha256": "BEE59EA12B8AAA074D863F2ABB8AA28FA21718682637734E89A8CFEF0A8E15B0",
+  "frozen_history": {
+    "phase6ho_status": "safe_stop_app_ready_module_path_gate",
+    "phase6ho_reclassified": false,
+    "phase6ho_artifact_reused": false,
+    "phase6ho_root_reused": false
+  },
+  "junction_fixture": {
+    "status": "qualified",
+    "root": "artifacts/phase6hp-junction-preflight-20260815",
+    "cases": "23/23",
+    "kit_launches": 0,
+    "actual_validator_used": true,
+    "filesystem_changes": false,
+    "extension_id": "campfire.app-0.1.0",
+    "extension_root": "_build/windows-x86_64/release/exts/campfire.app",
+    "junction_relative_path": "campfire",
+    "junction_reparse_tag": 2684354563,
+    "junction_target": "source/extensions/campfire.app/campfire",
+    "junction_chain_depth": 1,
+    "target_reparse_point_count": 0,
+    "negative_cases_fail_closed": true
+  },
+  "app_ready_smoke": {
+    "root": "artifacts/phase6hp-app-ready-smoke-20260815",
+    "launches": 1,
+    "retry_count": 0,
+    "replacement_count": 0,
+    "app_ready": true,
+    "dependency_solver_pass": true,
+    "anim_extension_from_build_extscache": true,
+    "campfire_extension_from_build_exts": true,
+    "extension_manager_acquired": true,
+    "campfire_imports_pass": true,
+    "junction_module_path_gate": "qualified",
+    "operation_complete": true,
+    "shutdown_complete": true,
+    "natural_os_exit_code": 0,
+    "parent_summary_status": "qualified",
+    "guard_status": "failed",
+    "guard_stop_reason": "observed_descendant_residual",
+    "guard_exit_code": 2,
+    "guard_child_exit_code": 0,
+    "guard_process_absent": true,
+    "cleanup_all_observed_absent": true,
+    "final_residual_processes": 0,
+    "classification": "functional_and_lifecycle_pass_with_guard_parent_cleanup_acceptance_conflict"
+  },
+  "proxy_boundary": {
+    "launches": 0,
+    "artifact_root_created": false,
+    "stage_created": false,
+    "proxy_prim_created": false,
+    "viewport_updates": 0,
+    "flow_interface_calls": 0,
+    "readback_calls": 0,
+    "coexistence_measured": false,
+    "classification": "unqualified"
+  },
+  "resource": {
+    "status": "pass",
+    "peak_private_bytes": {
+      "runner": 95444992,
+      "kit": 6971183104,
+      "diagnostic": 17219584,
+      "other_child": 62386176,
+      "unique_tree": 7432355840
+    },
+    "headroom_bytes": {
+      "runner_to_512_mib": 441425920,
+      "kit_to_16_gib": 10208686080,
+      "diagnostic_to_512_mib": 519651328,
+      "tree_to_17_gib": 10821255168
+    },
+    "minimum_available_physical_bytes": 86633455616,
+    "minimum_commit_headroom_bytes": 106314379264
+  },
+  "lifecycle_and_safety": {
+    "native_exception": false,
+    "dump_count": 0,
+    "automatic_upload_count": 0,
+    "device_loss_or_tdr_count": 0,
+    "cdb_attach_count": 0,
+    "exact_cleanup_all_absent": true,
+    "final_residual_processes": 0,
+    "nanovdb_residuals": 0
+  },
+  "production": {
+    "code_changed": false,
+    "defaults_changed": false,
+    "point_policy_changed": false,
+    "wood_authority_changed": false,
+    "v3_changed": false,
+    "latest_demo_changed": false,
+    "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "production_scene_sha256": "B6DA1D182DD69A918CEF26CFCD8A3AD4BEBA202E774292B48C4FDBF4A666616C",
+    "wood_authority_sha256": "D65F720AD640949A313A627D44B68BA10E28032F6E1FEAFC7A04566F1ACAF260",
+    "v3_sha256": "8B7C3CB9081224F29003C82F8E29801CC7A856DE8740AEAC20D4E25796C10FAE",
+    "latest_demo_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285"
+  },
+  "regression": {
+    "focused": "8/8 passed",
+    "python_compilation": "passed",
+    "release_build": "passed in 6.56 seconds",
+    "standard_suite": "8/8 processes, 78/78 tests passed in 306.4 seconds",
+    "devlog_validation": "passed; refs=545 ids=319 json=272 svg=177 zip=2",
+    "phase0_rtx": "not run: production, USD generation, renderer, authority, and Flow input unchanged; proxy not launched",
+    "phase3": "not run: wood authority and Flow input unchanged"
+  },
+  "next_approval": "Unify guard and parent acceptance for transient descendants followed by exact all-absent cleanup in a new offline-tested contract, then run one fresh smoke; do not start the proxy before an unambiguous pass."
+}

@@ -142,6 +142,26 @@ Production, defaults, Point policy, wood authority, V3, and latest demo remain
 unchanged. Details:
 `docs/design/phase6ho_app_ready_environment_safe_stop.md`.
 
+## Phase 6HP junction-aware app-ready and pre-proxy safe stop
+
+Phase 6HO remains frozen at `de224b3`. Phase 6HP changes only its false-negative
+module-path gate: extension-manager identity, lexical build root, the declared
+`campfire` junction's reparse tag and fixed repository target, plus imported
+module lexical/resolved paths must all agree. The existing junction and ACLs
+were inspected read-only. The no-Kit fixture passed 23/23 positive and
+fail-closed negative cases.
+
+One fresh smoke reached app-ready, loaded both required local extensions,
+passed the new gate, completed operation/shutdown markers, exited code 0, and
+ended with exact all-absent cleanup and final residual zero. Its parent summary
+is `qualified`, but the underlying Phase 6FU guard remains `status=failed` with
+`observed_descendant_residual` before that later cleanup. Phase 6HP preserves
+both records and treats their acceptance conflict as a pre-proxy safe stop. No
+proxy process/root, stage, Flow interface, viewport update, or readback was
+started. Production, defaults, Point policy, wood authority, V3, and latest
+demo remain unchanged. Details:
+`docs/design/phase6hp_junction_aware_app_ready_safe_stop.md`.
+
 # Phase 6HF velocity ROI-sampling lifecycle isolation (frozen before runtime)
 
 Phase 6HE remains an immutable lifecycle safe stop. Phase 6HF rebuilds V5 in

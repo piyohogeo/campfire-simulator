@@ -1,5 +1,17 @@
 # Changelog
 
+- Added Phase 6HP without changing frozen Phase 6HO. The read-only
+  junction-aware validator and exact-command no-Kit fixture passed 23/23,
+  accepting only the declared build `campfire` junction and rejecting external,
+  wrong-ID/version/root/target, broken, traversal, chain, missing, duplicate,
+  and contradictory evidence. One fresh smoke reached app-ready, passed the new
+  module gate, wrote operation/shutdown markers, exited 0, and left final
+  residual zero. The parent summary called it qualified, but the underlying
+  Phase 6FU guard retained `status=failed / observed_descendant_residual` before
+  later exact cleanup reported all identities absent. Phase 6HP therefore
+  stopped fail-closed before proxy launch. Production, defaults, Point policy,
+  wood authority, V3, and latest demo remain unchanged.
+
 - Added Phase 6HO without changing frozen Phase 6HN. Read-only audit confirmed
   that Phase 6HN resolved build-tree reparse points into mixed Packman/source
   roots, while healthy Phase 6FZ retained lexical build deployment paths. The
