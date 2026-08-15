@@ -1,5 +1,13 @@
 # Changelog
 
+- Froze Phase 6HD after the one-shot lifecycle ladder passed A--C and stopped
+  at D. D's added velocity save/sample/profile completed, references released,
+  stage close completed, and `shutdown_complete` was durable, but Kit did not
+  exit naturally. Exact cleanup left no process or NanoVDB residual; E/F and
+  all temperature native operations remained unstarted. Release build,
+  focused 6HD/6HC/6HB fixtures, Python compilation, and devlog validation
+  passed with production and latest-demo content unchanged.
+
 - Added the Phase 6HD single-source operation counter schema and producer-to-
   consumer fixture. Fifteen canonical counters now come from one integer-zero
   factory used by the runtime report and parent validator; explicit adapters at

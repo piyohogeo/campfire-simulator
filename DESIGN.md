@@ -14,6 +14,22 @@ runtime writer and passes the resulting file unmodified to the parent
 validator. Detailed contract:
 `docs/design/phase6hd_operation_counter_contract.md`.
 
+## Phase 6HD result
+
+The actual producer-to-consumer fixture passed 54/54 and verified that the
+runtime producer, bounded JSON writer, reader, normalizer, and parent validator
+all consume the same 15-key schema. Phase 6HD then used fresh independent
+processes. A, B, and C completed canonical operation evidence, ordered release,
+stage close, durable `shutdown_complete`, natural exit code 0, resource gates,
+cleanup, and residual-zero checks. D added only velocity save/sample/profile
+without collectors. That operation also completed, all references were
+released, stage close completed in 2.7366648 seconds, and `shutdown_complete`
+was durable, but Kit did not exit naturally. It is therefore a
+`post_shutdown_os_exit_failure`, not an operation or temperature failure. E and
+F were not launched. Phase 6HC remains unchanged and no temperature native
+operation ran. Details:
+`docs/design/phase6hd_candidate_lifecycle_safe_stop.md`.
+
 # Phase 6HC canonical operation evidence and lifecycle isolation (frozen before runtime)
 
 Phase 6HB remains an immutable harness-classification safe stop. Phase 6HC
