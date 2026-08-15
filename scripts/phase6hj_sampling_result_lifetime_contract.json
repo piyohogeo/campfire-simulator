@@ -1,0 +1,23 @@
+{
+  "schema": "campfire.phase6hj.sampling-result-lifetime-contract.v1",
+  "phase": "phase6hj",
+  "base_commit": "5f483a9",
+  "frozen_before_runtime": true,
+  "history": {
+    "phase6hf_frozen_at": "c27267f",
+    "phase6hh_status": "preflight_harness_safe_stop",
+    "phase6hh_kit_launches": 0,
+    "phase6hh_runtime_samples_reused": false
+  },
+  "fixture_fix": "allocate the exact command-line fixture beneath a unique TemporaryDirectory; runtime probe and operation schema unchanged",
+  "runtime_probe": "probe_phase6hh_sampling_result_lifetime.py",
+  "runtime_operation_schema": "campfire.phase6hh.operation-report.v1",
+  "ladder": [
+    {"name":"l0_sampling_none","mode":"L0","roi_count":0,"retention":"none"},
+    {"name":"l1_scene_immediate_clear","mode":"L1","roi_count":1,"retention":"immediate_clear"},
+    {"name":"l2_scene_retain_to_report","mode":"L2","roi_count":1,"retention":"retain"}
+  ],
+  "execution": {"maximum_launches":3,"retries":0,"replacements":0,"stop_after_first_non_normal":true,"simultaneous_kit":1,"inner_timeout_seconds":900,"outer_timeout_seconds":1020},
+  "safety": {"kit_private_limit_bytes":17179869184,"unique_tree_private_limit_bytes":18253611008,"runner_private_limit_bytes":536870912,"diagnostic_private_limit_bytes":536870912,"available_physical_floor_bytes":8589934592,"commit_headroom_floor_bytes":8589934592,"stage_close_timeout_seconds":180,"exact_cleanup":"phase6fu_with_phase6fw_pid_reuse_policy","cdb":"progress_aware_stack_first"},
+  "prohibited": ["forced gc","temperature","collector","profile","formal comparison","long repetition","production/default/Point/V3/P4/latest-demo changes"]
+}

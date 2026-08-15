@@ -10,6 +10,15 @@ the same bounded scalar copy and use no forced GC. Each condition runs once
 and the first non-normal result stops the ladder. Details:
 `docs/design/phase6hh_sampling_result_lifetime_contract.md`.
 
+## Phase 6HH preflight result and Phase 6HJ continuation
+
+Phase 6HH stopped before Kit launch because its no-Kit exact-command fixture
+reused a fixed temporary directory from the earlier fixture invocation. No
+runtime sample exists. Phase 6HJ preserves that safe stop and changes only the
+fixture root to a unique `TemporaryDirectory`; the frozen L0/L1/L2 runtime
+probe and retention contract semantics are unchanged. Details:
+`docs/design/phase6hh_preflight_safe_stop_and_phase6hj_contract.md`.
+
 # Phase 6HF velocity ROI-sampling lifecycle isolation (frozen before runtime)
 
 Phase 6HE remains an immutable lifecycle safe stop. Phase 6HF rebuilds V5 in

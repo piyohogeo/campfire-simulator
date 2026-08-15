@@ -1,5 +1,11 @@
 # Changelog
 
+- Froze Phase 6HH as a pre-Kit harness safe stop after its exact-command
+  fixture found the fixed temporary directory left by the implementation
+  fixture. Phase 6HJ isolates that fixture beneath a unique temporary root;
+  the runtime probe, L0/L1/L2 retention semantics, safety limits, and stop rule
+  remain unchanged, and Phase 6HH contributes no runtime sample.
+
 - Added the frozen-before-runtime Phase 6HH one-shot sampling-result lifetime
   ladder. It audits Phase 6HF's plain scalar dict ownership, then compares the
   same `scene` sample with immediate original-object clear or retention through
