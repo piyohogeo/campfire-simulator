@@ -1,5 +1,15 @@
 # Changelog
 
+- Qualified Phase 6HU without changing frozen Phase 6HT. The actual no-Kit
+  atomic producer-to-consumer fixture passed 15/15, reproduced WinError 5 from
+  a no-delete-share destination reader, recovered only within the frozen
+  targeted retry, and kept persistent failures fail-closed while cleanup
+  markers continued. One fresh Collision-OFF process produced representative
+  active blocks 226/254/242/226 and clearly visible Flow captures, completed
+  stage close/shutdown with Kit exit 0, stayed below 16/17 GiB, and ended at
+  residual zero as `cleanup_assisted_telemetry_exit`. Collision ON and ON/OFF
+  occlusion were not started; production/defaults/Point/V3/demo are unchanged.
+
 - Added the Phase 6HT readback-free static Flow-occlusion contract without
   changing Phase 6HS. The corrected no-Kit fixture passed 8/8. The sole ON
   process preserved the qualified proxy, ran 240 updates, captured two images,

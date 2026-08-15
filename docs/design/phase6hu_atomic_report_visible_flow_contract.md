@@ -69,3 +69,43 @@ exit, resource limits, exact cleanup, and invariant hashes must also pass.
 Collision ON, ON/OFF occlusion, readback, Point policy, dynamic transforms,
 PhysX sharing, 4/20-log performance, V3, production integration, defaults, and
 latest-demo changes remain out of scope. Success stops before any next phase.
+
+## Qualification result
+
+The actual producer-to-consumer preflight qualified before Kit launch. Its
+atomic fixture passed 15/15 cases, including a real Windows destination handle
+without delete sharing: replacement raised WinError 5 while the handle was
+held, then completed on the third bounded attempt after release. A persistent
+lock exhausted the frozen five attempts and failed closed. The forced raw
+snapshot failure fixture still emitted the ordered cleanup, stage-close, and
+shutdown markers, while the incomplete report remained unqualified. This is
+confirmed evidence that sharing contention is sufficient to produce the
+observed error; it does not prove which Phase 6HT reader held the file at the
+failure instant.
+
+One fresh Collision-OFF process then ran from
+`artifacts/phase6hu-atomic-visible-flow-baseline-20260815`. Active blocks at
+frames 60/120/180/240 were 226/254/242/226. The saved 1280x720 baseline and
+final captures both show a recognizable yellow-orange Flow volume between and
+above the logs; automated comparison found 45,471 changed pixels and human
+review passed. Readback count was zero. Kit and unique-tree peaks were
+12,124,934,144 and 12,443,738,112 bytes, leaving 5,054,935,040 bytes below the
+16 GiB Kit ceiling and 5,809,872,896 bytes below the 17 GiB tree ceiling.
+Physical and commit headroom minima were 84,512,120,832 and 104,446,406,656
+bytes.
+
+Operation, 2.164928-second stage close, shutdown, Kit exit code 0, and exact
+cleanup completed.
+The canonical lifecycle class is `cleanup_assisted_telemetry_exit`, kept
+distinct from natural exit; final residual count is zero. Phase 6HT remains its
+original safe stop. Collision ON and ON/OFF occlusion were not started.
+Production, defaults, Point policy, V3, wood authority, public scene, and the
+latest demo are unchanged. A separately approved fresh ON/OFF phase is the
+next possible boundary.
+
+Focused tests passed 4/4, the persisted atomic preflight passed 15/15, Python
+compilation and Release build passed, the standard suite passed all eight
+processes and 78 tests, and static devlog validation passed. Phase 0 RTX and
+Phase 3 were omitted because production sources, USD generation, rendering,
+wood authority, and Flow inputs are unchanged; only default-off diagnostic
+harness code and evidence were added.

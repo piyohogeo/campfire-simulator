@@ -1,0 +1,80 @@
+{
+  "schema": "campfire.phase6hu.devlog-summary.v1",
+  "phase": "phase6hu",
+  "status": "qualified",
+  "contract_sha256": "81677783F46012D026F908FA8B7666367C67EF347785112DA4E08461B882A693",
+  "phase6ht": {
+    "commit": "89ae109",
+    "status": "safe_stop",
+    "reclassified": false,
+    "runtime_reused": false
+  },
+  "atomic_fixture": {
+    "qualified": true,
+    "cases_passed": 15,
+    "cases_total": 15,
+    "snapshot_maximum_bytes": 1048576,
+    "retryable_windows_errors": [5, 32, 33],
+    "maximum_attempts": 5,
+    "maximum_elapsed_seconds": 0.25,
+    "transient_no_delete_share_lock_attempts": 3,
+    "persistent_lock_failed_closed": true,
+    "cleanup_continued_after_snapshot_failure": true
+  },
+  "runtime": {
+    "condition": "collision_off",
+    "kit_launches": 1,
+    "collision_on_started": false,
+    "readback_calls": 0,
+    "active_blocks": {"60": 226, "120": 254, "180": 242, "240": 226},
+    "visual": {
+      "human_review": "pass",
+      "recognizable_flow_volume": true,
+      "changed_pixels": 45471,
+      "baseline": "phase6hu_collision_off_baseline.png",
+      "final": "phase6hu_collision_off_final.png"
+    },
+    "kit_private_peak_bytes": 12124934144,
+    "unique_tree_peak_bytes": 12443738112,
+    "kit_ceiling_margin_bytes": 5054935040,
+    "tree_ceiling_margin_bytes": 5809872896,
+    "available_physical_minimum_bytes": 84512120832,
+    "commit_headroom_minimum_bytes": 104446406656,
+    "stage_close_complete": true,
+    "stage_close_seconds": 2.164928,
+    "shutdown_complete": true,
+    "kit_exit_code": 0,
+    "lifecycle_classification": "cleanup_assisted_telemetry_exit",
+    "final_residual_process_count": 0
+  },
+  "invariants": {
+    "production_changed": false,
+    "defaults_changed": false,
+    "point_policy_changed": false,
+    "v3_changed": false,
+    "latest_demo_changed": false
+  },
+  "regression": {
+    "focused_fixture": "4/4 pass",
+    "atomic_preflight": "15/15 pass",
+    "python_compilation": "pass",
+    "release_build": "pass",
+    "standard_suite": "8/8 processes; 78/78 tests pass",
+    "devlog_static_validation": "pass",
+    "phase0_rtx": "omitted: production, USD generation, rendering, wood authority, and Flow input are unchanged",
+    "phase3": "omitted: production, USD generation, rendering, wood authority, and Flow input are unchanged"
+  },
+  "qualified_scope": [
+    "atomic raw operation-report replacement and cleanup continuity",
+    "one representative visible Collision-OFF Flow baseline on the production log hierarchy",
+    "operation, stage close, shutdown, resource gates, and exact cleanup"
+  ],
+  "not_qualified": [
+    "Collision ON or ON/OFF occlusion",
+    "dynamic transform",
+    "PhysX sharing",
+    "Point Emitter coexistence",
+    "four-log or twenty-log performance",
+    "production integration"
+  ]
+}

@@ -237,6 +237,24 @@ exact cleanup passed with residual zero. Production, defaults, Point policy,
 V3, and latest demo remain unchanged. Details:
 `docs/design/phase6ht_static_flow_occlusion_safe_stop.md`.
 
+## Phase 6HU atomic report and visible Collision-OFF baseline
+
+Phase 6HT remains frozen at `89ae109`. Phase 6HU qualified the actual
+producer/writer/reader/consumer atomic snapshot boundary without weakening the
+fsync'd JSONL source of truth. The no-Kit atomic fixture passed 15/15 and
+reproduced WinError 5 with a destination reader that denied delete sharing;
+bounded retry recovered only after that lock was released, while persistent
+and non-retryable failures remained fail-closed and still exercised cleanup.
+
+One new Collision-OFF process then produced active blocks 226/254/242/226 at
+frames 60/120/180/240 and a visibly recognizable Flow volume in both frozen
+captures. Operation, stage close, shutdown, Kit exit 0, resource gates, and
+residual-zero cleanup passed. Lifecycle is recorded separately as
+`cleanup_assisted_telemetry_exit`. Collision ON and the ON/OFF occlusion
+comparison were not started. Production, defaults, Point policy, V3, wood
+authority, public scene, and latest demo remain unchanged. Details:
+`docs/design/phase6hu_atomic_report_visible_flow_contract.md`.
+
 # Phase 6HF velocity ROI-sampling lifecycle isolation (frozen before runtime)
 
 Phase 6HE remains an immutable lifecycle safe stop. Phase 6HF rebuilds V5 in
