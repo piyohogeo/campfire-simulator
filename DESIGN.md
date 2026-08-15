@@ -31,6 +31,30 @@ is invalid and Phase 6HF remains unchanged. NanoVDB shutdown investigation is
 parked as `diagnostic-only lifecycle`. Details:
 `docs/design/phase6hj_sampling_result_lifetime_safe_stop.md`.
 
+## Phase 6HK roadmap return and hierarchy-proxy safe stop
+
+Phase 6HJ remains frozen as `parked / diagnostic-only lifecycle`; no readback,
+sampling-lifetime, or CDB experiment was restarted. A read-only roadmap audit
+found that the current CPU-source V3 hierarchy/default and its analytic
+Collider/RenderSurface coexistence are already qualified, while the first
+missing collision boundary is the combination of that production hierarchy
+with the qualified low-detail static Flow Mesh proxy. GPU-source V3 transport,
+dynamic proxy transforms, PhysX Mesh sharing, and Flow-to-wood GPU feedback
+remain blocked or unstarted.
+
+Phase 6HK froze a default-off, stopped-timeline, readback-free contract for one
+`/World/Logs/Log_00/FlowCollisionProxy`. Its no-Kit focused fixture passed 5/5,
+but the single formal attempt stopped before Kit launch because Packman Python
+could not import the Phase 6FU guard dependency `psutil`. No stage or renderer
+operation occurred, no resource sample exists, and process/NanoVDB residuals
+are zero. This is a harness-startup safe stop, not a proxy result. There was no
+retry, and production, defaults, Point policy, V3, and latest demo are
+unchanged. Focused 5/5, Python compilation, Release build, standard 78/78, and
+devlog validation passed. Phase 0 RTX and Phase 3 were omitted because no
+production, USD generation, rendering, wood-authority, or Flow-input path
+changed and the formal Kit attempt never launched. Details:
+`docs/design/phase6hk_flow_proxy_hierarchy_boundary.md`.
+
 # Phase 6HF velocity ROI-sampling lifecycle isolation (frozen before runtime)
 
 Phase 6HE remains an immutable lifecycle safe stop. Phase 6HF rebuilds V5 in

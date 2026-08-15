@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6hj">最新記録</a>
+        <a href="#phase-6hk">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6hj">Phase 6HJの結果を読む</a>
+        <a class="button primary" href="#phase-6hk">Phase 6HKの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6HJ · lifetime comparison invalid / parked</strong></div>
+        <div><span>現在地</span><strong>Phase 6HK · pre-Kit harness safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,16 @@
   </header>
 
   <main>
+    <section id="phase-6hk" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6HK hierarchy proxy harness safe stop"><span class="phase-number compact">6HK</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6HK · mainline roadmap return</p><h2>The next non-readback boundary is selected;<br>the guarded run stopped before Kit.</h2><p>The audit identified the current production hierarchy plus one default-off low-detail FlowCollisionProxy as the first still-unqualified collision boundary. Its focused no-Kit contract passed 5/5.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Roadmap correction</p><h3>Current CPU-source V3 is already default ON.</h3><p>The analytic Collider/RenderSurface hierarchy and current CPU-source lifecycle are qualified. GPU transport, Mesh sharing, dynamic collision transforms, and 20-proxy cost remain separate blocked or unstarted work.</p></section><section class="note"><p class="note-label">Safe stop</p><h3>No Kit process started.</h3><p>The runner selected Packman Python for the Phase 6FU guard, but that environment lacks <code>psutil</code>. Contract SHA was durable; no stage, Flow, renderer, readback, CDB, or helper process ran, and residuals are zero.</p></section></div>
+          <section class="note next"><p class="note-label">Next approval</p><h3>Preflight the guard interpreter, then use a fresh Phase/root.</h3><p>Phase 6HK is not a proxy qualification and is not retried. Phase 6HJ remains parked. Focused 5/5, Python compilation, Release build, standard 78/78, and devlog validation passed. Phase 0 RTX/Phase 3 were omitted because no production, USD generation, rendering, authority, or Flow-input path changed and the formal Kit attempt never launched. Production, defaults, Point policy, V3, and latest demo are unchanged; there is no visual change and no new video.</p><p><a href="assets/phase6/phase6hk_flow_proxy_hierarchy_safe_stop.json">machine report</a> · <a href="../design/phase6hk_flow_proxy_hierarchy_boundary.md">design note</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>no visual change; no new video</small></span></button></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6hj" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6HJ sampling-result lifetime safe stop"><span class="phase-number compact">6HJ</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>

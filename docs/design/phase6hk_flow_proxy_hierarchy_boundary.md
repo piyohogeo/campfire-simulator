@@ -28,4 +28,25 @@ The timeline stays stopped. The Phase qualifies only offline authoring identity,
 
 ## Result
 
-Pending the single fresh guarded process. Success or failure stops this turn before any next boundary.
+The contract SHA-256 was frozen as
+`431B66962CF0ECE0C6B8CDD2724907FD56CCD3E502505EFE7DDC1F8BCE30B006`
+in the new empty artifact root. Attempt 01 then stopped before Kit launch:
+the runner invoked the Phase 6FU guard through Packman Python, whose environment
+does not provide the guard's required `psutil` module. The guard therefore did
+not create its resource summary, and the parent correctly could not accept a
+sample. No Kit, Flow, renderer, stage, proxy, CDB, telemetry child, or GPU helper
+process started. Residual process and temporary NanoVDB counts are zero.
+
+Phase 6HK is a harness-startup safe stop, not evidence for or against the proxy
+hierarchy. The authoring/renderer boundary remains unmeasured. The empty-root
+attempt is preserved and is not retried or reclassified. A separately approved
+Phase must first make the guard-interpreter dependency an executable preflight,
+then use a new contract and root; it must not treat this attempt as a runtime
+sample. Phase 6HJ remains parked and unchanged.
+
+The no-Kit focused fixture passed 5/5, Python compilation passed, the Release
+build completed successfully, the standard suite passed all 8 test processes
+(78 tests), and static devlog validation passed. Phase 0 RTX and Phase 3 were
+not rerun: this Phase changed only diagnostic scripts/contracts/documents, did
+not launch Kit for its formal attempt, and left production sources, USD
+generation, rendering configuration, wood authority, and Flow inputs unchanged.

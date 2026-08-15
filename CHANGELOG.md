@@ -1,5 +1,16 @@
 # Changelog
 
+- Audited the non-readback roadmap after parking Phase 6HJ. The current
+  CPU-source V3 default and analytic Collider/RenderSurface hierarchy are
+  already qualified; the first missing collision boundary is adding the
+  low-detail Flow Mesh proxy to that current hierarchy. Phase 6HK froze a
+  default-off one-process contract and passed its 5/5 no-Kit fixture, then
+  stopped before Kit launch because Packman Python lacked the Phase 6FU
+  guard's `psutil` dependency. No runtime sample was accepted, no retry was
+  made, and production, defaults, Point policy, V3, and latest demo remain
+  unchanged. Focused 5/5, Python compilation, Release build, standard 78/78,
+  and devlog validation passed.
+
 - Froze Phase 6HJ after its 51/51 isolated preflight passed but fresh L0
   exited with `0xC0000005` at startup frame 138, before readback, sampling, or
   shutdown. Exact cleanup left residual zero. A separate missing parent
