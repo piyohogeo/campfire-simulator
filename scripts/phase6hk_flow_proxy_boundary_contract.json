@@ -1,0 +1,55 @@
+{
+  "schema": "campfire.phase6hk.flow-proxy-hierarchy-boundary-contract.v1",
+  "phase": "phase6hk",
+  "baseline_commit": "b648017",
+  "purpose": "Qualify default-off diagnostic-only authoring and stopped-timeline renderer lifecycle for one low-detail FlowCollisionProxy child in the current production wood render hierarchy.",
+  "one_variable": "Add /World/Logs/Log_00/FlowCollisionProxy; every pre-existing Prim, attribute, relationship, authority value, and Flow source remains identical.",
+  "scope": {
+    "log_id": "Log_00",
+    "proxy_path": "/World/Logs/Log_00/FlowCollisionProxy",
+    "geometry": {"radius_m": 0.16, "length_m": 1.8, "segments": 12, "vertices": 26, "faces": 36, "indices": 120},
+    "collision_apis": ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI"],
+    "approximation": "convexDecomposition",
+    "visibility": "invisible",
+    "timeline": "stopped",
+    "renderer_updates": 30,
+    "readback_calls": 0
+  },
+  "hard_gates": {
+    "baseline_digest_unchanged_after_proxy_exclusion": true,
+    "only_added_prim": "/World/Logs/Log_00/FlowCollisionProxy",
+    "closed_outward_non_degenerate_mesh": true,
+    "root_collider_render_proxy_world_matrices_equal": true,
+    "existing_analytic_collider_unchanged": true,
+    "existing_render_surface_unchanged": true,
+    "point_payload_or_revision_changes": 0,
+    "readback_or_nanovdb_operations": 0,
+    "stage_open_and_renderer_updates_complete": true,
+    "stage_close_and_normal_os_exit": true,
+    "residual_processes": 0
+  },
+  "safety": {
+    "kit_private_limit_bytes": 17179869184,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "available_physical_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "outer_timeout_seconds": 360,
+    "simultaneous_kit_processes": 1,
+    "retry_or_replacement": 0
+  },
+  "out_of_scope": [
+    "Flow occlusion or field correctness",
+    "dynamic transform consumption",
+    "PhysX use of the Mesh proxy",
+    "20-log performance",
+    "Point supply policy",
+    "NanoVDB readback, conversion, save, reload, or ROI sampling",
+    "production integration or default changes",
+    "V3 default or transport changes",
+    "latest demo changes"
+  ],
+  "stop_policy": "Fail closed at the first operation, resource, lifecycle, identity, cleanup, or artifact failure; do not retry and do not advance to another boundary."
+}
