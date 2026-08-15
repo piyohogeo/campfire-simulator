@@ -1,0 +1,89 @@
+{
+  "schema": "campfire.phase6hl.flow-proxy-hierarchy-boundary-contract.v1",
+  "phase": "phase6hl",
+  "baseline_commit": "bfc7a0a",
+  "frozen_history": {
+    "phase6hk_commit": "bfc7a0a",
+    "phase6hk_status": "safe_stop_pre_kit_harness_failure",
+    "phase6hk_reclassified": false,
+    "phase6hk_artifact_reused": false
+  },
+  "purpose": "Preflight the exact Phase 6FU guard interpreter, then qualify the same default-off one-proxy stopped-timeline hierarchy boundary in one fresh process.",
+  "interpreter": {
+    "guard_executable": "C:\\Python38\\python.exe",
+    "guard_python_version": "3.8.3",
+    "guard_executable_sha256": "C46A75F0B283A14DA986C500E56D58FDD5FF80F4836CF605D2A50C0D810F2A6B",
+    "psutil_file": "C:\\Python38\\Lib\\site-packages\\psutil\\__init__.py",
+    "psutil_version": "5.9.8",
+    "guard_script": "scripts/phase6fu_resource_guard.py",
+    "guard_script_sha256": "79C7C5B5E21E644EA344795FCE5D5D9AFD13C566E4F9A4E3B19E50CDFE02AC23",
+    "process_identity_sha256": "ECD95E4BB578FF886C5761F06C00B52E96CC83FAC0E76B671654A2B843BA89C4",
+    "legacy_guard_sha256": "A16FA82606A4265093E88816540A0E293205AADC9A15FA11B7CA09C6B32CC45E",
+    "packman_executable": "C:\\packman-repo\\python\\3.12.13-nv3-windows-x86_64\\python.exe",
+    "packman_executable_sha256": "97F5B57AD5A91F8DDFC359500DCF3D29D3FA4FFE77035593A7EC7FBC47D76E12",
+    "packman_guard_role": "forbidden: psutil is absent and no package installation is permitted",
+    "parent_runner": "C:\\Python38\\python.exe",
+    "kit_exec": "_build/windows-x86_64/release/kit/kit.exe embedded Python 3.12",
+    "implicit_fallback": false
+  },
+  "historical_audit": {
+    "successful_guard_sources": [
+      "Phase 6FU qualification root 4 exact guard race",
+      "Phase 6FZ formal 9/9 normal-exit population"
+    ],
+    "phase6fz_parent_runner": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "phase6fz_guard_interpreter_source": "Get-Command python.exe resolved to C:\\Python38\\python.exe",
+    "phase6fz_guard_target": "PowerShell case runner which launches Kit",
+    "phase6hk_bad_branch": "run_phase6hk_flow_proxy_boundary.py used sys.executable; the runner had been launched by tools/packman/python.bat, so the Packman Python executable propagated into the guard command"
+  },
+  "scope": {
+    "log_id": "Log_00",
+    "proxy_path": "/World/Logs/Log_00/FlowCollisionProxy",
+    "geometry": {"radius_m": 0.16, "length_m": 1.8, "segments": 12, "vertices": 26, "faces": 36, "indices": 120},
+    "collision_apis": ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI"],
+    "approximation": "convexDecomposition",
+    "visibility": "invisible",
+    "timeline": "stopped",
+    "renderer_updates": 30,
+    "readback_calls": 0,
+    "frozen_phase6hk_probe_sha256": "7CDBFD7DBC5076095BA0BF352EFD96FFDD56CB1678AF6F5E2B7AD8835D640EC1"
+  },
+  "hard_gates": {
+    "preflight_complete": true,
+    "baseline_digest_unchanged_after_proxy_exclusion": true,
+    "only_added_prim": "/World/Logs/Log_00/FlowCollisionProxy",
+    "closed_outward_non_degenerate_mesh": true,
+    "root_collider_render_proxy_world_matrices_equal": true,
+    "existing_analytic_collider_unchanged": true,
+    "existing_render_surface_unchanged": true,
+    "point_payload_or_revision_changes": 0,
+    "readback_or_nanovdb_operations": 0,
+    "stage_open_and_renderer_updates_complete": true,
+    "stage_close_and_normal_os_exit": true,
+    "residual_processes": 0
+  },
+  "safety": {
+    "kit_private_limit_bytes": 17179869184,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "available_physical_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "outer_timeout_seconds": 360,
+    "sample_seconds": 0.25,
+    "simultaneous_kit_processes": 1,
+    "retry_or_replacement": 0
+  },
+  "out_of_scope": [
+    "Flow occlusion or field correctness",
+    "dynamic transform consumption",
+    "PhysX use of the Mesh proxy",
+    "20-log performance",
+    "Point supply policy or Point Emitter coexistence",
+    "NanoVDB readback, conversion, save, reload, or ROI sampling",
+    "production integration or default changes",
+    "V3 changes, GPU heat feedback, or latest demo changes"
+  ],
+  "stop_policy": "Fail closed at the first preflight, operation, resource, lifecycle, identity, cleanup, or artifact failure; do not retry or replace."
+}
