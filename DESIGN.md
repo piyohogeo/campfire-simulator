@@ -4739,3 +4739,17 @@ stage closeは2.311588秒で完了し`shutdown_complete`へ到達したが、Kit
 `docs/design/phase6gr_volume_metadata_safe_stop.md`。temporary NVDB、他channel、sampling、
 collector、flux、正式9条件はblockedであり、新Phaseのharness-only修正とfixtureに
 別承認を要する。
+# Phase 6IC exact authoring dependency safe stop
+
+Phase 6IB remains frozen at `7ba4958`. Phase 6IC fixed the repository-local
+authoring dependency boundary with a SHA-pinned four-module manifest and
+absolute-file loader that does not permanently mutate `sys.path`. No-Kit gates
+passed 18/18 plus inherited exact-loader 12/12, Point-policy 13/13, and atomic
+report 15/15. The only fresh Kit launch loaded all four declared modules and
+generated both registered-schema stages, then failed closed while validating
+the reopened OFF stage at `/World/Flow/Emitter.position` with
+`attribute_value_mismatch`. Stage close and `shutdown_complete` completed, Kit
+exited 1, resource limits held, and exact cleanup left residual zero. Phase 6IC
+therefore qualifies deterministic authoring dependency loading only; stage-open
+and the OFF/ON occlusion comparison remain unqualified. See
+`docs/design/phase6ic_exact_authoring_dependency_safe_stop.md`.

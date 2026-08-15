@@ -1,5 +1,13 @@
 # Changelog
 
+- Added Phase 6IC while retaining Phase 6IB at `7ba4958` as its original
+  authoring-import safe stop. The deterministic four-module exact dependency
+  gate passed all no-Kit fixtures. The sole actual Kit smoke generated both
+  registered-schema stages, then stopped fail-closed at reopened emitter
+  `float3` value validation. Stage close/shutdown completed, exit code was 1,
+  and exact cleanup left residual zero. No Flow simulation or OFF/ON comparison
+  ran; production and defaults remain unchanged.
+
 - Added Phase 6IB while retaining Phase 6IA at `cfc4fd2` as its original
   stage-parser safe stop. The old diagnostic USDA placed property specs and a
   closing brace on one line (and used semicolon-separated multi-properties),

@@ -1,0 +1,61 @@
+{
+  "schema": "campfire.phase6ic.devlog-summary.v1",
+  "phase": "phase6ic",
+  "status": "safe_stop_stage_attribute_validation_failure",
+  "implementation_commit": "a651588",
+  "contract_sha256": "E055062BC6B6385C4E02084EA0E91859B71B56E19AFE8AE6A1E8740D84A09D3C",
+  "dependency_manifest_sha256": "E0E45DF4ACDF81EAFFB5DFFEDB6C49540A1826509212A7DE904FBB5AA62A38F9",
+  "fixtures": {
+    "phase6ic": [18, 18],
+    "phase6hz_exact_loader": [12, 12],
+    "point_policy": [13, 13],
+    "atomic_report": [15, 15]
+  },
+  "kit_launches": 1,
+  "retry_count": 0,
+  "replacement_count": 0,
+  "dependency_modules_loaded": 4,
+  "last_marker": "shutdown_complete",
+  "first_failure": "attribute_value_mismatch:/World/Flow/Emitter.position",
+  "stage_generation_complete": true,
+  "stage_open_qualified": false,
+  "stage_close_complete": true,
+  "shutdown_complete": true,
+  "kit_exit_code": 1,
+  "resource_peaks_bytes": {
+    "kit": 7333801984,
+    "tree": 7761203200,
+    "runner": 96268288,
+    "diagnostic": 17264640
+  },
+  "resource_margin_bytes": {
+    "kit": 9845067200,
+    "tree": 10492407808
+  },
+  "residual_process_count": 0,
+  "fatal": false,
+  "native_exception": false,
+  "dump_count": 0,
+  "cdb_used": false,
+  "automatic_upload": false,
+  "flow_simulation_started": false,
+  "off_on_started": false,
+  "phase6ib_reclassified": false,
+  "phase6ib_artifact_or_runtime_reused": false,
+  "production_changed": false,
+  "defaults_changed": false,
+  "point_policy_changed": false,
+  "v3_changed": false,
+  "latest_demo_changed": false
+  ,"regression": {
+    "release_build_seconds": 7.82,
+    "focused_tests": [7, 7],
+    "python_compilation": "pass",
+    "standard_processes": [8, 8],
+    "standard_tests": [78, 78],
+    "standard_seconds": 322.2,
+    "devlog_validation": "pass: refs=576 ids=332 json=285 svg=177 zip=2",
+    "phase0_rtx": "omitted: production/rendering unchanged",
+    "phase3": "omitted: production/authority/physics/Flow inputs unchanged"
+  }
+}
