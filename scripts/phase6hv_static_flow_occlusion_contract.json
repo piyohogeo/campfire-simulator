@@ -1,0 +1,150 @@
+{
+  "schema": "campfire.phase6hv.static-production-hierarchy-flow-occlusion-contract.v1",
+  "phase": "phase6hv",
+  "baseline_commit": "a380276",
+  "declared_before_runtime": true,
+  "purpose": "Compare one fresh Collision-OFF and one fresh Collision-ON process around the Phase 6HS Mesh proxy under the Phase 6HU visible-Flow settings without NanoVDB readback.",
+  "frozen_history": {
+    "phase6hs_commit": "fbbac6f",
+    "phase6ht_commit": "89ae109",
+    "phase6hu_commit": "a380276",
+    "reclassified": false,
+    "artifacts_modified": false,
+    "runtime_reused": false
+  },
+  "one_variable": "FlowSimulate.physicsCollisionEnabled",
+  "condition_order": [
+    {"name": "collision_off", "physics_collision_enabled": false},
+    {"name": "collision_on", "physics_collision_enabled": true}
+  ],
+  "launches_per_condition": 1,
+  "retry": 0,
+  "replacement": 0,
+  "fixed_scene": {
+    "production_hierarchy": true,
+    "log_path": "/World/Logs/Log_00",
+    "log_world_matrix": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, -0.34, 0.18, 1.0],
+    "proxy_path": "/World/Logs/Log_00/FlowCollisionProxy",
+    "proxy_vertices": 26,
+    "proxy_faces": 36,
+    "proxy_indices": 120,
+    "proxy_closed_outward": true,
+    "proxy_approximation": "convexDecomposition",
+    "proxy_dynamic_transform": false,
+    "source_center_m": [0.0, 0.0, 0.55],
+    "source_radius_m": 0.2,
+    "source_fuel": 0.8,
+    "source_temperature": 2.0,
+    "camera_path": "/World/Cameras/FlowBaseline",
+    "camera_eye_m": [2.65, -4.2, 2.35],
+    "camera_target_m": [0.0, 0.0, 1.05],
+    "capture_resolution": [1280, 720],
+    "simulation_updates": 240,
+    "active_block_frames": [60, 120, 180, 240],
+    "preplay_updates": 12,
+    "renderer_drain_updates": 8,
+    "post_close_updates": 4,
+    "readback_calls": 0
+  },
+  "stage_authoring": {
+    "reference": "Phase 6HU qualified candidate USD; used only to freeze authoring digests, never as a formal runtime result",
+    "expected_stage_sha256": {
+      "collision_off": "1D60879CA6348E72AAE92842B9C36625DEBB10044CB96403EBE2EFE384F86B1B",
+      "collision_on": "E0828132CBDDCD1A47C5A2E1C75FB75A2E7631CE1069BA051D3E148B04BBFB6E"
+    },
+    "normalized_common_stage_sha256": "5E8B0E1D102D19A78860896FBA04CEEF5040AA5B3D214F35D6A1149CEA3B81C0",
+    "settings_schema": "campfire.phase6hv.stage-settings.v1",
+    "settings_common_sha256": "65A18F2F2E9D8C7F843DAEB0E2F4EF3AC6F2C382E516921B0AE28FD9C3DB8848",
+    "settings_sha256": {
+      "collision_off": "D726AC1E2A91FEBE5C20FE1E36DEE13688BF87C45D6FD8E000535F01A1998D81",
+      "collision_on": "5F47BECFA59F639A430167DE06C94737941E959F4C2F8FC3593E320D6751BFA8"
+    }
+  },
+  "authoring_reuse": {
+    "proxy": "Phase 6HS exact 26/36/120 closed outward Mesh authoring",
+    "flow": "probe_phase6ds_flow_collision._define_flow",
+    "camera": "probe_phase6ds_flow_collision._define_camera",
+    "capture": "probe_phase6ds_flow_collision._capture",
+    "atomic_report": "Phase 6HU DurableOperationReporter and bounded atomic retry",
+    "analytical_cylinder_forbidden": true
+  },
+  "flow_liveness": {
+    "collision_off_active_blocks_each_sample_minimum": 128,
+    "collision_on_active_blocks_each_sample_minimum": 25,
+    "collision_on_reason": "25 is fixed above the known non-representative 24-block startup plateau; image gates separately require source-near and diverted Flow so block count cannot qualify occlusion alone."
+  },
+  "visual_measurement": {
+    "baseline": "after 12 stopped Kit updates and before timeline play",
+    "final": "after exactly 240 playing updates and 8 stopped renderer-drain updates",
+    "pixel_change_threshold_per_channel": 12,
+    "flow_color_mask": {"red_minimum": 110, "green_minimum": 70, "blue_maximum": 90, "green_minus_blue_minimum": 25, "red_minus_green_maximum": 110},
+    "rois_normalized": {
+      "direct_path": [0.40, 0.58, 0.65, 0.90],
+      "side_left": [0.25, 0.48, 0.40, 0.90],
+      "side_right": [0.65, 0.48, 0.80, 0.90],
+      "upper": [0.40, 0.46, 0.65, 0.64],
+      "source_near": [0.40, 0.75, 0.65, 1.00],
+      "background_control": [0.02, 0.03, 0.25, 0.28]
+    },
+    "hard_gates": {
+      "collision_off_total_changed_pixels_minimum": 10000,
+      "collision_off_direct_changed_pixels_minimum": 5000,
+      "collision_off_direct_flow_color_pixels_minimum": 10000,
+      "collision_on_source_near_changed_pixels_minimum": 500,
+      "collision_on_source_near_flow_color_pixels_minimum": 1000,
+      "collision_on_side_or_upper_changed_pixels_minimum": 100,
+      "collision_on_to_off_direct_changed_pixel_ratio_maximum": 0.75,
+      "collision_on_to_off_direct_mean_delta_ratio_maximum": 0.85,
+      "collision_on_to_off_direct_flow_color_ratio_maximum": 0.90,
+      "on_off_final_changed_pixels_minimum": 1000,
+      "background_final_changed_pixels_maximum": 100,
+      "background_final_mean_delta_maximum": 2.0,
+      "background_baseline_changed_pixels_maximum": 100,
+      "background_baseline_mean_delta_maximum": 2.0
+    },
+    "human_gate": "OFF must visibly pass through the authored log position. ON must visibly suppress that direct path while retaining lateral diversion or upward Flow. Whole-field extinction, brightness-only difference, ambiguous evidence, or direct passage through the opposite side fails closed."
+  },
+  "operation_report": {
+    "schema": "campfire.phase6hs.proxy-operation-report.v1",
+    "schema_sha256": "5664B84A498D81FF2A53B793AF246F853F8C9912030DB7A1086959317DD7A393",
+    "producer": "phase6hs_operation_report.py",
+    "completion_markers": ["operation_complete", "stage_close_complete", "shutdown_complete"]
+  },
+  "atomic_report": {
+    "implementation": "phase6hu_atomic_report.py",
+    "retryable_windows_errors": [5, 32, 33],
+    "maximum_attempts": 5,
+    "maximum_elapsed_seconds": 0.25,
+    "backoff_seconds": [0.01, 0.02, 0.04, 0.08],
+    "persistent_failure_qualified": false,
+    "cleanup_continues_after_report_failure": true
+  },
+  "accepted_classifications": ["natural_clean_exit", "cleanup_assisted_telemetry_exit", "cleanup_assisted_ngx_exit"],
+  "telemetry_basename": "omni.telemetry.transmitter.exe",
+  "telemetry_path_suffix": "omni.telemetry.transmitter/omni.telemetry.transmitter.exe",
+  "telemetry_extension_prefix": "omni.kit.telemetry-",
+  "telemetry_extension_store_root": "C:/Users/junic/AppData/Local/ov/data/exts/v2",
+  "maximum_telemetry_helpers": 1,
+  "ngx_updater_basename": "nvngx_update.exe",
+  "ngx_driverstore_path_regex": "c:\\windows\\system32\\driverstore\\filerepository\\nv_dispig\\.inf_amd64_[0-9a-f]+\\nvngx_update\\.exe",
+  "conhost_exact_path": "C:/Windows/System32/conhost.exe",
+  "maximum_ngx_updaters": 1,
+  "maximum_ngx_conhosts": 1,
+  "maximum_ngx_trees": 1,
+  "authenticode_policy": "record when exposed by bounded identity API; explicit unavailability is permitted; explicit mismatch is rejected",
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 17179869184,
+    "diagnostic_private_limit_bytes": 536870912,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "available_physical_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "outer_timeout_seconds": 900,
+    "sample_seconds": 0.25,
+    "simultaneous_kit_processes": 1
+  },
+  "fail_fast": ["preflight or stage digest mismatch", "condition operation failure", "resource limit", "fatal", "device lost", "TDR", "dump", "automatic upload", "unknown residual", "cleanup failure", "stage close or shutdown failure", "canonical report failure", "ambiguous visual evidence"],
+  "scope_if_pass": "One static Phase 6HS low-detail Mesh proxy in the production wood hierarchy suppresses direct passage while preserving lateral or upward Flow for the frozen 0.2 m diagnostic source and playing timeline.",
+  "out_of_scope": ["production integration", "default change", "NanoVDB readback", "Point Emitter coexistence or policy", "S93/S100", "multiple proxies", "arbitrary pose", "dynamic transform", "PhysX sharing", "four-log performance", "twenty-log performance", "P4", "V3", "latest demo update"]
+}
