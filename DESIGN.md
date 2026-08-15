@@ -4850,3 +4850,24 @@ cleanup left residual zero. The classification is
 `safe_stop_runtime_authoring_isolation_failure`; neither runtime Layer
 ownership nor OFF/ON is qualified, and no causal claim about the native failure
 is made. See `docs/design/phase6ih_runtime_authoring_layer_isolation.md`.
+
+# Phase 6II minimal Stage-open composition ladder safe stop
+
+Phase 6IH remains frozen at `2df5df9`. Phase 6II reduced the requested ladder
+to A direct protected open, B container plus protected, and C container plus
+empty runtime plus protected. Requested D is exactly C in Phase 6IH, and the
+Kit USD Context's anonymous session Layer is common to every condition rather
+than a synthetic variable. The producer-to-consumer fixture passed 20/20 and
+five exact dependencies matched before runtime.
+
+Fresh Condition A returned from `open_stage_async` in 0.167172 seconds, with
+the expected root, no sublayers, protected EditTarget, and matching protected
+SHA. It then failed closed because the actual session identifier was
+`anon:<id>` rather than the predeclared filename-suffixed form. Error cleanup
+closed the stage in 0.121282 seconds, confirmed an empty context and shutdown,
+then Kit exited 1; exact cleanup left residual zero and no fatal/dump occurred.
+B/C were not launched. The frozen classification is
+`safe_stop_stage_open_native_failure_unlocalized`, but the observed failure is
+a session-identity contract mismatch, not a native exception. Phase 6IH's
+access violation remains unlocalized. See
+`docs/design/phase6ii_stage_open_composition_ladder.md`.

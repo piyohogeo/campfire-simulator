@@ -52,3 +52,35 @@ attempts are required for `stage_open_composition_ladder_qualified`.
 
 The runtime result is appended only after the no-Kit producer-to-consumer gate
 and the separately committed implementation are complete.
+
+## Runtime result
+
+The no-Kit fixture passed 20/20 and all five exact dependencies matched. One
+fresh Condition A process was launched; B and C were not launched after A's
+fail-fast boundary. The protected Layer SHA matched the contract.
+
+`open_stage_async` returned normally in 0.167172 seconds. The root had no
+sublayers, the EditTarget was the protected root, and the context did create an
+anonymous session Layer. Its actual identifier was the bounded form
+`anon:<runtime-id>`, not the predeclared filename-suffixed
+`anon:<runtime-id>:protected_diagnostic-session.usda`. The exact identity gate
+therefore stopped at `opened_stage_identity` with
+`session_identifier_mismatch`. This is an identity-contract mismatch after a
+successful native open, not a recurrence of Phase 6IH's access violation.
+
+The error cleanup used the same close API. Stage close completed in 0.121282
+seconds, context-empty and shutdown markers were durable, Kit exited 1, and
+exact cleanup left residual zero. No fatal, access violation, device loss,
+TDR, dump, CDB action, or upload occurred. Kit/tree Private Bytes peaked at
+7,290,847,232/7,745,839,104 bytes, within the fixed 16/17 GiB limits.
+
+The frozen A-failure rule yields
+`safe_stop_stage_open_native_failure_unlocalized`; the label does not assert a
+native crash. There is no fully qualified ladder condition. The evidence does
+establish that direct protected-root open/close can return normally in this
+one process, but it does not test container or runtime sublayers and cannot
+localize Phase 6IH's native exception.
+
+The next separately approved Phase must correct and fixture only the anonymous
+session-identity contract, then run a new-root A/B/C ladder. It must not reuse
+this attempt, proceed to four-boundary Layer audit, or start OFF/ON.

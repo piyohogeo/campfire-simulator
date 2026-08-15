@@ -1,5 +1,17 @@
 # Changelog
 
+- Added Phase 6II while retaining Phase 6IH at `2df5df9` as its original
+  runtime-authoring-isolation safe stop. The requested ladder was reduced to
+  real one-variable conditions A/B/C because D equals C and Kit supplies an
+  anonymous session Layer for every root. No-Kit producer-to-consumer fixtures
+  passed 20/20. Fresh A returned from direct protected-root open and close, but
+  failed the frozen identity contract because Kit named the session Layer
+  `anon:<id>` rather than the expected filename-suffixed form. B/C were not
+  launched. Close, shutdown, resource, and exact cleanup gates completed with
+  exit 1, residual zero, and no fatal or dump. The classification is
+  `safe_stop_stage_open_native_failure_unlocalized`; no native-cause or
+  composition-specific conclusion is claimed.
+
 - Added Phase 6IH while retaining Phase 6IG at `ea7217d` as its original
   camera-opinion safe stop. A file-backed protected diagnostic Layer is now
   composed below explicit runtime and container Layers plus an anonymous
