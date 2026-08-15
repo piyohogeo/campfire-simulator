@@ -1,0 +1,93 @@
+{
+  "schema": "campfire.phase6hj.devlog-result.v1",
+  "status": "control_non_normal_comparison_invalid",
+  "phase6hf_frozen_commit": "c27267f",
+  "phase6hh_implementation_commit": "5f483a9",
+  "phase6hj_fixture_commit": "7b989f8",
+  "contract_sha256": "48F7BC9A1939D518CF9112647049082E1BE92D2DD63459CEA6D09A346C4F0047",
+  "artifact_root": "artifacts/phase6hj-sampling-result-lifetime-20260815",
+  "phase6hh_preflight": {
+    "status": "harness_safe_stop",
+    "kit_launches": 0,
+    "fixture_exit": 1,
+    "reason": "fixed fixture command directory already existed",
+    "runtime_samples_reused": false
+  },
+  "phase6hj_preflight": {
+    "fixture_passed": 51,
+    "fixture_total": 51,
+    "unique_temporary_root": true,
+    "kit_launched_by_fixture": false
+  },
+  "read_only_audit": {
+    "sample_result_python_type": "builtins.dict",
+    "container_structure": "mapping_with_scalar_leaves",
+    "keys": ["available", "maximum", "mean", "nonzero_voxel_count", "p95", "sum", "voxel_count"],
+    "contains_numpy": false,
+    "contains_native_wrapper": false,
+    "contains_grid_volume_or_handle": false,
+    "weakref_supported": false,
+    "phase6hf_original_retained_to_operation_report": true
+  },
+  "launches": 1,
+  "retries": 0,
+  "replacements": 0,
+  "l0": {
+    "condition": "l0_sampling_none",
+    "classification": "windows_native_exception_before_operation",
+    "process_exit_code_decimal": 3221225477,
+    "process_exit_code_hex": "0xC0000005",
+    "last_marker": "startup_frame_sample",
+    "last_frame": 138,
+    "active_blocks": 1190,
+    "operation_status": "running",
+    "operation_complete": false,
+    "operation_counter_total": 0,
+    "readback_calls": 0,
+    "sampling_calls": 0,
+    "references_released": false,
+    "stage_close_complete": false,
+    "shutdown_complete": false,
+    "natural_os_exit": false,
+    "temporary_nvdb_count": 0,
+    "residual_process_count": 0,
+    "resource_pass": true,
+    "cleanup_pass": true
+  },
+  "parent_reporting_failure": {
+    "present": true,
+    "reason": "temporary_file_allowlist missing from Phase 6HJ machine contract",
+    "masked_child_as_normal": false,
+    "fixed_or_retried": false
+  },
+  "peaks_bytes": {"kit": 15525724160, "tree": 15678468096, "runner": 96456704, "diagnostic": 17014784},
+  "minimum_margin_bytes": {"kit": 1654145024, "tree": 2575142912, "available_physical": 82787434496, "commit_headroom": 102438232064},
+  "safety": {"crash_artifact_count": 1, "automatic_upload": false, "cdb_started": false, "residual_nvdb_count": 0, "residual_attempt_process_count": 0},
+  "l1_started": false,
+  "l2_started": false,
+  "conclusion": "comparison_invalid_control_non_normal",
+  "roadmap_state": "parked / diagnostic-only lifecycle",
+  "root_cause_claimed": false,
+  "phase6hf_reclassified": false,
+  "phase6hf_sample_reused": false,
+  "formal_population_started": false,
+  "production_changed": false,
+  "latest_demo_changed": false,
+  "regression": {
+    "release_build": "pass (7.72 s)",
+    "focused": {
+      "phase6hj": "51/51 pass",
+      "phase6hf_frozen": "62/62 pass",
+      "phase6he_frozen": "63/63 pass",
+      "phase6hh_frozen": "expected preflight-safe-stop exit 1"
+    },
+    "python_compilation": "pass",
+    "standard_suite": "78/78 pass (8 processes, 336.3 s)",
+    "devlog_validation": "pass (533 references, 313 ids, 266 JSON, 177 SVG, 2 ZIP)",
+    "phase0_rtx": "not run: production, render configuration, and USD generation unchanged",
+    "phase3": "not run: production physics and Flow input unchanged"
+  },
+  "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "latest_demo_manifest_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285",
+  "latest_demo_video_sha256": "DC14693EB07116C145344675BD830A0D2B0179FB08DCB3B83EEFEFFA3970E90F"
+}

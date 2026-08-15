@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6hf">最新記録</a>
+        <a href="#phase-6hj">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6hf">Phase 6HFの結果を読む</a>
+        <a class="button primary" href="#phase-6hj">Phase 6HJの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6HF · scene ROI lifecycle safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6HJ · lifetime comparison invalid / parked</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,16 @@
   </header>
 
   <main>
+    <section id="phase-6hj" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6HJ sampling-result lifetime safe stop"><span class="phase-number compact">6HJ</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6HJ · sampling-result lifetime</p><h2>The ownership audit passed;<br>the fresh control failed before readback.</h2><p>The isolated no-Kit fixture passed 51/51. L0 reached representative startup frame 138, then exited with <code>0xC0000005</code> before readback or any operation counter. L1/L2 were not launched.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Ownership audit</p><h3>The sample result is a scalar-only dict.</h3><p>It contains no NumPy or native owner and cannot be weak-referenced. Phase 6HF retained the original dict through its operation report; this fact remains frozen and was not reused as a new sample.</p></section><section class="note"><p class="note-label">Safe stop</p><h3>The lifetime comparison is invalid.</h3><p>L0 had zero readback and sampling calls, no stage close or shutdown marker, and abnormal OS exit. Kit/tree peaks stayed within limits; exact cleanup left process and NanoVDB residuals at zero.</p></section></div>
+          <section class="note next"><p class="note-label">Continuation roadmap</p><h3>Park as diagnostic-only lifecycle.</h3><p>The control failed before the comparison variable existed, so no result-lifetime conclusion is valid. Phase 6HF is not upgraded. Long repetition, L1/L2 replacement, formal comparison, temperature, collector, profile, production, and demo work remain stopped.</p><p>Release build, focused checks, Python compilation, devlog validation, and the standard 78/78 suite passed. Phase 0/3 were omitted because production, rendering, USD generation, physics, and Flow input are unchanged.</p><p><a href="assets/phase6/phase6hj_sampling_result_lifetime_safe_stop.json">machine report</a> · <a href="../design/phase6hj_sampling_result_lifetime_safe_stop.md">design note</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>internal lifecycle evidence; no new video</small></span></button></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6hf" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6HF velocity ROI lifecycle safe stop"><span class="phase-number compact">6HF</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>

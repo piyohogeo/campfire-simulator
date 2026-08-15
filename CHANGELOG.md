@@ -1,5 +1,12 @@
 # Changelog
 
+- Froze Phase 6HJ after its 51/51 isolated preflight passed but fresh L0
+  exited with `0xC0000005` at startup frame 138, before readback, sampling, or
+  shutdown. Exact cleanup left residual zero. A separate missing parent
+  allowlist prevented the aggregate report but did not turn the child result
+  normal. L1/L2 were not launched; result-lifetime comparison is invalid and
+  the NanoVDB shutdown issue moves to parked diagnostic-only monitoring.
+
 - Froze Phase 6HH as a pre-Kit harness safe stop after its exact-command
   fixture found the fixed temporary directory left by the implementation
   fixture. Phase 6HJ isolates that fixture beneath a unique temporary root;

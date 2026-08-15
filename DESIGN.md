@@ -19,6 +19,18 @@ fixture root to a unique `TemporaryDirectory`; the frozen L0/L1/L2 runtime
 probe and retention contract semantics are unchanged. Details:
 `docs/design/phase6hh_preflight_safe_stop_and_phase6hj_contract.md`.
 
+## Phase 6HJ result
+
+The isolated no-Kit fixture passed 51/51, but fresh L0 exited with
+`0xC0000005` at startup frame 138 before readback or any operation counter.
+Stage close and `shutdown_complete` were not reached. Exact cleanup left no
+process or NanoVDB residual. A missing parent-contract temporary allowlist then
+prevented the derived parent summary, but the durable child evidence is
+unambiguously non-normal. L1/L2 were not launched, so the retention comparison
+is invalid and Phase 6HF remains unchanged. NanoVDB shutdown investigation is
+parked as `diagnostic-only lifecycle`. Details:
+`docs/design/phase6hj_sampling_result_lifetime_safe_stop.md`.
+
 # Phase 6HF velocity ROI-sampling lifecycle isolation (frozen before runtime)
 
 Phase 6HE remains an immutable lifecycle safe stop. Phase 6HF rebuilds V5 in
