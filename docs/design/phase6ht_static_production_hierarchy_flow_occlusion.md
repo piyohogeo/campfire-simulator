@@ -31,3 +31,35 @@ If qualified, the result is limited to one static proxy in the production wood
 hierarchy under these fixed settings while the timeline is playing. It does
 not qualify production defaults, dynamic tracking, PhysX mesh sharing, Point
 Emitter coexistence, or four-/twenty-log performance.
+
+## Runtime safe stop
+
+The first no-Kit invocation stopped only because the focused test process did
+not put `scripts` on its module path. That pre-Kit artifact is retained. The
+same unchanged contract then passed a new no-Kit root at 8/8 after correcting
+only that fixture import boundary.
+
+The formal ON process was the only Kit process launched. It preserved the
+Phase 6HS proxy geometry, hierarchy, transform, and authoring, acquired Flow
+once, used no readback, played exactly 240 updates, and durably recorded active
+blocks of 46, 46, 40, and 49 at frames 60, 120, 180, and 240. Both bounded
+captures were written. The fixed representative-Flow minimum was 128 at every
+sample, so this condition was not eligible to qualify even before an OFF
+sensitivity control.
+
+After `operation_complete` and `timeline_stop_complete`, the next durable raw
+report replacement failed with `PermissionError: WinError 5`. Stage close and
+`shutdown_complete` were therefore not reached, Kit exited 1, and no canonical
+operation report was produced. This is a harness/lifecycle safe stop plus a
+failed representative-Flow prerequisite; it is not evidence for or against
+Mesh occlusion. The ON final image showed no clearly discernible Flow field,
+and OFF was not launched, so no comparison image or video was published.
+
+Kit and unique-tree peaks were 11,370,786,816 and 11,694,043,136 bytes,
+leaving 5,809,082,368 and 6,559,567,872 bytes to the 16/17 GiB limits. Physical
+and commit floors passed; no fatal, device loss, TDR, dump, or automatic upload
+was observed. Exact cleanup ended with residual zero. Phase 6HS remains
+qualified and unchanged. A future separately approved phase must first obtain
+a representative visible Flow field and a durable normal lifecycle before any
+ON/OFF occlusion conclusion; the present condition must not be retried or
+reclassified.

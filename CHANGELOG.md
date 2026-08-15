@@ -1,5 +1,14 @@
 # Changelog
 
+- Added the Phase 6HT readback-free static Flow-occlusion contract without
+  changing Phase 6HS. The corrected no-Kit fixture passed 8/8. The sole ON
+  process preserved the qualified proxy, ran 240 updates, captured two images,
+  and used no readback, but active blocks 46/46/40/49 missed the frozen 128
+  prerequisite. A later raw-report atomic replacement failed after
+  `operation_complete` and `timeline_stop_complete`, before stage close. OFF
+  was not launched, there was no retry, cleanup residual was zero, and no
+  occlusion or production qualification was claimed.
+
 - Added the Phase 6HS canonical proxy operation-report contract while keeping
   Phase 6HR frozen. Durable attempt-bound JSONL markers now produce one atomic
   top-level completion report; guard and parent use the same bounded validator

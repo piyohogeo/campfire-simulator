@@ -222,6 +222,21 @@ attempt-owned telemetry helper and ended at residual zero. Production,
 defaults, Point policy, V3, and latest demo remain unchanged. Details:
 `docs/design/phase6hs_canonical_proxy_report_qualification.md`.
 
+## Phase 6HT static production-hierarchy Flow occlusion safe stop
+
+Phase 6HS remains frozen and qualified at `fbbac6f`. Phase 6HT predeclared a
+readback-free ON/OFF comparison using the exact Phase 6HS proxy and production
+Log_00 transform, with only `physicsCollisionEnabled` changing. The corrected
+no-Kit fixture passed 8/8. The sole ON process completed 240 updates and two
+captures, but its frame 60/120/180/240 active blocks were 46/46/40/49 versus
+the frozen minimum 128. After durable `operation_complete` and
+`timeline_stop_complete`, an atomic raw-report replacement failed with
+`WinError 5`; stage close and shutdown were not reached. OFF was not launched,
+there was no retry, and no occlusion conclusion was made. Resource gates and
+exact cleanup passed with residual zero. Production, defaults, Point policy,
+V3, and latest demo remain unchanged. Details:
+`docs/design/phase6ht_static_flow_occlusion_safe_stop.md`.
+
 # Phase 6HF velocity ROI-sampling lifecycle isolation (frozen before runtime)
 
 Phase 6HE remains an immutable lifecycle safe stop. Phase 6HF rebuilds V5 in
