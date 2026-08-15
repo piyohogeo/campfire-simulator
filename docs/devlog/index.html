@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6hx">最新記録</a>
+        <a href="#phase-6ia">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6hx">Phase 6HXの結果を読む</a>
+        <a class="button primary" href="#phase-6ia">Phase 6IAの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6HX · Kit import harness safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6IA · stage-parse harness safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,16 @@
   </header>
 
   <main>
+    <section id="phase-6ia" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6IA single-log occlusion stage-parse safe stop"><span class="phase-number compact">6IA</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6IA · frozen single-log OFF/ON comparison</p><h2>The full preflight passed;<br>Kit rejected the generated stage before Flow began.</h2><p>Exact import, marker, Point-policy, atomic-report, and stage fixtures passed 62/62 without Kit. The first fresh OFF launch then failed at the USD parser boundary.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">First runtime boundary</p><h3>The stage never opened.</h3><p>Kit reported <code>candidate.usda:118:64: Expected }</code> at an inline temperature <code>FlowAdvectionChannelParams</code> declaration. ON was not launched. No active blocks, ROI occupancy, capture, difference image, or comparison video exists.</p></section><section class="note"><p class="note-label">Fail-fast safety</p><h3>Shutdown markers completed; residual zero.</h3><p>The error path reached stage close and <code>shutdown_complete</code>, then Kit exited 1. Kit/tree peaks were 7,344,545,792 / 7,799,668,736 bytes. There was no fatal, native exception, dump, upload, timeout, or CDB invocation.</p></section></div>
+          <section class="note next"><p class="note-label">Next approval boundary</p><h3>Qualify a Kit-parseable diagnostic stage before another comparison.</h3><p>Phase 6IA is a stage-authoring harness safe stop, not an occlusion or visual result. A new Phase and root must validate actual Kit stage open before any fresh OFF/ON run. Production, defaults, Point policy, wood authority, V3, public scene, and latest demo remain unchanged.</p><p><a href="assets/phase6/phase6ia_single_log_occlusion_safe_stop.json">machine report</a> · <a href="../design/phase6ia_single_log_occlusion_safe_stop.md">design and result</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>no new visual artifact was created</small></span></button></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6hz" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6HZ exact Kit import qualification"><span class="phase-number compact">6HZ</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">qualified</span></aside>

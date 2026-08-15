@@ -1,5 +1,15 @@
 # Changelog
 
+- Added Phase 6IA while retaining Phase 6HV through Phase 6HZ unchanged. The
+  new no-Kit preflight passed 62/62 across exact import, marker, Point-policy,
+  atomic-report, and generated-stage fixtures. The sole fresh Collision-OFF
+  launch then stopped before stage open because Kit's USD parser rejected an
+  inline `FlowAdvectionChannelParams` declaration in the frozen generated
+  USDA. ON was not launched; active blocks, ROI metrics, images, and video do
+  not exist. The error path reached stage-close/shutdown markers, stayed below
+  16/17 GiB, and exact cleanup ended at residual zero. No retry or threshold
+  change was made; production/defaults/Point/V3/latest demo are unchanged.
+
 - Qualified Phase 6HZ while retaining Phase 6HY at `40ff0e0` as its original
   marker-harness safe stop. The reserved-key-safe actual marker producer and
   helper passed 11/11 no-Kit fixtures, and the frozen exact-loader regression

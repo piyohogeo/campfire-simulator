@@ -1,0 +1,89 @@
+{
+  "schema": "campfire.phase6ia.devlog-summary.v1",
+  "phase": "phase6ia",
+  "status": "safe_stop_runtime_stage_parse_harness_failure",
+  "baseline_commit": "67f0b9c",
+  "implementation_commit": "2ecd177",
+  "contract_sha256": "24A46129E99627AF44CA5CB9BCB152C494C4083E19C4702B7AADB6CA9380DFD6",
+  "frozen_history_changed": false,
+  "past_runtime_reused": false,
+  "preflight": {
+    "status": "qualified",
+    "kit_launch_count": 0,
+    "exact_import": [12, 12],
+    "marker_payload": [11, 11],
+    "point_policy": [13, 13],
+    "atomic_report": [15, 15],
+    "generated_stage": [11, 11],
+    "total": [62, 62],
+    "only_collision_switch": true,
+    "proxy_topology": [26, 36, 120],
+    "source_surface_gap_m": 0.06,
+    "end_clearance_m": 1.6
+  },
+  "runtime": {
+    "kit_launch_count": 1,
+    "retry_count": 0,
+    "replacement_count": 0,
+    "collision_off": {
+      "launched": true,
+      "accepted": false,
+      "process_exit_code": 1,
+      "operation_status": "error",
+      "error": "RuntimeError: Phase 6HX stage did not open",
+      "first_failure": "USD text parser rejected candidate.usda at line 118 column 64 before stage open",
+      "parser_excerpt": "Expected } at float secondOrderBlendFactor = 0.9 }",
+      "last_operation_marker": "shutdown_complete",
+      "stage_close_complete": true,
+      "shutdown_complete": true,
+      "canonical_operation_report": "missing",
+      "canonical_lifecycle_classification": "cleanup_failure",
+      "exact_cleanup_all_absent": true,
+      "residual_process_count": 0
+    },
+    "collision_on": {
+      "launched": false,
+      "reason": "fail-fast after Collision OFF stage-parse failure"
+    },
+    "active_block_history": null,
+    "roi_metrics": null,
+    "numeric_gate": "not_evaluated",
+    "human_visual_gate": "not_evaluated",
+    "images_created": 0,
+    "comparison_videos_created": 0,
+    "fatal_count": 0,
+    "native_exception_count": 0,
+    "dump_count": 0,
+    "automatic_upload_count": 0,
+    "cdb_invocation_count": 0
+  },
+  "resource_peaks_bytes": {
+    "kit": 7344545792,
+    "unique_tree": 7799668736,
+    "runner": 96362496,
+    "diagnostic": 16896000
+  },
+  "resource_headroom_bytes": {
+    "kit_to_16_gib": 9835323392,
+    "tree_to_17_gib": 10453942272
+  },
+  "machine_minima_bytes": {
+    "available_physical": 84981919744,
+    "commit_headroom": 104944119808
+  },
+  "regression": {
+    "python_compilation": "pass",
+    "focused_tests": "14/14 pass",
+    "release_build": "pass",
+    "standard_suite": "8 processes, 78/78 pass",
+    "static_devlog_validation": "pass",
+    "phase0_rtx": "omitted: production, USD generation, rendering, wood authority, and Flow inputs unchanged",
+    "phase3": "omitted: production, USD generation, rendering, wood authority, and Flow inputs unchanged"
+  },
+  "production_placement_return_condition_met": false,
+  "production_changed": false,
+  "defaults_changed": false,
+  "point_policy_changed": false,
+  "v3_changed": false,
+  "latest_demo_changed": false
+}

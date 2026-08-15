@@ -4561,6 +4561,24 @@ not started. Production/defaults/Point/wood authority/V3/public scene/latest
 demo remain unchanged. Full evidence and the next boundary are recorded in
 `docs/design/phase6hz_import_smoke_marker_qualification.md`.
 
+# Phase 6IA single-log occlusion runtime safe stop
+
+Phase 6HV through Phase 6HZ remain frozen. Phase 6IA used a new contract and
+empty root to restart the frozen single-log OFF-then-ON comparison. The no-Kit
+preflight passed 62/62, including exact import, marker, Point-policy,
+atomic-report, and one-variable generated-stage checks.
+
+The first and only formal launch was Collision OFF. Kit rejected the generated
+USDA before stage open at the inline temperature
+`FlowAdvectionChannelParams` declaration (`candidate.usda:118:64`, `Expected
+}`). The probe persisted stage-close and shutdown completion on its error path,
+Kit exited 1, resource limits held, and exact cleanup left residual zero. The
+canonical operation report was absent, so fail-fast stopped before ON. No Flow
+frame, active-block value, capture, ROI metric, human judgment, or video was
+created. Phase 6IA is `safe_stop_runtime_stage_parse_harness_failure`, not an
+occlusion result. Details:
+`docs/design/phase6ia_single_log_occlusion_safe_stop.md`.
+
 # Phase 6GM export-aligned comparison safe stop
 
 Phase 6GMのpre-Kit gateはすべて合格した。float32 source 16/16、geometry
