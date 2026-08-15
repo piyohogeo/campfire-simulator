@@ -1,0 +1,39 @@
+{
+  "schema": "campfire.phase6hz.devlog-summary.v1",
+  "phase": "phase6hz",
+  "status": "qualified",
+  "baseline_commit": "40ff0e0",
+  "implementation_commit": "b46c140",
+  "contract_sha256": "5D05CE4D7DA82EF538D406DF79CDFDFDF9AE73D2C3B9DC92C7EA8A8F4BA6D457",
+  "fixtures": {"marker_producer_to_helper": [11, 11], "phase6hy_exact_loader_regression": [12, 12]},
+  "fixture_kit_launch_count": 0,
+  "runtime": {
+    "kit_launch_count": 1, "retry_count": 0, "replacement_count": 0,
+    "last_marker": "shutdown_complete", "exact_probe_import_complete": true,
+    "required_callable_validated": true, "kit_exit_code": 0,
+    "lifecycle_classification": "cleanup_assisted_telemetry_exit", "residual_process_count": 0,
+    "stage_created": false, "flow_interface_calls": 0, "readback_calls": 0,
+    "collision_proxy_created": false, "capture_calls": 0,
+    "missing_marker_count": 0, "fatal_count": 0, "dump_count": 0, "automatic_upload_count": 0
+  },
+  "resolved_identity": {
+    "wrapper": "C:/Users/junic/src/campfire-simulator/scripts/probe_phase6hz_import_smoke.py",
+    "wrapper_sha256": "D0FAF3880C01424211765394C527C0944B39C71B93B6ED9602621BD55862B730",
+    "scripts": "C:/Users/junic/src/campfire-simulator/scripts",
+    "probe": "C:/Users/junic/src/campfire-simulator/scripts/phase6hy_probe_source.py",
+    "probe_sha256": "4F373882C6BC8AAB14247E2B5A9916550444DC283947D5B3321FAA0F7A622B35",
+    "required_callable": "phase6hz_probe_source_exact.build_probe_source"
+  },
+  "resource_peaks_bytes": {"kit": 7253692416, "unique_tree": 7739625472, "runner": 97820672, "diagnostic": 16199680},
+  "resource_headroom_bytes": {"kit_to_16_gib": 9926176768, "tree_to_17_gib": 10513985536},
+  "machine_minima_bytes": {"available_physical": 85150494720, "commit_headroom": 105112694784},
+  "regression": {
+    "python_compilation": "pass", "focused_tests": "4/4 pass", "release_build": "pass",
+    "standard_suite": "8 processes, 78/78 pass", "static_devlog_validation": "pass",
+    "phase0_rtx": "omitted: production, USD generation, rendering, wood authority, and Flow inputs unchanged",
+    "phase3": "omitted: production, USD generation, rendering, wood authority, and Flow inputs unchanged"
+  },
+  "phase6hy_reclassified": false, "phase6hy_artifact_or_runtime_reused": false,
+  "collision_off_on_started": false, "production_changed": false, "defaults_changed": false,
+  "point_policy_changed": false, "v3_changed": false, "latest_demo_changed": false
+}

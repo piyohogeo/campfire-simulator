@@ -4538,6 +4538,29 @@ started. This is a marker-harness safe stop, not import or occlusion evidence.
 Production/defaults/Point/V3/latest demo remain unchanged. Details:
 `docs/design/phase6hy_exact_kit_import_safe_stop.md`.
 
+# Phase 6HZ exact import marker qualification
+
+Phase 6HY remains frozen at `40ff0e0`; its failed marker call and artifacts
+were not changed or reused. Phase 6HZ separates marker-helper arguments from
+payload fields, reserves helper-owned and legacy collision keys, and validates
+the actual wrapper's complete marker payload set before Kit launch. The new
+marker fixture passed 11/11 and the Phase 6HY exact-loader regression remained
+12/12, with zero preflight Kit launches.
+
+One fresh app-ready smoke completed the exact repository-rooted import of
+`phase6hy_probe_source.py`, validated `build_probe_source`, persisted all
+markers through `shutdown_complete`, and exited Kit with code 0. Canonical
+lifecycle classification is `cleanup_assisted_telemetry_exit`; exact cleanup
+ended at residual zero. Kit/tree peaks were 7,253,692,416 / 7,739,625,472
+bytes. No stage, Flow, proxy, Emitter, readback, capture, occupancy, image, or
+video was created.
+
+Phase 6HZ qualifies only the durable marker and exact app-ready import
+boundary. The single-log OFF/ON visual probe remains separately gated and was
+not started. Production/defaults/Point/wood authority/V3/public scene/latest
+demo remain unchanged. Full evidence and the next boundary are recorded in
+`docs/design/phase6hz_import_smoke_marker_qualification.md`.
+
 # Phase 6GM export-aligned comparison safe stop
 
 Phase 6GMのpre-Kit gateはすべて合格した。float32 source 16/16、geometry

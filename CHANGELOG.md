@@ -1,5 +1,15 @@
 # Changelog
 
+- Qualified Phase 6HZ while retaining Phase 6HY at `40ff0e0` as its original
+  marker-harness safe stop. The reserved-key-safe actual marker producer and
+  helper passed 11/11 no-Kit fixtures, and the frozen exact-loader regression
+  remained 12/12. One fresh app-ready Kit smoke completed exact probe import,
+  callable validation, operation and shutdown markers, Kit exit 0, accepted
+  cleanup-assisted telemetry lifecycle, and residual-zero cleanup within the
+  16/17 GiB limits. No stage, Flow, CollisionProxy, Emitter, capture, OFF/ON,
+  image, or video was started. Production/defaults/Point/V3/latest demo are
+  unchanged.
+
 - Added Phase 6HY while keeping Phase 6HX frozen at `4d83948`. The new
   repository-rooted exact Kit loader and no-Kit fixture passed 12/12; inherited
   Point, atomic-report, and stage fixtures passed 13/13, 15/15, and 11/11. The
