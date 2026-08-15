@@ -1,0 +1,96 @@
+{
+  "schema": "campfire.phase6hb.candidate-lifecycle-ladder-contract.v1",
+  "phase": "phase6hb",
+  "base_commit": "f147be1",
+  "frozen_before_runtime": true,
+  "history": {
+    "phase6gz_frozen": true,
+    "phase6ha_frozen": true,
+    "reclassified": false,
+    "runtime_samples_reused": false
+  },
+  "audit": {
+    "common": {
+      "stage_builder": "probe_phase6gn_supply_comparison.py::_build_stage_with_qualified_exports",
+      "geometry": "production_four/phase6er_corrected",
+      "policy": "allow_self_center",
+      "collision": true,
+      "active_points": 1344,
+      "total_points": 1440,
+      "export_state": ["temperature:on", "fuel:on", "burn:on", "smoke:on", "velocity:on", "divergence:on", "rgba:off", "rgb:off"],
+      "startup_order": ["stage_connect", "60_viewport_frames", "flow_acquire_before_updates", "timeline_reset", "12_stopped_updates", "timeline_play"],
+      "sample_frames": [60, 120, 180, 240],
+      "operation_frame": 180,
+      "collector_generation": "four SpatialNeighborhoodCollector objects before timeline play",
+      "ownership_slots": ["stage", "viewport", "capture_provider_alias", "flow_interface", "volume_provider", "emitter_prim", "collectors", "collectors_by_index"],
+      "release_order": "after_stage_close",
+      "pre_close_renderer_updates": 8,
+      "post_close_renderer_updates": 4,
+      "shutdown_order": ["timeline_stop", "renderer_drain", "retain_references", "close_stage_async", "usd_detach", "post_close_updates", "release_references", "app_close_requested", "shutdown_complete", "post_uncancellable_quit"]
+    },
+    "phase6gs_control": {
+      "readback_calls": 1,
+      "returned_handles": 7,
+      "array_metadata_handles": [0],
+      "buffer_to_volume": {"temperature": 1},
+      "public_volume_metadata_accessors": {"temperature": 6},
+      "temporary_saves": 0,
+      "typed_reads": 0,
+      "roi_sampling": 0,
+      "collector_capture_calls": 0,
+      "temperature_alias_held": true
+    },
+    "candidate_common_temperature_front": {
+      "readback_calls": 1,
+      "returned_handles": 7,
+      "array_metadata_handles": [0, 1, 2, 3, 4, 5, 6],
+      "schema_buffer_to_volume_calls": 6,
+      "schema_volume_metadata_calls": 6,
+      "schema_temporary_saves": 6,
+      "schema_typed_reads": 6,
+      "velocity_pipeline": {"buffer_to_volume": 1, "save": 1, "typed_read": 1, "roi_sampling": 1, "profile": 1, "collector_capture_calls": 4},
+      "temperature_alias_held": true,
+      "temperature_post_prefix_conversion": 0
+    },
+    "identical_conditions_omitted": ["candidate_stage_payload_only", "collector_generation_only", "ownership_release_order_only"],
+    "omission_reason": "the exact stage, payload, collector construction, ownership container, close, renderer-drain, release, and app-quit code paths are already identical"
+  },
+  "ladder": [
+    {"name": "a_readback_release_control", "mode": "R0", "adds": "none"},
+    {"name": "b_bounded_array_metadata", "mode": "R1", "adds": "bounded_array_metadata"},
+    {"name": "c_non_temperature_schema_prefix", "mode": "R2", "adds": "non_temperature_schema_prefix"},
+    {"name": "d_velocity_sampling_no_collector", "mode": "R3", "adds": "velocity_sampling"},
+    {"name": "e_velocity_sampling_with_collector", "mode": "R4", "adds": "collector_use"},
+    {"name": "f_temperature_alias_only", "mode": "R5", "adds": "temperature_alias"}
+  ],
+  "temperature_prohibitions": {
+    "buffer_to_volume": 0,
+    "metadata": 0,
+    "save": 0,
+    "sampling": 0,
+    "typed_read": 0,
+    "collector": 0
+  },
+  "execution": {
+    "independent_process_per_condition": true,
+    "maximum_launches": 6,
+    "retries": 0,
+    "replacements": 0,
+    "stop_after_first_non_normal": true,
+    "simultaneous_kit": 1,
+    "inner_timeout_seconds": 900,
+    "outer_timeout_seconds": 1020
+  },
+  "safety": {
+    "kit_private_limit_bytes": 17179869184,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "available_physical_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "temporary_file_allowlist": ["handle_1.nvdb", "handle_2.nvdb", "handle_3.nvdb", "handle_4.nvdb", "handle_5.nvdb", "p3_f0180_velocity.nvdb"],
+    "unknown_temporary_file_policy": "do_not_delete_and_fail_cleanup",
+    "exact_cleanup": "phase6fu_with_phase6fw_pid_reuse_policy"
+  }
+}

@@ -1,5 +1,22 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6HB Candidate lifecycle isolation (frozen before runtime)
+
+Phase 6GZ and Phase 6HA remain frozen and provide no runtime sample to Phase
+6HB. Read-only source auditing found that Phase 6GS and the Candidate already
+share the exact stage/payload/export setup, startup updates, four collector
+objects, ownership container, release-after-close sequence, eight pre-close
+updates, four post-close updates, and app-close request. Phase 6HB therefore
+does not create redundant stage-, collector-generation-, or release-order-only
+conditions. Its fresh-process ladder adds exactly one observable operation at a
+time: seven-handle readback/release, bounded metadata for all slots,
+non-temperature schema prefix for slots 1--5, velocity sampling without
+collectors, use of the already-created collectors, and finally a temperature
+alias hold/release. Every temperature conversion, metadata access, save, typed
+read, sampling, and collector use is forbidden. Each condition runs once; the
+first operation, lifecycle, resource, or cleanup failure stops the ladder.
+Detailed contract: `docs/design/phase6hb_candidate_lifecycle_contract.md`.
+
 # Phase 6HA temperature volume boundary (frozen before runtime)
 
 Phase 6GZ remains frozen and supplies no runtime sample to Phase 6HA. A fresh

@@ -1,5 +1,14 @@
 # Changelog
 
+- Added the frozen Phase 6HB temperature-free Candidate lifecycle isolation
+  contract. Source auditing removed redundant stage/payload, collector
+  construction, ownership, and shutdown-order conditions because Phase 6GS
+  and Candidate already use the same shared implementation. The six one-shot
+  conditions add bounded array metadata, non-temperature schema work,
+  velocity sampling, collector use, and temperature alias lifetime one at a
+  time; no retry, replacement, formal comparison, or production change is
+  permitted.
+
 - Safely stopped Phase 6HA after the original and its sole contract-permitted
   replacement both completed one temperature volume conversion, ordered
   release, stage close, durable `shutdown_complete`, resource gates, and exact
