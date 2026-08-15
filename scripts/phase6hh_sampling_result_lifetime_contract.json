@@ -1,0 +1,58 @@
+{
+  "schema": "campfire.phase6hh.sampling-result-lifetime-contract.v1",
+  "phase": "phase6hh",
+  "base_commit": "c27267f",
+  "frozen_before_runtime": true,
+  "history": {
+    "phase6hf_frozen": true,
+    "phase6hf_reclassified": false,
+    "phase6hf_artifacts_reused_as_measurement": false
+  },
+  "one_variable": {
+    "sampling_function": "_sample_grid",
+    "roi": "scene",
+    "sampling_calls": 1,
+    "difference_l1_l2": "lifetime of the original builtins.dict returned by _sample_grid",
+    "bounded_report_copy_same_shape": true,
+    "forced_gc": false
+  },
+  "ladder": [
+    {"name":"l0_sampling_none","mode":"L0","roi_count":0,"retention":"none"},
+    {"name":"l1_scene_immediate_clear","mode":"L1","roi_count":1,"retention":"immediate_clear"},
+    {"name":"l2_scene_retain_to_report","mode":"L2","roi_count":1,"retention":"retain"}
+  ],
+  "execution": {
+    "independent_process_per_condition": true,
+    "maximum_launches": 3,
+    "retries": 0,
+    "replacements": 0,
+    "stop_after_first_non_normal": true,
+    "simultaneous_kit": 1,
+    "inner_timeout_seconds": 900,
+    "outer_timeout_seconds": 1020
+  },
+  "decision": {
+    "l0_non_normal": "comparison invalid; safe stop",
+    "l1_non_normal": "retention alone insufficient; consider parked diagnostic-only lifecycle",
+    "l1_normal_l2_non_normal": "retention association strengthened without root-cause claim",
+    "l1_l2_normal": "not reproduced; park as low-frequency issue without repetition"
+  },
+  "prohibited": [
+    "forced gc", "temperature processing", "spatial collector", "velocity profile",
+    "formal S93/S100/OFF comparison", "long repetition", "video/latest-demo change",
+    "production/default/Point/V3/P4 changes"
+  ],
+  "safety": {
+    "kit_private_limit_bytes": 17179869184,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "available_physical_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "temporary_file_allowlist": ["handle_1.nvdb", "handle_2.nvdb", "handle_3.nvdb", "handle_4.nvdb", "handle_5.nvdb", "p3_f0180_velocity.nvdb"],
+    "unknown_temporary_file_policy": "do_not_delete_and_fail_cleanup",
+    "exact_cleanup": "phase6fu_with_phase6fw_pid_reuse_policy",
+    "cdb": "progress_aware_stack_first"
+  }
+}

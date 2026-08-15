@@ -1,5 +1,12 @@
 # Changelog
 
+- Added the frozen-before-runtime Phase 6HH one-shot sampling-result lifetime
+  ladder. It audits Phase 6HF's plain scalar dict ownership, then compares the
+  same `scene` sample with immediate original-object clear or retention through
+  the operation report. Both paths write the same bounded scalar artifact;
+  forced GC, temperature, collectors, profile, repetition, formal comparison,
+  and production changes remain forbidden.
+
 - Froze Phase 6HF after R0 exited normally and R1 stopped only at natural OS
   exit after adding the existing `scene` ROI sample. R1 completed sampling,
   bounded result retention, temporary deletion, ordered release, stage close,

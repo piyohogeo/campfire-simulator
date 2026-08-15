@@ -722,6 +722,7 @@ def _save_and_sample(
     diagnostic_stop_after: str | None = None,
     diagnostic_step_observer=None,
     diagnostic_roi_limit: int | None = None,
+    diagnostic_roi_result_retention: str | None = None,
 ) -> dict:
     """Save and sample one public field, with optional diagnostic stop points.
 
@@ -738,6 +739,10 @@ def _save_and_sample(
             raise ValueError("diagnostic ROI limit must be an integer within the supplied ROI count")
         if diagnostic_stop_after != "roi_sampling":
             raise ValueError("diagnostic ROI limit is only valid at the ROI-sampling stop")
+    if diagnostic_roi_result_retention not in (None, "retain", "immediate_clear"):
+        raise ValueError("unsupported diagnostic ROI-result retention mode")
+    if diagnostic_roi_result_retention is not None and diagnostic_stop_after != "roi_sampling":
+        raise ValueError("diagnostic ROI-result retention is only valid at the ROI-sampling stop")
 
     def observe(name: str, **values) -> None:
         if diagnostic_step_observer is not None:
@@ -820,14 +825,65 @@ def _save_and_sample(
     for name, roi in roi_items:
         observe("velocity_roi_sampling_before", roi=name)
         sample_result = _sample_grid(grid, roi, vector)
-        result["rois"][name] = sample_result
+        if diagnostic_roi_result_retention is None:
+            result["rois"][name] = sample_result
+        else:
+            value_types = {
+                str(key): f"{type(value).__module__}.{type(value).__qualname__}"
+                for key, value in sample_result.items()
+            }
+            try:
+                import weakref as _weakref
+                _weakref.ref(sample_result)
+                weakref_supported = True
+            except TypeError:
+                weakref_supported = False
+            observe(
+                "velocity_roi_result_store_before",
+                roi=name,
+                retention_mode=diagnostic_roi_result_retention,
+                python_type=f"{type(sample_result).__module__}.{type(sample_result).__qualname__}",
+                container_structure="mapping_with_scalar_leaves",
+                keys=sorted(str(key) for key in sample_result),
+                value_types=value_types,
+                contains_numpy=any(value_type.startswith("numpy.") for value_type in value_types.values()),
+                contains_native_wrapper=any(
+                    value_type.startswith(("nanovdb.", "omni.volume.")) for value_type in value_types.values()
+                ),
+                weakref_supported=weakref_supported,
+                sample_result_identity=int(id(sample_result)),
+                retained_count_before=len(result["rois"]),
+            )
+            if diagnostic_roi_result_retention == "retain":
+                result["rois"][name] = sample_result
+            observe(
+                "velocity_roi_result_store_after",
+                roi=name,
+                retention_mode=diagnostic_roi_result_retention,
+                retained_count_after=len(result["rois"]),
+                retained_identity=(int(id(result["rois"][name])) if name in result["rois"] else None),
+                same_object_retained=(name in result["rois"] and result["rois"][name] is sample_result),
+            )
         observe(
             "velocity_roi_sampling_after",
             roi=name,
             available=bool(sample_result.get("available")),
             voxel_count=int(sample_result.get("voxel_count", 0)),
             nonzero_voxel_count=int(sample_result.get("nonzero_voxel_count", 0)),
+            mean=(float(sample_result["mean"]) if "mean" in sample_result else None),
+            sum=(float(sample_result["sum"]) if "sum" in sample_result else None),
+            p95=(float(sample_result["p95"]) if "p95" in sample_result else None),
+            maximum=(float(sample_result["maximum"]) if "maximum" in sample_result else None),
         )
+        if diagnostic_roi_result_retention is not None:
+            sample_result = None
+            observe(
+                "velocity_roi_local_result_clear",
+                roi=name,
+                retention_mode=diagnostic_roi_result_retention,
+                local_result_is_none=sample_result is None,
+                retained_count=len(result["rois"]),
+            )
     if diagnostic_stop_after == "roi_sampling":
         delete_temporary()
         return result

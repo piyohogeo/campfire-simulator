@@ -1,5 +1,15 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6HH sampling-result lifetime isolation (frozen before runtime)
+
+Phase 6HF remains an immutable safe stop at `c27267f`. Phase 6HH compares the
+same single `scene` `_sample_grid()` call with either immediate original-dict
+clear or Phase 6HF-equivalent retention through the operation report. L0 is the
+fresh V5 control. L1/L2 differ only in original result lifetime; both persist
+the same bounded scalar copy and use no forced GC. Each condition runs once
+and the first non-normal result stops the ladder. Details:
+`docs/design/phase6hh_sampling_result_lifetime_contract.md`.
+
 # Phase 6HF velocity ROI-sampling lifecycle isolation (frozen before runtime)
 
 Phase 6HE remains an immutable lifecycle safe stop. Phase 6HF rebuilds V5 in
