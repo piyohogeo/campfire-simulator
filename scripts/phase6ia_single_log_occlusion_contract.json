@@ -1,0 +1,60 @@
+{
+  "schema": "campfire.phase6ia.single-log-occlusion-orchestration.v1",
+  "phase": "phase6ia",
+  "baseline_commit": "67f0b9c",
+  "declared_before_runtime": true,
+  "purpose": "Run the frozen Phase 6HW/HX single-log OFF-then-ON visual occlusion comparison through the Phase 6HZ exact import boundary without changing any physical, temporal, ROI, image, lifecycle, or resource gate.",
+  "frozen_history": {
+    "phase6hv": {"commit": "91f6b06", "status": "safe_stop_visual_gate"},
+    "phase6hw": {"commit": "16f1e6c", "status": "safe_stop_pre_kit_harness_failure"},
+    "phase6hx": {"commit": "4d83948", "status": "safe_stop_kit_import_harness_failure"},
+    "phase6hy": {"commit": "40ff0e0", "status": "safe_stop_kit_import_smoke_marker_harness_failure"},
+    "phase6hz": {"commit": "67f0b9c", "status": "qualified"},
+    "reclassified": false,
+    "artifact_or_runtime_reused": false,
+    "threshold_roi_or_scene_changed": false
+  },
+  "frozen_probe_contract": {
+    "path": "scripts/phase6hx_single_log_occlusion_contract.json",
+    "sha256": "6278E6A6E66C348BFE104AB247A466EA0BE152DBD614903E2ADEF57DFCEB9098",
+    "operation_schema_sha256": "5664B84A498D81FF2A53B793AF246F853F8C9912030DB7A1086959317DD7A393"
+  },
+  "exact_import": {
+    "qualified_phase6hz_contract": {"path": "scripts/phase6hz_import_smoke_contract.json", "sha256": "5D05CE4D7DA82EF538D406DF79CDFDFDF9AE73D2C3B9DC92C7EA8A8F4BA6D457"},
+    "loader": {"path": "scripts/phase6hz_exact_kit_import.py", "sha256": "A1A115E5DD6D4B99B95490665868A4E01754250D91FC45DC903662E31DB34126"},
+    "marker_contract": {"path": "scripts/phase6hz_marker_contract.py", "sha256": "3B621C3F886B4C4AC63FE57490EECC6F8DAEC8AB59037A74D986EE9AFEC3AA74"},
+    "wrapper": "scripts/probe_phase6ia_single_log_occlusion.py",
+    "wrapper_sha256": "C64070FC8D731C36B89599AB70520C098E71F073E99FEB4DCC3A37E276CB65C0",
+    "probe_builder": {"path": "scripts/phase6hy_probe_source.py", "sha256": "4F373882C6BC8AAB14247E2B5A9916550444DC283947D5B3321FAA0F7A622B35", "required_callables": ["build_probe_source"]}
+  },
+  "execution": {
+    "condition_order": ["collision_off", "collision_on"],
+    "fresh_processes": 2,
+    "launches_per_condition": 1,
+    "retry": 0,
+    "replacement": 0,
+    "stop_after_first_nonqualified_condition": true,
+    "human_review_required": true
+  },
+  "inheritance": {
+    "physical_scene": "exactly frozen_probe_contract.fixed_scene",
+    "stage_authoring": "exactly frozen_probe_contract.stage_authoring",
+    "point_policy": "exactly frozen_probe_contract.point_policy_source_set",
+    "temporal_measurement": "exactly frozen_probe_contract.temporal_measurement",
+    "resource_and_lifecycle": "exactly frozen_probe_contract.safety and accepted_classifications",
+    "atomic_report": "exactly frozen_probe_contract.atomic_report",
+    "one_variable": "FlowSimulate.physicsCollisionEnabled"
+  },
+  "fail_closed": [
+    "any cross-contract digest mismatch",
+    "any preflight fixture failure",
+    "any OFF/ON stage difference beyond physicsCollisionEnabled",
+    "OFF operation resource lifecycle or cleanup failure",
+    "ON operation resource lifecycle or cleanup failure",
+    "automated temporal gate failure",
+    "human visual ambiguity or disagreement",
+    "unknown residual fatal dump upload device loss or TDR"
+  ],
+  "production_changed": false,
+  "out_of_scope": ["production log placement", "arbitrary or multiple poses", "dynamic transform", "PhysX sharing", "production Point Emitter coexistence", "four/twenty-log performance", "P3", "P4", "production integration", "default change", "V3", "latest demo update", "NanoVDB readback"]
+}
