@@ -1,0 +1,23 @@
+{
+  "schema":"campfire.phase6id.stage-open-contract.v1","phase":"phase6id","baseline_commit":"832fd81","declared_before_runtime":true,
+  "purpose":"Qualify only registered USD float3 binary32 comparison semantics and one generate/parse/open/validate/close/shutdown smoke.",
+  "frozen_history":{"phase6ic":{"commit":"832fd81","status":"safe_stop_stage_attribute_validation_failure"},"phase6ib":{"commit":"7ba4958","status":"safe_stop_kit_stage_authoring_import_harness_failure"},"reclassified":false,"artifact_or_runtime_reused":false},
+  "frozen_probe_contract":{"path":"scripts/phase6hx_single_log_occlusion_contract.json","sha256":"6278E6A6E66C348BFE104AB247A466EA0BE152DBD614903E2ADEF57DFCEB9098"},
+  "dependency_manifest":{"path":"scripts/phase6id_authoring_dependencies.json","sidecar_path":"scripts/phase6id_authoring_dependencies.sha256","sha256":"F76F558C663B9C5D0942EF4507F7A3B230FC5E8858B5A0361414DBD8DC3E638A","module_count":4,"permanent_sys_path_mutation":false},
+  "bootstrap_sources":{
+    "dependency_loader":{"path":"scripts/phase6ic_exact_dependency_loader.py","sha256":"2E0DBB1D2106A237228040160D1FBBB6B437863DF5359DD74942CCD9AC2FBC18"},
+    "marker_contract":{"path":"scripts/phase6id_marker_contract.py","sha256":"8E0778C5F596231064C4FD23D0D4E09D7396AA602A1ABEEF81937AF16FE059E1"},
+    "wrapper":{"path":"scripts/probe_phase6id_stage_open_smoke.py","sha256":"B097E85D1B9EAA3680204AD5DAA8569139D7D782EF4F658D3A3A8CD09F14CE69"},
+    "float3_fixture":{"path":"scripts/phase6id_float3_fixture.py","sha256":"44CED04934E90826EC5C36CD79375CF259119DBD71FAEA46A5D9F5136F4CA8B4"}
+  },
+  "float3_contract":{"attribute_path":"/World/Flow/Emitter.position","declared_usd_type":"float3","expected_original":[0.0,0.0,0.48],"storage":"IEEE-754 binary32 per component","component_count":3,"ulp_budget":0,"signed_zero_policy":"equivalent","scalar_tolerance_unchanged":0.000001},
+  "parser_fixture":{"positive_stages":["collision_off","collision_on"],"negative_cases":["legacy_inline","missing","duplicate","type_mismatch","nan","unknown_schema"],"maximum_stage_bytes":1048576,"one_variable":"/World/Flow/Simulate.physicsCollisionEnabled"},
+  "smoke":{"condition":"collision_off","launches":1,"retry":0,"replacement":0,"timeline_play_calls":0,"flow_update_calls":0,"flow_interface_calls":0,"readback_calls":0,"capture_calls":0,"required_markers":["kit_launch","kit_app_ready","authoring_dependencies_load_complete","authoring_callable_validation_complete","stage_generation_started","stage_generation_complete","stage_parse_started","float3_validation_started","float3_validation_complete","stage_parse_complete","stage_open_complete","required_prims_validated","operation_complete","stage_close_started","stage_close_complete","shutdown_complete"]},
+  "accepted_classifications":["natural_clean_exit","cleanup_assisted_telemetry_exit","cleanup_assisted_ngx_exit"],
+  "telemetry_basename":"omni.telemetry.transmitter.exe","telemetry_path_suffix":"omni.telemetry.transmitter/omni.telemetry.transmitter.exe","telemetry_extension_prefix":"omni.kit.telemetry-","telemetry_extension_store_root":"C:/Users/junic/AppData/Local/ov/data/exts/v2","maximum_telemetry_helpers":1,
+  "ngx_updater_basename":"nvngx_update.exe","ngx_driverstore_path_regex":"c:\\windows\\system32\\driverstore\\filerepository\\nv_dispig\\.inf_amd64_[0-9a-f]+\\nvngx_update\\.exe","conhost_exact_path":"C:/Windows/System32/conhost.exe","maximum_ngx_updaters":1,"maximum_ngx_conhosts":1,"maximum_ngx_trees":1,"authenticode_policy":"record when exposed by bounded identity API; explicit unavailability is permitted; explicit mismatch is rejected",
+  "safety":{"runner_private_limit_bytes":536870912,"kit_private_limit_bytes":17179869184,"diagnostic_private_limit_bytes":536870912,"unique_tree_private_limit_bytes":18253611008,"available_physical_floor_bytes":8589934592,"commit_headroom_floor_bytes":8589934592,"stage_close_timeout_seconds":180,"outer_timeout_seconds":180,"sample_seconds":0.25,"simultaneous_kit_processes":1},
+  "frozen_geometry":{"proxy_topology":[26,36,120],"source_surface_gap_m":0.06,"source_to_nearest_end_clearance_m":1.6,"camera_eye_m":[5.5,0.0,0.9]},
+  "production_changed":false,
+  "out_of_scope":["timeline play","Flow update","public Flow interface","NanoVDB readback","active blocks","ROI sampling","capture","images","video","Collision OFF/ON runtime comparison","dynamic transform","PhysX sharing","Point Emitter coexistence","P3","P4","production integration","default change","V3","latest demo update"]
+}

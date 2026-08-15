@@ -10,7 +10,8 @@ param(
  [Parameter(Mandatory=$true)][string]$KitLogPath,
  [Parameter(Mandatory=$true)][string]$KitStdoutPath,
  [Parameter(Mandatory=$true)][string]$KitStderrPath,
- [Parameter(Mandatory=$true)][string]$AttemptId
+ [Parameter(Mandatory=$true)][string]$AttemptId,
+ [string]$SettingsPrefix="phase6ic"
 )
 $ErrorActionPreference="Stop";Set-StrictMode -Version 3.0
 $repo=Split-Path -Parent $PSScriptRoot
@@ -24,7 +25,7 @@ $productionApp=Join-Path $repo "_build\windows-x86_64\release\apps\campfire.simu
 $registryBefore=Get-CampfireCrashRegistrySnapshot
 $arguments=@($app,"--no-window","--/app/file/ignoreUnsavedOnExit=true","--/app/fastShutdown=0","--/app/quitAfter=120000","--/app/settings/persistent=0","--/app/settings/loadUserConfig=0","--/app/window/hideUi=true",
  "--/exts/campfire.app/autoCreateScene=false","--/rtx/flow/enabled=true","--enable","omni.usd","--enable","omni.flowusd","--enable","omni.physx",
- "--/phase6ic/markers=$markers","--/phase6ic/audit=$audit","--/phase6ic/stageRoot=$stages","--/phase6ic/attemptId=$AttemptId",
+ "--/$SettingsPrefix/markers=$markers","--/$SettingsPrefix/audit=$audit","--/$SettingsPrefix/stageRoot=$stages","--/$SettingsPrefix/attemptId=$AttemptId",
  "--/log/file=$kitLog","--/log/fileLogLevel=Info","--exec",$probe) + @(Get-CampfireIsolatedKitCrashSafetyArgs -DumpDir $dumpDir)
 $process=$null;$monitor=$null;$failure=$null;$exitCode=1
 try{$process=Start-Process -FilePath $kit -ArgumentList $arguments -WorkingDirectory $repo -PassThru -WindowStyle Hidden -RedirectStandardOutput $kitStdout -RedirectStandardError $kitStderr;$monitor=Wait-CampfireKitProcessWithShutdownPolicy -Process $process -ExpectedExecutable $kit -LifecyclePath $audit -LogPath $kitLog -DiagnosticDir $diagnosticDir -ShutdownGraceSeconds 30 -AbsoluteTimeoutSeconds 180;$exitCode=if($null-eq$monitor.exit_code){1}else{[int]$monitor.exit_code}}catch{$failure=$_.Exception.Message}
@@ -35,6 +36,6 @@ $auditObject=if(Test-Path -LiteralPath $audit){Get-Content -Raw -Encoding UTF8 $
 $fatal=@(Select-String -LiteralPath $kitLog -Pattern '0xC0000005|access violation|device lost|TDR|\[crash\] A crash has occurred' -ErrorAction SilentlyContinue|ForEach-Object{$_.Line})
 $uploads=@(Select-String -LiteralPath $kitLog -Pattern 'upload(?:ing|ed)? (?:mini)?dump|sending crash|submit.*crash' -ErrorAction SilentlyContinue|ForEach-Object{$_.Line})
 $qualified=($null-eq$failure -and $exitCode-eq 0 -and $null-ne$auditObject -and $auditObject.status-eq"qualified" -and $auditObject.operation_complete-eq$true -and $auditObject.shutdown_complete-eq$true -and $auditObject.lifecycle.stage_close_complete-eq$true -and $missing.Count-eq 0 -and $fatal.Count-eq 0 -and $dumps.Count-eq 0 -and $uploads.Count-eq 0 -and $registryUnchanged -and $productionBefore-eq$productionAfter)
-$report=[ordered]@{schema="campfire.phase6ic.stage-open-runner.v1";phase="phase6ic";mode="smoke";status=if($qualified){"qualified"}else{"failed"};attempt_id=$AttemptId;runner_pid=$PID;kit_launch_count=if($null-eq$process){0}else{1};kit_pid=if($null-eq$process){$null}else{$process.Id};kit_start_time_utc=if($null-eq$process){$null}else{$process.StartTime.ToUniversalTime().ToString("o")};process_exit_code=if($null-eq$monitor){$null}else{$monitor.exit_code};shutdown_monitor=$monitor;failure=$failure;missing_markers=$missing;marker_names=$markerNames;audit_path=$audit;fatal_lines=$fatal;dump_inventory=$dumps;automatic_upload_attempt_lines=$uploads;crash_registry_unchanged=$registryUnchanged;production_sha256_before=$productionBefore;production_sha256_after=$productionAfter;kit_arguments=$arguments;large_output_buffered_in_runner=$false}
+$report=[ordered]@{schema="campfire.$SettingsPrefix.stage-open-runner.v1";phase=$SettingsPrefix;mode="smoke";status=if($qualified){"qualified"}else{"failed"};attempt_id=$AttemptId;runner_pid=$PID;kit_launch_count=if($null-eq$process){0}else{1};kit_pid=if($null-eq$process){$null}else{$process.Id};kit_start_time_utc=if($null-eq$process){$null}else{$process.StartTime.ToUniversalTime().ToString("o")};process_exit_code=if($null-eq$monitor){$null}else{$monitor.exit_code};shutdown_monitor=$monitor;failure=$failure;missing_markers=$missing;marker_names=$markerNames;audit_path=$audit;fatal_lines=$fatal;dump_inventory=$dumps;automatic_upload_attempt_lines=$uploads;crash_registry_unchanged=$registryUnchanged;production_sha256_before=$productionBefore;production_sha256_after=$productionAfter;kit_arguments=$arguments;large_output_buffered_in_runner=$false}
 [IO.File]::WriteAllText($evidence,($report|ConvertTo-Json -Depth 20)+[Environment]::NewLine,[Text.UTF8Encoding]::new($false))
 if(-not$qualified){exit 1};exit 0

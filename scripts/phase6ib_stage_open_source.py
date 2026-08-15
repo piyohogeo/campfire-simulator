@@ -28,8 +28,8 @@ def start_smoke(authoring, atomic_report, emit, policy: dict, audit_path: Path, 
         context = omni.usd.get_context()
         timeline = omni.timeline.get_timeline_interface()
         report = {
-            "schema": "campfire.phase6ib.stage-open-audit.v1",
-            "phase": "phase6ib",
+            "schema": "campfire.phase6id.stage-open-audit.v1" if policy.get("phase") == "phase6id" else "campfire.phase6ib.stage-open-audit.v1",
+            "phase": policy.get("phase", "phase6ib"),
             "attempt_id": attempt_id,
             "status": "running",
             "operation_complete": False,
@@ -40,6 +40,7 @@ def start_smoke(authoring, atomic_report, emit, policy: dict, audit_path: Path, 
             "capture_calls": 0,
             "timeline_play_calls": 0,
             "parser_fixture": {},
+            "float3_evidence": [],
             "lifecycle": {},
         }
         exit_code = 1
@@ -69,8 +70,20 @@ def start_smoke(authoring, atomic_report, emit, policy: dict, audit_path: Path, 
             on = Usd.Stage.Open(str(on_path))
             if off is None or on is None:
                 raise RuntimeError("openusd_positive_parse_failed")
-            off_validation = authoring.validate_stage(off, frozen, "collision_off")
-            on_validation = authoring.validate_stage(on, frozen, "collision_on")
+            def validate_with_evidence(stage, condition: str, scope: str):
+                emit("float3_validation_started", scope=scope, attribute_path="/World/Flow/Emitter.position")
+                captured = []
+                def capture(item: dict) -> None:
+                    captured.append(item)
+                    report["float3_evidence"].append({"scope": scope, **item})
+                    persist()
+                validation = authoring.validate_stage(stage, frozen, condition, float3_evidence_callback=capture)
+                item = captured[-1]
+                emit("float3_validation_complete", scope=scope, attribute_path=item["attribute_path"], accepted=item["accepted"], maximum_ulp_distance=item["maximum_ulp_distance"])
+                return validation
+
+            off_validation = validate_with_evidence(off, "collision_off", "parser_fixture_off")
+            on_validation = validate_with_evidence(on, "collision_on", "parser_fixture_on")
             difference = authoring.one_variable_diff(off, on)
             if not difference["accepted"]:
                 raise RuntimeError("off_on_semantic_difference_invalid")
@@ -136,7 +149,7 @@ def start_smoke(authoring, atomic_report, emit, policy: dict, audit_path: Path, 
                 raise RuntimeError("usd_context_stage_missing")
             opened_identifier = str(live_stage.GetRootLayer().identifier)
             emit("stage_open_complete", stage_identifier=opened_identifier, root_layer_identifier=str(live_stage.GetRootLayer().realPath or live_stage.GetRootLayer().identifier))
-            live_validation = authoring.validate_stage(live_stage, frozen, "collision_off")
+            live_validation = validate_with_evidence(live_stage, "collision_off", "usd_context_off")
             report["stage"] = {
                 "identifier": opened_identifier,
                 "root_layer_identifier": str(live_stage.GetRootLayer().identifier),

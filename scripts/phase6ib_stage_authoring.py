@@ -10,9 +10,12 @@ import copy
 import hashlib
 import json
 import math
+import struct
 from pathlib import Path
 
 SPEC_SCHEMA = "campfire.phase6ib.stage-spec.v1"
+FLOAT3_EVIDENCE_SCHEMA = "campfire.phase6id.float3-evidence.v1"
+FLOAT3_ULP_BUDGET = 0
 _TOPOLOGY = None
 
 
@@ -314,7 +317,85 @@ def _plain(value):
     return str(value)
 
 
-def validate_stage(stage, frozen: dict, condition: str) -> dict:
+def _float32(value: float) -> tuple[float, int]:
+    packed = struct.pack(">f", float(value))
+    return struct.unpack(">f", packed)[0], struct.unpack(">I", packed)[0]
+
+
+def _ordered_float32_bits(bits: int) -> int:
+    if bits in (0, 0x80000000):
+        return 0x80000000
+    return ((~bits) & 0xFFFFFFFF) if bits & 0x80000000 else (bits | 0x80000000)
+
+
+def _numeric_vector3(value, role: str) -> list[float]:
+    if value is None:
+        raise ValueError(role + "_missing")
+    if isinstance(value, (str, bytes, bool)):
+        raise TypeError(role + "_vector_type_invalid")
+    try:
+        items = list(value)
+    except TypeError as error:
+        raise TypeError(role + "_vector_type_invalid") from error
+    if len(items) != 3:
+        raise ValueError(role + "_component_count_invalid")
+    result = []
+    for item in items:
+        if isinstance(item, bool) or not isinstance(item, (int, float)):
+            raise TypeError(role + "_component_type_invalid")
+        numeric = float(item)
+        if not math.isfinite(numeric):
+            raise ValueError(role + "_component_nonfinite")
+        result.append(numeric)
+    return result
+
+
+def canonical_float3_evidence(attribute_path: str, declared_type: str, expected, actual, ulp_budget: int = FLOAT3_ULP_BUDGET) -> dict:
+    """Compare a registered USD float3 using its binary32 storage semantics."""
+    evidence = {
+        "schema": FLOAT3_EVIDENCE_SCHEMA,
+        "attribute_path": attribute_path,
+        "declared_usd_type": declared_type,
+        "expected_original": _plain(expected),
+        "actual_python_type": f"{type(actual).__module__}.{type(actual).__qualname__}" if actual is not None else None,
+        "ulp_budget": ulp_budget,
+        "signed_zero_policy": "equivalent",
+        "accepted": False,
+        "reason": None,
+    }
+    try:
+        if declared_type != "float3":
+            raise TypeError("declared_type_not_float3")
+        if type(ulp_budget) is not int or ulp_budget < 0 or ulp_budget > 4:
+            raise ValueError("ulp_budget_invalid")
+        expected_values = _numeric_vector3(expected, "expected")
+        actual_values = _numeric_vector3(actual, "actual")
+        expected_quantized, expected_bits, actual_bits, distances, differences = [], [], [], [], []
+        for expected_value, actual_value in zip(expected_values, actual_values):
+            quantized, expected_bit = _float32(expected_value)
+            actual_quantized, actual_bit = _float32(actual_value)
+            expected_quantized.append(quantized)
+            expected_bits.append(f"0x{expected_bit:08X}")
+            actual_bits.append(f"0x{actual_bit:08X}")
+            distances.append(abs(_ordered_float32_bits(expected_bit) - _ordered_float32_bits(actual_bit)))
+            differences.append(abs(actual_value - quantized))
+        evidence.update({
+            "expected_float32": expected_quantized,
+            "actual_elements": actual_values,
+            "expected_float32_bits": expected_bits,
+            "actual_float32_bits": actual_bits,
+            "absolute_difference": differences,
+            "ulp_distance": distances,
+            "maximum_ulp_distance": max(distances),
+        })
+        evidence["accepted"] = all(distance <= ulp_budget for distance in distances)
+        evidence["reason"] = "pass" if evidence["accepted"] else "float3_ulp_budget_exceeded"
+    except (OverflowError, TypeError, ValueError, struct.error) as error:
+        evidence["reason"] = str(error)
+    return evidence
+
+
+def validate_stage(stage, frozen: dict, condition: str, float3_evidence_callback=None) -> dict:
     spec = stage_spec(frozen, condition)
     required = {item["path"]: item["type"] for item in spec["prims"]}
     actual = {str(prim.GetPath()): prim.GetTypeName() for prim in stage.Traverse()}
@@ -345,16 +426,25 @@ def validate_stage(stage, frozen: dict, condition: str) -> dict:
             raise RuntimeError("required_attribute_missing:" + key)
         if str(attribute.GetTypeName()) != type_name:
             raise RuntimeError("attribute_type_mismatch:" + key)
-        value = _plain(attribute.Get())
+        raw_value = attribute.Get()
+        value = _plain(raw_value)
         if not _finite(value):
             raise RuntimeError("attribute_nonfinite:" + key)
         expected_plain = _plain(expected)
-        if isinstance(expected_plain, float):
+        if type_name == "float3":
+            float3 = canonical_float3_evidence(key, type_name, expected, raw_value)
+            if float3_evidence_callback is not None:
+                float3_evidence_callback(float3)
+            if not float3["accepted"]:
+                raise RuntimeError("attribute_value_mismatch:" + key + ":" + str(float3["reason"]))
+        elif isinstance(expected_plain, float):
             if abs(float(value) - expected_plain) > 1e-6:
                 raise RuntimeError("attribute_value_mismatch:" + key)
         elif value != expected_plain:
             raise RuntimeError("attribute_value_mismatch:" + key)
         evidence[key] = {"type": type_name, "value": value}
+        if type_name == "float3":
+            evidence[key]["canonical_float3"] = float3
         if "/advection/" in key:
             channel_evidence[key] = evidence[key]
     proxy = stage.GetPrimAtPath(frozen["fixed_scene"]["proxy_path"])
