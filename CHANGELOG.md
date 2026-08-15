@@ -1,5 +1,15 @@
 # Changelog
 
+- Added Phase 6IG while retaining Phase 6IF at `d1e660f` as its original
+  audit-operation safe stop. The bounded camera-opinion fixture passed 8/8 and
+  the complete marker fixture passed before one fresh stopped-timeline Kit
+  process. The generated snapshot passed, but live open already contained the
+  three root-layer `exposure:*` opinions that Phase 6IF had observed only
+  after a stopped update. The fixed temporal/layer contract failed closed at
+  `live_open`; no update, Flow interface, readback, capture, or OFF/ON ran.
+  Stage close/shutdown completed, Kit exited 1, exact cleanup left residual
+  zero, and production/defaults/Point policy/V3/latest demo remain unchanged.
+
 - Added Phase 6IF while retaining Phase 6IE at `88dcb99` as its original
   runtime-policy/lifecycle safe stop. Bounded layer/opinion and marker fixtures
   passed 24/24 and 34/34. One fresh audit-only Kit process proved that the root

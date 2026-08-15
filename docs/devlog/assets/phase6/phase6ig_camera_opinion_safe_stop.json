@@ -1,0 +1,29 @@
+{
+  "schema": "campfire.phase6ig.camera-opinion-devlog.v1",
+  "phase": "phase6ig",
+  "status": "safe_stop_camera_opinion_unresolved",
+  "contract_sha256": "551ED00172EF246A3D6B720783C61B3295896B6B10CA35D4E0C016A580E94244",
+  "kit_launch_count": 1,
+  "last_marker": "shutdown_complete",
+  "first_failed_boundary": "live_open_camera_snapshot",
+  "error": "camera_property_set_unknown_or_incomplete",
+  "confirmed": {
+    "generated_camera_present": false,
+    "live_session_camera_present": true,
+    "live_root_exposure_properties_present": true,
+    "stage_close_seconds": 0.344443,
+    "shutdown_complete": true,
+    "kit_exit_code": 1,
+    "exact_cleanup_residual_process_count": 0,
+    "fatal_count": 0,
+    "dump_count": 0,
+    "upload_count": 0
+  },
+  "resource_peaks_bytes": {
+    "kit": 7467442176,
+    "tree": 7954870272,
+    "runner": 103825408,
+    "diagnostic": 16211968
+  },
+  "production_changed": false
+}

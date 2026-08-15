@@ -4812,3 +4812,21 @@ residual zero, and no fatal/device-loss/dump/upload occurred. The result is
 `safe_stop_audit_operation_incomplete`; it does not qualify the policy or
 OFF/ON. See
 `docs/design/phase6if_in_memory_layer_opinion_audit_safe_stop.md`.
+
+# Phase 6IG camera opinion audit safe stop
+
+Phase 6IF remains frozen at `d1e660f`. Phase 6IG limited the audit to
+`/OmniverseKit_Persp` at generated, immediate live-open, one stopped update,
+and pre-close boundaries. The no-Kit camera contract passed 8/8 fail-closed
+cases and its complete marker fixture passed before one actual Kit process.
+
+The generated snapshot passed. At immediate live open, the session layer had
+the expected Camera and eight camera/xform properties, but the root layer
+already had the three `exposure:*` opinions that the frozen Phase 6IF evidence
+had first shown after a stopped update. The predeclared temporal/layer contract
+therefore rejected the live snapshot before the update. Stage close and
+shutdown completed, Kit exited 1, cleanup left residual zero, and no fatal or
+dump occurred. The classification is `safe_stop_camera_opinion_unresolved`.
+The next approval boundary is runtime render/camera authoring isolation from
+the diagnostic root, not an allowlist relaxation or OFF/ON restart. Details:
+`docs/design/phase6ig_camera_runtime_opinion_audit.md`.
