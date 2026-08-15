@@ -721,6 +721,7 @@ def _save_and_sample(
     profile_threshold: float | None = None,
     diagnostic_stop_after: str | None = None,
     diagnostic_step_observer=None,
+    diagnostic_roi_limit: int | None = None,
 ) -> dict:
     """Save and sample one public field, with optional diagnostic stop points.
 
@@ -732,6 +733,11 @@ def _save_and_sample(
     allowed_stops = {None, "conversion", "durability", "file_read", "basic_metadata", "roi_sampling", "profile"}
     if diagnostic_stop_after not in allowed_stops:
         raise ValueError(f"unsupported diagnostic stop point: {diagnostic_stop_after}")
+    if diagnostic_roi_limit is not None:
+        if type(diagnostic_roi_limit) is not int or not 0 <= diagnostic_roi_limit <= len(rois):
+            raise ValueError("diagnostic ROI limit must be an integer within the supplied ROI count")
+        if diagnostic_stop_after != "roi_sampling":
+            raise ValueError("diagnostic ROI limit is only valid at the ROI-sampling stop")
 
     def observe(name: str, **values) -> None:
         if diagnostic_step_observer is not None:
@@ -808,10 +814,20 @@ def _save_and_sample(
         return result
 
     result["rois"] = {}
-    for name, roi in rois.items():
+    roi_items = list(rois.items())
+    if diagnostic_roi_limit is not None:
+        roi_items = roi_items[:diagnostic_roi_limit]
+    for name, roi in roi_items:
         observe("velocity_roi_sampling_before", roi=name)
-        result["rois"][name] = _sample_grid(grid, roi, vector)
-        observe("velocity_roi_sampling_after", roi=name)
+        sample_result = _sample_grid(grid, roi, vector)
+        result["rois"][name] = sample_result
+        observe(
+            "velocity_roi_sampling_after",
+            roi=name,
+            available=bool(sample_result.get("available")),
+            voxel_count=int(sample_result.get("voxel_count", 0)),
+            nonzero_voxel_count=int(sample_result.get("nonzero_voxel_count", 0)),
+        )
     if diagnostic_stop_after == "roi_sampling":
         delete_temporary()
         return result

@@ -1,0 +1,80 @@
+{
+  "schema": "campfire.phase6hf.velocity-roi-lifecycle-contract.v1",
+  "phase": "phase6hf",
+  "base_commit": "c410e02",
+  "frozen_before_runtime": true,
+  "history": {
+    "phase6he_frozen": true,
+    "phase6he_reclassified": false,
+    "phase6he_artifacts_reused": false
+  },
+  "v5_common_prefix": {
+    "readback_calls": 1,
+    "array_metadata_calls": 7,
+    "schema_slots": [1, 2, 3, 4, 5],
+    "schema_operations_per_slot": ["buffer_to_volume", "volume_metadata", "temporary_save", "typed_read"],
+    "velocity_second_conversion": 1,
+    "velocity_file_save": 1,
+    "velocity_file_durability_check": 1,
+    "velocity_file_read": 1,
+    "velocity_vector_grid_access": 1,
+    "velocity_basic_metadata": 1,
+    "velocity_temporary_file_deletion": 1,
+    "temperature_native_operations": 0,
+    "collector_operations": 0,
+    "profile_operations": 0
+  },
+  "roi_order": ["scene", "inter_log_gap", "flame_rise", "opposite_above", "side_control"],
+  "sampling_result_lifetime": "results remain in the returned rois dictionary through the cumulative pipeline and are released at the unchanged caller release boundary",
+  "ladder": [
+    {"name":"r0_velocity_roi_prefix_0","mode":"R0","roi_count":0,"roi_names":[],"adds":"none"},
+    {"name":"r1_velocity_roi_prefix_1","mode":"R1","roi_count":1,"roi_names":["scene"],"adds":"scene"},
+    {"name":"r2_velocity_roi_prefix_2","mode":"R2","roi_count":2,"roi_names":["scene","inter_log_gap"],"adds":"inter_log_gap"},
+    {"name":"r3_velocity_roi_prefix_3","mode":"R3","roi_count":3,"roi_names":["scene","inter_log_gap","flame_rise"],"adds":"flame_rise"},
+    {"name":"r4_velocity_roi_prefix_4","mode":"R4","roi_count":4,"roi_names":["scene","inter_log_gap","flame_rise","opposite_above"],"adds":"opposite_above"},
+    {"name":"r5_velocity_roi_prefix_5","mode":"R5","roi_count":5,"roi_names":["scene","inter_log_gap","flame_rise","opposite_above","side_control"],"adds":"side_control"}
+  ],
+  "operation_evidence": {
+    "report_schema": "campfire.phase6hf.operation-report.v1",
+    "counter_schema_source": "phase6he_operation_schema.COUNTER_KEYS",
+    "runtime_report_producer": "phase6hf_operation_schema.new_runtime_report",
+    "json_writer": "phase6hf_operation_schema.write_operation_report",
+    "parent_validator": "phase6hf_operation_schema.validate_operation_files",
+    "sampling_counter_expected_value": "roi_count",
+    "executed_roi_order_must_match": true
+  },
+  "execution": {
+    "independent_process_per_condition": true,
+    "maximum_launches": 6,
+    "retries": 0,
+    "replacements": 0,
+    "stop_after_first_non_normal": true,
+    "simultaneous_kit": 1,
+    "inner_timeout_seconds": 900,
+    "outer_timeout_seconds": 1020
+  },
+  "if_all_normal": "classify as not reproduced in this short ladder; do not alter Phase 6HE or start repetition",
+  "prohibited": [
+    "temperature native processing",
+    "spatial collector",
+    "velocity profile",
+    "new processing for another channel",
+    "formal S93/S100/OFF comparison",
+    "long or large repetition",
+    "video/latest-demo change",
+    "production/default/Point/V3/P4 changes"
+  ],
+  "safety": {
+    "kit_private_limit_bytes": 17179869184,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "available_physical_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "temporary_file_allowlist": ["handle_1.nvdb", "handle_2.nvdb", "handle_3.nvdb", "handle_4.nvdb", "handle_5.nvdb", "p3_f0180_velocity.nvdb"],
+    "unknown_temporary_file_policy": "do_not_delete_and_fail_cleanup",
+    "exact_cleanup": "phase6fu_with_phase6fw_pid_reuse_policy",
+    "cdb": "progress_aware_stack_first"
+  }
+}

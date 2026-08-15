@@ -1,5 +1,10 @@
 # Changelog
 
+- Added the frozen-before-runtime Phase 6HF one-shot ROI-sampling ladder. It
+  rebuilds Phase 6HE V5 in every fresh process and adds one fixed ROI at a
+  time, preserves result retention and release order, and stops at the first
+  operation, lifecycle, resource, or cleanup failure without retry.
+
 - Froze Phase 6HE after V0--V5 completed normally and V6 stopped at natural
   OS exit. V6 completed the five existing ROI samples, temporary deletion,
   ordered release, stage close, and durable `shutdown_complete`; exact cleanup

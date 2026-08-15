@@ -1,5 +1,15 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6HF velocity ROI-sampling lifecycle isolation (frozen before runtime)
+
+Phase 6HE remains an immutable lifecycle safe stop. Phase 6HF rebuilds V5 in
+fresh processes and adds the five existing velocity ROI samples cumulatively
+in the fixed `scene`, `inter_log_gap`, `flame_rise`, `opposite_above`,
+`side_control` order. Result retention and release remain unchanged. Each R0--R5
+condition runs once without retry/replacement and the first non-normal result
+stops the ladder. Details:
+`docs/design/phase6hf_velocity_roi_lifecycle_contract.md`.
+
 # Phase 6HE velocity sub-boundary lifecycle isolation (frozen before runtime)
 
 Phase 6HD remains an immutable Candidate lifecycle safe stop. Read-only code
