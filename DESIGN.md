@@ -13,6 +13,21 @@ source and V8 is unnecessary. Twenty-five canonical counters come from one
 shared integer-zero factory. Details:
 `docs/design/phase6he_velocity_lifecycle_contract.md`.
 
+## Phase 6HE result
+
+The producer-to-consumer and exact-call-order fixture passed 63/63. Fresh V0
+through V5 processes completed their operations, ordered release, stage close,
+durable `shutdown_complete`, natural exit code 0, resource gates, cleanup, and
+residual-zero checks. V6 added only the five existing ROI `_sample_grid()`
+calls. All five calls completed, the allowlisted file was deleted, references
+were released with weak residual zero, stage close completed in 4.5438597
+seconds, and `shutdown_complete` was durable; Kit then failed to exit
+naturally. Phase 6HE is therefore frozen as a lifecycle safe stop. V7 was not
+launched and V8 remained unnecessary. The V5--V6 boundary identifies ROI
+sampling as the first candidate association in this one-shot ladder, not as a
+proven root cause. Temperature and collector counters stayed zero. Details:
+`docs/design/phase6he_velocity_lifecycle_safe_stop.md`.
+
 # Phase 6HD canonical operation counters and lifecycle isolation (frozen before runtime)
 
 Phase 6HC remains an immutable canonical-report completeness safe stop. Phase

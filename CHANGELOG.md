@@ -1,5 +1,13 @@
 # Changelog
 
+- Froze Phase 6HE after V0--V5 completed normally and V6 stopped at natural
+  OS exit. V6 completed the five existing ROI samples, temporary deletion,
+  ordered release, stage close, and durable `shutdown_complete`; exact cleanup
+  left process and NanoVDB residuals at zero. The sole V5--V6 addition is the
+  existing ROI sampling stage, which is a first candidate boundary rather than
+  a one-run root-cause claim. V7/V8, profile, collectors, temperature work,
+  formal comparison, and production changes remained unstarted.
+
 - Added the frozen-before-runtime Phase 6HE velocity sub-boundary contract.
   The actual Phase 6HD D helper is split at conversion, save/durability,
   file-read, vector/basic metadata, five-ROI sampling, and profile boundaries
