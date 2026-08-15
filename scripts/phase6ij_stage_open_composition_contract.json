@@ -1,0 +1,40 @@
+{
+  "schema":"campfire.phase6ij.stage-open-composition-contract.v1",
+  "phase":"phase6ij",
+  "baseline_commit":"c57a6b2",
+  "declared_before_runtime":true,
+  "purpose":"Correct only the observed Kit 110.2 anonymous session Layer identity contract, then rerun the unchanged A/B/C Stage-open composition ladder.",
+  "frozen_history":{"phase6ii":{"commit":"c57a6b2","status":"safe_stop_stage_open_native_failure_unlocalized","observed_actual_boundary":"session identifier contract mismatch after native open returned"},"reclassified":false,"artifact_attempt_reused":false,"rerun":false},
+  "frozen_probe_contract":{"path":"scripts/phase6hx_single_log_occlusion_contract.json","sha256":"6278E6A6E66C348BFE104AB247A466EA0BE152DBD614903E2ADEF57DFCEB9098"},
+  "dependency_manifest":{"path":"scripts/phase6ij_authoring_dependencies.json","sidecar_path":"scripts/phase6ij_authoring_dependencies.sha256","sha256":"7CDFF704E65C1E8F1FE03D2053EA72B6B02D0FB6E2CAAA53DD0930322A83909F","module_count":6,"permanent_sys_path_mutation":false},
+  "bootstrap_sources":{
+    "dependency_loader":{"path":"scripts/phase6ic_exact_dependency_loader.py","sha256":"2E0DBB1D2106A237228040160D1FBBB6B437863DF5359DD74942CCD9AC2FBC18"},
+    "marker_contract":{"path":"scripts/phase6ii_marker_contract.py","sha256":"60BFC1AA69DCFC3FD96513A2B83431C490A1E321CF5F46FBC362ED4FCFFA19D7"}
+  },
+  "composition_contract":{
+    "conditions":[
+      {"id":"A","open":"protected_diagnostic.usda","sublayer_roles":[],"added_from_previous":"baseline direct protected open"},
+      {"id":"B","open":"container.usda","sublayer_roles":["protected"],"added_from_previous":"one file-backed container root"},
+      {"id":"C","open":"container.usda","sublayer_roles":["runtime","protected"],"added_from_previous":"one empty runtime sublayer above protected"}
+    ],
+    "requested_D_mapping":"D is identical to C and is not launched",
+    "session_behavior":"omni.usd context creates exactly one anonymous session Layer for every condition; no synthetic session-free condition is permitted",
+    "session_identifier_contract":{"syntax":"anon:<runtime-id>","runtime_id_charset":"ASCII hexadecimal [0-9A-Fa-f]","runtime_id_min_length":1,"runtime_id_max_length":32,"reject_empty":true,"reject_controls":true,"reject_path_separators":true,"reject_uri":true,"reject_traversal":true,"reject_suffix":true,"identifier_cross_process_equality_required":false,"identifier_and_layer_identity_stable_within_process":true,"anonymous_required":true,"file_backed_forbidden":true,"get_session_layer_identity_required":true,"distinct_from_root_runtime_protected":true,"exact_layer_count":1},
+    "protected_filename":"protected_diagnostic.usda",
+    "runtime_filename":"runtime_opinions.usda",
+    "container_filename":"container.usda",
+    "protected_file_sha256":"D5668572776AC0B48E9C8AF193FF517631865D9203864DBBFA1B52EFB8B8E99C",
+    "runtime_file_sha256":"28F84F705DAB5DC6D5BAAEE8EE94E59B93B71BCD708C048C71066E7A8956E2D1",
+    "container_B_file_sha256":"C08CEF7649B8E1437F1753E8982C58E3DCD0AD8411BB04CE08D1AB49EACD0361",
+    "container_C_file_sha256":"C556894E389C3E2AB49B53088460F2D2AFED46B6C0C4898C5758811288876250",
+    "unknown_layer_or_path":"fail_closed"
+  },
+  "operation_contract":{"open_api":"omni.usd.UsdContext.open_stage_async","close_api":"omni.usd.UsdContext.close_stage_async","condition_order":["A","B","C"],"fresh_process_per_condition":true,"retry":0,"replacement":0,"fail_fast":true,"required_markers":["process_started","kit_app_ready","stage_open_requested","stage_open_completed","opened_stage_identity_recorded","stage_close_requested","stage_close_completed","context_empty_confirmed","shutdown_requested","shutdown_complete"],"timeline_play_calls":0,"flow_simulation_update_calls":0,"flow_interface_calls":0,"readback_calls":0,"renderer_update_calls":0,"capture_calls":0,"maximum_report_bytes":262144},
+  "classification_contract":{"success":"stage_open_composition_ladder_qualified","contract":"safe_stop_stage_open_contract_failure","composition_specific":"safe_stop_stage_open_composition_specific_failure","native_unlocalized":"safe_stop_stage_open_native_failure_unlocalized","single_native_failure_is_never_composition_specific":true,"composition_specific_requires_prior_pass_and_deterministic_non_native_added_element_mismatch":true},
+  "accepted_classifications":["natural_clean_exit","cleanup_assisted_telemetry_exit","cleanup_assisted_ngx_exit"],
+  "telemetry_basename":"omni.telemetry.transmitter.exe","telemetry_path_suffix":"omni.telemetry.transmitter/omni.telemetry.transmitter.exe","telemetry_extension_prefix":"omni.kit.telemetry-","telemetry_extension_store_root":"C:/Users/junic/AppData/Local/ov/data/exts/v2","maximum_telemetry_helpers":1,
+  "ngx_updater_basename":"nvngx_update.exe","ngx_driverstore_path_regex":"c:\\windows\\system32\\driverstore\\filerepository\\nv_dispig\\.inf_amd64_[0-9a-f]+\\nvngx_update\\.exe","conhost_exact_path":"C:/Windows/System32/conhost.exe","maximum_ngx_updaters":1,"maximum_ngx_conhosts":1,"maximum_ngx_trees":1,"authenticode_policy":"record when exposed; explicit unavailability is permitted; explicit mismatch is rejected",
+  "safety":{"runner_private_limit_bytes":536870912,"kit_private_limit_bytes":17179869184,"diagnostic_private_limit_bytes":536870912,"unique_tree_private_limit_bytes":18253611008,"available_physical_floor_bytes":8589934592,"commit_headroom_floor_bytes":8589934592,"stage_close_timeout_seconds":180,"outer_timeout_seconds":180,"sample_seconds":0.25,"simultaneous_kit_processes":1},
+  "production_changed":false,
+  "out_of_scope":["four-boundary Layer audit","camera allowlist","runtime Layer production policy","timeline play","Flow simulation/interface","NanoVDB readback","renderer update","capture","Collision OFF/ON","production/default/Point/V3/latest demo changes"]
+}
