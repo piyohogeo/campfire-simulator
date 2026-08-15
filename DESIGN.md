@@ -14,6 +14,22 @@ failure, and cleanup failure all fail closed. The frozen Phase 6HB A--F audit
 and ordering are retained without sample reuse. Detailed contract:
 `docs/design/phase6hc_canonical_operation_contract.md`.
 
+## Phase 6HC result
+
+The 20/20 no-Kit fixture passed and the canonical report/resource-marker role
+split worked at runtime: A's report was complete and the absent duplicate
+resource completion marker was neutral. A also released references with weak
+residual zero, closed the stage in 2.5273771 seconds, reached
+`shutdown_complete`, exited naturally with code 0, and passed resource/cleanup
+gates. The canonical report inherited the Phase 6HB call-count object without a
+`temperature_typed_read` key, however. The validator correctly could not prove
+the required zero and stopped with
+`forbidden_call_nonzero:temperature_typed_read`; this is missing schema
+evidence, not proof that a typed read ran. B--F were not launched. Phase 6HC is
+frozen as a canonical-report completeness safe stop and no lifecycle element
+was isolated. Details:
+`docs/design/phase6hc_canonical_operation_safe_stop.md`.
+
 # Phase 6HB Candidate lifecycle isolation (frozen before runtime)
 
 Phase 6GZ and Phase 6HA remain frozen and provide no runtime sample to Phase

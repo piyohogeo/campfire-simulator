@@ -1,5 +1,13 @@
 # Changelog
 
+- Froze Phase 6HC at A as a canonical-report completeness safe stop. The new
+  report was complete and correctly independent of an absent duplicate
+  resource marker; operation, release, stage close, shutdown, natural exit,
+  resources, and cleanup all completed. Its inherited call-count object lacked
+  the required `temperature_typed_read=0` field, so fail-closed validation
+  stopped B--F. Absence of that key is not treated as evidence of a typed read
+  or temperature failure.
+
 - Added the Phase 6HC canonical operation-evidence boundary. The bounded
   `post_readback_isolation.json` report now owns operation qualification;
   resource JSONL is telemetry and optional consistency evidence, never an
