@@ -1,0 +1,28 @@
+{
+  "schema": "campfire.phase6ie.phase6id-runtime-projection.v1",
+  "source_phase": "phase6id",
+  "source_attempt": "phase6id-stage-open-attempt01",
+  "source_classification": "safe_stop_live_stage_prim_set_validation_failure",
+  "canonicalization": {
+    "paths": "verbatim from Phase 6ID stage_prim_set_mismatch evidence",
+    "types": "confirmed from local Kit 110.2 viewport USD and Flow 110.0.0 schemas/samples",
+    "layer": "contract expectation; actual Phase 6IE smoke must prove session ownership",
+    "property_values": "not replayed"
+  },
+  "runtime": [
+    {"path":"/OmniverseKit_Front","type":"Camera","parent":"/","depth":1,"defining_layer_identifier":"<SESSION_LAYER>","defining_layer_kind":"session","opinion_layer_kinds":["session"],"property_count":0,"property_names":[],"relationships":[]},
+    {"path":"/OmniverseKit_Persp","type":"Camera","parent":"/","depth":1,"defining_layer_identifier":"<SESSION_LAYER>","defining_layer_kind":"session","opinion_layer_kinds":["session"],"property_count":0,"property_names":[],"relationships":[]},
+    {"path":"/OmniverseKit_Right","type":"Camera","parent":"/","depth":1,"defining_layer_identifier":"<SESSION_LAYER>","defining_layer_kind":"session","opinion_layer_kinds":["session"],"property_count":0,"property_names":[],"relationships":[]},
+    {"path":"/OmniverseKit_Top","type":"Camera","parent":"/","depth":1,"defining_layer_identifier":"<SESSION_LAYER>","defining_layer_kind":"session","opinion_layer_kinds":["session"],"property_count":0,"property_names":[],"relationships":[]},
+    {"path":"/Render","type":"","parent":"/","depth":1,"defining_layer_identifier":"<SESSION_LAYER>","defining_layer_kind":"session","opinion_layer_kinds":["session"],"property_count":0,"property_names":[],"relationships":[]},
+    {"path":"/Render/OmniverseGlobalRenderSettings","type":"RenderSettings","parent":"/Render","depth":2,"defining_layer_identifier":"<SESSION_LAYER>","defining_layer_kind":"session","opinion_layer_kinds":["session"],"property_count":0,"property_names":[],"relationships":[]},
+    {"path":"/Render/OmniverseKit","type":"","parent":"/Render","depth":2,"defining_layer_identifier":"<SESSION_LAYER>","defining_layer_kind":"session","opinion_layer_kinds":["session"],"property_count":0,"property_names":[],"relationships":[]},
+    {"path":"/Render/OmniverseKit/HydraTextures","type":"","parent":"/Render/OmniverseKit","depth":3,"defining_layer_identifier":"<SESSION_LAYER>","defining_layer_kind":"session","opinion_layer_kinds":["session"],"property_count":0,"property_names":[],"relationships":[]},
+    {"path":"/Render/OmniverseKit/HydraTextures/omni_kit_widget_viewport_ViewportTexture_0","type":"RenderProduct","parent":"/Render/OmniverseKit/HydraTextures","depth":4,"defining_layer_identifier":"<SESSION_LAYER>","defining_layer_kind":"session","opinion_layer_kinds":["session"],"property_count":0,"property_names":[],"relationships":[]},
+    {"path":"/Render/Vars","type":"","parent":"/Render","depth":2,"defining_layer_identifier":"<SESSION_LAYER>","defining_layer_kind":"session","opinion_layer_kinds":["session"],"property_count":0,"property_names":[],"relationships":[]},
+    {"path":"/Render/Vars/LdrColor","type":"RenderVar","parent":"/Render/Vars","depth":3,"defining_layer_identifier":"<SESSION_LAYER>","defining_layer_kind":"session","opinion_layer_kinds":["session"],"property_count":0,"property_names":[],"relationships":[]},
+    {"path":"/World/Flow/Offscreen/debugVolume","type":"FlowDebugVolumeParams","parent":"/World/Flow/Offscreen","depth":4,"defining_layer_identifier":"<SESSION_LAYER>","defining_layer_kind":"session","opinion_layer_kinds":["session"],"property_count":0,"property_names":[],"relationships":[]},
+    {"path":"/World/Flow/Render/rayMarch/cloud","type":"FlowRayMarchCloudParams","parent":"/World/Flow/Render/rayMarch","depth":5,"defining_layer_identifier":"<SESSION_LAYER>","defining_layer_kind":"session","opinion_layer_kinds":["session"],"property_count":0,"property_names":[],"relationships":[]},
+    {"path":"/World/Flow/Render/renderSettings","type":"FlowRenderSettingsParams","parent":"/World/Flow/Render","depth":4,"defining_layer_identifier":"<SESSION_LAYER>","defining_layer_kind":"session","opinion_layer_kinds":["session"],"property_count":0,"property_names":[],"relationships":[]}
+  ]
+}

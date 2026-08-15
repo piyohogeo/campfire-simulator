@@ -1,0 +1,118 @@
+{
+  "schema": "campfire.phase6ie.stage-open-contract.v1",
+  "phase": "phase6ie",
+  "baseline_commit": "b761a4a",
+  "declared_before_runtime": true,
+  "purpose": "Qualify only a bounded exact-path policy for legitimate Kit runtime prim additions while preserving every authored diagnostic-stage prim and root-layer opinion.",
+  "frozen_history": {
+    "phase6id": {"commit": "b761a4a", "status": "safe_stop_live_stage_prim_set_validation_failure"},
+    "phase6ic": {"commit": "832fd81", "status": "safe_stop_stage_attribute_validation_failure"},
+    "reclassified": false,
+    "artifact_or_runtime_reused": false
+  },
+  "frozen_probe_contract": {
+    "path": "scripts/phase6hx_single_log_occlusion_contract.json",
+    "sha256": "6278E6A6E66C348BFE104AB247A466EA0BE152DBD614903E2ADEF57DFCEB9098"
+  },
+  "dependency_manifest": {
+    "path": "scripts/phase6ie_authoring_dependencies.json",
+    "sidecar_path": "scripts/phase6ie_authoring_dependencies.sha256",
+    "sha256": "56E25C077942A8338281A96591F0317C4A5477B469A2DAF5AF1AC58C9D7E1D70",
+    "module_count": 5,
+    "permanent_sys_path_mutation": false
+  },
+  "bootstrap_sources": {
+    "dependency_loader": {"path": "scripts/phase6ic_exact_dependency_loader.py", "sha256": "2E0DBB1D2106A237228040160D1FBBB6B437863DF5359DD74942CCD9AC2FBC18"},
+    "marker_contract": {"path": "scripts/phase6ie_marker_contract.py", "sha256": "BF06D44F76088F0A5299387D2F7EE1C5E628B74F26E9D8DE9A4A6C9F0AAB5C4B"},
+    "wrapper": {"path": "scripts/probe_phase6ie_stage_open_smoke.py", "sha256": "FC9165102616CD1317C06E828B099412323D1BDA7B522B389B6A79B592B089CC"},
+    "runtime_policy": {"path": "scripts/phase6ie_runtime_prim_policy.py", "sha256": "6B40D8A9DA4F677B0B809D0E8FA8A5C48451E59556E0DAFE1CB060F7C2505750"},
+    "runtime_fixture": {"path": "scripts/phase6ie_runtime_prim_fixture.py", "sha256": "4277CEFAE1E45155707133EFE80ABABD11927945E05B0ED3100460984B0D0EAF"},
+    "phase6id_projection": {"path": "scripts/phase6ie_phase6id_runtime_projection.json", "sha256": "D6F2AFB2FBA04DE1CD1C0C67B9038A649D8986F8426F372C9A14EE29A9FF366F"}
+  },
+  "runtime_prim_policy": {
+    "schema": "campfire.phase6ie.runtime-prim-policy.v1",
+    "evidence_schema": "campfire.phase6ie.runtime-prim-evidence.v1",
+    "maximum_evidence_bytes": 524288,
+    "maximum_runtime_prims": 14,
+    "exact_rule_count": 14,
+    "category_maximums": {"kit_camera": 4, "render_core": 5, "hydra_texture": 2, "flow_debug": 1, "flow_render": 2},
+    "required_defining_layer_kind": "session",
+    "unknown_paths": "reject",
+    "root_layer_runtime_opinions": "reject",
+    "protected_subtree_intersections": "reject",
+    "protected_relationship_targets": "reject",
+    "authored_prim_missing_or_changed": "reject",
+    "root_layer_hash_change": "reject"
+  },
+  "float3_contract": {
+    "attribute_path": "/World/Flow/Emitter.position",
+    "declared_usd_type": "float3",
+    "expected_original": [0.0, 0.0, 0.48],
+    "storage": "IEEE-754 binary32 per component",
+    "component_count": 3,
+    "ulp_budget": 0,
+    "signed_zero_policy": "equivalent",
+    "scalar_tolerance_unchanged": 0.000001
+  },
+  "parser_fixture": {
+    "positive_stages": ["collision_off", "collision_on"],
+    "negative_cases": ["legacy_inline", "missing", "duplicate", "type_mismatch", "nan", "unknown_schema"],
+    "maximum_stage_bytes": 1048576,
+    "one_variable": "/World/Flow/Simulate.physicsCollisionEnabled"
+  },
+  "smoke": {
+    "condition": "collision_off",
+    "launches": 1,
+    "retry": 0,
+    "replacement": 0,
+    "timeline_play_calls": 0,
+    "flow_update_calls": 0,
+    "flow_interface_calls": 0,
+    "readback_calls": 0,
+    "capture_calls": 0,
+    "required_markers": [
+      "kit_launch", "kit_app_ready", "authoring_dependencies_load_complete", "authoring_callable_validation_complete",
+      "stage_generation_started", "stage_generation_complete", "stage_parse_started", "stage_parse_complete", "stage_open_complete",
+      "authored_prim_validation_started", "authored_prim_validation_complete", "runtime_prim_classification_started",
+      "runtime_prim_classification_complete", "root_layer_integrity_complete", "float3_validation_complete",
+      "required_prims_validated", "operation_complete", "stage_close_started", "stage_close_complete", "shutdown_complete"
+    ]
+  },
+  "accepted_classifications": ["natural_clean_exit", "cleanup_assisted_telemetry_exit", "cleanup_assisted_ngx_exit"],
+  "telemetry_basename": "omni.telemetry.transmitter.exe",
+  "telemetry_path_suffix": "omni.telemetry.transmitter/omni.telemetry.transmitter.exe",
+  "telemetry_extension_prefix": "omni.kit.telemetry-",
+  "telemetry_extension_store_root": "C:/Users/junic/AppData/Local/ov/data/exts/v2",
+  "maximum_telemetry_helpers": 1,
+  "ngx_updater_basename": "nvngx_update.exe",
+  "ngx_driverstore_path_regex": "c:\\windows\\system32\\driverstore\\filerepository\\nv_dispig\\.inf_amd64_[0-9a-f]+\\nvngx_update\\.exe",
+  "conhost_exact_path": "C:/Windows/System32/conhost.exe",
+  "maximum_ngx_updaters": 1,
+  "maximum_ngx_conhosts": 1,
+  "maximum_ngx_trees": 1,
+  "authenticode_policy": "record when exposed by bounded identity API; explicit unavailability is permitted; explicit mismatch is rejected",
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 17179869184,
+    "diagnostic_private_limit_bytes": 536870912,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "available_physical_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "outer_timeout_seconds": 180,
+    "sample_seconds": 0.25,
+    "simultaneous_kit_processes": 1
+  },
+  "frozen_geometry": {
+    "proxy_topology": [26, 36, 120],
+    "source_surface_gap_m": 0.06,
+    "source_to_nearest_end_clearance_m": 1.6,
+    "camera_eye_m": [5.5, 0.0, 0.9]
+  },
+  "production_changed": false,
+  "out_of_scope": [
+    "timeline play", "Flow update", "public Flow interface", "NanoVDB readback", "active blocks", "ROI sampling",
+    "capture", "images", "video", "Collision OFF/ON runtime comparison", "dynamic transform", "PhysX sharing",
+    "Point Emitter coexistence", "P3", "P4", "production integration", "default change", "V3", "latest demo update"
+  ]
+}
