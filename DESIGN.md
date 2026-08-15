@@ -55,6 +55,34 @@ production, USD generation, rendering, wood-authority, or Flow-input path
 changed and the formal Kit attempt never launched. Details:
 `docs/design/phase6hk_flow_proxy_hierarchy_boundary.md`.
 
+## Phase 6HL deterministic guard preflight and resource-role safe stop
+
+Phase 6HK remains frozen at `bfc7a0a`; its artifact, contract, classification,
+and thresholds were not reused. Read-only audit confirmed that successful
+Phase 6FU/6FZ guards used `C:\Python38\python.exe` (Python 3.8.3, psutil
+5.9.8), while Phase 6HK propagated its Packman runner's `sys.executable`, which
+has no psutil. Phase 6HL pinned the exact system interpreter and hashes with no
+fallback. Its persisted no-Kit preflight passed all 9 positive/negative gates,
+including the actual guard command, exact child identity/parentage, space-safe
+argument forwarding, bounded file streaming, and residual zero. Packman Python
+was not modified.
+
+The one formal launch stopped before probe execution. Because Kit was the
+guarded root, the frozen guard classified its 1,845,035,008-byte Private Bytes
+as `runner` and triggered the 512 MiB runner ceiling in 1.629 seconds. Tree peak
+was 1,866,956,800 bytes; physical/commit floors remained safe. No stage,
+proxy, renderer, Flow-interface, stage-close, or `shutdown_complete` marker
+exists. Cleanup and final residual checks passed. Phase 6HL is therefore a
+resource-role harness safe stop, not a hierarchy qualification; it was not
+retried. Details:
+`docs/design/phase6hl_guarded_flow_proxy_hierarchy_boundary.md`.
+
+Regression passed focused 10/10, Python compilation, Release build, standard
+8-process 78/78, and devlog validation. Production app and latest-demo hashes
+remain `94162F82...F02A` and `1C6FB249...E6285`. Phase 0 RTX and Phase 3 were
+omitted because production sources, USD generation, render settings, wood
+authority, and Flow inputs are unchanged.
+
 # Phase 6HF velocity ROI-sampling lifecycle isolation (frozen before runtime)
 
 Phase 6HE remains an immutable lifecycle safe stop. Phase 6HF rebuilds V5 in

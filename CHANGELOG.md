@@ -1,5 +1,14 @@
 # Changelog
 
+- Added Phase 6HL without changing frozen Phase 6HK. The exact
+  `C:\Python38\python.exe`/psutil guard preflight passed all 9 cases and rejected
+  Packman Python without modifying it. The sole formal Kit launch then stopped
+  before probe execution because direct-root Kit memory was classified as the
+  512 MiB `runner` role. No hierarchy operation was measured, no retry was
+  made, cleanup residual was zero, and production/defaults/Point/V3/demo remain
+  unchanged. Focused 10/10, Python compilation, Release build, standard 78/78,
+  and devlog validation passed.
+
 - Audited the non-readback roadmap after parking Phase 6HJ. The current
   CPU-source V3 default and analytic Collider/RenderSurface hierarchy are
   already qualified; the first missing collision boundary is adding the

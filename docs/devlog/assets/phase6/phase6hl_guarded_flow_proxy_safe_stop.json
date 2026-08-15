@@ -1,0 +1,75 @@
+{
+  "schema": "campfire.phase6hl.guarded-flow-proxy-safe-stop.v1",
+  "phase": "phase6hl",
+  "status": "safe_stop_resource_role_harness_failure",
+  "baseline_commit": "bfc7a0a",
+  "implementation_commit": "74f4664",
+  "contract_sha256": "E890157C17C4392C88E429D5AD8C8451CB57A6AA66E045E211E89D13A05E6D04",
+  "guard_interpreter": {
+    "absolute_path": "C:\\Python38\\python.exe",
+    "python_version": "3.8.3",
+    "sys_executable_match": true,
+    "psutil_version": "5.9.8",
+    "psutil_file": "C:\\Python38\\Lib\\site-packages\\psutil\\__init__.py",
+    "selection_basis": "Phase 6FU qualification and Phase 6FZ 9/9 normal population",
+    "implicit_fallback": false
+  },
+  "packman_python": {
+    "modified": false,
+    "guard_use_rejected": true,
+    "psutil_present": false
+  },
+  "preflight": {
+    "status": "pass",
+    "cases_passed": 9,
+    "cases_total": 9,
+    "kit_launches": 0,
+    "guard_child_residual": 0,
+    "large_output_buffered_in_parent": false
+  },
+  "formal": {
+    "kit_launches": 1,
+    "accepted_runtime_samples": 0,
+    "stop_reason": "runner_private_limit",
+    "duration_seconds": 1.629326581954956,
+    "last_marker": null,
+    "proxy_or_stage_operations": 0,
+    "resource_peaks_bytes": {
+      "runner_role_containing_kit_root": 1845035008,
+      "kit_role": 0,
+      "diagnostic": 17088512,
+      "child": 5697536,
+      "unique_tree": 1866956800
+    },
+    "resource_minima_bytes": {
+      "available_physical": 91069804544,
+      "commit_headroom": 110720606208
+    },
+    "stage_close_complete": false,
+    "shutdown_complete": false,
+    "normal_os_exit": false,
+    "exact_cleanup": true,
+    "residual_processes": 0,
+    "temporary_nanovdb_residual": 0
+  },
+  "phase6hk_reclassified": false,
+  "phase6hk_artifact_reused": false,
+  "production_changed": false,
+  "defaults_changed": false,
+  "point_policy_changed": false,
+  "v3_changed": false,
+  "latest_demo_changed": false,
+  "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "latest_demo_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285",
+  "regression": {
+    "focused": "10/10 passed",
+    "python_compilation": "passed",
+    "release_build": "passed in 7.62 seconds",
+    "standard_suite": "8/8 processes, 78/78 tests passed in 321.7 seconds",
+    "devlog_validation": "passed",
+    "phase0_rtx": "not run: production/USD/render settings unchanged",
+    "phase3": "not run: wood authority and Flow inputs unchanged"
+  },
+  "qualification": "unmeasured",
+  "next_approval": "Use a fresh Phase/root after qualifying a small guarded runner root or another role-aware limit boundary; do not retry Phase 6HL."
+}

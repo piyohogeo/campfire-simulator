@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6hk">最新記録</a>
+        <a href="#phase-6hl">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6hk">Phase 6HKの結果を読む</a>
+        <a class="button primary" href="#phase-6hl">Phase 6HLの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6HK · pre-Kit harness safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6HL · guard preflight pass / role-limit safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,16 @@
   </header>
 
   <main>
+    <section id="phase-6hl" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6HL guard interpreter and hierarchy proxy safe stop"><span class="phase-number compact">6HL</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6HL · deterministic guard boundary</p><h2>The interpreter is now proven;<br>the next harness role boundary stopped the run.</h2><p>The exact <code>C:\Python38\python.exe</code>, psutil 5.9.8, guard import, argument binding, streamed files, identity, and residual-zero preflight passed 9/9. Packman Python was rejected and left unchanged.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Formal result</p><h3>One Kit launch; no proxy sample.</h3><p>Direct-root Kit was labeled as the guard's <code>runner</code> role, so its 1.845 GB startup allocation hit the 512 MiB runner ceiling after 1.629 seconds. No probe, stage, renderer, Flow-interface, or lifecycle marker ran.</p></section><section class="note"><p class="note-label">Evidence boundary</p><h3>Cleanup passed; qualification did not.</h3><p>Tree peak was 1.867 GB, memory floors stayed safe, and Kit/CDB/NanoVDB residuals were zero. This is a resource-role harness safe stop, not evidence for or against the Flow proxy.</p></section></div>
+          <section class="note next"><p class="note-label">Next approval</p><h3>Qualify a small guarded runner root in a fresh Phase.</h3><p>Phase 6HK and 6HL are not retried or reclassified. Focused 10/10, Python compilation, Release build, standard 78/78, and devlog validation passed. Phase 0/3 were omitted because production/USD/render settings/authority/Flow inputs are unchanged. Production, defaults, Point policy, V3, and latest demo are unchanged; no visual change or new video exists.</p><p><a href="assets/phase6/phase6hl_guarded_flow_proxy_safe_stop.json">machine report</a> · <a href="../design/phase6hl_guarded_flow_proxy_hierarchy_boundary.md">design note</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>no visual change; no new video</small></span></button></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6hk" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6HK hierarchy proxy harness safe stop"><span class="phase-number compact">6HK</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>
