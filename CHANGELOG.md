@@ -1,5 +1,15 @@
 # Changelog
 
+- Added Phase 6ID while retaining Phase 6IC at `832fd81` as its original
+  stage-attribute safe stop. A canonical binary32/ULP `float3` comparator and
+  bounded evidence passed 22/22 fixtures plus inherited 18/18, 12/12, 13/13,
+  and 15/15 gates. The sole actual Kit smoke confirmed the emitter position
+  bit-exact at zero ULP, then stopped fail-closed because the live USD context
+  added runtime render/camera/Flow prims outside the generated-stage exact prim
+  set. Stage close/shutdown completed, exit code was 1, and exact cleanup left
+  residual zero. No Flow simulation or OFF/ON comparison ran; production and
+  defaults remain unchanged.
+
 - Added Phase 6IC while retaining Phase 6IB at `7ba4958` as its original
   authoring-import safe stop. The deterministic four-module exact dependency
   gate passed all no-Kit fixtures. The sole actual Kit smoke generated both

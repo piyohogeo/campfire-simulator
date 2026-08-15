@@ -43,6 +43,16 @@
   </header>
 
   <main>
+    <section id="phase-6id" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6ID float3 qualification and live-stage safe stop"><span class="phase-number compact">6ID</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6ID · canonical registered float3</p><h2>The float3 value is bit-exact;<br>the live stage exposed a separate prim-set boundary.</h2><p>The canonical binary32 comparator passed 22/22 cases, with inherited dependency 18/18, exact-loader 12/12, Point-policy 13/13, and atomic-report 15/15 gates.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Qualified boundary</p><h3>Emitter position matched at zero ULP.</h3><p><code>[0, 0, 0.48]</code> quantized to the actual <code>pxr.Gf.Vec3f</code> bits exactly. The actual Kit parser validated both generated stages with the predeclared zero-ULP budget.</p></section><section class="note"><p class="note-label">First new failure</p><h3>Kit-added live prims failed the exact generated-stage set.</h3><p>The stage opened, then validation rejected runtime render, camera, Hydra, and Flow child prims not present in the generated stage. Stage close and shutdown completed; Kit exited 1 and exact cleanup left residual zero.</p></section></div>
+          <section class="note next"><p class="note-label">Next approval boundary</p><h3>Define a bounded policy for expected Kit-authored prims before OFF/ON.</h3><p>Phase 6IC remains frozen. Phase 6ID does not qualify the complete live-stage gate or occlusion comparison. Production, defaults, Point policy, wood authority, V3, public scene, and latest demo remain unchanged.</p><p><a href="assets/phase6/phase6id_float3_stage_validation_safe_stop.json">machine report</a> · <a href="../design/phase6id_float3_stage_validation_safe_stop.md">design and result</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>no visual artifact was created in this stage-open-only Phase</small></span></button></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6ic" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6IC exact authoring dependency safe stop"><span class="phase-number compact">6IC</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>

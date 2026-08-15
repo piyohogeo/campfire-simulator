@@ -4753,3 +4753,21 @@ exited 1, resource limits held, and exact cleanup left residual zero. Phase 6IC
 therefore qualifies deterministic authoring dependency loading only; stage-open
 and the OFF/ON occlusion comparison remain unqualified. See
 `docs/design/phase6ic_exact_authoring_dependency_safe_stop.md`.
+
+# Phase 6ID canonical float3 comparison and live-stage safe stop
+
+Phase 6IC remains frozen at `832fd81`. Phase 6ID defines the registered
+`float3` comparison as exact binary32 component comparison with a predeclared
+zero-ULP budget, explicit signed-zero equivalence, strict type/length/finite
+gates, and bounded per-component evidence. Its no-Kit fixture passed 22/22 and
+the sole actual Kit process confirmed `/World/Flow/Emitter.position` bit-exact
+at zero ULP.
+
+The live stage then stopped fail-closed at the next boundary: Kit-authored
+runtime render/camera/Flow prims were outside the generated-stage exact prim
+set. Stage close and shutdown completed, Kit exited 1, resource gates held,
+and exact cleanup left residual zero. Phase 6ID qualifies float3 semantics
+only; the complete live-stage attribute gate and OFF/ON comparison remain
+unqualified. Production, defaults, Point policy, V3, public scene, and latest
+demo remain unchanged. See
+`docs/design/phase6id_float3_stage_validation_safe_stop.md`.

@@ -1,0 +1,79 @@
+{
+  "schema": "campfire.phase6id.devlog-summary.v1",
+  "phase": "phase6id",
+  "status": "safe_stop_live_stage_prim_set_validation_failure",
+  "date": "2026-08-15",
+  "implementation_commit": "8b71d9f",
+  "contract_sha256": "218EDD32D73C71B6EDE2E9E9EBDD1D24288162F4ACEEA3A13174A3ACEEE98A30",
+  "phase6ic_frozen": true,
+  "phase6ic_artifact_or_runtime_reused": false,
+  "kit_launch_count": 1,
+  "retry_count": 0,
+  "replacement_count": 0,
+  "fixtures": {
+    "float3": {"passed": 22, "total": 22},
+    "authoring_dependencies": {"passed": 18, "total": 18},
+    "exact_loader": {"passed": 12, "total": 12},
+    "point_policy": {"passed": 13, "total": 13},
+    "atomic_report": {"passed": 15, "total": 15}
+  },
+  "float3": {
+    "attribute_path": "/World/Flow/Emitter.position",
+    "declared_usd_type": "float3",
+    "actual_python_type": "pxr.Gf.Vec3f",
+    "expected_original": [0.0, 0.0, 0.48],
+    "expected_float32": [0.0, 0.0, 0.47999998927116394],
+    "actual": [0.0, 0.0, 0.47999998927116394],
+    "expected_bits": ["0x00000000", "0x00000000", "0x3EF5C28F"],
+    "actual_bits": ["0x00000000", "0x00000000", "0x3EF5C28F"],
+    "ulp_distance": [0, 0, 0],
+    "ulp_budget": 0,
+    "qualified": true
+  },
+  "runtime": {
+    "stage_generation_complete": true,
+    "stage_parse_complete": true,
+    "stage_open_complete": true,
+    "required_prims_validated": false,
+    "operation_complete": false,
+    "first_failure": "stage_prim_set_mismatch",
+    "last_marker": "shutdown_complete",
+    "stage_close_complete": true,
+    "shutdown_complete": true,
+    "kit_exit_code": 1,
+    "canonical_lifecycle_classification": "cleanup_failure",
+    "canonical_consumer_reason": "operation_complete_failed",
+    "residual_process_count": 0
+  },
+  "resource_peaks_bytes": {
+    "kit": 7390875648,
+    "unique_tree": 7884918784,
+    "runner": 97308672,
+    "diagnostic": 16941056
+  },
+  "resource_margin_bytes": {
+    "kit_to_16_gib": 9788993536,
+    "tree_to_17_gib": 10368692224
+  },
+  "fatal": false,
+  "native_exception": false,
+  "dump": false,
+  "cdb": false,
+  "automatic_upload": false,
+  "flow_simulation_started": false,
+  "off_on_comparison_started": false,
+  "production_changed": false,
+  "defaults_changed": false,
+  "point_policy_changed": false,
+  "v3_changed": false,
+  "latest_demo_changed": false,
+  "regression": {
+    "release_build": "pass",
+    "focused_tests": "7/7",
+    "python_compilation": "pass",
+    "standard_suite": "78/78",
+    "static_devlog_validation": "pass_refs578_ids333_json286_svg177_zip2",
+    "phase0_rtx": "not_run_no_relevant_change",
+    "phase3": "not_run_no_relevant_change"
+  }
+}
