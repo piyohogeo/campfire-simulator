@@ -4830,3 +4830,23 @@ dump occurred. The classification is `safe_stop_camera_opinion_unresolved`.
 The next approval boundary is runtime render/camera authoring isolation from
 the diagnostic root, not an allowlist relaxation or OFF/ON restart. Details:
 `docs/design/phase6ig_camera_runtime_opinion_audit.md`.
+
+# Phase 6IH runtime authoring Layer isolation safe stop
+
+Phase 6IG remains frozen at `ea7217d`. Phase 6IH separated the frozen physical
+and Flow diagnostic content into a file-backed protected Layer, beneath an
+empty runtime sublayer and container root, with an anonymous session Layer.
+Its actual producer/writer/reader/validator fixture passed 14/14, the marker
+fixture passed 19/19, and all seven exact dependencies matched before the sole
+fresh Kit launch.
+
+The generated snapshot confirmed the four-role Layer stack, container
+EditTarget, clean protected Layer, matching protected file/in-memory hash, and
+unchanged semantic digest. Kit then ended with `0xC0000005` while stage open
+was pending, before `stage_open_complete` or any live-open snapshot.
+Four-boundary evidence, stage close, and shutdown are therefore incomplete.
+Resource limits held, one bounded dump was preserved without upload, and exact
+cleanup left residual zero. The classification is
+`safe_stop_runtime_authoring_isolation_failure`; neither runtime Layer
+ownership nor OFF/ON is qualified, and no causal claim about the native failure
+is made. See `docs/design/phase6ih_runtime_authoring_layer_isolation.md`.

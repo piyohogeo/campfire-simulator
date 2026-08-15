@@ -1,5 +1,17 @@
 # Changelog
 
+- Added Phase 6IH while retaining Phase 6IG at `ea7217d` as its original
+  camera-opinion safe stop. A file-backed protected diagnostic Layer is now
+  composed below explicit runtime and container Layers plus an anonymous
+  session Layer. No-Kit isolation fixtures passed 14/14, marker fixtures passed
+  19/19, and seven exact dependencies matched. The sole fresh Kit process
+  validated only the generated Layer stack before ending with `0xC0000005`
+  during stage open. No live-open or later snapshot, stage close, or shutdown
+  was claimed; one bounded dump was retained without upload, resource limits
+  held, and exact cleanup left residual zero. The result is
+  `safe_stop_runtime_authoring_isolation_failure`; production/defaults/Point
+  policy/V3/latest demo remain unchanged.
+
 - Added Phase 6IG while retaining Phase 6IF at `d1e660f` as its original
   audit-operation safe stop. The bounded camera-opinion fixture passed 8/8 and
   the complete marker fixture passed before one fresh stopped-timeline Kit

@@ -45,3 +45,45 @@ failed closed. The complete marker fixture passed 19/19 and all seven exact
 dependencies matched. Kit launch count was zero.
 
 The separately authorized one-process result is recorded below after runtime.
+
+## Actual Kit result
+
+One fresh Kit process was launched from
+`artifacts/phase6ih_runtime_authoring_isolation_20260816_01`; no prior Phase
+6IG artifact or runtime sample was reused. The generated boundary produced the
+required session/container/runtime/protected stack with the container as the
+EditTarget. The protected Layer was clean and its file and in-memory SHA-256
+both remained `D5668572...E99C`. Its protected semantic digest was
+`AA895FB6...4EBD`, and the generated runtime record population was empty.
+
+The process then ended with Windows status `0xC0000005` while
+`open_stage_async` was pending. The last durable marker is
+`isolation_snapshot_complete` for the generated boundary; there is no
+`stage_open_complete`, live-open snapshot, stopped-update snapshot, pre-close
+snapshot, stage-close marker, or shutdown marker. Consequently, no runtime
+camera/render opinion was observed in the separated configuration and the
+required four-boundary evidence is incomplete. The result is
+`safe_stop_runtime_authoring_isolation_failure`, not a Layer-isolation
+qualification. The evidence establishes the generated Layer topology only; it
+does not establish that the topology caused the native exception.
+
+Kit and unique-tree Private Bytes peaked at 7,408,095,232 and 7,831,797,760
+bytes, leaving 9,771,773,952 and 10,421,813,248 bytes below the fixed 16/17 GiB
+limits. A single bounded 1,719,306-byte dump was preserved with SHA-256
+`5AAE1EAD...1CC5`; automatic upload was not attempted. Exact identity cleanup
+left zero residual processes. Timeline play, stopped update, Flow interface,
+readback, capture, and OFF/ON remained at zero.
+
+## Verification and next boundary
+
+Focused producer-to-consumer tests passed, Python compilation passed, the
+Release build succeeded, and the standard suite passed all eight processes and
+78 tests. Devlog static validation passed after the result was recorded.
+Phase 0 RTX and Phase 3 were not run because production code, published USD,
+renderer configuration, wood authority, and Flow input are unchanged.
+
+Phase 6IG remains frozen as `safe_stop_camera_opinion_unresolved`. A separate
+approval is required for the smallest stage-open/lifecycle isolation of the
+container composition before any live-stage policy validation. Production
+policy application and the single-log OFF/ON comparison must not start from
+this result.
