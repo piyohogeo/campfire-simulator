@@ -67,3 +67,35 @@ qualify only the visual signature of this axis-aligned diagnostic log and
 directly-below Sphere source. Production placement, arbitrary pose, dynamic
 tracking, Point coexistence, PhysX sharing, 4/20-log performance, P3/P4,
 production integration, and default-on remain unqualified.
+
+## Frozen result
+
+The canonical Point-policy source-set boundary qualified before runtime. The
+actual producer-to-consumer fixture passed all 13 cases, the inherited atomic
+report fixture passed 15/15, and the generated-stage fixture passed 11/11. A
+formal-command prelaunch smoke reached
+`production_invariant_hash_complete` with zero Kit launches. The manifest is
+`3D0BD6CDBDA2FA0FEE38FA390EF65C1BD763EEEA80024F0ED6F96C688F51645D`;
+its ordered-entry digest is
+`283C59CB4C559D0437BD0CBA7F66FCC02712365C81D2AFEDCAF0E03BFCB4740A`.
+
+The fresh formal root then stopped on its first and only OFF launch. Kit's
+actual `--exec` environment could load the wrapper path but could not import
+`phase6hx_probe_source`; stderr records `ModuleNotFoundError` before any probe
+operation or lifecycle marker. The canonical operation report is therefore
+absent. The guard later reached its absolute bound, collected bounded shutdown
+evidence, and removed the exact attempt tree. ON was not launched. No active
+blocks, capture, occupancy metric, human visual result, or video exists.
+
+This is `safe_stop_kit_import_harness_failure`, not Flow, CollisionProxy,
+resource, rendering, or occlusion evidence. Kit/tree peaks were
+9,129,500,672/9,319,284,736 bytes, below the frozen 16/17 GiB limits; the
+observed physical/commit minima stayed above 8 GiB. Fatal, device-loss, TDR,
+dump, automatic upload, and final residual counts were zero. Phase 6HW remains
+unchanged and is not reclassified.
+
+A future separately approved phase may change only the deterministic Kit
+`--exec` import boundary, qualify an app-ready exact-wrapper smoke, and then
+use another empty root. It must not reuse this runtime attempt. Production,
+defaults, Point policy, wood authority, V3, public scene, and latest demo were
+not changed.

@@ -4510,6 +4510,20 @@ frames, numerical gates, replacement budget, 16/17 GiB limits, lifecycle order,
 CDB, and cleanup remain identical to Phase 6GL. Numerical 9/9 qualification is
 required before any comparison video; production integration remains excluded.
 
+# Phase 6HX
+
+- Replaced the nonexistent single-file Point invariant with a versioned,
+  ordered 13-file production source-set manifest. The actual producer,
+  serializer, bounded reader, and parent validator passed 13/13 no-Kit cases;
+  atomic/stage fixtures passed 15/15 and 11/11.
+- Froze the first formal OFF attempt as
+  `safe_stop_kit_import_harness_failure`. Kit `--exec` could not import
+  `phase6hx_probe_source`, so no operation, Flow, capture, occupancy, or
+  lifecycle result was claimed and ON was not launched.
+- Resource limits held and exact cleanup left residual zero. Production,
+  defaults, Point policy, wood authority, V3, public scene, and latest demo are
+  unchanged. Phase 6HW remains frozen at `16f1e6c`.
+
 # Phase 6GM export-aligned comparison safe stop
 
 Phase 6GMのpre-Kit gateはすべて合格した。float32 source 16/16、geometry

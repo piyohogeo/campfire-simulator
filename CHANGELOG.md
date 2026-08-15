@@ -1776,6 +1776,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   completed, all six accessors remained at zero calls, stage close completed,
   and exact cleanup left no residual process. Phase 6GR is not qualified.
 
+# Phase 6HX
+
+- Qualified a 13-entry, versioned canonical Point-policy source-set manifest
+  through the actual no-Kit producer-to-consumer path. Atomic and stage
+  fixtures also passed, and the formal prelaunch marker completed with zero
+  Kit launches.
+- Safely stopped the first fresh OFF process at the Kit exact-probe import
+  boundary (`ModuleNotFoundError: phase6hx_probe_source`). ON was not launched;
+  no Flow, active-block, image, occupancy, or occlusion result was claimed.
+- Kept the 16/17 GiB limits, exact cleanup, and Phase 6HW history unchanged.
+  Final residual was zero, and production/defaults/Point policy/V3/latest demo
+  were not changed.
+
 # Phase 6HM
 
 - Froze Phase 6HL at `f1f5578` and added a new process-tree contract that

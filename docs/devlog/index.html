@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6hw">最新記録</a>
+        <a href="#phase-6hx">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6hw">Phase 6HWの結果を読む</a>
+        <a class="button primary" href="#phase-6hx">Phase 6HXの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6HW · pre-Kit harness safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6HX · Kit import harness safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,16 @@
   </header>
 
   <main>
+    <section id="phase-6hx" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6HX canonical Point invariant and Kit import safe stop"><span class="phase-number compact">6HX</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6HX · canonical Point source set</p><h2>The production invariant is qualified;<br>the exact Kit wrapper import is not.</h2><p>The real 13-file Point-policy source set passed all 13 producer-to-consumer fixtures. Atomic report 15/15, generated stage 11/11, and the formal prelaunch command also passed before the new empty runtime root was opened.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Confirmed harness boundary</p><h3>OFF stopped before the probe operation.</h3><p>The first and only Kit launch failed to import <code>phase6hx_probe_source</code> from its actual <code>--exec</code> environment. No operation marker, active-block value, capture, occupancy metric, or visual judgment exists. ON was not launched and no retry was made.</p></section><section class="note"><p class="note-label">Safety and history</p><h3>Resource gates held; cleanup ended at zero.</h3><p>Kit/tree peaks were 9,129,500,672 / 9,319,284,736 bytes. The exact attempt tree was removed; fatal, device loss, TDR, dump, upload, and final residual counts were zero. Phase 6HW remains its original <code>safe_stop_pre_kit_harness_failure</code>.</p></section></div>
+          <section class="note next"><p class="note-label">Next approval boundary</p><h3>Fixture the exact app-ready wrapper import only.</h3><p>A future independent Phase may make the Kit <code>--exec</code> module path deterministic, require an app-ready exact-wrapper smoke, and then use another new root. Production, defaults, Point policy, wood authority, V3, public scene, and latest demo remain unchanged.</p><p><a href="assets/phase6/phase6hx_point_invariant_and_import_safe_stop.json">machine report</a> · <a href="../design/phase6hx_point_invariant_and_single_log_occlusion_contract.md">design and result</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>no Flow capture or comparison video was created</small></span></button></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6hw" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6HW single-log end-on pre-Kit safe stop"><span class="phase-number compact">6HW</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>
