@@ -1,0 +1,84 @@
+{
+  "schema": "campfire.phase6hq.cleanup-assisted-app-ready-and-proxy-contract.v1",
+  "phase": "phase6hq",
+  "baseline_commit": "92dfe5a",
+  "purpose": "Use one canonical guard/parent lifecycle evaluator, allow only one exact attempt-owned Omniverse telemetry transmitter cleanup, then qualify a fresh app-ready smoke and at most one one-proxy boundary.",
+  "frozen_history": {
+    "phase6hp_commit": "92dfe5a",
+    "reclassified": false,
+    "artifact_modified": false,
+    "artifact_reused_as_runtime": false
+  },
+  "accepted_classifications": [
+    "natural_clean_exit",
+    "cleanup_assisted_exit"
+  ],
+  "telemetry_basename": "omni.telemetry.transmitter.exe",
+  "telemetry_path_suffix": "omni.telemetry.transmitter/omni.telemetry.transmitter.exe",
+  "telemetry_extension_prefix": "omni.kit.telemetry-",
+  "telemetry_extension_store_root": "C:/Users/junic/AppData/Local/ov/data/exts/v2",
+  "maximum_cleanup_assisted_helpers": 1,
+  "base_module_contract_sha256": "BEE59EA12B8AAA074D863F2ABB8AA28FA21718682637734E89A8CFEF0A8E15B0",
+  "smoke": {
+    "lexical_build_paths": true,
+    "junction_aware_gate": true,
+    "stage_created": false,
+    "flow_interface_calls": 0,
+    "readback_calls": 0,
+    "launches": 1,
+    "retry": 0,
+    "replacement": 0
+  },
+  "proxy_scope": {
+    "path": "/World/Logs/Log_00/FlowCollisionProxy",
+    "count": 1,
+    "default": "off",
+    "timeline": "stopped",
+    "viewport_updates": 30,
+    "flow_interface_calls": 1,
+    "readback_calls": 0,
+    "dynamic_transform": false,
+    "occlusion": false,
+    "physx_sharing": false
+  },
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 17179869184,
+    "diagnostic_private_limit_bytes": 536870912,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "available_physical_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "outer_timeout_seconds": 420,
+    "sample_seconds": 0.25,
+    "simultaneous_kit_processes": 1
+  },
+  "fail_closed": [
+    "operation or shutdown incomplete",
+    "Kit or runner exit nonzero",
+    "resource artifact identity or lifecycle gate failure",
+    "telemetry helper count not exactly zero or one",
+    "non-telemetry residual",
+    "unknown identity or PID reuse",
+    "parent chain or attempt ownership mismatch",
+    "cleanup evidence missing duplicate or contradictory",
+    "post-cleanup residual",
+    "fatal native exception dump upload device loss or TDR"
+  ],
+  "production_changes": false,
+  "out_of_scope": [
+    "Phase 6HP modification or reclassification",
+    "NanoVDB readback",
+    "Point policy",
+    "wood authority",
+    "V3",
+    "USD publication",
+    "Flow input",
+    "dynamic transforms",
+    "occlusion",
+    "PhysX sharing",
+    "20-log performance",
+    "production integration",
+    "video"
+  ]
+}
