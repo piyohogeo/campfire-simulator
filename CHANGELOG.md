@@ -1,5 +1,14 @@
 # Changelog
 
+- Added Phase 6HQ while preserving Phase 6HP. A single canonical lifecycle
+  evaluator now classifies natural, telemetry-only assisted, and failed cleanup
+  identically in the guard and parent; its no-Kit producer-to-consumer fixture
+  passed 22/22. One fresh smoke completed app-ready, operation, shutdown, and
+  Kit exit 0, but exact cleanup found telemetry plus `nvngx_update.exe` and its
+  `conhost.exe`. Both guard and parent returned `cleanup_failure`; final
+  residual was zero and the proxy was not launched. Production, defaults,
+  Point policy, wood authority, V3, and latest demo remain unchanged.
+
 - Added Phase 6HP without changing frozen Phase 6HO. The read-only
   junction-aware validator and exact-command no-Kit fixture passed 23/23,
   accepting only the declared build `campfire` junction and rejecting external,

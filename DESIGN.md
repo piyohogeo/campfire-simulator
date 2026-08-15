@@ -162,6 +162,23 @@ started. Production, defaults, Point policy, wood authority, V3, and latest
 demo remain unchanged. Details:
 `docs/design/phase6hp_junction_aware_app_ready_safe_stop.md`.
 
+## Phase 6HQ canonical lifecycle classification and safe stop
+
+Phase 6HP remains frozen at `92dfe5a`. Phase 6HQ gives the guard and parent one
+shared evaluator for `natural_clean_exit`, the narrowly allowed single
+telemetry-helper `cleanup_assisted_exit`, and fail-closed `cleanup_failure`.
+The no-Kit producer-to-consumer fixture passed 22/22 with identical guard and
+parent results.
+
+One fresh smoke passed app-ready, extension/import/junction gates, operation,
+shutdown, and Kit exit code 0. Exact cleanup then found three attempt-owned
+survivors: telemetry, `nvngx_update.exe`, and its `conhost.exe`. Because the
+assisted contract permits only one telemetry helper, both evaluator consumers
+returned `cleanup_failure`. Cleanup removed those exact identities and final
+residual was zero. No proxy root, stage, Flow call, viewport update, or readback
+was started. Production and defaults remain unchanged. Details:
+`docs/design/phase6hq_canonical_lifecycle_safe_stop.md`.
+
 # Phase 6HF velocity ROI-sampling lifecycle isolation (frozen before runtime)
 
 Phase 6HE remains an immutable lifecycle safe stop. Phase 6HF rebuilds V5 in

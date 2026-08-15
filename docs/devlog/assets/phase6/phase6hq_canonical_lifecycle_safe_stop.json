@@ -1,0 +1,105 @@
+{
+  "schema": "campfire.phase6hq.canonical-lifecycle-safe-stop.v1",
+  "phase": "phase6hq",
+  "status": "safe_stop_app_ready_cleanup_failure",
+  "baseline_commit": "92dfe5a",
+  "implementation_commit": "076daa1",
+  "contract_sha256": "E14A19A7B68E02792D54DB7757A4EB444362F11391023C3319ABE052507C0477",
+  "frozen_history": {
+    "phase6hp_reclassified": false,
+    "phase6hp_artifact_modified": false,
+    "phase6hp_runtime_reused": false
+  },
+  "canonical_fixture": {
+    "status": "qualified",
+    "root": "artifacts/phase6hq-lifecycle-preflight-20260815",
+    "cases": "22/22",
+    "focused_tests": "4/4",
+    "guard_parent_classification_identical": true,
+    "kit_launches": 0
+  },
+  "app_ready_smoke": {
+    "root": "artifacts/phase6hq-app-ready-smoke-20260815",
+    "launches": 1,
+    "retry_count": 0,
+    "replacement_count": 0,
+    "app_ready": true,
+    "dependency_solver_pass": true,
+    "required_extensions_enabled": true,
+    "extension_manager_acquired": true,
+    "imports_pass": true,
+    "junction_gate_pass": true,
+    "operation_complete": true,
+    "shutdown_complete": true,
+    "kit_exit_code": 0,
+    "guard_classification": "cleanup_failure",
+    "parent_classification": "cleanup_failure",
+    "classification_reason": "only_zero_or_one_telemetry_residual_allowed",
+    "natural_clean_exit": false,
+    "cleanup_assisted_exit": false,
+    "cleanup_intervention": true,
+    "killed_pids": [23364, 9544, 10608],
+    "cleanup_processes": [
+      {"pid": 23364, "basename": "conhost.exe", "parent_pid": 9544},
+      {"pid": 9544, "basename": "nvngx_update.exe", "parent_pid": 28816},
+      {"pid": 10608, "basename": "omni.telemetry.transmitter.exe", "parent_pid": 28816}
+    ],
+    "exact_cleanup_all_absent": true,
+    "final_residual_processes": 0
+  },
+  "proxy_boundary": {
+    "launches": 0,
+    "artifact_root_created": false,
+    "stage_created": false,
+    "proxy_prim_created": false,
+    "viewport_updates": 0,
+    "flow_interface_calls": 0,
+    "readback_calls": 0,
+    "coexistence_measured": false,
+    "classification": "unqualified"
+  },
+  "resource": {
+    "peak_private_bytes": {
+      "runner": 97116160,
+      "kit": 7129280512,
+      "diagnostic": 17084416,
+      "child": 61546496,
+      "unique_tree": 7574065152
+    },
+    "headroom_bytes": {
+      "kit_to_16_gib": 10050588672,
+      "tree_to_17_gib": 10679545856
+    },
+    "minimum_available_physical_bytes": 86075592704,
+    "minimum_commit_headroom_bytes": 105805922304
+  },
+  "safety": {
+    "fatal_or_native_exception_count": 0,
+    "dump_count": 0,
+    "automatic_upload_count": 0,
+    "device_loss_or_tdr_count": 0,
+    "final_residual_processes": 0
+  },
+  "production": {
+    "code_changed": false,
+    "defaults_changed": false,
+    "point_policy_changed": false,
+    "wood_authority_changed": false,
+    "v3_changed": false,
+    "latest_demo_changed": false,
+    "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "production_scene_sha256": "B6DA1D182DD69A918CEF26CFCD8A3AD4BEBA202E774292B48C4FDBF4A666616C",
+    "wood_authority_sha256": "D65F720AD640949A313A627D44B68BA10E28032F6E1FEAFC7A04566F1ACAF260",
+    "v3_sha256": "8B7C3CB9081224F29003C82F8E29801CC7A856DE8740AEAC20D4E25796C10FAE",
+    "latest_demo_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285"
+  },
+  "regression": {
+    "python_compilation": "passed",
+    "release_build": "passed in 7.90 seconds",
+    "standard_suite": "8/8 processes, 78/78 tests passed",
+    "devlog_validation": "passed; refs=547 ids=320 json=273 svg=177 zip=2",
+    "phase0_rtx": "not run: production, USD generation, renderer, authority, and Flow input unchanged; proxy not launched",
+    "phase3": "not run: wood authority and Flow input unchanged"
+  },
+  "next_approval": "Decide in a separate Phase whether to keep telemetry-only cleanup assistance or predeclare and fixture a distinct NGX-helper-tree policy; use a fresh smoke root before any proxy launch."
+}
