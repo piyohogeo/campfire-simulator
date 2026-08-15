@@ -1,5 +1,15 @@
 # Changelog
 
+- Added Phase 6IE while retaining Phase 6ID at `b761a4a` as its original
+  live-stage Prim-set safe stop. The exact bounded runtime-Prim policy passed
+  26/26 fixtures plus inherited gates and observed the same 14 runtime paths
+  in one fresh Kit smoke. It rejected in-memory root-layer opinions and two
+  changed authored Prim records, then shutdown encountered RTX fatal/device
+  loss and no natural Kit exit. Stage close/shutdown markers completed,
+  resource limits held, and exact cleanup left residual zero. No Flow
+  simulation or OFF/ON comparison ran; production and defaults remain
+  unchanged.
+
 - Added Phase 6ID while retaining Phase 6IC at `832fd81` as its original
   stage-attribute safe stop. A canonical binary32/ULP `float3` comparator and
   bounded evidence passed 22/22 fixtures plus inherited 18/18, 12/12, 13/13,

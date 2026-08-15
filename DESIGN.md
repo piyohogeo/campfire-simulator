@@ -4771,3 +4771,22 @@ only; the complete live-stage attribute gate and OFF/ON comparison remain
 unqualified. Production, defaults, Point policy, V3, public scene, and latest
 demo remain unchanged. See
 `docs/design/phase6id_float3_stage_validation_safe_stop.md`.
+
+# Phase 6IE bounded runtime Prim policy safe stop
+
+Phase 6ID remains frozen at `b761a4a`. Phase 6IE predeclares exact path, type,
+parent, depth, session-layer, category, population, protected-subtree, and
+root-integrity rules for the 14 Kit runtime Prims observed by Phase 6ID. Its
+producer-to-consumer policy fixture passed 26/26, with inherited float3,
+dependency, loader, Point-policy, and atomic-report gates unchanged.
+
+The sole fresh Kit stage-open smoke observed the same 14 paths with no unknown
+Prim or protected conflict, but failed closed because ten runtime entries had
+root-layer opinions outside the session-only contract and the authored records
+for `/World/Flow/Simulate` and `nanoVdbExport` changed. The root file hash
+itself remained unchanged. Error cleanup reached stage close and
+`shutdown_complete`; RTX fatal/device loss then prevented natural exit, two
+bounded dump artifacts were retained, and exact cleanup ended at residual
+zero. Phase 6IE does not qualify the policy or OFF/ON comparison. Production,
+defaults, Point policy, V3, public scene, and latest demo remain unchanged. See
+`docs/design/phase6ie_bounded_runtime_prim_policy_safe_stop.md`.
