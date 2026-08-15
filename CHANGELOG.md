@@ -1,5 +1,12 @@
 # Changelog
 
+- Froze Phase 6HB as a first-condition harness-classification safe stop. Its A
+  process completed one seven-handle readback, release, stage close,
+  `shutdown_complete`, natural exit 0, resource gates, and exact cleanup, but
+  the parent required the operation-complete event in a different durable
+  marker channel than the probe used. The no-retry rule blocked B--F; no
+  Candidate lifecycle difference or temperature failure was inferred.
+
 - Added the frozen Phase 6HB temperature-free Candidate lifecycle isolation
   contract. Source auditing removed redundant stage/payload, collector
   construction, ownership, and shutdown-order conditions because Phase 6GS

@@ -17,6 +17,21 @@ read, sampling, and collector use is forbidden. Each condition runs once; the
 first operation, lifecycle, resource, or cleanup failure stops the ladder.
 Detailed contract: `docs/design/phase6hb_candidate_lifecycle_contract.md`.
 
+## Phase 6HB result
+
+The no-Kit contract fixture passed 28/28. The sole A process then completed the
+allowed readback and ordered release with weak residual zero, closed the stage
+in 4.1460752 seconds, reached `shutdown_complete`, exited naturally with code
+0, passed every resource/cleanup gate, and left no process or NanoVDB residual.
+However, the frozen parent classifier required
+`phase6hb_operation_complete` in the resource-marker JSONL while the probe had
+durably written it only to the bounded operation report. It therefore emitted
+an `operation_failure` despite the separately retained operation report and
+normal-exit evidence. The first-condition fail-closed rule prevented B--F from
+starting. Phase 6HB is frozen as a harness-classification safe stop; A is not a
+qualified ladder sample and no Candidate element was isolated. Details:
+`docs/design/phase6hb_candidate_lifecycle_safe_stop.md`.
+
 # Phase 6HA temperature volume boundary (frozen before runtime)
 
 Phase 6GZ remains frozen and supplies no runtime sample to Phase 6HA. A fresh
