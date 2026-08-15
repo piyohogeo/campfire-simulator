@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "campfire.phase6hs.proxy-operation-report.v1",
+  "title": "Phase 6HS canonical proxy operation report",
+  "type": "object",
+  "required": [
+    "schema", "schema_sha256", "producer_version", "phase", "attempt_id",
+    "status", "operation_complete", "stage_close_complete",
+    "shutdown_complete", "last_marker", "kit_exit_code", "readback_calls",
+    "marker_sha256", "contract_sha256", "report_sha256"
+  ],
+  "properties": {
+    "schema": {"const": "campfire.phase6hs.proxy-operation-report.v1"},
+    "schema_sha256": {"type": "string"},
+    "producer_version": {"const": "phase6hs-operation-report-producer-v1"},
+    "phase": {"const": "phase6hs"},
+    "attempt_id": {"type": "string", "minLength": 1},
+    "status": {"const": "qualified"},
+    "operation_complete": {"const": true},
+    "stage_close_complete": {"const": true},
+    "shutdown_complete": {"const": true},
+    "last_marker": {"const": "shutdown_complete"},
+    "kit_exit_code": {"const": 0},
+    "readback_calls": {"const": 0},
+    "marker_sha256": {"type": "string"},
+    "contract_sha256": {"type": "string"},
+    "report_sha256": {"type": "string"}
+  },
+  "additionalProperties": true
+}

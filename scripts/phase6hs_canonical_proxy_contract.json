@@ -1,0 +1,50 @@
+{
+  "schema": "campfire.phase6hs.canonical-one-proxy-contract.v1",
+  "phase": "phase6hs",
+  "baseline_commit": "f3bca01",
+  "purpose": "Qualify one canonical marker-derived proxy operation report, then remeasure one unchanged default-off production-hierarchy proxy boundary.",
+  "frozen_history": {"phase6hr_commit": "f3bca01", "reclassified": false, "artifact_modified": false, "runtime_reused": false},
+  "operation_report": {
+    "schema": "campfire.phase6hs.proxy-operation-report.v1",
+    "schema_sha256": "5664B84A498D81FF2A53B793AF246F853F8C9912030DB7A1086959317DD7A393",
+    "producer_version": "phase6hs-operation-report-producer-v1",
+    "maximum_bytes": 1048576,
+    "marker_maximum_bytes": 1048576,
+    "source_of_truth": "durable JSONL markers",
+    "completion_markers": ["operation_complete", "stage_close_complete", "shutdown_complete"],
+    "completion_marker_attempt_identity_required": true,
+    "last_marker": "shutdown_complete",
+    "atomic_fsync": true,
+    "legacy_schema_accepted": false
+  },
+  "accepted_classifications": ["natural_clean_exit", "cleanup_assisted_telemetry_exit", "cleanup_assisted_ngx_exit"],
+  "telemetry_basename": "omni.telemetry.transmitter.exe",
+  "telemetry_path_suffix": "omni.telemetry.transmitter/omni.telemetry.transmitter.exe",
+  "telemetry_extension_prefix": "omni.kit.telemetry-",
+  "telemetry_extension_store_root": "C:/Users/junic/AppData/Local/ov/data/exts/v2",
+  "maximum_telemetry_helpers": 1,
+  "ngx_updater_basename": "nvngx_update.exe",
+  "ngx_driverstore_path_regex": "c:\\\\windows\\\\system32\\\\driverstore\\\\filerepository\\\\nv_dispig\\.inf_amd64_[0-9a-f]+\\\\nvngx_update\\.exe",
+  "conhost_exact_path": "C:/Windows/System32/conhost.exe",
+  "maximum_ngx_updaters": 1,
+  "maximum_ngx_conhosts": 1,
+  "maximum_ngx_trees": 1,
+  "authenticode_policy": "record when exposed by bounded identity API; explicit unavailability is permitted; explicit mismatch is rejected",
+  "proxy_scope": {
+    "path": "/World/Logs/Log_00/FlowCollisionProxy", "count": 1, "default": "off", "timeline": "stopped",
+    "vertices": 26, "faces": 36, "indices": 120, "outward_winding": true, "degenerate_faces": 0,
+    "viewport_updates": 30, "flow_interface_calls": 1, "readback_calls": 0,
+    "post_close_updates": 4, "dynamic_transform": false, "occlusion": false, "physx_sharing": false
+  },
+  "safety": {
+    "runner_private_limit_bytes": 536870912, "kit_private_limit_bytes": 17179869184,
+    "diagnostic_private_limit_bytes": 536870912, "unique_tree_private_limit_bytes": 18253611008,
+    "available_physical_floor_bytes": 8589934592, "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180, "outer_timeout_seconds": 420, "sample_seconds": 0.25, "simultaneous_kit_processes": 1
+  },
+  "launches": 1,
+  "retry": 0,
+  "replacement": 0,
+  "production_changes": false,
+  "out_of_scope": ["Phase 6HR modification or reclassification", "Flow occlusion measurement", "timeline play", "dynamic transforms", "PhysX sharing", "Point Emitter coexistence", "4-log or 20-log performance", "production integration", "default-on", "V3", "NanoVDB", "image", "video"]
+}

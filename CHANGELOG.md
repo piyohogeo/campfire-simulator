@@ -1,5 +1,13 @@
 # Changelog
 
+- Added the Phase 6HS canonical proxy operation-report contract while keeping
+  Phase 6HR frozen. Durable attempt-bound JSONL markers now produce one atomic
+  top-level completion report; guard and parent use the same bounded validator
+  result. The no-Kit producer-to-consumer fixture qualified 42 operation and
+  five lifecycle cases, including natural, telemetry-assisted, and exact
+  NGX-assisted exits. No Kit runtime or production change is included in this
+  contract checkpoint.
+
 - Added Phase 6HR without changing Phase 6HQ. The exact NGX lifecycle
   producer-to-consumer fixture passed 32/32 and guard/parent results matched in
   classification, reason, allowed helper set, and killed PID set. A fresh

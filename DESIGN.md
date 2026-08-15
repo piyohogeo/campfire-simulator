@@ -199,6 +199,17 @@ is partial evidence only and the formal one-proxy boundary remains
 unqualified. Details:
 `docs/design/phase6hr_ngx_lifecycle_and_flow_proxy_safe_stop.md`.
 
+## Phase 6HS canonical proxy operation report (frozen before runtime)
+
+Phase 6HR remains an immutable safe stop at `f3bca01`. Phase 6HS makes durable
+JSONL completion markers the sole completion source, produces one atomic
+versioned top-level operation report after Kit exit, and has guard and parent
+consume the same bounded validator result. The no-Kit fixture passed all 42
+operation and five lifecycle cases without changing Phase 6HR artifacts. One
+fresh default-off proxy process is authorized only from a new root, with no
+retry or replacement. Details:
+`docs/design/phase6hs_canonical_proxy_report_contract.md`.
+
 # Phase 6HF velocity ROI-sampling lifecycle isolation (frozen before runtime)
 
 Phase 6HE remains an immutable lifecycle safe stop. Phase 6HF rebuilds V5 in
