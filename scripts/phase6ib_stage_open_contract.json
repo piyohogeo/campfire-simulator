@@ -1,0 +1,84 @@
+{
+  "schema": "campfire.phase6ib.stage-open-contract.v1",
+  "phase": "phase6ib",
+  "baseline_commit": "cfc4fd2",
+  "declared_before_runtime": true,
+  "purpose": "Qualify only registered-schema authoring, OpenUSD parsing, and one actual Kit OFF stage-open/close boundary; do not simulate Flow or restart OFF/ON visual comparison.",
+  "frozen_history": {
+    "phase6ia": {"commit": "cfc4fd2", "status": "safe_stop_runtime_stage_parse_harness_failure"},
+    "phase6hw": {"commit": "16f1e6c", "status": "safe_stop_pre_kit_harness_failure"},
+    "phase6hx": {"commit": "4d83948", "status": "safe_stop_kit_import_harness_failure"},
+    "phase6hy": {"commit": "40ff0e0", "status": "safe_stop_kit_import_smoke_marker_harness_failure"},
+    "phase6hz": {"commit": "67f0b9c", "status": "qualified"},
+    "reclassified": false,
+    "artifact_or_attempt_reused": false,
+    "threshold_roi_or_scene_changed": false
+  },
+  "frozen_probe_contract": {
+    "path": "scripts/phase6hx_single_log_occlusion_contract.json",
+    "sha256": "6278E6A6E66C348BFE104AB247A466EA0BE152DBD614903E2ADEF57DFCEB9098"
+  },
+  "sources": {
+    "loader": {"path": "scripts/phase6hz_exact_kit_import.py", "sha256": "A1A115E5DD6D4B99B95490665868A4E01754250D91FC45DC903662E31DB34126"},
+    "marker_contract": {"path": "scripts/phase6ib_marker_contract.py", "sha256": "B6E28872A378D57FE98D754E9DB630A8ABBE7338F9F65F0049288791D6842CF8"},
+    "authoring": {"path": "scripts/phase6ib_stage_authoring.py", "sha256": "3270EF2896817C3E22B41FCBCADBC7EF8FE25975D1AB057AFCC47D21E0094884"},
+    "probe_source": {"path": "scripts/phase6ib_stage_open_source.py", "sha256": "25080318B157E57A53C41CF177659FB8AD17A32FE5F3D1C118D957C000C276A1", "required_callables": ["start_smoke"]},
+    "wrapper": {"path": "scripts/probe_phase6ib_stage_open_smoke.py", "sha256": "C870FC2854DD18F22B08EE28AC32D44D5EEF682C5B804690F5F1AD7E076F83CB"}
+  },
+  "known_good_basis": {
+    "production_registered_schema_authoring": {"path": "source/extensions/campfire.app/campfire/app/flow_scene.py", "sha256": "305A8D5BCC0B34B0BD1211EE5C4F4924699D2E57217CD2142BD29D6958A2563D"},
+    "multiline_usda": {"path": "assets/scenes/phase1_flow.usda", "sha256": "F37B17B06F894EEF090E34CA2719CDE387B71678C7ADD282162BFB1AAF39045C"},
+    "confirmed_parser_boundary": "USDA property specs are newline-terminated in the known-good text. Phase 6IA put the closing brace on the same line as an attribute and also used semicolon-separated property specs. The parser stopped at the first closing brace after the attribute value.",
+    "selected_method": "pxr.Usd.Stage.CreateNew plus registered Flow prim schemas and their existing attributes; no hand-written positive USDA"
+  },
+  "parser_fixture": {
+    "positive_stages": ["collision_off", "collision_on"],
+    "negative_cases": ["legacy_inline", "missing", "duplicate", "type_mismatch", "nan", "unknown_schema"],
+    "maximum_stage_bytes": 1048576,
+    "one_variable": "/World/Flow/Simulate.physicsCollisionEnabled"
+  },
+  "smoke": {
+    "condition": "collision_off",
+    "launches": 1,
+    "retry": 0,
+    "replacement": 0,
+    "timeline_play_calls": 0,
+    "flow_interface_calls": 0,
+    "readback_calls": 0,
+    "capture_calls": 0,
+    "required_markers": [
+      "kit_launch", "kit_app_ready", "probe_import_complete",
+      "stage_generation_started", "stage_generation_complete",
+      "stage_parse_started", "stage_parse_complete", "stage_open_complete",
+      "required_prims_validated", "operation_complete", "stage_close_started",
+      "stage_close_complete", "shutdown_complete"
+    ]
+  },
+  "accepted_classifications": ["natural_clean_exit", "cleanup_assisted_telemetry_exit", "cleanup_assisted_ngx_exit"],
+  "telemetry_basename": "omni.telemetry.transmitter.exe",
+  "telemetry_path_suffix": "omni.telemetry.transmitter/omni.telemetry.transmitter.exe",
+  "telemetry_extension_prefix": "omni.kit.telemetry-",
+  "telemetry_extension_store_root": "C:/Users/junic/AppData/Local/ov/data/exts/v2",
+  "maximum_telemetry_helpers": 1,
+  "ngx_updater_basename": "nvngx_update.exe",
+  "ngx_driverstore_path_regex": "c:\\windows\\system32\\driverstore\\filerepository\\nv_dispig\\.inf_amd64_[0-9a-f]+\\nvngx_update\\.exe",
+  "conhost_exact_path": "C:/Windows/System32/conhost.exe",
+  "maximum_ngx_updaters": 1,
+  "maximum_ngx_conhosts": 1,
+  "maximum_ngx_trees": 1,
+  "authenticode_policy": "record when exposed by bounded identity API; explicit unavailability is permitted; explicit mismatch is rejected",
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 17179869184,
+    "diagnostic_private_limit_bytes": 536870912,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "available_physical_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "outer_timeout_seconds": 180,
+    "sample_seconds": 0.25,
+    "simultaneous_kit_processes": 1
+  },
+  "production_changed": false,
+  "out_of_scope": ["Flow simulation", "public Flow interface", "NanoVDB readback", "capture", "ROI or occupancy", "Collision OFF/ON runtime comparison", "dynamic transform", "PhysX sharing", "Point Emitter coexistence", "multiple poses", "four/twenty-log performance", "P3", "P4", "production integration", "default change", "V3", "latest demo update"]
+}
