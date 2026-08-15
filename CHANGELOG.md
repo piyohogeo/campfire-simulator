@@ -1,5 +1,15 @@
 # Changelog
 
+- Added Phase 6HV without changing frozen Phase 6HS/6HT/6HU. The no-Kit
+  preflight qualified the fixed OFF-then-ON contract, including atomic report
+  15/15 and generated-stage 11/11 fixtures. Two fresh processes differed only
+  in `physicsCollisionEnabled`; both passed Flow liveness, operation, stage
+  close, Kit exit 0, 16/17 GiB limits, and residual-zero cleanup. The fixed
+  visual hard gate stopped the comparison: ON/OFF direct changed-pixel and
+  mean-delta ratios were 1.295 and 1.020 versus maxima 0.75 and 0.85, and human
+  review was unclear. No occlusion or production qualification is claimed;
+  production/defaults/Point/V3/latest demo are unchanged.
+
 - Qualified Phase 6HU without changing frozen Phase 6HT. The actual no-Kit
   atomic producer-to-consumer fixture passed 15/15, reproduced WinError 5 from
   a no-delete-share destination reader, recovered only within the frozen

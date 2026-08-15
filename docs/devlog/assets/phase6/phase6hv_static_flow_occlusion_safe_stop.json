@@ -1,0 +1,129 @@
+{
+  "schema": "campfire.phase6hv.static-flow-occlusion-safe-stop.v1",
+  "phase": "phase6hv",
+  "status": "safe_stop_visual_gate",
+  "date": "2026-08-15",
+  "frozen_contract_sha256": "2778E597A4A7F951CEBCC30DD6E361B75FC0BEF633E6C5263357779BEABC18B6",
+  "history": {
+    "phase6hs_reclassified": false,
+    "phase6ht_reclassified": false,
+    "phase6hu_reclassified": false,
+    "phase6hu_runtime_reused": false
+  },
+  "preflight": {
+    "status": "qualified",
+    "kit_launch_count": 0,
+    "atomic_fixture": "15/15",
+    "generated_stage_fixture": "11/11"
+  },
+  "population": {
+    "order": [
+      "collision_off",
+      "collision_on"
+    ],
+    "fresh_processes": 2,
+    "retry_count": 0,
+    "replacement_count": 0,
+    "readback_calls": 0,
+    "stage_difference": "FlowSimulate.physicsCollisionEnabled only",
+    "normalized_common_stage_sha256": "5E8B0E1D102D19A78860896FBA04CEEF5040AA5B3D214F35D6A1149CEA3B81C0"
+  },
+  "conditions": {
+    "collision_off": {
+      "active_blocks_frames_60_120_180_240": [
+        193,
+        277,
+        215,
+        227
+      ],
+      "flow_liveness": true,
+      "kit_private_bytes_peak": 12124119040,
+      "unique_tree_private_bytes_peak": 12390694912,
+      "kit_ceiling_margin_bytes": 5055750144,
+      "tree_ceiling_margin_bytes": 5862916096,
+      "stage_close_seconds": 3.289894,
+      "operation_complete": true,
+      "shutdown_complete": true,
+      "kit_exit_code": 0,
+      "lifecycle_classification": "cleanup_assisted_telemetry_exit",
+      "residual_process_count": 0
+    },
+    "collision_on": {
+      "active_blocks_frames_60_120_180_240": [
+        237,
+        255,
+        240,
+        240
+      ],
+      "flow_liveness": true,
+      "kit_private_bytes_peak": 11952672768,
+      "unique_tree_private_bytes_peak": 12281868288,
+      "kit_ceiling_margin_bytes": 5227196416,
+      "tree_ceiling_margin_bytes": 5971742720,
+      "stage_close_seconds": 0.589655,
+      "operation_complete": true,
+      "shutdown_complete": true,
+      "kit_exit_code": 0,
+      "lifecycle_classification": "cleanup_assisted_telemetry_exit",
+      "residual_process_count": 0
+    }
+  },
+  "visual": {
+    "off_direct_path": {
+      "changed_pixels": 23205,
+      "mean_delta": 17.159171195652174,
+      "flow_color_pixels": 18412
+    },
+    "on_direct_path": {
+      "changed_pixels": 30049,
+      "mean_delta": 17.49411684782609,
+      "flow_color_pixels": 15172
+    },
+    "on_to_off_ratios": {
+      "direct_changed_pixels": 1.2949364361129068,
+      "direct_mean_delta": 1.0195199201846523,
+      "direct_flow_color_pixels": 0.8240278079513361
+    },
+    "fixed_maxima": {
+      "direct_changed_pixels": 0.75,
+      "direct_mean_delta": 0.85,
+      "direct_flow_color_pixels": 0.9
+    },
+    "background_control_changed_pixels": 0,
+    "automated_pass": false,
+    "human_review": "unclear",
+    "video_generated": false,
+    "reason": "direct-path suppression was not demonstrated by all frozen image gates or unambiguous human review"
+  },
+  "safety": {
+    "resource_pass": true,
+    "fatal": false,
+    "device_lost": false,
+    "tdr": false,
+    "dump": false,
+    "automatic_upload": false,
+    "cdb_started": false,
+    "cleanup_pass": true,
+    "final_residual_process_count": 0
+  },
+  "invariants": {
+    "production_changed": false,
+    "defaults_changed": false,
+    "point_policy_changed": false,
+    "v3_changed": false,
+    "public_scene_changed": false,
+    "wood_authority_changed": false,
+    "latest_demo_changed": false
+  },
+  "regression": {
+    "focused": "6/6 pass",
+    "python_compilation": "pass",
+    "release_build": "pass",
+    "standard_suite": "8 processes / 78 tests pass",
+    "phase0_rtx": "omitted: production/render path unchanged",
+    "phase3": "omitted: production USD/wood authority/Flow input unchanged",
+    "devlog_validation": "pass (refs=561 ids=325 json=278 svg=177 zip=2)"
+  },
+  "qualified_scope": null,
+  "next_boundary": "separately approve a predeclared phase-aligned static visual comparison; do not relax or reuse Phase 6HV"
+}

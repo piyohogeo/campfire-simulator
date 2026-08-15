@@ -57,3 +57,49 @@ conversion, NanoVDB files, sampling, directional flux, P3 comparison, dynamic
 transforms, PhysX sharing, Point policy, multiple proxies, 4/20-log
 performance, production integration, defaults, V3, and latest-demo updates are
 forbidden. Success stops after this two-process static boundary.
+
+## Frozen result
+
+The pre-Kit checkpoint qualified before runtime: the reused Phase 6HU atomic
+fixture passed 15/15, the freshly saved/reloaded OFF and ON stages passed 11/11,
+and the exact command, order, no-retry, no-readback, stage-digest, and invariant
+checks all passed. The immutable contract SHA-256 is
+`2778E597A4A7F951CEBCC30DD6E361B75FC0BEF633E6C5263357779BEABC18B6`.
+
+One fresh OFF process followed by one fresh ON process ran from
+`artifacts/phase6hv-static-flow-occlusion-20260815`. OFF active blocks were
+193/277/215/227; ON active blocks were 237/255/240/240. Both conditions
+therefore met their predeclared liveness gates. Their generated USD files had
+the same normalized common digest and a two-line diff containing only the
+`physicsCollisionEnabled` value. Readback count was zero.
+
+Both conditions qualified independently for functional operation, canonical
+reporting, resource limits, lifecycle, and exact cleanup. OFF/ON Kit peaks were
+12,124,119,040 / 11,952,672,768 bytes and unique-tree peaks were
+12,390,694,912 / 12,281,868,288 bytes. Stage close took 3.289894 / 0.589655
+seconds. Each reached `shutdown_complete`, returned Kit exit code 0, was
+classified `cleanup_assisted_telemetry_exit`, and ended with residual zero.
+There was no retry, replacement, CDB run, fatal, dump, device loss, TDR, or
+automatic upload.
+
+The occlusion comparison did not qualify. OFF direct-path changed pixels,
+mean delta, and Flow-color pixels were 23,205 / 17.159171 / 18,412. ON values
+were 30,049 / 17.494117 / 15,172. The resulting ON/OFF ratios were 1.294936,
+1.019520, and 0.824028: only the color-mask ratio passed its respective frozen
+0.90 maximum, while the first two exceeded 0.75 and 0.85. The background
+control remained exactly stable, and ON retained source-near and side/upper
+signals, but the fixed images do not show unambiguous direct suppression plus
+diversion. Human review is `unclear`; no comparison video was made because the
+numeric population failed first.
+
+Phase 6HV is frozen as `safe_stop_visual_gate`. This does not alter the Phase
+6HU representative OFF qualification and does not qualify CollisionProxy
+occlusion. A later Phase requires a separately approved, predeclared way to
+obtain phase-aligned visual evidence without relaxing these results or
+thresholds. Production sources, generated public scene, wood authority, Point
+policy, defaults, V3, and latest-demo hashes remained unchanged. Focused tests
+passed 6/6, Python compilation and Release build passed, and the standard suite
+passed all eight processes and 78 tests. Phase 0 RTX and Phase 3 were omitted
+because only default-off diagnostic harness code and evidence changed; no
+production, USD generation, render setting, wood authority, or Flow-input path
+changed.

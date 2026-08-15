@@ -255,6 +255,29 @@ comparison were not started. Production, defaults, Point policy, V3, wood
 authority, public scene, and latest demo remain unchanged. Details:
 `docs/design/phase6hu_atomic_report_visible_flow_contract.md`.
 
+## Phase 6HV static production-hierarchy Flow occlusion safe stop
+
+Phase 6HS, Phase 6HT, and Phase 6HU remain frozen at `fbbac6f`, `89ae109`,
+and `a380276`. Phase 6HV fixed a fresh OFF-then-ON, one-process-per-condition
+comparison before runtime. Both generated stages matched their exact SHA-256,
+shared the same normalized stage digest, and differed only in
+`FlowSimulate.physicsCollisionEnabled`. No Phase 6HU runtime sample was reused.
+
+Both fresh processes completed operation, stage close, shutdown, Kit exit 0,
+16/17 GiB resource gates, and exact residual-zero cleanup. OFF active blocks
+were 193/277/215/227 and ON active blocks were 237/255/240/240 at frames
+60/120/180/240, so the frozen Flow-liveness gates passed. The fixed image
+contract nevertheless failed closed: ON/OFF direct-path changed-pixel and
+mean-delta ratios were 1.294936 and 1.019520 versus maxima 0.75 and 0.85.
+The color-mask ratio passed at 0.824028, and background control remained
+unchanged, but human review could not distinguish unambiguous direct
+suppression plus side diversion or rise. Phase 6HV is therefore a visual-gate
+safe stop, not an occlusion qualification. Static multiple poses, dynamic
+transform following, PhysX sharing, Point coexistence, 4/20-log performance,
+production integration, defaults, V3, and latest demo remain unchanged and
+unqualified. Details:
+`docs/design/phase6hv_static_flow_occlusion_contract.md`.
+
 # Phase 6HF velocity ROI-sampling lifecycle isolation (frozen before runtime)
 
 Phase 6HE remains an immutable lifecycle safe stop. Phase 6HF rebuilds V5 in

@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6ht">最新記録</a>
+        <a href="#phase-6hv">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6hu">Phase 6HUの結果を読む</a>
+        <a class="button primary" href="#phase-6hv">Phase 6HVの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6HU · visible OFF baseline qualified</strong></div>
+        <div><span>現在地</span><strong>Phase 6HV · static occlusion visual-gate safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,17 @@
   </header>
 
   <main>
+    <section id="phase-6hv" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6HV static Flow occlusion visual-gate safe stop"><span class="phase-number compact">6HV</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6HV · fresh static Collision ON/OFF</p><h2>Both Flow runs were healthy;<br>the fixed visual contract did not prove occlusion.</h2><p>A no-Kit preflight passed the atomic 15/15 and generated-stage 11/11 fixtures. Two fresh processes then used the same production hierarchy, proxy, source, camera, timing, and capture points. Their USD diff contains only <code>physicsCollisionEnabled</code>; Phase 6HU runtime evidence was not reused.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Flow and lifecycle</p><h3>OFF and ON both completed cleanly.</h3><p>OFF active blocks were 193/277/215/227 and ON were 237/255/240/240 at frames 60/120/180/240. Both completed operation, stage close, shutdown, Kit exit 0, 16/17 GiB gates, and residual-zero cleanup. No readback, retry, replacement, CDB, fatal, dump, device loss, or TDR occurred.</p></section><section class="note"><p class="note-label">Fail-closed visual gate</p><h3>Direct suppression was not unambiguous.</h3><p>The ON/OFF direct changed-pixel and mean-delta ratios were 1.295 and 1.020, above frozen maxima 0.75 and 0.85. The color-mask ratio passed at 0.824 and the background stayed unchanged, but the paired images do not clearly distinguish blockage plus side diversion or rise. Human review is <code>unclear</code>.</p></section></div>
+          <figure class="capture-card wide"><a href="assets/phase6/phase6hv_static_occlusion_comparison.png"><img src="assets/phase6/phase6hv_static_occlusion_comparison.png" alt="Phase 6HVのCollision OFFとON最終画像を同じROIで並べた比較" loading="lazy"></a><figcaption><div><strong>Fresh OFF / ON comparison · fixed camera and ROIs</strong><span>Both fields are live; the required occlusion pattern is not visually decisive.</span></div></figcaption></figure>
+          <section class="note next"><p class="note-label">Safe boundary</p><h3>No static occlusion qualification is claimed.</h3><p>Phase 6HS and Phase 6HU remain qualified only for their original hierarchy/proxy and representative-OFF boundaries. Production, defaults, Point policy, V3, public scene, and latest demo are unchanged. Static multiple poses, dynamic transforms, PhysX sharing, Point coexistence, and 4/20-log performance remain unqualified. No comparison video was generated because the numeric hard gate failed first.</p><p><a href="assets/phase6/phase6hv_static_flow_occlusion_safe_stop.json">machine report</a> · <a href="../design/phase6hv_static_flow_occlusion_contract.md">design and result</a> · <a href="assets/phase6/phase6hv_static_occlusion_difference.png">difference image</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>diagnostic comparison only; latest demo unchanged</small></span></button></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6hu" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6HU atomic report and visible Flow baseline"><span class="phase-number compact">6HU</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">qualified</span></aside>
