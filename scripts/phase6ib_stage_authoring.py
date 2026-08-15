@@ -12,10 +12,24 @@ import json
 import math
 from pathlib import Path
 
-from phase6hw_stage_builder import topology
-
-
 SPEC_SCHEMA = "campfire.phase6ib.stage-spec.v1"
+_TOPOLOGY = None
+
+
+def configure_repository_dependencies(topology_callable) -> None:
+    """Inject the exact-loaded repository-local topology boundary once."""
+    global _TOPOLOGY
+    if not callable(topology_callable):
+        raise TypeError("topology_dependency_not_callable")
+    if _TOPOLOGY is not None and _TOPOLOGY is not topology_callable:
+        raise RuntimeError("topology_dependency_conflict")
+    _TOPOLOGY = topology_callable
+
+
+def _topology(length: float, radius: float):
+    if _TOPOLOGY is None:
+        raise RuntimeError("topology_dependency_not_configured")
+    return _TOPOLOGY(length, radius)
 CHANNELS = ("temperature", "fuel", "burn", "smoke", "velocity", "divergence")
 REQUIRED_PRIMS = {
     "/World": "Xform",
@@ -66,7 +80,7 @@ def stage_spec(frozen: dict, condition: str) -> dict:
     if condition not in states:
         raise ValueError("unknown_condition:" + condition)
     scene = frozen["fixed_scene"]
-    points, counts, indices = topology(scene["diagnostic_log_length_m"], scene["log_radius_m"])
+    points, counts, indices = _topology(scene["diagnostic_log_length_m"], scene["log_radius_m"])
     return {
         "schema": SPEC_SCHEMA,
         "condition": condition,
@@ -209,7 +223,7 @@ def author_stage(path: Path, frozen: dict, condition: str):
 
     log = UsdGeom.Xform.Define(stage, "/World/DiagnosticLog")
     log.AddTranslateOp().Set(Gf.Vec3d(*scene["log_center_m"]))
-    points, counts, indices = topology(scene["diagnostic_log_length_m"], scene["log_radius_m"])
+    points, counts, indices = _topology(scene["diagnostic_log_length_m"], scene["log_radius_m"])
     proxy = UsdGeom.Mesh.Define(stage, scene["proxy_path"])
     proxy.CreatePointsAttr([Gf.Vec3f(*point) for point in points])
     proxy.CreateFaceVertexCountsAttr(counts)

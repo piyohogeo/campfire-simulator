@@ -10,6 +10,9 @@ from pathlib import Path
 
 import phase6ib_marker_contract as markers
 import phase6ib_stage_authoring as authoring
+import phase6hw_stage_builder as stage_builder
+
+authoring.configure_repository_dependencies(stage_builder.topology)
 
 
 def _sha(path: Path) -> str: return hashlib.sha256(path.read_bytes()).hexdigest().upper()

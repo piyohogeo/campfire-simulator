@@ -19,10 +19,10 @@ def _sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest().upper()
 
 
-def start_smoke(authoring, emit, policy: dict, audit_path: Path, stage_root: Path, attempt_id: str) -> None:
+def start_smoke(authoring, atomic_report, emit, policy: dict, audit_path: Path, stage_root: Path, attempt_id: str) -> None:
     async def run() -> None:
         from pxr import Sdf, Usd
-        from phase6hu_atomic_report import atomic_write_json
+        atomic_write_json = atomic_report.atomic_write_json
 
         app = omni.kit.app.get_app()
         context = omni.usd.get_context()
