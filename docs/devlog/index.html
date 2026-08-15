@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6ia">Phase 6IAの結果を読む</a>
+        <a class="button primary" href="#phase-6ib">Phase 6IBの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6IA · stage-parse harness safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6IB · stage-authoring import safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,16 @@
   </header>
 
   <main>
+    <section id="phase-6ib" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6IB registered-schema stage-open safe stop"><span class="phase-number compact">6IB</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6IB · registered-schema stage authoring</p><h2>The parser defect is understood;<br>the actual smoke stopped one import earlier.</h2><p>The positive diagnostic builder now uses registered <code>pxr.Usd</code>/<code>UsdPhysics</code> authoring, and the no-Kit gates passed 23/23 + 12/12 + 13/13 + 15/15.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Confirmed parser cause</p><h3>The old property spec was not line-terminated.</h3><p>Phase 6IA put the temperature property and closing brace on one line; multi-property channels also used semicolons. The known-good Flow stage uses the same schema and value with newline-terminated property specs.</p></section><section class="note"><p class="note-label">First actual-Kit boundary</p><h3>Stage generation was never reached.</h3><p>One fresh Kit process reached app-ready, then the exact-loaded authoring module could not resolve <code>phase6hw_stage_builder</code>. No durable marker, stage, parser result, Flow work, image, or video was produced. Exact cleanup left residual zero.</p></section></div>
+          <section class="note next"><p class="note-label">Next approval boundary</p><h3>Qualify the authoring module dependency inside Kit, then repeat only stage-open.</h3><p>Phase 6IB is not a stage-open qualification and does not authorize OFF/ON. A new contract/root must first prove deterministic dependency loading and stage generate/parse/open/close. Production, defaults, Point policy, wood authority, V3, public scene, and latest demo remain unchanged.</p><p><a href="assets/phase6/phase6ib_stage_open_safe_stop.json">machine report</a> · <a href="../design/phase6ib_stage_open_safe_stop.md">design and result</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>no visual artifact was created in this stage-open-only Phase</small></span></button></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6ia" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6IA single-log occlusion stage-parse safe stop"><span class="phase-number compact">6IA</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>

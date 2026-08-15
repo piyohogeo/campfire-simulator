@@ -1,5 +1,17 @@
 # Changelog
 
+- Added Phase 6IB while retaining Phase 6IA at `cfc4fd2` as its original
+  stage-parser safe stop. The old diagnostic USDA placed property specs and a
+  closing brace on one line (and used semicolon-separated multi-properties),
+  unlike the newline-terminated known-good Flow stage. The new positive builder
+  uses registered `pxr.Usd`/`UsdPhysics` authoring; its no-Kit fixtures passed
+  23/23 plus inherited 12/12, 13/13, and 15/15 gates. The sole actual Kit smoke
+  then stopped before stage generation because the exact-loaded authoring
+  module could not resolve repository-local `phase6hw_stage_builder`. It timed
+  out without canonical markers, exact cleanup left residual zero, and no
+  parser/open, Flow, OFF/ON, image, or video work occurred. Production,
+  defaults, Point policy, V3, and latest demo remain unchanged.
+
 - Added Phase 6IA while retaining Phase 6HV through Phase 6HZ unchanged. The
   new no-Kit preflight passed 62/62 across exact import, marker, Point-policy,
   atomic-report, and generated-stage fixtures. The sole fresh Collision-OFF

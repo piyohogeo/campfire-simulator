@@ -4579,6 +4579,26 @@ created. Phase 6IA is `safe_stop_runtime_stage_parse_harness_failure`, not an
 occlusion result. Details:
 `docs/design/phase6ia_single_log_occlusion_safe_stop.md`.
 
+# Phase 6IB registered-schema stage-open safe stop
+
+Phase 6IA remains frozen and its runtime sample was not reused. Inspection of
+the failed artifact and the known-good Flow USDA confirmed that the diagnostic
+builder put property specs and the closing brace on the same line, with
+semicolon-separated properties on several channels. The known-good stage
+terminates each property spec with a newline. Phase 6IB therefore selected
+registered `pxr.Usd.Stage.CreateNew` and `UsdPhysics` authoring for the positive
+path; the old inline form is negative-fixture input only.
+
+The no-Kit Phase 6IB fixture passed 23/23, with inherited exact-loader 12/12,
+Point-policy 13/13, and atomic-report 15/15 gates. One fresh actual Kit smoke
+reached app-ready but failed before any durable marker or stage generation:
+the exact-loaded authoring module's ordinary import of repository-local
+`phase6hw_stage_builder` was not resolvable in Kit. The bounded attempt ended as
+`safe_stop_kit_stage_authoring_import_harness_failure`; no parser/open, stage
+close, Flow, readback, capture, or OFF/ON work occurred. Resources stayed below
+16/17 GiB and exact cleanup left residual zero. Details are in
+`docs/design/phase6ib_stage_open_safe_stop.md`.
+
 # Phase 6GM export-aligned comparison safe stop
 
 Phase 6GMのpre-Kit gateはすべて合格した。float32 source 16/16、geometry

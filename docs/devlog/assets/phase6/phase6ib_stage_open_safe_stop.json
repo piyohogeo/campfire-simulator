@@ -1,0 +1,62 @@
+{
+  "schema": "campfire.phase6ib.devlog-summary.v1",
+  "phase": "phase6ib",
+  "status": "safe_stop_kit_stage_authoring_import_harness_failure",
+  "date": "2026-08-15",
+  "implementation_commit": "b12c34c",
+  "contract_sha256": "A32560472007EEC87B28D35B6A11575CADB766261ACBDFBBA8B929071C4A9A32",
+  "phase6ia_frozen": true,
+  "phase6ia_reclassified": false,
+  "phase6ia_artifact_or_attempt_reused": false,
+  "parser_cause": {
+    "confirmed": true,
+    "rejected_form": "inline USDA property spec followed by a same-line closing brace; multi-property forms also used semicolon separators",
+    "known_good_difference": "property specs are newline-terminated before the closing brace",
+    "selected_positive_authoring": "pxr.Usd.Stage.CreateNew with registered Flow and UsdPhysics schemas",
+    "actual_kit_parser_reached": false
+  },
+  "preflight": {
+    "qualified_root": "artifacts/phase6ib-stage-open/preflight02",
+    "kit_launch_count": 0,
+    "phase6ib_fixture": [23, 23],
+    "exact_import_fixture": [12, 12],
+    "point_policy_fixture": [13, 13],
+    "atomic_report_fixture": [15, 15]
+  },
+  "runtime": {
+    "artifact_root": "artifacts/phase6ib-stage-open/runtime01",
+    "kit_launch_count": 1,
+    "retry_count": 0,
+    "replacement_count": 0,
+    "first_failure": "ModuleNotFoundError: No module named 'phase6hw_stage_builder'",
+    "last_durable_marker": null,
+    "stage_generated": false,
+    "stage_open_complete": false,
+    "stage_close_complete": false,
+    "shutdown_complete": false,
+    "kit_exit_code": null,
+    "lifecycle_classification": "safe_stop / canonical_evidence_missing",
+    "residual_process_count": 0
+  },
+  "resource_peaks_bytes": {
+    "runner": 94130176,
+    "kit": 9083842560,
+    "diagnostic": 16941056,
+    "unique_tree": 9266745344
+  },
+  "resource_margin_bytes": {
+    "kit_to_16_gib": 8096026624,
+    "unique_tree_to_17_gib": 8986865664
+  },
+  "fatal_count": 0,
+  "native_exception_count": 0,
+  "dump_count": 0,
+  "cdb_launch_count": 0,
+  "automatic_upload_count": 0,
+  "off_on_comparison_started": false,
+  "production_changed": false,
+  "defaults_changed": false,
+  "point_policy_changed": false,
+  "v3_changed": false,
+  "latest_demo_changed": false
+}
