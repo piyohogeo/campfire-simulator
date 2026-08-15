@@ -10,6 +10,7 @@ from pathlib import Path
 
 from phase6ho_app_ready_environment import deployment_descriptor, historical_audit, validate_deployment, write_json
 from phase6ho_process_tree_topology import APP, KIT, build_target, validate_target
+from phase6hl_guard_preflight import build_guard_command
 
 ROOT = Path(__file__).absolute().parents[1]
 
@@ -43,6 +44,11 @@ def main() -> int:
     cases.append({"name":"resolved_kit_rejected","status":"pass" if validate_target(resolved_target,"smoke")== (False,"kit_path_mismatch") else "fail","observed":validate_target(resolved_target,"smoke")})
     wrong_app=list(target);wrong_app[wrong_app.index("-AppPath")+1]=str(APP.resolve())
     cases.append({"name":"resolved_app_rejected","status":"pass" if validate_target(wrong_app,"smoke")== (False,"app_path_mismatch") else "fail","observed":validate_target(wrong_app,"smoke")})
+    guard_paths={"trace":root/"guard-shape-resource.jsonl","summary":root/"guard-shape-summary.json","child_stdout":root/"guard-shape.stdout.log","child_stderr":root/"guard-shape.stderr.log","cleanup":root/"guard-shape-cleanup.jsonl","lifecycle":paths["output"],"gpu":root/"guard-shape-gpu.csv"}
+    safety=json.loads(contract.read_text(encoding="utf-8"))["safety"]
+    guard_command=build_guard_command(Path(r"C:\Python38\python.exe"),ROOT/"scripts/phase6fu_resource_guard.py",guard_paths,target,attempt_id="phase6ho-shape",safety=safety,include_gpu=True)
+    guard_shape_ok=guard_command[-len(target):]==target and guard_command[guard_command.index("--") + 1:]==target
+    cases.append({"name":"actual_guard_builder_binding","status":"pass" if guard_shape_ok else "fail","target_preserved":guard_shape_ok,"kit_launch_count":0})
     status="pass" if digest==expected and all(row["status"]=="pass" for row in cases) and audit["confirmed_delta"]["phase6hn_kit_resolved_away_from_build"] and audit["confirmed_delta"]["phase6hn_app_resolved_away_from_build"] else "fail"
     summary={"schema":"campfire.phase6ho.preflight.v1","status":status,"contract_sha256":digest,"case_count":len(cases),"cases":cases,"kit_launch_count":0,"phase6hn_preserved":True,"root_reused":False,"audit_path":str(root/"environment_audit.json")}
     write_json(root/"summary.json",summary);return 0 if status=="pass" else 1

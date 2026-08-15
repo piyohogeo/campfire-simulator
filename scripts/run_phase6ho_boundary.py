@@ -32,7 +32,10 @@ def main()->int:
  write_json(attempt/"launch_contract.json",{"schema":"campfire.phase6ho.launch.v1","mode":a.mode,"target":target,"validation":[ok,reason],"lexical_paths_preserved":True,"cwd":str(ROOT)})
  if not ok: write_json(root/"summary.json",{"status":"safe_stop_pre_kit","reason":reason,"kit_launch_count":0});return 1
  safety=json.loads(contract.read_text(encoding="utf-8"))["safety"]
- command=build_guard_command(Path(r"C:\Python38\python.exe"),ROOT/"scripts/phase6fu_resource_guard.py",paths,target,"phase6ho-"+a.mode+"-attempt01",safety,True)
+ command=build_guard_command(
+  Path(r"C:\Python38\python.exe"), ROOT/"scripts/phase6fu_resource_guard.py", paths, target,
+  attempt_id="phase6ho-"+a.mode+"-attempt01", safety=safety, include_gpu=True,
+ )
  with (logs/"guard-launcher.stdout.log").open("wb",buffering=0) as out,(logs/"guard-launcher.stderr.log").open("wb",buffering=0) as err:
   proc=subprocess.Popen(command,cwd=ROOT,stdout=out,stderr=err,creationflags=getattr(subprocess,"CREATE_NO_WINDOW",0));guard_exit=proc.wait()
  guard=_read_bounded(paths["summary"]) if paths["summary"].is_file() else None;run=_read_bounded(paths["output"]) if paths["output"].is_file() else None;case=_read_bounded(paths["runner_evidence"]) if paths["runner_evidence"].is_file() else None
