@@ -1,0 +1,111 @@
+{
+  "schema": "campfire.phase6ho.app-ready-environment-safe-stop.v1",
+  "phase": "phase6ho",
+  "status": "safe_stop_app_ready_module_path_gate",
+  "baseline_commit": "8278141",
+  "implementation_commits": ["1e50072", "8025f4b"],
+  "contract_sha256": "91D9DD198579FEF7D4189436B72DA151022D6D9492641A2EE34F13ACE6EB0F65",
+  "frozen_history": {
+    "phase6hn_status": "safe_stop_kit_app_ready_dependency_environment",
+    "phase6hn_reclassified": false,
+    "phase6hn_artifact_reused": false,
+    "phase6hn_retry_count": 0
+  },
+  "audit": {
+    "status": "complete",
+    "confirmed_cause": "Path.resolve collapsed lexical build reparse points into mixed Packman/source roots",
+    "healthy_reference": "Phase 6FZ retained lexical _build deployment paths",
+    "registry_lock_count": 2,
+    "registry_lock_owner": "DESKTOP-8GNVAER\\junic",
+    "registry_lock_size_bytes": 0,
+    "current_competing_holder_evidence": false,
+    "phase6hn_write_denied_preserved": true,
+    "acl_or_cache_changed": false
+  },
+  "no_kit_fixture": {
+    "status": "qualified",
+    "root": "artifacts/phase6ho-app-ready-preflight-20260815-3",
+    "cases": "12/12",
+    "kit_launches": 0,
+    "actual_guard_command_tested": true,
+    "negative_cases_fail_closed": true
+  },
+  "app_ready_smoke": {
+    "root": "artifacts/phase6ho-app-ready-smoke-20260815-2",
+    "launches": 1,
+    "retry_count": 0,
+    "replacement_count": 0,
+    "lexical_build_paths_preserved": true,
+    "dependency_solver_pass": true,
+    "app_ready": true,
+    "extension_manager_acquired": true,
+    "anim_extension_registered_from_build_extscache": true,
+    "campfire_extension_registered_from_build_exts": true,
+    "campfire_import_succeeded": true,
+    "failure": "campfire_module_path_mismatch",
+    "failure_explanation": "resolved imported module file crossed the intentional nested build-extension junction into source",
+    "operation_complete": false,
+    "shutdown_complete": true,
+    "process_exit_code": 1,
+    "qualified_normal_exit": false,
+    "stage_created": false,
+    "flow_interface_calls": 0,
+    "proxy_prim_created": false,
+    "readback_calls": 0
+  },
+  "resource": {
+    "status": "pass",
+    "peak_private_bytes": {
+      "runner": 96129024,
+      "kit": 7367909376,
+      "diagnostic": 16916480,
+      "other_child": 62607360,
+      "unique_tree": 7813689344
+    },
+    "headroom_bytes": {
+      "runner_to_512_mib": 440741888,
+      "kit_to_16_gib": 9811959808,
+      "diagnostic_to_512_mib": 519954432,
+      "tree_to_17_gib": 10439921664
+    },
+    "minimum_available_physical_bytes": 86352715776,
+    "minimum_commit_headroom_bytes": 106030129152
+  },
+  "lifecycle_cleanup": {
+    "native_exception": false,
+    "dump_count": 0,
+    "automatic_upload_count": 0,
+    "device_loss_or_tdr_count": 0,
+    "cdb_attach_count": 0,
+    "exact_cleanup_pass": true,
+    "residual_processes": 0,
+    "nanovdb_residuals": 0
+  },
+  "production": {
+    "code_changed": false,
+    "defaults_changed": false,
+    "point_policy_changed": false,
+    "wood_authority_changed": false,
+    "v3_changed": false,
+    "latest_demo_changed": false,
+    "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "production_scene_sha256": "B6DA1D182DD69A918CEF26CFCD8A3AD4BEBA202E774292B48C4FDBF4A666616C",
+    "wood_authority_sha256": "D65F720AD640949A313A627D44B68BA10E28032F6E1FEAFC7A04566F1ACAF260",
+    "v3_sha256": "8B7C3CB9081224F29003C82F8E29801CC7A856DE8740AEAC20D4E25796C10FAE",
+    "latest_demo_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285"
+  },
+  "regression": {
+    "focused": "6/6 passed",
+    "python_compilation": "passed",
+    "release_build": "passed in 7.34 seconds",
+    "standard_suite": "8/8 processes, 78/78 tests passed in 322.5 seconds",
+    "devlog_validation": "passed; refs=543 ids=318 json=271 svg=177 zip=2",
+    "phase0_rtx": "not run: production, USD generation, rendering, authority, and Flow input unchanged; no stage created",
+    "phase3": "not run: wood authority and Flow input unchanged"
+  },
+  "proxy_boundary": {
+    "coexistence_measured": false,
+    "classification": "unqualified",
+    "next_approval": "Make the exact module-path gate nested-junction-aware in a new contract/root, rerun one app-ready smoke, and only on complete pass run the unchanged one-proxy boundary."
+  }
+}

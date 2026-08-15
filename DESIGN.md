@@ -123,6 +123,25 @@ CollisionProxy coexistence result. Production, defaults, Point policy, wood
 authority, V3, and latest demo are unchanged. Details:
 `docs/design/phase6hn_bounded_process_role_projection_and_flow_proxy_boundary.md`.
 
+## Phase 6HO exact app-ready deployment safe stop
+
+Phase 6HN remains frozen at `8278141`. A read-only comparison with healthy
+Phase 6FZ confirmed that Phase 6HN resolved build reparse points into mixed
+Packman/source launch roots; Phase 6HO instead preserves the lexical build
+deployment spelling through the unchanged Phase 6FZ/FU/FW process topology.
+The final no-Kit environment and exact-command fixture passed 12/12.
+
+One fresh smoke reached app-ready and loaded `omni.anim.curve.core` and
+`campfire.app` from the expected build extension roots. It then failed closed
+because the imported module-file path resolves through the intentional nested
+`campfire` junction into `source`, while the smoke required it to remain under
+the physical build root. No stage, Flow interface, proxy Prim, or readback was
+created. Resource gates and exact cleanup passed with residual zero. This is an
+app-ready diagnostic-path-gate safe stop, not a hierarchy-proxy result.
+Production, defaults, Point policy, wood authority, V3, and latest demo remain
+unchanged. Details:
+`docs/design/phase6ho_app_ready_environment_safe_stop.md`.
+
 # Phase 6HF velocity ROI-sampling lifecycle isolation (frozen before runtime)
 
 Phase 6HE remains an immutable lifecycle safe stop. Phase 6HF rebuilds V5 in

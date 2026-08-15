@@ -1,5 +1,16 @@
 # Changelog
 
+- Added Phase 6HO without changing frozen Phase 6HN. Read-only audit confirmed
+  that Phase 6HN resolved build-tree reparse points into mixed Packman/source
+  roots, while healthy Phase 6FZ retained lexical build deployment paths. The
+  final no-Kit environment/command fixture passed 12/12. One exact lexical-path
+  smoke then reached app-ready and loaded both `omni.anim.curve.core` and
+  `campfire.app` from build extension roots, but failed closed because its
+  module-file check rejected the intentional nested junction into source. No
+  stage, Flow interface, proxy, or readback ran; cleanup left residual zero.
+  The one-proxy hierarchy boundary remains unqualified, and production,
+  defaults, Point policy, wood authority, V3, and latest demo are unchanged.
+
 - Qualified the Phase 6HN bounded Phase 6FZ role projection and no-Kit fixture
   at 34/34 without relaxing the shared 1 MiB reader. The nine-attempt output is
   36,005 bytes under a fixed 128 KiB limit. One fresh formal Kit process then

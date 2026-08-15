@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6hm">最新記録</a>
+        <a href="#phase-6ho">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6hm">Phase 6HMの結果を読む</a>
+        <a class="button primary" href="#phase-6ho">Phase 6HOの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6HM · pre-Kit fixture harness safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6HO · app-ready path-gate safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,16 @@
   </header>
 
   <main>
+    <section id="phase-6ho" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6HO exact app-ready deployment safe stop"><span class="phase-number compact">6HO</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6HO · exact build deployment</p><h2>Lexical build paths restored app-ready;<br>an over-strict junction check stopped before stage creation.</h2><p>The healthy Phase 6FZ comparison confirmed that resolving build reparse points had mixed Packman and source roots in Phase 6HN. The final no-Kit environment and exact-command fixture passed 12/12 while keeping the frozen process topology and limits.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Confirmed boundary</p><h3>Local extension resolution works again.</h3><p>One fresh smoke registered and started <code>omni.anim.curve.core</code> from build <code>extscache</code> and <code>campfire.app</code> from build <code>exts</code>, reached app-ready, acquired the extension manager, and imported the application module.</p></section><section class="note"><p class="note-label">Fail-closed result</p><h3>The proxy was not launched.</h3><p>The module-file validator rejected the build extension's intentional nested junction into <code>source</code>. No stage, Flow interface, proxy Prim, or NanoVDB readback ran. Kit exited nonzero after durable shutdown; resource gates passed and exact cleanup left residual zero.</p></section></div>
+          <section class="note next"><p class="note-label">Next approval</p><h3>Qualify only the nested-junction-aware module path gate.</h3><p>Phase 6HN and Phase 6HO stay frozen. A future fresh contract may recognize the extension-manager build root plus its declared nested junction, rerun one app-ready smoke, and only on complete pass attempt the unchanged one-proxy boundary. Production, defaults, Point policy, wood authority, V3, and latest demo are unchanged; no new video exists.</p><p><a href="assets/phase6/phase6ho_app_ready_environment_safe_stop.json">machine report</a> · <a href="../design/phase6ho_app_ready_environment_safe_stop.md">design note</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>no visual operation reached; no new video</small></span></button></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6hn" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6HN bounded projection and Kit app-ready safe stop"><span class="phase-number compact">6HN</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>
