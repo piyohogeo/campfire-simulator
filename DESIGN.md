@@ -4524,6 +4524,20 @@ required before any comparison video; production integration remains excluded.
   defaults, Point policy, wood authority, V3, public scene, and latest demo are
   unchanged. Phase 6HW remains frozen at `16f1e6c`.
 
+# Phase 6HY exact Kit import smoke safe stop
+
+Phase 6HX remains frozen at `4d83948`. Phase 6HY introduced a SHA-bound,
+repository-rooted exact loader for the real Kit `--exec` wrapper. Its no-Kit
+exact-import fixture passed 12/12; inherited Point, atomic-report, and stage
+fixtures passed 13/13, 15/15, and 11/11. One fresh Kit smoke reached
+`kit_app_ready`, then stopped before resolver completion because its marker
+helper received `path` both positionally and as a payload key. Kit later hit
+the bounded 180-second guard timeout; 16/17 GiB gates passed and exact cleanup
+left residual zero. OFF/ON, Flow, captures, occupancy, and video were not
+started. This is a marker-harness safe stop, not import or occlusion evidence.
+Production/defaults/Point/V3/latest demo remain unchanged. Details:
+`docs/design/phase6hy_exact_kit_import_safe_stop.md`.
+
 # Phase 6GM export-aligned comparison safe stop
 
 Phase 6GMのpre-Kit gateはすべて合格した。float32 source 16/16、geometry

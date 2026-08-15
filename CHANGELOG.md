@@ -1,5 +1,14 @@
 # Changelog
 
+- Added Phase 6HY while keeping Phase 6HX frozen at `4d83948`. The new
+  repository-rooted exact Kit loader and no-Kit fixture passed 12/12; inherited
+  Point, atomic-report, and stage fixtures passed 13/13, 15/15, and 11/11. The
+  sole fresh app-ready smoke reached `kit_app_ready` but failed before resolver
+  completion because its marker helper received a conflicting `path` payload.
+  The bounded guard timed out, resource limits held, and exact cleanup ended at
+  residual zero. OFF/ON, Flow, images, occupancy, and video were not started.
+  Production/defaults/Point/V3/latest demo are unchanged.
+
 - Added the Phase 6HW single-log end-on diagnostic contract while retaining
   Phase 6HV as `safe_stop_visual_gate`. The no-Kit atomic and generated-stage
   fixtures passed 15/15 and 12/12, but the formal root stopped before Kit
