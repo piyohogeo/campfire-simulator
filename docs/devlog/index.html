@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6hd">最新記録</a>
+        <a href="#phase-6hf">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -27,14 +27,14 @@
       <h1>火が灯るまでの、<br><span>技術の記録。</span></h1>
       <p class="lede">物理的に意味のある焚き火シミュレーションを、検証可能な小さな段階に分けて育てています。ここでは実装だけでなく、画面、実測値、失敗、次の判断まで残します。</p>
       <div class="hero-actions">
-        <a class="button primary" href="#phase-6he">Phase 6HEの結果を読む</a>
+        <a class="button primary" href="#phase-6hf">Phase 6HFの結果を読む</a>
         <a class="button secondary" href="../../README.md">実行方法を見る</a>
       </div>
     </div>
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6HE · ROI sampling lifecycle safe stop</strong></div>
+        <div><span>現在地</span><strong>Phase 6HF · scene ROI lifecycle safe stop</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,16 @@
   </header>
 
   <main>
+    <section id="phase-6hf" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6HF velocity ROI lifecycle safe stop"><span class="phase-number compact">6HF</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6HF · velocity ROI prefix ladder</p><h2>The zero-ROI control exited normally;<br>one scene sample exposed the exit boundary.</h2><p>The 62/62 producer-to-consumer fixture passed. Fresh R0 completed normally. R1 completed exactly one existing <code>scene</code> sample and every operation and shutdown marker, but Kit did not exit naturally.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Exact boundary</p><h3>R0 passed; R1 stopped after shutdown.</h3><p>R1 retained the bounded sampling result through the unchanged operation report, deleted its allowlisted temporary file, released references with weak residual zero, closed the stage in 3.0257568 seconds, and reached durable <code>shutdown_complete</code>.</p></section><section class="note"><p class="note-label">Safety</p><h3>Operation passed; lifecycle failed separately.</h3><p>Maximum Kit/tree peaks were 15,199,580,160 / 15,363,514,368 bytes, leaving 1,980,289,024 / 2,890,096,640 bytes below the ceilings. Exact cleanup left process and NanoVDB residuals at zero.</p></section></div>
+          <section class="note next"><p class="note-label">Continuation roadmap</p><h3>Keep this as a candidate boundary, not a root-cause claim.</h3><p>R2--R5 were not launched. A state-dependent lifecycle event remains possible. Only a separately approved one-variable result-lifetime test would further separate sampling from retained-result lifetime; temperature, profile, collectors, formal comparison, and production remain blocked.</p><p><a href="assets/phase6/phase6hf_velocity_roi_lifecycle_safe_stop.json">machine report</a> · <a href="../design/phase6hf_velocity_roi_lifecycle_safe_stop.md">design note</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>internal lifecycle evidence; no new video</small></span></button></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6he" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6HE velocity sub-boundary lifecycle safe stop"><span class="phase-number compact">6HE</span><p><time datetime="2026-08-15">2026.08.15</time></p><span class="pill current">safe stop</span></aside>

@@ -10,6 +10,22 @@ condition runs once without retry/replacement and the first non-normal result
 stops the ladder. Details:
 `docs/design/phase6hf_velocity_roi_lifecycle_contract.md`.
 
+## Phase 6HF result
+
+The offline contract and producer-to-consumer fixture passed 62/62. Fresh R0
+rebuilt Phase 6HE V5 and completed operation, ordered release, stage close,
+durable `shutdown_complete`, natural exit code 0, resource gates, exact
+cleanup, and residual-zero checks. R1 added exactly the first existing ROI,
+`scene`. That single `_sample_grid()` call completed and its bounded result was
+retained by the unchanged operation-report path; temporary deletion, ordered
+release with weak residual zero, stage close, and `shutdown_complete` also
+completed. Kit then failed to exit naturally. Phase 6HF is frozen as a
+lifecycle safe stop; R2--R5 were not launched. The R0--R1 boundary is a
+one-shot candidate association, not a root-cause finding, and a probabilistic
+or state-dependent lifecycle event remains possible. Temperature, collector,
+and profile work remained zero. Details:
+`docs/design/phase6hf_velocity_roi_lifecycle_safe_stop.md`.
+
 # Phase 6HE velocity sub-boundary lifecycle isolation (frozen before runtime)
 
 Phase 6HD remains an immutable Candidate lifecycle safe stop. Read-only code

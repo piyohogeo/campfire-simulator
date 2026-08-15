@@ -1,5 +1,13 @@
 # Changelog
 
+- Froze Phase 6HF after R0 exited normally and R1 stopped only at natural OS
+  exit after adding the existing `scene` ROI sample. R1 completed sampling,
+  bounded result retention, temporary deletion, ordered release, stage close,
+  and durable `shutdown_complete`; exact cleanup left process and NanoVDB
+  residuals at zero. R2--R5 were not launched. The one-shot boundary is a
+  candidate association, not a root-cause claim or a retrospective change to
+  Phase 6HE.
+
 - Added the frozen-before-runtime Phase 6HF one-shot ROI-sampling ladder. It
   rebuilds Phase 6HE V5 in every fresh process and adds one fixed ROI at a
   time, preserves result retention and release order, and stops at the first
