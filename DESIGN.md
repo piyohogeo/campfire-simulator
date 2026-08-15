@@ -1,5 +1,18 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6HE velocity sub-boundary lifecycle isolation (frozen before runtime)
+
+Phase 6HD remains an immutable Candidate lifecycle safe stop. Read-only code
+audit fixed D's actual second velocity path as conversion, parameters/save,
+durability, file read, vector-grid access, bounded basic metadata, five ROI
+samples, scene profile, temporary deletion, then caller release. Phase 6HE
+rebuilds the qualified C prefix in every fresh process and adds exactly one of
+those boundaries from V0 through V7. The existing helper owns the staged
+diagnostic stops; its default call order remains equivalent to the `cefa061`
+source and V8 is unnecessary. Twenty-five canonical counters come from one
+shared integer-zero factory. Details:
+`docs/design/phase6he_velocity_lifecycle_contract.md`.
+
 # Phase 6HD canonical operation counters and lifecycle isolation (frozen before runtime)
 
 Phase 6HC remains an immutable canonical-report completeness safe stop. Phase

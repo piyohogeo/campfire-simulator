@@ -1,5 +1,12 @@
 # Changelog
 
+- Added the frozen-before-runtime Phase 6HE velocity sub-boundary contract.
+  The actual Phase 6HD D helper is split at conversion, save/durability,
+  file-read, vector/basic metadata, five-ROI sampling, and profile boundaries
+  without changing existing callers' default order. A shared 25-counter schema
+  drives runtime reports and the parent validator; the no-Kit producer-to-
+  consumer and `cefa061` call-order fixture passes before any fresh V0--V7 run.
+
 - Froze Phase 6HD after the one-shot lifecycle ladder passed A--C and stopped
   at D. D's added velocity save/sample/profile completed, references released,
   stage close completed, and `shutdown_complete` was durable, but Kit did not

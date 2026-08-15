@@ -1,0 +1,90 @@
+{
+  "schema": "campfire.phase6he.velocity-lifecycle-contract.v1",
+  "phase": "phase6he",
+  "base_commit": "cefa061",
+  "frozen_before_runtime": true,
+  "history": {
+    "phase6hd_frozen": true,
+    "phase6hd_reclassified": false,
+    "phase6hd_artifacts_reused": false
+  },
+  "condition_c_common_prefix": {
+    "readback_calls": 1,
+    "array_metadata_calls": 7,
+    "schema_slots": [1, 2, 3, 4, 5],
+    "schema_operations_per_slot": ["buffer_to_volume", "volume_metadata", "temporary_save", "typed_read"],
+    "temperature_schema_operations": 0,
+    "collector_operations": 0
+  },
+  "phase6hd_condition_d_actual_order": [
+    "buffer_to_volume",
+    "SaveVolumeParameters(kNanoVDBCodecNone)",
+    "save_volume",
+    "file durability poll",
+    "nanovdb.io.readGrid",
+    "vec3fGrid",
+    "voxelSize and activeVoxelCount",
+    "_sample_grid for scene/inter_log_gap/flame_rise/opposite_above/side_control",
+    "_profile_grid for scene at threshold 0.01",
+    "temporary file unlink",
+    "caller ordered alias/handle release"
+  ],
+  "ladder": [
+    {"name": "v0_condition_c_control", "mode": "V0", "stop_after": null, "adds": "none"},
+    {"name": "v1_velocity_alias_metadata", "mode": "V1", "stop_after": null, "adds": "velocity_alias_metadata"},
+    {"name": "v2_velocity_second_conversion", "mode": "V2", "stop_after": "conversion", "adds": "velocity_second_conversion"},
+    {"name": "v3_velocity_save_durable", "mode": "V3", "stop_after": "durability", "adds": "velocity_file_save_and_durability"},
+    {"name": "v4_velocity_file_read", "mode": "V4", "stop_after": "file_read", "adds": "velocity_file_read"},
+    {"name": "v5_velocity_vector_basic_metadata", "mode": "V5", "stop_after": "basic_metadata", "adds": "velocity_vector_grid_and_basic_metadata"},
+    {"name": "v6_velocity_roi_sampling", "mode": "V6", "stop_after": "roi_sampling", "adds": "five_roi_samples"},
+    {"name": "v7_velocity_profile", "mode": "V7", "stop_after": "profile", "adds": "scene_profile"}
+  ],
+  "v8": {
+    "scheduled": false,
+    "reason": "V7 uses the actual _save_and_sample implementation through its final applicable profile step; local ROI and collector branches are disabled exactly as in Phase 6HD D, and default-path order is checked offline"
+  },
+  "operation_evidence": {
+    "report_schema": "campfire.phase6he.operation-report.v1",
+    "counter_schema_source": "phase6he_operation_schema.COUNTER_KEYS",
+    "counter_factory": "phase6he_operation_schema.new_counter_values",
+    "runtime_report_producer": "phase6he_operation_schema.new_runtime_report",
+    "json_writer": "phase6he_operation_schema.write_operation_report",
+    "parent_reader_normalizer_validator": "phase6he_operation_schema.validate_operation_files",
+    "all_counters_start_as_explicit_integer_zero": true,
+    "legacy_name_policy": "fail_closed",
+    "unknown_key_policy": "call_count_unknown:<key>",
+    "missing_key_policy": "forbidden_call_missing:<key>",
+    "nonzero_forbidden_policy": "forbidden_call_nonzero:<key>",
+    "invalid_type_policy": "call_count_type_invalid:<key>"
+  },
+  "execution": {
+    "independent_process_per_condition": true,
+    "maximum_launches": 8,
+    "retries": 0,
+    "replacements": 0,
+    "stop_after_first_non_normal": true,
+    "simultaneous_kit": 1,
+    "inner_timeout_seconds": 900,
+    "outer_timeout_seconds": 1020
+  },
+  "prohibited": [
+    "spatial collector",
+    "temperature buffer_to_volume/metadata/save/typed-read/sampling/collector",
+    "new processing for any other channel",
+    "formal S93/S100/OFF comparison",
+    "video",
+    "production/default/Point/V3/P4 changes"
+  ],
+  "safety": {
+    "kit_private_limit_bytes": 17179869184,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "available_physical_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "temporary_file_allowlist": ["handle_1.nvdb", "handle_2.nvdb", "handle_3.nvdb", "handle_4.nvdb", "handle_5.nvdb", "p3_f0180_velocity.nvdb"],
+    "unknown_temporary_file_policy": "do_not_delete_and_fail_cleanup",
+    "exact_cleanup": "phase6fu_with_phase6fw_pid_reuse_policy"
+  }
+}

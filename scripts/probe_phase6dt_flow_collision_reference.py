@@ -719,19 +719,58 @@ def _save_and_sample(
     spatial_velocity_only: bool = False,
     frame: int | None = None,
     profile_threshold: float | None = None,
+    diagnostic_stop_after: str | None = None,
+    diagnostic_step_observer=None,
 ) -> dict:
+    """Save and sample one public field, with optional diagnostic stop points.
+
+    The default path is the frozen production-neutral diagnostic path.  The
+    optional stop/observer arguments expose that same call order to bounded
+    one-variable probes; no existing caller supplies them.
+    """
+
+    allowed_stops = {None, "conversion", "durability", "file_read", "basic_metadata", "roi_sampling", "profile"}
+    if diagnostic_stop_after not in allowed_stops:
+        raise ValueError(f"unsupported diagnostic stop point: {diagnostic_stop_after}")
+
+    def observe(name: str, **values) -> None:
+        if diagnostic_step_observer is not None:
+            diagnostic_step_observer(name, **values)
+
+    def delete_temporary() -> None:
+        observe("velocity_temporary_file_deletion_before", temporary_name=path.name)
+        path.unlink(missing_ok=True)
+        observe("velocity_temporary_file_deletion_after", temporary_name=path.name, exists=path.exists())
+
+    observe("velocity_second_conversion_before")
     grid_data = flow.buffer_to_volume(buffer)
+    observe("velocity_second_conversion_after", python_type=f"{type(grid_data).__module__}.{type(grid_data).__qualname__}")
+    if diagnostic_stop_after == "conversion":
+        return {"diagnostic_stop_after": "conversion"}
+
+    observe("velocity_save_parameters_before")
     parameters = omni.volume.SaveVolumeParameters()
     parameters.flags = omni.volume.kNanoVDBCodecNone
+    observe("velocity_save_parameters_after", codec="kNanoVDBCodecNone")
+    observe("velocity_file_save_before", temporary_name=path.name)
     if not volume.save_volume(grid_data, str(path), parameters):
         raise RuntimeError(f"Unable to save public readback: {path}")
+    observe("velocity_file_save_after", temporary_name=path.name)
+    observe("velocity_file_durability_check_before", temporary_name=path.name)
     deadline = time.monotonic() + 5.0
     while (not path.is_file() or path.stat().st_size == 0) and time.monotonic() < deadline:
         time.sleep(0.01)
     if not path.is_file() or path.stat().st_size == 0:
         raise RuntimeError(f"Public readback did not become durable within 5 s: {path}")
+    observe("velocity_file_durability_check_after", temporary_name=path.name, file_bytes=int(path.stat().st_size))
+    if diagnostic_stop_after == "durability":
+        file_bytes = int(path.stat().st_size)
+        delete_temporary()
+        return {"diagnostic_stop_after": "durability", "temporary_file_bytes": file_bytes}
+
     handle = None
     read_error = None
+    observe("velocity_file_read_before", temporary_name=path.name)
     deadline = time.monotonic() + 5.0
     while time.monotonic() < deadline:
         try:
@@ -742,16 +781,48 @@ def _save_and_sample(
             time.sleep(0.01)
     if handle is None:
         raise RuntimeError(f"Public readback was not readable within 5 s: {path}: {read_error}")
+    observe("velocity_file_read_after", python_type=f"{type(handle).__module__}.{type(handle).__qualname__}")
+    if diagnostic_stop_after == "file_read":
+        delete_temporary()
+        return {"diagnostic_stop_after": "file_read"}
+
     vector = channel == "velocity"
+    observe("velocity_vector_grid_access_before", vector=vector)
     grid = handle.vec3fGrid() if vector else handle.floatGrid()
+    observe("velocity_vector_grid_access_after", python_type=f"{type(grid).__module__}.{type(grid).__qualname__}")
+    observe("velocity_basic_metadata_before")
     voxel_size = grid.voxelSize()
+    active_voxel_count = int(grid.activeVoxelCount())
+    bounded_voxel_size = [_component(voxel_size, axis) for axis in range(3)]
+    observe(
+        "velocity_basic_metadata_after",
+        active_voxel_count=active_voxel_count,
+        voxel_size=bounded_voxel_size,
+    )
     result = {
-        "active_voxel_count": int(grid.activeVoxelCount()),
-        "voxel_size": [_component(voxel_size, axis) for axis in range(3)],
-        "rois": {name: _sample_grid(grid, roi, vector) for name, roi in rois.items()},
+        "active_voxel_count": active_voxel_count,
+        "voxel_size": bounded_voxel_size,
     }
+    if diagnostic_stop_after == "basic_metadata":
+        delete_temporary()
+        return result
+
+    result["rois"] = {}
+    for name, roi in rois.items():
+        observe("velocity_roi_sampling_before", roi=name)
+        result["rois"][name] = _sample_grid(grid, roi, vector)
+        observe("velocity_roi_sampling_after", roi=name)
+    if diagnostic_stop_after == "roi_sampling":
+        delete_temporary()
+        return result
+
     if profile_threshold is not None and "scene" in rois:
+        observe("velocity_profile_before", roi="scene", threshold=float(profile_threshold))
         result["field_profile"] = _profile_grid(grid, rois["scene"], vector, profile_threshold)
+        observe("velocity_profile_after", roi="scene", threshold=float(profile_threshold))
+    if diagnostic_stop_after == "profile":
+        delete_temporary()
+        return result
     if local_rois is not None and local_to_world is not None:
         result["local_rois"] = _sample_local_grid(grid, local_rois, local_to_world, vector)
         result["alignment_rois"] = _sample_alignment_grid(
@@ -768,7 +839,7 @@ def _save_and_sample(
         result["phase6ee_neighborhood"] = neighborhoods[0]
         if len(neighborhoods) > 1:
             result["phase6ee_additional_neighborhoods"] = neighborhoods[1:]
-    path.unlink(missing_ok=True)
+    delete_temporary()
     return result
 
 
