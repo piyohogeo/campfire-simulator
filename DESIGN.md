@@ -13,6 +13,18 @@ and lacks only natural OS exit after `shutdown_complete`. The replacement
 budget is one; all other failures stop immediately. Detailed contract:
 `docs/design/phase6ha_temperature_volume_contract.md`.
 
+## Phase 6HA result
+
+The no-Kit replacement fixture passed 27 cases. The original and sole allowed
+replacement each returned exactly one temperature `GridData`, performed zero
+new content/metadata/save/sampling work, released volume and all handles with
+weak residual zero, closed the stage in 7.7617377 / 4.6436064 seconds, reached
+durable `shutdown_complete`, and passed resource/exact-cleanup gates. Neither
+Kit process exited naturally. The replacement budget is exhausted, both
+attempts remain lifecycle-only failures, and the temperature boundary is not
+formally qualified. Phase 6GZ remains unchanged. Details:
+`docs/design/phase6ha_temperature_volume_safe_stop.md`.
+
 # Phase 6GZ post-readback boundary ladder (frozen before runtime)
 
 Phase 6GX and Phase 6GY remain frozen. Phase 6GY launch 23 is retained as

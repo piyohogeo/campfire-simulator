@@ -1,0 +1,93 @@
+{
+  "schema": "campfire.phase6ha.temperature-volume-safe-stop.v1",
+  "contract_sha256": "A6C6FB4625EB7B2EDF50502B287C3D5CE21D7BFE232E642543F644EE43C8051D",
+  "offline_fixture": {
+    "passed": true,
+    "cases": 27,
+    "kit_started": false
+  },
+  "phase6gz": {
+    "frozen": true,
+    "reclassified": false,
+    "runtime_sample_reused": false
+  },
+  "attempt_count": 2,
+  "replacement_count": 1,
+  "replacement_budget_exhausted": true,
+  "attempts": [
+    {
+      "attempt_id": "original",
+      "operation_result": "pass",
+      "lifecycle_result": "os_exit_timeout_after_shutdown_complete",
+      "replacement_classification": "replaceable_post_shutdown_os_exit_failure",
+      "temperature_buffer_to_volume_calls": 1,
+      "temperature_volume_python_type": "omni.volume._volume.GridData",
+      "forbidden_temperature_content_access_calls": 0,
+      "volume_weak_reference_alive_after_release": false,
+      "handle_weak_reference_alive_after_release_count": 0,
+      "last_operation_marker": "phase6ha_operation_complete",
+      "last_lifecycle_marker": "shutdown_complete",
+      "stage_close_seconds": 7.7617377,
+      "kit_peak_bytes": 15314292736,
+      "tree_peak_bytes": 15466680320,
+      "kit_limit_margin_bytes": 1865576448,
+      "tree_limit_margin_bytes": 2786930688,
+      "resource_pass": true,
+      "cleanup_pass": true,
+      "residual_process_count": 0
+    },
+    {
+      "attempt_id": "replacement01",
+      "operation_result": "pass",
+      "lifecycle_result": "os_exit_timeout_after_shutdown_complete",
+      "replacement_classification": "replaceable_post_shutdown_os_exit_failure",
+      "temperature_buffer_to_volume_calls": 1,
+      "temperature_volume_python_type": "omni.volume._volume.GridData",
+      "forbidden_temperature_content_access_calls": 0,
+      "volume_weak_reference_alive_after_release": false,
+      "handle_weak_reference_alive_after_release_count": 0,
+      "last_operation_marker": "phase6ha_operation_complete",
+      "last_lifecycle_marker": "shutdown_complete",
+      "stage_close_seconds": 4.6436064,
+      "kit_peak_bytes": 15210369024,
+      "tree_peak_bytes": 15362613248,
+      "kit_limit_margin_bytes": 1969500160,
+      "tree_limit_margin_bytes": 2890997760,
+      "resource_pass": true,
+      "cleanup_pass": true,
+      "residual_process_count": 0
+    }
+  ],
+  "diagnostic": {
+    "invoked_attempts": 2,
+    "stack_evidence": "partial_no_progress_timeout",
+    "module_pass_complete": true,
+    "explicit_detach_complete": true,
+    "full_dump_created": false
+  },
+  "status": "safe_stop",
+  "temperature_volume_boundary_qualified": false,
+  "operation_evidence_complete_attempts": 2,
+  "normal_exit_samples": 0,
+  "temperature_metadata_started": false,
+  "temperature_save_started": false,
+  "temperature_sampling_started": false,
+  "formal_population_started": false,
+  "regression": {
+    "release_build": "pass",
+    "focused_phase6ha": "27/27",
+    "focused_phase6gz": "42/42",
+    "devlog_static": {
+      "status": "pass",
+      "ids": 307,
+      "links": 540,
+      "json_files": 260
+    }
+  },
+  "production_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "latest_demo_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285",
+  "production_changed": false,
+  "latest_demo_changed": false,
+  "final_process_residual_count": 0,
+  "next_state": "await explicit approval; natural OS exit qualification remains unresolved"
+}

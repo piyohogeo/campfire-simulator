@@ -1,5 +1,14 @@
 # Changelog
 
+- Safely stopped Phase 6HA after the original and its sole contract-permitted
+  replacement both completed one temperature volume conversion, ordered
+  release, stage close, durable `shutdown_complete`, resource gates, and exact
+  cleanup, but neither exited naturally. Both attempts remain lifecycle-only
+  failures; no temperature metadata, save, sampling, formal comparison, video,
+  or production change followed. Release build, focused 27/27 and 42/42
+  fixtures, and static devlog validation passed; process/file residuals were
+  zero.
+
 - Added the Phase 6HA single-temperature-volume contract and fail-closed
   lifecycle-only replacement classifier. One replacement is permitted only
   when every operation, release, stage-close, resource, and cleanup gate passes
