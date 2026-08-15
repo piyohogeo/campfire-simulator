@@ -7,7 +7,10 @@ import copy
 import hashlib
 import json
 import os
+import time
 from pathlib import Path
+
+from phase6hu_atomic_report import BACKOFF_SECONDS, atomic_write_json as bounded_atomic_write_json
 
 
 REPORT_SCHEMA = "campfire.phase6hs.proxy-operation-report.v1"
@@ -39,11 +42,42 @@ def report_digest(report: dict) -> str:
 def read_bounded_json(path: Path, maximum_bytes: int = MAX_REPORT_BYTES) -> dict:
     if not path.is_file():
         raise ReportError("report_missing")
-    if path.stat().st_size > maximum_bytes:
-        raise ReportError("report_oversize")
+    lease = path.with_name(path.name + ".writer.lock")
+    data = None
+    last_error = None
+    for attempt in range(1 + len(BACKOFF_SECONDS)):
+        if lease.exists():
+            if attempt < len(BACKOFF_SECONDS):
+                time.sleep(BACKOFF_SECONDS[attempt])
+                continue
+            raise ReportError("report_writer_busy")
+        try:
+            with path.open("rb") as stream:
+                size = os.fstat(stream.fileno()).st_size
+                if size > maximum_bytes:
+                    raise ReportError("report_oversize")
+                if size <= 0:
+                    raise ReportError("report_json_invalid")
+                candidate = stream.read(maximum_bytes + 1)
+            if lease.exists():
+                if attempt < len(BACKOFF_SECONDS):
+                    time.sleep(BACKOFF_SECONDS[attempt])
+                    continue
+                raise ReportError("report_writer_busy")
+            data = candidate
+            break
+        except ReportError:
+            raise
+        except OSError as error:
+            last_error = error
+            if attempt < len(BACKOFF_SECONDS):
+                time.sleep(BACKOFF_SECONDS[attempt])
+                continue
+    if data is None:
+        raise ReportError("report_json_invalid") from last_error
     try:
-        value = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+        value = json.loads(data.decode("utf-8"))
+    except (UnicodeError, json.JSONDecodeError) as error:
         raise ReportError("report_json_invalid") from error
     if not isinstance(value, dict):
         raise ReportError("report_type_invalid")
@@ -97,13 +131,7 @@ def validate_marker_sequence(rows: list[dict], expected_attempt_id: str | None =
 
 
 def atomic_write_json(path: Path, payload: dict) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".partial")
-    with temporary.open("wb") as stream:
-        stream.write((json.dumps(payload, indent=2, sort_keys=True) + "\n").encode("utf-8"))
-        stream.flush()
-        os.fsync(stream.fileno())
-    os.replace(temporary, path)
+    bounded_atomic_write_json(path, payload)
 
 
 def produce_report(

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import copy
 import json
-import os
 from pathlib import Path
 
 import phase6eg_resource_guard as legacy
@@ -14,12 +13,11 @@ from phase6hq_resource_guard import cleanup_observed_exact
 from phase6hr_lifecycle_classification import build_evidence
 from phase6hs_lifecycle_classification import attach_evaluation, consume_guard_report
 from phase6hs_operation_report import sha256_bytes, validate_paths
+from phase6hu_atomic_report import atomic_write_json
 
 
 def _write(path: Path, payload: dict) -> None:
-    temporary = path.with_suffix(path.suffix + ".partial")
-    temporary.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
-    os.replace(temporary, path)
+    atomic_write_json(path, payload)
 
 
 def _read(path: Path) -> dict:
