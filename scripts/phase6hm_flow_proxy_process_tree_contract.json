@@ -1,0 +1,118 @@
+{
+  "schema": "campfire.phase6hm.flow-proxy-process-tree-contract.v1",
+  "phase": "phase6hm",
+  "baseline_commit": "f1f5578",
+  "purpose": "Restore only the Phase 6FZ-qualified guarded process topology, then rerun the unchanged default-off one-proxy hierarchy boundary once.",
+  "frozen_history": {
+    "phase6hl_commit": "f1f5578",
+    "phase6hl_status": "safe_stop_resource_role_harness_failure",
+    "phase6hl_reclassified": false,
+    "phase6hl_artifact_reused": false,
+    "same_artifact_root_reused": false
+  },
+  "process_topology": {
+    "guard_launcher": "C:\\Python38\\python.exe",
+    "guard_script": "scripts/phase6fu_resource_guard.py",
+    "guarded_root": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "case_runner": "scripts/run_phase6hm_flow_proxy_case.ps1",
+    "kit_child": "_build/windows-x86_64/release/kit/kit.exe",
+    "required_chain": ["guard", "runner", "kit"],
+    "role_basis": {
+      "guard": "diagnostic child outside the guarded tree",
+      "runner": "guarded root PID",
+      "kit": "non-root process named kit.exe",
+      "diagnostic": "CDB/WinDbg/nvidia-smi diagnostic name or qualified helper command"
+    },
+    "stdout_stderr": "direct-to-file streaming",
+    "exit_code_propagation": "Kit to PowerShell case runner to resource guard",
+    "tree_deduplication_key": ["pid", "create_time_utc_epoch"],
+    "classifier_change": false,
+    "implicit_interpreter_fallback": false,
+    "packman_python_used": false
+  },
+  "interpreter": {
+    "guard_executable": "C:\\Python38\\python.exe",
+    "guard_python_version": "3.8.3",
+    "guard_executable_sha256": "C46A75F0B283A14DA986C500E56D58FDD5FF80F4836CF605D2A50C0D810F2A6B",
+    "guard_script": "scripts/phase6fu_resource_guard.py",
+    "packman_environment_modified": false
+  },
+  "runtime_hashes": {
+    "phase6fu_resource_guard": "79C7C5B5E21E644EA344795FCE5D5D9AFD13C566E4F9A4E3B19E50CDFE02AC23",
+    "phase6fu_process_identity": "ECD95E4BB578FF886C5761F06C00B52E96CC83FAC0E76B671654A2B843BA89C4",
+    "phase6eg_resource_guard": "A16FA82606A4265093E88816540A0E293205AADC9A15FA11B7CA09C6B32CC45E",
+    "phase6fw_pid_reuse_policy": "625837617F7240F74E49A875B0895ACD06D0134FFA9ED13342C71E0F401E0DBA",
+    "phase6hl_guard_preflight": "9B26C2C0648166D425863152AD85650738D17D844811CAE4FBEB1E80117FCE4B",
+    "frozen_phase6hk_probe": "7CDBFD7DBC5076095BA0BF352EFD96FFDD56CB1678AF6F5E2B7AD8835D640EC1",
+    "isolated_kit_crash_safety": "DA050D03314A1FE768D681BC0B0595C5ECC8E5F3446459FAC9C750ECCB77922F",
+    "kit_shutdown_policy": "04EF194B8132C8C60C32307402ADD315552537CBB42DC03F17DDA999238C44CF",
+    "process_tree_topology": "300E0192B2AAD5326AF782261BCBA8086688F95AEBB08FE5119FDD4FC4B86B1F",
+    "process_role_fixture": "12F1F4C60E1BF0D384BD0BDCCC5C594F0AD930B66C097F10ED6A8E7224B4691E",
+    "process_role_fixture_child": "83EC20B1A35319B94EACBD845DA87D5FE71A9AD96969E213DD1F19E61BE42FA1",
+    "case_runner": "97A12B4F8C1D8EC7B9DE8E34BE44DB6B3AC9F7D49799AC5A53C1EE0F917CAE79",
+    "probe_wrapper": "12033E4C245DEDDEB11FE45D6000EE93491CDAB3FF1DB96EB8DD44810F14BF31"
+  },
+  "fixture": {
+    "kit_launch_count": 0,
+    "actual_guarded_root": "PowerShell",
+    "actual_mock_child": "C:\\Python38\\python.exe",
+    "synthetic_role_cases": ["kit", "diagnostic", "unknown-child", "root-runner"],
+    "required_negative_cases": ["direct-kit-root", "kit-path-mismatch", "summary-missing", "unknown-role"],
+    "required_residual_count": 0
+  },
+  "scope": {
+    "log_id": "Log_00",
+    "proxy_path": "/World/Logs/Log_00/FlowCollisionProxy",
+    "geometry": {"radius_m": 0.16, "length_m": 1.8, "segments": 12, "vertices": 26, "faces": 36, "indices": 120},
+    "collision_apis": ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI"],
+    "approximation": "convexDecomposition",
+    "visibility": "invisible",
+    "timeline": "stopped",
+    "renderer_updates": 30,
+    "readback_calls": 0,
+    "frozen_phase6hk_probe_sha256": "7CDBFD7DBC5076095BA0BF352EFD96FFDD56CB1678AF6F5E2B7AD8835D640EC1"
+  },
+  "hard_gates": {
+    "process_role_fixture_pass": true,
+    "powershell_root_runner": true,
+    "kit_child_role": true,
+    "runner_kit_accounting_separate": true,
+    "pid_creation_dedup": true,
+    "baseline_digest_unchanged_after_proxy_exclusion": true,
+    "only_added_prim": "/World/Logs/Log_00/FlowCollisionProxy",
+    "closed_outward_non_degenerate_mesh": true,
+    "root_collider_render_proxy_world_matrices_equal": true,
+    "point_payload_or_revision_changes": 0,
+    "readback_or_nanovdb_operations": 0,
+    "stage_open_and_renderer_updates_complete": true,
+    "stage_close_and_shutdown_complete": true,
+    "natural_kit_exit_code": 0,
+    "exact_cleanup": true,
+    "residual_processes": 0
+  },
+  "safety": {
+    "kit_private_limit_bytes": 17179869184,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "runner_private_limit_bytes": 536870912,
+    "diagnostic_private_limit_bytes": 536870912,
+    "available_physical_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "outer_timeout_seconds": 420,
+    "sample_seconds": 0.25,
+    "simultaneous_kit_processes": 1,
+    "retry_or_replacement": 0
+  },
+  "out_of_scope": [
+    "Phase 6HL reclassification or rerun",
+    "resource guard role-classifier redesign",
+    "Packman Python package installation",
+    "Flow occlusion or numerical correctness",
+    "dynamic transform consumption",
+    "PhysX use of the Mesh proxy",
+    "Point Emitter coexistence or Point supply policy",
+    "NanoVDB readback, conversion, save, reload, or sampling",
+    "20-log performance, production integration, defaults, V3, P4, P5, video, or latest demo"
+  ],
+  "stop_policy": "Fail closed at the first preflight, operation, resource, lifecycle, identity, cleanup, or artifact failure. Do not retry, replace, relax a limit, or reuse the root."
+}
