@@ -1,0 +1,92 @@
+{
+  "schema": "campfire.phase6hr.ngx-cleanup-assisted-proxy-contract.v1",
+  "phase": "phase6hr",
+  "baseline_commit": "faa7903",
+  "purpose": "Extend the single canonical Phase 6HQ guard/parent evaluator with one exact attempt-owned NGX updater/conhost tree, without reclassifying Phase 6HQ.",
+  "frozen_history": {
+    "phase6hq_commit": "faa7903",
+    "reclassified": false,
+    "artifact_modified": false,
+    "artifact_reused_as_runtime": false
+  },
+  "accepted_classifications": [
+    "natural_clean_exit",
+    "cleanup_assisted_telemetry_exit",
+    "cleanup_assisted_ngx_exit"
+  ],
+  "telemetry_basename": "omni.telemetry.transmitter.exe",
+  "telemetry_path_suffix": "omni.telemetry.transmitter/omni.telemetry.transmitter.exe",
+  "telemetry_extension_prefix": "omni.kit.telemetry-",
+  "telemetry_extension_store_root": "C:/Users/junic/AppData/Local/ov/data/exts/v2",
+  "maximum_telemetry_helpers": 1,
+  "ngx_updater_basename": "nvngx_update.exe",
+  "ngx_driverstore_path_regex": "c:\\\\windows\\\\system32\\\\driverstore\\\\filerepository\\\\nv_dispig\\.inf_amd64_[0-9a-f]+\\\\nvngx_update\\.exe",
+  "conhost_exact_path": "C:/Windows/System32/conhost.exe",
+  "maximum_ngx_updaters": 1,
+  "maximum_ngx_conhosts": 1,
+  "maximum_ngx_trees": 1,
+  "authenticode_policy": "record when exposed by bounded identity API; explicit unavailability is permitted; explicit mismatch is rejected",
+  "smoke": {
+    "lexical_build_paths": true,
+    "junction_aware_gate": true,
+    "stage_created": false,
+    "flow_interface_calls": 0,
+    "readback_calls": 0,
+    "launches": 1,
+    "retry": 0,
+    "replacement": 0
+  },
+  "proxy_scope": {
+    "path": "/World/Logs/Log_00/FlowCollisionProxy",
+    "count": 1,
+    "default": "off",
+    "timeline": "stopped",
+    "viewport_updates": 30,
+    "flow_interface_calls": 1,
+    "readback_calls": 0,
+    "dynamic_transform": false,
+    "occlusion": false,
+    "physx_sharing": false
+  },
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 17179869184,
+    "diagnostic_private_limit_bytes": 536870912,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "available_physical_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "outer_timeout_seconds": 420,
+    "sample_seconds": 0.25,
+    "simultaneous_kit_processes": 1
+  },
+  "fail_closed": [
+    "operation or shutdown incomplete",
+    "Kit or runner exit nonzero",
+    "resource artifact identity or lifecycle gate failure",
+    "telemetry helper count above one",
+    "NGX tree incomplete duplicated or above one",
+    "non-telemetry and non-NGX residual",
+    "unknown identity PID reuse or identity mismatch",
+    "parent chain path creation time or attempt ownership mismatch",
+    "cleanup evidence missing duplicate or contradictory",
+    "post-cleanup residual",
+    "fatal native exception dump upload device loss or TDR"
+  ],
+  "production_changes": false,
+  "out_of_scope": [
+    "Phase 6HQ modification reclassification or runtime reuse",
+    "NanoVDB readback",
+    "Point policy",
+    "wood authority",
+    "V3",
+    "USD publication",
+    "Flow input",
+    "dynamic transforms",
+    "occlusion",
+    "PhysX sharing",
+    "20-log performance",
+    "production integration",
+    "video"
+  ]
+}
