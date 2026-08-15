@@ -1,5 +1,13 @@
 # Changelog
 
+- Qualified the Phase 6HN bounded Phase 6FZ role projection and no-Kit fixture
+  at 34/34 without relaxing the shared 1 MiB reader. The nine-attempt output is
+  36,005 bytes under a fixed 128 KiB limit. One fresh formal Kit process then
+  stopped before its first probe marker because extension-registry lock access
+  and dependency resolution failed; no stage or Flow proxy operation was
+  measured. Resource gates and exact cleanup passed with residual zero. Phase
+  6HM remains frozen and production/defaults/Point/wood/V3/demo are unchanged.
+
 - Added Phase 6HL without changing frozen Phase 6HK. The exact
   `C:\Python38\python.exe`/psutil guard preflight passed all 9 cases and rejected
   Packman Python without modifying it. The sole formal Kit launch then stopped

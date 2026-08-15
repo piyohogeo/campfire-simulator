@@ -102,6 +102,27 @@ failure. This is `safe_stop_pre_kit_fixture_harness_failure`, not evidence for
 or against the proxy or process-role topology. Details:
 `docs/design/phase6hm_phase6fz_process_tree_flow_proxy_boundary.md`.
 
+## Phase 6HN bounded role projection and Kit app-ready safe stop
+
+Phase 6HM remains frozen at `d1dc873`. Phase 6HN keeps the 1 MiB shared reader
+unchanged and projects the 4,081,422-byte Phase 6FZ aggregate plus streamed
+resource traces into a 36,005-byte, nine-attempt role/identity document with a
+fixed 128 KiB maximum. The actual producer-to-consumer fixture passed 34/34,
+including missing, duplicate, oversize, invalid-type, and role-conflict
+fail-closed cases. PowerShell root, direct Kit child, diagnostic/unknown-child
+roles, PID/creation-time deduplication, PID-reuse protection, exit propagation,
+bounded file streaming, and residual zero are qualified.
+
+One fresh formal Kit process was then launched without retry. It failed before
+any probe marker: extension-registry lock permission errors caused dependency
+resolution failure and the executed probe could not import `campfire`. No
+stage, proxy Prim, viewport update, Flow interface, stage close, or shutdown
+operation was measured. Resource gates passed and exact cleanup left residual
+zero. This is a Kit app-ready/dependency-environment safe stop, not a Flow or
+CollisionProxy coexistence result. Production, defaults, Point policy, wood
+authority, V3, and latest demo are unchanged. Details:
+`docs/design/phase6hn_bounded_process_role_projection_and_flow_proxy_boundary.md`.
+
 # Phase 6HF velocity ROI-sampling lifecycle isolation (frozen before runtime)
 
 Phase 6HE remains an immutable lifecycle safe stop. Phase 6HF rebuilds V5 in
