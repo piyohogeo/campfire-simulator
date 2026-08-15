@@ -1,5 +1,12 @@
 # Changelog
 
+- Added the Phase 6HD single-source operation counter schema and producer-to-
+  consumer fixture. Fifteen canonical counters now come from one integer-zero
+  factory used by the runtime report and parent validator; explicit adapters at
+  the frozen implementation boundary do not leak legacy names into artifacts.
+  Missing, forbidden nonzero, invalid-type, and unknown counters are distinct
+  fail-closed classes before any Kit process may start.
+
 - Froze Phase 6HC at A as a canonical-report completeness safe stop. The new
   report was complete and correctly independent of an absent duplicate
   resource marker; operation, release, stage close, shutdown, natural exit,

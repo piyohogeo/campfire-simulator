@@ -1,5 +1,19 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6HD canonical operation counters and lifecycle isolation (frozen before runtime)
+
+Phase 6HC remains an immutable canonical-report completeness safe stop. Phase
+6HD centralizes all 15 operation counter names, integer-zero factory, runtime
+report producer, bounded writer, reader, normalizer, A--F expected counts, and
+validator in `phase6hd_operation_schema.py`. The runtime wrapper uses an
+explicit adapter only at the frozen Phase 6HB implementation boundary; legacy
+names are never serialized or accepted by the parent. Missing, nonzero
+forbidden, invalid-type, and unknown counters have separate fail-closed reasons.
+The producer-to-consumer fixture writes the actual producer output with the
+runtime writer and passes the resulting file unmodified to the parent
+validator. Detailed contract:
+`docs/design/phase6hd_operation_counter_contract.md`.
+
 # Phase 6HC canonical operation evidence and lifecycle isolation (frozen before runtime)
 
 Phase 6HB remains an immutable harness-classification safe stop. Phase 6HC
