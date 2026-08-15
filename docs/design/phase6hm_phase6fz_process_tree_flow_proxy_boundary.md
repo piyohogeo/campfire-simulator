@@ -67,3 +67,27 @@ retry or replacement and no limit is changed after seeing results.
 Flow occlusion, dynamic transforms, PhysX Mesh sharing, Point Emitter
 coexistence, 20-log performance, production/default integration, V3, P4, P5,
 video, and all NanoVDB operations remain out of scope.
+
+## Result: pre-Kit safe stop
+
+The static topology tests passed 7/7, but the first persisted no-Kit fixture
+stopped before it launched even its short-lived PowerShell/mock-child case. Its
+read-only Phase 6FZ audit tried to load the 4,081,422-byte qualification report
+through the reused 1 MiB bounded JSON reader and raised
+`bounded_json_oversize`. This is a fixture harness boundary, not a role,
+resource, lifecycle, or Flow proxy observation.
+
+The fixture root is retained and is not retried. Formal Kit launch count is
+zero, accepted runtime samples are zero, and the one-proxy hierarchy boundary
+remains unmeasured. Phase 6HL stays frozen with its original classification.
+No process was left by the failed preflight. A future separately approved Phase
+would need a deliberately bounded Phase 6FZ audit projection rather than
+loading its full aggregate report; Phase 6HM itself must not be repaired or
+rerun.
+
+Post-stop regression passed focused 7/7, Python compilation, Release build in
+11.678 seconds, the standard 8-process 78/78 suite in 365.300 seconds, and
+static devlog validation. Phase 0 RTX and Phase 3 were omitted because the
+formal boundary never launched and production sources, USD generation,
+rendering settings, wood authority, and Flow inputs are unchanged. Production
+app and latest-demo hashes remain `94162F82...F02A` and `1C6FB249...E6285`.

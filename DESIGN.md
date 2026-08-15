@@ -83,6 +83,25 @@ remain `94162F82...F02A` and `1C6FB249...E6285`. Phase 0 RTX and Phase 3 were
 omitted because production sources, USD generation, render settings, wood
 authority, and Flow inputs are unchanged.
 
+## Phase 6HM Phase 6FZ topology contract and pre-Kit fixture safe stop
+
+Phase 6HL remains frozen at `f1f5578` as
+`safe_stop_resource_role_harness_failure`. Phase 6HM restored the Phase
+6FZ-qualified command shape without changing the frozen resource classifier:
+`C:\Python38\python.exe` launches the Phase 6FU guard, whose root target is a
+small PowerShell case runner, and that runner receives the exact Kit child path.
+The contract keeps runner/diagnostic at 512 MiB, Kit at 16 GiB, the deduplicated
+tree at 17 GiB, and the existing 8 GiB machine floors.
+
+The static topology tests passed 7/7. The first no-Kit persisted fixture then
+stopped during its read-only Phase 6FZ audit: the 4,081,422-byte aggregate
+qualification report exceeded the reused 1 MiB bounded JSON reader. No mock
+child or Kit process was launched, and the formal hierarchy boundary remained
+unmeasured. The root was not reused and the bound was not changed after the
+failure. This is `safe_stop_pre_kit_fixture_harness_failure`, not evidence for
+or against the proxy or process-role topology. Details:
+`docs/design/phase6hm_phase6fz_process_tree_flow_proxy_boundary.md`.
+
 # Phase 6HF velocity ROI-sampling lifecycle isolation (frozen before runtime)
 
 Phase 6HE remains an immutable lifecycle safe stop. Phase 6HF rebuilds V5 in

@@ -1669,3 +1669,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   received a duplicate `channel` keyword. Readback and bounded source metadata
   completed, all six accessors remained at zero calls, stage close completed,
   and exact cleanup left no residual process. Phase 6GR is not qualified.
+
+# Phase 6HM
+
+- Froze Phase 6HL at `f1f5578` and added a new process-tree contract that
+  restores the Phase 6FZ guarded topology: `C:\Python38\python.exe` launches
+  the unchanged Phase 6FU guard, PowerShell is the guarded runner root, and Kit
+  is its explicitly transmitted child. The role classifier and 512 MiB / 16
+  GiB / 512 MiB / 17 GiB ceilings are unchanged.
+- Passed 7/7 static topology tests, then stopped the first persisted no-Kit
+  fixture before mock-child or Kit launch. The read-only Phase 6FZ aggregate
+  was 4,081,422 bytes and exceeded the reused 1 MiB bounded JSON reader.
+- Classified the result as `safe_stop_pre_kit_fixture_harness_failure`. The
+  fixture was not retried, the formal proxy boundary was not launched, and
+  Phase 6HL, production, defaults, Point policy, V3, and latest demo remain
+  unchanged.

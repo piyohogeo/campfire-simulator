@@ -1,0 +1,59 @@
+{
+  "schema": "campfire.phase6hm.process-tree-fixture-safe-stop.v1",
+  "phase": "phase6hm",
+  "status": "safe_stop_pre_kit_fixture_harness_failure",
+  "baseline_commit": "f1f5578",
+  "implementation_commit": "c42f620",
+  "contract_sha256": "0674F1315B4C965F64A995A76476FBE3CFB0C11DDB078008E8DCF9C1FA7320D4",
+  "phase6hl_status_preserved": "safe_stop_resource_role_harness_failure",
+  "phase6hl_reclassified": false,
+  "phase6hl_artifact_reused": false,
+  "phase6fz_audit_mode": "read-only",
+  "process_topology_implemented": [
+    "C:\\Python38\\python.exe",
+    "Phase 6FU resource guard",
+    "PowerShell case runner",
+    "Kit child"
+  ],
+  "classifier_changed": false,
+  "preflight": {
+    "static_topology_tests": "7/7 passed",
+    "persisted_fixture_status": "failed_before_mock_child_launch",
+    "failure_reason": "bounded_json_oversize",
+    "failure_source": "Phase 6FZ aggregate report",
+    "source_size_bytes": 4081422,
+    "reader_limit_bytes": 1048576,
+    "mock_child_launches": 0,
+    "kit_launches": 0,
+    "artifact_root_reused": false
+  },
+  "formal": {
+    "kit_launches": 0,
+    "accepted_runtime_samples": 0,
+    "proxy_boundary": "unmeasured",
+    "resource_result": "not_measured",
+    "lifecycle_result": "not_measured",
+    "os_exit_result": "not_measured",
+    "cleanup_result": "no_process_started",
+    "residual_processes": 0
+  },
+  "production_changed": false,
+  "defaults_changed": false,
+  "point_policy_changed": false,
+  "v3_changed": false,
+  "latest_demo_changed": false,
+  "production_app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+  "latest_demo_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285",
+  "regression": {
+    "focused": "7/7 passed",
+    "python_compilation": "passed",
+    "release_build": "passed in 11.678 seconds",
+    "standard_suite": "8/8 processes, 78/78 tests passed in 365.300 seconds",
+    "devlog_validation": "passed; refs=539 ids=316 json=269 svg=177 zip=2",
+    "phase0_rtx": "not run: production/USD/render settings unchanged and Phase 6HM formal Kit launch count is zero",
+    "phase3": "not run: wood authority and Flow inputs unchanged"
+  },
+  "final_residual_processes": 0,
+  "temporary_nanovdb_residuals": 0,
+  "next_approval": "Use a new Phase and root to emit a bounded Phase 6FZ audit projection before rerunning the no-Kit role fixture; do not repair or rerun Phase 6HM."
+}
