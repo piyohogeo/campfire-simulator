@@ -1,0 +1,41 @@
+{
+  "schema": "campfire.phase6hs.result-summary.v1",
+  "phase": "phase6hs",
+  "status": "qualified",
+  "implementation_commit": "8e6585b",
+  "contract_sha256": "8DA32B5CCCA6AD4539EC60494F52988BEA3D06D5E7D9E93DF35EB097B7F6CA93",
+  "operation_schema": {
+    "id": "campfire.phase6hs.proxy-operation-report.v1",
+    "sha256": "5664B84A498D81FF2A53B793AF246F853F8C9912030DB7A1086959317DD7A393",
+    "producer_version": "phase6hs-operation-report-producer-v1",
+    "marker_source_of_truth": true,
+    "guard_parent_same_validation": true
+  },
+  "fixture": {"status": "qualified", "operation_cases": "42/42", "lifecycle_cases": "5/5", "focused_tests": "5/5", "kit_launch_count": 0, "phase6hr_read_only": true, "legacy_schema_rejected": true},
+  "proxy": {
+    "launched": true, "launches": 1, "retry": 0, "replacement": 0,
+    "path": "/World/Logs/Log_00/FlowCollisionProxy", "only_proxy_prim_added": true,
+    "vertex_face_index_count": [26, 36, 120], "closed_outward_mesh": true, "degenerate_faces": 0,
+    "world_transform_matches_log": true, "timeline_playing": false, "renderer_updates": 30,
+    "flow_interface_calls": 1, "readback_calls": 0, "stage_close_seconds": 0.514881,
+    "completion": {"operation_complete": true, "stage_close_complete": true, "shutdown_complete": true, "last_marker": "shutdown_complete", "kit_exit_code": 0}
+  },
+  "lifecycle": {"classification": "cleanup_assisted_telemetry_exit", "natural_exit": false, "cleanup_intervention": true, "killed_pids": [15296], "fatal": 0, "dump": 0, "automatic_upload": 0, "device_loss_or_tdr": 0, "cdb_started": false, "residual_processes": 0},
+  "resources": {
+    "peaks_bytes": {"runner": 95580160, "kit": 10036449280, "diagnostic": 16891904, "child": 62763008, "tree": 10430550016},
+    "headroom_bytes": {"kit": 7143419904, "tree": 7823060992},
+    "minima_bytes": {"available_physical": 85067730944, "commit_headroom": 104803434496}
+  },
+  "regression": {"python_compilation": "pass", "phase6hs_focused": "5/5", "phase6hr_focused": "5/5", "release_build": "pass", "standard_suite": "8/8 processes, 78/78 tests", "static_devlog": "pass", "phase0_rtx": "omitted-production-render-path-unchanged", "phase3": "omitted-production-usd-wood-flow-input-unchanged"},
+  "production": {
+    "changed": false, "defaults_changed": false, "point_policy_changed": false, "v3_changed": false, "latest_demo_changed": false,
+    "app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "scene_sha256": "B6DA1D182DD69A918CEF26CFCD8A3AD4BEBA202E774292B48C4FDBF4A666616C",
+    "wood_authority_sha256": "D65F720AD640949A313A627D44B68BA10E28032F6E1FEAFC7A04566F1ACAF260",
+    "v3_sha256": "8B7C3CB9081224F29003C82F8E29801CC7A856DE8740AEAC20D4E25796C10FAE",
+    "latest_demo_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285"
+  },
+  "phase6hr": {"frozen": true, "reclassified": false, "artifact_modified": false, "runtime_reused": false},
+  "qualified_scope": "production hierarchy plus one default-off proxy, stopped timeline, 30 updates, one Flow-interface call, zero readbacks, lifecycle/resource/cleanup",
+  "next_requires_separate_approval": ["Flow occlusion", "timeline play", "dynamic transform", "PhysX sharing", "Point Emitter coexistence", "4/20-log performance", "production integration"]
+}

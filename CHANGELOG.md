@@ -7,6 +7,12 @@
   five lifecycle cases, including natural, telemetry-assisted, and exact
   NGX-assisted exits. No Kit runtime or production change is included in this
   contract checkpoint.
+  The subsequent fresh one-proxy process qualified: only the expected closed
+  proxy was added, 30 stopped-timeline updates and one public Flow-interface
+  acquisition completed with zero readbacks, all canonical completion evidence
+  agreed, and Kit exited 0. It is classified separately as
+  `cleanup_assisted_telemetry_exit`; exact cleanup left residual zero.
+  Production, defaults, Point policy, V3, and latest demo remain unchanged.
 
 - Added Phase 6HR without changing Phase 6HQ. The exact NGX lifecycle
   producer-to-consumer fixture passed 32/32 and guard/parent results matched in

@@ -210,6 +210,18 @@ fresh default-off proxy process is authorized only from a new root, with no
 retry or replacement. Details:
 `docs/design/phase6hs_canonical_proxy_report_contract.md`.
 
+## Phase 6HS result
+
+The 42-operation/5-lifecycle no-Kit fixture and the one fresh proxy process
+qualified. The fresh run added only the expected 26/36/120 closed proxy,
+completed the stopped-timeline 30-update/one-Flow/zero-readback boundary, and
+persisted mutually consistent operation, stage-close, and shutdown evidence.
+Kit exited code 0. The accepted classification was
+`cleanup_assisted_telemetry_exit`, not natural exit; exact cleanup removed one
+attempt-owned telemetry helper and ended at residual zero. Production,
+defaults, Point policy, V3, and latest demo remain unchanged. Details:
+`docs/design/phase6hs_canonical_proxy_report_qualification.md`.
+
 # Phase 6HF velocity ROI-sampling lifecycle isolation (frozen before runtime)
 
 Phase 6HE remains an immutable lifecycle safe stop. Phase 6HF rebuilds V5 in
