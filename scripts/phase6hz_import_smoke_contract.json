@@ -1,0 +1,111 @@
+{
+  "schema": "campfire.phase6hz.import-smoke-contract.v1",
+  "phase": "phase6hz",
+  "baseline_commit": "40ff0e0",
+  "declared_before_runtime": true,
+  "purpose": "Qualify only the reserved-key-safe marker boundary and exact Kit app-ready probe import; do not start Flow or the frozen OFF/ON probe.",
+  "frozen_history": {
+    "phase6hy_commit": "40ff0e0",
+    "phase6hy_status": "safe_stop_kit_import_smoke_marker_harness_failure",
+    "reclassified": false,
+    "artifact_or_root_reused": false,
+    "runtime_attempt_reused": false
+  },
+  "sources": {
+    "loader": {
+      "path": "scripts/phase6hz_exact_kit_import.py",
+      "sha256": "A1A115E5DD6D4B99B95490665868A4E01754250D91FC45DC903662E31DB34126"
+    },
+    "marker_contract": {
+      "path": "scripts/phase6hz_marker_contract.py",
+      "sha256": "3B621C3F886B4C4AC63FE57490EECC6F8DAEC8AB59037A74D986EE9AFEC3AA74"
+    },
+    "wrapper": {
+      "path": "scripts/probe_phase6hz_import_smoke.py",
+      "sha256": "D0FAF3880C01424211765394C527C0944B39C71B93B6ED9602621BD55862B730"
+    },
+    "probe_builder": {
+      "path": "scripts/phase6hy_probe_source.py",
+      "sha256": "4F373882C6BC8AAB14247E2B5A9916550444DC283947D5B3321FAA0F7A622B35",
+      "required_callables": ["build_probe_source"]
+    }
+  },
+  "marker_contract": {
+    "schema": "campfire.phase6hz.marker-contract.v1",
+    "helper_output_argument": "marker_file",
+    "payload_path_keys": ["resolved_path", "module_path", "expected_wrapper_path"],
+    "reserved_keys": ["marker", "timestamp_utc", "path", "marker_file", "event_name", "payload"],
+    "unknown_reserved_collision": "fail_closed",
+    "duplicate_value": "fail_closed",
+    "conflicting_value": "fail_closed"
+  },
+  "smoke": {
+    "launches": 1,
+    "retry": 0,
+    "replacement": 0,
+    "stage_created": false,
+    "flow_interface_calls": 0,
+    "readback_calls": 0,
+    "collision_proxy_created": false,
+    "capture_calls": 0,
+    "required_markers": [
+      "kit_launch",
+      "kit_app_ready",
+      "wrapper_resolution_started",
+      "wrapper_resolution_complete",
+      "probe_resolution_started",
+      "probe_resolution_complete",
+      "module_identity_validated",
+      "import_complete",
+      "required_callable_validated",
+      "operation_complete",
+      "shutdown_started",
+      "shutdown_complete"
+    ]
+  },
+  "accepted_classifications": [
+    "natural_clean_exit",
+    "cleanup_assisted_telemetry_exit",
+    "cleanup_assisted_ngx_exit"
+  ],
+  "telemetry_basename": "omni.telemetry.transmitter.exe",
+  "telemetry_path_suffix": "omni.telemetry.transmitter/omni.telemetry.transmitter.exe",
+  "telemetry_extension_prefix": "omni.kit.telemetry-",
+  "telemetry_extension_store_root": "C:/Users/junic/AppData/Local/ov/data/exts/v2",
+  "maximum_telemetry_helpers": 1,
+  "ngx_updater_basename": "nvngx_update.exe",
+  "ngx_driverstore_path_regex": "c:\\\\windows\\\\system32\\\\driverstore\\\\filerepository\\\\nv_dispig\\.inf_amd64_[0-9a-f]+\\\\nvngx_update\\.exe",
+  "conhost_exact_path": "C:/Windows/System32/conhost.exe",
+  "maximum_ngx_updaters": 1,
+  "maximum_ngx_conhosts": 1,
+  "maximum_ngx_trees": 1,
+  "authenticode_policy": "record when exposed by bounded identity API; explicit unavailability is permitted; explicit mismatch is rejected",
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 17179869184,
+    "diagnostic_private_limit_bytes": 536870912,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "available_physical_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "stage_close_timeout_seconds": 180,
+    "outer_timeout_seconds": 180,
+    "sample_seconds": 0.25,
+    "simultaneous_kit_processes": 1
+  },
+  "production_changed": false,
+  "out_of_scope": [
+    "Flow simulation",
+    "stage construction",
+    "CollisionProxy",
+    "Emitter",
+    "capture or occupancy",
+    "NanoVDB readback",
+    "Collision OFF/ON comparison",
+    "production code or defaults",
+    "Point policy",
+    "wood authority",
+    "V3",
+    "P3",
+    "P4"
+  ]
+}
