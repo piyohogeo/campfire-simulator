@@ -1,0 +1,55 @@
+{
+  "schema": "campfire.phase6hy.exact-kit-import-contract.v1",
+  "phase": "phase6hy",
+  "baseline_commit": "4d83948",
+  "declared_before_runtime": true,
+  "purpose": "Qualify only the deterministic Kit --exec wrapper-to-probe import boundary, then authorize one fresh frozen Phase 6HX OFF/ON diagnostic comparison if the real Kit smoke passes.",
+  "frozen_history": {
+    "phase6hx_commit": "4d83948",
+    "phase6hx_status": "safe_stop_kit_import_harness_failure",
+    "reclassified": false,
+    "artifact_or_root_reused": false,
+    "runtime_attempt_reused": false
+  },
+  "canonical_repository_boundary": {
+    "derivation": "absolute wrapper path -> scripts parent -> repository parent",
+    "scripts_repository_relative": "scripts",
+    "reject_reparse": true,
+    "reject_root_escape": true,
+    "reject_current_working_directory_dependency": true,
+    "reject_pythonpath_dependency": true,
+    "reject_user_site_dependency": true
+  },
+  "sources": {
+    "loader": {"path": "scripts/phase6hy_exact_kit_import.py", "sha256": "C2824098651F0F547CE9742C59291133EFCB3727D76B28485F36D64B6F49F60D"},
+    "wrapper": {"path": "scripts/probe_phase6hy_single_log_occlusion.py", "sha256": "53D935A755B4FA304702B23D316CB421E9A3AF83802B92721A50763E2A000BC5"},
+    "probe_builder": {"path": "scripts/phase6hy_probe_source.py", "sha256": "4F373882C6BC8AAB14247E2B5A9916550444DC283947D5B3321FAA0F7A622B35", "required_callables": ["build_probe_source"]},
+    "nested_probe_builder": {"path": "scripts/phase6hx_probe_source.py", "sha256": "21CB55A6352FA1EEA83BFD516D8352680A6C7A9BEEA71D8BB266C6E08CEF7988"},
+    "frozen_operation_source": {"path": "scripts/probe_phase6hw_single_log_occlusion.py", "sha256": "FEF4BA507A2E9AC79EDE1E6E23ED0DBA01CF39B651A9EF9F240C91E7EECD9594"}
+  },
+  "frozen_probe_contract": {
+    "path": "scripts/phase6hx_single_log_occlusion_contract.json",
+    "sha256": "6278E6A6E66C348BFE104AB247A466EA0BE152DBD614903E2ADEF57DFCEB9098",
+    "physical_threshold_or_visual_gate_changed": false
+  },
+  "smoke": {
+    "launches": 1,
+    "retry": 0,
+    "replacement": 0,
+    "forbid_stage_flow_collision_capture": true,
+    "required_markers": ["kit_app_ready", "wrapper_resolved", "scripts_resolved", "probe_source_resolved", "probe_source_sha256", "loaded_module_file", "required_callable_identity", "import_complete", "operation_complete", "smoke_shutdown_complete"]
+  },
+  "formal": {"condition_order": ["collision_off", "collision_on"], "fresh_processes": 2, "retry": 0, "replacement": 0},
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 17179869184,
+    "diagnostic_private_limit_bytes": 536870912,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "available_physical_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "outer_timeout_seconds": 180,
+    "sample_seconds": 0.25
+  },
+  "production_changed": false,
+  "out_of_scope": ["production log placement", "arbitrary pose", "dynamic transform", "PhysX sharing", "production Point Emitter coexistence", "4/20-log performance", "P3", "P4", "production integration", "default ON", "NanoVDB readback"]
+}
