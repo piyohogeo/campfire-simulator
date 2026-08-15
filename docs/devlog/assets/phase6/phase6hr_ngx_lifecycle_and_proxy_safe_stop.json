@@ -1,0 +1,50 @@
+{
+  "schema": "campfire.phase6hr.result-summary.v1",
+  "phase": "phase6hr",
+  "status": "safe_stop_proxy_operation_report_interface",
+  "contract_sha256": "5BBBA68CCCFB15B5FED787F4ED82E230B27B0145E5ECD20F80FFC4463109BD2C",
+  "phase6hq": {"commit": "faa7903", "frozen": true, "reclassified": false, "artifact_modified": false, "runtime_reused": false},
+  "fixture": {"status": "qualified", "cases": "32/32", "focused_tests": "5/5", "guard_parent_classification_reason_helper_and_pid_agreement": true, "kit_launch_count": 0},
+  "smoke": {
+    "status": "qualified", "classification": "cleanup_assisted_ngx_exit", "natural_exit": false, "kit_exit_code": 0,
+    "cleanup_killed_pids": [4652, 38296, 43592], "helper_kinds": ["telemetry", "ngx_conhost", "ngx_updater"],
+    "resource_peaks_bytes": {"runner": 96624640, "kit": 7300018176, "diagnostic": 16924672, "child": 61345792, "tree": 7753838592},
+    "resource_minima_bytes": {"available_physical": 85572374528, "commit_headroom": 105302704128},
+    "readback_calls": 0, "residual_processes": 0
+  },
+  "proxy": {
+    "launched": true, "launches": 1, "retry": 0, "replacement": 0,
+    "formal_status": "safe_stop", "classification": "cleanup_failure",
+    "reason": ["operation_complete_failed", "shutdown_complete_failed"],
+    "functional_partial_evidence": {
+      "proxy_path": "/World/Logs/Log_00/FlowCollisionProxy", "only_proxy_prim_added": true,
+      "closed_outward_mesh": true, "vertex_face_index_count": [26, 36, 120], "world_transform_matches_log": true,
+      "timeline_playing": false, "renderer_updates": 30, "flow_interface_calls": 1, "readback_calls": 0,
+      "stage_close_seconds": 0.899246, "stage_close_complete": true, "shutdown_complete_marker": true, "kit_exit_code": 0
+    },
+    "harness_boundary": "proxy report lacks canonical top-level operation/shutdown booleans although durable JSONL markers and nested lifecycle evidence exist",
+    "cleanup_killed_pids": [328],
+    "resource_peaks_bytes": {"runner": 95457280, "kit": 10123976704, "diagnostic": 16183296, "child": 62304256, "tree": 10471964672},
+    "resource_headroom_bytes": {"kit": 7055892480, "tree": 7781646336},
+    "resource_minima_bytes": {"available_physical": 84124553216, "commit_headroom": 103859863552},
+    "fatal": 0, "dump": 0, "automatic_upload": 0, "device_loss_or_tdr": 0, "cdb_started": false, "residual_processes": 0
+  },
+  "qualification": {
+    "canonical_ngx_lifecycle": true, "app_ready_smoke": true,
+    "production_hierarchy_plus_one_proxy": false,
+    "next": "separate approval to unify the proxy bounded operation report with canonical lifecycle evidence, then one fresh proxy process"
+  },
+  "regression": {
+    "python_compilation": "pass", "release_build": "pass", "standard_suite": "8/8 processes, 78/78 tests",
+    "static_devlog": "pass", "phase0_rtx": "omitted-production-render-path-unchanged",
+    "phase3": "omitted-production-usd-wood-flow-input-unchanged"
+  },
+  "production": {
+    "changed": false, "defaults_changed": false, "point_policy_changed": false, "v3_changed": false, "latest_demo_changed": false,
+    "app_sha256": "94162F82AF95D5ABB3798FCB5CA71F7821B7813FD8623D1387BC723288ADF02A",
+    "scene_sha256": "B6DA1D182DD69A918CEF26CFCD8A3AD4BEBA202E774292B48C4FDBF4A666616C",
+    "wood_authority_sha256": "D65F720AD640949A313A627D44B68BA10E28032F6E1FEAFC7A04566F1ACAF260",
+    "v3_sha256": "8B7C3CB9081224F29003C82F8E29801CC7A856DE8740AEAC20D4E25796C10FAE",
+    "latest_demo_sha256": "1C6FB249EAE8DF09E804680C7D0459BA8631D4ECFF4903944FFA4701E94E6285"
+  }
+}

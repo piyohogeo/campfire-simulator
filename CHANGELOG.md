@@ -1,5 +1,17 @@
 # Changelog
 
+- Added Phase 6HR without changing Phase 6HQ. The exact NGX lifecycle
+  producer-to-consumer fixture passed 32/32 and guard/parent results matched in
+  classification, reason, allowed helper set, and killed PID set. A fresh
+  app-ready smoke qualified as `cleanup_assisted_ngx_exit`. One fresh proxy
+  process then created the production hierarchy plus one default-off closed
+  Mesh proxy, completed 30 updates, one public Flow-interface acquisition,
+  stage close, shutdown, Kit exit 0, resource gates, and residual-zero cleanup.
+  It nevertheless stopped fail-closed because the reused proxy operation report
+  omitted canonical top-level operation/shutdown booleans. Functional evidence
+  is partial; the formal one-proxy boundary remains unqualified. Production,
+  defaults, Point policy, V3, and latest demo are unchanged.
+
 - Added Phase 6HQ while preserving Phase 6HP. A single canonical lifecycle
   evaluator now classifies natural, telemetry-only assisted, and failed cleanup
   identically in the guard and parent; its no-Kit producer-to-consumer fixture

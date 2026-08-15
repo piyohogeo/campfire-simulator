@@ -179,6 +179,26 @@ residual was zero. No proxy root, stage, Flow call, viewport update, or readback
 was started. Production and defaults remain unchanged. Details:
 `docs/design/phase6hq_canonical_lifecycle_safe_stop.md`.
 
+## Phase 6HR exact NGX lifecycle and one-proxy safe stop
+
+Phase 6HQ remains frozen at `faa7903`. Phase 6HR extends the shared canonical
+guard/parent evaluator with only one exact attempt-owned NGX updater/conhost
+tree, optionally alongside one exact telemetry helper. Its no-Kit fixture
+passed 32/32 with complete guard/parent agreement. A fresh app-ready smoke
+qualified as `cleanup_assisted_ngx_exit`, explicitly not natural exit.
+
+The separately authorized one-proxy process functionally created only
+`/World/Logs/Log_00/FlowCollisionProxy`, completed 30 stopped-timeline updates,
+acquired the public Flow interface once, used no readback, closed the stage,
+reached shutdown, exited Kit code 0, passed resource gates, and left residual
+zero. The canonical evaluator still failed closed because the reused proxy
+operation report did not expose its durable operation/shutdown completion as
+the top-level booleans required by Phase 6HR. This is a harness artifact-
+interface safe stop, not a Flow/proxy/lifecycle failure. The functional sample
+is partial evidence only and the formal one-proxy boundary remains
+unqualified. Details:
+`docs/design/phase6hr_ngx_lifecycle_and_flow_proxy_safe_stop.md`.
+
 # Phase 6HF velocity ROI-sampling lifecycle isolation (frozen before runtime)
 
 Phase 6HE remains an immutable lifecycle safe stop. Phase 6HF rebuilds V5 in
