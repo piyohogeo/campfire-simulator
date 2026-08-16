@@ -37,6 +37,8 @@
     "monitor": {"path": "phase6io_post_shutdown_monitor.ps1", "sha256": "4BF75B714ED61845D26EA84BF7031C57FD0662F222895A579337BBBF60BE0207"},
     "probe": {"path": "probe_phase6io_minimal_post_shutdown.py", "sha256": "E4B5186139CE6EC6E33DA3788D3ABE65199894D871BA27EA0E0132F020F473A0"},
     "case_runner": {"path": "run_phase6io_minimal_post_shutdown_case.ps1", "sha256": "29A81A5F4C76ADD8C425CD1C6D284ECBF97DE3B8D33A9BEA31B2ABC897BBB090"},
+    "runtime_runner": {"path": "run_phase6io_post_shutdown.py", "sha256": "0CD73C50A81D530FA203F9EEBA97F82A3497F2C2CCE45C26B9B9058A6FA03D4E"},
+    "resource_guard": {"path": "phase6in_resource_guard.py", "sha256": "5C3EB447F0318171F401A8DDA3F05E60AFDCB10B32593266D09E8D26F21C647D"},
     "inherited_boundary": {"path": "phase6in_post_shutdown_boundary.py", "sha256": "DBFAB9778BB027392266230A4CD2AC3050422B62B843A8B2C3F7D7DC17CF5758"},
     "inherited_monitor": {"path": "phase6in_post_shutdown_monitor.ps1", "sha256": "30026F90C2ED826D75B172AADCE50E39C627C4A651A38D334ACD41EEDF660A2A"}
   },
