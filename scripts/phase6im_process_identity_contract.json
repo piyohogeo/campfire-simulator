@@ -1,0 +1,93 @@
+{
+  "schema": "campfire.phase6im.process-identity-contract.v1",
+  "phase": "phase6im",
+  "baseline_commit": "3da784d",
+  "declared_before_runtime": true,
+  "purpose": "Qualify only the pointer-sized Windows process-creation-time identity helper in no-Kit fixtures and one Stage-free app-ready Kit smoke.",
+  "frozen_history": {
+    "phase6il_commit": "3da784d",
+    "phase6il_status": "safe_stop_post_shutdown_harness_failure",
+    "phase6il_rerun": false,
+    "phase6il_artifact_reused": false,
+    "phase6il_dump_reanalyzed": false,
+    "post_shutdown_monitor_started": false,
+    "abc_ladder_started": false
+  },
+  "windows_api": {
+    "architecture": "x64",
+    "pid_min": 1,
+    "pid_max": 4294967295,
+    "open_process_access": 1052672,
+    "open_process_access_names": ["PROCESS_QUERY_LIMITED_INFORMATION", "SYNCHRONIZE"],
+    "handle_pointer_sized": true,
+    "filetime_ticks_per_second": 10000000,
+    "windows_to_unix_epoch_seconds": 11644473600,
+    "declared_apis": [
+      "OpenProcess",
+      "GetProcessTimes",
+      "CloseHandle",
+      "GetCurrentProcess",
+      "GetCurrentProcessId",
+      "GetExitCodeProcess",
+      "WaitForSingleObject",
+      "QueryFullProcessImageNameW"
+    ]
+  },
+  "operation": {
+    "mode": "minimal_app_ready_identity_helper",
+    "kit_launches": 1,
+    "identity_calls": 2,
+    "retry": 0,
+    "replacement": 0,
+    "stage_calls": 0,
+    "layer_calls": 0,
+    "timeline_play_calls": 0,
+    "flow_calls": 0,
+    "renderer_update_calls": 0,
+    "readback_calls": 0,
+    "capture_calls": 0,
+    "cdb_attach_calls": 0,
+    "dump_analysis_calls": 0,
+    "post_shutdown_schedule_samples": 0
+  },
+  "axes": {
+    "helper": ["qualified", "failed"],
+    "lifecycle": ["normal_exit", "post_shutdown_anomaly", "incomplete"]
+  },
+  "classifications": [
+    "kit_process_identity_helper_qualified",
+    "safe_stop_kit_process_identity_helper_failure",
+    "helper_qualified_with_post_shutdown_anomaly",
+    "safe_stop_identity_helper_harness_failure"
+  ],
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 17179869184,
+    "diagnostic_private_limit_bytes": 536870912,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "available_physical_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "outer_timeout_seconds": 180,
+    "sample_seconds": 0.25,
+    "simultaneous_kit_processes": 1
+  },
+  "modules": {
+    "helper": {"path": "phase6im_process_identity.py", "sha256": "E25CDA2BC189B6740A10E4330E78D5579740EFF4B3EB8C1F95D3E1421DE01F4A"},
+    "fixture": {"path": "phase6im_process_identity_fixture.py", "sha256": "CCAB6F8E0FB5BCC181288B8232D882882CF479D2CAE146B929C2D2B5379BFF50"},
+    "probe": {"path": "probe_phase6im_identity_helper.py", "sha256": "E22570ABC76B98F6BBFAF3A53BF50D5F79313FC5E096FAE3DEC9BF21993E37BE"},
+    "case_runner": {"path": "run_phase6im_identity_helper_case.ps1", "sha256": "FBBB916764C258651BC52E8EC4BB843A73D056CB0198662D29D76CA28D2FA281"},
+    "resource_guard": {"path": "phase6im_resource_guard.py", "sha256": "243180270890B1CDF00D267882C286D328EE0E24313A7D7D0A94D11E36DF9B24"},
+    "preflight": {"path": "run_phase6im_preflight.py", "sha256": "78CE1B81821B9D50E503B9AAF5ADBA86DD49ABB0E3C723CF2F30CE7565CD7CA4"},
+    "runtime_runner": {"path": "run_phase6im_identity_helper.py", "sha256": "A581B4E78BF1B770D8C20E99DF640478C2292FD7C84CCE1696B77C6368B5E910"}
+  },
+  "production_changed": false,
+  "out_of_scope": [
+    "Phase 6IL post-shutdown samples or CDB",
+    "dump reanalysis",
+    "USD Stage or Layer operations",
+    "A/B/C ladder",
+    "timeline play",
+    "Flow, renderer, readback, camera, capture",
+    "production, defaults, Point policy, V3, latest demo"
+  ]
+}
