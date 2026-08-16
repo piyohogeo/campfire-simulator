@@ -1,0 +1,30 @@
+{
+  "schema": "campfire.phase6ip.dump-audit-contract.v1",
+  "phase": "phase6ip",
+  "baseline_commit": "c7fef78",
+  "declared_before_analysis": true,
+  "source_phase": "phase6io",
+  "source_phase_frozen": true,
+  "source_artifact_reused_as_runtime": false,
+  "kit_launches": 0,
+  "cdb_runs": 1,
+  "timeouts": {"sample_seconds": 0.25, "no_output_progress_seconds": 30.0, "absolute_seconds": 120.0},
+  "limits": {"source_file_count": 11, "archive_entry_count": 16, "archive_entry_bytes": 33554432, "archive_total_bytes": 67108864, "cdb_stdout_bytes": 8388608, "cdb_stderr_bytes": 1048576, "json_bytes": 1048576},
+  "symbols": {"network_symbol_server": false, "local_only": true, "paths": ["_build/windows-x86_64/release", "C:/packman-repo/chk/kit-kernel/110.2.0+feature.windows-x86_64.release", "C:/Windows/System32"]},
+  "cdb": {"path": "C:/Program Files (x86)/Windows Kits/10/Debuggers/x64/cdb.exe", "bytes": 178632, "sha256": "506D1FD7AD306F6F53D8D157375A03A8368446923DEF9457CDFB2E3214054376", "version": "10.0.28000.2526"},
+  "sources": [
+    {"path": "artifacts/phase6io_post_shutdown_monitor_20260816/attempt-01/sensitive-crash-dumps/183a63df-1968-4b84-a9af-3cf26ebaffe8.dmp.zip", "bytes": 1631923, "sha256": "7C77B77414BABE3267483DEFC134FB5EF97BBD8DA9C7843F398B6A3A5FF98B28"},
+    {"path": "artifacts/phase6io_post_shutdown_monitor_20260816/attempt-01/sensitive-crash-dumps/183a63df-1968-4b84-a9af-3cf26ebaffe8.dmp.zip.toml", "bytes": 52535, "sha256": "DC49A943DF46C9C888BA741B49DAA50DA2CB701424B66226DBA3F79EFA80ED77"},
+    {"path": "artifacts/phase6io_post_shutdown_monitor_20260816/attempt-01/sensitive-crash-dumps/183a63df-1968-4b84-a9af-3cf26ebaffe8.py.txt", "bytes": 5726, "sha256": "956F761A7F4CBB29CF495FD16ED514D853E54377180B4B1A264BB04112893CF4"},
+    {"path": "artifacts/phase6io_post_shutdown_monitor_20260816/attempt-01/sensitive-crash-dumps/crash_2026-08-16_11-04-24_9100.txt", "bytes": 13250, "sha256": "B91A2B29483E191FEB4CE4A33654FEC4EDBB64EB09363CAE883628ECD624A6EB"},
+    {"path": "artifacts/phase6io_post_shutdown_monitor_20260816/attempt-01/kit.log", "bytes": 1013882, "sha256": "DEB51F8289431E9AB07887B3C2750486EE6E2485E57C87C054A8F09457FC015D"},
+    {"path": "artifacts/phase6io_post_shutdown_monitor_20260816/attempt-01/child_markers.jsonl", "bytes": 1697, "sha256": "90517C344F87124C7204F14743CE66111B1CA0EE7AC05C6FDA3A48809E54506A"},
+    {"path": "artifacts/phase6io_post_shutdown_monitor_20260816/attempt-01/parent_markers.jsonl", "bytes": 11043, "sha256": "5AFD490ED09D09BC5F191E16986D39C376ECBEEA624BF81645C6943E25B7BE75"},
+    {"path": "artifacts/phase6io_post_shutdown_monitor_20260816/attempt-01/operation_report.json", "bytes": 4100, "sha256": "6B0DC9F3EBBFFD53BC61A57D58961D2E63E190BC33F685B77F25BAA6FF84B36A"},
+    {"path": "artifacts/phase6io_post_shutdown_monitor_20260816/attempt-01/runner_evidence.json", "bytes": 57208, "sha256": "20C42591E556255011E678B9B94E1ACDDDCD817B0EB964DAC6A1EA8E946D7686"},
+    {"path": "artifacts/phase6io_post_shutdown_monitor_20260816/summary.json", "bytes": 18815, "sha256": "02B1FEFE6136D25D379EA482EC167AA933A6D07175AB4AAC45FE77207CE245A9"},
+    {"path": "artifacts/phase6il-post-shutdown-exit-20260816/prior-dump-audit/bounded_dump_audit.json", "bytes": 3636, "sha256": "9E264746B79AE364BD0E0CD445E6C107C97F6162A341A486791674A2012D688B"}
+  ],
+  "commands": ["vertarget", "|", "~", ".time", "!runaway", "!analyze -v", ".exr -1", ".ecxr", "r", "u @rip-20 @rip+20", "ln @rip", "kvn", "~* kvn", "lm", "lmvm omni_usd", "lmvm carb_crashreporter_breakpad_plugin"],
+  "forbidden": ["Kit launch", "network symbols", "automatic upload", "dump modification", "A/B/C", "Stage", "Layer", "Flow", "readback", "production change"]
+}
