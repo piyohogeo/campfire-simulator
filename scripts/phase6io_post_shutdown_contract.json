@@ -1,0 +1,45 @@
+{
+  "schema": "campfire.phase6io.post-shutdown-contract.v1",
+  "phase": "phase6io",
+  "baseline_commit": "3c323b6",
+  "declared_before_runtime": true,
+  "purpose": "Canonicalize the exact build launch path and the Phase 6IM process path through one Windows file-handle boundary, then observe one fresh Stage-free Kit process after shutdown_complete.",
+  "frozen_history": {
+    "phase6in_status": "safe_stop_post_shutdown_monitor_harness_failure",
+    "phase6in_rerun": false,
+    "phase6in_artifact_reused": false
+  },
+  "dependencies": {
+    "phase6im_contract_sha256": "CCC603326EC355EE54390952D85816214DBB52DA061ECABB2DA025E306CD12ED",
+    "phase6im_helper": {"path": "phase6im_process_identity.py", "sha256": "E25CDA2BC189B6740A10E4330E78D5579740EFF4B3EB8C1F95D3E1421DE01F4A", "must_remain_unmodified": true}
+  },
+  "path_identity": {
+    "lexical_launch_path": "C:\\Users\\junic\\src\\campfire-simulator\\_build\\windows-x86_64\\release\\kit\\kit.exe",
+    "expected_canonical_path": "c:\\packman-repo\\chk\\kit-kernel\\110.2.0+feature.windows-x86_64.release\\kit.exe",
+    "expected_volume_serial": 1261293552,
+    "expected_file_index": 1688849864660117,
+    "expected_file_size_bytes": 752224,
+    "expected_sha256": "5FE8AD14C77328DBE4A11361D1FDB45F8581D2595E7607AFAB0221379D4650EF",
+    "resolution": "CreateFileW + GetFinalPathNameByHandleW + GetFileInformationByHandle",
+    "requires_pid_match": true,
+    "requires_creation_time_match": true,
+    "allows_arbitrary_junction": false,
+    "allows_hardcoded_packman_substitution": false
+  },
+  "operation": {"kit_launches": 1, "retry": 0, "replacement": 0, "stage_calls": 0, "layer_calls": 0, "timeline_play_calls": 0, "flow_calls": 0, "renderer_update_calls": 0, "readback_calls": 0, "camera_calls": 0, "capture_calls": 0, "cdb_attach_calls": 0, "dump_analysis_calls": 0},
+  "monitor": {"schedule_seconds": [0.0, 0.25, 0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0], "normal_exit_max_seconds": 15.0, "absolute_timeout_seconds": 30.0, "cdb_enabled": false, "dump_automatic_upload": false},
+  "axes": {"path_identity": ["qualified", "failed"], "monitor": ["qualified", "incomplete", "failed"], "operation": ["complete", "incomplete"], "lifecycle": ["normal_exit", "delayed_exit", "post_shutdown_exception", "post_shutdown_timeout", "unknown"], "cleanup": ["natural", "assisted_known_auxiliary", "failure"], "resource": ["qualified", "failed"]},
+  "safety": {"runner_private_limit_bytes": 536870912, "kit_private_limit_bytes": 17179869184, "diagnostic_private_limit_bytes": 536870912, "unique_tree_private_limit_bytes": 18253611008, "available_physical_floor_bytes": 8589934592, "commit_headroom_floor_bytes": 8589934592, "outer_timeout_seconds": 180, "sample_seconds": 0.25, "simultaneous_kit_processes": 1},
+  "modules": {
+    "path_boundary": {"path": "phase6io_executable_identity.py", "sha256": "98B50A417111171F9F0A0A35F7305CD6EF39A406A8A9552109B51F7D527CE450"},
+    "path_cli": {"path": "phase6io_path_identity_cli.py", "sha256": "0EBBD2D0940D25EC6258DA8476F228F31EC7EF0BC81D9310AEA1D3B684155027"},
+    "path_fixture": {"path": "phase6io_path_identity_fixture.py", "sha256": "255988A6F28EF6211AC90871A99F4B0CC9FC7BB59A5CC34CCFC206A560993121"},
+    "monitor": {"path": "phase6io_post_shutdown_monitor.ps1", "sha256": "4BF75B714ED61845D26EA84BF7031C57FD0662F222895A579337BBBF60BE0207"},
+    "probe": {"path": "probe_phase6io_minimal_post_shutdown.py", "sha256": "E4B5186139CE6EC6E33DA3788D3ABE65199894D871BA27EA0E0132F020F473A0"},
+    "case_runner": {"path": "run_phase6io_minimal_post_shutdown_case.ps1", "sha256": "29A81A5F4C76ADD8C425CD1C6D284ECBF97DE3B8D33A9BEA31B2ABC897BBB090"},
+    "inherited_boundary": {"path": "phase6in_post_shutdown_boundary.py", "sha256": "DBFAB9778BB027392266230A4CD2AC3050422B62B843A8B2C3F7D7DC17CF5758"},
+    "inherited_monitor": {"path": "phase6in_post_shutdown_monitor.ps1", "sha256": "30026F90C2ED826D75B172AADCE50E39C627C4A651A38D334ACD41EEDF660A2A"}
+  },
+  "production_changed": false,
+  "out_of_scope": ["A/B/C Stage ladder", "four-boundary Layer audit", "Flow or Collision", "CDB or dump analysis", "production, defaults, Point policy, V3, latest demo"]
+}
