@@ -1,0 +1,90 @@
+{
+  "schema": "campfire.phase6in.post-shutdown-contract.v1",
+  "phase": "phase6in",
+  "baseline_commit": "54a027f",
+  "declared_before_runtime": true,
+  "purpose": "Observe one Stage-free app-ready Kit process after shutdown_complete using the unchanged Phase 6IM exact identity helper.",
+  "frozen_history": {
+    "phase6il_status": "safe_stop_post_shutdown_harness_failure",
+    "phase6il_rerun": false,
+    "phase6il_artifact_reused": false,
+    "phase6il_monitor_reused": false,
+    "abc_ladder_started": false
+  },
+  "dependencies": {
+    "phase6im_commit": "54a027f",
+    "phase6im_status": "kit_process_identity_helper_qualified",
+    "phase6im_contract_sha256": "CCC603326EC355EE54390952D85816214DBB52DA061ECABB2DA025E306CD12ED",
+    "phase6im_helper": {
+      "path": "phase6im_process_identity.py",
+      "sha256": "E25CDA2BC189B6740A10E4330E78D5579740EFF4B3EB8C1F95D3E1421DE01F4A",
+      "must_remain_unmodified": true
+    }
+  },
+  "operation": {
+    "mode": "stage_free_minimal_post_shutdown_monitor",
+    "kit_launches": 1,
+    "retry": 0,
+    "replacement": 0,
+    "stage_calls": 0,
+    "layer_calls": 0,
+    "timeline_play_calls": 0,
+    "flow_calls": 0,
+    "renderer_update_calls": 0,
+    "readback_calls": 0,
+    "camera_calls": 0,
+    "capture_calls": 0,
+    "cdb_attach_calls": 0,
+    "dump_analysis_calls": 0
+  },
+  "monitor": {
+    "schedule_seconds": [0.0, 0.25, 0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0],
+    "normal_exit_max_seconds": 15.0,
+    "absolute_timeout_seconds": 30.0,
+    "terminal_sample_ends_schedule": true,
+    "cdb_enabled": false,
+    "cdb_omission_reason": "The phase isolates passive post-shutdown observation; a 30-second bounded monitor is shorter than the prior diagnostic attach threshold, and automatic low-level diagnosis would add a second variable.",
+    "dump_automatic_upload": false,
+    "sample_fields": [
+      "pid", "creation_time_filetime_ticks", "executable_path", "alive", "exit_code",
+      "cpu_total_seconds", "cpu_delta_seconds", "private_bytes", "working_set_bytes",
+      "thread_count", "auxiliary_processes", "crash_reporters", "dump_inventory",
+      "marker_log_dump_file_progress"
+    ]
+  },
+  "axes": {
+    "monitor": ["qualified", "failed", "incomplete"],
+    "operation": ["complete", "incomplete"],
+    "lifecycle": ["normal_exit", "delayed_exit", "post_shutdown_exception", "post_shutdown_timeout", "unknown"],
+    "cleanup": ["natural", "assisted_known_auxiliary", "failure"],
+    "resource": ["qualified", "failed"]
+  },
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 17179869184,
+    "diagnostic_private_limit_bytes": 536870912,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "available_physical_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "outer_timeout_seconds": 180,
+    "sample_seconds": 0.25,
+    "simultaneous_kit_processes": 1
+  },
+  "modules": {
+    "boundary": {"path": "phase6in_post_shutdown_boundary.py", "sha256": "DBFAB9778BB027392266230A4CD2AC3050422B62B843A8B2C3F7D7DC17CF5758"},
+    "monitor": {"path": "phase6in_post_shutdown_monitor.ps1", "sha256": "30026F90C2ED826D75B172AADCE50E39C627C4A651A38D334ACD41EEDF660A2A"},
+    "probe": {"path": "probe_phase6in_minimal_post_shutdown.py", "sha256": "D052A323A6EC1C99C11D14AFA6B923DB86E1CF133BEE6C096BAA9F5342D5FB03"},
+    "case_runner": {"path": "run_phase6in_minimal_post_shutdown_case.ps1", "sha256": "EA77A448A7F06E330D5EB99EAA4E57D4DC926A34567ADC47F540F82BB1593273"},
+    "fixture": {"path": "phase6in_post_shutdown_fixture.py", "sha256": "30E3D32E44577A907CE24D17A9562C580CC4F28D819F611617AD79FE941FFEF7"},
+    "fixture_child": {"path": "phase6in_fixture_child.py", "sha256": "EB73D09A8AEC865CADC46FEAF7ED36F0E08A8F369C1587C5AD8ACC79E7E6F716"},
+    "fixture_case": {"path": "run_phase6in_fixture_case.ps1", "sha256": "1A6553009DF24E0BF0E105CF522EC4F5C25DEF8E91FF755447412C34AC8B8867"},
+    "resource_guard": {"path": "phase6in_resource_guard.py", "sha256": "5C3EB447F0318171F401A8DDA3F05E60AFDCB10B32593266D09E8D26F21C647D"},
+    "preflight": {"path": "run_phase6in_preflight.py", "sha256": "8D703892CAEB23FA1F7E7938CC4F3DD85D427326390D7541A5A5D0F6C58652D4"},
+    "runtime_runner": {"path": "run_phase6in_post_shutdown.py", "sha256": "1272D37F800B985770E5AD79053E89A80457DD18C3673FBA6FA222270B784183"}
+  },
+  "production_changed": false,
+  "out_of_scope": [
+    "Phase 6IL monitor or CDB", "Stage, Layer, A/B/C ladder", "Flow and Collision",
+    "renderer, camera, capture, NanoVDB", "production, defaults, Point policy, V3, latest demo"
+  ]
+}
