@@ -1,5 +1,16 @@
 # Changelog
 
+- Added Phase 6IJ without changing Phase 6II's frozen classification or
+  artifacts. The exact `anon:<runtime-id>` session contract and producer-to-
+  consumer fixture passed 30/30, including anonymous/non-file-backed identity,
+  one-session, in-process stability, malformed-ID, Layer collision, and marker
+  conflict gates. Fresh A passed native open, Layer identity, close, context,
+  operation, and shutdown markers, but the parent runner did not persist its
+  canonical evidence before the fixed 180-second guard boundary. B/C were not
+  launched. The result is `safe_stop_stage_open_contract_failure`, with no
+  fatal/native exception/dump and exact cleanup residual zero. Production,
+  defaults, Point policy, V3, and latest demo remain unchanged.
+
 - Added Phase 6II while retaining Phase 6IH at `2df5df9` as its original
   runtime-authoring-isolation safe stop. The requested ladder was reduced to
   real one-variable conditions A/B/C because D equals C and Kit supplies an

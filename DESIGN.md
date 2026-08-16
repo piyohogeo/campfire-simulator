@@ -1,5 +1,25 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6IJ anonymous-session contract and lifecycle-evidence safe stop
+
+Phase 6II remains frozen at `c57a6b2`; its attempt, artifacts, classification,
+and old suffix contract were not changed or reused. Phase 6IJ accepts only
+`anon:<runtime-id>` with a bounded 1–32 ASCII-hex ID and separately requires
+one anonymous non-file-backed session Layer, exact `GetSessionLayer()` identity,
+root/runtime/protected non-identity, and in-process identifier/Layer stability.
+The actual producer-to-consumer fixture passed 30/30 and all six exact
+dependencies matched.
+
+Fresh Condition A passed that session contract and all Stage open/identity/
+close/context/operation/shutdown markers. The canonical parent runner evidence
+was not persisted before the fixed 180-second outer guard, so natural-exit
+acceptance remained incomplete; B/C were not launched. This is
+`safe_stop_stage_open_contract_failure`, not a native Stage-open or
+composition-specific result. Fatal/native exception/dump/upload counts were
+zero and exact cleanup left residual zero. Four-boundary validation and OFF/ON
+remain separately approval-gated. Details:
+`docs/design/phase6ij_anonymous_session_composition_ladder.md`.
+
 # Phase 6HH sampling-result lifetime isolation (frozen before runtime)
 
 Phase 6HF remains an immutable safe stop at `c27267f`. Phase 6HH compares the

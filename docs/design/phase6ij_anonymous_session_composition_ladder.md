@@ -60,3 +60,43 @@ content, and oversize content.
 Runtime results are recorded only after this contract and implementation are
 committed. Even a fully qualified ladder does not start the four-boundary Layer
 audit, Flow, renderer updates, capture, or Collision OFF/ON comparison.
+
+## Runtime result
+
+Implementation was frozen at `a3f9f03`, then one new-root Condition A process
+was launched. B and C were not launched after A's first non-normal boundary.
+The corrected contract itself passed: the raw identifier was
+`anon:000004B31A0C0180`; normalization preserved that bounded value; the Layer
+was anonymous and non-file-backed; exactly one session Layer was present; it
+was distinct from root/runtime/protected Layers; and its identifier and Layer
+identity were stable through the close request.
+
+The protected root opened in 0.251944 seconds with expected root, sublayers,
+EditTarget, and SHA-256. Stage close returned in 0.491582 seconds; context empty,
+reference release, operation complete, and `shutdown_complete` were durable.
+The complete operation validator, marker sequence, and marker/Layer evidence
+consistency all passed.
+
+The parent PowerShell did not persist `runner_evidence.json` before the fixed
+180-second outer guard boundary. Consequently the canonical lifecycle
+evaluator reported `canonical_evidence_missing`, the natural-exit acceptance
+contract was incomplete, and the condition is not qualified. Exact identity
+cleanup left zero residual processes. There was no fatal, native exception,
+device loss, TDR, dump, CDB evidence, or automatic upload. Kit/tree Private
+Bytes peaked at 3,992,465,408 / 4,429,004,800 bytes, leaving
+13,187,403,776 / 13,824,606,208 bytes to the fixed 16/17 GiB ceilings.
+
+Phase 6IJ therefore stops as `safe_stop_stage_open_contract_failure` at the
+post-`shutdown_complete` parent-evidence boundary. This is not a native
+Stage-open failure and does not localize a composition-specific issue. There is
+no fully qualified ladder condition. Phase 6II remains frozen and unchanged.
+The next separately approved work must address or isolate the canonical parent
+lifecycle-evidence completion before a fresh A/B/C population; four-boundary
+validation and Collision OFF/ON remain stopped.
+
+Regression completed with Python compilation, focused fixture 30/30, Release
+build, the standard 8-process/78-test suite, and devlog static validation.
+Phase 0 RTX and Phase 3 were omitted because the change is confined to
+diagnostic session validation/runner code and documentation: production source,
+generated production USD, rendering inputs, wood authority, Flow inputs,
+defaults, Point policy, V3, public scene, and latest demo hashes are unchanged.
