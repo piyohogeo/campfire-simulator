@@ -1,0 +1,148 @@
+{
+  "schema": "campfire.phase6ip.bounded-dump-audit-result.v1",
+  "phase": "6IP",
+  "phase_result": "safe_stop_post_analysis_kit_launch_contract_deviation",
+  "source_phase": "6IO",
+  "source_phase_frozen": true,
+  "analysis_only": true,
+  "analysis_kit_launch_count": 0,
+  "post_analysis_release_build_precache_kit_launch_count": 3,
+  "kit_launch_contract_qualified": false,
+  "cdb_launch_count": 1,
+  "contract_sha256": "9DD7B93138A97A48C8C49FEC0C0667EABA460C940100BAB31908B44D4134CC20",
+  "axes": {
+    "artifact_integrity": "qualified",
+    "dump_parse": "partial",
+    "exception_localization": "localized",
+    "phase6ik_relation": "related_candidate",
+    "production_relevance": "indeterminate",
+    "cleanup": "qualified"
+  },
+  "source_dump_archive": {
+    "path": "artifacts/phase6io_post_shutdown_monitor_20260816/attempt-01/sensitive-crash-dumps/183a63df-1968-4b84-a9af-3cf26ebaffe8.dmp.zip",
+    "bytes": 1631923,
+    "sha256": "7C77B77414BABE3267483DEFC134FB5EF97BBD8DA9C7843F398B6A3A5FF98B28",
+    "unchanged_after_analysis": true
+  },
+  "extracted_dump": {
+    "format": "user_minidump_registers_stacks_partial_memory",
+    "architecture": "x64",
+    "bytes": 9257417,
+    "sha256": "13C32AAF5421495AEE76DE27ACA07C6F45D6F981D86DDE7B3E458EE8BEEA5A34",
+    "debug_time": "2026-08-16T02:04:23Z",
+    "process_id": 9100,
+    "process_uptime_seconds": 24,
+    "thread_count": 151
+  },
+  "exception": {
+    "code": "0x80000003",
+    "description": "break_instruction_exception",
+    "address": "0x00007ff8fa644f34",
+    "parameters": ["0x0"],
+    "stored_exception_thread_index": 16,
+    "stored_exception_thread_id_hex": "0xD9F4",
+    "stored_exception_thread_id_decimal": 55796,
+    "reporter_text_thread_id_hex": "0xD1BC",
+    "reporter_text_thread_id_decimal": 53692,
+    "thread_id_evidence_note": "CDB's stored exception context selects OS thread 0xD9F4. The crash reporter text names 0xD1BC; the all-thread dump shows 0xD1BC in NtGetContextThread. The discrepancy is retained rather than normalized away.",
+    "faulting_module": "carb.crashreporter-breakpad.plugin.dll",
+    "module_base": "0x00007ff8fa600000",
+    "module_offset": "0x44F34",
+    "module_timestamp": "2026-07-08T06:06:03",
+    "module_version": "1.1.1.1",
+    "instruction": "CC / int 3",
+    "intentional_breakpoint_evidence": true,
+    "assert_evidence": false,
+    "fail_fast_evidence": false,
+    "abort_terminate_evidence": true,
+    "representative_stack": [
+      "carb_crashreporter_breakpad_plugin+0x44f34 (int 3)",
+      "carb_crashreporter_breakpad_plugin+0x2d889",
+      "carb_crashreporter_breakpad_plugin+0x1c7bd",
+      "ucrtbase!raise+0x1e5",
+      "ucrtbase!abort+0x31",
+      "ucrtbase!terminate+0x29",
+      "VCRUNTIME140!CxxThrowException+0x90",
+      "omni_usd!omni::usd::audio::waitForCapture+0xc65f (nearest export symbol)",
+      "omni_usd!omni::usd::UsdManager::getFoundationPlugins+0xf23 (nearest export symbol)",
+      "omni_usd!omni::usd::UsdContext::useFabricSceneDelegate+0x8e13 (nearest export symbol)",
+      "carb_tasking_plugin+0x230bb"
+    ]
+  },
+  "shutdown_timing": {
+    "shutdown_complete_utc_epoch": 1786845856.8067493,
+    "exception_debug_time_utc_epoch": 1786845863.0,
+    "seconds_from_shutdown_complete_to_exception": 6.1932507,
+    "exit_observed_seconds_after_shutdown": 9.8967655,
+    "sample_2_seconds": {
+      "observed_offset_seconds": 2.0185126,
+      "cpu_total_seconds": 4.953125,
+      "private_bytes": 3908726784
+    },
+    "sample_5_seconds": {
+      "observed_offset_seconds": 5.0269277,
+      "cpu_total_seconds": 29.078125,
+      "cpu_delta_seconds": 24.125,
+      "private_bytes": 5190729728,
+      "private_bytes_delta_from_2_seconds": 1282002944
+    },
+    "log_sequence": [
+      "omni.rtx semaphore-release fatal at about 4.95 s after shutdown_complete",
+      "omni.rtx GPU crash dump write begins immediately afterward",
+      "breakpad reports termination and writes the minidump",
+      "stored int 3 exception occurs about 6.19 s after shutdown_complete"
+    ],
+    "bounded_inference": "The CPU and Private Bytes rise aligns with RTX teardown failure plus GPU/minidump capture and crash-report generation. It is not evidence that Stage, Flow, or A/B/C operations ran. Exact allocation ownership is unavailable in the user minidump."
+  },
+  "phase6ik_comparison": {
+    "phase6ik": {
+      "exception_code": "0xC0000005",
+      "faulting_module": "omni_usd",
+      "module_offset_or_symbol": "omni::usd::UsdContext::addHydraEngine+0x288",
+      "shutdown_delay_seconds": 4.938714,
+      "stack_family": "omni.usd Hydra context teardown"
+    },
+    "phase6io": {
+      "exception_code": "0x80000003",
+      "faulting_module": "carb_crashreporter_breakpad_plugin",
+      "module_offset_or_symbol": "+0x44f34 / int 3",
+      "shutdown_delay_seconds": 6.1932507,
+      "stack_family": "crash reporter breakpoint after terminate/abort; unwind reaches omni.usd audio/context tasking; log also records RTX teardown failure"
+    },
+    "relation": "related_candidate",
+    "confidence": "medium_low",
+    "reason": "Both occur only after shutdown_complete and involve omni.usd/context teardown, but the recorded exception modules, instructions, and immediate mechanisms differ. Phase 6IO additionally has an RTX semaphore/GPU-crash sequence not established for Phase 6IK."
+  },
+  "limitations": [
+    "The source is a user minidump, not a full-memory dump.",
+    "Only local build and OS module paths were used; no network symbols were requested.",
+    "ntdll symbols did not match, so WinDbg !analyze produced a wrong-symbol bucket; the explicit exception context and stack remained readable.",
+    "omni.usd has export symbols only, so several private frames are represented by their nearest exported symbol.",
+    "The dump localizes the stored breakpoint and unwind but does not prove the original C++ exception type or exact resource owner.",
+    "After the read-only audit completed, repo.bat build invoked three Kit extension-precache processes. They did not open Phase 6IO, Stage, Layer, or Flow evidence, but this violated the Phase-wide no-Kit-launch constraint and is retained as a contract deviation."
+  ],
+  "decision": {
+    "abc_restart_ready": false,
+    "natural_exit_zero_required_for_lifecycle_qualification": true,
+    "operation_evidence_may_be_retained_separately": true,
+    "recommended_next_boundary": "With separate approval, run a bounded small Stage-free post-shutdown re-observation population using the unchanged monitor and preserve full evidence only for the first anomaly signature. Do not start A/B/C until its lifecycle gate is explicitly decided.",
+    "no_automatic_next_phase": true
+  },
+  "verification": {
+    "focused_fixture": "10/10 passed twice",
+    "python_compile": "passed",
+    "json_validation": "passed",
+    "static_devlog_validation": "passed: refs=602 ids=345 json=298 svg=177 zip=2",
+    "release_build": "passed but caused the recorded three-Kit precache contract deviation",
+    "standard_suite": "not run because it would add Kit processes after the no-Kit contract deviation",
+    "phase0_rtx": "not run",
+    "phase3": "not run"
+  },
+  "unchanged": {
+    "production": true,
+    "defaults": true,
+    "point_policy": true,
+    "v3": true,
+    "latest_demo": true
+  }
+}

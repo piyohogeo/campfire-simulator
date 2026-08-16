@@ -1,5 +1,21 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6IP bounded Phase 6IO dump audit
+
+Phase 6IO remains frozen. Phase 6IP copied and hashed its saved crash evidence,
+then parsed the copied user minidump once with local-only CDB and no analysis
+Kit launch. A later Release build unexpectedly invoked three extension-precache
+Kit processes, so the Phase is a `safe_stop_post_analysis_kit_launch_contract_deviation`
+even though the dump audit itself remained read-only and intact.
+The stored `0x80000003` is an actual `int 3` at
+`carb.crashreporter-breakpad.plugin+0x44f34`. Its unwind contains
+`raise`/`abort`/`terminate` and reaches `omni.usd` audio/context tasking; the Kit
+log separately records RTX semaphore-release failures and GPU-dump generation
+immediately beforehand. This is related to, but not the same recorded mechanism
+as, Phase 6IK's `omni_usd` `0xC0000005`. Production relevance remains
+indeterminate and A/B/C remains stopped. Details:
+`docs/design/phase6ip_bounded_phase6io_dump_audit.md`.
+
 # Phase 6IO canonical path and post-shutdown exception observation
 
 Phase 6IN remains frozen. Phase 6IO resolved the lexical build Kit path and the

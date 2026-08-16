@@ -16,7 +16,7 @@
         <span>Campfire Simulator</span>
       </a>
       <div class="nav-links">
-        <a href="#phase-6io">最新記録</a>
+        <a href="#phase-6ip">最新記録</a>
         <a href="#roadmap">ロードマップ</a>
         <a href="../../DESIGN.md">設計書</a>
       </div>
@@ -34,7 +34,7 @@
 
     <div class="status-strip" aria-label="現在のプロジェクト状態">
       <div class="shell status-grid">
-        <div><span>現在地</span><strong>Phase 6IO · monitor qualified / lifecycle exception</strong></div>
+        <div><span>現在地</span><strong>Phase 6IP · evidence localized / contract deviation</strong></div>
         <div><span>Render device</span><strong>RTX 3090 · CUDA 0</strong></div>
         <div><span>Qualification</span><strong>Kit 16 GiB / tree 17 GiB · qualified</strong></div>
         <div><span>Production</span><strong>unchanged · no Point integration</strong></div>
@@ -43,6 +43,16 @@
   </header>
 
   <main>
+    <section id="phase-6ip" class="section entry-section phase-six">
+      <article class="shell entry">
+        <aside class="entry-meta" aria-label="Phase 6IP bounded Phase 6IO dump audit"><span class="phase-number compact">6IP</span><p><time datetime="2026-08-16">2026.08.16</time></p><span class="pill current">safe stop</span></aside>
+        <div class="entry-body">
+          <header class="entry-header"><p class="section-kicker">Phase 6IP · frozen evidence only</p><h2>The breakpoint is localized;<br>the initiating teardown fault is only partial.</h2><p>Eleven originals were verified before and after one local-only CDB pass. No Kit ran during the audit; the later build deviation is recorded below.</p></header>
+          <div class="notes-grid"><section class="note"><p class="note-label">Stored exception</p><h3><code>int 3</code> in the crash reporter.</h3><p>CDB localized <code>0x80000003</code> to <code>carb.crashreporter-breakpad.plugin+0x44f34</code>. The unwind contains terminate/abort and reaches USD audio/context tasking; local symbols do not establish the private throwing routine.</p></section><section class="note caution"><p class="note-label">Preceding sequence</p><h3>RTX teardown failed before dump capture.</h3><p>The frozen Kit log records semaphore-release failures, a GPU crash dump, then Breakpad collection. The post-shutdown CPU and Private Bytes rise aligns with this reporting sequence, not with a Stage or Flow operation.</p></section></div>
+          <section class="note next"><p class="note-label">Boundary held</p><h3>A/B/C remains stopped.</h3><p>Phase 6IK is a related candidate with medium-low confidence, not the same proven mechanism. A post-audit Release build unexpectedly invoked three Kit extension-precache processes; no Stage or Flow was opened, but this violates the Phase-wide no-Kit contract and is recorded as a safe stop. Natural exit 0 remains required for lifecycle qualification. Production, defaults, Point policy, V3, and latest demo remain unchanged.</p><p><a href="assets/phase6/phase6ip_bounded_dump_audit_result.json">machine report</a> · <a href="../design/phase6ip_bounded_phase6io_dump_audit.md">design and result</a></p><button class="video-trigger" type="button" aria-haspopup="dialog" data-latest-demo-manifest="assets/latest_demo.json"><span class="video-trigger-icon" aria-hidden="true"></span><span><strong>Existing latest demo</strong><small>no visual artifact was created in this evidence-only Phase</small></span></button></section>
+        </div>
+      </article>
+    </section>
     <section id="phase-6io" class="section entry-section phase-six">
       <article class="shell entry">
         <aside class="entry-meta" aria-label="Phase 6IO canonical path and post-shutdown monitor"><span class="phase-number compact">6IO</span><p><time datetime="2026-08-16">2026.08.16</time></p><span class="pill current">safe stop</span></aside>

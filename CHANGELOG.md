@@ -1,5 +1,21 @@
 # Changelog
 
+- Added Phase 6IP without changing the frozen Phase 6IO result. Eleven original
+  crash/marker/report inputs were hash-verified before and after a single
+  local-symbol, read-only CDB pass; no analysis Kit or upload was started. A
+  later Release build invoked three Kit extension-precache processes, so the
+  Phase is explicitly a `safe_stop_post_analysis_kit_launch_contract_deviation`
+  rather than a fully contract-qualified audit. The stored
+  `0x80000003` localized to an intentional `int 3` in
+  `carb.crashreporter-breakpad.plugin+0x44f34`. The unwind contains C++
+  terminate/abort and `omni.usd` audio/context tasking, while the preceding Kit
+  log records RTX semaphore failures and GPU-dump creation. Phase 6IK remains a
+  related candidate rather than a proven identical mechanism. A/B/C remains
+  stopped, natural exit 0 remains required for lifecycle qualification, and
+  production/defaults/Point policy/V3/latest demo are unchanged. Focused 10/10,
+  Python/JSON checks, and static devlog validation passed; no further Kit-based
+  suite was started after the contract deviation.
+
 - Added Phase 6IO while preserving Phase 6IN as its original safe stop and
   retaining the unchanged Phase 6IM process identity authority. The actual
   handle-resolved path producer/consumer fixture passed 26/26. The build
