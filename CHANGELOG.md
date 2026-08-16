@@ -1,5 +1,19 @@
 # Changelog
 
+- Added Phase 6IN while preserving Phase 6IL and reusing the unchanged Phase
+  6IM exact identity helper. The actual no-Kit producer-to-consumer fixture
+  passed 26/26. The sole fresh Stage-free Kit child reached app-ready,
+  operation complete, and `shutdown_complete`, but the parent rejected the
+  lexical build Kit path versus the helper's resolved Packman path before the
+  first post-shutdown sample. It was not retried. Exact cleanup stopped the
+  still-live attempt tree and left residual zero; resource limits passed and no
+  AV, dump, crash reporter, CDB, or upload attempt was observed. The result is
+  `safe_stop_post_shutdown_monitor_harness_failure` with operation complete,
+  monitor incomplete, and lifecycle unknown. Release build, focused 26/26 and
+  7/7, standard 78/78, and devlog validation passed. Production, defaults,
+  Point policy, wood authority, V3, public scene, and latest demo are unchanged;
+  A/B/C was not started.
+
 - Added Phase 6IM while preserving Phase 6IL as its original harness safe
   stop. The new helper declares exact pointer-sized Windows API signatures,
   validates PID/FILETIME/path/liveness and exit races, and closes all opened

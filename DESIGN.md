@@ -1,5 +1,22 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6IN minimal post-shutdown monitor safe stop
+
+Phase 6IL and its monitor remain frozen. Phase 6IN reused the unchanged Phase
+6IM pointer-sized helper under a new contract and roots. Its actual no-Kit
+producer-to-consumer fixture passed 26/26. One fresh Stage-free Kit child then
+completed app-ready, operation, shutdown request, and `shutdown_complete`.
+
+The parent stopped before the first post-shutdown sample because it compared
+the lexical build-deployment Kit path directly against the helper's resolved
+Packman path. PID and creation FILETIME matched. Exact cleanup started 0.482
+seconds after shutdown, stopped the still-live attempt-owned Kit/tree, and left
+residual zero. Thus operation is complete, but monitor is incomplete and
+lifecycle is unknown; this is
+`safe_stop_post_shutdown_monitor_harness_failure`, not a timeout or native-exit
+result. No AV, dump, reporter, CDB, or upload attempt was observed. A/B/C was
+not started. Details: `docs/design/phase6in_minimal_post_shutdown_monitor.md`.
+
 # Phase 6IM Kit-compatible process identity helper qualification
 
 Phase 6IL remains frozen at `3da784d` and its post-shutdown monitor, dump
