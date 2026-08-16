@@ -1,0 +1,129 @@
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import shutil
+import subprocess
+from pathlib import Path
+
+from phase6hl_guard_preflight import _read_bounded, build_guard_command
+from phase6hm_process_role_fixture import _read_jsonl
+from phase6hn_process_tree_topology import validate_trace_roles
+from phase6ho_app_ready_environment import ROOT, write_json
+from phase6ho_process_tree_topology import APP, KIT
+from phase6il_post_shutdown_boundary import (
+    REPORT_SCHEMA,
+    classify,
+    read_bounded_jsonl,
+    validate_report,
+)
+from run_phase6hz_import_smoke import hashes as invariant_hashes
+
+S = ROOT / "scripts"
+CONTRACT = S / "phase6il_post_shutdown_contract.json"
+SIDECAR = S / "phase6il_post_shutdown_contract.sha256"
+PYTHON = Path(r"C:\Python38\python.exe")
+GUARD = S / "phase6il_resource_guard.py"
+CASE = S / "run_phase6il_minimal_lifecycle_case.ps1"
+PROBE = S / "probe_phase6il_minimal_lifecycle.py"
+
+
+def run(root: Path, preflight_path: Path) -> dict:
+    if root.exists():
+        raise RuntimeError("Phase 6IL runtime refuses root reuse")
+    policy = json.loads(CONTRACT.read_text(encoding="utf-8"))
+    digest = hashlib.sha256(CONTRACT.read_bytes()).hexdigest().upper()
+    preflight = _read_bounded(preflight_path)
+    if digest != SIDECAR.read_text().split()[0].upper() or preflight.get("status") != "qualified" or preflight.get("contract_sha256") != digest:
+        raise RuntimeError("Phase 6IL preflight/contract invalid")
+    root.mkdir(parents=True)
+    shutil.copy2(CONTRACT, root / "frozen_contract.json")
+    shutil.copy2(SIDECAR, root / "frozen_contract.sha256")
+    attempt_id = "phase6il-post-shutdown-01"
+    attempt = root / "attempt-01"
+    logs = attempt / "runner-logs"
+    logs.mkdir(parents=True)
+    paths = {
+        "output": attempt / "minimal_operation_report.json", "lifecycle": attempt / "minimal_operation_report.json",
+        "markers": attempt / "boundary_markers.jsonl", "runner_evidence": attempt / "runner_evidence.json",
+        "kit_log": attempt / "kit.log", "kit_stdout": attempt / "kit.stdout.log", "kit_stderr": attempt / "kit.stderr.log",
+        "trace": logs / "resource.jsonl", "summary": logs / "guard.json", "child_stdout": logs / "powershell.stdout.log",
+        "child_stderr": logs / "powershell.stderr.log", "cleanup": logs / "cleanup.jsonl", "gpu": logs / "gpu.csv",
+    }
+    ps = Path(r"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe")
+    target = [str(ps), "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", str(CASE),
+              "-KitPath", str(KIT), "-AppPath", str(APP), "-ProbePath", str(PROBE), "-MarkersPath", str(paths["markers"]),
+              "-ReportPath", str(paths["output"]), "-RunnerEvidencePath", str(paths["runner_evidence"]), "-ContractPath", str(CONTRACT),
+              "-KitLogPath", str(paths["kit_log"]), "-KitStdoutPath", str(paths["kit_stdout"]), "-KitStderrPath", str(paths["kit_stderr"]), "-AttemptId", attempt_id]
+    write_json(attempt / "launch_contract.json", {"schema":"campfire.phase6il.launch.v1", "attempt_id":attempt_id, "target":target, "cwd":str(ROOT)})
+    command = build_guard_command(PYTHON, GUARD, paths, target, attempt_id=attempt_id, safety=policy["safety"], include_gpu=True)
+    before = invariant_hashes()
+    with (logs / "guard-launcher.stdout.log").open("wb", buffering=0) as stdout, (logs / "guard-launcher.stderr.log").open("wb", buffering=0) as stderr:
+        process = subprocess.Popen(command, cwd=ROOT, stdout=stdout, stderr=stderr, creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+        guard_exit = process.wait()
+    after = invariant_hashes()
+    rows = read_bounded_jsonl(paths["markers"]) if paths["markers"].is_file() else []
+    guard = _read_bounded(paths["summary"]) if paths["summary"].is_file() else {}
+    runner = _read_bounded(paths["runner_evidence"]) if paths["runner_evidence"].is_file() else {}
+    operation = _read_bounded(paths["output"]) if paths["output"].is_file() else {}
+    trace = _read_jsonl(paths["trace"]) if paths["trace"].is_file() else []
+    roles_ok, role_failures, roles = validate_trace_roles(trace)
+    cleanup = guard.get("observed_process_cleanup") or {}
+    cleanup_pass = cleanup.get("all_observed_absent") is True
+    peaks = guard.get("peaks") or {}
+    minima = guard.get("machine_minima") or {}
+    safety = policy["safety"]
+    resource_pass = all((
+        isinstance(peaks.get("runner"), int) and peaks["runner"] <= safety["runner_private_limit_bytes"],
+        isinstance(peaks.get("kit"), int) and peaks["kit"] <= safety["kit_private_limit_bytes"],
+        isinstance(peaks.get("diagnostic"), int) and peaks["diagnostic"] <= safety["diagnostic_private_limit_bytes"],
+        isinstance(peaks.get("tree"), int) and peaks["tree"] <= safety["unique_tree_private_limit_bytes"],
+        isinstance(minima.get("available_physical_bytes"), int) and minima["available_physical_bytes"] >= safety["available_physical_floor_bytes"],
+        isinstance(minima.get("estimated_commit_headroom_bytes"), int) and minima["estimated_commit_headroom_bytes"] >= safety["commit_headroom_floor_bytes"],
+    ))
+    samples = ((runner.get("monitor") or {}).get("samples") or [])
+    tree_roles = [child.get("role") for sample in samples for child in ((sample.get("tree") or {}).get("processes") or [])]
+    dump_count = len(runner.get("dump_inventory") or [])
+    classification_input = {
+        "schema": REPORT_SCHEMA, "attempt_id": attempt_id, "contract_valid": True,
+        "operation_complete": runner.get("operation_complete") is True, "shutdown_complete": runner.get("shutdown_complete") is True,
+        "samples": samples, "natural_exit_observed": runner.get("process_exit_code") == 0 and not runner.get("forced_boundary_cleanup"),
+        "kit_exit_code": runner.get("process_exit_code"), "cdb_attempted": (runner.get("monitor") or {}).get("cdb_attempted") is True,
+        "crash_reporter_observed": "crash_reporter" in tree_roles, "completed_dump_count": dump_count,
+    }
+    validation = validate_report(classification_input, rows, attempt_id=attempt_id) if rows else {"accepted":False,"reasons":["markers_missing"]}
+    decision = classify(classification_input, fixture_pass=preflight.get("status") == "qualified" and validation["accepted"], resource_pass=resource_pass, cleanup_pass=cleanup_pass)
+    result = {
+        "schema":"campfire.phase6il.summary.v1", "phase":"phase6il", "status":decision["classification"], "classification_reason":decision["reason"],
+        "contract_sha256":digest, "attempt_id":attempt_id, "kit_launch_count":1, "retry_count":0, "replacement_count":0,
+        "prior_dump_audit_only":True, "phase6ik_reclassified":False, "phase6ik_runtime_reused":False, "abc_ladder_started":False,
+        "operation_report":operation, "runner_evidence_validation":validation, "samples":samples,
+        "last_completed_marker":rows[-1].get("step_id") if rows else None,
+        "first_incomplete_boundary":None if decision["classification"] == "post_shutdown_child_exit_qualified" else decision["reason"],
+        "kit_exit_code":runner.get("process_exit_code"), "guard_exit_code":guard_exit,
+        "crash_reporter_observed":classification_input["crash_reporter_observed"], "dump_inventory":runner.get("dump_inventory") or [],
+        "fatal_lines":runner.get("fatal_lines") or [], "automatic_upload_attempt_lines":runner.get("automatic_upload_attempt_lines") or [],
+        "cdb":(runner.get("monitor") or {}).get("cdb"), "cdb_attempted":classification_input["cdb_attempted"],
+        "roles_pass":roles_ok, "role_failures":role_failures, "roles":roles,
+        "resource_pass":resource_pass, "resource_peaks_bytes":peaks, "resource_minima_bytes":minima,
+        "resource_headroom_bytes":{"kit":safety["kit_private_limit_bytes"]-peaks.get("kit",0), "tree":safety["unique_tree_private_limit_bytes"]-peaks.get("tree",0)},
+        "cleanup_pass":cleanup_pass, "residual_process_count":0 if cleanup_pass else None,
+        "invariant_hashes_before":before, "invariant_hashes_after":after, "invariants_pass":before == after,
+        "production_changed":False, "defaults_changed":False, "point_policy_changed":False, "v3_changed":False, "latest_demo_changed":False,
+    }
+    write_json(root / "summary.json", result)
+    return result
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--artifact-root", type=Path, required=True)
+    parser.add_argument("--preflight-summary", type=Path, required=True)
+    args = parser.parse_args()
+    result = run(args.artifact_root.resolve(), args.preflight_summary.resolve())
+    return 0 if result["status"] == "post_shutdown_child_exit_qualified" else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

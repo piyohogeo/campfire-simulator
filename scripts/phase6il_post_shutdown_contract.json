@@ -1,0 +1,105 @@
+{
+  "schema": "campfire.phase6il.post-shutdown-contract.v1",
+  "phase": "phase6il",
+  "baseline_commit": "60d2b54",
+  "declared_before_runtime": true,
+  "purpose": "Separate exact Kit process exit, parent polling, crash-reporter artifacts, and stale Process-object evidence after durable shutdown_complete without creating a USD Stage.",
+  "frozen_history": {
+    "phase6ik_commit": "60d2b54",
+    "phase6ik_status": "safe_stop_parent_lifecycle_boundary_localized",
+    "phase6ik_rerun": false,
+    "phase6ik_reclassified": false,
+    "phase6ik_artifact_reused_as_runtime": false,
+    "abc_ladder_started": false
+  },
+  "prior_dump_audit": {
+    "read_only_original": true,
+    "copy_and_extract_only_in_new_diagnostic_directory": true,
+    "network_symbol_wait": false,
+    "automatic_upload": false,
+    "may_reclassify_phase6ik": false,
+    "maximum_cdb_seconds": 30,
+    "maximum_audit_json_bytes": 262144
+  },
+  "post_shutdown_schedule_seconds": [0, 0.25, 0.5, 1, 2, 5, 10, 15, 30, 60, 120, 175],
+  "post_shutdown_boundary_seconds": 180,
+  "sample_contract": {
+    "power_shell_process_object_has_exited": true,
+    "os_process_enumeration": true,
+    "native_handle_wait": true,
+    "native_exit_code_or_still_active": true,
+    "exact_process_tree": true,
+    "maximum_processes": 64,
+    "maximum_threads": 512,
+    "maximum_kit_log_tail_lines": 8,
+    "maximum_kit_log_tail_line_characters": 512,
+    "maximum_marker_bytes": 1048576,
+    "maximum_report_bytes": 1048576,
+    "hash_only_after_dump_stable": true
+  },
+  "cdb_contract": {
+    "trigger_same_exact_kit_alive_seconds": 60,
+    "maximum_invocations": 1,
+    "stack_first": true,
+    "stack_absolute_timeout_seconds": 20,
+    "module_absolute_timeout_seconds": 10,
+    "detach_absolute_timeout_seconds": 5,
+    "no_progress_timeout_seconds": 15,
+    "local_symbols_only": true,
+    "automatic_upload": false,
+    "residual_cdb_required": 0
+  },
+  "operation_contract": {
+    "mode": "minimal_app_ready_post_shutdown",
+    "kit_launches": 1,
+    "retry": 0,
+    "replacement": 0,
+    "stage_calls": 0,
+    "timeline_play_calls": 0,
+    "flow_calls": 0,
+    "readback_calls": 0,
+    "renderer_update_calls": 0,
+    "capture_calls": 0
+  },
+  "classifications": [
+    "post_shutdown_child_exit_qualified",
+    "safe_stop_post_shutdown_native_wait_localized",
+    "safe_stop_post_shutdown_crash_reporter_boundary",
+    "safe_stop_stale_process_object_proven",
+    "safe_stop_post_shutdown_exit_unresolved",
+    "safe_stop_post_shutdown_harness_failure"
+  ],
+  "safety": {
+    "runner_private_limit_bytes": 536870912,
+    "kit_private_limit_bytes": 17179869184,
+    "diagnostic_private_limit_bytes": 536870912,
+    "unique_tree_private_limit_bytes": 18253611008,
+    "available_physical_floor_bytes": 8589934592,
+    "commit_headroom_floor_bytes": 8589934592,
+    "outer_timeout_seconds": 180,
+    "sample_seconds": 0.25,
+    "simultaneous_kit_processes": 1
+  },
+  "modules": {
+    "boundary": {"path": "phase6il_post_shutdown_boundary.py", "sha256": "8D172E71EB6CD7A852EA2206152903AFD29514E95C499B9F990B7A2AA95DDBA4"},
+    "monitor": {"path": "phase6il_post_shutdown_monitor.ps1", "sha256": "5F38718761102CA38549F67ADA7A2DEFBB413EE3A6F2027F81C19BC51517496F"},
+    "probe": {"path": "probe_phase6il_minimal_lifecycle.py", "sha256": "B8E0DE9A8B0E81511825E077098285E3A1BB227D2C34E594C05F308CDEA760F6"},
+    "case_runner": {"path": "run_phase6il_minimal_lifecycle_case.ps1", "sha256": "D5BACCD04FBD6D5E37BED04894E872DCAADB282DF12C4211914343181AF2844A"},
+    "resource_guard": {"path": "phase6il_resource_guard.py", "sha256": "65C2557AE140F793C0A0760DC13BDA6AD315209702D4F1E95730F0C37347D329"},
+    "runtime_runner": {"path": "run_phase6il_post_shutdown.py", "sha256": "C3FCD15CC21F08FD19F85B136C1C8E99F5EF8EAE9ECD4C5FC83AADE16CA320B5"},
+    "fixture": {"path": "phase6il_post_shutdown_fixture.py", "sha256": "5D2C849F614C62E4EE523848198E95625329A6A7458DCED1CDABBD1EBC8F722B"}
+  },
+  "production_changed": false,
+  "out_of_scope": [
+    "USD Stage generation/open/close",
+    "protected/container/runtime Layer use",
+    "A/B/C ladder",
+    "timeline play",
+    "Flow simulation/interface/readback",
+    "renderer/viewport update",
+    "camera audit",
+    "capture/image/video",
+    "Collision OFF/ON",
+    "production/default/Point/V3/latest demo changes"
+  ]
+}
