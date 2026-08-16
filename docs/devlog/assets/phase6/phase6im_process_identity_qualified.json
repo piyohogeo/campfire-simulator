@@ -1,0 +1,93 @@
+{
+  "schema": "campfire.devlog.phase6im-process-identity-qualified.v1",
+  "phase": "phase6im",
+  "date": "2026-08-16",
+  "status": "kit_process_identity_helper_qualified",
+  "contract_sha256": "CCC603326EC355EE54390952D85816214DBB52DA061ECABB2DA025E306CD12ED",
+  "frozen_history": {
+    "phase6il_commit": "3da784d",
+    "phase6il_reclassified": false,
+    "phase6il_runtime_reused": false,
+    "post_shutdown_monitor_started": false,
+    "abc_ladder_started": false
+  },
+  "abi": {
+    "pointer_size_bytes": 8,
+    "handle_size_bytes": 8,
+    "dword_size_bytes": 4,
+    "bool_size_bytes": 4,
+    "filetime_size_bytes": 8,
+    "declared_api_count": 8
+  },
+  "fixture": {
+    "status": "qualified",
+    "passed": 24,
+    "total": 24,
+    "real_windows_handle_used": true,
+    "kit_launches": 0
+  },
+  "runtime": {
+    "kit_launches": 1,
+    "retry_count": 0,
+    "replacement_count": 0,
+    "pid": 54552,
+    "creation_time_filetime_ticks": 134313166752306621,
+    "creation_time_utc_epoch": 1786843075.2306633,
+    "executable_path": "c:\\packman-repo\\chk\\kit-kernel\\110.2.0+feature.windows-x86_64.release\\kit.exe",
+    "identity_calls": 2,
+    "identities_match": true,
+    "open_handle_calls": 2,
+    "close_handle_calls": 2,
+    "close_handle_failures": 0,
+    "helper_handle_residual": 0,
+    "last_marker": "shutdown_complete",
+    "forbidden_calls_nonzero": 0
+  },
+  "axes": {
+    "helper": "qualified",
+    "lifecycle": "normal_exit",
+    "kit_exit_code": 0,
+    "shutdown_complete": true,
+    "guard_exit_code": 2,
+    "guard_stop_reason": "observed_descendant_residual",
+    "auxiliary_descendants_cleanup_assisted": true
+  },
+  "resource": {
+    "kit_peak_bytes": 7362031616,
+    "tree_peak_bytes": 7847092224,
+    "kit_headroom_bytes": 9817837568,
+    "tree_headroom_bytes": 10406518784,
+    "runner_peak_bytes": 95846400,
+    "diagnostic_peak_bytes": 16887808,
+    "available_physical_min_bytes": 80215314432,
+    "commit_headroom_min_bytes": 100137283584
+  },
+  "cleanup": {
+    "passed": true,
+    "residual_process_count": 0,
+    "fatal_count": 0,
+    "dump_count": 0,
+    "cdb_attempted": false,
+    "automatic_upload": false
+  },
+  "regression": {
+    "focused": "4/4",
+    "producer_consumer_fixture": "24/24",
+    "python_compilation": "pass",
+    "powershell_parse": "pass",
+    "release_build": "pass_7.22_seconds",
+    "standard_suite": "78/78_333.1_seconds",
+    "phase0_rtx": "omitted_no_production_or_render_change",
+    "phase3": "omitted_no_production_or_physics_change"
+  },
+  "production": {
+    "changed": false,
+    "defaults_changed": false,
+    "point_policy_changed": false,
+    "wood_authority_changed": false,
+    "v3_changed": false,
+    "latest_demo_changed": false
+  },
+  "next_approval": "one fresh minimal post-shutdown monitor using the qualified helper; do not rerun Phase 6IL or start A/B/C"
+}
+

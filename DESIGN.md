@@ -1,5 +1,25 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6IM Kit-compatible process identity helper qualification
+
+Phase 6IL remains frozen at `3da784d` and its post-shutdown monitor, dump
+audit, artifacts, and A/B/C boundary were not reused. Phase 6IM declares exact
+Windows SDK-compatible `ctypes` signatures for the pointer-sized process APIs,
+uses only `PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE`, validates
+PID/FILETIME/path/liveness, and closes every opened handle in `finally`.
+
+The actual no-Kit producer-to-consumer fixture passed 24/24 with real Windows
+process handles and measured pointer/HANDLE sizes of 8 bytes. One fresh
+Stage-free app-ready Kit smoke then captured the same PID, FILETIME creation
+ticks, and exact executable path twice. Open/close counts were 2/2 with zero
+helper handle residual. All helper/operation/shutdown markers completed, Kit
+exited naturally with code 0, resource gates passed, and exact cleanup removed
+known auxiliary descendants with final residual zero. The result is
+`kit_process_identity_helper_qualified` with independent axes
+`helper=qualified` and `lifecycle=normal_exit`. No post-shutdown schedule, CDB,
+Stage, Layer, Flow, or A/B/C operation occurred. Details:
+`docs/design/phase6im_process_identity_helper.md`.
+
 # Phase 6IL post-shutdown exit evidence harness safe stop
 
 Phase 6IK remains frozen at `60d2b54`; its attempt, artifacts, 180-second

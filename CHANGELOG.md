@@ -1,5 +1,18 @@
 # Changelog
 
+- Added Phase 6IM while preserving Phase 6IL as its original harness safe
+  stop. The new helper declares exact pointer-sized Windows API signatures,
+  validates PID/FILETIME/path/liveness and exit races, and closes all opened
+  handles in `finally`. The real producer-to-consumer fixture passed 24/24.
+  One fresh Stage-free app-ready Kit smoke captured the same PID, creation
+  ticks, and exact executable twice; open/close was 2/2 with no helper leak.
+  Durable evidence reached `shutdown_complete`, Kit exited naturally with code
+  0, resource limits passed, and exact cleanup left residual zero. The result
+  is `kit_process_identity_helper_qualified` with helper and lifecycle axes
+  separated. Release build, focused 4/4, standard 78/78, and devlog validation
+  passed. Production, defaults, Point policy, wood authority, V3, public scene,
+  and latest demo are unchanged; the Phase 6IL monitor and A/B/C were not run.
+
 - Added Phase 6IL without changing or reusing Phase 6IK. A bounded read-only
   audit preserved the frozen dump hashes and localized its recorded
   `0xC0000005` to `omni_usd!omni::usd::UsdContext::addHydraEngine+0x288`, while
