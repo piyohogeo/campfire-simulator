@@ -1,5 +1,19 @@
 # Changelog
 
+- Added Phase 6IL without changing or reusing Phase 6IK. A bounded read-only
+  audit preserved the frozen dump hashes and localized its recorded
+  `0xC0000005` to `omni_usd!omni::usd::UsdContext::addHydraEngine+0x288`, while
+  retaining the mini-dump/symbol limitations and Phase 6IK classification. The
+  formal no-Kit post-shutdown producer-to-consumer fixture passed 33/33. The
+  sole fresh app-ready Kit launch then failed before its first child marker
+  because the new `ctypes` creation-time helper was incompatible with Kit's
+  embedded Python argument conversion. It was not retried; the Phase result is
+  `safe_stop_post_shutdown_harness_failure`, not a post-shutdown native-exit
+  result. Resource gates and exact cleanup passed with residual zero. Release
+  build, focused 4/4, Python/PowerShell validation, and the standard 78/78 suite
+  passed. Production, defaults, Point policy, wood authority, V3, public scene,
+  and latest demo are unchanged; A/B/C was not started.
+
 - Added Phase 6IK while preserving Phase 6IJ at `b32411c` as its original
   contract safe stop. The actual no-Kit lifecycle producer/writer/evaluator
   fixture passed 25/25. In the sole fresh minimal app-ready launch, Kit reached

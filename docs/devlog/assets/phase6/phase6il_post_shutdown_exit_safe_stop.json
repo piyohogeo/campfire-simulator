@@ -1,0 +1,79 @@
+{
+  "schema": "campfire.devlog.phase6il-post-shutdown-exit-safe-stop.v1",
+  "phase": "phase6il",
+  "date": "2026-08-16",
+  "status": "safe_stop_post_shutdown_harness_failure",
+  "contract_sha256": "FBEA44FE97E1B0E60030309EC53C661B984A94768AF5F9268C1CDB5B6DF438D4",
+  "frozen_history": {
+    "phase6ik_commit": "60d2b54",
+    "phase6ik_reclassified": false,
+    "phase6ik_runtime_reused": false,
+    "abc_ladder_started": false
+  },
+  "prior_dump_audit": {
+    "read_only_original": true,
+    "original_hashes_unchanged": true,
+    "exception_code": "0xC0000005",
+    "faulting_symbol": "omni_usd!omni::usd::UsdContext::addHydraEngine+0x288",
+    "seconds_after_shutdown_complete": 4.938714,
+    "network_symbols": false,
+    "automatic_upload": false,
+    "root_cause_proven": false
+  },
+  "preflight": {
+    "status": "qualified",
+    "passed": 33,
+    "total": 33,
+    "actual_poll_process_cases": 8,
+    "kit_launches": 0
+  },
+  "runtime": {
+    "kit_launches": 1,
+    "retry_count": 0,
+    "replacement_count": 0,
+    "last_parent_marker": "parent_return",
+    "last_child_marker": null,
+    "first_incomplete_child_boundary": "process_started",
+    "failure": "kit_embedded_ctypes_process_creation_time_argument_overflow",
+    "post_shutdown_samples": 0,
+    "kit_exit_code": null,
+    "operation_evaluated": false
+  },
+  "resource": {
+    "kit_peak_bytes": 7313997824,
+    "tree_peak_bytes": 7446261760,
+    "kit_headroom_bytes": 9865871360,
+    "tree_headroom_bytes": 10807349248,
+    "runner_peak_bytes": 113197056,
+    "diagnostic_peak_bytes": 16941056,
+    "available_physical_min_bytes": 79744315392,
+    "commit_headroom_min_bytes": 99737870336
+  },
+  "cleanup": {
+    "passed": true,
+    "residual_process_count": 0,
+    "new_dump_count": 0,
+    "cdb_attempted": false,
+    "automatic_upload": false
+  },
+  "regression": {
+    "focused": "4/4",
+    "producer_consumer_fixture": "33/33",
+    "python_compilation": "pass",
+    "powershell_parse": "pass",
+    "release_build": "pass",
+    "standard_suite": "78/78",
+    "phase0_rtx": "omitted_nonproduction_nonrender_change",
+    "phase3": "omitted_nonproduction_nonphysics_change"
+  },
+  "production": {
+    "changed": false,
+    "defaults_changed": false,
+    "point_policy_changed": false,
+    "wood_authority_changed": false,
+    "v3_changed": false,
+    "latest_demo_changed": false
+  },
+  "next_approval": "qualify a Kit-compatible process-creation-time marker helper in a new app-ready smoke before one new minimal post-shutdown boundary; do not start A/B/C"
+}
+

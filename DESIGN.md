@@ -1,5 +1,25 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6IL post-shutdown exit evidence harness safe stop
+
+Phase 6IK remains frozen at `60d2b54`; its attempt, artifacts, 180-second
+boundary, and classification were not changed or reused. Phase 6IL preserved
+and copied the prior crash bundle for a bounded local-symbol audit. The dump
+records `0xC0000005` in
+`omni_usd!omni::usd::UsdContext::addHydraEngine+0x288` about 4.94 seconds after
+the frozen shutdown marker, but its mini-dump/symbol limits do not prove a root
+cause and do not reclassify Phase 6IK.
+
+The actual no-Kit post-shutdown producer/monitor/writer/validator fixture passed
+33/33. The sole fresh app-ready Kit attempt then stopped before the first child
+marker because the new `ctypes` process-creation-time helper was not compatible
+with Kit's embedded Python argument conversion. Parent evidence and exact
+cleanup completed, resource limits passed, residuals were zero, and no new
+dump/CDB/upload occurred. The result is
+`safe_stop_post_shutdown_harness_failure`; it is not evidence about Kit's
+post-shutdown natural exit. Stage, Layer, Flow, and A/B/C were not started.
+Details: `docs/design/phase6il_post_shutdown_exit_boundary.md`.
+
 # Phase 6IK parent lifecycle evidence boundary safe stop
 
 Phase 6IJ remains frozen at `b32411c` and its A/B/C population was not reused
