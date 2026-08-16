@@ -1,5 +1,19 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6IK parent lifecycle evidence boundary safe stop
+
+Phase 6IJ remains frozen at `b32411c` and its A/B/C population was not reused
+or rerun. Phase 6IK qualified the actual bounded producer-to-consumer fixture
+25/25, then launched one Stage-free app-ready Kit process. Kit persisted
+`operation_complete` and `shutdown_complete`, but `child_process_exit` and the
+PowerShell wait/evidence boundaries were not reached before the unchanged
+180-second outer guard. The result is
+`safe_stop_parent_lifecycle_boundary_localized`. One crash-report bundle was
+retained without automatic upload; exact cleanup left residual zero and
+resource limits passed. Stage, Layer, Flow, Collision, A/B/C, and production
+paths were not exercised. Details:
+`docs/design/phase6ik_parent_lifecycle_evidence_boundary.md`.
+
 # Phase 6IJ anonymous-session contract and lifecycle-evidence safe stop
 
 Phase 6II remains frozen at `c57a6b2`; its attempt, artifacts, classification,

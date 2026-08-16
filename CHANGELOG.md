@@ -1,5 +1,17 @@
 # Changelog
 
+- Added Phase 6IK while preserving Phase 6IJ at `b32411c` as its original
+  contract safe stop. The actual no-Kit lifecycle producer/writer/evaluator
+  fixture passed 25/25. In the sole fresh minimal app-ready launch, Kit reached
+  `operation_complete` and `shutdown_complete`, but no child-exit or parent-wait
+  completion marker was persisted before the unchanged 180-second outer guard.
+  One dump bundle was retained without upload; resource limits passed and exact
+  cleanup left residual zero. The result is
+  `safe_stop_parent_lifecycle_boundary_localized`. No Stage, Flow, A/B/C
+  ladder, production/default/Point/V3/latest-demo change, retry, or replacement
+  occurred. Release build, focused tests, standard 78/78 suite, and static
+  devlog validation passed.
+
 - Added Phase 6IJ without changing Phase 6II's frozen classification or
   artifacts. The exact `anon:<runtime-id>` session contract and producer-to-
   consumer fixture passed 30/30, including anonymous/non-file-backed identity,

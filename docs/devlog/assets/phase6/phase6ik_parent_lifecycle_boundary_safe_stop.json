@@ -1,0 +1,58 @@
+{
+  "schema": "campfire.phase6ik.devlog-summary.v1",
+  "phase": "phase6ik",
+  "status": "safe_stop_parent_lifecycle_boundary_localized",
+  "baseline_commit": "b32411c",
+  "implementation_commit": "f007bdc",
+  "contract_sha256": "9C91929CB684A12899E0A1101B3D3D07C34E2B534EB80144B9CA0BDC5ACB9156",
+  "fixture": {"qualified": true, "passed": 25, "total": 25, "kit_launch_count": 0},
+  "runtime": {
+    "kit_launch_count": 1,
+    "retry_count": 0,
+    "replacement_count": 0,
+    "last_completed_child_marker": "shutdown_complete",
+    "first_incomplete_step": "child_process_exit",
+    "outer_guard_duration_seconds": 180.24010705947876,
+    "kit_exit_code": null,
+    "parent_runner_evidence_written": false,
+    "canonical_evaluation_started": true,
+    "canonical_evaluation_completed": false,
+    "exact_cleanup_residual_process_count": 0
+  },
+  "boundary_timeline": [
+    {"step":"outer_guard_wait_started","timestamp_utc":"2026-08-16T00:17:49.285Z","elapsed_seconds":0.0},
+    {"step":"child_wait_started","timestamp_utc":"2026-08-16T00:17:49.821Z","elapsed_seconds":0.1160474},
+    {"step":"kit_app_ready","timestamp_utc":"2026-08-16T00:17:55.041Z","elapsed_seconds":0.0},
+    {"step":"operation_complete","timestamp_utc":"2026-08-16T00:17:55.052Z","elapsed_seconds":0.016},
+    {"step":"shutdown_complete","timestamp_utc":"2026-08-16T00:17:55.061Z","elapsed_seconds":0.016},
+    {"step":"guard_result_received","timestamp_utc":"2026-08-16T00:20:49.533Z","elapsed_seconds":180.234},
+    {"step":"canonical_evaluation_started","timestamp_utc":"2026-08-16T00:20:49.535Z","elapsed_seconds":180.25}
+  ],
+  "resource": {
+    "runner_peak_bytes": 98283520,
+    "kit_peak_bytes": 6206468096,
+    "diagnostic_peak_bytes": 16863232,
+    "tree_peak_bytes": 6350667776,
+    "kit_headroom_bytes": 10973401088,
+    "tree_headroom_bytes": 11902943232,
+    "minimum_available_physical_bytes": 81556672512,
+    "minimum_commit_headroom_bytes": 101564051456
+  },
+  "crash_evidence": {
+    "dump_bundle_count": 1,
+    "support_file_count": 3,
+    "dump_zip_bytes": 1906509,
+    "dump_zip_sha256": "E48C43294938829D2F959017A506F8F94D967B56ED7DA928B5620E05DF643EAC",
+    "automatic_upload_count": 0,
+    "dump_analyzed": false
+  },
+  "forbidden_operations": {"stage":0,"timeline_play":0,"flow":0,"readback":0,"renderer_update":0,"capture":0,"abc_ladder_launches":0},
+  "verification": {"release_build":"passed","focused_fixture":"25/25","focused_unit_test":"1/1","standard_suite":"78/78 across 8 processes","python_compilation":"passed","static_devlog_validation":"passed","phase0_rtx":"omitted: production/render unchanged and no Stage created","phase3":"omitted: wood authority and Flow input unchanged"},
+  "phase6ij_reclassified": false,
+  "phase6ij_artifact_reused": false,
+  "production_changed": false,
+  "defaults_changed": false,
+  "point_policy_changed": false,
+  "v3_changed": false,
+  "latest_demo_changed": false
+}
