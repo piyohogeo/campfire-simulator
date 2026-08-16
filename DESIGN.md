@@ -1,5 +1,19 @@
 # 物理ベース・リアルタイム焚き火シミュレータ 設計文書
 
+# Phase 6IO canonical path and post-shutdown exception observation
+
+Phase 6IN remains frozen. Phase 6IO resolved the lexical build Kit path and the
+Phase 6IM authoritative process path through the same Windows file handle,
+final-path, volume-serial, file-index, size, and hash boundary. The actual
+producer-to-consumer fixture passed 26/26. One fresh Stage-free Kit process
+then qualified path identity and the bounded monitor, but exited about 9.90
+seconds after `shutdown_complete` with `0x80000003` and bounded crash evidence.
+This is `lifecycle=post_shutdown_exception`, not a natural production exit.
+No cleanup intervention was needed and residuals were zero. Phase 6IK's
+`0xC0000005` did not match this exit code; one sample cannot establish a common
+mechanism. A/B/C remains stopped. Details:
+`docs/design/phase6io_canonical_path_post_shutdown_monitor.md`.
+
 # Phase 6IN minimal post-shutdown monitor safe stop
 
 Phase 6IL and its monitor remain frozen. Phase 6IN reused the unchanged Phase

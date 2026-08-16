@@ -1,5 +1,22 @@
 # Changelog
 
+- Added Phase 6IO while preserving Phase 6IN as its original safe stop and
+  retaining the unchanged Phase 6IM process identity authority. The actual
+  handle-resolved path producer/consumer fixture passed 26/26. The build
+  junction and direct Packman executable matched by final path, volume serial,
+  file index, size, and SHA-256. One fresh Stage-free Kit launch completed
+  operation and shutdown, then produced seven bounded post-shutdown samples.
+  Kit exited at about 9.90 seconds with `0x80000003`, not naturally with code
+  0; bounded crash evidence was retained without CDB, analysis, or upload.
+  Path identity, monitor evidence, operation, resources, and residual-zero
+  cleanup passed, while lifecycle is independently
+  `post_shutdown_exception`. Phase 6IK's `0xC0000005` exit code did not match,
+  and one sample does not localize a shared mechanism. A/B/C was not started.
+  Release build, focused 26/26 plus 2/2 and inherited 3/3 tests, standard
+  78/78, Python/PowerShell parsing, and static devlog validation passed.
+  Production, defaults, Point policy, wood authority, V3, public scene, and
+  latest demo are unchanged.
+
 - Added Phase 6IN while preserving Phase 6IL and reusing the unchanged Phase
   6IM exact identity helper. The actual no-Kit producer-to-consumer fixture
   passed 26/26. The sole fresh Stage-free Kit child reached app-ready,
